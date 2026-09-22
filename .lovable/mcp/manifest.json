@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "sdk_version": "0.22.2",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://fihklznbfufhowopwwuc.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "h2fleet-mcp",
+      "version": "0.1.0",
+      "title": "H2Fleet MCP"
+    },
+    "tools": [
+      {
+        "name": "list_projects",
+        "title": "List projects",
+        "description": "List the H2Fleet fleet-transition projects owned by the signed-in user, most recently updated first.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "description": "Maximum number of projects to return (default 50)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_project",
+        "title": "Get project details",
+        "description": "Fetch a single H2Fleet project (name, region, currency, analysis horizon, discount rate) by its ID. Only projects the signed-in user can see under RLS are returned.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "project_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The project's UUID."
+            }
+          },
+          "required": [
+            "project_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_scenarios",
+        "title": "List scenarios in a project",
+        "description": "List the fleet-transition scenarios (BEV, FCEV, diesel, mixed…) that belong to a given H2Fleet project. Returns scenario id, name, region, analysis horizon, discount rate, and fleet composition.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "project_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The parent project's UUID."
+            }
+          },
+          "required": [
+            "project_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_tco_results",
+        "title": "Get TCO results for a scenario",
+        "description": "Return the latest computed Total Cost of Ownership (TCO) results for a given scenario: capex, opex breakdown, cumulative costs, and CO2 emissions.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "scenario_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The scenario's UUID."
+            }
+          },
+          "required": [
+            "scenario_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_project",
+        "title": "Create a new project",
+        "description": "Create a new fleet-transition project owned by the signed-in user. Use this when the user wants to start a new H2Fleet analysis (e.g. a new deployment region or a new client mandate).",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Human-readable project name."
+            },
+            "description": {
+              "type": "string",
+              "description": "Short project description."
+            },
+            "country_or_region": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Country or region code, e.g. 'CA-QC', 'FR', 'US-CA'."
+            },
+            "currency": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 3,
+              "description": "ISO currency code, e.g. 'CAD', 'EUR', 'USD'."
+            },
+            "default_analysis_horizon_years": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30,
+              "description": "Default TCO horizon in years (1-30)."
+            },
+            "default_discount_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Default discount rate as a decimal, e.g. 0.05 for 5%."
+            }
+          },
+          "required": [
+            "name",
+            "country_or_region",
+            "currency",
+            "default_analysis_horizon_years",
+            "default_discount_rate"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

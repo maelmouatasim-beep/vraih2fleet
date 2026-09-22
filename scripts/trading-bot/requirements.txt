@@ -1,0 +1,5 @@
+# Dépendances Python du bot de trading
+ccxt>=4.0.0        # connexion aux plateformes crypto (Binance testnet)
+pandas>=2.0.0      # manipulation des données en tableau (DataFrame)
+ta>=0.11.0         # indicateurs techniques (RSI, MACD, Bollinger, ATR, ADX...)
+requests>=2.31.0   # appels HTTP (notifications Telegram)

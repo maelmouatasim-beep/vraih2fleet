@@ -1,0 +1,32 @@
+project_id = "fihklznbfufhowopwwuc"
+
+[functions.calculate-tco]
+verify_jwt = false
+
+[functions.authenticate-telematics]
+verify_jwt = true
+
+[functions.fetch-telematics-vehicles]
+verify_jwt = true
+
+[functions.sync-telematics-data]
+verify_jwt = false
+
+[functions.get-mapbox-token]
+verify_jwt = true
+
+[functions.assistant-chat]
+verify_jwt = false
+
+[functions.send-email]
+verify_jwt = false
+
+[functions.notify-subsidy-deadlines]
+verify_jwt = false
+
+[functions.api-gateway]
+verify_jwt = false
+
+[functions.mcp]
+verify_jwt = false
+
