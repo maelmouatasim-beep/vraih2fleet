@@ -5,18 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, Truck, ArrowLeft, Eye, EyeOff, Check, X, Leaf, KeyRound, Send, Mail, CheckCircle2 } from 'lucide-react';
+import { Loader2, Truck, ArrowLeft, Eye, EyeOff, Check, X, Leaf } from 'lucide-react';
 import { z } from 'zod';
-import { supabase } from '@/integrations/supabase/client';
-
-const ACCESS_CODE = '293308';
-
-type AccessMode = 'gate' | 'code' | 'request' | 'register';
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -74,14 +68,6 @@ export default function Signup() {
     path: ['confirmPassword'],
   });
 
-  const [accessMode, setAccessMode] = useState<AccessMode>('gate');
-  const [accessCode, setAccessCode] = useState('');
-  const [codeError, setCodeError] = useState(false);
-
-  const [requestData, setRequestData] = useState({ fullName: '', email: '', company: '', message: '' });
-  const [isRequestSubmitting, setIsRequestSubmitting] = useState(false);
-  const [requestSuccess, setRequestSuccess] = useState(false);
-
   const [formData, setFormData] = useState({
     fullName: '', functionTitle: '', company: '', email: '',
     fleetSize: '', fleetTypes: [] as string[],
@@ -96,57 +82,6 @@ export default function Signup() {
     minLength: formData.password.length >= 8,
     hasUppercase: /[A-Z]/.test(formData.password),
     hasNumber: /[0-9]/.test(formData.password),
-  };
-
-  const handleCodeValidation = () => {
-    if (accessCode === ACCESS_CODE) {
-      setCodeError(false);
-      setAccessMode('register');
-    } else {
-      setCodeError(true);
-    }
-  };
-
-  const handleAccessRequest = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsRequestSubmitting(true);
-    try {
-      const { error } = await supabase.functions.invoke('send-email', {
-        body: {
-          to: 'contact@h2fleet.ca',
-          subject: `[Access Request] ${requestData.company} - ${requestData.fullName}`,
-          htmlContent: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <div style="background: linear-gradient(135deg, #1a365d 0%, #2d6a4f 100%); padding: 20px; text-align: center;">
-                <h1 style="color: white; margin: 0;">🔑 New Access Request</h1>
-              </div>
-              <div style="padding: 24px; background: #f9fafb;">
-                <table style="width: 100%; border-collapse: collapse;">
-                  <tr><td style="padding: 8px 0; color: #6b7280;"><strong>Name:</strong></td><td style="padding: 8px 0;">${requestData.fullName}</td></tr>
-                  <tr><td style="padding: 8px 0; color: #6b7280;"><strong>Email:</strong></td><td style="padding: 8px 0;"><a href="mailto:${requestData.email}">${requestData.email}</a></td></tr>
-                  <tr><td style="padding: 8px 0; color: #6b7280;"><strong>Company:</strong></td><td style="padding: 8px 0;">${requestData.company}</td></tr>
-                </table>
-                ${requestData.message ? `<div style="margin-top: 20px; padding: 16px; background: white; border-radius: 8px;"><h3 style="margin: 0 0 12px 0;">Message:</h3><p style="margin: 0; white-space: pre-wrap;">${requestData.message}</p></div>` : ''}
-              </div>
-              <div style="background: #f3f4f6; padding: 16px; text-align: center;">
-                <p style="margin: 0; color: #6b7280; font-size: 14px;">Reply with the access code: <strong>${ACCESS_CODE}</strong></p>
-              </div>
-            </div>`,
-          textContent: `New Access Request\n\nName: ${requestData.fullName}\nEmail: ${requestData.email}\nCompany: ${requestData.company}\n${requestData.message ? `\nMessage: ${requestData.message}` : ''}\n\nAccess code to share: ${ACCESS_CODE}`,
-        },
-      });
-      if (error) throw error;
-      setRequestSuccess(true);
-    } catch (error) {
-      console.error('Error sending access request:', error);
-      toast({
-        title: t('demoModal.error.title', 'Error'),
-        description: t('demoModal.error.message', 'Failed to submit your request. Please try again.'),
-        variant: 'destructive',
-      });
-    } finally {
-      setIsRequestSubmitting(false);
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -184,117 +119,6 @@ export default function Signup() {
       setIsLoading(false);
     }
   };
-
-  // ───── Access Gate Screen ─────
-  const renderAccessGate = () => (
-    <div className="w-full max-w-md">
-      <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors">
-        <ArrowLeft className="w-4 h-4" />
-        {t('common.backToHome')}
-      </Link>
-      <Card className="border-border/50 shadow-xl">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="h-16 w-16 rounded-2xl gradient-hero flex items-center justify-center">
-              <KeyRound className="h-8 w-8 text-primary-foreground" />
-            </div>
-          </div>
-          <CardTitle className="text-2xl font-bold">{t('landing.accessGate.title')}</CardTitle>
-          <CardDescription className="text-base">{t('landing.accessGate.subtitle')}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Button className="w-full h-14 text-base gap-3" onClick={() => setAccessMode('code')}>
-            <KeyRound className="h-5 w-5" />
-            {t('landing.accessGate.hasCode')}
-          </Button>
-          <Button variant="outline" className="w-full h-14 text-base gap-3" onClick={() => setAccessMode('request')}>
-            <Mail className="h-5 w-5" />
-            {t('landing.accessGate.requestAccess')}
-          </Button>
-          <p className="text-center text-sm text-muted-foreground pt-2">
-            {t('auth.login.alreadyHaveAccount')}{' '}
-            <Link to="/login" className="text-primary hover:underline font-medium">{t('auth.login.signInButton')}</Link>
-          </p>
-        </CardContent>
-      </Card>
-    </div>
-  );
-
-  // ───── Code Entry Screen ─────
-  const renderCodeEntry = () => (
-    <div className="w-full max-w-md">
-      <button onClick={() => { setAccessMode('gate'); setCodeError(false); setAccessCode(''); }} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors">
-        <ArrowLeft className="w-4 h-4" />
-        {t('landing.accessGate.backToChoices')}
-      </button>
-      <Card className="border-border/50 shadow-xl">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="h-16 w-16 rounded-2xl gradient-hero flex items-center justify-center">
-              <KeyRound className="h-8 w-8 text-primary-foreground" />
-            </div>
-          </div>
-          <CardTitle className="text-2xl font-bold">{t('landing.accessGate.codeLabel')}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Input type="text" placeholder={t('landing.accessGate.codePlaceholder')} value={accessCode} onChange={(e) => { setAccessCode(e.target.value); setCodeError(false); }} onKeyDown={(e) => e.key === 'Enter' && handleCodeValidation()} className={cn("h-12 text-center text-lg tracking-widest", codeError && 'border-destructive')} autoFocus />
-            {codeError && <p className="text-sm text-destructive text-center">{t('landing.accessGate.codeError')}</p>}
-          </div>
-          <Button className="w-full h-12 text-base" onClick={handleCodeValidation}>{t('landing.accessGate.validate')}</Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
-
-  // ───── Access Request Form ─────
-  const renderRequestForm = () => (
-    <div className="w-full max-w-md">
-      <button onClick={() => { setAccessMode('gate'); setRequestSuccess(false); }} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors">
-        <ArrowLeft className="w-4 h-4" />
-        {t('landing.accessGate.backToChoices')}
-      </button>
-      <Card className="border-border/50 shadow-xl">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">{t('landing.accessGate.requestTitle')}</CardTitle>
-          <CardDescription className="text-base">{t('landing.accessGate.requestSubtitle')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {requestSuccess ? (
-            <div className="py-8 text-center">
-              <div className="mx-auto w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
-                <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-400" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">{t('demoModal.success.title')}</h3>
-              <p className="text-muted-foreground">{t('landing.accessGate.requestSuccess')}</p>
-            </div>
-          ) : (
-            <form onSubmit={handleAccessRequest} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="reqName">{t('demoModal.fields.fullName')}</Label>
-                <Input id="reqName" placeholder={t('demoModal.placeholders.fullName')} value={requestData.fullName} onChange={(e) => setRequestData(prev => ({ ...prev, fullName: e.target.value }))} required disabled={isRequestSubmitting} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="reqEmail">{t('demoModal.fields.email')}</Label>
-                <Input id="reqEmail" type="email" placeholder={t('demoModal.placeholders.email')} value={requestData.email} onChange={(e) => setRequestData(prev => ({ ...prev, email: e.target.value }))} required disabled={isRequestSubmitting} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="reqCompany">{t('demoModal.fields.company')}</Label>
-                <Input id="reqCompany" placeholder={t('demoModal.placeholders.company')} value={requestData.company} onChange={(e) => setRequestData(prev => ({ ...prev, company: e.target.value }))} required disabled={isRequestSubmitting} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="reqMessage">{t('demoModal.fields.message')}</Label>
-                <Textarea id="reqMessage" placeholder={t('demoModal.placeholders.message')} rows={3} value={requestData.message} onChange={(e) => setRequestData(prev => ({ ...prev, message: e.target.value }))} disabled={isRequestSubmitting} />
-              </div>
-              <Button type="submit" className="w-full h-12 text-base gap-2" disabled={isRequestSubmitting}>
-                {isRequestSubmitting ? (<><Loader2 className="h-4 w-4 animate-spin" />{t('demoModal.submitting')}</>) : (<><Send className="h-4 w-4" />{t('landing.accessGate.requestAccess')}</>)}
-              </Button>
-            </form>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  );
 
   // ───── Registration Form ─────
   const renderRegistrationForm = () => (
@@ -485,10 +309,7 @@ export default function Signup() {
 
       {/* Right side */}
       <div className="flex-1 flex items-center justify-center p-6 bg-background overflow-y-auto">
-        {accessMode === 'gate' && renderAccessGate()}
-        {accessMode === 'code' && renderCodeEntry()}
-        {accessMode === 'request' && renderRequestForm()}
-        {accessMode === 'register' && renderRegistrationForm()}
+        {renderRegistrationForm()}
       </div>
     </div>
   );

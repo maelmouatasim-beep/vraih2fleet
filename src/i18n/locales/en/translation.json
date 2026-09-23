@@ -385,8 +385,8 @@
       "guides": "Guides",
       "login": "Login",
       "start": "Get Started",
-      "startTrial": "Request Access",
-      "requestAccess": "Request Access"
+      "startTrial": "Sign up",
+      "requestAccess": "Sign up"
     },
     "accessGate": {
       "title": "Platform Access",
@@ -1468,6 +1468,7 @@
     }
   },
   "common": {
+    "requestAccess": "Sign up",
     "language": {
       "fr": "Français",
       "en": "English"

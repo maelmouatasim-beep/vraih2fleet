@@ -385,8 +385,8 @@
       "guides": "Guides",
       "login": "Connexion",
       "start": "Commencer",
-      "startTrial": "Demander un accès",
-      "requestAccess": "Demander un accès"
+      "startTrial": "Créer un compte",
+      "requestAccess": "Créer un compte"
     },
     "accessGate": {
       "title": "Accès à la plateforme",
@@ -1468,6 +1468,7 @@
     }
   },
   "common": {
+    "requestAccess": "Créer un compte",
     "language": {
       "fr": "Français",
       "en": "English"

@@ -325,7 +325,9 @@ const Methodology = () => {
               {t('methodology.cta.desc', 'Use our calculator with these validated formulas')}
             </p>
             <div className="flex gap-4 justify-center">
-              <Button onClick={() => setDemoOpen(true)}>{t('common.requestAccess', 'Request Access')}</Button>
+              <Link to="/signup">
+                <Button>{t('common.requestAccess', 'Sign up')}</Button>
+              </Link>
               <Link to="/contact">
                 <Button variant="outline">{t('common.contactUs', 'Contact Us')}</Button>
               </Link>

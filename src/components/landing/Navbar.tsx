@@ -208,11 +208,11 @@ const Navbar = () => {
               >
                 <Link to="/login">{t('landing.navbar.login')}</Link>
               </Button>
-              <Button 
+              <Button
                 className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                onClick={() => setIsDemoModalOpen(true)}
+                asChild
               >
-                {t('landing.navbar.startTrial')}
+                <Link to="/signup">{t('landing.navbar.startTrial')}</Link>
               </Button>
             </div>
 
@@ -345,11 +345,11 @@ const Navbar = () => {
             <Button variant="outline" className="w-full" asChild>
               <Link to="/login">{t('landing.navbar.login')}</Link>
             </Button>
-            <Button 
+            <Button
               className="w-full bg-primary hover:bg-primary/90"
-              onClick={() => { setIsDemoModalOpen(true); setIsMobileMenuOpen(false); }}
+              asChild
             >
-              {t('landing.navbar.startTrial')}
+              <Link to="/signup" onClick={() => setIsMobileMenuOpen(false)}>{t('landing.navbar.startTrial')}</Link>
             </Button>
           </div>
         </div>
