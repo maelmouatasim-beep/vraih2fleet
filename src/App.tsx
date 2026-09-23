@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import ScrollToTop from "@/components/ScrollToTop";
 import { SubscriptionProvider } from "@/hooks/useSubscription";
@@ -62,9 +62,14 @@ import { GuideBEV, GuideFCEV, GuideBiomethane, GuideSectorUrban, GuideSectorRegi
 
 const queryClient = new QueryClient();
 
+// L'aperçu hébergé (claude.ai) sert l'app hors de la racine "/" : le hash
+// routing garde alors toutes les routes fonctionnelles. La prod reste en
+// BrowserRouter (URLs propres).
+const Router = import.meta.env.VITE_PREVIEW_HASH_ROUTER === "true" ? HashRouter : BrowserRouter;
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
+    <Router>
       <ScrollToTop />
       <AuthProvider>
         <SubscriptionProvider>
@@ -196,7 +201,7 @@ const App = () => (
           </TooltipProvider>
         </SubscriptionProvider>
       </AuthProvider>
-    </BrowserRouter>
+    </Router>
   </QueryClientProvider>
 );
 

@@ -2,8 +2,29 @@
 
 // On a Lovable preview surface, broker the auth session to the editor over
 // postMessage so the project's preview surfaces share one login; else localStorage.
+// localStorage peut être inaccessible (iframe sandboxée, données de site
+// bloquées) : la simple lecture de la propriété jette alors une SecurityError.
+function safeLocalStorage(): Storage {
+  try {
+    const ls = window.localStorage;
+    ls.getItem('__probe__');
+    return ls;
+  } catch {
+    const mem = new Map<string, string>();
+    return {
+      get length() { return mem.size; },
+      key: (i: number) => Array.from(mem.keys())[i] ?? null,
+      getItem: (k: string) => (mem.has(k) ? mem.get(k)! : null),
+      setItem: (k: string, v: string) => { mem.set(k, String(v)); },
+      removeItem: (k: string) => { mem.delete(k); },
+      clear: () => { mem.clear(); },
+    } as Storage;
+  }
+}
+
 export function brokeredPreviewStorage() {
   if (typeof window === 'undefined') return undefined;
+  const localStorage = safeLocalStorage();
   const host = location.hostname;
   const PREVIEW_ZONES = ['lovableproject.com', 'lovableproject-dev.com', 'lovable.app', 'gpt-eng.com', 'gptengineer.run'];
   const onPreviewZone = PREVIEW_ZONES.some((z) => host === z || host.endsWith('.' + z));
