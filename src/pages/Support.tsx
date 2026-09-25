@@ -69,32 +69,18 @@ export default function Support() {
       const categoryLabel = SUPPORT_CATEGORIES.find(c => c.value === category)?.label || category;
       const priorityLabel = PRIORITY_LEVELS.find(p => p.value === priority)?.label || priority;
       
+      // Identité (nom, email) résolue côté serveur depuis le JWT.
       const { error } = await supabase.functions.invoke('send-email', {
         body: {
-          to: 'contact@h2fleet.ca',
-          subject: `[Support${hasPrioritySupport ? ' - PRIORITY' : ''}] ${categoryLabel}: ${subject}`,
-          htmlContent: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <div style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%); padding: 20px; text-align: center;">
-                <h1 style="color: white; margin: 0;">H2Fleet Support Request</h1>
-              </div>
-              <div style="padding: 24px; background: #f9fafb;">
-                ${hasPrioritySupport ? '<div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px; margin-bottom: 16px;"><strong>⚡ PRIORITY SUPPORT REQUEST</strong></div>' : ''}
-                <table style="width: 100%; border-collapse: collapse;">
-                  <tr><td style="padding: 8px 0; color: #6b7280;"><strong>From:</strong></td><td style="padding: 8px 0;">${profile?.full_name || 'N/A'}</td></tr>
-                  <tr><td style="padding: 8px 0; color: #6b7280;"><strong>Email:</strong></td><td style="padding: 8px 0;">${user?.email}</td></tr>
-                  <tr><td style="padding: 8px 0; color: #6b7280;"><strong>Category:</strong></td><td style="padding: 8px 0;">${categoryLabel}</td></tr>
-                  ${hasPrioritySupport ? `<tr><td style="padding: 8px 0; color: #6b7280;"><strong>Priority:</strong></td><td style="padding: 8px 0;">${priorityLabel}</td></tr>` : ''}
-                  ${phone ? `<tr><td style="padding: 8px 0; color: #6b7280;"><strong>Callback Phone:</strong></td><td style="padding: 8px 0;">${phone}</td></tr>` : ''}
-                </table>
-                <div style="margin-top: 20px; padding: 16px; background: white; border-radius: 8px;">
-                  <h3 style="margin: 0 0 12px 0; color: #1f2937;">Message:</h3>
-                  <p style="margin: 0; color: #374151; white-space: pre-wrap;">${message}</p>
-                </div>
-              </div>
-            </div>
-          `,
-          textContent: `Support request from ${profile?.full_name || user?.email}\n\nCategory: ${categoryLabel}\nSubject: ${subject}\n\nMessage:\n${message}`,
+          templateType: 'support_request',
+          data: {
+            category: categoryLabel,
+            priority: hasPrioritySupport ? priorityLabel : undefined,
+            phone: phone || undefined,
+            subject,
+            message,
+            isPriority: hasPrioritySupport,
+          },
         },
       });
 

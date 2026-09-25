@@ -23,6 +23,21 @@ function safeSameOriginPath(value: string | null): string | null {
   return value;
 }
 
+// Cible de redirection sûre : chemin interne (safeSameOriginPath) ou URL
+// https absolue (le retour OAuth vers le client est externe par design) —
+// jamais javascript:, data:, http:.
+function safeRedirectTarget(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const internal = safeSameOriginPath(value);
+  if (internal) return internal;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function OAuthConsent() {
   const [params] = useSearchParams();
   const authorizationId = params.get("authorization_id") ?? "";
@@ -39,7 +54,8 @@ export default function OAuthConsent() {
       }
       const { data: sess } = await supabase.auth.getSession();
       if (!sess.session) {
-        const next = window.location.pathname + window.location.search;
+        const next =
+          safeSameOriginPath(window.location.pathname + window.location.search) ?? "/";
         window.location.href = "/login?next=" + encodeURIComponent(next);
         return;
       }
@@ -50,7 +66,7 @@ export default function OAuthConsent() {
           setError(error.message ?? "Could not load this authorization request.");
           return;
         }
-        const immediate = data?.redirect_url ?? data?.redirect_to;
+        const immediate = safeRedirectTarget(data?.redirect_url ?? data?.redirect_to);
         if (immediate && !data?.client) {
           window.location.href = immediate;
           return;
@@ -78,7 +94,7 @@ export default function OAuthConsent() {
         setError(error.message ?? "Authorization action failed.");
         return;
       }
-      const target = data?.redirect_url ?? data?.redirect_to;
+      const target = safeRedirectTarget(data?.redirect_url ?? data?.redirect_to);
       if (!target) {
         setBusy(false);
         setError("No redirect returned by the authorization server.");
@@ -176,4 +192,4 @@ export default function OAuthConsent() {
   );
 }
 
-export { safeSameOriginPath };
+export { safeSameOriginPath, safeRedirectTarget };

@@ -22,6 +22,8 @@ import Footer from "@/components/landing/Footer";
 const Contact = () => {
   const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Pot de miel anti-robots : champ invisible, toujours vide pour un humain.
+  const [honeypot, setHoneypot] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -50,29 +52,16 @@ const Contact = () => {
       
       const { error } = await supabase.functions.invoke('send-email', {
         body: {
-          to: 'contact@h2fleet.ca',
-          subject: `[Contact] ${subjectLabels[formData.subject] || formData.subject}`,
-          htmlContent: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <div style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%); padding: 20px; text-align: center;">
-                <h1 style="color: white; margin: 0;">New Contact Form Submission</h1>
-              </div>
-              <div style="padding: 24px; background: #f9fafb;">
-                <table style="width: 100%; border-collapse: collapse;">
-                  <tr><td style="padding: 8px 0; color: #6b7280;"><strong>Name:</strong></td><td style="padding: 8px 0;">${formData.name}</td></tr>
-                  <tr><td style="padding: 8px 0; color: #6b7280;"><strong>Email:</strong></td><td style="padding: 8px 0;">${formData.email}</td></tr>
-                  ${formData.company ? `<tr><td style="padding: 8px 0; color: #6b7280;"><strong>Company:</strong></td><td style="padding: 8px 0;">${formData.company}</td></tr>` : ''}
-                  ${formData.fleetSize ? `<tr><td style="padding: 8px 0; color: #6b7280;"><strong>Fleet Size:</strong></td><td style="padding: 8px 0;">${formData.fleetSize}</td></tr>` : ''}
-                  <tr><td style="padding: 8px 0; color: #6b7280;"><strong>Subject:</strong></td><td style="padding: 8px 0;">${subjectLabels[formData.subject] || formData.subject}</td></tr>
-                </table>
-                <div style="margin-top: 20px; padding: 16px; background: white; border-radius: 8px;">
-                  <h3 style="margin: 0 0 12px 0; color: #1f2937;">Message:</h3>
-                  <p style="margin: 0; color: #374151; white-space: pre-wrap;">${formData.message}</p>
-                </div>
-              </div>
-            </div>
-          `,
-          textContent: `New contact from ${formData.name} (${formData.email})\n\nSubject: ${subjectLabels[formData.subject] || formData.subject}\n\nMessage:\n${formData.message}`,
+          templateType: 'contact',
+          data: {
+            name: formData.name,
+            email: formData.email,
+            company: formData.company || undefined,
+            fleetSize: formData.fleetSize || undefined,
+            subject: subjectLabels[formData.subject] || formData.subject,
+            message: formData.message,
+            website: honeypot || undefined,
+          },
         },
       });
 
@@ -188,6 +177,16 @@ const Contact = () => {
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-6">
+              <input
+                type="text"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="absolute -left-[9999px] h-0 w-0 opacity-0"
+              />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="name">{t('pages.contact.form.fields.name')} *</Label>

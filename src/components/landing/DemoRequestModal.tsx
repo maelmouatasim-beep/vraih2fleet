@@ -44,6 +44,8 @@ export function DemoRequestModal({ open, onOpenChange }: DemoRequestModalProps) 
   const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  // Pot de miel anti-robots : champ invisible, toujours vide pour un humain.
+  const [honeypot, setHoneypot] = useState('');
 
   const {
     register,
@@ -66,40 +68,19 @@ export function DemoRequestModal({ open, onOpenChange }: DemoRequestModalProps) 
     setIsSubmitting(true);
     
     try {
-      const fleetSizeLabel = fleetSizeOptions.find(o => o.value === data.fleetSize)?.label || data.fleetSize;
-      
+      // Le gabarit et le destinataire sont fixés côté serveur ; le serveur
+      // enregistre aussi le lead dans email_leads.
       const { error } = await supabase.functions.invoke('send-email', {
         body: {
-          to: 'contact@h2fleet.ca',
-          subject: `[Demo Request] ${data.company} - ${data.fullName}`,
-          htmlContent: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <div style="background: linear-gradient(135deg, #8b5cf6 0%, #0ea5e9 100%); padding: 20px; text-align: center;">
-                <h1 style="color: white; margin: 0;">🚀 New Demo Request</h1>
-              </div>
-              <div style="padding: 24px; background: #f9fafb;">
-                <div style="background: #dbeafe; border-left: 4px solid #3b82f6; padding: 12px; margin-bottom: 16px;">
-                  <strong>A potential customer wants to see H2Fleet in action!</strong>
-                </div>
-                <table style="width: 100%; border-collapse: collapse;">
-                  <tr><td style="padding: 8px 0; color: #6b7280;"><strong>Name:</strong></td><td style="padding: 8px 0;">${data.fullName}</td></tr>
-                  <tr><td style="padding: 8px 0; color: #6b7280;"><strong>Email:</strong></td><td style="padding: 8px 0;"><a href="mailto:${data.email}">${data.email}</a></td></tr>
-                  <tr><td style="padding: 8px 0; color: #6b7280;"><strong>Company:</strong></td><td style="padding: 8px 0;">${data.company}</td></tr>
-                  <tr><td style="padding: 8px 0; color: #6b7280;"><strong>Fleet Size:</strong></td><td style="padding: 8px 0;">${fleetSizeLabel}</td></tr>
-                </table>
-                ${data.message ? `
-                <div style="margin-top: 20px; padding: 16px; background: white; border-radius: 8px;">
-                  <h3 style="margin: 0 0 12px 0; color: #1f2937;">Additional Notes:</h3>
-                  <p style="margin: 0; color: #374151; white-space: pre-wrap;">${data.message}</p>
-                </div>
-                ` : ''}
-              </div>
-              <div style="background: #f3f4f6; padding: 16px; text-align: center;">
-                <p style="margin: 0; color: #6b7280; font-size: 14px;">Reply directly to this email to contact the prospect.</p>
-              </div>
-            </div>
-          `,
-          textContent: `New Demo Request\n\nName: ${data.fullName}\nEmail: ${data.email}\nCompany: ${data.company}\nFleet Size: ${fleetSizeLabel}\n${data.message ? `\nNotes: ${data.message}` : ''}`,
+          templateType: 'demo_request',
+          data: {
+            fullName: data.fullName,
+            email: data.email,
+            company: data.company,
+            fleetSize: data.fleetSize,
+            message: data.message || undefined,
+            website: honeypot || undefined,
+          },
         },
       });
 
@@ -163,6 +144,16 @@ export function DemoRequestModal({ open, onOpenChange }: DemoRequestModalProps) 
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
+            <input
+              type="text"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="absolute -left-[9999px] h-0 w-0 opacity-0"
+            />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="fullName">{t('demoModal.fields.fullName')}</Label>

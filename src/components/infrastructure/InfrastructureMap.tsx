@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { el as makeEl } from '@/lib/safeDom';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -114,16 +115,18 @@ const InfrastructureMap = ({
             ? vehicle.annual_km_real 
             : vehicle.annual_km;
 
-          const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-            <div style="padding: 8px; color: #333;">
-              <strong>${vehicle.make_model}</strong><br/>
-              <span style="font-size: 12px;">${vehicle.vehicle_type}</span><br/>
-              <span style="font-size: 12px; color: #666;">
-                ${Math.round(annualKm).toLocaleString()} km/an
-                ${'annual_km_real' in vehicle && vehicle.annual_km_real ? ' ✓' : ' (est.)'}
-              </span>
-            </div>
-          `);
+          // XSS : contenu construit en DOM (textContent), jamais en HTML.
+          const popupRoot = makeEl('div', { padding: '8px', color: '#333' });
+          popupRoot.appendChild(makeEl('strong', {}, vehicle.make_model));
+          popupRoot.appendChild(document.createElement('br'));
+          popupRoot.appendChild(makeEl('span', { fontSize: '12px' }, vehicle.vehicle_type));
+          popupRoot.appendChild(document.createElement('br'));
+          popupRoot.appendChild(makeEl(
+            'span',
+            { fontSize: '12px', color: '#666' },
+            `${Math.round(annualKm).toLocaleString()} km/an${'annual_km_real' in vehicle && vehicle.annual_km_real ? ' ✓' : ' (est.)'}`,
+          ));
+          const popup = new mapboxgl.Popup({ offset: 25 }).setDOMContent(popupRoot);
 
           const marker = new mapboxgl.Marker(el)
             .setLngLat([lng, lat])

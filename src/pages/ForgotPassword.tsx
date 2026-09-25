@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { Leaf, Mail, Loader2, ArrowLeft, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -62,9 +62,15 @@ const ForgotPassword = () => {
               </div>
             </div>
             <CardTitle className="text-2xl font-bold">{t('auth.forgotPassword.successTitle')}</CardTitle>
-            <CardDescription className="text-base" dangerouslySetInnerHTML={{
-              __html: t('auth.forgotPassword.successMessage', { email })
-            }} />
+            <CardDescription className="text-base">
+              {/* XSS : l'email est interpolé par React (échappé), le <strong>
+                  vient du gabarit de traduction via <Trans>. */}
+              <Trans
+                i18nKey="auth.forgotPassword.successMessage"
+                values={{ email }}
+                components={{ strong: <strong /> }}
+              />
+            </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
             <Link to="/login">

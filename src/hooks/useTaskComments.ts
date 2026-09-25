@@ -107,53 +107,20 @@ export function useTaskComments(taskId: string | undefined) {
   // Send email notification for mentions
   const sendMentionEmails = async (
     mentionedIds: string[],
-    collaborators: UserProfile[],
-    content: string,
-    taskTitle: string,
-    projectId: string
+    content: string
   ) => {
-    // Get project name
-    const { data: project } = await supabase
-      .from('projects')
-      .select('name')
-      .eq('id', projectId)
-      .single();
-
-    // Get author name
-    const authorName = collaborators.find(c => c.id === user?.id)?.fullName || 'Someone';
-    
-    // Get emails of mentioned users
-    const { data: profiles } = await supabase
-      .from('profiles')
-      .select('id, email, email_notifications')
-      .in('id', mentionedIds);
-
-    if (!profiles) return;
-
-    const baseUrl = window.location.origin;
-    const taskUrl = `${baseUrl}/dashboard/projects/${projectId}/tasks`;
-
-    for (const profile of profiles) {
-      if (!profile.email) continue;
-      
-      // Check if user has comment notifications enabled
-      const emailPrefs = profile.email_notifications as Record<string, boolean> | null;
-      if (emailPrefs?.comment_replies === false) continue;
-
+    // Le serveur résout l'email du mentionné, vérifie son appartenance au
+    // projet et ses préférences de notification (la RLS de profiles ne
+    // permet pas de lire les emails d'autrui côté client).
+    for (const mentionedUserId of mentionedIds) {
       try {
         await supabase.functions.invoke('send-email', {
           body: {
-            to: profile.email,
-            subject: `@${authorName} vous a mentionné sur "${taskTitle}"`,
-            htmlContent: '',
             templateType: 'task_mention',
             data: {
-              taskTitle,
-              mentionerName: authorName,
-              commentPreview: content.length > 100 ? content.slice(0, 100) + '...' : content,
-              taskUrl,
-              projectName: project?.name || 'Project',
-              lang: 'fr',
+              taskId,
+              mentionedUserId,
+              commentPreview: content.length > 300 ? content.slice(0, 297) + '...' : content,
             },
           },
         });
@@ -198,7 +165,7 @@ export function useTaskComments(taskId: string | undefined) {
 
       // Send email notifications for mentions (fire and forget)
       if (mentions.length > 0 && task) {
-        sendMentionEmails(mentions, collaborators, content, task.title, task.project_id);
+        sendMentionEmails(mentions, content);
       }
 
       return true;

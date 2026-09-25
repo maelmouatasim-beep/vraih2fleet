@@ -34,6 +34,10 @@ i18n
     fallbackLng: 'en',
     lng: 'en', // Force English as default
     interpolation: {
+      // React échappe déjà toute valeur interpolée rendue en JSX.
+      // CONTRAT DE SÉCURITÉ : ne jamais injecter une chaîne i18n via
+      // dangerouslySetInnerHTML ou innerHTML — pour du balisage dans une
+      // traduction, utiliser <Trans> (les valeurs restent échappées).
       escapeValue: false,
     },
     detection: {

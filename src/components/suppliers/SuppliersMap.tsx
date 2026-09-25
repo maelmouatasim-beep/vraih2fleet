@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { el as makeEl, safeExternalLink } from '@/lib/safeDom';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useMapboxToken } from '@/hooks/useMapboxToken';
@@ -133,21 +134,44 @@ export function SuppliersMap({ suppliers, onSupplierClick }: SuppliersMapProps) 
         ? SUPPLIER_TYPE_LABELS_MAP.en[supplier.supplier_type] 
         : SUPPLIER_TYPE_LABELS_MAP.fr[supplier.supplier_type];
       
-      const popupContent = `
-        <div style="min-width: 200px; font-family: system-ui, sans-serif;">
-          <h3 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600;">${supplier.company_name}</h3>
-          <div style="display: inline-block; padding: 2px 8px; background: ${color}20; color: ${color}; border-radius: 12px; font-size: 11px; font-weight: 500; margin-bottom: 8px;">
-            ${typeLabel}
-          </div>
-          ${description ? `<p style="margin: 0 0 8px 0; font-size: 12px; color: #666; line-height: 1.4;">${description.slice(0, 100)}${description.length > 100 ? '...' : ''}</p>` : ''}
-          <p style="margin: 0; font-size: 11px; color: #888;">
-            📍 ${supplier.province_state ? `${supplier.province_state}, ` : ''}${supplier.country}
-          </p>
-          ${supplier.website_url ? `<a href="${supplier.website_url}" target="_blank" rel="noopener" style="display: inline-block; margin-top: 8px; font-size: 11px; color: ${color};">Visit website →</a>` : ''}
-        </div>
-      `;
+      // XSS : données externes (fournisseurs) rendues via textContent,
+      // lien de site validé https uniquement.
+      const popupRoot = makeEl('div', { minWidth: '200px', fontFamily: 'system-ui, sans-serif' });
+      popupRoot.appendChild(makeEl('h3', { margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600' }, supplier.company_name));
+      const badge = makeEl('div', {
+        display: 'inline-block',
+        padding: '2px 8px',
+        background: `${color}20`,
+        color,
+        borderRadius: '12px',
+        fontSize: '11px',
+        fontWeight: '500',
+        marginBottom: '8px',
+      }, typeLabel);
+      popupRoot.appendChild(badge);
+      if (description) {
+        popupRoot.appendChild(makeEl(
+          'p',
+          { margin: '0 0 8px 0', fontSize: '12px', color: '#666', lineHeight: '1.4' },
+          `${description.slice(0, 100)}${description.length > 100 ? '...' : ''}`,
+        ));
+      }
+      popupRoot.appendChild(makeEl(
+        'p',
+        { margin: '0', fontSize: '11px', color: '#888' },
+        `📍 ${supplier.province_state ? `${supplier.province_state}, ` : ''}${supplier.country}`,
+      ));
+      if (supplier.website_url) {
+        const link = safeExternalLink(supplier.website_url, 'Visit website →', {
+          display: 'inline-block',
+          marginTop: '8px',
+          fontSize: '11px',
+          color,
+        });
+        if (link) popupRoot.appendChild(link);
+      }
 
-      const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(popupContent);
+      const popup = new mapboxgl.Popup({ offset: 25 }).setDOMContent(popupRoot);
 
       const marker = new mapboxgl.Marker({ element: el })
         .setLngLat([supplier.longitude, supplier.latitude])

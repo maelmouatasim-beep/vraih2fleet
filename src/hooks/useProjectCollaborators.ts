@@ -164,12 +164,16 @@ export function useProjectCollaborators(projectId: string | undefined) {
     }
 
     // 2. User doesn't exist - create pending invitation
-    const { error: inviteError } = await supabase.from("pending_invitations").insert({
-      email: normalizedEmail,
-      project_id: projectId,
-      role,
-      invited_by: user.id,
-    });
+    const { data: invitation, error: inviteError } = await supabase
+      .from("pending_invitations")
+      .insert({
+        email: normalizedEmail,
+        project_id: projectId,
+        role,
+        invited_by: user.id,
+      })
+      .select("id")
+      .single();
 
     if (inviteError) {
       if (inviteError.code === "23505") {
@@ -178,38 +182,17 @@ export function useProjectCollaborators(projectId: string | undefined) {
       throw inviteError;
     }
 
-    // 3. Send invitation email
+    // 3. Send invitation email — le destinataire est résolu côté serveur
+    // à partir de l'invitation en base (plus de "to" libre).
     try {
-      const { data: projectData } = await supabase
-        .from("projects")
-        .select("name")
-        .eq("id", projectId)
-        .single();
-
-      const { data: inviterProfile } = await supabase
-        .from("profiles")
-        .select("full_name")
-        .eq("id", user.id)
-        .single();
-
-      const projectUrl = `${window.location.origin}/signup?invite=${projectId}`;
-
       await supabase.functions.invoke("send-email", {
         body: {
-          to: normalizedEmail,
-          subject: `Invitation à collaborer - ${projectData?.name || "Projet H2Fleet"}`,
           templateType: "collaboration_invite",
-          data: {
-            projectName: projectData?.name || "Projet H2Fleet",
-            inviterName: inviterProfile?.full_name || "Un utilisateur",
-            role,
-            projectUrl,
-            lang: "fr",
-          },
+          data: { invitationId: invitation.id },
         },
       });
 
-      toast.success(`Invitation envoyée à ${normalizedEmail}`);
+    toast.success(`Invitation envoyée à ${normalizedEmail}`);
     } catch (emailError) {
       // Email failed but invitation is saved
       toast.warning("Invitation créée, mais l'email n'a pas pu être envoyé.");
