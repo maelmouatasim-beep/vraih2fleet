@@ -149,15 +149,9 @@ export function useProjectCollaborators(projectId: string | undefined) {
         throw error;
       }
 
-      // Notify the user
-      await supabase.from("notifications").insert({
-        user_id: existingProfile.id,
-        type: "invitation",
-        title: "Invitation à collaborer",
-        message: `Vous avez été ajouté au projet en tant que ${role}`,
-        project_id: projectId,
-        actor_id: user.id,
-      });
+      // La notification est créée par le trigger notify_on_collaboration
+      // (SECURITY DEFINER) ; l'INSERT client direct est désormais refusé
+      // par la RLS et créait un doublon.
 
       await fetchCollaborators();
       return { type: "added", email: normalizedEmail };
