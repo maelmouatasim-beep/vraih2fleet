@@ -28,6 +28,12 @@ hydrogène : TCO, infrastructure, subventions canadiennes, télématique
   à la main sauf nécessité ; fichiers marqués « automatically generated »).
 - `supabase/migrations/` — migrations SQL horodatées.
 - `supabase/functions/` — edge functions Deno (une par dossier).
+- `supabase/functions/_shared/` — modules communs des fonctions :
+  `cors.ts` (origines depuis ALLOWED_ORIGINS, jamais `*`), `auth.ts`
+  (getUserOrThrow, requireCronSecret, requireInternalSecret,
+  serviceRoleClient), `validation.ts` (zod, escapeHtml, anti-SSRF).
+- `supabase/tests/` — tests d'intégration contre Supabase local
+  (helpers + audit RLS) ; exécutés en CI, jamais contre la production.
 
 ## Commandes
 
@@ -59,6 +65,12 @@ npm run build          # build de production
 - Secrets : jamais de valeur dans le dépôt ; les noms vont dans
   `.env.example`, les valeurs dans `.env` (gitignoré) ou
   `supabase secrets set`.
+- **Aucune edge function sans vérification explicite de l'appelant** :
+  `verify_jwt` n'est pas une authentification (la clé anon le franchit).
+  Toute fonction passe par `_shared/auth.ts` — `getUserOrThrow` (JWT réel),
+  `requireCronSecret` ou `requireInternalSecret` — et une fonction agissant
+  pour un utilisateur utilise son client RLS, pas le service role.
+  Voir SECURITY.md pour le tableau complet.
 
 ## Direction produit (à garder en tête pour tout arbitrage)
 

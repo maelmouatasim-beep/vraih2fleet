@@ -34,14 +34,9 @@ jobs:
       - name: Build
         run: npm run build
 
-  edge-functions:
-    name: Tests d'intégration edge functions (Deno)
+  supabase:
+    name: Edge functions + audit RLS (Supabase local)
     runs-on: ubuntu-latest
-    env:
-      # Ces tests appellent les fonctions déployées sur Supabase ; sans les
-      # secrets du dépôt, l'étape est sautée proprement.
-      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -49,10 +44,42 @@ jobs:
         with:
           deno-version: v2.x
 
-      - name: Tests Deno (supabase/functions/*/index.test.ts)
-        if: env.VITE_SUPABASE_URL != ''
-        run: deno test --allow-net --allow-env --allow-read supabase/functions
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
 
-      - name: Secrets absents, tests sautés
-        if: env.VITE_SUPABASE_URL == ''
-        run: echo "VITE_SUPABASE_URL non défini dans les secrets du dépôt — tests d'intégration sautés."
+      - name: Typecheck des edge functions
+        working-directory: supabase/functions
+        env:
+          SUPABASE_ANON_KEY: check-only
+          SUPABASE_SERVICE_ROLE_KEY: check-only
+        run: |
+          deno check --node-modules-dir=none \
+            _shared/cors.ts _shared/auth.ts _shared/validation.ts \
+            send-email/index.ts notify-subsidy-deadlines/index.ts \
+            sync-telematics-data/index.ts calculate-tco/index.ts \
+            assistant-chat/index.ts authenticate-telematics/index.ts \
+            fetch-telematics-vehicles/index.ts api-gateway/index.ts \
+            get-mapbox-token/index.ts
+
+      # Démarre Postgres + Auth + PostgREST et applique toutes les migrations.
+      - name: Démarrer Supabase local
+        run: supabase start
+
+      - name: Servir les edge functions (env de test, jamais la production)
+        run: |
+          supabase functions serve --env-file supabase/tests/functions.env &
+          for i in $(seq 1 30); do
+            curl -s -o /dev/null http://127.0.0.1:54321/functions/v1/send-email && break
+            sleep 1
+          done
+
+      - name: Tests d'intégration (fonctions + audit RLS)
+        run: |
+          eval "$(supabase status -o env | sed 's/^/export /')"
+          export SUPABASE_URL="$API_URL"
+          export SUPABASE_ANON_KEY="$ANON_KEY"
+          export SUPABASE_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY"
+          export SUPABASE_DB_URL="$DB_URL"
+          deno test --allow-net --allow-env --allow-read \
+            supabase/tests/ supabase/functions/

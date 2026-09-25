@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useIsAdmin } from '@/hooks/useIsAdmin';
 
 export type SupplierType = 'vehicle_manufacturer' | 'infrastructure' | 'fuel_provider' | 'maintenance' | 'charging_infrastructure' | 'biomethane' | 'diesel_biodiesel' | 'retrofit_services' | 'other';
 
@@ -73,14 +74,21 @@ export function useSuppliers(filter?: SuppliersFilter) {
   const [suppliers, setSuppliers] = useState<HydrogenSupplier[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { isAdmin, isLoading: adminLoading } = useIsAdmin();
 
   useEffect(() => {
+    if (adminLoading) return;
     async function fetchSuppliers() {
       try {
         setLoading(true);
-        
-        let query = supabase
-          .from('hydrogen_suppliers')
+
+        // Les contacts (email, téléphone) sont réservés aux admins : les
+        // autres lisent la vue hydrogen_suppliers_directory qui ne les
+        // expose pas. La vue n'est pas dans les types générés, d'où le cast.
+        const source = isAdmin ? 'hydrogen_suppliers' : 'hydrogen_suppliers_directory';
+        const query = supabase
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .from(source as any)
           .select('*')
           .order('company_name', { ascending: true });
 
@@ -90,7 +98,7 @@ export function useSuppliers(filter?: SuppliersFilter) {
           throw fetchError;
         }
 
-        setSuppliers((data as HydrogenSupplier[]) || []);
+        setSuppliers((data as unknown as HydrogenSupplier[]) || []);
       } catch (err) {
         console.error('Error fetching suppliers:', err);
         setError(err instanceof Error ? err.message : 'Failed to fetch suppliers');
@@ -100,7 +108,7 @@ export function useSuppliers(filter?: SuppliersFilter) {
     }
 
     fetchSuppliers();
-  }, []);
+  }, [isAdmin, adminLoading]);
 
   // Filter suppliers based on criteria
   const filteredSuppliers = useMemo(() => {
