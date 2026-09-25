@@ -325,3 +325,15 @@ CREATE POLICY "Users can update their own profile"
   ON public.profiles FOR UPDATE
   USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id);
+
+-- ────────────────────────────────────────────────────────────────────────────
+-- Constat du test d'audit : reference_data_history était lisible par anon
+-- (USING true). L'historique d'audit des données de référence est réservé
+-- aux utilisateurs connectés ; les tables de référence courantes restent
+-- publiques pour le calculateur.
+-- ────────────────────────────────────────────────────────────────────────────
+DROP POLICY IF EXISTS "Anyone can read reference history" ON public.reference_data_history;
+CREATE POLICY "Authenticated users can read reference history"
+  ON public.reference_data_history FOR SELECT
+  TO authenticated
+  USING (true);

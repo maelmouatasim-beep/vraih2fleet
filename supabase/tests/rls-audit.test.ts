@@ -360,13 +360,14 @@ Deno.test("B15 pending_invitations : SELECT par email du JWT fonctionne", async 
 Deno.test("B16 hydrogen_suppliers : contacts réservés aux admins", async () => {
   await setupOnce();
   const admin = adminClient();
-  await admin.from("hydrogen_suppliers").insert({
+  const { error: seedErr } = await admin.from("hydrogen_suppliers").insert({
     company_name: "Fournisseur Test",
-    supplier_type: "hydrogen_producer",
+    supplier_type: "fuel_provider",
     country: "Canada",
     contact_email: "secret@fournisseur.example",
     contact_phone: "+1 555 0000",
   });
+  assertEquals(seedErr, null, `seed fournisseur : ${seedErr?.message}`);
 
   // table de base : illisible pour un utilisateur normal
   const { data: baseRows } = await userA.client

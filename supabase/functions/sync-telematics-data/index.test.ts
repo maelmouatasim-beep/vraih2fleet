@@ -53,6 +53,7 @@ Deno.test("sync-telematics-data - connexion d'autrui (IDOR) => 404", async () =>
     .insert({
       user_id: owner.id,
       provider: "samsara",
+      username: "owner@example.com",
       status: "connected",
       encrypted_credentials: btoa(JSON.stringify({ apiToken: "x" })),
     })

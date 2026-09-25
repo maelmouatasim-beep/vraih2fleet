@@ -876,12 +876,8 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!LOVABLE_API_KEY) {
-      console.error('LOVABLE_API_KEY is not configured');
-      throw new Error('AI service not configured');
-    }
-
+    // Auth et validation d'abord : une mauvaise configuration serveur ne
+    // doit pas masquer un 401/400.
     const { user } = await getUserOrThrow(req);
     if (!(await checkUserRateLimit(user.id))) {
       return jsonResponse(
@@ -892,6 +888,12 @@ Deno.serve(async (req) => {
     }
 
     const { message, history = [], context } = await parseJsonBody(req, chatRequestSchema, 256 * 1024);
+
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) {
+      console.error('LOVABLE_API_KEY is not configured');
+      throw new Error('AI service not configured');
+    }
 
     // Search knowledge base for relevant documents
     const relevantDocs = searchKnowledge(message, 4);

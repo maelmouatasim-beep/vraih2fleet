@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
-import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/supabase/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -10,7 +9,9 @@ export default defineConfig(({ mode }) => ({
     host: "0.0.0.0",
     port: 8080,
   },
-  plugins: [react(), mode === "development" && componentTagger(), mcpPlugin()].filter(Boolean),
+  // mcpPlugin retiré : le serveur MCP est reporté (FEATURE_PUBLIC_API) et
+  // supabase/functions/mcp/index.ts est maintenant maintenu à la main.
+  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

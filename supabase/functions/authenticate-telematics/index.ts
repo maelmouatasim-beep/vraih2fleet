@@ -97,6 +97,9 @@ Deno.serve(async (req) => {
     return jsonResponse(req, authResult, authResult.success ? 200 : 401);
 
   } catch (error) {
+    if (error instanceof HttpError) {
+      return jsonResponse(req, { success: false, error: error.message }, error.status);
+    }
     console.error('Error in authenticate-telematics:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return jsonResponse(req, { success: false, error: errorMessage }, 500);
