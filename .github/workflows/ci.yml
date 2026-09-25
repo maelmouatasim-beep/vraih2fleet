@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  web:
+    name: Typecheck, lint, tests, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # Lint en mode baseline : échoue seulement sur les erreurs nouvelles
+      # par rapport à scripts/lint-baseline.json (dette existante assumée).
+      - name: Lint (baseline)
+        run: npm run lint:ci
+
+      - name: Tests unitaires
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
+  edge-functions:
+    name: Tests d'intégration edge functions (Deno)
+    runs-on: ubuntu-latest
+    env:
+      # Ces tests appellent les fonctions déployées sur Supabase ; sans les
+      # secrets du dépôt, l'étape est sautée proprement.
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Tests Deno (supabase/functions/*/index.test.ts)
+        if: env.VITE_SUPABASE_URL != ''
+        run: deno test --allow-net --allow-env --allow-read supabase/functions
+
+      - name: Secrets absents, tests sautés
+        if: env.VITE_SUPABASE_URL == ''
+        run: echo "VITE_SUPABASE_URL non défini dans les secrets du dépôt — tests d'intégration sautés."
