@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Environnement : seuls les noms de variables sont versionnés (.env.example)
+.env
+.env.*
+!.env.example
+
 # Bot de trading : journaux et environnements générés
 journal_trades.csv
 scripts/trading-bot/.venv
