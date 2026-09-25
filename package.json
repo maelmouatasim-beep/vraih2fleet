@@ -8,6 +8,8 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
+    "lint:ci": "node scripts/check-lint-baseline.mjs",
+    "lint:baseline": "node scripts/check-lint-baseline.mjs --update",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
