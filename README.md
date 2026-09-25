@@ -1,73 +1,92 @@
-# Welcome to your Lovable project
+# H2Fleet Planner
 
-## Project info
+Plateforme SaaS de planification de la transition énergétique des flottes
+(diesel → électrique / hydrogène) : analyse TCO, infrastructure,
+subventions canadiennes, télématique (Geotab/Samsara), feuille de route
+pluriannuelle.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+**Stack** : React 18 + Vite + TypeScript · Tailwind CSS + shadcn/ui ·
+Supabase (Postgres/RLS, Auth, Edge Functions Deno) · i18next (fr/en).
 
-## How can I edit this code?
+Voir aussi [CLAUDE.md](./CLAUDE.md) pour les conventions de contribution
+et la direction produit.
 
-There are several ways of editing your application.
+## Installation locale
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Prérequis : Node.js ≥ 20 et npm (npm est le seul gestionnaire de paquets
+du projet).
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+git clone <URL_DU_DEPOT>
+cd vraih2fleet
+npm ci
+cp .env.example .env   # puis remplir les valeurs (voir ci-dessous)
+npm run dev            # http://localhost:8080
 ```
 
-**Edit a file directly in GitHub**
+## Variables d'environnement
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Copier `.env.example` vers `.env` et remplir. Les principales :
 
-**Use GitHub Codespaces**
+| Variable | Rôle |
+| --- | --- |
+| `VITE_SUPABASE_PROJECT_ID` | Identifiant du projet Supabase |
+| `VITE_SUPABASE_URL` | URL du projet, `https://<id>.supabase.co` |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | Clé publique « anon » (Settings → API) |
+| `VITE_ADMIN_EMAILS` | Emails admin, séparés par des virgules |
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Les variables `VITE_*` sont inlinées dans le bundle : n'y mettre que des
+valeurs publiques. Les secrets des edge functions (SendGrid, Lovable AI,
+Mapbox, télématique…) se configurent côté Supabase :
+`supabase secrets set NOM=valeur` — la liste complète des noms est dans
+`.env.example`.
 
-## What technologies are used for this project?
+## Supabase en local
 
-This project is built with:
+Avec la [CLI Supabase](https://supabase.com/docs/guides/cli) installée :
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```sh
+supabase start                  # démarre Postgres + Auth + functions en local
+supabase db reset               # rejoue toutes les migrations (supabase/migrations/)
+supabase functions serve        # sert les edge functions localement
+```
 
-## How can I deploy this project?
+Pointer ensuite `.env` vers l'instance locale (`VITE_SUPABASE_URL=http://127.0.0.1:54321`
+et la clé anon affichée par `supabase start`).
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+Conventions : migrations additives et horodatées (ne jamais modifier une
+migration existante), RLS obligatoire sur toute nouvelle table.
 
-## Can I connect a custom domain to my Lovable project?
+## Tests et qualité
 
-Yes, you can!
+```sh
+npm run check          # typecheck + lint (baseline) + tests — le tout-en-un
+npm run test           # tests unitaires (Vitest)
+npm run test:watch     # Vitest en mode watch
+npm run typecheck      # tsc --noEmit
+npm run lint           # eslint complet (inclut la dette existante)
+npm run lint:ci        # échoue seulement sur les nouvelles erreurs (baseline)
+npm run build          # build de production
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Le lint fonctionne en mode « baseline » : la dette existante est
+enregistrée dans `scripts/lint-baseline.json` et seule une **nouvelle**
+erreur fait échouer `lint:ci` (et la CI). Après avoir résorbé de la dette,
+verrouiller le progrès avec `npm run lint:baseline`.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Les tests d'intégration des edge functions (`supabase/functions/*/index.test.ts`)
+s'exécutent avec Deno contre les fonctions déployées :
+
+```sh
+deno test --allow-net --allow-env --allow-read supabase/functions
+```
+
+Ils lisent `VITE_SUPABASE_URL` et `VITE_SUPABASE_PUBLISHABLE_KEY` dans
+l'environnement (ou `.env`). En CI, ils ne tournent que si ces secrets
+sont configurés dans le dépôt GitHub.
+
+## Intégration continue
+
+`.github/workflows/ci.yml` exécute sur chaque push / PR :
+`npm ci` → typecheck → lint (baseline) → tests → build, plus les tests
+Deno des edge functions quand les secrets sont présents.
