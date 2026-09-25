@@ -17,9 +17,6 @@ dist-ssr
 .env.*
 !.env.example
 
-# Bot de trading : journaux et environnements générés
-journal_trades.csv
-scripts/trading-bot/.venv
 
 # Python
 __pycache__/
