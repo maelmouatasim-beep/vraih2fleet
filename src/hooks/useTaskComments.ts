@@ -88,7 +88,7 @@ export function useTaskComments(taskId: string | undefined) {
   // Parse @mentions from content
   const parseMentions = (content: string, collaborators: UserProfile[]): string[] => {
     const mentionRegex = /@(\w+)/g;
-    const matches = content.match(mentionRegex) || [];
+    const matches: string[] = content.match(mentionRegex) ?? [];
     const mentionedIds: string[] = [];
 
     matches.forEach(match => {

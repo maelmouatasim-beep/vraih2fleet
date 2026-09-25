@@ -63,6 +63,112 @@ const energyTypeLabels: Record<EnergyType, string> = {
   hydrogen_grey: "H₂ Gris",
 };
 
+// Ligne d'édition extraite : un hook d'état par ligne éditée doit vivre dans
+// son propre composant, pas dans le map() du tableau (rules-of-hooks).
+const VehicleProfileEditRow = ({
+  profile,
+  onSave,
+  onCancel,
+}: {
+  profile: RefVehicleProfile;
+  onSave: (profile: RefVehicleProfile) => void;
+  onCancel: () => void;
+}) => {
+  const [editedProfile, setEditedProfile] = useState(profile);
+
+  return (
+      <TableRow>
+        <TableCell>
+          <Input
+            value={editedProfile.name}
+            onChange={(e) => setEditedProfile({ ...editedProfile, name: e.target.value })}
+            className="w-36"
+          />
+        </TableCell>
+        <TableCell>
+          <Select
+            value={editedProfile.vehicleType}
+            onValueChange={(v) => setEditedProfile({ ...editedProfile, vehicleType: v as VehicleType })}
+          >
+            <SelectTrigger className="w-24">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(vehicleTypeLabels).map(([value, label]) => (
+                <SelectItem key={value} value={value}>{label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </TableCell>
+        <TableCell>
+          <Select
+            value={editedProfile.powertrain}
+            onValueChange={(v) => setEditedProfile({ ...editedProfile, powertrain: v as PowertrainType })}
+          >
+            <SelectTrigger className="w-28">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(powertrainLabels).map(([value, label]) => (
+                <SelectItem key={value} value={value}>{label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </TableCell>
+        <TableCell>
+          <Input
+            type="number"
+            value={editedProfile.defaultCapex}
+            onChange={(e) => setEditedProfile({ ...editedProfile, defaultCapex: parseInt(e.target.value) })}
+            className="w-24 text-right"
+          />
+        </TableCell>
+        <TableCell>
+          <Input
+            type="number"
+            value={editedProfile.defaultConsumptionLPer100km || ""}
+            onChange={(e) => setEditedProfile({ ...editedProfile, defaultConsumptionLPer100km: parseFloat(e.target.value) || null })}
+            className="w-20 text-right"
+          />
+        </TableCell>
+        <TableCell>
+          <Input
+            type="number"
+            value={editedProfile.defaultConsumptionKgH2Per100km || ""}
+            onChange={(e) => setEditedProfile({ ...editedProfile, defaultConsumptionKgH2Per100km: parseFloat(e.target.value) || null })}
+            className="w-20 text-right"
+          />
+        </TableCell>
+        <TableCell>
+          <Input
+            type="number"
+            value={editedProfile.defaultConsumptionKwhPer100km || ""}
+            onChange={(e) => setEditedProfile({ ...editedProfile, defaultConsumptionKwhPer100km: parseFloat(e.target.value) || null })}
+            className="w-20 text-right"
+          />
+        </TableCell>
+        <TableCell>
+          <Input
+            type="number"
+            value={editedProfile.defaultMaintenanceCostPerYear}
+            onChange={(e) => setEditedProfile({ ...editedProfile, defaultMaintenanceCostPerYear: parseInt(e.target.value) })}
+            className="w-20 text-right"
+          />
+        </TableCell>
+        <TableCell>
+          <div className="flex gap-1">
+            <Button size="icon" variant="ghost" className="h-8 w-8 text-accent" onClick={() => onSave(editedProfile)}>
+              <Save className="w-4 h-4" />
+            </Button>
+            <Button size="icon" variant="ghost" className="h-8 w-8" onClick={onCancel}>
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+        </TableCell>
+      </TableRow>
+  );
+};
+
 const Admin = () => {
   const [vehicleProfiles, setVehicleProfiles] = useState<RefVehicleProfile[]>(refVehicleProfiles);
   const [energyPrices, setEnergyPrices] = useState<RefEnergyPrice[]>(refEnergyPrices);
@@ -168,100 +274,14 @@ const Admin = () => {
                   </TableHeader>
                   <TableBody>
                     {vehicleProfiles.map((profile) => {
-                      const isEditing = editingProfileId === profile.id;
-                      const [editedProfile, setEditedProfile] = useState(profile);
-
-                      if (isEditing) {
+                      if (editingProfileId === profile.id) {
                         return (
-                          <TableRow key={profile.id}>
-                            <TableCell>
-                              <Input
-                                value={editedProfile.name}
-                                onChange={(e) => setEditedProfile({ ...editedProfile, name: e.target.value })}
-                                className="w-36"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Select
-                                value={editedProfile.vehicleType}
-                                onValueChange={(v) => setEditedProfile({ ...editedProfile, vehicleType: v as VehicleType })}
-                              >
-                                <SelectTrigger className="w-24">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {Object.entries(vehicleTypeLabels).map(([value, label]) => (
-                                    <SelectItem key={value} value={value}>{label}</SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </TableCell>
-                            <TableCell>
-                              <Select
-                                value={editedProfile.powertrain}
-                                onValueChange={(v) => setEditedProfile({ ...editedProfile, powertrain: v as PowertrainType })}
-                              >
-                                <SelectTrigger className="w-28">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {Object.entries(powertrainLabels).map(([value, label]) => (
-                                    <SelectItem key={value} value={value}>{label}</SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </TableCell>
-                            <TableCell>
-                              <Input
-                                type="number"
-                                value={editedProfile.defaultCapex}
-                                onChange={(e) => setEditedProfile({ ...editedProfile, defaultCapex: parseInt(e.target.value) })}
-                                className="w-24 text-right"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Input
-                                type="number"
-                                value={editedProfile.defaultConsumptionLPer100km || ""}
-                                onChange={(e) => setEditedProfile({ ...editedProfile, defaultConsumptionLPer100km: parseFloat(e.target.value) || null })}
-                                className="w-20 text-right"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Input
-                                type="number"
-                                value={editedProfile.defaultConsumptionKgH2Per100km || ""}
-                                onChange={(e) => setEditedProfile({ ...editedProfile, defaultConsumptionKgH2Per100km: parseFloat(e.target.value) || null })}
-                                className="w-20 text-right"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Input
-                                type="number"
-                                value={editedProfile.defaultConsumptionKwhPer100km || ""}
-                                onChange={(e) => setEditedProfile({ ...editedProfile, defaultConsumptionKwhPer100km: parseFloat(e.target.value) || null })}
-                                className="w-20 text-right"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Input
-                                type="number"
-                                value={editedProfile.defaultMaintenanceCostPerYear}
-                                onChange={(e) => setEditedProfile({ ...editedProfile, defaultMaintenanceCostPerYear: parseInt(e.target.value) })}
-                                className="w-20 text-right"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex gap-1">
-                                <Button size="icon" variant="ghost" className="h-8 w-8 text-accent" onClick={() => handleSaveProfile(editedProfile)}>
-                                  <Save className="w-4 h-4" />
-                                </Button>
-                                <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => setEditingProfileId(null)}>
-                                  <X className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
+                          <VehicleProfileEditRow
+                            key={profile.id}
+                            profile={profile}
+                            onSave={handleSaveProfile}
+                            onCancel={() => setEditingProfileId(null)}
+                          />
                         );
                       }
 
