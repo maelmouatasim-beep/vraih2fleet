@@ -69,9 +69,13 @@ jobs:
       - name: Servir les edge functions (env de test, jamais la production)
         run: |
           supabase functions serve --env-file supabase/tests/functions.env &
-          for i in $(seq 1 30); do
-            curl -s -o /dev/null http://127.0.0.1:54321/functions/v1/send-email && break
-            sleep 1
+          for i in $(seq 1 60); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+              http://127.0.0.1:54321/functions/v1/send-email || echo 000)
+            case "$code" in
+              000|502|503) sleep 2 ;;
+              *) echo "edge runtime prêt (HTTP $code)"; break ;;
+            esac
           done
 
       - name: Tests d'intégration (fonctions + audit RLS)
@@ -81,5 +85,5 @@ jobs:
           export SUPABASE_ANON_KEY="$ANON_KEY"
           export SUPABASE_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY"
           export SUPABASE_DB_URL="$DB_URL"
-          deno test --allow-net --allow-env --allow-read \
+          deno test --allow-net --allow-env --allow-read --node-modules-dir=none \
             supabase/tests/ supabase/functions/
