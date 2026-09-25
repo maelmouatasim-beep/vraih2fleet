@@ -1,245 +1,480 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+// send-email — relais SendGrid fermé.
+//
+// Sécurité :
+// - Aucun destinataire ni HTML libre dans la requête : chaque gabarit (liste
+//   fermée) définit son destinataire côté serveur et échappe toutes les
+//   données interpolées.
+// - Gabarits publics (demo_request, contact) : limite de débit par IP,
+//   champ pot de miel, enregistrement du lead dans email_leads.
+// - Gabarits authentifiés (support_request, collaboration_invite,
+//   task_mention) : JWT vérifié via getUserOrThrow, destinataire résolu en
+//   base (jamais fourni par le client).
+// - Gabarit interne (subsidy_reminder) : secret partagé x-internal-secret.
+
+import { corsHeaders, handleOptions, jsonResponse } from "../_shared/cors.ts";
+import {
+  getUserOrThrow,
+  HttpError,
+  requireInternalSecret,
+  serviceRoleClient,
+} from "../_shared/auth.ts";
+import {
+  clientIp,
+  escapeHtml,
+  parseJsonBody,
+  safeHttpsUrl,
+  ValidationError,
+  z,
+} from "../_shared/validation.ts";
 
 const SENDGRID_API_KEY = Deno.env.get("SENDGRID_API_KEY");
 const FROM_EMAIL = "contact@h2fleet.ca";
 const FROM_NAME = "H2Fleet Planner";
+// Destinataire interne des formulaires publics ; jamais fourni par le client.
+const INTERNAL_INBOX = Deno.env.get("CONTACT_INBOX_EMAIL") ?? "contact@h2fleet.ca";
+const APP_BASE_URL = Deno.env.get("APP_BASE_URL") ?? "https://h2fleet.app";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+// ── Limite de débit par IP pour les gabarits publics ───────────────────────
+const PUBLIC_RATE_LIMIT = 5; // envois
+const PUBLIC_RATE_WINDOW_MINUTES = 60;
 
-interface EmailRequest {
-  to: string;
-  subject: string;
-  htmlContent: string;
-  textContent?: string;
-  templateType?: 'subsidy_reminder' | 'collaboration_invite' | 'project_comment' | 'task_mention' | 'weekly_digest' | 'custom';
-  data?: Record<string, any>;
+async function checkPublicRateLimit(bucket: string, ip: string): Promise<boolean> {
+  const supabase = serviceRoleClient();
+  const windowStart = new Date(
+    Date.now() - PUBLIC_RATE_WINDOW_MINUTES * 60_000,
+  ).toISOString();
+  const { count, error } = await supabase
+    .from("rate_limit_events")
+    .select("id", { count: "exact", head: true })
+    .eq("bucket", bucket)
+    .eq("caller", ip)
+    .gte("created_at", windowStart);
+  if (error) {
+    console.error("rate limit check failed:", error.message);
+    return true; // ne pas bloquer les utilisateurs légitimes sur une panne interne
+  }
+  if ((count ?? 0) >= PUBLIC_RATE_LIMIT) return false;
+  await supabase.from("rate_limit_events").insert({ bucket, caller: ip });
+  return true;
 }
 
-// Email templates
-const getSubsidyReminderTemplate = (data: { programName: string; amount: string; daysRemaining: number; deadline: string; applyUrl: string; isUrgent: boolean; lang: string }) => {
-  const isEnglish = data.lang === 'en';
-  const urgentBadge = data.isUrgent 
-    ? `<span style="background: #ef4444; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: bold;">${isEnglish ? 'URGENT' : 'URGENT'}</span>` 
-    : '';
-  
-  return `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f5; margin: 0; padding: 20px;">
-  <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-    <div style="background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%); padding: 32px; text-align: center;">
-      <h1 style="color: white; margin: 0; font-size: 24px;">H2Fleet Planner</h1>
-      <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0;">${isEnglish ? 'Subsidy Deadline Reminder' : 'Rappel d\'échéance de subvention'}</p>
-    </div>
-    <div style="padding: 32px;">
-      <div style="text-align: center; margin-bottom: 24px;">
-        ${urgentBadge}
-      </div>
-      <h2 style="color: #1f2937; margin: 0 0 16px 0;">${data.programName}</h2>
-      <div style="background: #f0fdf4; border-left: 4px solid #22c55e; padding: 16px; margin-bottom: 24px; border-radius: 0 8px 8px 0;">
-        <p style="margin: 0; color: #166534; font-size: 24px; font-weight: bold;">${data.amount}</p>
-        <p style="margin: 4px 0 0 0; color: #15803d; font-size: 14px;">${isEnglish ? 'Available funding' : 'Financement disponible'}</p>
-      </div>
-      <div style="background: ${data.isUrgent ? '#fef2f2' : '#fffbeb'}; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
-        <p style="margin: 0; color: ${data.isUrgent ? '#991b1b' : '#92400e'}; font-weight: 600;">
-          ⏰ ${data.daysRemaining} ${isEnglish ? 'days remaining' : 'jours restants'}
-        </p>
-        <p style="margin: 8px 0 0 0; color: ${data.isUrgent ? '#b91c1c' : '#a16207'}; font-size: 14px;">
-          ${isEnglish ? 'Deadline' : 'Date limite'}: ${data.deadline}
-        </p>
-      </div>
-      <a href="${data.applyUrl}" style="display: block; background: #0ea5e9; color: white; text-align: center; padding: 16px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 16px;">
-        ${isEnglish ? 'Apply Now' : 'Faire une demande'}
-      </a>
-      <p style="color: #6b7280; font-size: 14px; text-align: center;">
-        ${isEnglish ? 'Don\'t miss this opportunity to fund your fleet transition!' : 'Ne manquez pas cette opportunité de financer votre transition de flotte!'}
-      </p>
-    </div>
-    <div style="background: #f9fafb; padding: 24px; text-align: center; border-top: 1px solid #e5e7eb;">
-      <p style="margin: 0; color: #9ca3af; font-size: 12px;">
-        ${isEnglish ? 'You received this email because you enabled subsidy reminders.' : 'Vous avez reçu cet email car vous avez activé les rappels de subventions.'}
-      </p>
-      <p style="margin: 8px 0 0 0; color: #9ca3af; font-size: 12px;">
-        <a href="https://h2fleet.app/dashboard/settings" style="color: #0ea5e9;">${isEnglish ? 'Manage preferences' : 'Gérer les préférences'}</a>
-      </p>
-    </div>
-  </div>
-</body>
-</html>`;
-};
+// ── Schémas des gabarits (liste fermée) ─────────────────────────────────────
+const nonEmpty = (max: number) => z.string().trim().min(1).max(max);
 
-const getCollaborationInviteTemplate = (data: { projectName: string; inviterName: string; role: string; projectUrl: string; lang: string }) => {
-  const isEnglish = data.lang === 'en';
-  const roleLabels: Record<string, { en: string; fr: string }> = {
-    owner: { en: 'Owner', fr: 'Propriétaire' },
-    editor: { en: 'Editor', fr: 'Éditeur' },
-    viewer: { en: 'Viewer', fr: 'Lecteur' },
-  };
-  const roleLabel = roleLabels[data.role]?.[isEnglish ? 'en' : 'fr'] || data.role;
+const demoRequestSchema = z.object({
+  templateType: z.literal("demo_request"),
+  data: z.object({
+    fullName: nonEmpty(120),
+    email: z.string().trim().email().max(254),
+    company: nonEmpty(160),
+    fleetSize: nonEmpty(60),
+    message: z.string().trim().max(2000).optional(),
+    // Pot de miel : rempli par les robots, toujours vide pour un humain.
+    website: z.string().max(200).optional(),
+  }),
+});
 
-  return `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f5; margin: 0; padding: 20px;">
-  <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-    <div style="background: linear-gradient(135deg, #8b5cf6 0%, #0ea5e9 100%); padding: 32px; text-align: center;">
-      <h1 style="color: white; margin: 0; font-size: 24px;">H2Fleet Planner</h1>
-      <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0;">${isEnglish ? 'Collaboration Invitation' : 'Invitation à collaborer'}</p>
-    </div>
-    <div style="padding: 32px; text-align: center;">
-      <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #8b5cf6 0%, #0ea5e9 100%); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;">
-        <span style="color: white; font-size: 28px;">👥</span>
-      </div>
-      <h2 style="color: #1f2937; margin: 0 0 16px 0;">
-        ${isEnglish ? 'You\'ve been invited!' : 'Vous avez été invité(e)!'}
-      </h2>
-      <p style="color: #6b7280; margin: 0 0 24px 0; font-size: 16px;">
-        <strong>${data.inviterName}</strong> ${isEnglish ? 'has invited you to collaborate on' : 'vous a invité(e) à collaborer sur'}
-      </p>
-      <div style="background: #f3f4f6; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
-        <p style="margin: 0; color: #1f2937; font-size: 20px; font-weight: 600;">${data.projectName}</p>
-        <p style="margin: 8px 0 0 0; color: #6b7280; font-size: 14px;">
-          ${isEnglish ? 'Role' : 'Rôle'}: <span style="background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 4px; font-weight: 500;">${roleLabel}</span>
-        </p>
-      </div>
-      <a href="${data.projectUrl}" style="display: inline-block; background: #8b5cf6; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600;">
-        ${isEnglish ? 'View Project' : 'Voir le projet'}
-      </a>
-    </div>
-    <div style="background: #f9fafb; padding: 24px; text-align: center; border-top: 1px solid #e5e7eb;">
-      <p style="margin: 0; color: #9ca3af; font-size: 12px;">
-        <a href="https://h2fleet.app/dashboard/settings" style="color: #8b5cf6;">${isEnglish ? 'Manage notification preferences' : 'Gérer les préférences de notification'}</a>
-      </p>
-    </div>
-  </div>
-</body>
-</html>`;
-};
+const contactSchema = z.object({
+  templateType: z.literal("contact"),
+  data: z.object({
+    name: nonEmpty(120),
+    email: z.string().trim().email().max(254),
+    company: z.string().trim().max(160).optional(),
+    fleetSize: z.string().trim().max(60).optional(),
+    subject: nonEmpty(120),
+    message: nonEmpty(4000),
+    website: z.string().max(200).optional(), // pot de miel
+  }),
+});
 
-const getTaskMentionTemplate = (data: { taskTitle: string; mentionerName: string; commentPreview: string; taskUrl: string; projectName: string; lang: string }) => {
-  const isEnglish = data.lang === 'en';
+const supportRequestSchema = z.object({
+  templateType: z.literal("support_request"),
+  data: z.object({
+    category: nonEmpty(80),
+    priority: z.string().trim().max(40).optional(),
+    phone: z.string().trim().max(40).optional(),
+    subject: nonEmpty(160),
+    message: nonEmpty(4000),
+    isPriority: z.boolean().optional(),
+  }),
+});
 
-  return `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f4f5; margin: 0; padding: 20px;">
-  <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-    <div style="background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); padding: 32px; text-align: center;">
-      <h1 style="color: white; margin: 0; font-size: 24px;">H2Fleet Planner</h1>
-      <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0;">${isEnglish ? 'You were mentioned' : 'Vous avez été mentionné'}</p>
-    </div>
-    <div style="padding: 32px;">
-      <div style="text-align: center; margin-bottom: 24px;">
-        <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-          <span style="color: white; font-size: 28px;">@</span>
-        </div>
-      </div>
-      <h2 style="color: #1f2937; margin: 0 0 8px 0; text-align: center;">
-        ${isEnglish ? 'You were mentioned in a comment' : 'Vous avez été mentionné dans un commentaire'}
-      </h2>
-      <p style="color: #6b7280; margin: 0 0 24px 0; font-size: 14px; text-align: center;">
-        ${isEnglish ? 'on task' : 'sur la tâche'} <strong>"${data.taskTitle}"</strong> ${isEnglish ? 'in project' : 'dans le projet'} <strong>${data.projectName}</strong>
-      </p>
-      <div style="background: #f3f4f6; border-left: 4px solid #f59e0b; padding: 16px; margin-bottom: 24px; border-radius: 0 8px 8px 0;">
-        <p style="margin: 0 0 8px 0; color: #6b7280; font-size: 12px; font-weight: 600;">
-          ${data.mentionerName} ${isEnglish ? 'wrote' : 'a écrit'}:
-        </p>
-        <p style="margin: 0; color: #1f2937; font-size: 14px; font-style: italic;">
-          "${data.commentPreview}"
-        </p>
-      </div>
-      <a href="${data.taskUrl}" style="display: block; background: #f59e0b; color: white; text-align: center; padding: 14px 24px; border-radius: 8px; text-decoration: none; font-weight: 600;">
-        ${isEnglish ? 'View Task' : 'Voir la tâche'}
-      </a>
-    </div>
-    <div style="background: #f9fafb; padding: 24px; text-align: center; border-top: 1px solid #e5e7eb;">
-      <p style="margin: 0; color: #9ca3af; font-size: 12px;">
-        <a href="https://h2fleet.app/dashboard/settings" style="color: #f59e0b;">${isEnglish ? 'Manage notification preferences' : 'Gérer les préférences de notification'}</a>
-      </p>
-    </div>
-  </div>
-</body>
-</html>`;
-};
+const collaborationInviteSchema = z.object({
+  templateType: z.literal("collaboration_invite"),
+  data: z.object({ invitationId: z.string().uuid() }),
+});
 
-serve(async (req: Request): Promise<Response> => {
-  // Handle CORS preflight requests
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+const taskMentionSchema = z.object({
+  templateType: z.literal("task_mention"),
+  data: z.object({
+    taskId: z.string().uuid(),
+    mentionedUserId: z.string().uuid(),
+    commentPreview: nonEmpty(300),
+  }),
+});
+
+const subsidyReminderSchema = z.object({
+  templateType: z.literal("subsidy_reminder"),
+  data: z.object({
+    to: z.string().trim().email().max(254),
+    programName: nonEmpty(300),
+    amount: nonEmpty(60),
+    daysRemaining: z.number().int().min(0).max(365),
+    deadline: nonEmpty(120),
+    applyUrl: z.string().max(2048),
+    isUrgent: z.boolean(),
+    lang: z.enum(["fr", "en"]),
+  }),
+});
+
+const requestSchema = z.discriminatedUnion("templateType", [
+  demoRequestSchema,
+  contactSchema,
+  supportRequestSchema,
+  collaborationInviteSchema,
+  taskMentionSchema,
+  subsidyReminderSchema,
+]);
+
+// ── Gabarits HTML (toutes les valeurs passent par escapeHtml) ───────────────
+function layout(header: string, body: string, footer: string): string {
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+<body style="font-family:'Segoe UI',Tahoma,sans-serif;background:#f4f4f5;margin:0;padding:20px;">
+<div style="max-width:600px;margin:0 auto;background:white;border-radius:12px;overflow:hidden;">
+<div style="background:linear-gradient(135deg,#0ea5e9 0%,#22c55e 100%);padding:28px;text-align:center;">
+<h1 style="color:white;margin:0;font-size:22px;">H2Fleet Planner</h1>
+<p style="color:rgba(255,255,255,0.9);margin:8px 0 0 0;">${header}</p>
+</div>
+<div style="padding:28px;">${body}</div>
+<div style="background:#f9fafb;padding:20px;text-align:center;border-top:1px solid #e5e7eb;">
+<p style="margin:0;color:#9ca3af;font-size:12px;">${footer}</p>
+</div></div></body></html>`;
+}
+
+function tableRows(rows: Array<[string, string | undefined]>): string {
+  return rows
+    .filter(([, v]) => v)
+    .map(
+      ([k, v]) =>
+        `<tr><td style="padding:8px 0;color:#6b7280;"><strong>${escapeHtml(k)}:</strong></td>` +
+        `<td style="padding:8px 0;">${escapeHtml(v)}</td></tr>`,
+    )
+    .join("");
+}
+
+function leadEmailHtml(
+  title: string,
+  rows: Array<[string, string | undefined]>,
+  message?: string,
+): string {
+  const messageBlock = message
+    ? `<div style="margin-top:20px;padding:16px;background:#f3f4f6;border-radius:8px;">
+<h3 style="margin:0 0 12px 0;">Message:</h3>
+<p style="margin:0;white-space:pre-wrap;">${escapeHtml(message)}</p></div>`
+    : "";
+  return layout(
+    escapeHtml(title),
+    `<table style="width:100%;border-collapse:collapse;">${tableRows(rows)}</table>${messageBlock}`,
+    "Formulaire du site h2fleet.app",
+  );
+}
+
+// ── Envoi SendGrid ──────────────────────────────────────────────────────────
+async function sendEmail(
+  to: string,
+  subject: string,
+  html: string,
+  text: string,
+): Promise<void> {
+  if (!SENDGRID_API_KEY) throw new HttpError(500, "SENDGRID_API_KEY is not configured");
+  const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${SENDGRID_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      personalizations: [{ to: [{ email: to }] }],
+      from: { email: FROM_EMAIL, name: FROM_NAME },
+      subject,
+      content: [
+        { type: "text/plain", value: text },
+        { type: "text/html", value: html },
+      ],
+    }),
+  });
+  if (!response.ok) {
+    console.error("SendGrid API error:", response.status);
+    throw new HttpError(502, "Email provider error");
+  }
+}
+
+Deno.serve(async (req: Request): Promise<Response> => {
+  if (req.method === "OPTIONS") return handleOptions(req);
+  if (req.method !== "POST") {
+    return jsonResponse(req, { error: "Method not allowed" }, 405);
   }
 
   try {
-    const { to, subject, htmlContent, textContent, templateType, data }: EmailRequest = await req.json();
+    const body = await parseJsonBody(req, requestSchema);
 
-    // Email send initiated
-
-    if (!SENDGRID_API_KEY) {
-      throw new Error("SENDGRID_API_KEY is not configured");
-    }
-
-    // Generate HTML based on template type or use provided content
-    let finalHtml = htmlContent;
-    
-    if (templateType === 'subsidy_reminder' && data) {
-      finalHtml = getSubsidyReminderTemplate(data as any);
-    } else if (templateType === 'collaboration_invite' && data) {
-      finalHtml = getCollaborationInviteTemplate(data as any);
-    } else if (templateType === 'task_mention' && data) {
-      finalHtml = getTaskMentionTemplate(data as any);
-    }
-
-    const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${SENDGRID_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: to }] }],
-        from: { email: FROM_EMAIL, name: FROM_NAME },
-        subject,
-        content: [
-          { type: "text/plain", value: textContent || subject },
-          { type: "text/html", value: finalHtml },
-        ],
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("SendGrid API error:", response.status, errorText);
-      throw new Error(`SendGrid error: ${response.status} - ${errorText}`);
-    }
-
-    // Email sent successfully
-
-    return new Response(JSON.stringify({ success: true }), {
-      status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
-  } catch (error: any) {
-    console.error("Error sending email:", error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+    switch (body.templateType) {
+      case "demo_request": {
+        const d = body.data;
+        if (d.website) return jsonResponse(req, { success: true }); // pot de miel
+        if (!(await checkPublicRateLimit("send-email:public", clientIp(req)))) {
+          return jsonResponse(req, { error: "Too many requests" }, 429);
+        }
+        // Enregistrer le lead même si l'envoi échoue ensuite.
+        await serviceRoleClient().from("email_leads").insert({
+          email: d.email,
+          source: "demo_request",
+          calculator_inputs: {
+            fullName: d.fullName,
+            company: d.company,
+            fleetSize: d.fleetSize,
+            message: d.message ?? null,
+          },
+        });
+        await sendEmail(
+          INTERNAL_INBOX,
+          `[Demo Request] ${d.company} - ${d.fullName}`,
+          leadEmailHtml(
+            "New Demo Request",
+            [
+              ["Name", d.fullName],
+              ["Email", d.email],
+              ["Company", d.company],
+              ["Fleet Size", d.fleetSize],
+            ],
+            d.message,
+          ),
+          `New Demo Request\n\nName: ${d.fullName}\nEmail: ${d.email}\nCompany: ${d.company}\nFleet Size: ${d.fleetSize}\n${d.message ? `\nNotes: ${d.message}` : ""}`,
+        );
+        return jsonResponse(req, { success: true });
       }
-    );
+
+      case "contact": {
+        const d = body.data;
+        if (d.website) return jsonResponse(req, { success: true }); // pot de miel
+        if (!(await checkPublicRateLimit("send-email:public", clientIp(req)))) {
+          return jsonResponse(req, { error: "Too many requests" }, 429);
+        }
+        await serviceRoleClient().from("email_leads").insert({
+          email: d.email,
+          source: "contact",
+          calculator_inputs: {
+            name: d.name,
+            company: d.company ?? null,
+            fleetSize: d.fleetSize ?? null,
+            subject: d.subject,
+          },
+        });
+        await sendEmail(
+          INTERNAL_INBOX,
+          `[Contact] ${d.subject}`,
+          leadEmailHtml(
+            "New Contact Form Submission",
+            [
+              ["Name", d.name],
+              ["Email", d.email],
+              ["Company", d.company],
+              ["Fleet Size", d.fleetSize],
+              ["Subject", d.subject],
+            ],
+            d.message,
+          ),
+          `New contact from ${d.name} (${d.email})\n\nSubject: ${d.subject}\n\nMessage:\n${d.message}`,
+        );
+        return jsonResponse(req, { success: true });
+      }
+
+      case "support_request": {
+        const { user } = await getUserOrThrow(req);
+        const d = body.data;
+        const { data: profile } = await serviceRoleClient()
+          .from("profiles")
+          .select("full_name")
+          .eq("id", user.id)
+          .maybeSingle();
+        await sendEmail(
+          INTERNAL_INBOX,
+          `[Support${d.isPriority ? " - PRIORITY" : ""}] ${d.category}: ${d.subject}`,
+          leadEmailHtml(
+            "H2Fleet Support Request",
+            [
+              ["From", profile?.full_name ?? "N/A"],
+              ["Email", user.email ?? "N/A"],
+              ["Category", d.category],
+              ["Priority", d.priority],
+              ["Callback Phone", d.phone],
+            ],
+            d.message,
+          ),
+          `Support request from ${user.email}\nCategory: ${d.category}\n\n${d.message}`,
+        );
+        return jsonResponse(req, { success: true });
+      }
+
+      case "collaboration_invite": {
+        const { user } = await getUserOrThrow(req);
+        const admin = serviceRoleClient();
+        // Le destinataire vient de l'invitation en base, créée par l'appelant.
+        const { data: invitation } = await admin
+          .from("pending_invitations")
+          .select("id, email, role, project_id, invited_by, projects(name)")
+          .eq("id", body.data.invitationId)
+          .eq("invited_by", user.id)
+          .maybeSingle();
+        if (!invitation) throw new HttpError(404, "Invitation not found");
+
+        const { data: inviterProfile } = await admin
+          .from("profiles")
+          .select("full_name")
+          .eq("id", user.id)
+          .maybeSingle();
+
+        const projectName =
+          (invitation.projects as { name?: string } | null)?.name ??
+          "Projet H2Fleet";
+        const inviterName = inviterProfile?.full_name ?? "Un utilisateur";
+        const roleLabels: Record<string, string> = {
+          owner: "Propriétaire",
+          editor: "Éditeur",
+          viewer: "Lecteur",
+        };
+        const roleLabel = roleLabels[invitation.role] ?? invitation.role;
+        const projectUrl = `${APP_BASE_URL}/signup?invite=${invitation.project_id}`;
+
+        await sendEmail(
+          invitation.email,
+          `Invitation à collaborer - ${projectName}`,
+          layout(
+            "Invitation à collaborer",
+            `<p style="text-align:center;color:#6b7280;"><strong>${escapeHtml(inviterName)}</strong> vous a invité(e) à collaborer sur</p>
+<div style="background:#f3f4f6;border-radius:8px;padding:20px;margin-bottom:24px;text-align:center;">
+<p style="margin:0;font-size:20px;font-weight:600;">${escapeHtml(projectName)}</p>
+<p style="margin:8px 0 0 0;color:#6b7280;font-size:14px;">Rôle : ${escapeHtml(roleLabel)}</p>
+</div>
+<p style="text-align:center;"><a href="${escapeHtml(projectUrl)}" style="display:inline-block;background:#8b5cf6;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:600;">Voir le projet</a></p>`,
+            "Vous avez reçu cet email car un utilisateur H2Fleet vous a invité(e) sur un projet.",
+          ),
+          `${inviterName} vous a invité(e) à collaborer sur ${projectName} (rôle : ${roleLabel}).\n${projectUrl}`,
+        );
+        return jsonResponse(req, { success: true });
+      }
+
+      case "task_mention": {
+        const { user, supabase: userClient } = await getUserOrThrow(req);
+        const d = body.data;
+        // L'appelant doit voir la tâche (RLS) — sinon 404.
+        const { data: task } = await userClient
+          .from("tasks")
+          .select("id, title, project_id, projects(name)")
+          .eq("id", d.taskId)
+          .maybeSingle();
+        if (!task) throw new HttpError(404, "Task not found");
+
+        const admin = serviceRoleClient();
+        // Le mentionné doit être owner ou collaborateur du projet.
+        const [{ data: project }, { data: collaborator }] = await Promise.all([
+          admin
+            .from("projects")
+            .select("id, user_id")
+            .eq("id", task.project_id)
+            .maybeSingle(),
+          admin
+            .from("project_collaborators")
+            .select("user_id")
+            .eq("project_id", task.project_id)
+            .eq("user_id", d.mentionedUserId)
+            .maybeSingle(),
+        ]);
+        const isMember =
+          collaborator !== null || project?.user_id === d.mentionedUserId;
+        if (!isMember) throw new HttpError(403, "User is not on this project");
+
+        const { data: mentioned } = await admin
+          .from("profiles")
+          .select("email, full_name, email_notifications")
+          .eq("id", d.mentionedUserId)
+          .maybeSingle();
+        if (!mentioned?.email) return jsonResponse(req, { success: true });
+        const prefs = mentioned.email_notifications as
+          | { comment_replies?: boolean }
+          | null;
+        if (prefs?.comment_replies === false) {
+          return jsonResponse(req, { success: true });
+        }
+
+        const { data: authorProfile } = await admin
+          .from("profiles")
+          .select("full_name")
+          .eq("id", user.id)
+          .maybeSingle();
+        const authorName = authorProfile?.full_name ?? "Un utilisateur";
+        const projectName =
+          (task.projects as { name?: string } | null)?.name ?? "Projet";
+        const taskUrl = `${APP_BASE_URL}/dashboard/tasks?project=${task.project_id}`;
+
+        await sendEmail(
+          mentioned.email,
+          `@${authorName} vous a mentionné sur "${task.title}"`,
+          layout(
+            "Vous avez été mentionné",
+            `<p style="color:#6b7280;text-align:center;">sur la tâche <strong>"${escapeHtml(task.title)}"</strong> dans le projet <strong>${escapeHtml(projectName)}</strong></p>
+<div style="background:#f3f4f6;border-left:4px solid #f59e0b;padding:16px;margin-bottom:24px;border-radius:0 8px 8px 0;">
+<p style="margin:0 0 8px 0;color:#6b7280;font-size:12px;font-weight:600;">${escapeHtml(authorName)} a écrit :</p>
+<p style="margin:0;font-style:italic;">"${escapeHtml(d.commentPreview)}"</p></div>
+<p style="text-align:center;"><a href="${escapeHtml(taskUrl)}" style="display:inline-block;background:#f59e0b;color:white;padding:14px 24px;border-radius:8px;text-decoration:none;font-weight:600;">Voir la tâche</a></p>`,
+            "Gérez vos préférences de notification dans les réglages.",
+          ),
+          `${authorName} vous a mentionné sur "${task.title}" (${projectName}) :\n"${d.commentPreview}"\n${taskUrl}`,
+        );
+        return jsonResponse(req, { success: true });
+      }
+
+      case "subsidy_reminder": {
+        requireInternalSecret(req);
+        const d = body.data;
+        const applyUrl = safeHttpsUrl(d.applyUrl) ?? APP_BASE_URL;
+        const isEnglish = d.lang === "en";
+        const html = layout(
+          isEnglish ? "Subsidy Deadline Reminder" : "Rappel d'échéance de subvention",
+          `${d.isUrgent ? '<p style="text-align:center;"><span style="background:#ef4444;color:white;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:bold;">URGENT</span></p>' : ""}
+<h2 style="margin:0 0 16px 0;">${escapeHtml(d.programName)}</h2>
+<div style="background:#f0fdf4;border-left:4px solid #22c55e;padding:16px;margin-bottom:24px;border-radius:0 8px 8px 0;">
+<p style="margin:0;color:#166534;font-size:24px;font-weight:bold;">${escapeHtml(d.amount)}</p>
+<p style="margin:4px 0 0 0;color:#15803d;font-size:14px;">${isEnglish ? "Available funding" : "Financement disponible"}</p></div>
+<div style="background:${d.isUrgent ? "#fef2f2" : "#fffbeb"};border-radius:8px;padding:16px;margin-bottom:24px;">
+<p style="margin:0;font-weight:600;">⏰ ${d.daysRemaining} ${isEnglish ? "days remaining" : "jours restants"}</p>
+<p style="margin:8px 0 0 0;font-size:14px;">${isEnglish ? "Deadline" : "Date limite"} : ${escapeHtml(d.deadline)}</p></div>
+<p style="text-align:center;"><a href="${escapeHtml(applyUrl)}" style="display:inline-block;background:#0ea5e9;color:white;padding:16px 24px;border-radius:8px;text-decoration:none;font-weight:600;">${isEnglish ? "Apply Now" : "Faire une demande"}</a></p>`,
+          isEnglish
+            ? "You received this email because you enabled subsidy reminders."
+            : "Vous avez reçu cet email car vous avez activé les rappels de subventions.",
+        );
+        await sendEmail(
+          d.to,
+          d.isUrgent
+            ? `🚨 URGENT: ${isEnglish ? "Last day for" : "Dernier jour pour"} ${d.programName}`
+            : `⏰ ${isEnglish ? "Reminder" : "Rappel"}: 7 ${isEnglish ? "days left for" : "jours pour"} ${d.programName}`,
+          html,
+          `${d.programName} — ${d.amount} — ${d.daysRemaining} ${isEnglish ? "days remaining" : "jours restants"} (${d.deadline})\n${applyUrl}`,
+        );
+        return jsonResponse(req, { success: true });
+      }
+    }
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      return jsonResponse(req, { error: error.message }, 400);
+    }
+    if (error instanceof HttpError) {
+      return jsonResponse(req, { error: error.message }, error.status);
+    }
+    console.error("Error in send-email:", error);
+    return jsonResponse(req, { error: "Internal error" }, 500);
   }
+
+  return jsonResponse(req, { error: "Unknown template" }, 400);
 });

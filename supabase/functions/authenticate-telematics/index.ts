@@ -1,27 +1,23 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+// authenticate-telematics — l'utilisateur réel est vérifié (getUser) :
+// verify_jwt seul laisse passer la clé anon publique.
+import { handleOptions, jsonResponse } from "../_shared/cors.ts";
+import { getUserOrThrow, HttpError } from "../_shared/auth.ts";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
-serve(async (req) => {
+Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return handleOptions(req);
   }
 
   try {
+    await getUserOrThrow(req);
+
     const { provider, database, username, password } = await req.json();
 
     console.log(`Authenticating with provider: ${provider}`);
 
     if (!provider || !username || !password) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Missing required fields' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return jsonResponse(req, { success: false, error: 'Missing required fields' }, 400);
     }
 
     let authResult: { success: boolean; credentials?: string; error?: string };
@@ -29,10 +25,7 @@ serve(async (req) => {
     if (provider === 'geotab') {
       // Geotab requires database field
       if (!database) {
-        return new Response(
-          JSON.stringify({ success: false, error: 'Database is required for Geotab' }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
+        return jsonResponse(req, { success: false, error: 'Database is required for Geotab' }, 400);
       }
 
       // Authenticate with Geotab API
@@ -50,7 +43,6 @@ serve(async (req) => {
       });
 
       const geotabData = await geotabResponse.json();
-      console.log('Geotab response:', JSON.stringify(geotabData));
 
       if (geotabData.result?.credentials) {
         // Encode credentials as base64 for storage
@@ -99,23 +91,14 @@ serve(async (req) => {
         };
       }
     } else {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Unsupported provider' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return jsonResponse(req, { success: false, error: 'Unsupported provider' }, 400);
     }
 
-    return new Response(
-      JSON.stringify(authResult),
-      { status: authResult.success ? 200 : 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return jsonResponse(req, authResult, authResult.success ? 200 : 401);
 
   } catch (error) {
     console.error('Error in authenticate-telematics:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(
-      JSON.stringify({ success: false, error: errorMessage }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return jsonResponse(req, { success: false, error: errorMessage }, 500);
   }
 });

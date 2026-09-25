@@ -1,5 +1,11 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+// api-gateway — API publique REPORTÉE : derrière FEATURE_PUBLIC_API
+// (404 pour tout appel quand le drapeau est absent/false).
+// Corrections dormantes : recherche de clé par hash (l'UI stockait un
+// key_prefix de 8 caractères, le gateway en cherchait 12) et anti-SSRF sur
+// les livraisons de webhooks (https public uniquement).
+import { createClient } from "npm:@supabase/supabase-js@2.49.4";
+import { isPublicApiEnabled } from "../_shared/auth.ts";
+import { safeHttpsUrl } from "../_shared/validation.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -37,7 +43,12 @@ function hasScope(keyScopes: string[], requiredScope: string): boolean {
 // deno-lint-ignore no-explicit-any
 type SupabaseClient = any;
 
-serve(async (req) => {
+Deno.serve(async (req) => {
+  // API publique désactivée par défaut : ne rien révéler.
+  if (!isPublicApiEnabled()) {
+    return new Response("Not Found", { status: 404 });
+  }
+
   // CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -59,13 +70,13 @@ serve(async (req) => {
       return jsonError(401, "Invalid API key format.", "invalid_key_format");
     }
 
-    const keyPrefix = apiKey.substring(0, 12);
+    // Recherche par hash uniquement : le key_prefix n'est qu'un indicatif
+    // d'affichage (des enregistrements historiques en ont 8 caractères).
     const keyHash = await hashKey(apiKey);
 
     const { data: keyRecord, error: keyError } = await supabase
       .from("api_keys")
       .select("*")
-      .eq("key_prefix", keyPrefix)
       .eq("key_hash", keyHash)
       .eq("is_active", true)
       .single();
@@ -666,6 +677,19 @@ async function triggerWebhooks(
 
     for (const webhook of webhooks as WebhookRow[]) {
       try {
+        // SSRF : uniquement https vers un hôte public.
+        const targetUrl = safeHttpsUrl(webhook.url);
+        if (!targetUrl) {
+          await supabase.from("webhook_deliveries").insert({
+            webhook_id: webhook.id,
+            event_type: eventType,
+            payload: payload as object,
+            success: false,
+            response_body: "Webhook URL rejected: https public hosts only",
+          });
+          continue;
+        }
+
         const body = JSON.stringify({
           event: eventType,
           timestamp: new Date().toISOString(),
@@ -686,7 +710,7 @@ async function triggerWebhooks(
           .map((b) => b.toString(16).padStart(2, "0"))
           .join("");
 
-        const response = await fetch(webhook.url, {
+        const response = await fetch(targetUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

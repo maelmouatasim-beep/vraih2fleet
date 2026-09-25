@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import ScrollToTop from "@/components/ScrollToTop";
+import { PUBLIC_API_ENABLED } from "@/lib/constants";
 import { SubscriptionProvider } from "@/hooks/useSubscription";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
@@ -155,9 +156,11 @@ const App = () => (
             <Route path="/dashboard/analytics" element={
               <ProtectedRoute><Analytics /></ProtectedRoute>
             } />
-            <Route path="/dashboard/api" element={
-              <ProtectedRoute><ApiDocumentation /></ProtectedRoute>
-            } />
+            {PUBLIC_API_ENABLED && (
+              <Route path="/dashboard/api" element={
+                <ProtectedRoute><ApiDocumentation /></ProtectedRoute>
+              } />
+            )}
             <Route path="/dashboard/settings" element={
               <ProtectedRoute><Settings /></ProtectedRoute>
             } />

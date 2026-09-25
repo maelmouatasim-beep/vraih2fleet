@@ -1,9 +1,6 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+// fetch-telematics-vehicles — l'utilisateur réel est vérifié (getUser).
+import { handleOptions, jsonResponse } from "../_shared/cors.ts";
+import { getUserOrThrow, HttpError } from "../_shared/auth.ts";
 
 // Geotab API base URL
 const GEOTAB_API_URL = Deno.env.get('GEOTAB_API_URL') || 'https://my.geotab.com/apiv1';
@@ -318,35 +315,30 @@ async function fetchSamsaraVehicles(apiToken: string): Promise<any[]> {
   });
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return handleOptions(req);
   }
 
   try {
+    await getUserOrThrow(req);
+
     const { provider, encryptedCredentials } = await req.json();
 
     console.log(`Fetching vehicles with odometer data from provider: ${provider}`);
 
     if (!provider || !encryptedCredentials) {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Missing required fields' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return jsonResponse(req, { success: false, error: 'Missing required fields' }, 400);
     }
 
     // Decode the base64 encoded credentials
     let credentials: any;
     try {
       credentials = JSON.parse(atob(encryptedCredentials));
-      console.log('Credentials decoded successfully');
     } catch (e) {
       console.error('Failed to decode credentials:', e);
-      return new Response(
-        JSON.stringify({ success: false, error: 'Invalid credentials format' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return jsonResponse(req, { success: false, error: 'Invalid credentials format' }, 400);
     }
 
     let vehicles: any[] = [];
@@ -356,28 +348,25 @@ serve(async (req) => {
     } else if (provider === 'samsara') {
       vehicles = await fetchSamsaraVehicles(credentials.apiToken);
     } else {
-      return new Response(
-        JSON.stringify({ success: false, error: 'Unsupported provider' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return jsonResponse(req, { success: false, error: 'Unsupported provider' }, 400);
     }
 
     // Count vehicles with real odometer data
     const vehiclesWithOdometer = vehicles.filter(v => v.annualKm !== null).length;
     console.log(`${vehiclesWithOdometer}/${vehicles.length} vehicles have real annual km data`);
 
-    return new Response(
-      JSON.stringify({ 
+    return jsonResponse(req, { 
         success: true, 
         vehicles,
         count: vehicles.length,
         vehiclesWithOdometerData: vehiclesWithOdometer,
         provider,
-      }),
-      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+      }, 200);
 
   } catch (error) {
+    if (error instanceof HttpError) {
+      return jsonResponse(req, { success: false, error: error.message }, error.status);
+    }
     console.error('Error in fetch-telematics-vehicles:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     
@@ -386,13 +375,10 @@ serve(async (req) => {
                              errorMessage.includes('InvalidCredentials') ||
                              errorMessage.includes('session');
     
-    return new Response(
-      JSON.stringify({ 
+    return jsonResponse(req, { 
         success: false, 
         error: isSessionExpired ? 'SESSION_EXPIRED' : errorMessage,
         requiresReauth: isSessionExpired
-      }),
-      { status: isSessionExpired ? 401 : 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+      }, isSessionExpired ? 401 : 500);
   }
 });

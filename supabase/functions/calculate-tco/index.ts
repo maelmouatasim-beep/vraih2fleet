@@ -1,11 +1,16 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+// calculate-tco — sécurité :
+// - JWT obligatoire (getUserOrThrow) ;
+// - toutes les lectures/écritures passent par le client RLS de l'utilisateur
+//   (plus de service role) : un scenarioId d'autrui renvoie 404 ;
+// - region validée contre une liste fermée avant toute utilisation dans un
+//   filtre PostgREST.
+import { handleOptions, jsonResponse } from "../_shared/cors.ts";
+import { getUserOrThrow, HttpError } from "../_shared/auth.ts";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+const ALLOWED_REGIONS = new Set([
+  'Global', 'Canada', 'CA',
+  'CA_QC', 'CA_ON', 'CA_BC', 'CA_AB', 'CA_MB',
+]);
 
 // Consumption factors - standardized to per 100km
 const L_PER_100KM_DIESEL = 35.7;        // L/100km for Class 8 trucks
@@ -173,49 +178,46 @@ function calculateH2InfraScaleDiscount(
   return baseInfraCost * scaleFactor;
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return handleOptions(req);
   }
 
   try {
+    // Le client Supabase porte le JWT de l'appelant : la RLS s'applique.
+    const { supabase } = await getUserOrThrow(req);
+
     const { scenarioId } = await req.json();
     
-    if (!scenarioId) {
-      throw new Error('scenarioId is required');
+    if (!scenarioId || typeof scenarioId !== 'string') {
+      throw new HttpError(400, 'scenarioId is required');
     }
 
-    // TCO calculation initiated for scenario
-
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    // Fetch scenario
+    // Fetch scenario (RLS : introuvable si le scénario n'est pas à l'appelant)
     const { data: scenario, error: scenarioError } = await supabase
       .from('scenarios')
       .select('*')
       .eq('id', scenarioId)
-      .single();
+      .maybeSingle();
 
     if (scenarioError || !scenario) {
-      console.error('Scenario fetch error:', scenarioError);
-      throw new Error(`Scenario not found: ${scenarioId}`);
+      throw new HttpError(404, 'Scenario not found');
     }
 
-    // Scenario fetched successfully
+    // region : liste fermée uniquement (jamais interpolée telle quelle)
+    const region = ALLOWED_REGIONS.has(scenario.region) ? scenario.region : 'Canada';
 
     // Fetch reference data
     const { data: refDataRows, error: refError } = await supabase
       .from('reference_data_ranges')
       .select('category, subcategory, region, mid_value')
-      .or(`region.eq.${scenario.region},region.eq.Global`);
+      .in('region', [region, 'Global']);
 
     if (refError) {
-      console.error('Reference data fetch error:', refError);
+      console.error('Reference data fetch error:', refError.message);
     }
 
-    const referenceData = buildReferenceData(refDataRows || [], scenario.region);
+    const referenceData = buildReferenceData(refDataRows || [], region);
     // Reference data loaded
 
     // Calculate TCO
@@ -239,23 +241,18 @@ serve(async (req) => {
 
     // TCO result saved
 
-    return new Response(JSON.stringify({ 
+    return jsonResponse(req, { 
       success: true, 
       resultId: savedResult.id,
       result 
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error: unknown) {
+    if (error instanceof HttpError) {
+      return jsonResponse(req, { success: false, error: error.message }, error.status);
+    }
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('Error in calculate-tco function:', errorMessage);
-    return new Response(JSON.stringify({ 
-      error: errorMessage,
-      success: false 
-    }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return jsonResponse(req, { error: errorMessage, success: false }, 500);
   }
 });
 

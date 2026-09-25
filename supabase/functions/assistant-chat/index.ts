@@ -1,10 +1,61 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+// assistant-chat — proxy LLM fermé :
+// - JWT obligatoire ;
+// - limite de débit par utilisateur (fenêtre glissante en table) ;
+// - tailles bornées (message, historique), rôles limités à user/assistant
+//   (impossible d'injecter un message system) ;
+// - context validé (zod) et traité comme donnée dans le prompt.
+import { handleOptions, jsonResponse, corsHeaders as buildCorsHeaders } from "../_shared/cors.ts";
+import { getUserOrThrow, HttpError, serviceRoleClient } from "../_shared/auth.ts";
+import { parseJsonBody, ValidationError, z } from "../_shared/validation.ts";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+const RATE_LIMIT = 30;            // requêtes
+const RATE_WINDOW_MINUTES = 10;   // par fenêtre glissante
+
+async function checkUserRateLimit(userId: string): Promise<boolean> {
+  const admin = serviceRoleClient();
+  const windowStart = new Date(Date.now() - RATE_WINDOW_MINUTES * 60_000).toISOString();
+  const { count, error } = await admin
+    .from('rate_limit_events')
+    .select('id', { count: 'exact', head: true })
+    .eq('bucket', 'assistant-chat')
+    .eq('caller', userId)
+    .gte('created_at', windowStart);
+  if (error) {
+    console.error('rate limit check failed:', error.message);
+    return true;
+  }
+  if ((count ?? 0) >= RATE_LIMIT) return false;
+  await admin.from('rate_limit_events').insert({ bucket: 'assistant-chat', caller: userId });
+  return true;
+}
+
+// Donnée bornée, jamais une instruction : une seule ligne, longueur limitée.
+function asPromptData(value: string, maxLength: number): string {
+  return value.replace(/[\r\n]+/g, ' ').slice(0, maxLength);
+}
+
+const chatRequestSchema = z.object({
+  message: z.string().min(1).max(4000),
+  history: z
+    .array(
+      z.object({
+        role: z.enum(['user', 'assistant']),
+        content: z.string().max(4000),
+      }),
+    )
+    .max(20)
+    .optional()
+    .default([]),
+  context: z
+    .object({
+      current_url: z.string().max(300).optional(),
+      page_type: z.string().max(60).optional(),
+      time_on_page: z.number().min(0).max(86_400).optional(),
+      has_projects: z.boolean().optional(),
+      has_scenarios: z.boolean().optional(),
+    })
+    .optional(),
+});
 
 // ============================================
 // ENRICHED KNOWLEDGE BASE - GPT-4 Level Expert
@@ -819,23 +870,9 @@ interface ChatMessage {
   content: string;
 }
 
-interface ChatRequest {
-  message: string;
-  history?: ChatMessage[];
-  context?: {
-    current_url?: string;
-    page_type?: string;
-    user_id?: string;
-    timestamp?: string;
-    time_on_page?: number;
-    has_projects?: boolean;
-    has_scenarios?: boolean;
-  };
-}
-
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return handleOptions(req);
   }
 
   try {
@@ -845,14 +882,16 @@ serve(async (req) => {
       throw new Error('AI service not configured');
     }
 
-    const { message, history = [], context }: ChatRequest = await req.json();
-
-    if (!message || typeof message !== 'string') {
-      return new Response(
-        JSON.stringify({ error: 'Message is required' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    const { user } = await getUserOrThrow(req);
+    if (!(await checkUserRateLimit(user.id))) {
+      return jsonResponse(
+        req,
+        { response: "⚠️ Trop de requêtes. Merci de patienter quelques minutes." },
+        429,
       );
     }
+
+    const { message, history = [], context } = await parseJsonBody(req, chatRequestSchema, 256 * 1024);
 
     // Search knowledge base for relevant documents
     const relevantDocs = searchKnowledge(message, 4);
@@ -860,10 +899,10 @@ serve(async (req) => {
     
     // Knowledge search completed
 
-    // Build detailed context string
+    // Contexte : donnée validée et bornée, jamais interprétée comme instruction
     const contextDetails = context ? `
-- **Page actuelle**: ${context.page_type || 'inconnue'} (${context.current_url || 'N/A'})
-- **Temps sur page**: ${context.time_on_page || 0} secondes
+- **Page actuelle**: "${asPromptData(context.page_type ?? 'inconnue', 60)}" (URL: "${asPromptData(context.current_url ?? 'N/A', 300)}")
+- **Temps sur page**: ${Math.round(context.time_on_page ?? 0)} secondes
 - **A des projets**: ${context.has_projects ? 'Oui ✓' : 'Non - suggérer de créer un projet'}
 - **A des scénarios**: ${context.has_scenarios ? 'Oui ✓' : 'Non - suggérer de créer un scénario'}
 ` : 'Aucun contexte spécifique fourni';
@@ -877,10 +916,10 @@ serve(async (req) => {
       { role: 'system', content: systemPrompt }
     ];
 
-    // Add conversation history (last 12 messages for better context)
+    // Historique borné, rôles limités à user/assistant par le schéma zod
     const recentHistory = history.slice(-12);
     for (const msg of recentHistory) {
-      messages.push({ role: msg.role, content: msg.content });
+      messages.push({ role: msg.role === 'assistant' ? 'assistant' : 'user', content: msg.content });
     }
 
     // Add current message
@@ -914,21 +953,15 @@ serve(async (req) => {
       console.error('AI gateway error:', response.status, errorText);
       
       if (response.status === 429) {
-        return new Response(
-          JSON.stringify({ 
-            response: '⚠️ Service temporairement surchargé. Veuillez réessayer dans quelques secondes.'
-          }),
-          { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
+        return jsonResponse(req, { 
+          response: '⚠️ Service temporairement surchargé. Veuillez réessayer dans quelques secondes.'
+        });
       }
       
       if (response.status === 402) {
-        return new Response(
-          JSON.stringify({ 
-            response: '⚠️ Les crédits IA sont épuisés. Veuillez contacter l\'administrateur.'
-          }),
-          { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
+        return jsonResponse(req, { 
+          response: '⚠️ Les crédits IA sont épuisés. Veuillez contacter l\'administrateur.'
+        });
       }
       
       throw new Error(`AI gateway error: ${response.status}`);
@@ -938,7 +971,7 @@ serve(async (req) => {
     
     return new Response(response.body, {
       headers: {
-        ...corsHeaders,
+        ...buildCorsHeaders(req),
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
@@ -946,6 +979,12 @@ serve(async (req) => {
     });
 
   } catch (error: unknown) {
+    if (error instanceof HttpError) {
+      return jsonResponse(req, { error: error.message }, error.status);
+    }
+    if (error instanceof ValidationError) {
+      return jsonResponse(req, { error: error.message }, 400);
+    }
     console.error('Error in assistant-chat function:', error);
     
     const isAbortError = error instanceof Error && error.name === 'AbortError';
@@ -953,12 +992,9 @@ serve(async (req) => {
       ? '⚠️ La requête a pris trop de temps. Veuillez réessayer.'
       : '⚠️ Erreur temporaire du service. Veuillez réessayer dans un instant.';
 
-    return new Response(
-      JSON.stringify({ 
-        error: error instanceof Error ? error.message : 'Unknown error',
-        response: errorMessage
-      }),
-      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return jsonResponse(req, { 
+      error: error instanceof Error ? error.message : 'Unknown error',
+      response: errorMessage
+    });
   }
 });

@@ -147,7 +147,8 @@ const ApiKeyManagement = () => {
     try {
       // Generate the key
       const rawKey = `h2f_${generateSecureKey()}`;
-      const keyPrefix = rawKey.substring(0, 8);
+      // 12 caractères, aligné avec l'indicatif attendu côté gateway
+      const keyPrefix = rawKey.substring(0, 12);
       const keyHash = await hashKey(rawKey);
       
       // Save to database

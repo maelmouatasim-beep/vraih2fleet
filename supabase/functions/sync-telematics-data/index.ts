@@ -1,10 +1,15 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+// sync-telematics-data — deux modes d'appel, tous deux authentifiés :
+// - mode "cron"  : header x-cron-secret (pg_cron), synchronise toutes les
+//   connexions actives ;
+// - mode "user"  : JWT vérifié, synchronise UNIQUEMENT une connexion
+//   appartenant à l'utilisateur (fin de l'IDOR sur connectionId).
+import { corsHeaders, handleOptions, jsonResponse } from "../_shared/cors.ts";
+import {
+  getUserOrThrow,
+  HttpError,
+  requireCronSecret,
+  serviceRoleClient,
+} from "../_shared/auth.ts";
 
 const GEOTAB_API_URL = Deno.env.get('GEOTAB_API_URL') || 'https://my.geotab.com/apiv1';
 const SAMSARA_API_URL = Deno.env.get('SAMSARA_API_URL') || 'https://api.samsara.com';
@@ -158,26 +163,43 @@ async function fetchSamsaraOdometer(apiToken: string, vehicleIds: string[]): Pro
   return odometerMap;
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return handleOptions(req);
   }
 
   try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabase = serviceRoleClient();
 
-    // Check if this is a manual sync for a specific connection
     let connectionId: string | null = null;
     try {
       const body = await req.json();
-      connectionId = body.connectionId || null;
+      connectionId = typeof body?.connectionId === 'string' ? body.connectionId : null;
     } catch {
-      // No body or invalid JSON - sync all connections
+      // Pas de corps : synchro globale (mode cron)
     }
 
-    console.log(connectionId ? `Manual sync for connection: ${connectionId}` : 'Scheduled sync for all connections');
+    if (req.headers.get('x-cron-secret')) {
+      // Mode cron : synchro de toutes les connexions actives.
+      requireCronSecret(req);
+    } else {
+      // Mode utilisateur : JWT obligatoire + la connexion doit lui appartenir.
+      const { user } = await getUserOrThrow(req);
+      if (!connectionId) {
+        throw new HttpError(400, 'connectionId is required');
+      }
+      const { data: owned } = await supabase
+        .from('telematics_connections')
+        .select('id')
+        .eq('id', connectionId)
+        .eq('user_id', user.id)
+        .maybeSingle();
+      if (!owned) {
+        throw new HttpError(404, 'Connection not found');
+      }
+    }
+
+    console.log(connectionId ? `Manual sync for one connection` : 'Scheduled sync for all connections');
 
     // Get active telematics connections
     let query = supabase
@@ -198,10 +220,7 @@ serve(async (req) => {
 
     if (!connections || connections.length === 0) {
       console.log('No active telematics connections found');
-      return new Response(
-        JSON.stringify({ success: true, message: 'No connections to sync', synced: 0 }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return jsonResponse(req, { success: true, message: 'No connections to sync', synced: 0 });
     }
 
     let totalUpdated = 0;
@@ -268,21 +287,18 @@ serve(async (req) => {
 
     console.log(`Sync complete. Total vehicles updated: ${totalUpdated}`);
 
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: `Synced ${connections.length} connection(s)`,
-        connectionsProcessed: connections.length,
-        vehiclesUpdated: totalUpdated,
-      }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return jsonResponse(req, { 
+      success: true, 
+      message: `Synced ${connections.length} connection(s)`,
+      connectionsProcessed: connections.length,
+      vehiclesUpdated: totalUpdated,
+    });
 
   } catch (error) {
+    if (error instanceof HttpError) {
+      return jsonResponse(req, { success: false, error: error.message }, error.status);
+    }
     console.error('Sync error:', error);
-    return new Response(
-      JSON.stringify({ success: false, error: error instanceof Error ? error.message : 'Unknown error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return jsonResponse(req, { success: false, error: error instanceof Error ? error.message : 'Unknown error' }, 500);
   }
 });

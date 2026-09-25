@@ -2,8 +2,9 @@ import { useState } from "react";
 import { AssistantWidget } from "@/components/AssistantWidget";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { 
-  LayoutDashboard, 
+import { PUBLIC_API_ENABLED } from "@/lib/constants";
+import {
+  LayoutDashboard,
   FolderKanban, 
   BarChart3, 
   Settings,
@@ -65,7 +66,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   // SECTION 3 - Configuration
   const configLinks = [
-    { icon: Code, labelKey: "dashboard.menu.api", href: "/dashboard/api" },
+    // API publique reportée : entrée masquée tant que le drapeau est éteint.
+    ...(PUBLIC_API_ENABLED
+      ? [{ icon: Code, labelKey: "dashboard.menu.api", href: "/dashboard/api" }]
+      : []),
     { icon: GraduationCap, labelKey: "dashboard.menu.helpTraining", href: "/dashboard/help" },
     { icon: Headphones, labelKey: "dashboard.menu.support", href: "/dashboard/support" },
   ];

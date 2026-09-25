@@ -460,12 +460,19 @@ export function AssistantWidget() {
 
     try {
       const history = buildConversationHistory();
-      
+
+      // La fonction exige le JWT de l'utilisateur (plus la clé anon seule).
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
+      if (!accessToken) {
+        throw new Error('Not authenticated');
+      }
+
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/assistant-chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          'Authorization': `Bearer ${accessToken}`,
           'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
         },
         body: JSON.stringify({
@@ -474,8 +481,6 @@ export function AssistantWidget() {
           context: {
             current_url: location.pathname,
             page_type: pageType,
-            user_id: user?.id,
-            timestamp: new Date().toISOString(),
             time_on_page: timeOnPage,
             has_projects: hasProjects,
             has_scenarios: hasScenarios,
