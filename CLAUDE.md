@@ -47,7 +47,19 @@ npm run lint           # eslint complet (dette existante incluse)
 npm run lint:ci        # échoue seulement sur les NOUVELLES erreurs vs scripts/lint-baseline.json
 npm run lint:baseline  # verrouille la baseline après une résorption de dette
 npm run build          # build de production
+npm run build:preview  # build de l'APERÇU hébergé (hash routing, base ./)
 ```
+
+## Aperçu du site (règle permanente)
+
+L'utilisateur suit le site via l'aperçu
+https://claude.ai/artifact/NLvGfsNLX3qmW7PJeaJbCq — sa seule fenêtre sur
+l'application pendant le développement. **Après CHAQUE changement visible
+du site** : `npm run build:preview`, republier le dossier `dist/` sur cet
+artefact (toujours la même URL, jamais un nouvel artefact), et envoyer une
+capture d'écran de la page modifiée dans la conversation. L'aperçu utilise
+le hash routing (`VITE_PREVIEW_HASH_ROUTER`) ; la production reste en
+BrowserRouter.
 
 ## Conventions
 
