@@ -57,7 +57,11 @@ https://claude.ai/artifact/NLvGfsNLX3qmW7PJeaJbCq — sa seule fenêtre sur
 l'application pendant le développement. **Après CHAQUE changement visible
 du site** : `npm run build:preview`, republier le dossier `dist/` sur cet
 artefact (toujours la même URL, jamais un nouvel artefact), et envoyer une
-capture d'écran de la page modifiée dans la conversation. L'aperçu utilise
+capture d'écran de la page modifiée dans la conversation.
+ATTENTION : à chaque build, les hashes des fichiers `dist/assets/` changent
+— publier TOUS les fichiers régénérés (le JS **et le CSS**, comparer avec
+`grep -o 'assets/[^"]*' dist/index.html`), sinon la page s'affiche en HTML
+brut sans styles (incident du 27/09 : CSS oublié). L'aperçu utilise
 le hash routing (`VITE_PREVIEW_HASH_ROUTER`) ; la production reste en
 BrowserRouter.
 
