@@ -1,0 +1,29 @@
+name: Fetch anon key (temporaire)
+
+# Workflow TEMPORAIRE : extrait la clé PUBLIQUE anon du bundle JS du site
+# Lovable publié (fleet-future-planner.lovable.app). Cette clé est publique
+# par conception (servie à tout visiteur du site). Supprimé après usage.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extraire la clé publique du bundle
+        run: |
+          set -e
+          curl -s https://fleet-future-planner.lovable.app/ -o index.html
+          JS=$(grep -oE '/assets/index-[^"]*\.js' index.html | head -1)
+          echo "bundle: $JS"
+          curl -s "https://fleet-future-planner.lovable.app$JS" -o bundle.js
+          echo "taille: $(wc -c < bundle.js)"
+          echo "occurrences URL projet: $(grep -c fihklznbfufhowopwwuc bundle.js || true)"
+          echo "--- cle(s) JWT ---"
+          grep -oE 'eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}' bundle.js | sort -u | head -5
+          echo "--- cle(s) publishable ---"
+          grep -oE 'sb_publishable_[A-Za-z0-9_-]+' bundle.js | sort -u | head -5
