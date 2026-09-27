@@ -1,0 +1,57 @@
+name: Deploy Pages
+
+# Site de test réel (l'aperçu claude.ai ne peut pas atteindre Supabase).
+# URL : https://maelmouatasim-beep.github.io/vraih2fleet/
+
+on:
+  push:
+    branches: ["claude/code-integration-site-o88hza"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Build (hash routing, base /vraih2fleet/)
+        env:
+          # Valeurs publiques (inlinées dans le bundle de toute façon).
+          VITE_SUPABASE_PROJECT_ID: fihklznbfufhowopwwuc
+          VITE_SUPABASE_URL: https://fihklznbfufhowopwwuc.supabase.co
+          # Clé anon (publique) : variable de dépôt pour changer sans commit
+          # (Settings > Secrets and variables > Actions > Variables).
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY || 'PLACEHOLDER_REMPLACER_PAR_LA_CLE_ANON' }}
+          VITE_PREVIEW_HASH_ROUTER: "true"
+        run: npx vite build --base=/vraih2fleet/
+
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

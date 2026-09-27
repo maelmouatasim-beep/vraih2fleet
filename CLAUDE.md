@@ -65,6 +65,16 @@ brut sans styles (incident du 27/09 : CSS oublié). L'aperçu utilise
 le hash routing (`VITE_PREVIEW_HASH_ROUTER`) ; la production reste en
 BrowserRouter.
 
+LIMITE DE L'APERÇU : les pages hébergées sur claude.ai ne peuvent pas
+appeler de serveurs externes → **pas de login ni de données Supabase sur
+l'aperçu** (« Failed to fetch » attendu) ; il sert au visuel et à la
+navigation. Le test fonctionnel (auth, données) se fait sur le site de
+test GitHub Pages, redéployé automatiquement à chaque push par
+`.github/workflows/deploy-pages.yml` :
+https://maelmouatasim-beep.github.io/vraih2fleet/
+La clé anon y vient de la variable de dépôt
+`VITE_SUPABASE_PUBLISHABLE_KEY` (Actions > Variables).
+
 ## Conventions
 
 - **Migrations Supabase** : additives et horodatées ; **ne jamais modifier
