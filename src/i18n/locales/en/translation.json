@@ -1336,6 +1336,13 @@
     }
   },
   "onboarding": {
+    "profile": {
+      "title": "Tell us about your fleet",
+      "subtitle": "Optional — this helps tailor H2Fleet to your organization. You can skip and come back later.",
+      "save": "Save",
+      "later": "Later",
+      "saved": "Profile saved"
+    },
     "stepOf": "Step {{step}} of {{total}}",
     "welcome": {
       "title": "Welcome to H2Fleet!",

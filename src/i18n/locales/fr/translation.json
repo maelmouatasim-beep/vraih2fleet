@@ -1336,6 +1336,13 @@
     }
   },
   "onboarding": {
+    "profile": {
+      "title": "Parlez-nous de votre flotte",
+      "subtitle": "Optionnel — cela nous aide à adapter H2Fleet à votre organisation. Vous pourrez compléter plus tard.",
+      "save": "Enregistrer",
+      "later": "Plus tard",
+      "saved": "Profil enregistré"
+    },
     "stepOf": "Étape {{step}} sur {{total}}",
     "welcome": {
       "title": "Bienvenue sur H2Fleet !",

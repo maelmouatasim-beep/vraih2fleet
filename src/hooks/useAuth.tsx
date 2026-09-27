@@ -19,7 +19,9 @@ interface UserRole {
 
 interface SignUpMetadata {
   full_name: string;
-  company: string;
+  // Optionnels : le profil se complète après la première connexion
+  // (ProfileOnboardingDialog), plus au signup.
+  company?: string;
   function_title?: string;
   fleet_size?: string;
   fleet_types?: string[];
