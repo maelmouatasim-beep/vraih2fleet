@@ -186,10 +186,39 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   retraits + redirections (scenarios global, subsidies/incentives,
   suppliers, tasks autonome, admin mock, pages publiques vides), code
   mort supprimé (13 pages + module fournisseurs).
-- Phase 3 — contenu des 7 étapes (stress test dans Stratégies via
-  sensitivity.ts, subventions enrichies, vrai .xlsx, tâches dans Suivi,
-  assistant réaligné) : à venir. **Critère bloquant : suppression
-  complète de `src/lib/calculations/` à la fin du bloc 3 (Stratégies).**
+- **Phase 3 — contenu des 7 étapes : LIVRÉE, en attente du « ok »
+  avant la Phase 4.** Les 8 blocs :
+  (1) Flotte : sélection des véhicules du projet (project_vehicles),
+  année suggérée = mise en service + durée de vie de la catégorie ;
+  (2) Faisabilité : verdict BEV/FCEV par véhicule chiffré par le moteur
+  (économie/surcoût, payback, CO2, subventions, réserves qualitatives,
+  données estimées signalées) — `src/lib/journey/feasibility.ts` ;
+  (3) Stratégies : 3 stratégies (Plan actuel / Tout électrique /
+  Économies d'abord, `strategies.ts`) + stress test sur sensitivity.ts
+  (tornade, 3 scénarios, risque calculé) ; **moteur 1.1.0** :
+  `anneeAcquisition` par véhicule (§10.11, méthodologie v1.2, cas de
+  référence inchangés à ±0,01 $), `parametresParDefaut` (assemblage
+  traçable du registre, testé ≡ PARAMETRES_CAS), résolveur filtrant les
+  programmes échus avant l'année d'achat + `statutEffectif(dates)` ;
+  **`src/lib/calculations/` SUPPRIMÉ** (critère bloquant, −19 750
+  lignes) avec l'ancien flux scénarios/wizard/Infrastructure/
+  RiskAnalysisPanel (redirections posées, types hérités sans calcul
+  dans `src/lib/legacy/scenario-types.ts`, baselines lint 186→88 et
+  constantes 20→12 verrouillées) ;
+  (4) Plan : budget annuel (vueBudgetaire) + remplacements par année ;
+  (5) Financement : subventions du plan par véhicule + registre des
+  programmes à statut CALCULÉ, date de vérification et source visibles ;
+  (6) Rapports : PDF conseil fr/en (résumé, stress test, budget, annexe
+  des 40 hypothèses, empreinte en pied de page) + vrai .xlsx 3 feuilles
+  (`report.ts` pur testé) — téléchargements validés par clic Playwright ;
+  (7) Suivi : réalisé vs prévu, kanban réutilisé, tâches liées
+  véhicule/année/subvention, génération idempotente (auto_key), fix du
+  double trigger de notification d'assignation (migration
+  20260928170000, qui répare aussi l'INSERT cassé) ;
+  (8) Démo « Ville de Rivière-Claire » (municipalité FICTIVE, 40
+  véhicules déterministes, aucun résultat pré-calculé — remplace la
+  démo STM) + assistant IA réaligné (zéro chiffre figé, renvoi aux
+  écrans avec source/date).
 - Phase 4 — site public et conformité (études de cas re-étiquetées,
   tarification unique — prix demandés à l'utilisateur, promesses non
   livrées retirées, légal fr/en Loi 25 — nom légal demandé, admin

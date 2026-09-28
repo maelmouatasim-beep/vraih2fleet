@@ -239,10 +239,10 @@ arrêt pour « ok » à la fin de 1A.
 - **2f. Menu 6 entrées + parcours 7 étapes** : comme au plan initial
   (layout `ProjectJourney`, retraits + redirections, code mort supprimé).
 
-### Phase 3 — Contenu des 7 étapes
+### Phase 3 — Contenu des 7 étapes — LIVRÉE (2026-09-28)
 
 Les 8 blocs du plan initial (Flotte/import, Faisabilité, Stratégies,
-Plan, Financement, Rapports, Suivi, Démo ~40 véhicules), avec :
+Plan, Financement, Rapports, Suivi, Démo ~40 véhicules), livrés avec :
 - **Stratégies** : le stress test d'Analytics (RiskAnalysisPanel) y
   déménage, rebranché sur `src/lib/tco/sensitivity.ts`.
 - **Financement** : modèle de subventions enrichi (montant ou %,
@@ -256,7 +256,16 @@ Plan, Financement, Rapports, Suivi, Démo ~40 véhicules), avec :
 - **Assistant IA** : base de connaissances et liens réalignés sur la
   nouvelle structure et le nouveau moteur, aucun chiffre figé non sourcé.
 - Fin du bloc 3 (Stratégies) : **suppression complète de
-  `src/lib/calculations/`** (critère bloquant).
+  `src/lib/calculations/`** (critère bloquant) — FAIT (−19 750 lignes ;
+  ancien flux scénarios, wizard, page Infrastructure et
+  RiskAnalysisPanel retirés avec redirections ; types hérités sans
+  calcul dans `src/lib/legacy/scenario-types.ts`).
+- Moteur 1.1.0 : année d'acquisition par véhicule (méthodologie v1.2,
+  §10.11), `parametresParDefaut` traçable, programmes échus exclus à
+  l'année d'achat, `statutEffectif` calculé des dates.
+- Démo réécrite : « Ville de Rivière-Claire » (municipalité FICTIVE,
+  40 véhicules déterministes, aucun résultat pré-calculé) — l'ancienne
+  démo STM (organisation réelle, chiffres inventés) est supprimée.
 
 ### Phase 4 — Site public et conformité (obligatoire avant toute démo)
 
