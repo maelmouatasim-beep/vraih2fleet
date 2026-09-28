@@ -58,7 +58,7 @@ const RoadmapBuilder: React.FC = () => {
   // Fetch projects
   const { data: projects, isLoading: projectsLoading } = useQuery({
     queryKey: ['projects', user?.id],
-    queryFn: () => listProjects(user!.id),
+    queryFn: () => listProjects(),
     enabled: !!user?.id,
   });
 

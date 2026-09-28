@@ -40,32 +40,48 @@ function rowToProject(row: ProjectRow): ProjectDTO {
   };
 }
 
-export async function listProjects(userId: string): Promise<ProjectDTO[]> {
+// La visibilité est entièrement portée par la RLS (propriétaire,
+// collaborateur externe OU membre de l'organisation) : filtrer côté
+// client sur user_id rendait « introuvable » tout projet partagé.
+export async function listProjects(): Promise<ProjectDTO[]> {
   const { data, error } = await supabase
     .from("projects")
     .select("*")
-    .eq("user_id", userId)
     .order("updated_at", { ascending: false });
 
   if (error) throw error;
   return (data || []).map(rowToProject);
 }
 
-export async function getProjectById(projectId: string, userId?: string): Promise<ProjectDTO | null> {
-  let query = supabase.from("projects").select("*").eq("id", projectId);
-  if (userId) query = query.eq("user_id", userId);
-
-  const { data, error } = await query.maybeSingle();
+export async function getProjectById(projectId: string): Promise<ProjectDTO | null> {
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("id", projectId)
+    .maybeSingle();
   if (error) throw error;
 
   return data ? rowToProject(data) : null;
 }
 
+async function myOrganizationId(userId: string): Promise<string | null> {
+  const { data } = await supabase
+    .from("organization_members")
+    .select("organization_id")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  return data?.organization_id ?? null;
+}
+
 export async function createProject(userId: string, input: CreateProjectInput): Promise<ProjectDTO> {
+  const organizationId = await myOrganizationId(userId);
   const { data, error } = await supabase
     .from("projects")
     .insert({
       user_id: userId,
+      organization_id: organizationId,
       name: input.name,
       description: input.description || null,
       country_or_region: input.countryOrRegion,
@@ -86,7 +102,7 @@ export async function deleteProject(projectId: string): Promise<void> {
 }
 
 export async function duplicateProject(userId: string, projectId: string, newName: string): Promise<ProjectDTO> {
-  const original = await getProjectById(projectId, userId);
+  const original = await getProjectById(projectId);
   if (!original) throw new Error("Project not found");
 
   return createProject(userId, {

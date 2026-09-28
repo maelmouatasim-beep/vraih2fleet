@@ -98,7 +98,7 @@ export default function ProjectDetail() {
         setIsLoading(true);
 
         const [p, s] = await Promise.all([
-          getProjectById(projectId, user.id),
+          getProjectById(projectId),
           listScenarios(projectId),
         ]);
 

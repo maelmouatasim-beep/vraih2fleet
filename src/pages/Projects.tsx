@@ -115,7 +115,7 @@ const Projects = () => {
     (async () => {
       try {
         setIsLoadingProjects(true);
-        const data = await listProjects(user.id);
+        const data = await listProjects();
         if (!cancelled) setProjects(data);
       } catch (error) {
         console.error("Error loading projects:", error);
@@ -250,7 +250,7 @@ const Projects = () => {
       const { projectId } = await seedDemoProject(user.id);
       
       // Refresh projects list
-      const updatedProjects = await listProjects(user.id);
+      const updatedProjects = await listProjects();
       setProjects(updatedProjects);
 
       toast({
