@@ -5593,6 +5593,45 @@
         "removed": "Véhicule retiré du projet (il reste dans Ma flotte)",
         "added": "{{count}} véhicule(s) ajouté(s) au projet"
       }
+    },
+    "feasibility": {
+      "tableTitle": "Verdict par véhicule",
+      "methodNote": "Comparaison sur {{horizon}} ans avec un diesel neuf équivalent, chiffrée par le moteur TCO (hypothèses du registre, consommation réelle utilisée quand elle est connue). Infrastructure du dépôt non incluse à cette étape — elle est répartie aux étapes Stratégies et Plan.",
+      "stats": {
+        "favorable": "Favorables (BEV)",
+        "conditional": "Conditionnels (BEV)",
+        "unfavorable": "Défavorables (BEV)",
+        "notAssessable": "Non évaluables"
+      },
+      "columns": {
+        "bev": "Électrique (BEV)",
+        "fcev": "Hydrogène (FCEV)",
+        "notes": "Réserves"
+      },
+      "verdicts": {
+        "favorable": "Favorable",
+        "conditionnel": "Conditionnel",
+        "defavorable": "Défavorable",
+        "non_evaluable": "Non évaluable"
+      },
+      "savings": "Économie de {{amount}}",
+      "extraCost": "Surcoût de {{amount}}",
+      "payback": "Retour en {{years}} ans",
+      "noPayback": "Pas de retour sur l'horizon",
+      "co2Avoided": "{{tonnes}} t CO2e évitées",
+      "subsidies": "Subventions : {{amount}}",
+      "reserves": {
+        "longue_distance": "Autonomie à vérifier (longue distance)",
+        "hors_route": "Usage hors route à vérifier",
+        "ravitaillement_h2": "Ravitaillement H2 limité au Québec"
+      },
+      "estimatedConsumption": "Consommation estimée",
+      "unknownCategory": "Catégorie « autre » : à évaluer manuellement",
+      "empty": {
+        "title": "Aucun véhicule à évaluer",
+        "subtitle": "Sélectionnez d'abord les véhicules du projet à l'étape Flotte."
+      },
+      "disclaimer": "L'autonomie n'est pas modélisée dans cette version : les usages longue distance et hors route sont signalés comme réserves. Les montants reposent sur les hypothèses du registre (statuts et dates de vérification dans la Bibliothèque) et se raffinent aux étapes suivantes."
     }
   }
 }

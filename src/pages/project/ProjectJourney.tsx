@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getProjectById } from "@/lib/supabase/projects";
 import FleetStep from "@/components/journey/FleetStep";
+import FeasibilityStep from "@/components/journey/FeasibilityStep";
 import { cn } from "@/lib/utils";
 import {
   ArrowLeft,
@@ -141,6 +142,8 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
         {/* Contenu de l'étape (Phase 3, bloc par bloc) */}
         {etape === "flotte" && projectId ? (
           <FleetStep projectId={projectId} />
+        ) : etape === "faisabilite" && projectId ? (
+          <FeasibilityStep projectId={projectId} project={project} />
         ) : (
           <Card>
             <CardHeader>

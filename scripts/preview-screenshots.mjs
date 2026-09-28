@@ -128,6 +128,7 @@ async function main() {
     ['#/dashboard', 'accueil-menu-6-entrees'],
     ['#/dashboard/fleet', 'ma-flotte'],
     [`#/dashboard/projects/${PROJET_ID}/flotte`, 'parcours-etape-flotte'],
+    [`#/dashboard/projects/${PROJET_ID}/faisabilite`, 'parcours-etape-faisabilite'],
     [`#/dashboard/projects/${PROJET_ID}/strategies`, 'parcours-etape-strategies'],
     ['#/dashboard/organization', 'organisation'],
     ['#/dashboard/library', 'bibliotheque'],

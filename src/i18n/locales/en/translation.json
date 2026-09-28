@@ -5593,6 +5593,45 @@
         "removed": "Vehicle removed from the project (it stays in My fleet)",
         "added": "{{count}} vehicle(s) added to the project"
       }
+    },
+    "feasibility": {
+      "tableTitle": "Verdict per vehicle",
+      "methodNote": "Comparison over {{horizon}} years against an equivalent new diesel, computed by the TCO engine (registry assumptions, real consumption used when known). Depot infrastructure is not included at this step — it is allocated in the Strategies and Plan steps.",
+      "stats": {
+        "favorable": "Favorable (BEV)",
+        "conditional": "Conditional (BEV)",
+        "unfavorable": "Unfavorable (BEV)",
+        "notAssessable": "Not assessable"
+      },
+      "columns": {
+        "bev": "Electric (BEV)",
+        "fcev": "Hydrogen (FCEV)",
+        "notes": "Caveats"
+      },
+      "verdicts": {
+        "favorable": "Favorable",
+        "conditionnel": "Conditional",
+        "defavorable": "Unfavorable",
+        "non_evaluable": "Not assessable"
+      },
+      "savings": "Savings of {{amount}}",
+      "extraCost": "Extra cost of {{amount}}",
+      "payback": "Payback in {{years}} years",
+      "noPayback": "No payback within the horizon",
+      "co2Avoided": "{{tonnes}} t CO2e avoided",
+      "subsidies": "Subsidies: {{amount}}",
+      "reserves": {
+        "longue_distance": "Range to verify (long distance)",
+        "hors_route": "Off-road use to verify",
+        "ravitaillement_h2": "Limited H2 refuelling in Québec"
+      },
+      "estimatedConsumption": "Estimated consumption",
+      "unknownCategory": "Category “other”: assess manually",
+      "empty": {
+        "title": "No vehicles to assess",
+        "subtitle": "First select the project vehicles in the Fleet step."
+      },
+      "disclaimer": "Range is not modelled in this version: long-distance and off-road uses are flagged as caveats. Amounts rely on the registry assumptions (statuses and verification dates in the Library) and are refined in the next steps."
     }
   }
 }

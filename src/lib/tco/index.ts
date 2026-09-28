@@ -10,6 +10,8 @@ export type { ProgrammeSubvention, TypeOrganisme, StatutProgramme } from './subs
 export { resoudreSubventionsVehicule } from './subsidy-resolver';
 export type { DemandeSubventions } from './subsidy-resolver';
 export { calculerPlan, energieAnnuelleFacturee } from './engine';
+export { parametresParDefaut, tauxTaxesNonRecuperables } from './defaults';
+export type { OptionsParametres } from './defaults';
 export { analyserSensibilite, parametresStandards } from './sensitivity';
 export type { ResultatSensibilite, ParametreSensibilite, NiveauRisque, BarreTornade } from './sensitivity';
 export { ENGINE_VERSION, empreinte, serialiserCanonique } from './fingerprint';
