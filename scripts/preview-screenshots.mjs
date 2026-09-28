@@ -66,6 +66,13 @@ const LIGNES = {
   ],
 };
 
+// Étape Flotte du parcours : véhicules inclus dans le projet (joint vehicles(*))
+LIGNES.project_vehicles = [
+  { id: 'pv1', project_id: PROJET_ID, vehicle_id: 'v1', replacement_year: 2028, target_technology: 'bev', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), vehicles: LIGNES.vehicles[0] },
+  { id: 'pv2', project_id: PROJET_ID, vehicle_id: 'v2', replacement_year: 2028, target_technology: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), vehicles: LIGNES.vehicles[1] },
+  { id: 'pv3', project_id: PROJET_ID, vehicle_id: 'v3', replacement_year: 2030, target_technology: 'bev', created_at: new Date().toISOString(), updated_at: new Date().toISOString(), vehicles: LIGNES.vehicles[2] },
+];
+
 function tableDepuisUrl(url) {
   const m = url.pathname.match(/\/rest\/v1\/([a-zA-Z_]+)/);
   return m ? m[1] : null;
