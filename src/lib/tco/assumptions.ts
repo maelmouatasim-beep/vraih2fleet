@@ -732,6 +732,10 @@ export interface DefautsCategorie {
   categorie: CategorieVehicule;
   libelle: string;
   /** Consommations par technologie (unités canoniques : L/100km, kWh/100km, kgH2/100km). */
+  /** Consommations NOMINALES en conditions tempérées (§3.3) : la
+   *  majoration hivernale du moteur s'applique PAR-DESSUS pour BEV et
+   *  FCEV — ne jamais y mettre une moyenne annuelle incluant l'hiver
+   *  (double comptage). */
   consommation: Record<Technologie, { valeur: number; plage: { basse: number; haute: number } }>;
   /** Prix d'achat avant taxes, CAD 2026. */
   prixAchat: Record<Technologie, { valeur: number; plage: { basse: number; haute: number } }>;
@@ -842,7 +846,11 @@ export const DEFAUTS_CATEGORIES: Record<CategorieVehicule, DefautsCategorie> = {
     libelle: 'Autobus urbain 12 m',
     consommation: {
       diesel: { valeur: 45, plage: { basse: 35, haute: 58 } },
-      BEV: { valeur: 150, plage: { basse: 120, haute: 180 } },
+      // 140 = 1,4 kWh/km « été » (Concordia/STM) : valeur NOMINALE
+      // TEMPÉRÉE — la majoration hivernale du moteur s'applique
+      // par-dessus. L'ancienne valeur 150 (proche de la moyenne annuelle
+      // incluant l'hiver) comptait l'hiver DEUX FOIS (revue externe, A4).
+      BEV: { valeur: 140, plage: { basse: 120, haute: 170 } },
       FCEV: { valeur: 9, plage: { basse: 7, haute: 11.5 } },
     },
     prixAchat: {

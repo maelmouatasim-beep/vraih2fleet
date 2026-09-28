@@ -34,13 +34,12 @@ describe("construireStrategie", () => {
     expect(s.plan!.vehicules[0].anneeAcquisition).toBe(3);
     expect(s.plan!.vehicules[0].alternative.technologie).toBe("BEV");
     expect(s.resultat!.alternative.flux.investissement[3]).toBeGreaterThan(0);
-    // à l'année 0 : seulement l'infrastructure (comptée au point 0, §3.5) —
-    // l'achat du véhicule n'a pas encore eu lieu (référence sans infra : 0)
+    // rien à l'année 0 : le véhicule ET l'infrastructure arrivent en
+    // année 3 (l'infra suit l'arrivée des véhicules, §3.5 v2.0)
     expect(s.resultat!.reference.flux.investissement[0]).toBe(0);
-    expect(s.resultat!.alternative.flux.investissement[0]).toBeCloseTo(
-      s.infraCapex * (1 + s.plan!.parametres.tauxTaxesNonRecuperables),
-      6,
-    );
+    expect(s.resultat!.alternative.flux.investissement[0]).toBe(0);
+    const site = s.plan!.sitesInfra!.find((x) => x.id === "depot-recharge")!;
+    expect(site.anneeMiseEnService).toBe(3);
     // le versement des subventions est décalé à l'année d'acquisition
     for (const sub of s.plan!.vehicules[0].subventionsAlternative ?? []) {
       expect(sub.annee).toBeGreaterThanOrEqual(3);
@@ -112,6 +111,22 @@ describe("construireStrategie", () => {
     expect(libelles(en2026)).toContain("Roulez vert");
     expect(libelles(en2030)).not.toContain("Roulez vert");
     expect(en2030.subventionsTotal).toBeLessThan(en2026.subventionsTotal);
+  });
+
+  it("l'infrastructure est mise en service à l'année d'arrivée des premiers véhicules", () => {
+    const s = construireStrategie(
+      [
+        vehicule({ id: "a", replacement_year: 2029 }),
+        vehicule({ id: "b", replacement_year: 2031 }),
+      ],
+      "plan_actuel",
+      OPTIONS,
+    );
+    const site = s.plan!.sitesInfra!.find((x) => x.id === "depot-recharge")!;
+    expect(site.anneeMiseEnService).toBe(3); // 2029 − 2026
+    // aucun investissement d'infrastructure à l'année 0
+    expect(s.resultat!.alternative.flux.investissement[0]).toBe(0);
+    expect(s.resultat!.alternative.flux.investissement[3]).toBeGreaterThan(0);
   });
 
   it("FCEV : site H2 distinct du site de recharge (répartitions homogènes)", () => {

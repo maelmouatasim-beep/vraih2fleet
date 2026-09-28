@@ -1,14 +1,18 @@
 # Méthodologie de calcul du coût total de possession (TCO)
 
 **H2Fleet — spécification du moteur de calcul `src/lib/tco/`**
-Version 1.2 (Phase 3) — 2026-09-28 — statut : **en validation**
+Version 2.0 (révision de la revue externe) — 2026-09-28 — statut : **en validation**
 
 > Historique : v1.0 = spécification initiale (Phase 1A). v1.1 intègre les
 > précisions issues du contre-calcul indépendant des 6 cas de référence
 > (les « ambiguïtés » relevées, tranchées en §10). v1.2 (Phase 3) ajoute
-> l'année d'acquisition par véhicule (§10.11) pour le plan pluriannuel ;
-> le moteur `src/lib/tco/engine.ts` (engineVersion 1.1.0) implémente
-> cette version et reproduit toujours les 6 cas à ±0,01 $.
+> l'année d'acquisition par véhicule (§10.11). v2.0 (revue externe)
+> révise : VR unifiée au re-remplacement (§10.2), infrastructure à
+> l'année de mise en service avec ré-investissement (§3.5), assurance
+> codée (§3.6), convention des consommations nominales tempérées (§3.3),
+> convention du coût par tonne (§6.1). Le moteur (engineVersion 2.0.0)
+> implémente cette version ; les 7 cas de référence sont régénérés par
+> le contre-calculateur indépendant committé (scripts/reference-cases/).
 
 Ce document est la référence unique de la méthode de calcul. Il est écrit
 pour être lu par un directeur des finances municipal : chaque formule est
@@ -81,9 +85,12 @@ d'actualisation ; le service de la dette peut être ajouté en Phase 3).
   (1 + r_réel) × (1 + π)` où π est l'inflation générale). Mélanger un
   taux réel et des flux nominaux est une erreur classique que le moteur
   interdit par construction (le type d'entrée exige un taux nominal).
-- Tous les montants sont en **CAD de l'année de référence du projet**
-  (l'année civile choisie à la création du projet, affichée sur chaque
-  rapport : « dollars courants, année de référence 2026 »).
+- Deux expressions monétaires coexistent et sont TOUJOURS étiquetées :
+  la **vue budgétaire** est en dollars **courants de chaque année**
+  (ce que le conseil votera cette année-là) ; les montants **actualisés**
+  (TCO, VAN) sont exprimés en dollars **de l'année de référence** du
+  projet (l'année 0, affichée sur chaque rapport). Les prix d'entrée du
+  registre sont datés (champ `anneeDollars`).
 
 ### 2.3 Taux : stockage en décimal
 
@@ -239,18 +246,30 @@ kWh_réseau = km/an × (kWh/100 km ÷ 100) × (1 + MajorationHivernale) ÷ Rende
   s'applique en moyenne annualisée :
   `MajorationAnnualisée = part_km_hiver × majoration_hiver`
   (défaut : 4 mois d'hiver ≈ 33 % des km, majoration paramétrable, § 8).
-- `CoûtEffectif_$/kWh` est calculé **au niveau du site de recharge**
+- `CoûtEffectif_$/kWh` se raisonne **au niveau du site de recharge**
   (dépôt), pas du véhicule, parce que la facture d'Hydro-Québec se
-  compose de deux parties (tarif M ou G) :
+  compose de deux parties (tarif M ou G). En v2, c'est une **hypothèse
+  d'entrée** ($/kWh au compteur du dépôt, registre ou donnée client) —
+  le calcul automatique par site à partir de la puissance appelée n'est
+  PAS implémenté ; la formule ci-dessous documente comment la dériver
+  d'une facture :
 
 ```
 CoûtEffectif = [ Σ kWh_site × Prix_énergie + PuissanceFacturée_kW × Prime_$/kW × 12 mois ] ÷ Σ kWh_site
 ```
 
   La puissance facturée dépend de la stratégie de recharge (recharge
-  nocturne étalée vs recharge rapide simultanée) ; elle est saisie au
-  niveau du site ou estimée par défaut. **Un devis ou une facture
-  d'Hydro-Québec saisi dans le projet remplace l'estimation** (§ 7.6).
+  nocturne étalée vs recharge rapide simultanée). **Un devis ou une
+  facture d'Hydro-Québec saisi dans le projet remplace l'estimation**
+  (§ 7.6).
+
+**Convention des consommations (toutes technologies)** : les
+consommations d'entrée (saisies, télématiques ou défauts de catégorie)
+sont des valeurs **NOMINALES en conditions tempérées**. Le moteur
+applique la majoration hivernale annualisée PAR-DESSUS (BEV et FCEV).
+Une moyenne annuelle réelle qui inclut déjà l'hiver ne doit pas être
+saisie telle quelle (double comptage) — la retraiter en valeur tempérée
+ou ajuster la majoration du projet.
 
 **Hydrogène**
 
@@ -274,6 +293,12 @@ Entretien(v, n) = km/an × Coût_$/km(techno, catégorie) × (1 + g_entretien)^n
   Chacun est défini par (année, coût, probabilité optionnelle) et
   apparaît comme une ligne distincte dans la ventilation — jamais fondu
   dans le $/km.
+
+**Remplacement de batterie ou de pile à combustible** : sur les longues
+durées (vie complète d'un autobus, horizon 15-16 ans), un remplacement
+de batterie/pile se modélise comme un **événement majeur daté** au
+montant du devis — optionnel, jamais ajouté d'office (aucun coût de
+remplacement générique sourcé au registre en v2).
 
 ### 3.5 Infrastructure
 
@@ -299,29 +324,38 @@ véhicule (principe de causalité des coûts) ; à défaut de données, parts
 `Σ PartInfra(v) = CoûtInfra_site` — le coût d'infrastructure n'est
 compté **ni deux fois, ni à moitié**.
 
-Si la durée de vie de l'infrastructure dépasse l'horizon H, une valeur
-résiduelle d'infrastructure (amortissement linéaire) est créditée en fin
-d'horizon, comme pour les véhicules.
+**Chronologie (v2.0)** : chaque site porte une **année de mise en
+service** (par défaut, l'année d'arrivée des premiers véhicules qui
+l'utilisent). Le capex est payé cette année-là (indexé à l'inflation
+générale, §3.8) ; l'opex court ensuite ; si la durée de vie de
+l'infrastructure échoit avant l'horizon, l'équipement est **ré-investi**
+(même capex, indexé) — l'équipement remplacé atteint exactement sa fin
+de vie (valeur résiduelle linéaire nulle). En fin d'horizon, le dernier
+équipement est crédité de sa valeur résiduelle **linéaire** au prorata
+de sa durée de vie restante.
 
 ### 3.6 Assurance et immatriculation
 
 Comptées seulement si fournies par l'organisme (beaucoup de municipalités
-s'auto-assurent) : $/an par véhicule, indexé à l'inflation générale.
-Aucune heuristique du type « 1 % du prix du véhicule » : si la donnée
-n'est pas fournie, le poste vaut 0 et la ventilation l'indique
-explicitement (« assurance : non fournie »).
+s'auto-assurent) : champ `assuranceParAn` ($/an) sur chaque
+spécification de véhicule, indexé à l'inflation générale, poste
+« assurance » distinct dans les flux. Aucune heuristique du type « 1 %
+du prix du véhicule » : si la donnée n'est pas fournie, le poste vaut 0.
 
 ### 3.7 Valeur résiduelle
 
-Dépréciation géométrique avec plancher :
+Dépréciation géométrique avec plancher, à l'âge `a` du véhicule :
 
 ```
-VR(v, H) = max( Prix × (1 − d)^H , Plancher × Prix )   avec VR ≤ Prix
+VR(v, a) = max( Prix × (1 − d)^a , Plancher × Prix )   avec VR ≤ Prix
 ```
 
 - `d` = taux de dépréciation annuel par technologie et catégorie (§ 8) ;
 - `Plancher` (défaut 10 %) représente la valeur de ferraille/pièces ;
-- la valeur résiduelle est actualisée comme tout flux de l'année H.
+- **la MÊME formule s'applique partout** (v2.0) : en fin d'horizon
+  (a = H − année d'achat) comme à la reprise d'un véhicule remplacé en
+  fin de vie utile (a = durée de vie) ;
+- la valeur résiduelle est actualisée comme tout flux de son année.
 
 ### 3.8 Horizon vs durée de vie
 
@@ -390,6 +424,14 @@ Coût/tonne = (TCO_alternative − TCO_référence) ÷ t CO₂e évitées cumul�
 
 (affiché « gain net par tonne évitée » quand le TCO alternatif est
 inférieur à la référence).
+
+**Convention du coût par tonne évitée** : numérateur = surcoût
+ACTUALISÉ (TCO_alternative − TCO_référence, dollars de l'année de
+référence) ; dénominateur = tonnes de CO₂e évitées **physiques, non
+actualisées** (somme simple sur l'horizon). Cette convention — la plus
+répandue dans les analyses publiques — est affichée avec le chiffre ;
+actualiser aussi les tonnes serait défendable mais donnerait des
+valeurs non comparables aux barèmes usuels ($/t).
 
 **Valorisation carbone** : optionnellement, les tonnes évitées peuvent
 être valorisées au **coût social du carbone** d'ECCC (mise à jour 2023).
@@ -578,13 +620,15 @@ désormais NORMATIVE et testée dans le moteur.
 1. **Assiette de la valeur résiduelle** : le prix AVANT taxes payé pour
    ce véhicule (pour un rachat futur : le prix indexé effectivement
    payé), en dollars nominaux, NON indexée entre l'achat et la revente.
-2. **Re-remplacement (§3.8)** : le véhicule remplacé en fin de vie utile
-   est repris à sa valeur **plancher** (10 % du prix avant taxes de son
-   cycle) — la formule géométrique ne vaut que pour une revente avant la
-   fin de vie (fin d'horizon). Le rachat se fait au prix avant taxes
-   indexé à l'inflation générale (trajectoire technologique désactivée
-   par défaut), taxes non récupérables ajoutées, **sans subvention**
-   (aucun programme actuel ne garantit un barème à cet horizon).
+2. **Re-remplacement (§3.8) — RÉVISÉ v2.0 (revue externe)** : le
+   véhicule remplacé en fin de vie utile est repris à sa **VR
+   géométrique planchée à l'âge = durée de vie** — la MÊME méthode
+   qu'en fin d'horizon (l'ancienne règle « plancher forfaitaire »
+   créait deux méthodes pour le même concept). Le rachat se fait au
+   prix avant taxes indexé à l'inflation générale (trajectoire
+   technologique désactivée par défaut), taxes non récupérables
+   ajoutées, **sans subvention** (aucun programme actuel ne garantit un
+   barème à cet horizon).
 3. **Subventions** : montants nominaux NON indexés ; comptées à leur
    année de versement, y compris dans le calcul du délai de
    récupération. Versement par défaut : an 0 (point de vente — PAVÉ,
@@ -594,11 +638,14 @@ désormais NORMATIVE et testée dans le moteur.
    servent aux émissions.
 5. **Émissions de l'électricité** : calculées sur les kWh **au
    compteur** (pertes de recharge incluses).
-6. **Infrastructure** : entretien = % du capex AVANT taxes, indexé à
-   l'inflation entretien dès l'année 1 ; taxes non récupérables sur le
-   capex seulement ; valeur résiduelle linéaire sur le capex avant
-   taxes ; si la durée de vie de l'infra est inférieure à l'horizon,
-   aucun ré-investissement n'est modélisé en v1 (avertissement émis).
+6. **Infrastructure — RÉVISÉ v2.0** : entretien = % du capex AVANT
+   taxes, indexé à l'inflation entretien après la mise en service ;
+   taxes non récupérables sur le capex seulement ; capex payé à
+   l'**année de mise en service** (défaut : arrivée des premiers
+   véhicules du site), indexé à l'inflation générale ;
+   **ré-investissement** en fin de durée de vie tant que l'horizon la
+   dépasse ; valeur résiduelle linéaire du dernier équipement en fin
+   d'horizon.
 7. **Délai de récupération (§6.1)** : cumul des écarts nominaux
    (référence − alternative) **depuis l'année 0 incluse**, subventions
    et valeurs résiduelles comptées à leur année ; le résultat est la

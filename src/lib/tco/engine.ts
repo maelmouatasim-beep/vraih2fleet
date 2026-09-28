@@ -35,11 +35,18 @@ function fluxVides(h: number): FluxAnnuels {
     subventions: zero(),
     energie: zero(),
     entretien: zero(),
+    assurance: zero(),
     evenements: zero(),
     opexInfra: zero(),
     residuels: zero(),
     net: zero(),
   };
+}
+
+/** Valeur résiduelle géométrique planchée (§3.7) — MÊME méthode en fin
+ *  de vie (reprise au re-remplacement) et en fin d'horizon (§10.2 v2.0). */
+function ratioResiduel(depreciation: number, age: number, plancher: number): number {
+  return Math.max(Math.pow(1 - depreciation, age), plancher);
 }
 
 /** Années d'achat d'un véhicule sur l'horizon (début, début+durée, … < H). */
@@ -130,15 +137,15 @@ function ajouterVehiculeAuScenario(
     const prixBase = spec.prixAvantTaxes * Math.pow(1 + p.inflations.generale, annee);
     flux.investissement[annee] += prixBase * taxes;
     if (annee > debut) {
-      flux.residuels[annee] += p.plancherResiduel * prixBasePrecedent;
+      // Reprise du véhicule remplacé à sa VR géométrique planchée (même
+      // méthode qu'en fin d'horizon — §10.2 v2.0).
+      flux.residuels[annee] += ratioResiduel(depreciation, vehicule.dureeVieAns, p.plancherResiduel) * prixBasePrecedent;
     }
     prixBasePrecedent = prixBase;
     dernierAchat = annee;
     prixBaseDernier = prixBase;
   }
-  const ageFinHorizon = h - dernierAchat;
-  const ratioResiduel = Math.max(Math.pow(1 - depreciation, ageFinHorizon), p.plancherResiduel);
-  flux.residuels[h] += ratioResiduel * prixBaseDernier;
+  flux.residuels[h] += ratioResiduel(depreciation, h - dernierAchat, p.plancherResiduel) * prixBaseDernier;
 
   // Subventions à leur année de versement (alternative seulement : la
   // référence diesel n'en reçoit pas).
@@ -160,6 +167,9 @@ function ajouterVehiculeAuScenario(
   for (let n = debut + 1; n <= h; n++) {
     flux.energie[n] += energieAnnuelle * prixEnergieAnnee(spec, p, n);
     flux.entretien[n] += vehicule.kmParAn * spec.entretienParKm * Math.pow(1 + p.inflations.entretien, n);
+    // Assurance/immatriculation (§3.6) : $/an fournis, indexés à
+    // l'inflation générale ; 0 si non fournis.
+    flux.assurance[n] += spec.assuranceParAn * Math.pow(1 + p.inflations.generale, n);
   }
   for (const ev of spec.evenements) {
     if (ev.annee > h) continue;
@@ -183,7 +193,31 @@ function ajouterInfra(
   const parts: PartInfraVehicule[] = [];
 
   for (const site of plan.sitesInfra) {
-    flux.investissement[0] += site.capexAvantTaxes * taxes;
+    const debut = site.anneeMiseEnService;
+    if (debut >= h) {
+      avertissements.push(
+        `site ${site.id} : mise en service (${debut}) hors de l'horizon H=${h} — site sans effet sur le plan`,
+      );
+      continue;
+    }
+    // Capex à l'année de mise en service (indexé à l'inflation générale,
+    // §3.8), puis RÉINVESTISSEMENT en fin de durée de vie tant que
+    // l'horizon la dépasse (§3.5 v2.0) ; l'équipement remplacé atteint
+    // exactement sa fin de vie (VR linéaire nulle) ; le dernier est
+    // crédité de sa VR linéaire en fin d'horizon.
+    const achats = anneesAchat(p.infra.dureeVieAns, h, debut);
+    let dernierAchat = debut;
+    let capexDernier = 0;
+    for (const annee of achats) {
+      const capexIndexe = site.capexAvantTaxes * Math.pow(1 + p.inflations.generale, annee);
+      flux.investissement[annee] += capexIndexe * taxes;
+      dernierAchat = annee;
+      capexDernier = capexIndexe;
+    }
+    const ageFin = h - dernierAchat;
+    if (ageFin < p.infra.dureeVieAns) {
+      flux.residuels[h] += (capexDernier * (p.infra.dureeVieAns - ageFin)) / p.infra.dureeVieAns;
+    }
     for (const s of site.subventions) {
       if (s.annee > h) {
         avertissements.push(`site ${site.id} : subvention « ${s.libelle} » après l'horizon — ignorée`);
@@ -191,16 +225,9 @@ function ajouterInfra(
       }
       flux.subventions[s.annee] += s.montant;
     }
-    for (let n = 1; n <= h; n++) {
+    for (let n = debut + 1; n <= h; n++) {
       flux.opexInfra[n] +=
         site.capexAvantTaxes * p.infra.entretienAnnuelPctCapex * Math.pow(1 + p.inflations.entretien, n);
-    }
-    if (p.infra.dureeVieAns > h) {
-      flux.residuels[h] += (site.capexAvantTaxes * (p.infra.dureeVieAns - h)) / p.infra.dureeVieAns;
-    } else if (p.infra.dureeVieAns < h) {
-      avertissements.push(
-        `site ${site.id} : durée de vie de l'infrastructure (${p.infra.dureeVieAns} ans) inférieure à l'horizon — aucun ré-investissement modélisé en v1`,
-      );
     }
 
     // Répartition par véhicule : au prorata de l'énergie facturée de
@@ -235,6 +262,7 @@ function finaliserScenario(flux: FluxAnnuels, ttw: number, wtw: number, p: Param
       flux.investissement[n] +
       flux.energie[n] +
       flux.entretien[n] +
+      flux.assurance[n] +
       flux.evenements[n] +
       flux.opexInfra[n] -
       flux.subventions[n] -
@@ -319,6 +347,7 @@ export function calculerPlan(entree: PlanTcoEntree): ResultatPlan {
     const fonctionnementAlt =
       alternative.flux.energie[n] +
       alternative.flux.entretien[n] +
+      alternative.flux.assurance[n] +
       alternative.flux.evenements[n] +
       alternative.flux.opexInfra[n];
     vueBudgetaire.push({

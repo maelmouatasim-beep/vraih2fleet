@@ -92,9 +92,11 @@ describe('anneeAcquisition (§10.11)', () => {
       95000 * Math.pow(1 + P.inflations.generale, 7) * taxes,
       6,
     );
-    // reprise au plancher du véhicule remplacé, à l'année du re-remplacement
+    // reprise du véhicule remplacé à sa VR géométrique planchée (âge =
+    // durée de vie, même méthode qu'en fin d'horizon — §10.2 v2.0)
+    const ratioReprise = Math.max(Math.pow(1 - P.depreciationAnnuelle.BEV, 5), P.plancherResiduel);
     expect(r.alternative.flux.residuels[7]).toBeCloseTo(
-      P.plancherResiduel * 95000 * Math.pow(1 + P.inflations.generale, 2),
+      ratioReprise * 95000 * Math.pow(1 + P.inflations.generale, 2),
       6,
     );
   });

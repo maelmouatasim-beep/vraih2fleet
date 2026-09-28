@@ -69,9 +69,16 @@ export type EvenementMajeur = z.infer<typeof zEvenementMajeur>;
 export const zSpecVehicule = z.object({
   technologie: zTechnologie,
   prixAvantTaxes: zMontantPositif,
-  /** L/100 km (diesel), kWh/100 km (BEV), kg H2/100 km (FCEV). */
+  /** L/100 km (diesel), kWh/100 km (BEV), kg H2/100 km (FCEV) — valeur
+   *  NOMINALE en conditions tempérées (§3.3) : la majoration hivernale
+   *  du moteur s'applique par-dessus pour les BEV/FCEV. */
   consommationPar100km: zMontantPositif,
   entretienParKm: zMontantNonNegatif,
+  /** Assurance et immatriculation, $/an, indexées à l'inflation générale
+   *  (§3.6). 0 = non fournie (aucune heuristique). */
+  assuranceParAn: zMontantNonNegatif.default(0),
+  /** Événements majeurs datés (§3.4) — y compris un remplacement de
+   *  batterie ou de pile à combustible (montant du devis). */
   evenements: z.array(zEvenementMajeur).default([]),
 });
 export type SpecVehicule = z.infer<typeof zSpecVehicule>;
@@ -114,6 +121,10 @@ export const zSiteInfra = z.object({
   capexAvantTaxes: zMontantNonNegatif,
   vehiculeIds: z.array(z.string().min(1)).min(1),
   subventions: z.array(zSubventionAppliquee).default([]),
+  /** Année du plan où le site est mis en service (§3.5) : capex payé
+   *  cette année-là (indexé à l'inflation générale), opex ensuite,
+   *  ré-investissement en fin de durée de vie si l'horizon la dépasse. */
+  anneeMiseEnService: z.number().int().min(0).max(40).default(0),
 });
 export type SiteInfra = z.infer<typeof zSiteInfra>;
 
@@ -136,6 +147,7 @@ export interface FluxAnnuels {
   subventions: number[];
   energie: number[];
   entretien: number[];
+  assurance: number[];
   evenements: number[];
   opexInfra: number[];
   residuels: number[];

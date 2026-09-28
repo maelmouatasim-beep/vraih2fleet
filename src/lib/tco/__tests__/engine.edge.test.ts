@@ -72,14 +72,58 @@ describe('événements majeurs et avertissements', () => {
     expect(r.alternative.flux.subventions[1]).toBe(5000);
   });
 
-  it('durée de vie de l’infra < horizon : avertissement, pas de résiduel', () => {
+  it("durée de vie de l'infra < horizon : RÉINVESTISSEMENT en fin de vie (§3.5 v2.0)", () => {
     const plan = base();
     plan.parametres = { ...PARAMETRES_CAS, infra: { entretienAnnuelPctCapex: 0.03, dureeVieAns: 5 } };
     const r = calculerPlan(plan);
-    expect(r.avertissements.some((a) => a.includes('durée de vie'))).toBe(true);
-    // le seul résiduel restant est celui du véhicule
+    const taxes = 1 + PARAMETRES_CAS.tauxTaxesNonRecuperables;
+    // réachat à l'année 5, capex indexé à l'inflation générale
+    expect(r.alternative.flux.investissement[5]).toBeCloseTo(
+      15000 * Math.pow(1 + PARAMETRES_CAS.inflations.generale, 5) * taxes,
+      6,
+    );
+    // le dernier équipement (acheté en 5, âge 5 = durée de vie) n'a
+    // aucune VR linéaire en fin d'horizon : seul le véhicule en a une
     const residuelInfra = r.alternative.flux.residuels[10] - Math.max(0.82 ** 10, 0.1) * 95000;
     expect(Math.abs(residuelInfra)).toBeLessThan(1e-9);
+  });
+
+  it("site mis en service à l'année des véhicules : capex à cette année-là, rien avant", () => {
+    const plan = base();
+    plan.sitesInfra = [
+      { id: 's1', capexAvantTaxes: 15000, vehiculeIds: ['v1'], anneeMiseEnService: 3 },
+    ];
+    const r = calculerPlan(plan);
+    const taxes = 1 + PARAMETRES_CAS.tauxTaxesNonRecuperables;
+    // année 0 : seulement le véhicule (acquis en 0)
+    expect(r.alternative.flux.investissement[0]).toBeCloseTo(95000 * taxes, 6);
+    expect(r.alternative.flux.investissement[3]).toBeCloseTo(
+      15000 * Math.pow(1 + PARAMETRES_CAS.inflations.generale, 3) * taxes,
+      6,
+    );
+    // opex seulement après la mise en service
+    expect(r.alternative.flux.opexInfra[3]).toBe(0);
+    expect(r.alternative.flux.opexInfra[4]).toBeGreaterThan(0);
+    // VR linéaire du dernier équipement : âge 7 sur 15 en fin d'horizon
+    const capexIndexe = 15000 * Math.pow(1 + PARAMETRES_CAS.inflations.generale, 3);
+    const residuelInfra =
+      r.alternative.flux.residuels[10] -
+      Math.max(0.82 ** 10, 0.1) * 95000 -
+      (capexIndexe * (15 - 7)) / 15;
+    expect(Math.abs(residuelInfra)).toBeLessThan(1e-6);
+  });
+
+  it("assurance fournie : $/an indexés à l'inflation générale, dans le net (§3.6)", () => {
+    const plan = base();
+    plan.vehicules[0].alternative.assuranceParAn = 1200;
+    const r = calculerPlan(plan);
+    expect(r.alternative.flux.assurance[1]).toBeCloseTo(
+      1200 * (1 + PARAMETRES_CAS.inflations.generale),
+      9,
+    );
+    const sans = calculerPlan(base());
+    expect(r.alternative.tcoActualise).toBeGreaterThan(sans.alternative.tcoActualise);
+    expect(r.reference.flux.assurance.every((x) => x === 0)).toBe(true);
   });
 
   it('site avec des technologies mixtes : parts égales + avertissement', () => {

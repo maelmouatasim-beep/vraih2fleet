@@ -672,17 +672,17 @@
     ]
    },
    "sorties": {
-    "tcoActualiseAlt": 1110461.52,
-    "tcoActualiseRef": 1580097.03,
-    "vanDifferentielle": 469635.51,
-    "tcoParKmAlt": 0.8353,
+    "tcoActualiseAlt": 1108185.53,
+    "tcoActualiseRef": 1574744.5,
+    "vanDifferentielle": 466558.98,
+    "tcoParKmAlt": 0.8335,
     "paybackSimpleAns": 5,
     "paybackSimpleRaison": null,
     "paybackActualiseAns": 5,
     "paybackActualiseRaison": null,
     "co2EviteTtwTonnes": 890.95,
     "co2EviteWtwTonnes": 1112.596,
-    "coutParTonneWtw": -422.11
+    "coutParTonneWtw": -419.34
    }
   },
   {
@@ -758,17 +758,17 @@
     ]
    },
    "sorties": {
-    "tcoActualiseAlt": 2782116.79,
+    "tcoActualiseAlt": 2808557.62,
     "tcoActualiseRef": 2587197.95,
-    "vanDifferentielle": -194918.84,
-    "tcoParKmAlt": 4.2784,
+    "vanDifferentielle": -221359.67,
+    "tcoParKmAlt": 4.3191,
     "paybackSimpleAns": 14,
     "paybackSimpleRaison": null,
     "paybackActualiseAns": null,
     "paybackActualiseRaison": "le surcoût n'est pas résorbé à l'horizon H=16",
     "co2EviteTtwTonnes": 1176.768,
     "co2EviteWtwTonnes": 1469.02,
-    "coutParTonneWtw": 132.69
+    "coutParTonneWtw": 150.69
    }
   }
  ]

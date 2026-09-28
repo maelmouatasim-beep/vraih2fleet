@@ -170,16 +170,26 @@ export function construireStrategie(
     };
   }
 
+  // L'infrastructure est payée l'année d'ARRIVÉE des premiers véhicules
+  // qui l'utilisent (§3.5) — pas à l'année 0 du plan.
+  const anneeArrivee = (ids: string[]) =>
+    Math.min(...plansVehicules.filter((v) => ids.includes(v.id)).map((v) => v.anneeAcquisition ?? 0));
   const sitesInfra: NonNullable<PlanTcoEntree["sitesInfra"]> = [];
   if (bevIds.length > 0) {
     infraRecharge += HYPOTHESES.raccordement_depot.valeur;
-    sitesInfra.push({ id: "depot-recharge", capexAvantTaxes: infraRecharge, vehiculeIds: bevIds });
+    sitesInfra.push({
+      id: "depot-recharge",
+      capexAvantTaxes: infraRecharge,
+      vehiculeIds: bevIds,
+      anneeMiseEnService: anneeArrivee(bevIds),
+    });
   }
   if (fcevIds.length > 0) {
     sitesInfra.push({
       id: "depot-h2",
       capexAvantTaxes: HYPOTHESES.station_h2_depot.valeur,
       vehiculeIds: fcevIds,
+      anneeMiseEnService: anneeArrivee(fcevIds),
     });
   }
 

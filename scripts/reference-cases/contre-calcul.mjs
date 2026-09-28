@@ -17,11 +17,18 @@ function fluxVides(h) {
     subventions: zero(),
     energie: zero(),
     entretien: zero(),
+    assurance: zero(),
     evenements: zero(),
     opexInfra: zero(),
     residuels: zero(),
     net: zero(),
   };
+}
+
+/** VR géométrique planchée (§3.7) — même méthode en fin de vie et en
+ *  fin d'horizon (§10.2 v2.0). */
+function ratioResiduel(dep, age, plancher) {
+  return Math.max((1 - dep) ** age, plancher);
 }
 
 /** Énergie annuelle facturée (unité native), majoration hivernale et
@@ -65,9 +72,8 @@ function ajouterVehicule(flux, vehicule, spec, estAlternative, p) {
   const dep = p.depreciationAnnuelle[spec.technologie];
 
   // Achats et re-remplacements (§3.8) : prix indexé à l'inflation
-  // générale ; reprise du véhicule remplacé à la valeur plancher ;
-  // dernier véhicule crédité de sa VR géométrique planchée en fin
-  // d'horizon (§3.7, §10.2).
+  // générale ; reprise du véhicule remplacé à sa VR géométrique planchée
+  // (même méthode qu'en fin d'horizon — §10.2 v2.0).
   const achats = [];
   for (let a = debut; a < h; a += vehicule.dureeVieAns) achats.push(a);
   let prixPrecedent = 0;
@@ -76,13 +82,14 @@ function ajouterVehicule(flux, vehicule, spec, estAlternative, p) {
   for (const a of achats) {
     const prixBase = spec.prixAvantTaxes * (1 + p.inflations.generale) ** a;
     flux.investissement[a] += prixBase * taxes;
-    if (a > debut) flux.residuels[a] += p.plancherResiduel * prixPrecedent;
+    if (a > debut) {
+      flux.residuels[a] += ratioResiduel(dep, vehicule.dureeVieAns, p.plancherResiduel) * prixPrecedent;
+    }
     prixPrecedent = prixBase;
     dernier = a;
     prixDernier = prixBase;
   }
-  const ratioFin = Math.max((1 - dep) ** (h - dernier), p.plancherResiduel);
-  flux.residuels[h] += ratioFin * prixDernier;
+  flux.residuels[h] += ratioResiduel(dep, h - dernier, p.plancherResiduel) * prixDernier;
 
   if (estAlternative) {
     for (const s of vehicule.subventionsAlternative ?? []) {
@@ -94,6 +101,7 @@ function ajouterVehicule(flux, vehicule, spec, estAlternative, p) {
   for (let n = debut + 1; n <= h; n++) {
     flux.energie[n] += e * prixEnergie(spec, p, n);
     flux.entretien[n] += vehicule.kmParAn * spec.entretienParKm * (1 + p.inflations.entretien) ** n;
+    flux.assurance[n] += (spec.assuranceParAn ?? 0) * (1 + p.inflations.generale) ** n;
   }
   for (const ev of spec.evenements ?? []) {
     if (ev.annee <= h) flux.evenements[ev.annee] += ev.coutAvantTaxes;
@@ -103,22 +111,36 @@ function ajouterVehicule(flux, vehicule, spec, estAlternative, p) {
   return { ttw: ttw * (h - debut), wtw: wtw * (h - debut) };
 }
 
-/** Infrastructure (§3.5) : capex au point 0 (alternative seulement),
- *  opex indexé années 1..H, VR linéaire si la durée de vie dépasse H. */
+/** Infrastructure (§3.5 v2.0) : capex à l'année de mise en service
+ *  (indexé inflation générale), RÉINVESTISSEMENT en fin de durée de vie
+ *  tant que l'horizon la dépasse, VR linéaire du dernier équipement en
+ *  fin d'horizon, opex après la mise en service. Alternative seulement. */
 function ajouterInfra(flux, plan, p) {
   const h = p.horizonAns;
   const taxes = 1 + p.tauxTaxesNonRecuperables;
   for (const site of plan.sitesInfra ?? []) {
-    flux.investissement[0] += site.capexAvantTaxes * taxes;
+    const debut = site.anneeMiseEnService ?? 0;
+    if (debut >= h) continue;
+    const achats = [];
+    for (let a = debut; a < h; a += p.infra.dureeVieAns) achats.push(a);
+    let dernier = debut;
+    let capexDernier = 0;
+    for (const a of achats) {
+      const capexIndexe = site.capexAvantTaxes * (1 + p.inflations.generale) ** a;
+      flux.investissement[a] += capexIndexe * taxes;
+      dernier = a;
+      capexDernier = capexIndexe;
+    }
+    const ageFin = h - dernier;
+    if (ageFin < p.infra.dureeVieAns) {
+      flux.residuels[h] += (capexDernier * (p.infra.dureeVieAns - ageFin)) / p.infra.dureeVieAns;
+    }
     for (const s of site.subventions ?? []) {
       if (s.annee <= h) flux.subventions[s.annee] += s.montant;
     }
-    for (let n = 1; n <= h; n++) {
+    for (let n = debut + 1; n <= h; n++) {
       flux.opexInfra[n] +=
         site.capexAvantTaxes * p.infra.entretienAnnuelPctCapex * (1 + p.inflations.entretien) ** n;
-    }
-    if (p.infra.dureeVieAns > h) {
-      flux.residuels[h] += (site.capexAvantTaxes * (p.infra.dureeVieAns - h)) / p.infra.dureeVieAns;
     }
   }
 }
@@ -131,6 +153,7 @@ function finaliser(flux, p) {
       flux.investissement[n] +
       flux.energie[n] +
       flux.entretien[n] +
+      flux.assurance[n] +
       flux.evenements[n] +
       flux.opexInfra[n] -
       flux.subventions[n] -
