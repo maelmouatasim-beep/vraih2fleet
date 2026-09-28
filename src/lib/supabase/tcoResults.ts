@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
-import { TCOResult, YearlyBreakdown, VehicleTypeCosts } from '@/lib/calculations/types';
+import { TCOResult, YearlyBreakdown, VehicleTypeCosts } from '@/lib/legacy/scenario-types';
 import { Json } from '@/integrations/supabase/types';
 
 // Utility to ensure numeric values are never NaN or undefined

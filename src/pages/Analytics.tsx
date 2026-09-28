@@ -30,7 +30,6 @@ import TransitionScenariosCard from "@/components/analytics/TransitionScenariosC
 import InvestmentBreakdownChart from "@/components/analytics/InvestmentBreakdownChart";
 import DataQualityIndicator from "@/components/analytics/DataQualityIndicator";
 import InfrastructureEconomics from "@/components/analytics/InfrastructureEconomics";
-import RiskAnalysisPanel from "@/components/analytics/RiskAnalysisPanel";
 import ESGObjectivesTracker from "@/components/analytics/ESGObjectivesTracker";
 import SubsidyRiskBadge from "@/components/analytics/SubsidyRiskBadge";
 import OperatingCostBreakdownChart from "@/components/analytics/OperatingCostBreakdownChart";
@@ -427,23 +426,16 @@ const AnalyticsDashboard = () => {
 
         {/* Risk Analysis Tab (unified What-If + Sensitivity) */}
         <TabsContent value="risks" className="space-y-6">
-          {hasTcoResults && transitionScenarios.length > 0 ? (
-            <>
-              <RiskAnalysisPanel 
-                scenarios={transitionScenarios}
-                baseTcoTotal={kpis.totalTcoSum}
-                basePaybackYears={kpis.avgPaybackYears}
-                scenarioPrices={scenarioPrices}
-              />
-              {costProjections.length > 0 && <CostProjectionsChart projections={costProjections} />}
-            </>
-          ) : (
-            <SectionEmptyState
-              icon={Sliders}
-              message={t('analytics.noRiskAnalysis', 'L\'analyse de risque nécessite au moins un scénario avec TCO calculé.')}
-              actionLabel={t('analytics.createScenario', 'Create Scenario')}
-              actionHref="/dashboard/projects"
-            />
+          {/* Le stress test vit désormais dans l'étape Stratégies du parcours
+              projet, branché sur le moteur TCO (sensitivity.ts). */}
+          <SectionEmptyState
+            icon={Sliders}
+            message={t('analytics.riskMoved')}
+            actionLabel={t('analytics.riskMovedCta')}
+            actionHref="/dashboard/projects"
+          />
+          {hasTcoResults && costProjections.length > 0 && (
+            <CostProjectionsChart projections={costProjections} />
           )}
         </TabsContent>
 

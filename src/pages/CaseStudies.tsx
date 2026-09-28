@@ -33,7 +33,7 @@ import {
   formatNumber,
   formatCurrency,
   ASSUMPTIONS
-} from "@/lib/calculations/caseStudies";
+} from "@/lib/caseStudies";
 
 const CaseStudies = () => {
   const { t, i18n } = useTranslation();

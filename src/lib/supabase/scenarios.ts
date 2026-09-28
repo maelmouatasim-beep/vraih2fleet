@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
-import { Scenario, FleetComposition, Region, CreateScenarioForm, VehicleConfiguration } from '@/lib/calculations/types';
+import { Scenario, FleetComposition, Region, CreateScenarioForm, VehicleConfiguration } from '@/lib/legacy/scenario-types';
 import { Json } from '@/integrations/supabase/types';
 
 // Convert database row to Scenario type

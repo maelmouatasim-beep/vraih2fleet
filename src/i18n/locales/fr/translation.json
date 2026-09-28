@@ -3704,7 +3704,9 @@
       },
       "reset": "Réinitialiser",
       "noData": "L'analyse de risque nécessite au moins un scénario avec TCO calculé."
-    }
+    },
+    "riskMoved": "Le stress test a déménagé dans l'étape Stratégies du parcours projet, branché sur le moteur TCO.",
+    "riskMovedCta": "Ouvrir un projet"
   },
   "dataProvenance": {
     "badges": {

@@ -1,4 +1,4 @@
-import { Region } from './calculations/types';
+import { Region } from './legacy/scenario-types';
 
 export type Currency = 'CAD';
 

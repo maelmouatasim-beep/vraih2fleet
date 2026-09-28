@@ -1,7 +1,4 @@
 {
-  "src/components/infrastructure/GridCapacityManager.tsx": {
-    "jours d’exploitation codés (×365/300/250)": 1
-  },
   "src/components/reports/FeatureDocumentationPDF.tsx": {
     "conso BEV 120 kWh/100 codée": 1
   },
@@ -9,9 +6,6 @@
     "conso BEV 120 kWh/100 codée": 1
   },
   "src/components/reports/charts/PDFDonutChart.tsx": {
-    "conso BEV 120 kWh/100 codée": 1
-  },
-  "src/components/scenarios/ScenarioForm.tsx": {
     "conso BEV 120 kWh/100 codée": 1
   },
   "src/data/mockData.ts": {
@@ -25,33 +19,8 @@
   "src/hooks/useRealDataMetrics.ts": {
     "facteur CO2 diesel (2,6x)": 1
   },
-  "src/lib/calculations/caseStudies.ts": {
+  "src/lib/caseStudies.ts": {
     "facteur CO2 diesel (2,6x)": 2
-  },
-  "src/lib/calculations/configurableMultipliers.ts": {
-    "facteur CO2 diesel (2,6x)": 1,
-    "conso diesel 35,7 L/100": 1,
-    "conso BEV 120 kWh/100 codée": 2
-  },
-  "src/lib/calculations/emissions.ts": {
-    "facteur CO2 diesel (2,6x)": 1,
-    "conso diesel 35,7 L/100": 2,
-    "conso BEV 120 kWh/100 codée": 1
-  },
-  "src/lib/calculations/flexibleTCO.ts": {
-    "facteur CO2 diesel (2,6x)": 1
-  },
-  "src/lib/calculations/flexibleTypes.ts": {
-    "conso BEV 120 kWh/100 codée": 1
-  },
-  "src/lib/calculations/opex.ts": {
-    "conso diesel 35,7 L/100": 2,
-    "conso BEV 120 kWh/100 codée": 1
-  },
-  "src/lib/calculations/types.ts": {
-    "facteur CO2 diesel (2,6x)": 1,
-    "prix diesel codé (1,48 / 1,85)": 3,
-    "conso BEV 120 kWh/100 codée": 1
   },
   "src/lib/supabase/referenceData.ts": {
     "facteur CO2 diesel (2,6x)": 1,

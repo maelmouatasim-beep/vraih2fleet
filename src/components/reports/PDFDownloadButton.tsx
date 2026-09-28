@@ -3,7 +3,7 @@ import { pdf } from '@react-pdf/renderer';
 import { Button } from '@/components/ui/button';
 import { FileDown, Loader2 } from 'lucide-react';
 import { TCOReportPDF, PDFTranslations } from './TCOReportPDF';
-import { TCOResult } from '@/lib/calculations/types';
+import { TCOResult } from '@/lib/legacy/scenario-types';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 

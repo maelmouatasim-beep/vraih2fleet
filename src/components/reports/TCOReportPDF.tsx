@@ -1,6 +1,6 @@
 import { Document, Page, Text, View, Svg, Circle, Path } from '@react-pdf/renderer';
 import { StyleSheet } from '@react-pdf/renderer';
-import { TCOResult } from '@/lib/calculations/types';
+import { TCOResult } from '@/lib/legacy/scenario-types';
 import { PDFBarChart, PDFDonutChart, PDFAreaChart } from './charts';
 
 // ==================== CONSTANTS ====================

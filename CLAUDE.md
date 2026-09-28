@@ -23,11 +23,16 @@ hydrogène : TCO, infrastructure, subventions canadiennes, télématique
 - `src/hooks/` — hooks de données et d'état (Supabase, TanStack Query).
 - `src/lib/tco/` — **LE moteur de calcul TCO/émissions** (pur, testé,
   hypothèses sourcées) ; spec : `docs/tco-methodologie.md` ; tout import
-  passe par le barrel `src/lib/tco`. `src/lib/calculations/` est
-  l'ANCIEN moteur, en sursis (suppression au bloc 3 de la Phase 3) :
-  tout NOUVEL import en est interdit (lint `no-restricted-imports`) et
-  les constantes d'hypothèses hors `src/lib/tco/` sont bloquées par
+  passe par le barrel `src/lib/tco`. L'ANCIEN moteur
+  (`src/lib/calculations/`) est SUPPRIMÉ (Phase 3, bloc 3) ; le lint
+  `no-restricted-imports` empêche sa réintroduction et les constantes
+  d'hypothèses hors `src/lib/tco/` restent bloquées par
   `scripts/check-hypothesis-constants.mjs` (baseline décroissante).
+  `src/lib/legacy/scenario-types.ts` = types hérités SANS calcul, pour
+  lire les tables existantes (scenarios, tco_results, reference_data)
+  jusqu'à la refonte des rapports.
+- `src/lib/journey/` — logique PURE des étapes du parcours
+  (faisabilité, stratégies), branchée sur `src/lib/tco`.
 - `src/i18n/locales/{fr,en}/translation.json` — tous les textes UI.
 - `src/integrations/supabase/` — client et types générés (ne pas éditer
   à la main sauf nécessité ; fichiers marqués « automatically generated »).

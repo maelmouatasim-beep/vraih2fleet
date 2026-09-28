@@ -1,10 +1,8 @@
 {
-  "@typescript-eslint/no-explicit-any": 116,
-  "no-restricted-imports": 53,
+  "@typescript-eslint/no-explicit-any": 73,
   "no-var": 7,
-  "prefer-const": 4,
+  "prefer-const": 3,
   "no-case-declarations": 2,
   "@typescript-eslint/no-empty-object-type": 2,
-  "@typescript-eslint/ban-ts-comment": 1,
   "@typescript-eslint/no-require-imports": 1
 }

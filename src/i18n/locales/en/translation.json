@@ -3704,7 +3704,9 @@
       },
       "reset": "Reset",
       "noData": "Risk analysis requires at least one scenario with calculated TCO."
-    }
+    },
+    "riskMoved": "The stress test moved to the Strategies step of the project journey, powered by the TCO engine.",
+    "riskMovedCta": "Open a project"
   },
   "dataProvenance": {
     "badges": {

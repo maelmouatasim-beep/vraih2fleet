@@ -28,9 +28,6 @@ import Library from "./pages/Library";
 import OrganizationPage from "./pages/OrganizationPage";
 import ProjectDetail from "./pages/ProjectDetail";
 import ProjectJourney, { ETAPES_PARCOURS } from "./pages/project/ProjectJourney";
-import NewScenario from "./pages/NewScenario";
-import NewFlexibleScenario from "./pages/NewFlexibleScenario";
-import ScenarioResults from "./pages/ScenarioResults";
 import DonneesRef from "./pages/DonneesRef";
 import CustomReferenceData from "./pages/CustomReferenceData";
 import Support from "./pages/Support";
@@ -41,7 +38,6 @@ import Settings from "./pages/Settings";
 import HelpTraining from "./pages/HelpTraining";
 import Ecosystem from "./pages/Ecosystem";
 import Telematics from "./pages/Telematics";
-import Infrastructure from "./pages/Infrastructure";
 import ScenarioComparison from "./pages/ScenarioComparison";
 import RoadmapBuilder from "./pages/RoadmapBuilder";
 import Notifications from "./pages/Notifications";
@@ -49,7 +45,6 @@ import NotFound from "./pages/NotFound";
 import OAuthConsent from "./pages/OAuthConsent";
 
 import Guides from "./pages/Guides";
-import TransitionWizard from "./pages/TransitionWizard";
 import { GuideBEV, GuideFCEV, GuideBiomethane, GuideSectorUrban, GuideSectorRegional, GuideSectorLongHaul, GuidePlanning, GuideFunding, GuideOperations } from "./pages/guides";
 
 const queryClient = new QueryClient();
@@ -136,18 +131,13 @@ const App = () => (
                 element={<ProtectedRoute><ProjectJourney etape={etape} /></ProtectedRoute>}
               />
             ))}
-            <Route path="/dashboard/projects/:projectId/scenarios/new" element={
-              <ProtectedRoute><NewScenario /></ProtectedRoute>
-            } />
-            <Route path="/dashboard/projects/:projectId/scenarios/new-flexible" element={
-              <ProtectedRoute><NewFlexibleScenario /></ProtectedRoute>
-            } />
             <Route path="/dashboard/projects/:projectId/compare" element={
               <ProtectedRoute><ScenarioComparison /></ProtectedRoute>
             } />
-            <Route path="/dashboard/scenarios/:scenarioId/results" element={
-              <ProtectedRoute><ScenarioResults /></ProtectedRoute>
-            } />
+            {/* Ancien flux de scénarios (moteur supprimé au bloc 3) : l'étape Stratégies le remplace */}
+            <Route path="/dashboard/projects/:projectId/scenarios/new" element={<ScenarioVersStrategies />} />
+            <Route path="/dashboard/projects/:projectId/scenarios/new-flexible" element={<ScenarioVersStrategies />} />
+            <Route path="/dashboard/scenarios/:scenarioId/results" element={<Navigate to="/dashboard/projects" replace />} />
 
             {/* Outils conservés, accessibles hors menu (absorbés au fil de la Phase 3) */}
             <Route path="/dashboard/donnees-ref" element={
@@ -159,18 +149,14 @@ const App = () => (
             <Route path="/dashboard/telematics" element={
               <ProtectedRoute><Telematics /></ProtectedRoute>
             } />
-            <Route path="/dashboard/infrastructure" element={
-              <ProtectedRoute><Infrastructure /></ProtectedRoute>
-            } />
+            <Route path="/dashboard/infrastructure" element={<Navigate to="/dashboard/projects" replace />} />
             <Route path="/dashboard/analytics" element={
               <ProtectedRoute><Analytics /></ProtectedRoute>
             } />
             <Route path="/dashboard/roadmap" element={
               <ProtectedRoute><RoadmapBuilder /></ProtectedRoute>
             } />
-            <Route path="/dashboard/wizard" element={
-              <ProtectedRoute><TransitionWizard /></ProtectedRoute>
-            } />
+            <Route path="/dashboard/wizard" element={<Navigate to="/dashboard/projects" replace />} />
             <Route path="/dashboard/support" element={
               <ProtectedRoute><Support /></ProtectedRoute>
             } />
@@ -209,6 +195,12 @@ const App = () => (
 function TacheVersSuivi() {
   const { projectId } = useParams();
   return <Navigate to={`/dashboard/projects/${projectId}/suivi`} replace />;
+}
+
+// L'ancien flux de création de scénarios est remplacé par l'étape Stratégies.
+function ScenarioVersStrategies() {
+  const { projectId } = useParams();
+  return <Navigate to={`/dashboard/projects/${projectId}/strategies`} replace />;
 }
 
 export default App;

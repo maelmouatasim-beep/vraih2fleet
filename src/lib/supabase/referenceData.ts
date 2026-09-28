@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
-import { ReferenceData, Region } from '@/lib/calculations/types';
+import { ReferenceData, Region } from '@/lib/legacy/scenario-types';
 
 // Map regions to database region values (Canada only)
 const REGION_DB_MAP: Record<Region, string[]> = {

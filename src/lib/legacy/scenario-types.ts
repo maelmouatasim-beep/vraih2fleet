@@ -1,3 +1,10 @@
+/**
+ * Types HÉRITÉS du modèle de scénarios de l'ancien moteur (supprimé au
+ * bloc 3 de la Phase 3). Conservés UNIQUEMENT pour lire/écrire les
+ * tables existantes (scenarios, tco_results, reference_data) et les
+ * composants de rapport en attendant leur refonte (bloc 6). Aucune
+ * valeur d'hypothèse ici — les calculs vivent dans src/lib/tco.
+ */
 // ============= TCO Calculation Types =============
 
 export type VehicleType = 'diesel' | 'ev' | 'hydrogen';
@@ -122,8 +129,12 @@ export interface FleetComposition {
 }
 
 // Enhanced vehicle configuration for detailed scenario
-// Import multiplier override type for expert overrides
-import { MultiplierOverride } from './configurableMultipliers';
+// Surcharges expertes de multiplicateurs (modèle hérité, données stockées)
+export type MultiplierSource = 'system' | 'expert';
+export interface MultiplierOverride {
+  value: number;
+  source: MultiplierSource;
+}
 
 export interface VehicleConfiguration {
   // Section A - Vehicle Type
@@ -462,17 +473,3 @@ export const TERRAIN_TYPE_LABELS: Record<TerrainType, string> = {
   mountainous: 'Montagneux',
 };
 
-// Default reference data (will be overridden by DB values)
-export const DEFAULT_REFERENCE_DATA: ReferenceData = {
-  diesel_truck: 150000,
-  ev_truck: 280000,
-  hydrogen_truck: 350000,
-  diesel_price: 1.48,        // CAD$/L - Canada national average 2025
-  electricity_price: 0.12,
-  hydrogen_price: 12.00,     // CAD$/kg - Canada production cost 2025
-  co2_factor_diesel: 2.68,   // kg CO2/L
-  co2_factor_grid: 120,      // kg CO2/MWh (Canada average - cleaner grid)
-  maintenance_diesel: 15000,
-  maintenance_ev: 8000,
-  maintenance_hydrogen: 10000,
-};

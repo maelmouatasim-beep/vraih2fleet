@@ -2,7 +2,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { createProject } from './projects';
 import { createScenario } from './scenarios';
 import { VehicleGroup, ScenarioRecommendation } from '@/lib/mockTelematicsData';
-import { FleetComposition } from '@/lib/calculations/types';
+import { FleetComposition } from '@/lib/legacy/scenario-types';
 
 export interface AutoScenarioResult {
   projectId: string;
