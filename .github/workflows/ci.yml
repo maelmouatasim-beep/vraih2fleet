@@ -37,6 +37,9 @@ jobs:
       - name: Constantes d'hypothèses hors src/lib/tco (baseline)
         run: node scripts/check-hypothesis-constants.mjs
 
+      - name: Cas de référence — JSON conforme au contre-calculateur indépendant
+        run: node scripts/reference-cases/generate.mjs --check
+
       - name: Build
         run: npm run build
 

@@ -1,8 +1,9 @@
 /**
- * Les 6 cas de référence de la Phase 1A, à ±0,01 $.
- * Valeurs attendues : docs/tco-cas-de-reference.json — contre-calcul
- * INDÉPENDANT (agent isolé, méthodologie seulement). Ne jamais modifier
- * le JSON pour faire passer un test.
+ * Les cas de référence, à ±0,01 $. Valeurs attendues :
+ * docs/tco-cas-de-reference.json — GÉNÉRÉ par le contre-calculateur
+ * INDÉPENDANT (scripts/reference-cases/, vérifié par la CI avec
+ * `generate.mjs --check`). Ne jamais modifier le JSON à la main pour
+ * faire passer un test.
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -30,7 +31,7 @@ const REF = JSON.parse(
 
 const CENT = 0.011; // tolérance ±0,01 $ (les attendus sont arrondis au cent)
 
-describe('moteur vs 6 cas de référence indépendants', () => {
+describe('moteur vs cas de référence indépendants', () => {
   for (const attendu of REF.cas) {
     it(`cas ${attendu.id} — ${attendu.titre}`, () => {
       const resultat = calculerPlan(CAS[attendu.id - 1]());

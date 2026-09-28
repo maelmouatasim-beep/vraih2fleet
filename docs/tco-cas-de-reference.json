@@ -1,308 +1,775 @@
 {
-  "parametresCommuns": {
-    "anneeReference": 2026,
-    "devise": "CAD courants",
-    "organisme": "municipalite",
-    "scenario": "central",
-    "tauxActualisationNominal": 0.05,
-    "inflations": {
+ "avertissement": "FICHIER GÉNÉRÉ par scripts/reference-cases/generate.mjs — ne pas éditer à la main. Les sorties viennent du contre-calculateur INDÉPENDANT (contre-calcul.mjs), jamais du moteur : ne jamais modifier ce fichier pour faire passer un test du moteur.",
+ "parametresCommuns": {
+  "anneeReference": 2026,
+  "horizonAns": 10,
+  "tauxActualisationNominal": 0.05,
+  "inflations": {
+   "diesel": 0.03,
+   "electricite": 0.035,
+   "hydrogene": 0,
+   "entretien": 0.025,
+   "generale": 0.021
+  },
+  "prixAnnee0": {
+   "dieselParL": 2.95,
+   "electriciteEffectiveParKwh": 0.1,
+   "h2LivreParKg": 16.5
+  },
+  "rendementRecharge": 0.9,
+  "majorationHivernaleAnnualisee": 0.0825,
+  "tauxTaxesNonRecuperables": 0.049875,
+  "depreciationAnnuelle": {
+   "diesel": 0.15,
+   "BEV": 0.18,
+   "FCEV": 0.2
+  },
+  "plancherResiduel": 0.1,
+  "infra": {
+   "entretienAnnuelPctCapex": 0.03,
+   "dureeVieAns": 15
+  },
+  "facteursEmission": {
+   "dieselTtwLegersKgParL": 2.741,
+   "dieselTtwLourdsKgParL": 2.724,
+   "ratioWtwDiesel": 1.25,
+   "electriciteGParKwh": 1.2,
+   "h2KgParKg": 1
+  }
+ },
+ "cas": [
+  {
+   "id": 1,
+   "titre": "Camionnette de service BEV",
+   "notes": "Subvention Écocamionnage classe 2b : 2 500 $ forfaitaires (barème 2026-2027), versée à l'année 1 (versement unique après livraison et approbation, modalités 6.1.6).",
+   "entrees": {
+    "parametres": {
+     "anneeReference": 2026,
+     "horizonAns": 10,
+     "tauxActualisationNominal": 0.05,
+     "inflations": {
       "diesel": 0.03,
       "electricite": 0.035,
-      "hydrogene": 0.0,
+      "hydrogene": 0,
       "entretien": 0.025,
       "generale": 0.021
-    },
-    "prixAnnee0": {
+     },
+     "prixAnnee0": {
       "dieselParL": 2.95,
       "electriciteEffectiveParKwh": 0.1,
       "h2LivreParKg": 16.5
-    },
-    "rendementRecharge": 0.9,
-    "majorationHivernaleAnnualisee": 0.08250000000000002,
-    "tauxTaxesNonRecuperables": 0.049875,
-    "depreciationAnnuelle": {
+     },
+     "rendementRecharge": 0.9,
+     "majorationHivernaleAnnualisee": 0.0825,
+     "tauxTaxesNonRecuperables": 0.049875,
+     "depreciationAnnuelle": {
       "diesel": 0.15,
       "BEV": 0.18,
       "FCEV": 0.2
-    },
-    "plancherResiduel": 0.1,
-    "infra": {
+     },
+     "plancherResiduel": 0.1,
+     "infra": {
       "entretienAnnuelPctCapex": 0.03,
       "dureeVieAns": 15
-    },
-    "facteursEmission": {
+     },
+     "facteursEmission": {
       "dieselTtwLegersKgParL": 2.741,
       "dieselTtwLourdsKgParL": 2.724,
       "ratioWtwDiesel": 1.25,
       "electriciteGParKwh": 1.2,
-      "h2ElectrolyseKgParKg": 1.0
+      "h2KgParKg": 1
+     }
     },
-    "conventions": [
-      "année 0 = acquisition, CAPEX non actualisé ; flux d'exploitation en fin d'année n, actualisés 1/(1+r)^n",
-      "flux nominaux : prix année 0 x (1+g_poste)^n",
-      "kWh facturés au compteur = kWh véhicule / 0,90 ; majoration hivernale x 1,0825 (BEV et FCEV)",
-      "taxes non récupérables 4,9875 % sur prix avant taxes et avant subventions (véhicules et infra)",
-      "VR = max(prixAvantTaxes x (1-d)^années, 10 % x prixAvantTaxes), nominale, fin d'horizon",
-      "référence = diesel neuf équivalent, sans infrastructure"
+    "vehicules": [
+     {
+      "id": "camionnette",
+      "kmParAn": 30000,
+      "classeEmissionDiesel": "legers",
+      "reference": {
+       "technologie": "diesel",
+       "prixAvantTaxes": 68000,
+       "consommationPar100km": 15,
+       "entretienParKm": 0.14
+      },
+      "alternative": {
+       "technologie": "BEV",
+       "prixAvantTaxes": 95000,
+       "consommationPar100km": 32,
+       "entretienParKm": 0.1
+      },
+      "subventionsAlternative": [
+       {
+        "libelle": "Écocamionnage classe 2b",
+        "montant": 2500,
+        "annee": 1
+       }
+      ],
+      "dureeVieAns": 30
+     }
+    ],
+    "sitesInfra": [
+     {
+      "id": "depot",
+      "capexAvantTaxes": 15000,
+      "vehiculeIds": [
+       "camionnette"
+      ]
+     }
     ]
+   },
+   "sorties": {
+    "tcoActualiseAlt": 142986.72,
+    "tcoActualiseRef": 219655.59,
+    "vanDifferentielle": 76668.87,
+    "tcoParKmAlt": 0.6172,
+    "paybackSimpleAns": 4,
+    "paybackSimpleRaison": null,
+    "paybackActualiseAns": 4,
+    "paybackActualiseRaison": null,
+    "co2EviteTtwTonnes": 123.345,
+    "co2EviteWtwTonnes": 154.043,
+    "coutParTonneWtw": -497.71
+   }
   },
-  "cas": [
-    {
-      "id": 1,
-      "titre": "Camionnette de service BEV",
-      "entrees": {
-        "horizonAns": 10,
-        "kmParAn": 30000,
-        "reference": {
-          "prixAvantTaxes": 68000,
-          "consoL100km": 15,
-          "entretienParKm": 0.14
-        },
-        "alternative": {
-          "technologie": "BEV",
-          "prixAvantTaxes": 95000,
-          "consoKwh100km": 32,
-          "entretienParKm": 0.1
-        },
-        "subventions": {
-          "1": 2500
-        },
-        "infraCapexAvantTaxes": 15000,
-        "feDieselTtwKgParL": 2.741,
-        "notes": "Subvention Écocamionnage classe 2b : 2 500 $ forfaitaires (barème 2026-2027), versée à l'année 1 (versement unique après livraison et approbation, modalités 6.1.6)."
-      },
-      "sorties": {
-        "tcoActualiseAlt": 142986.72,
-        "tcoActualiseRef": 219655.59,
-        "vanDifferentielle": 76668.87,
-        "tcoParKmAlt": 0.6172,
-        "paybackSimpleAns": 4,
-        "paybackSimpleRaison": null,
-        "paybackActualiseAns": 4,
-        "paybackActualiseRaison": null,
-        "co2EviteTtwTonnes": 123.345,
-        "co2EviteWtwTonnes": 154.043,
-        "coutParTonneWtw": -497.71
-      }
+  {
+   "id": 2,
+   "titre": "Autobus urbain 12 m BEV",
+   "notes": "Aucune subvention comptée : FTCZE et PAGTCP sont des montants par projet (plafond automatique 0 dans le registre — jamais comptés sans saisie).",
+   "entrees": {
+    "parametres": {
+     "anneeReference": 2026,
+     "horizonAns": 10,
+     "tauxActualisationNominal": 0.05,
+     "inflations": {
+      "diesel": 0.03,
+      "electricite": 0.035,
+      "hydrogene": 0,
+      "entretien": 0.025,
+      "generale": 0.021
+     },
+     "prixAnnee0": {
+      "dieselParL": 2.95,
+      "electriciteEffectiveParKwh": 0.1,
+      "h2LivreParKg": 16.5
+     },
+     "rendementRecharge": 0.9,
+     "majorationHivernaleAnnualisee": 0.0825,
+     "tauxTaxesNonRecuperables": 0.049875,
+     "depreciationAnnuelle": {
+      "diesel": 0.15,
+      "BEV": 0.18,
+      "FCEV": 0.2
+     },
+     "plancherResiduel": 0.1,
+     "infra": {
+      "entretienAnnuelPctCapex": 0.03,
+      "dureeVieAns": 15
+     },
+     "facteursEmission": {
+      "dieselTtwLegersKgParL": 2.741,
+      "dieselTtwLourdsKgParL": 2.724,
+      "ratioWtwDiesel": 1.25,
+      "electriciteGParKwh": 1.2,
+      "h2KgParKg": 1
+     }
     },
-    {
-      "id": 2,
-      "titre": "Autobus urbain 12 m BEV",
-      "entrees": {
-        "horizonAns": 10,
-        "kmParAn": 60000,
-        "reference": {
-          "prixAvantTaxes": 750000,
-          "consoL100km": 45,
-          "entretienParKm": 0.95
-        },
-        "alternative": {
-          "technologie": "BEV",
-          "prixAvantTaxes": 1720000,
-          "consoKwh100km": 140,
-          "entretienParKm": 0.7
-        },
-        "subventions": {},
-        "infraCapexAvantTaxes": 250000,
-        "feDieselTtwKgParL": 2.724,
-        "notes": "Aucune subvention comptée : FTCZE et PAGTCP sont des montants par projet (plafond automatique 0 dans le registre — jamais comptés sans montant réel saisi)."
+    "vehicules": [
+     {
+      "id": "bus",
+      "kmParAn": 60000,
+      "classeEmissionDiesel": "lourds",
+      "reference": {
+       "technologie": "diesel",
+       "prixAvantTaxes": 750000,
+       "consommationPar100km": 45,
+       "entretienParKm": 0.95
       },
-      "sorties": {
-        "tcoActualiseAlt": 2399979.76,
-        "tcoActualiseRef": 1914849.96,
-        "vanDifferentielle": -485129.8,
-        "tcoParKmAlt": 5.1801,
-        "paybackSimpleAns": null,
-        "paybackSimpleRaison": "le surcoût n'est pas résorbé à l'horizon H=10",
-        "paybackActualiseAns": null,
-        "paybackActualiseRaison": "le surcoût n'est pas résorbé à l'horizon H=10",
-        "co2EviteTtwTonnes": 735.48,
-        "co2EviteWtwTonnes": 918.138,
-        "coutParTonneWtw": 528.38
-      }
+      "alternative": {
+       "technologie": "BEV",
+       "prixAvantTaxes": 1720000,
+       "consommationPar100km": 140,
+       "entretienParKm": 0.7
+      },
+      "dureeVieAns": 30
+     }
+    ],
+    "sitesInfra": [
+     {
+      "id": "depot",
+      "capexAvantTaxes": 250000,
+      "vehiculeIds": [
+       "bus"
+      ]
+     }
+    ]
+   },
+   "sorties": {
+    "tcoActualiseAlt": 2399979.76,
+    "tcoActualiseRef": 1914849.96,
+    "vanDifferentielle": -485129.8,
+    "tcoParKmAlt": 5.1801,
+    "paybackSimpleAns": null,
+    "paybackSimpleRaison": "le surcoût n'est pas résorbé à l'horizon H=10",
+    "paybackActualiseAns": null,
+    "paybackActualiseRaison": "le surcoût n'est pas résorbé à l'horizon H=10",
+    "co2EviteTtwTonnes": 735.48,
+    "co2EviteWtwTonnes": 918.138,
+    "coutParTonneWtw": 528.38
+   }
+  },
+  {
+   "id": 3,
+   "titre": "Camion lourd BEV (classe 8)",
+   "notes": "Écocamionnage classe 8 : 25 % x 460 000 = 115 000 $ (sous le plafond de 150 000 $), année 1. Le pourcentage des classes 5-8 vient des modalités (borne basse retenue en Phase 1A).",
+   "entrees": {
+    "parametres": {
+     "anneeReference": 2026,
+     "horizonAns": 10,
+     "tauxActualisationNominal": 0.05,
+     "inflations": {
+      "diesel": 0.03,
+      "electricite": 0.035,
+      "hydrogene": 0,
+      "entretien": 0.025,
+      "generale": 0.021
+     },
+     "prixAnnee0": {
+      "dieselParL": 2.95,
+      "electriciteEffectiveParKwh": 0.1,
+      "h2LivreParKg": 16.5
+     },
+     "rendementRecharge": 0.9,
+     "majorationHivernaleAnnualisee": 0.0825,
+     "tauxTaxesNonRecuperables": 0.049875,
+     "depreciationAnnuelle": {
+      "diesel": 0.15,
+      "BEV": 0.18,
+      "FCEV": 0.2
+     },
+     "plancherResiduel": 0.1,
+     "infra": {
+      "entretienAnnuelPctCapex": 0.03,
+      "dureeVieAns": 15
+     },
+     "facteursEmission": {
+      "dieselTtwLegersKgParL": 2.741,
+      "dieselTtwLourdsKgParL": 2.724,
+      "ratioWtwDiesel": 1.25,
+      "electriciteGParKwh": 1.2,
+      "h2KgParKg": 1
+     }
     },
-    {
-      "id": 3,
-      "titre": "Camion lourd BEV (classe 8)",
-      "entrees": {
-        "horizonAns": 10,
-        "kmParAn": 60000,
-        "reference": {
-          "prixAvantTaxes": 200000,
-          "consoL100km": 36,
-          "entretienParKm": 0.35
-        },
-        "alternative": {
-          "technologie": "BEV",
-          "prixAvantTaxes": 460000,
-          "consoKwh100km": 115,
-          "entretienParKm": 0.25
-        },
-        "subventions": {
-          "1": 115000
-        },
-        "infraCapexAvantTaxes": 250000,
-        "feDieselTtwKgParL": 2.724,
-        "notes": "Écocamionnage classe 8 : 25 % x 460 000 = 115 000 $ (sous le plafond de 150 000 $), année 1. Le pourcentage des classes 5-8 n'a pas pu être lu dans les modalités (borne basse 25 % retenue, à valider)."
+    "vehicules": [
+     {
+      "id": "c8",
+      "kmParAn": 60000,
+      "classeEmissionDiesel": "lourds",
+      "reference": {
+       "technologie": "diesel",
+       "prixAvantTaxes": 200000,
+       "consommationPar100km": 36,
+       "entretienParKm": 0.35
       },
-      "sorties": {
-        "tcoActualiseAlt": 820198.54,
-        "tcoActualiseRef": 944294.76,
-        "vanDifferentielle": 124096.22,
-        "tcoParKmAlt": 1.7703,
-        "paybackSimpleAns": 7,
-        "paybackSimpleRaison": null,
-        "paybackActualiseAns": 9,
-        "paybackActualiseRaison": null,
-        "co2EviteTtwTonnes": 588.384,
-        "co2EviteWtwTonnes": 734.484,
-        "coutParTonneWtw": -168.96
-      }
+      "alternative": {
+       "technologie": "BEV",
+       "prixAvantTaxes": 460000,
+       "consommationPar100km": 115,
+       "entretienParKm": 0.25
+      },
+      "subventionsAlternative": [
+       {
+        "libelle": "Écocamionnage classe 8 (25 %)",
+        "montant": 115000,
+        "annee": 1
+       }
+      ],
+      "dureeVieAns": 30
+     }
+    ],
+    "sitesInfra": [
+     {
+      "id": "depot",
+      "capexAvantTaxes": 250000,
+      "vehiculeIds": [
+       "c8"
+      ]
+     }
+    ]
+   },
+   "sorties": {
+    "tcoActualiseAlt": 820198.54,
+    "tcoActualiseRef": 944294.76,
+    "vanDifferentielle": 124096.22,
+    "tcoParKmAlt": 1.7703,
+    "paybackSimpleAns": 7,
+    "paybackSimpleRaison": null,
+    "paybackActualiseAns": 9,
+    "paybackActualiseRaison": null,
+    "co2EviteTtwTonnes": 588.384,
+    "co2EviteWtwTonnes": 734.484,
+    "coutParTonneWtw": -168.96
+   }
+  },
+  {
+   "id": 4,
+   "titre": "Véhicule léger BEV",
+   "notes": "PAVÉ 5 000 $ + Roulez vert 2 000 $, cumulés au point de vente (année 0). Admissible : transaction 49 500 $ <= 50 000 $ (PAVÉ) et PDSF < 65 000 $ (RV).",
+   "entrees": {
+    "parametres": {
+     "anneeReference": 2026,
+     "horizonAns": 10,
+     "tauxActualisationNominal": 0.05,
+     "inflations": {
+      "diesel": 0.03,
+      "electricite": 0.035,
+      "hydrogene": 0,
+      "entretien": 0.025,
+      "generale": 0.021
+     },
+     "prixAnnee0": {
+      "dieselParL": 2.95,
+      "electriciteEffectiveParKwh": 0.1,
+      "h2LivreParKg": 16.5
+     },
+     "rendementRecharge": 0.9,
+     "majorationHivernaleAnnualisee": 0.0825,
+     "tauxTaxesNonRecuperables": 0.049875,
+     "depreciationAnnuelle": {
+      "diesel": 0.15,
+      "BEV": 0.18,
+      "FCEV": 0.2
+     },
+     "plancherResiduel": 0.1,
+     "infra": {
+      "entretienAnnuelPctCapex": 0.03,
+      "dureeVieAns": 15
+     },
+     "facteursEmission": {
+      "dieselTtwLegersKgParL": 2.741,
+      "dieselTtwLourdsKgParL": 2.724,
+      "ratioWtwDiesel": 1.25,
+      "electriciteGParKwh": 1.2,
+      "h2KgParKg": 1
+     }
     },
-    {
-      "id": 4,
-      "titre": "Véhicule léger BEV",
-      "entrees": {
-        "horizonAns": 10,
-        "kmParAn": 25000,
-        "reference": {
-          "prixAvantTaxes": 45000,
-          "consoL100km": 9,
-          "entretienParKm": 0.1
-        },
-        "alternative": {
-          "technologie": "BEV",
-          "prixAvantTaxes": 49500,
-          "consoKwh100km": 20,
-          "entretienParKm": 0.07
-        },
-        "subventions": {
-          "0": 7000
-        },
-        "infraCapexAvantTaxes": 15000,
-        "feDieselTtwKgParL": 2.741,
-        "notes": "PAVÉ 5 000 $ + Roulez vert 2 000 $, cumulés au point de vente (année 0). Admissible : transaction 49 500 $ <= 50 000 $ (PAVÉ) et PDSF < 65 000 $ (RV). Taxes calculées sur le prix AVANT rabais."
+    "vehicules": [
+     {
+      "id": "vl",
+      "kmParAn": 25000,
+      "classeEmissionDiesel": "legers",
+      "reference": {
+       "technologie": "diesel",
+       "prixAvantTaxes": 45000,
+       "consommationPar100km": 9,
+       "entretienParKm": 0.1
       },
-      "sorties": {
-        "tcoActualiseAlt": 78346.91,
-        "tcoActualiseRef": 123558.8,
-        "vanDifferentielle": 45211.89,
-        "tcoParKmAlt": 0.4059,
-        "paybackSimpleAns": 3,
-        "paybackSimpleRaison": null,
-        "paybackActualiseAns": 3,
-        "paybackActualiseRaison": null,
-        "co2EviteTtwTonnes": 61.673,
-        "co2EviteWtwTonnes": 77.018,
-        "coutParTonneWtw": -587.03
-      }
+      "alternative": {
+       "technologie": "BEV",
+       "prixAvantTaxes": 49500,
+       "consommationPar100km": 20,
+       "entretienParKm": 0.07
+      },
+      "subventionsAlternative": [
+       {
+        "libelle": "PAVÉ + Roulez vert",
+        "montant": 7000,
+        "annee": 0
+       }
+      ],
+      "dureeVieAns": 30
+     }
+    ],
+    "sitesInfra": [
+     {
+      "id": "depot",
+      "capexAvantTaxes": 15000,
+      "vehiculeIds": [
+       "vl"
+      ]
+     }
+    ]
+   },
+   "sorties": {
+    "tcoActualiseAlt": 78346.91,
+    "tcoActualiseRef": 123558.8,
+    "vanDifferentielle": 45211.89,
+    "tcoParKmAlt": 0.4059,
+    "paybackSimpleAns": 3,
+    "paybackSimpleRaison": null,
+    "paybackActualiseAns": 3,
+    "paybackActualiseRaison": null,
+    "co2EviteTtwTonnes": 61.673,
+    "co2EviteWtwTonnes": 77.018,
+    "coutParTonneWtw": -587.03
+   }
+  },
+  {
+   "id": 5,
+   "titre": "Camion lourd FCEV (H2 électrolyse)",
+   "notes": "Écocamionnage : 25 % x 720 000 = 180 000 $, PLAFONNÉ à 150 000 $, année 1. Infra = 0 : ravitaillement externe, le prix du H2 livré porte l'infrastructure.",
+   "entrees": {
+    "parametres": {
+     "anneeReference": 2026,
+     "horizonAns": 10,
+     "tauxActualisationNominal": 0.05,
+     "inflations": {
+      "diesel": 0.03,
+      "electricite": 0.035,
+      "hydrogene": 0,
+      "entretien": 0.025,
+      "generale": 0.021
+     },
+     "prixAnnee0": {
+      "dieselParL": 2.95,
+      "electriciteEffectiveParKwh": 0.1,
+      "h2LivreParKg": 16.5
+     },
+     "rendementRecharge": 0.9,
+     "majorationHivernaleAnnualisee": 0.0825,
+     "tauxTaxesNonRecuperables": 0.049875,
+     "depreciationAnnuelle": {
+      "diesel": 0.15,
+      "BEV": 0.18,
+      "FCEV": 0.2
+     },
+     "plancherResiduel": 0.1,
+     "infra": {
+      "entretienAnnuelPctCapex": 0.03,
+      "dureeVieAns": 15
+     },
+     "facteursEmission": {
+      "dieselTtwLegersKgParL": 2.741,
+      "dieselTtwLourdsKgParL": 2.724,
+      "ratioWtwDiesel": 1.25,
+      "electriciteGParKwh": 1.2,
+      "h2KgParKg": 1
+     }
     },
-    {
-      "id": 5,
-      "titre": "Camion lourd FCEV (H2 électrolyse)",
-      "entrees": {
-        "horizonAns": 10,
-        "kmParAn": 60000,
-        "reference": {
-          "prixAvantTaxes": 200000,
-          "consoL100km": 36,
-          "entretienParKm": 0.35
-        },
-        "alternative": {
-          "technologie": "FCEV",
-          "prixAvantTaxes": 720000,
-          "consoKgH2100km": 8,
-          "entretienParKm": 0.32
-        },
-        "subventions": {
-          "1": 150000
-        },
-        "infraCapexAvantTaxes": 0,
-        "feDieselTtwKgParL": 2.724,
-        "notes": "Écocamionnage : 25 % x 720 000 = 180 000 $, PLAFONNÉ à 150 000 $, année 1. Infra = 0 : ravitaillement externe, le prix de 16,50 $/kg inclut déjà la distribution."
+    "vehicules": [
+     {
+      "id": "h2",
+      "kmParAn": 60000,
+      "classeEmissionDiesel": "lourds",
+      "reference": {
+       "technologie": "diesel",
+       "prixAvantTaxes": 200000,
+       "consommationPar100km": 36,
+       "entretienParKm": 0.35
       },
-      "sorties": {
-        "tcoActualiseAlt": 1396177.13,
-        "tcoActualiseRef": 944294.76,
-        "vanDifferentielle": -451882.37,
-        "tcoParKmAlt": 3.0135,
-        "paybackSimpleAns": null,
-        "paybackSimpleRaison": "le surcoût n'est pas résorbé à l'horizon H=10",
-        "paybackActualiseAns": null,
-        "paybackActualiseRaison": "le surcoût n'est pas résorbé à l'horizon H=10",
-        "co2EviteTtwTonnes": 588.384,
-        "co2EviteWtwTonnes": 683.52,
-        "coutParTonneWtw": 661.11
-      }
+      "alternative": {
+       "technologie": "FCEV",
+       "prixAvantTaxes": 720000,
+       "consommationPar100km": 8,
+       "entretienParKm": 0.32
+      },
+      "subventionsAlternative": [
+       {
+        "libelle": "Écocamionnage classe 8 (plafond)",
+        "montant": 150000,
+        "annee": 1
+       }
+      ],
+      "dureeVieAns": 30
+     }
+    ],
+    "sitesInfra": []
+   },
+   "sorties": {
+    "tcoActualiseAlt": 1396177.13,
+    "tcoActualiseRef": 944294.76,
+    "vanDifferentielle": -451882.37,
+    "tcoParKmAlt": 3.0135,
+    "paybackSimpleAns": null,
+    "paybackSimpleRaison": "le surcoût n'est pas résorbé à l'horizon H=10",
+    "paybackActualiseAns": null,
+    "paybackActualiseRaison": "le surcoût n'est pas résorbé à l'horizon H=10",
+    "co2EviteTtwTonnes": 588.384,
+    "co2EviteWtwTonnes": 683.52,
+    "coutParTonneWtw": 661.11
+   }
+  },
+  {
+   "id": 6,
+   "titre": "Mini-plan 5 véhicules (horizon 12 ans, infra partagée, re-remplacement)",
+   "notes": "",
+   "entrees": {
+    "parametres": {
+     "anneeReference": 2026,
+     "horizonAns": 12,
+     "tauxActualisationNominal": 0.05,
+     "inflations": {
+      "diesel": 0.03,
+      "electricite": 0.035,
+      "hydrogene": 0,
+      "entretien": 0.025,
+      "generale": 0.021
+     },
+     "prixAnnee0": {
+      "dieselParL": 2.95,
+      "electriciteEffectiveParKwh": 0.1,
+      "h2LivreParKg": 16.5
+     },
+     "rendementRecharge": 0.9,
+     "majorationHivernaleAnnualisee": 0.0825,
+     "tauxTaxesNonRecuperables": 0.049875,
+     "depreciationAnnuelle": {
+      "diesel": 0.15,
+      "BEV": 0.18,
+      "FCEV": 0.2
+     },
+     "plancherResiduel": 0.1,
+     "infra": {
+      "entretienAnnuelPctCapex": 0.03,
+      "dureeVieAns": 15
+     },
+     "facteursEmission": {
+      "dieselTtwLegersKgParL": 2.741,
+      "dieselTtwLourdsKgParL": 2.724,
+      "ratioWtwDiesel": 1.25,
+      "electriciteGParKwh": 1.2,
+      "h2KgParKg": 1
+     }
     },
-    {
-      "id": 6,
-      "titre": "Mini-plan 5 véhicules (horizon 12 ans, infra partagée, re-remplacement)",
-      "entrees": {
-        "horizonAns": 12,
-        "vehicules": [
-          {
-            "n": 2,
-            "type": "vehicule_leger BEV (cas 4)",
-            "kmParAn": 25000,
-            "subventionsAn0ParVehicule": 7000,
-            "reRemplacementAn": 10,
-            "prixRachatAn10AvantTaxes": 60934.411317392754,
-            "note": "rachat sans subvention (PAVÉ fin 2031, Roulez vert fin 2026) ; VR ancien = plancher 10 % du prix initial à l'an 10"
-          },
-          {
-            "n": 1,
-            "type": "camionnette BEV (cas 1)",
-            "kmParAn": 30000,
-            "subventionAn1": 2500,
-            "dureeVie": "12 ans pour ce cas (pas de re-remplacement)"
-          },
-          {
-            "n": 2,
-            "type": "camion_moyen BEV classe 6",
-            "kmParAn": 35000,
-            "refPrix": 140000,
-            "refL100": 26,
-            "refCpk": 0.25,
-            "altPrix": 300000,
-            "altKwh100": 62,
-            "altCpk": 0.18,
-            "subventionAn1ParVehicule": 75000
-          }
-        ],
-        "infra": {
-          "capexAvantTaxes": 135000,
-          "detail": "5 bornes x 15 000 + raccordement 60 000",
-          "repartitionProrataKwhAn1": {
-            "vehicule_leger_1": 10714.29,
-            "vehicule_leger_2": 10714.29,
-            "camionnette": 20571.43,
-            "camion_moyen_1": 46500.0,
-            "camion_moyen_2": 46500.0
-          },
-          "sommeParts": 135000.0,
-          "vrLineaireFin12": 27000.0
-        },
-        "kwhCompteurAn1": {
-          "vehicule_leger (x1)": 6013.89,
-          "camionnette": 11546.67,
-          "camion_moyen (x1)": 26100.28
-        },
-        "kwhCompteurAn1Total": 75775.0
+    "vehicules": [
+     {
+      "id": "vl1",
+      "kmParAn": 25000,
+      "classeEmissionDiesel": "legers",
+      "reference": {
+       "technologie": "diesel",
+       "prixAvantTaxes": 45000,
+       "consommationPar100km": 9,
+       "entretienParKm": 0.1
       },
-      "sorties": {
-        "tcoActualiseAlt": 1110461.52,
-        "tcoActualiseRef": 1580097.03,
-        "vanDifferentielle": 469635.51,
-        "tcoParKmAlt": 0.8353,
-        "paybackSimpleAns": 5,
-        "paybackSimpleRaison": null,
-        "paybackActualiseAns": 5,
-        "paybackActualiseRaison": null,
-        "co2EviteTtwTonnes": 890.95,
-        "co2EviteWtwTonnes": 1112.596,
-        "coutParTonneWtw": -422.11
-      }
-    }
-  ]
+      "alternative": {
+       "technologie": "BEV",
+       "prixAvantTaxes": 49500,
+       "consommationPar100km": 20,
+       "entretienParKm": 0.07
+      },
+      "subventionsAlternative": [
+       {
+        "libelle": "PAVÉ + Roulez vert",
+        "montant": 7000,
+        "annee": 0
+       }
+      ],
+      "dureeVieAns": 10
+     },
+     {
+      "id": "vl2",
+      "kmParAn": 25000,
+      "classeEmissionDiesel": "legers",
+      "reference": {
+       "technologie": "diesel",
+       "prixAvantTaxes": 45000,
+       "consommationPar100km": 9,
+       "entretienParKm": 0.1
+      },
+      "alternative": {
+       "technologie": "BEV",
+       "prixAvantTaxes": 49500,
+       "consommationPar100km": 20,
+       "entretienParKm": 0.07
+      },
+      "subventionsAlternative": [
+       {
+        "libelle": "PAVÉ + Roulez vert",
+        "montant": 7000,
+        "annee": 0
+       }
+      ],
+      "dureeVieAns": 10
+     },
+     {
+      "id": "camionnette",
+      "kmParAn": 30000,
+      "classeEmissionDiesel": "legers",
+      "reference": {
+       "technologie": "diesel",
+       "prixAvantTaxes": 68000,
+       "consommationPar100km": 15,
+       "entretienParKm": 0.14
+      },
+      "alternative": {
+       "technologie": "BEV",
+       "prixAvantTaxes": 95000,
+       "consommationPar100km": 32,
+       "entretienParKm": 0.1
+      },
+      "subventionsAlternative": [
+       {
+        "libelle": "Écocamionnage classe 2b",
+        "montant": 2500,
+        "annee": 1
+       }
+      ],
+      "dureeVieAns": 12
+     },
+     {
+      "id": "cm1",
+      "kmParAn": 35000,
+      "classeEmissionDiesel": "lourds",
+      "reference": {
+       "technologie": "diesel",
+       "prixAvantTaxes": 140000,
+       "consommationPar100km": 26,
+       "entretienParKm": 0.25
+      },
+      "alternative": {
+       "technologie": "BEV",
+       "prixAvantTaxes": 300000,
+       "consommationPar100km": 62,
+       "entretienParKm": 0.18
+      },
+      "subventionsAlternative": [
+       {
+        "libelle": "Écocamionnage classes 5-7 (25 %)",
+        "montant": 75000,
+        "annee": 1
+       }
+      ],
+      "dureeVieAns": 12
+     },
+     {
+      "id": "cm2",
+      "kmParAn": 35000,
+      "classeEmissionDiesel": "lourds",
+      "reference": {
+       "technologie": "diesel",
+       "prixAvantTaxes": 140000,
+       "consommationPar100km": 26,
+       "entretienParKm": 0.25
+      },
+      "alternative": {
+       "technologie": "BEV",
+       "prixAvantTaxes": 300000,
+       "consommationPar100km": 62,
+       "entretienParKm": 0.18
+      },
+      "subventionsAlternative": [
+       {
+        "libelle": "Écocamionnage classes 5-7 (25 %)",
+        "montant": 75000,
+        "annee": 1
+       }
+      ],
+      "dureeVieAns": 12
+     }
+    ],
+    "sitesInfra": [
+     {
+      "id": "depot",
+      "capexAvantTaxes": 135000,
+      "vehiculeIds": [
+       "vl1",
+       "vl2",
+       "camionnette",
+       "cm1",
+       "cm2"
+      ]
+     }
+    ]
+   },
+   "sorties": {
+    "tcoActualiseAlt": 1110461.52,
+    "tcoActualiseRef": 1580097.03,
+    "vanDifferentielle": 469635.51,
+    "tcoParKmAlt": 0.8353,
+    "paybackSimpleAns": 5,
+    "paybackSimpleRaison": null,
+    "paybackActualiseAns": 5,
+    "paybackActualiseRaison": null,
+    "co2EviteTtwTonnes": 890.95,
+    "co2EviteWtwTonnes": 1112.596,
+    "coutParTonneWtw": -422.11
+   }
+  },
+  {
+   "id": 7,
+   "titre": "Autobus urbain 12 m BEV — vie complète 16 ans (avant PAGTCP/FTCZE)",
+   "notes": "Horizon = durée de vie complète (16 ans). AUCUNE subvention comptée : PAGTCP et FTCZE sont des montants par projet non vérifiés (« avant PAGTCP/FTCZE ») — le cas montre l'économique brut de l'autobus sur sa vie. Défauts de catégorie du registre (prix, consommations, entretien).",
+   "entrees": {
+    "parametres": {
+     "anneeReference": 2026,
+     "horizonAns": 16,
+     "tauxActualisationNominal": 0.05,
+     "inflations": {
+      "diesel": 0.03,
+      "electricite": 0.035,
+      "hydrogene": 0,
+      "entretien": 0.025,
+      "generale": 0.021
+     },
+     "prixAnnee0": {
+      "dieselParL": 2.95,
+      "electriciteEffectiveParKwh": 0.1,
+      "h2LivreParKg": 16.5
+     },
+     "rendementRecharge": 0.9,
+     "majorationHivernaleAnnualisee": 0.0825,
+     "tauxTaxesNonRecuperables": 0.049875,
+     "depreciationAnnuelle": {
+      "diesel": 0.15,
+      "BEV": 0.18,
+      "FCEV": 0.2
+     },
+     "plancherResiduel": 0.1,
+     "infra": {
+      "entretienAnnuelPctCapex": 0.03,
+      "dureeVieAns": 15
+     },
+     "facteursEmission": {
+      "dieselTtwLegersKgParL": 2.741,
+      "dieselTtwLourdsKgParL": 2.724,
+      "ratioWtwDiesel": 1.25,
+      "electriciteGParKwh": 1.2,
+      "h2KgParKg": 1
+     }
+    },
+    "vehicules": [
+     {
+      "id": "bus16",
+      "kmParAn": 60000,
+      "classeEmissionDiesel": "lourds",
+      "reference": {
+       "technologie": "diesel",
+       "prixAvantTaxes": 750000,
+       "consommationPar100km": 45,
+       "entretienParKm": 0.95
+      },
+      "alternative": {
+       "technologie": "BEV",
+       "prixAvantTaxes": 1720000,
+       "consommationPar100km": 140,
+       "entretienParKm": 0.7
+      },
+      "dureeVieAns": 16
+     }
+    ],
+    "sitesInfra": [
+     {
+      "id": "depot",
+      "capexAvantTaxes": 250000,
+      "vehiculeIds": [
+       "bus16"
+      ]
+     }
+    ]
+   },
+   "sorties": {
+    "tcoActualiseAlt": 2782116.79,
+    "tcoActualiseRef": 2587197.95,
+    "vanDifferentielle": -194918.84,
+    "tcoParKmAlt": 4.2784,
+    "paybackSimpleAns": 14,
+    "paybackSimpleRaison": null,
+    "paybackActualiseAns": null,
+    "paybackActualiseRaison": "le surcoût n'est pas résorbé à l'horizon H=16",
+    "co2EviteTtwTonnes": 1176.768,
+    "co2EviteWtwTonnes": 1469.02,
+    "coutParTonneWtw": 132.69
+   }
+  }
+ ]
 }
