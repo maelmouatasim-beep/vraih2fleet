@@ -126,9 +126,22 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
 `docs/tco-methodologie.md` (annexe des rapports et future page publique).
 
 - **Phase 0 — cartographie et plan : livrée, ok reçu.**
-- **Phase 1 — moteur TCO unique (`src/lib/tco/`) : 1A en cours**
-  (méthodologie, hypothèses sourcées, cas de référence indépendants —
-  aucun code moteur ; arrêt pour ok avant 1B moteur+tests+nettoyage).
+- **Phase 1 — moteur TCO unique (`src/lib/tco/`) : 1A LIVRÉE, en
+  attente du « ok » avant 1B (moteur + tests + nettoyage).**
+  Livré : `docs/tco-methodologie.md` (spec complète) ;
+  `src/lib/tco/{assumption-types,assumptions,subsidy-programs,units,generate-hypotheses-doc}.ts` ;
+  `docs/tco-hypotheses.md` GÉNÉRÉ (`npm run docs:tco`, test CI de
+  fraîcheur) ; 6 cas de référence contre-calculés par un agent
+  indépendant (`docs/tco-cas-de-reference.{md,json}`,
+  `docs/tco-verification.xlsx` — formules Excel auditables) ; analyse
+  des écarts vs l'ancien moteur (fin de tco-cas-de-reference.md).
+  Sources officielles lues via
+  `.github/workflows/verify-tco-sources.yml` (l'environnement de dev ne
+  peut pas les atteindre) — statuts vérifiés le 2026-09-28 : iMHZEV
+  FERMÉ, PAVÉ actif (5 000 $, ≤ 50 k$), Roulez vert 2 000 $ jusqu'au
+  2026-12-31, Écocamionnage 2025-2028 (plafonds 30/75/100/150 k$ + 15 %
+  achat local), PIVEZ fermé aux demandes, diesel QC ≈ 2,95 $/L
+  (2026-09-21), tarif M HQ 6,292 ¢/kWh + 18,242 $/kW.
 - Phase 2 — fondations des données (organizations, table vehicles,
   télématique sans aléatoire, tco_results courant unique, i18n/région)
   + menu 6 entrées + parcours 7 étapes : à venir.
