@@ -305,3 +305,13 @@ Plan, Financement, Rapports, Suivi, Démo ~40 véhicules), livrés avec :
   après la refonte).
 - Tables devenues orphelines (hydrogen_suppliers, user_favorite_suppliers,
   scenarios globaux…) : conservées en base, aucune suppression.
+- Rapports PDF hérités (Analytics, Comparaison, ProjectDetail) : encore
+  branchés sur les `tco_results` STOCKÉS de l'ancien modèle via
+  `src/lib/legacy/scenario-types.ts` (types sans calcul). Le rapport de
+  référence est désormais celui de l'étape Rapports (nouveau moteur) ;
+  retrait ou refonte des PDF hérités au plus tard en Phase 4.
+- Faisabilité v1 : l'autonomie n'est pas modélisée (réserves
+  qualitatives affichées pour longue distance / hors route) ; l'infra
+  de l'étape Stratégies est comptée à l'année de référence (pas de
+  phasage de l'infra) et les bornes sont des montants « estimation »
+  du registre en attendant les devis.
