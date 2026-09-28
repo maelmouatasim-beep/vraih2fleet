@@ -8,6 +8,7 @@ import { getProjectById } from "@/lib/supabase/projects";
 import FleetStep from "@/components/journey/FleetStep";
 import FeasibilityStep from "@/components/journey/FeasibilityStep";
 import StrategiesStep from "@/components/journey/StrategiesStep";
+import PlanStep from "@/components/journey/PlanStep";
 import { cn } from "@/lib/utils";
 import {
   ArrowLeft,
@@ -143,6 +144,8 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
           <FeasibilityStep projectId={projectId} project={project} />
         ) : etape === "strategies" && projectId ? (
           <StrategiesStep projectId={projectId} project={project} />
+        ) : etape === "plan" && projectId ? (
+          <PlanStep projectId={projectId} project={project} />
         ) : (
           <Card>
             <CardHeader>

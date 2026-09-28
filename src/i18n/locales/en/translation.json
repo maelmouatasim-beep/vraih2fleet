@@ -5686,6 +5686,37 @@
         "vanRange": "Savings (NPV) at the assumption's bounds",
         "note": "Central savings: {{van}}. Each bar shows the savings recomputed by the engine as the assumption moves from its low to its high bound (registry ranges)."
       }
+    },
+    "plan": {
+      "empty": {
+        "title": "No plan to display",
+        "subtitle": "First select the project vehicles in the Fleet step (replacement year + target technology)."
+      },
+      "stats": {
+        "investment": "Investment (capital, gross)",
+        "subsidies": "Expected subsidies",
+        "toFinance": "Left to finance",
+        "netSavings": "Savings vs status quo (NPV)"
+      },
+      "chartTitle": "Annual plan budget",
+      "chartSubtitle": "Left to finance (investment − subsidies) and operating costs per year; the line shows the yearly gap vs status quo (positive = the plan costs less that year).",
+      "series": {
+        "pti": "Left to finance (capital)",
+        "fonctionnement": "Operating",
+        "ecart": "Gap vs status quo"
+      },
+      "tableTitle": "Replacement plan, year by year",
+      "tableSubtitle": "“Current plan” strategy: the choices made in the Fleet step, computed by the engine (budget view, current dollars).",
+      "columns": {
+        "year": "Year",
+        "replacements": "Replacements",
+        "investment": "Investment",
+        "subsidies": "Subsidies",
+        "toFinance": "Left to finance",
+        "operating": "Operating",
+        "gap": "Gap vs status quo"
+      },
+      "note": "Amounts in current dollars (budget view). A vehicle without a target technology stays diesel (status quo); adjust it in the Fleet step. Infrastructure is booked in the reference year."
     }
   }
 }

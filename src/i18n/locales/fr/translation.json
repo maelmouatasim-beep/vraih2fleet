@@ -5686,6 +5686,37 @@
         "vanRange": "Économie (VAN) aux bornes de l'hypothèse",
         "note": "Économie centrale : {{van}}. Chaque barre montre l'économie recalculée par le moteur quand l'hypothèse passe de sa borne basse à sa borne haute (plages du registre)."
       }
+    },
+    "plan": {
+      "empty": {
+        "title": "Aucun plan à afficher",
+        "subtitle": "Sélectionnez les véhicules du projet à l'étape Flotte (année de remplacement + technologie cible)."
+      },
+      "stats": {
+        "investment": "Investissement (PTI, brut)",
+        "subsidies": "Subventions prévues",
+        "toFinance": "Reste à financer",
+        "netSavings": "Économie vs statu quo (VAN)"
+      },
+      "chartTitle": "Budget annuel du plan",
+      "chartSubtitle": "Reste à financer (investissement − subventions) et fonctionnement, par année ; la ligne montre l'écart annuel vs statu quo (positif = le plan coûte moins cher cette année-là).",
+      "series": {
+        "pti": "Reste à financer (PTI)",
+        "fonctionnement": "Fonctionnement",
+        "ecart": "Écart vs statu quo"
+      },
+      "tableTitle": "Plan de remplacement, année par année",
+      "tableSubtitle": "Stratégie « Plan actuel » : les choix faits à l'étape Flotte, chiffrés par le moteur (vue budgétaire, dollars courants).",
+      "columns": {
+        "year": "Année",
+        "replacements": "Remplacements",
+        "investment": "Investissement",
+        "subsidies": "Subventions",
+        "toFinance": "Reste à financer",
+        "operating": "Fonctionnement",
+        "gap": "Écart vs statu quo"
+      },
+      "note": "Montants en dollars courants (vue budgétaire). Un véhicule sans technologie cible reste au diesel (statu quo) ; ajustez-le à l'étape Flotte. L'infrastructure est comptée à l'année de référence."
     }
   }
 }
