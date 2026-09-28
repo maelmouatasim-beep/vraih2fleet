@@ -132,13 +132,14 @@ async function main() {
     [`#/dashboard/projects/${PROJET_ID}/strategies`, 'parcours-etape-strategies'],
     [`#/dashboard/projects/${PROJET_ID}/plan`, 'parcours-etape-plan'],
     [`#/dashboard/projects/${PROJET_ID}/financement`, 'parcours-etape-financement'],
+    [`#/dashboard/projects/${PROJET_ID}/suivi`, 'parcours-etape-suivi'],
     ['#/dashboard/organization', 'organisation'],
     ['#/dashboard/library', 'bibliotheque'],
   ];
   for (const [route, nom] of captures) {
     await page.goto(`http://localhost:${PORT}/${route}`);
     await page.waitForTimeout(2200);
-    await page.screenshot({ path: join(SORTIE, `${nom}.png`), fullPage: ['strategies','plan','financement'].some((x) => nom.includes(x)) });
+    await page.screenshot({ path: join(SORTIE, `${nom}.png`), fullPage: ['strategies','plan','financement','suivi'].some((x) => nom.includes(x)) });
     console.log('capturé :', nom);
   }
 

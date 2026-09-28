@@ -1531,6 +1531,7 @@ export type Database = {
       tasks: {
         Row: {
           assigned_to: string[] | null
+          auto_key: string | null
           blocked_by: string | null
           budget_allocated: number | null
           budget_spent: number | null
@@ -1545,15 +1546,19 @@ export type Database = {
           is_overdue: boolean | null
           milestone_id: string | null
           order_index: number | null
+          plan_year: number | null
           priority: string | null
           project_id: string
           start_date: string | null
           status: string
+          subsidy_program: string | null
           title: string
           updated_at: string | null
+          vehicle_id: string | null
         }
         Insert: {
           assigned_to?: string[] | null
+          auto_key?: string | null
           blocked_by?: string | null
           budget_allocated?: number | null
           budget_spent?: number | null
@@ -1568,15 +1573,19 @@ export type Database = {
           is_overdue?: boolean | null
           milestone_id?: string | null
           order_index?: number | null
+          plan_year?: number | null
           priority?: string | null
           project_id: string
           start_date?: string | null
           status?: string
+          subsidy_program?: string | null
           title: string
           updated_at?: string | null
+          vehicle_id?: string | null
         }
         Update: {
           assigned_to?: string[] | null
+          auto_key?: string | null
           blocked_by?: string | null
           budget_allocated?: number | null
           budget_spent?: number | null
@@ -1591,12 +1600,15 @@ export type Database = {
           is_overdue?: boolean | null
           milestone_id?: string | null
           order_index?: number | null
+          plan_year?: number | null
           priority?: string | null
           project_id?: string
           start_date?: string | null
           status?: string
+          subsidy_program?: string | null
           title?: string
           updated_at?: string | null
+          vehicle_id?: string | null
         }
         Relationships: [
           {
@@ -1611,6 +1623,13 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
             referencedColumns: ["id"]
           },
         ]

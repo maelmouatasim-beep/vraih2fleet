@@ -179,6 +179,10 @@ export const PROGRAMMES: ProgrammeSubvention[] = [
       '« Un véhicule ne peut obtenir qu’une seule aide financière » au sein du programme (vérifié, 6.1.6). ' +
       'Cumul avec un programme fédéral : non interdit par les extraits lus — règle précise À VALIDER (modalités, art. 4).',
     anneeVersementDefaut: 1,
+    // Programme « 2025-2028 » (titre des modalités lues) ; fin posée au
+    // 31 mars 2028 par convention d'année financière québécoise — date
+    // exacte à confirmer au dépôt. Prudent : aucune aide promise après.
+    dateFin: '2028-03-31',
     source: {
       organisme: 'MTMD (Québec)',
       document: 'Modalités d’application du programme Écocamionnage 2025-2028, section 6.1.5',

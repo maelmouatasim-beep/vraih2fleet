@@ -11,6 +11,7 @@ import StrategiesStep from "@/components/journey/StrategiesStep";
 import PlanStep from "@/components/journey/PlanStep";
 import FinancingStep from "@/components/journey/FinancingStep";
 import ReportsStep from "@/components/journey/ReportsStep";
+import TrackingStep from "@/components/journey/TrackingStep";
 import { cn } from "@/lib/utils";
 import {
   ArrowLeft,
@@ -152,6 +153,8 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
           <FinancingStep projectId={projectId} project={project} />
         ) : etape === "rapports" && projectId ? (
           <ReportsStep projectId={projectId} project={project} />
+        ) : etape === "suivi" && projectId ? (
+          <TrackingStep projectId={projectId} project={project} />
         ) : (
           <Card>
             <CardHeader>

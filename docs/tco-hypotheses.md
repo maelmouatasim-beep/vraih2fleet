@@ -175,7 +175,7 @@ Source : [Gouvernement du Québec — Montant de l’aide financière pour un v�
 
 ### Écocamionnage volet 1 (Québec, MTMD) — acquisition de véhicules
 
-Palier : provincial — cible : vehicule — **statut : actif** (✅ vérifié, le 2026-09-28)
+Palier : provincial — cible : vehicule — **statut : actif** (✅ vérifié, le 2026-09-28) — fin : 2028-03-31
 
 Source : [MTMD (Québec) — Modalités d’application du programme Écocamionnage 2025-2028, section 6.1.5](https://www.quebec.ca/transports/aide-financiere/electrification/ecocamionnage/volet-1)
 

@@ -5783,6 +5783,28 @@
         "download": "Download the .xlsx"
       },
       "note": "The report carries the input fingerprint and engine version: the same fingerprint reproduces exactly the same figures. “To validate” assumptions are shown as such — check them before an official presentation."
+    },
+    "tracking": {
+      "states": {
+        "realise": "Done",
+        "en_retard": "Late",
+        "cette_annee": "This year",
+        "a_venir": "Upcoming",
+        "sans_plan": "No plan"
+      },
+      "tableTitle": "Actual vs planned",
+      "tableSubtitle": "“Done” = the vehicle's current technology matches its target (or, diesel target, the model year reaches the planned year) — update the vehicle in My fleet after each replacement.",
+      "columns": {
+        "state": "Status"
+      },
+      "empty": "No vehicles in the plan — select them in the Fleet step.",
+      "tasks": {
+        "title": "Project tasks",
+        "subtitle": "Kanban and list views, assignment and comments; generated tasks are linked to the vehicle, the plan year and the subsidy program.",
+        "generate": "Generate plan tasks",
+        "generated": "{{count}} task(s) created from the plan deadlines",
+        "upToDate": "Plan tasks already exist — nothing to create."
+      }
     }
   }
 }

@@ -5783,6 +5783,28 @@
         "download": "Télécharger le .xlsx"
       },
       "note": "Le rapport porte l'empreinte des entrées et la version du moteur : la même empreinte reproduit exactement les mêmes chiffres. Les hypothèses « à valider » sont affichées comme telles — vérifiez-les avant une présentation officielle."
+    },
+    "tracking": {
+      "states": {
+        "realise": "Réalisés",
+        "en_retard": "En retard",
+        "cette_annee": "Cette année",
+        "a_venir": "À venir",
+        "sans_plan": "Sans plan"
+      },
+      "tableTitle": "Réalisé vs prévu",
+      "tableSubtitle": "« Réalisé » = la technologie actuelle du véhicule correspond à sa cible (ou, cible diesel, l'année-modèle atteint l'année prévue) — mettez la fiche du véhicule à jour dans Ma flotte après chaque remplacement.",
+      "columns": {
+        "state": "État"
+      },
+      "empty": "Aucun véhicule au plan — sélectionnez-les à l'étape Flotte.",
+      "tasks": {
+        "title": "Tâches du projet",
+        "subtitle": "Kanban et vue liste, assignation et commentaires ; les tâches générées sont liées au véhicule, à l'année du plan et au programme de subvention.",
+        "generate": "Générer les tâches du plan",
+        "generated": "{{count}} tâche(s) créée(s) depuis les échéances du plan",
+        "upToDate": "Les tâches du plan existent déjà — rien à créer."
+      }
     }
   }
 }
