@@ -20,6 +20,10 @@ export interface DemandeSubventions {
   fabriqueAuQuebec?: boolean;
   /** Fabriqué au Canada (lève le plafond de transaction du PAVÉ). */
   fabriqueAuCanada?: boolean;
+  /** Année CALENDAIRE de l'achat (ex. 2029) : un programme dont la date
+   *  de fin tombe une année antérieure n'est pas compté (prudent — on ne
+   *  promet pas une aide échue). Absent = achat immédiat. */
+  anneeAchatCalendaire?: number;
 }
 
 /** Règles d'admissibilité propres à un programme, non exprimables par le
@@ -49,6 +53,13 @@ export function resoudreSubventionsVehicule(
     if (prog.statut !== 'actif' || prog.cible !== 'vehicule') continue;
     if (!prog.organismesAdmissibles.includes(d.typeOrganisme)) continue;
     if (!admissibleSpecifique(prog, d)) continue;
+    if (
+      d.anneeAchatCalendaire !== undefined &&
+      prog.dateFin !== undefined &&
+      Number(prog.dateFin.slice(0, 4)) < d.anneeAchatCalendaire
+    ) {
+      continue; // programme échu avant l'année d'achat prévue
+    }
 
     // Meilleur barème admissible du programme (un seul par programme).
     let meilleur = 0;

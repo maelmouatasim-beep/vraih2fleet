@@ -5632,6 +5632,58 @@
         "subtitle": "First select the project vehicles in the Fleet step."
       },
       "disclaimer": "Range is not modelled in this version: long-distance and off-road uses are flagged as caveats. Amounts rely on the registry assumptions (statuses and verification dates in the Library) and are refined in the next steps."
+    },
+    "strategies": {
+      "empty": {
+        "title": "No vehicles to compare",
+        "subtitle": "First select the project vehicles in the Fleet step."
+      },
+      "options": {
+        "plan_actuel": {
+          "title": "Current plan",
+          "description": "The target technologies and replacement years chosen in the Fleet step."
+        },
+        "tout_electrique": {
+          "title": "All electric",
+          "description": "Every replacement switches to BEV, same schedule."
+        },
+        "economies_d_abord": {
+          "title": "Savings first",
+          "description": "BEV only where the engine computes a saving; diesel otherwise."
+        }
+      },
+      "metrics": {
+        "vehicles": "{{ze}} zero-emission out of {{total}} vehicles",
+        "co2": "{{tonnes}} t CO2e avoided (well-to-wheel)",
+        "infra": "Infrastructure: {{amount}}",
+        "subsidies": "Subsidies: {{amount}}"
+      },
+      "bestSavings": "Best savings",
+      "notComputable": "Not computable (no assessable vehicle).",
+      "methodTitle": "What these numbers compare",
+      "methodNote1": "Each strategy is compared to the status quo: the same vehicles replaced in the same years by an equivalent new diesel. Future purchases are indexed to general inflation; a subsidy program that expires before the planned purchase year is not counted.",
+      "methodNote2": "Depot infrastructure: chargers per category (level 2 / fast) plus grid connection, and an H2 station when hydrogen vehicles are present — registry amounts (status “estimate”, replaced by your quotes as soon as they exist).",
+      "warnings": {
+        "excluded": "{{count}} vehicle(s) in category “other” excluded from the computation (assess manually).",
+        "noYear": "{{count}} vehicle(s) without a replacement year: treated as replaced now."
+      },
+      "stress": {
+        "title": "Stress test of the selected strategy",
+        "subtitle": "The engine is re-run at each assumption's sourced bounds — never an arbitrary ±20%.",
+        "risk": {
+          "faible": "Low risk — still ahead in the prudent scenario",
+          "moyen": "Medium risk — ahead in the central scenario, not the prudent one",
+          "eleve": "High risk — behind in the central scenario"
+        },
+        "scenarios": {
+          "prudent": "Prudent scenario",
+          "central": "Central scenario",
+          "favorable": "Favorable scenario"
+        },
+        "tcoCompare": "Strategy TCO {{alt}} vs status quo {{ref}}",
+        "vanRange": "Savings (NPV) at the assumption's bounds",
+        "note": "Central savings: {{van}}. Each bar shows the savings recomputed by the engine as the assumption moves from its low to its high bound (registry ranges)."
+      }
     }
   }
 }

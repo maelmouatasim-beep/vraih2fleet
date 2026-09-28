@@ -25,6 +25,7 @@ import {
   type EvaluationTechno,
   type FaisabiliteVehicule,
 } from "@/lib/journey/feasibility";
+import { formateurCad } from "@/lib/format";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 import { Loader2 } from "lucide-react";
 
@@ -54,15 +55,7 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
     return parVehicule;
   }, [project, organization, projectVehicles]);
 
-  const argent = useMemo(
-    () =>
-      new Intl.NumberFormat(i18n.language.startsWith("fr") ? "fr-CA" : "en-CA", {
-        style: "currency",
-        currency: "CAD",
-        maximumFractionDigits: 0,
-      }),
-    [i18n.language],
-  );
+  const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
 
   const stats = useMemo(() => {
     let favorables = 0;

@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { getProjectById } from "@/lib/supabase/projects";
 import FleetStep from "@/components/journey/FleetStep";
 import FeasibilityStep from "@/components/journey/FeasibilityStep";
+import StrategiesStep from "@/components/journey/StrategiesStep";
 import { cn } from "@/lib/utils";
 import {
   ArrowLeft,
@@ -67,10 +68,6 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
   const base = `/dashboard/projects/${projectId}`;
 
   const ctaParEtape: Partial<Record<EtapeParcours, { href: string; libelle: string }[]>> = {
-    strategies: [
-      { href: `${base}/scenarios/new-flexible`, libelle: t("journey.cta.newScenario") },
-      { href: `${base}/compare`, libelle: t("journey.cta.compare") },
-    ],
     rapports: [{ href: base, libelle: t("journey.cta.projectOverview") }],
   };
 
@@ -144,6 +141,8 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
           <FleetStep projectId={projectId} />
         ) : etape === "faisabilite" && projectId ? (
           <FeasibilityStep projectId={projectId} project={project} />
+        ) : etape === "strategies" && projectId ? (
+          <StrategiesStep projectId={projectId} project={project} />
         ) : (
           <Card>
             <CardHeader>

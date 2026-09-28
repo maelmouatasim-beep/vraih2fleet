@@ -135,6 +135,22 @@ describe('résolveur de subventions', () => {
     ).toThrow();
   });
 
+  it("un programme échu avant l'année d'achat prévue n'est pas compté", () => {
+    // Roulez vert prend fin le 2026-12-31 : compté pour un achat 2026,
+    // exclu pour un achat 2029 ; le PAVÉ (fin 2031) reste compté.
+    const base = {
+      categorie: 'vehicule_leger' as const,
+      technologie: 'BEV' as const,
+      prixAvantTaxes: 49500,
+      typeOrganisme: 'municipalite' as const,
+    };
+    const achat2026 = resoudreSubventionsVehicule({ ...base, anneeAchatCalendaire: 2026 });
+    expect(achat2026.some((x) => x.libelle.includes('Roulez vert'))).toBe(true);
+    const achat2029 = resoudreSubventionsVehicule({ ...base, anneeAchatCalendaire: 2029 });
+    expect(achat2029.some((x) => x.libelle.includes('Roulez vert'))).toBe(false);
+    expect(achat2029.some((x) => x.libelle.includes('PAVÉ'))).toBe(true);
+  });
+
   it('le registre ne compte automatiquement que des programmes actifs à barème défini', () => {
     for (const p of PROGRAMMES) {
       if (p.statut === 'actif') continue;

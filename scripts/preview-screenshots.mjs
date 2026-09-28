@@ -136,7 +136,7 @@ async function main() {
   for (const [route, nom] of captures) {
     await page.goto(`http://localhost:${PORT}/${route}`);
     await page.waitForTimeout(2200);
-    await page.screenshot({ path: join(SORTIE, `${nom}.png`) });
+    await page.screenshot({ path: join(SORTIE, `${nom}.png`), fullPage: nom.includes('strategies') });
     console.log('capturé :', nom);
   }
 

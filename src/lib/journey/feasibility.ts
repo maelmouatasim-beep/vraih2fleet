@@ -56,18 +56,25 @@ export interface FaisabiliteVehicule {
   donneesEstimees: DonneeEstimee[];
 }
 
-function classeEmission(category: string): "legers" | "lourds" {
+export function classeEmission(category: string): "legers" | "lourds" {
   return category === "vehicule_leger" || category === "camionnette" ? "legers" : "lourds";
 }
 
-export function evaluerFaisabiliteVehicule(
-  vehicule: VehiculeFaisabilite,
-  options: OptionsParametres,
-): FaisabiliteVehicule {
+export interface DonneesVehicule {
+  /** null quand la catégorie n'est pas connue du moteur (« autre »). */
+  defauts: (typeof DEFAUTS_CATEGORIES)[keyof typeof DEFAUTS_CATEGORIES] | null;
+  kmParAn: number;
+  /** Consommation du diesel neuf de référence (réelle si utilisable). */
+  consoReference: number;
+  donneesEstimees: DonneeEstimee[];
+}
+
+/** Prépare les données d'un véhicule pour le moteur : défauts de sa
+ *  catégorie, km retenus et consommation de référence, avec la liste de
+ *  ce qui relève de l'estimation. Partagé par Faisabilité et Stratégies. */
+export function analyserDonneesVehicule(vehicule: VehiculeFaisabilite): DonneesVehicule {
   const defauts = DEFAUTS_CATEGORIES[vehicule.category as keyof typeof DEFAUTS_CATEGORIES];
-  if (!defauts) {
-    return { vehiculeId: vehicule.id, evaluations: null, kmParAnRetenu: null, donneesEstimees: [] };
-  }
+  if (!defauts) return { defauts: null, kmParAn: 0, consoReference: 0, donneesEstimees: [] };
 
   const donneesEstimees: DonneeEstimee[] = [];
   const kmParAn = vehicule.annual_km != null && vehicule.annual_km > 0
@@ -87,6 +94,18 @@ export function evaluerFaisabiliteVehicule(
     ? vehicule.consumption_per_100km!
     : defauts.consommation.diesel.valeur;
   if (!consoReelleUtilisable) donneesEstimees.push("consommation");
+
+  return { defauts, kmParAn, consoReference, donneesEstimees };
+}
+
+export function evaluerFaisabiliteVehicule(
+  vehicule: VehiculeFaisabilite,
+  options: OptionsParametres,
+): FaisabiliteVehicule {
+  const { defauts, kmParAn, consoReference, donneesEstimees } = analyserDonneesVehicule(vehicule);
+  if (!defauts) {
+    return { vehiculeId: vehicule.id, evaluations: null, kmParAnRetenu: null, donneesEstimees: [] };
+  }
 
   const parametres = parametresParDefaut(options);
 
