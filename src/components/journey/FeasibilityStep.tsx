@@ -56,7 +56,7 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
 
   const argent = useMemo(
     () =>
-      new Intl.NumberFormat(i18n.language === "fr" ? "fr-CA" : "en-CA", {
+      new Intl.NumberFormat(i18n.language.startsWith("fr") ? "fr-CA" : "en-CA", {
         style: "currency",
         currency: "CAD",
         maximumFractionDigits: 0,
