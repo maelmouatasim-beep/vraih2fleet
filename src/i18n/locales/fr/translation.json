@@ -2574,7 +2574,7 @@
       },
       "projects": {
         "title": "Gestion multi-projets",
-        "description": "Organisez vos études par client, région ou phase. Collaboration en équipe avec partage, commentaires et historique des versions. Import de la démo STM Montréal en un clic pour explorer les fonctionnalités."
+        "description": "Organisez vos études par client, région ou phase. Collaboration en équipe avec partage, commentaires et historique des versions. Démo « Ville de Rivière-Claire » (municipalité fictive, ~40 véhicules) en un clic pour explorer le parcours."
       },
       "scenarios": {
         "title": "Scénarios TCO comparatifs",

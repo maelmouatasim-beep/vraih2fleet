@@ -1,3 +1,3 @@
-// Demo Data Module Index
-export * from "./stmMontreal";
+// Démo « Ville de Rivière-Claire » (municipalité fictive, ~40 véhicules)
+export * from "./villeDemo";
 export * from "./seedDemoData";

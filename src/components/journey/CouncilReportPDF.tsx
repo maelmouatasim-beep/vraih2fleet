@@ -279,7 +279,7 @@ export default function CouncilReportPDF({
             : "Méthode (docs/tco-methodologie.md) : année 0 = acquisition (non actualisée) ; flux d'exploitation nominaux (inflation par poste) actualisés au taux nominal ; la référence est la même flotte remplacée au même calendrier par des diesels neufs équivalents ; les subventions sont comptées à leur année de versement et plafonnées par les règles de cumul ; valeurs résiduelles géométriques avec plancher. Chaque hypothèse ci-dessous porte un statut honnête : un montant n'est « vérifié » que si la source officielle a réellement été lue à la date indiquée."}
         </Text>
         <View style={[s.enTeteTable, { marginTop: 8 }]}>
-          <Text style={[s.cel, { flex: 2.6 }]}>{en ? "Assumption" : "Hypothèse"}</Text>
+          <Text style={[s.cel, { flex: 2.5 }]}>{en ? "Assumption" : "Hypothèse"}</Text>
           <Text style={[s.cel, s.droite, { flex: 0.8 }]}>{en ? "Value" : "Valeur"}</Text>
           <Text style={[s.cel, { flex: 0.8 }]}>{en ? "Unit" : "Unité"}</Text>
           <Text style={[s.cel, { flex: 0.8 }]}>{en ? "Status" : "Statut"}</Text>
@@ -288,7 +288,7 @@ export default function CouncilReportPDF({
         </View>
         {LISTE_HYPOTHESES.map((h) => (
           <View key={h.id} style={s.ligneTable} wrap={false}>
-            <Text style={[s.cel, { flex: 2.6 }]}>{h.description}</Text>
+            <Text style={[s.cel, { flex: 2.5 }]}>{h.description}</Text>
             <Text style={[s.cel, s.droite, { flex: 0.8 }]}>{h.valeur}</Text>
             <Text style={[s.cel, { flex: 0.8 }]}>{h.unite}</Text>
             <Text style={[s.cel, { flex: 0.8 }]}>{statutsHyp[h.statut] ?? h.statut}</Text>

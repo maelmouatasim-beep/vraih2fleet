@@ -259,7 +259,7 @@ const Projects = () => {
       });
 
       // Navigate to the demo project
-      navigate(`/dashboard/projects/${projectId}`);
+      navigate(`/dashboard/projects/${projectId}/flotte`);
     } catch (error) {
       console.error("Error loading demo project:", error);
       toast({

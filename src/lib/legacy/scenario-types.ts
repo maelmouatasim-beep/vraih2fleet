@@ -26,14 +26,17 @@ export const COUNTRIES: Record<Country, string> = {
   Canada: 'Canada',
 };
 
+// Les anciennes listes de prix par province (valeurs non sourcées) ont
+// été retirées avec l'ancien moteur : les prix d'énergie vivent dans le
+// registre d'hypothèses src/lib/tco (source + statut + date).
 export const STATES_PROVINCES: Record<Country, StateProvince[]> = {
   Canada: [
-    { code: 'Canada', name: 'National Average', electricityPrice: 0.1440, dieselPrice: 1.48, hydrogenPrice: 12.00, currency: 'CAD' },
-    { code: 'CA_QC', name: 'Quebec', electricityPrice: 0.0780, dieselPrice: 1.52, hydrogenPrice: 12.00, currency: 'CAD' },
-    { code: 'CA_MB', name: 'Manitoba', electricityPrice: 0.1020, dieselPrice: 1.50, hydrogenPrice: 13.00, currency: 'CAD' },
-    { code: 'CA_BC', name: 'British Columbia', electricityPrice: 0.1400, dieselPrice: 1.55, hydrogenPrice: 12.50, currency: 'CAD' },
-    { code: 'CA_ON', name: 'Ontario', electricityPrice: 0.1710, dieselPrice: 1.48, hydrogenPrice: 13.00, currency: 'CAD' },
-    { code: 'CA_AB', name: 'Alberta', electricityPrice: 0.2580, dieselPrice: 1.45, hydrogenPrice: 13.00, currency: 'CAD' },
+    { code: 'Canada', name: 'National Average', currency: 'CAD' },
+    { code: 'CA_QC', name: 'Quebec', currency: 'CAD' },
+    { code: 'CA_MB', name: 'Manitoba', currency: 'CAD' },
+    { code: 'CA_BC', name: 'British Columbia', currency: 'CAD' },
+    { code: 'CA_ON', name: 'Ontario', currency: 'CAD' },
+    { code: 'CA_AB', name: 'Alberta', currency: 'CAD' },
   ],
 };
 
