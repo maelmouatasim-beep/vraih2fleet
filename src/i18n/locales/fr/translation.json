@@ -5758,6 +5758,31 @@
       "toValidate": "À valider",
       "verifiedOn": "vérifié le {{date}}",
       "disclaimer": "Montants estimés selon les barèmes en vigueur à la date de vérification : rien n'est garanti avant l'acceptation d'une demande, et plusieurs programmes ferment à l'épuisement des fonds. Les programmes « à valider » n'ont pas encore été lus à la source — consultez le lien avant de budgéter."
+    },
+    "reports": {
+      "empty": {
+        "title": "Rien à rapporter encore",
+        "subtitle": "Sélectionnez les véhicules du projet à l'étape Flotte pour générer le dossier."
+      },
+      "pdf": {
+        "title": "Rapport pour le conseil (PDF)",
+        "subtitle": "Le dossier défendable : chaque chiffre vient du moteur, chaque hypothèse a un statut et une source.",
+        "item1": "Résumé exécutif : économie/surcoût (VAN), CO2 évité, récupération, risque du stress test",
+        "item2": "Budget annuel et plan de remplacement véhicule par véhicule",
+        "item3": "Subventions retenues par véhicule (programmes, montants, années)",
+        "item4": "Annexe : méthodologie et registre des hypothèses (statut, source, date de lecture)",
+        "download_fr": "PDF (français)",
+        "download_en": "PDF (English)"
+      },
+      "xlsx": {
+        "title": "Classeur Excel (.xlsx)",
+        "subtitle": "Un vrai classeur (plus un CSV renommé) pour vos propres analyses.",
+        "item1": "Feuille « Plan annuel » : la vue budgétaire complète, ligne à ligne",
+        "item2": "Feuille « Véhicules » : unités, cibles, années, prix, subventions",
+        "item3": "Feuille « Hypothèses » : les 40 hypothèses avec statut, source et date de vérification",
+        "download": "Télécharger le .xlsx"
+      },
+      "note": "Le rapport porte l'empreinte des entrées et la version du moteur : la même empreinte reproduit exactement les mêmes chiffres. Les hypothèses « à valider » sont affichées comme telles — vérifiez-les avant une présentation officielle."
     }
   }
 }

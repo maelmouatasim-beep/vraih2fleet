@@ -5758,6 +5758,31 @@
       "toValidate": "To validate",
       "verifiedOn": "verified on {{date}}",
       "disclaimer": "Amounts estimated from the scales in force at the verification date: nothing is guaranteed before an application is accepted, and several programs close when funds run out. “To validate” programs have not yet been read at the source — check the link before budgeting."
+    },
+    "reports": {
+      "empty": {
+        "title": "Nothing to report yet",
+        "subtitle": "Select the project vehicles in the Fleet step to generate the report."
+      },
+      "pdf": {
+        "title": "Council-ready report (PDF)",
+        "subtitle": "The defensible file: every figure comes from the engine, every assumption has a status and a source.",
+        "item1": "Executive summary: savings/extra cost (NPV), CO2 avoided, payback, stress-test risk",
+        "item2": "Annual budget and vehicle-by-vehicle replacement plan",
+        "item3": "Subsidies per vehicle (programs, amounts, years)",
+        "item4": "Appendix: methodology and assumption registry (status, source, read date)",
+        "download_fr": "PDF (français)",
+        "download_en": "PDF (English)"
+      },
+      "xlsx": {
+        "title": "Excel workbook (.xlsx)",
+        "subtitle": "A real workbook (not a renamed CSV) for your own analyses.",
+        "item1": "“Plan annuel” sheet: the full budget view, line by line",
+        "item2": "“Véhicules” sheet: units, targets, years, prices, subsidies",
+        "item3": "“Hypothèses” sheet: all 40 assumptions with status, source and verification date",
+        "download": "Download the .xlsx"
+      },
+      "note": "The report carries the input fingerprint and engine version: the same fingerprint reproduces exactly the same figures. “To validate” assumptions are shown as such — check them before an official presentation."
     }
   }
 }
