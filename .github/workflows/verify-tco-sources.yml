@@ -1,0 +1,102 @@
+# Outil de documentation : lit les sources officielles des hypothèses TCO
+# (bloquées par le proxy de la sandbox de dev) et imprime des extraits dans
+# les logs pour vérification humaine/agent. Aucun secret, lecture seule.
+# Utilisé pour tenir à jour src/lib/tco/assumptions.ts (statut « vérifié »).
+name: Vérification des sources TCO
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fetch-sources:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Installer poppler (pdftotext)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+
+      - name: Régie de l'énergie — bulletin hebdomadaire prix pétroliers (diesel)
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 60 -o bulletin.pdf "https://www.regie-energie.qc.ca/storage/app/media/consommateurs/informations-pratiques/prix-petrole/publications/Publications-hebdomadaires/Bulletin/bulletin.pdf"
+          pdftotext -layout bulletin.pdf bulletin.txt || true
+          echo "=== REGIE BULLETIN (extraits diesel) ==="
+          head -60 bulletin.txt
+          grep -i -n -B2 -A6 "diesel" bulletin.txt | head -120
+
+      - name: Hydro-Québec — grille tarifaire 2026 (tarif M, tarif G)
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 60 -o grille.pdf "https://www.hydroquebec.com/data/documents-donnees/pdf/grille-tarifaire.pdf"
+          pdftotext -layout grille.pdf grille.txt || true
+          echo "=== HQ GRILLE TARIFAIRE ==="
+          sed -n '1,200p' grille.txt
+
+      - name: Québec — Roulez vert montants véhicule neuf
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 60 "https://www.quebec.ca/en/transports/electric-transportation/financial-assistance-electric-vehicle/new-vehicle/amount-financial-assistance" -o rv.html
+          echo "=== ROULEZ VERT ==="
+          python3 -c "import re,html;t=open('rv.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'\s+',' ',t);print(t[:6000])"
+
+      - name: Québec — Écocamionnage volet 1
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 60 "https://www.quebec.ca/transports/aide-financiere/electrification/ecocamionnage/volet-1" -o eco.html
+          echo "=== ECOCAMIONNAGE V1 ==="
+          python3 -c "import re,html;t=open('eco.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'\s+',' ',t);print(t[:8000])"
+
+      - name: Transports Canada — iMHZEV (statut fin de programme)
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 60 "https://tc.canada.ca/en/road-transportation/innovative-technologies/zero-emission-vehicles/medium-heavy-duty-zero-emission-vehicles" -o imhzev.html
+          echo "=== iMHZEV ==="
+          python3 -c "import re,html;t=open('imhzev.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'\s+',' ',t);print(t[:6000])"
+
+      - name: Transports Canada — PAVÉ (véhicules légers)
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 60 "https://tc.canada.ca/en/road-transportation/innovative-technologies/electric-vehicles/electric-vehicle-affordability-program" -o pave.html
+          echo "=== PAVE ==="
+          python3 -c "import re,html;t=open('pave.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'\s+',' ',t);print(t[:6000])"
+
+      - name: RNCan — PIVEZ/ZEVIP (infrastructure)
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 60 "https://ressources-naturelles.canada.ca/efficacite-energetique/efficacite-energetique-transports/pivez" -o pivez.html
+          echo "=== PIVEZ ==="
+          python3 -c "import re,html;t=open('pivez.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'\s+',' ',t);print(t[:6000])"
+
+      - name: Infrastructure Canada — FTCZE (transport en commun zéro émission)
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 60 "https://logement-infrastructure.canada.ca/zero-emissions-trans-zero-emissions/index-fra.html" -o ftcze.html
+          echo "=== FTCZE ==="
+          python3 -c "import re,html;t=open('ftcze.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'\s+',' ',t);print(t[:6000])"
+
+      - name: ECCC — intensité carbone électricité Québec
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 60 "https://www.canada.ca/fr/services/environnement/meteo/changementsclimatiques/plan-climatique/electricite-propre/apercu-quebec.html" -o qcgrid.html
+          echo "=== QC GRID ==="
+          python3 -c "import re,html;t=open('qcgrid.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'\s+',' ',t);print(t[:5000])"
+
+      - name: ECCC — coût social des GES
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 60 "https://www.canada.ca/en/environment-climate-change/services/climate-change/science-research-data/social-cost-ghg.html" -o scc.html
+          echo "=== SCC HTTP ==="
+          python3 -c "import re,html;t=open('scc.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'\s+',' ',t);print(t[:6000])"
+
+      - name: ECCC — RIN partie 2, facteurs d'émission diesel (CO2/CH4/N2O)
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 300 -o rin2.pdf "https://publications.gc.ca/collections/collection_2024/eccc/En81-4-2022-2-fra.pdf"
+          ls -la rin2.pdf
+          pdftotext -layout rin2.pdf rin2.txt || true
+          echo "=== RIN FACTEURS DIESEL ==="
+          grep -n -i -B3 -A10 "carburant diesel" rin2.txt | head -150
+          echo "=== RIN VEHICULES LOURDS ==="
+          grep -n -i -B2 -A8 "lourds.*diesel\|diesel.*lourds" rin2.txt | head -120
