@@ -236,6 +236,58 @@ jobs:
           grep -oE 'href="[^"]*(donnees|data|telecharg|download)[^"]*"' archive/rec-avenir.html | sort -u | head -20 || true
 
       # ----------------------------------------------------------------
+      # Passe 3 — compléments : PAVÉ Aperçu (barèmes), RC4049 complet,
+      # fiche dépenses fiscales QC (TVQ municipalités 50 %), taux ARC,
+      # FTCZE rendu
+      # ----------------------------------------------------------------
+      - name: Compléments — PAVÉ aperçu, RC4049, TVQ 50 %, taux, FTCZE
+        continue-on-error: true
+        run: |
+          cat > rendu2.mjs <<'JS'
+          import { chromium } from 'playwright';
+          const PAGES = [
+            ['pave-apercu', 'https://tc.canada.ca/en/road-transportation/innovative-technologies/electric-vehicles/electric-vehicle-affordability-program/overview'],
+            ['ftcze-rendu', 'https://logement-infrastructure.canada.ca/zero-emissions-trans-zero-emissions/index-fra.html'],
+          ];
+          const nav = await chromium.launch();
+          const ctx = await nav.newContext({ locale: 'fr-CA', userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36' });
+          for (const [nom, url] of PAGES) {
+            try {
+              const page = await ctx.newPage();
+              await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
+              const fs = await import('node:fs');
+              fs.writeFileSync(`archive/${nom}.txt`, await page.evaluate(() => document.body.innerText));
+              console.log(`--- ${nom} ok`);
+              await page.close();
+            } catch (e) { console.log(`--- ${nom} : ÉCHEC ${e.message}`); }
+          }
+          await nav.close();
+          JS
+          node rendu2.mjs || true
+          echo "=== PAVE APERÇU — BARÈMES PAR ANNÉE ET LIMITES ==="
+          grep -o -E ".{200}(5,000|4,000|3,000|2,000|municipal|fleet|10 incentives|maximum).{300}" archive/pave-apercu.txt 2>/dev/null | head -30 || true
+          echo "=== FTCZE RENDU ==="
+          grep -o -E ".{200}(demande|guichet|fermé|ouvert|contribution|50 %).{300}" archive/ftcze-rendu.txt 2>/dev/null | head -12 || true
+          # RC4049 publication complète (lien depuis la page de garde)
+          LIEN=$(grep -oE 'href="[^"]*rc4049[^"]*\.html"' archive/rc4049.html | head -1 | sed 's/href="//;s/"$//')
+          case "$LIEN" in http*) URLRC="$LIEN";; *) URLRC="https://www.canada.ca$LIEN";; esac
+          echo "RC4049 complet : $URLRC" | tee archive/rc4049-complet.url
+          curl -sL --max-time 90 "$URLRC" -o archive/rc4049-complet.html
+          python3 -c "import re,html;t=open('archive/rc4049-complet.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/rc4049-complet.txt','w').write(t)"
+          echo "=== RC4049 — REMBOURSEMENT MUNICIPAL 100 % ==="
+          grep -o -E ".{250}(100 %|remboursement pour les municipalités|taux de remboursement).{350}" archive/rc4049-complet.txt | head -12 || true
+          # Fiche dépenses fiscales QC : remboursement TVQ municipalités
+          curl -sL --max-time 90 "https://www.budget.finances.gouv.qc.ca/budget/outils/depenses-fiscales/fiches/fiche-310302.asp" -o archive/qc-depenses-fiscales-310302.html
+          python3 -c "import re,html;t=open('archive/qc-depenses-fiscales-310302.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/qc-depenses-fiscales-310302.txt','w').write(t)"
+          echo "=== QC DÉPENSES FISCALES — TAUX TVQ MUNICIPALITÉS ==="
+          grep -o -E ".{250}(50 %|62,8|municipalités).{350}" archive/qc-depenses-fiscales-310302.txt | head -14 || true
+          # Taux TPS/TVQ (page ARC, rend server-side)
+          curl -sL --max-time 90 "https://www.canada.ca/fr/agence-revenu/services/impot/entreprises/sujets/tps-tvh-entreprises/facturer-percevoir-quel-taux.html" -o archive/arc-taux.html
+          python3 -c "import re,html;t=open('archive/arc-taux.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/arc-taux.txt','w').write(t)"
+          echo "=== ARC — TAUX TPS ==="
+          grep -o -E ".{150}(5 %|5%).{250}" archive/arc-taux.txt | head -8 || true
+
+      # ----------------------------------------------------------------
       # Archivage : commit de tous les documents lus
       # ----------------------------------------------------------------
       - name: Committer l'archive dans data/sources/<date>/
