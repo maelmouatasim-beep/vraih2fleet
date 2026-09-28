@@ -9,23 +9,7 @@
  
 
  
- REC – Avenir énergétique du Canada 
- 
- 
- 
- 
- 
- 
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
+ REC – Avenir énergétique du Canada en 2026 – Offre et demande énergétiques à l’horizon 2050 
  
  
  
@@ -36,16 +20,27 @@
 
  
  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+ 
+ 
 
 
  
 
- 
- 
- 
-
- 
- 
  
  
  
@@ -57,10 +52,15 @@
  
  
  
- Passer au contenu principal 
+
+ 
+
  
  
- Passer à « À propos de ce site » 
+ Skip to main content 
+ 
+ 
+ Skip to "About this site" 
  
  
  
@@ -69,10 +69,12 @@
  
  
  
- Sélection de la langue 
+ Language selection 
+ 
  
  
  English 
+ 
  
  
  
@@ -85,25 +87,39 @@
  
  
  
- Recherche 
+ Search 
  
  
- Recherche Canada.ca 
- 
- 
- 
- 
- 
- 
- 
--->
+ Search Canada.ca 
  
  
  
  
  
- Recherche 
  
+ 
+ -->
+ 
+ 
+ 
+ 
+ 
+ Search 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Menu 
+ 
+ 
+ 
+ 
+ Menu 
  
  
  
@@ -115,35 +131,24 @@
  Menu 
  
  
- 
- 
- Menu 
- 
- 
- 
- 
- 
- 
- 
- 
- Menu des sujets 
- 
- 
- Sécurité et environnement 
- Consultation et mobilisation 
- Demandes et audiences 
- Données et analyse 
- La Régie 
+ Safety and environment 
+ Consultation and engagement 
+ Applications and hearings 
+ Data and analysis 
+ About Us 
  
  
  
  
  
- Vous êtes ici : 
+ You are here: 
+ 
+ 
  
  Accueil 
  Données et analyse 
  Avenir énergétique du Canada 
+ Avenir énergétique du Canada en 2026 – Offre et demande énergétiques à l’horizon 2050 
  
 
  
@@ -155,112 +160,125 @@
  
 
  
- Avenir énergétique du Canada 
  
- La série de rapports sur l’avenir énergétique explore divers scénarios auxquels les Canadiens pourraient faire face à long terme. 
- En plus d’effectuer sa propre analyse quantitative, la Régie consulte l’industrie, diverses organisations gouvernementales et non gouvernementales ainsi que le milieu universitaire pour produire les rapports sur l’avenir énergétique du Canada. 
  
  
- Afficher tout 
- Réduire tout 
  
  
+
  
  
- Rapports 
- Consultez la dernière version du rapport sur l’avenir énergétique. Aimeriez-vous savoir comment nos hypothèses et nos résultats ont changé au cours des dernières années? Consultez nos rapports et remontez jusqu’à 2013. 
  
+
  
- Suppléments 
- Nos rapports supplémentaires nous aident à analyser en profondeur divers résultats futurs possibles. 
  
  
+ Avenir énergétique du Canada en 2026 – Offre et demande énergétiques à l’horizon 2050 
  
- Données 
- Vous pouvez télécharger l’ensemble complet des données sur l’avenir énergétique, explorer la visualisation interactive ou personnaliser un plus petit ensemble de données par produit de base et année de rapport. 
+
  
  
- Exploration de l’avenir énergétique du Canada par les étudiants 
- Ressources à l’intention des étudiants et liens menant au guide de l’enseignant. 
  
+
  
+
  
  
- Haut de la page 
- Rapports 
- Remontez dans le temps jusqu’en 2013 avec nos rapports 
+
+ Canada’s Energy Future 2026: Energy Supply and Demand Projections to 2050 -->
+ Le rapport Avenir énergétique du Canada en 2026 – Offre et demande énergétiques à l’horizon 2050 est la plus récente perspective énergétique à long terme de la Régie de l’énergie du Canada. La série de rapports sur l’avenir énergétique du Canada explore diverses possibilités qui pourraient s’offrir aux Canadiens à long terme en matière d’énergie, en s’appuyant sur des décennies de modélisation et d’analyse économiques et énergétiques. Les scénarios couvrent tous les produits énergétiques, pour la totalité des provinces et des territoires du Canada. 
+
  
+   Télécharger le rapport 
  
  
+   Consulter les données 
  
  
+   Explorer les visualisations de données 
  
  
- 2026 
  
+ Lire le rapport par chapitre 
  
  
  
  
  
  
+ Portée 
  
  
  
+ Lettre de la présidente-directrice générale 
+ Résumé 
  
+ Résumé – Principaux résultats et principales incertitudes 
+ Principales constatations 
  
- 2023 
  
  
+ Introduction 
+ Scénarios et hypothèses 
  
+ Scénarios 
+ Principales hypothèses 
  
  
  
+ Perspectives autochtones sur l’avenir énergétique du Canada 
  
  
  
  
  
- 2021 
  
  
  
  
+ Résultats 
  
  
  
+ Résultats selon les scénarios 
  
  
  
+ Demande d’énergie 
+ Pétrole brut 
+ Hydrogène 
+ Facteurs macroéconomiques 
  
- Archives 
  
  
  
+ Capacité et production d’électricité 
+ Gaz naturel 
+ Bioénergie 
+ Émissions de gaz à effet de serre 
  
  
  
+ Analyse – Sécurité énergétique, autosuffisance et diversification commerciale du Canada 
  
- Haut de la page 
- Suppléments et Méthodes 
- Le présent supplément offre des renseignements additionnels sur des sujets précis qui ne figuraient pas dans le rapport initial. 
-La méthode d’AE2023 fournit des précisions sur chaque modèle permettant de créer le rapport. 
  
  
  
  
  
  
- 2026 Méthode 
  
  
+ À propos 
  
  
  
+ Explorer les données liées à l’avenir énergétique 
+ À propos du présent rapport 
  
  
+ Au sujet de la Régie 
  
- 2023 Supplément 
  
  
  
@@ -269,24 +287,32 @@ La méthode d’AE2023 fournit des précisions sur chaque modèle permettant de 
  
  
  
- 2023 Méthode 
+ Annexes 
  
  
  
+ Annexe I – Hypothèses relatives aux politiques climatiques du Canada 
+ Annexe III – Comparaison avec Avenir énergétique du Canada en 2023 
  
  
+ Annexe II – Hypothèses sur les technologies 
+ Annexe IV – Hypothèses détaillées pour la figure S.8 
  
  
- Fiches de renseignements et suppléments précédents 
  
+ Annexe V – Système de modélisation d’Avenir énergétique 
  
  
  
  
+
+ Points saillants du rapport 
  
  
  
- Avenir énergétique 2021 – Aperçu 
+ Avenir énergétique 2026 en une minute 
+ Visionnez une vidéo d'une minute qui vous donnera un aperçu du rapport Avenir énergétique au Canada en 2026. 
+ Visionner sur YouTube 
  
  
  
@@ -295,73 +321,44 @@ La méthode d’AE2023 fournit des précisions sur chaque modèle permettant de 
  
  
  
+ Transcription 
+ L’avenir est incertian. 
+ Mais nous pouvons comprendre 
+ Les possibilitiés dès maintenant. 
+ L’avenir énergétique du Canada n’est pas fixé… 
+ …explorez les voies qu’il pourrait prendre. 
+ Voyez les effets possibles sure le paysage 
+ énergétiques des tendances mondiales, 
+ nouvelles technologies et objectifs de carboneutralité. 
+ Apprenez en plus sur la sécurité énergétique, 
+ la diversification commerciale, la demande d’ électricté 
+ et les marches d’exportation. 
+ Quatre scenarios. Un rapport. 
+ Découvrez les possibilités… 
+ Dans la nouvelle edition du rapport sur 
+ l’avenir énergétique du Canada. 
  
+ Avenir énergétique du Canada en 2026 
+ Offre et demande énergétiques à l’horizon 2050 
+ Consultez le rapport complet ! 
  
  
  
- Avenir énergétique 2021 – Électricité 
  
  
  
  
+ Interagir avec la visualisation des données 
+ À partir des données de nos rapports sur l’avenir énergétique, cet outil interactif vous permet d’explorer les tendances de la production et de la consommation d’énergie et de les projeter dans l’avenir. 
+ Explorer maintenant 
  
  
  
  
  
  
+ Pause 
  
- Avenir énergétique 2021 – Sables bitumineux 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- Avenir énergétique 2021 – Pétrole classique 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- Avenir énergétique 2021 – Gaz naturel 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- Avenir énergétique 2021 – Liquides de gaz naturel 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- Avenir énergétique 2021 : Demande d’énergie 
  
  
  
@@ -371,86 +368,15 @@ La méthode d’AE2023 fournit des précisions sur chaque modèle permettant de 
 
  
  
- Haut de la page 
- Données 
  
  
  
  
- 
- 
- 
- Données des Annexes 
- 
- 
- 
- Téléchargez des données personnalisées à partir des projections de la Régie. 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- Explorer l’avenir énergétique du Canada 
- 
- 
- 
- Essayez le nouvel outil interactif et découvrez de nouvelles histoires à raconter. 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- Government ouvert 
- 
- 
- 
- Fichiers lisibles par machine – Les données ayant servi à la production du rapport peuvent être téléchargées d’un seul coup à partir du site du gouvernement ouvert . 
- 
- 
- 
- 
- 
- Haut de la page 
- 
- Média 
- Envoyez-nous vos commentaires 
-à l’adresse avenirenergetique@rec-cer.gc.ca . 
- 
- 
- ARCHIVÉ – Avenir énergétique du Canada 
- 
- 
- 
- 
- 
- 
- 
- Merci d’avoir consulté le site Web de l’Office national de l’énergie 
-Pour nous aider à rendre votre expérience en ligne encore plus satisfaisante, nous vous serions reconnaissants de bien vouloir répondre à ce bref sondage. Nous vous remercions de votre rétroaction! 
- 
- 
- 
- 
+ Date modified: 
+ 2026-03-16 
  
  
 
-   
- 
- 
--->
- 
- 
- 
- Date de modification : 
- 2026-08-18 
  
  
  
@@ -458,52 +384,54 @@ Pour nous aider à rendre votre expérience en ligne encore plus satisfaisante, 
 
  
  
- Nous cherchons à améliorer notre site Web pour mieux vous servir. 
+ We're looking to improve our website to serve you better. 
  
  
- Vos réponses à ce sondage nous aideront à mieux vous servir. 
+ Please help us by completing this survey . 
  
  
+
  
  
  
  Menu 
  
+ Terms and conditions 
  
- Avis 
- Transparence 
- Accessibilité 
+ Transparency 
  
- 
- 
- À propos de nous 
- 
- Nos employés 
- Publications et rapports 
- Lois et règlements 
- Carrières 
+ Accessibility 
  
  
  
- Nouvelles 
+ About us 
  
- Quoi de neuf 
- Communiqués 
- Vidéos 
- 
- 
- 
- Contactez-nous 
- 
- Signalement d’incidents 
- Processus en matière de divulgation confidentielle 
- Obtenir des exemplaires de publications 
+ Our People 
+ Publications and Reports 
+ Acts and Regulations 
+ Careers 
  
  
  
- Restez branchés 
+ News 
  
- Fils RSS 
+ What's New 
+ News Releases 
+ Videos 
+ 
+ 
+ 
+ Contact us 
+ 
+ Report an incident 
+ Confidential disclosure 
+ Request publications 
+ 
+ 
+ 
+ Stay connected 
+ 
+ RSS Feeds 
  X 
  Facebook 
  YouTube 
@@ -516,17 +444,17 @@ Pour nous aider à rendre votre expérience en ligne encore plus satisfaisante, 
  
  
  
- Pied de page du gouvernement du Canada 
+ Government of Canada footer 
  
- Santé 
- Voyage 
+ Health 
+ Travel 
  Service Canada 
- Emplois 
+ Jobs 
  Canada.ca 
  
  
  
- Haut de la page 
+ Top of Page 
  
  
  
