@@ -118,3 +118,24 @@ moteur TCO unique, puis refonte.
 fournisseurs, page Scénarios globale, page Incitatifs, pages publiques
 vides, kanban de tâches. Corrections minimales seulement si un bug y
 bloque autre chose.
+
+## Avancement de la refonte
+
+Plan complet : `docs/refonte.md` (cartographie, classement des pages,
+plan détaillé des phases 1-3, risques).
+
+- **Phase 0 — cartographie et plan : livrée, en attente du « ok »**.
+  Constats clés : 3 moteurs TCO indépendants sans constante partagée
+  (`src/lib/calculations/*`, `supabase/functions/calculate-tco`
+  injoignable, `src/lib/calculations.ts` mock) + ~15 calculs inline ;
+  subventions jamais déduites du TCO ; référence « diesel seul » faussée.
+- Phase 1 — moteur TCO unique (`src/lib/tco/`) : à venir.
+- Phase 2 — menu 6 entrées + parcours projet 7 étapes : à venir.
+- Phase 3 — contenu des étapes + tâches dans Suivi + démo ~40 véhicules :
+  à venir.
+
+Rappels de méthode : chaque phase finit par `npm run check` vert → push →
+résumé court → **attendre le « ok » de l'utilisateur** ; kanban intégré à
+l'étape Suivi (pas de module autonome) ; aucune suppression de données en
+base (retraits = routes/menus seulement) ; identifiants télématiques non
+touchés.
