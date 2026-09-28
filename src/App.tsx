@@ -29,6 +29,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Projects from "./pages/Projects";
+import MyFleet from "./pages/MyFleet";
 import ProjectDetail from "./pages/ProjectDetail";
 import NewScenario from "./pages/NewScenario";
 import NewFlexibleScenario from "./pages/NewFlexibleScenario";
@@ -118,6 +119,9 @@ const App = () => (
             } />
             <Route path="/dashboard/projects" element={
               <ProtectedRoute><Projects /></ProtectedRoute>
+            } />
+            <Route path="/dashboard/fleet" element={
+              <ProtectedRoute><MyFleet /></ProtectedRoute>
             } />
             <Route path="/dashboard/projects/:projectId" element={
               <ProtectedRoute><ProjectDetail /></ProtectedRoute>

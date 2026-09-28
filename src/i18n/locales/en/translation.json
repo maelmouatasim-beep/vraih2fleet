@@ -1,4 +1,84 @@
 {
+  "fleet": {
+    "title": "My fleet",
+    "subtitle": "Your organization's real fleet — one row per vehicle",
+    "stats": {
+      "total": "Vehicles",
+      "active": "Active",
+      "zeroEmission": "Zero-emission",
+      "estimated": "Estimated consumptions"
+    },
+    "empty": {
+      "title": "No vehicles yet",
+      "subtitle": "Add a vehicle or import your inventory (CSV or Excel)."
+    },
+    "columns": {
+      "unit": "Unit",
+      "vehicle": "Vehicle",
+      "category": "Category",
+      "fuel": "Fuel",
+      "annualKm": "km/yr",
+      "consumption": "Cons. /100 km",
+      "source": "Source",
+      "depot": "Depot",
+      "status": "Status",
+      "make": "Make",
+      "model": "Model",
+      "year": "Year"
+    },
+    "source": {
+      "saisie": "Entered",
+      "telematique": "Telematics",
+      "estimation": "Estimate"
+    },
+    "categories": {
+      "vehicule_leger": "Light vehicle",
+      "camionnette": "Pickup / van",
+      "camion_moyen": "Medium truck (cl. 4-6)",
+      "camion_lourd": "Heavy truck (cl. 7-8)",
+      "autobus_urbain_12m": "12 m transit bus",
+      "autre": "Other"
+    },
+    "fuels": {
+      "diesel": "Diesel",
+      "essence": "Gasoline",
+      "hybride": "Hybrid",
+      "phev": "Plug-in hybrid",
+      "bev": "Battery electric",
+      "fcev": "Hydrogen",
+      "gnc": "CNG",
+      "propane": "Propane",
+      "autre": "Other"
+    },
+    "statuses": {
+      "actif": "Active",
+      "inactif": "Inactive",
+      "reforme": "Retired",
+      "vendu": "Sold"
+    },
+    "add": {
+      "button": "Add a vehicle",
+      "title": "New vehicle",
+      "subtitle": "Fields marked * are required; the rest can be completed later.",
+      "consumption": "Actual consumption /100 km",
+      "consumptionHint": "empty = category estimate",
+      "confirm": "Add"
+    },
+    "toast": {
+      "added": "Vehicle added"
+    },
+    "import": {
+      "button": "Import CSV/Excel",
+      "title": "Import fleet",
+      "subtitle": "CSV or Excel with headers (unit, make, model, year, category, fuel, km/yr, consumption, depot…). No invalid row is imported.",
+      "choose": "Choose a file…",
+      "preview": "{{valid}} valid row(s), {{errors}} error(s)",
+      "errorLine": "Row {{line}}, field {{field}}",
+      "confirm": "Import {{count}} vehicle(s)",
+      "done": "{{count}} vehicle(s) imported",
+      "readError": "Unreadable file"
+    }
+  },
   "pages_marketing": {
     "privacy": {
       "title": "Privacy Policy",

@@ -1,4 +1,84 @@
 {
+  "fleet": {
+    "title": "Ma flotte",
+    "subtitle": "La flotte réelle de votre organisation — une ligne par véhicule",
+    "stats": {
+      "total": "Véhicules",
+      "active": "Actifs",
+      "zeroEmission": "Zéro émission",
+      "estimated": "Consommations estimées"
+    },
+    "empty": {
+      "title": "Aucun véhicule pour l'instant",
+      "subtitle": "Ajoutez un véhicule ou importez votre inventaire (CSV ou Excel)."
+    },
+    "columns": {
+      "unit": "Unité",
+      "vehicle": "Véhicule",
+      "category": "Catégorie",
+      "fuel": "Carburant",
+      "annualKm": "km/an",
+      "consumption": "Conso /100 km",
+      "source": "Source",
+      "depot": "Dépôt",
+      "status": "Statut",
+      "make": "Marque",
+      "model": "Modèle",
+      "year": "Année"
+    },
+    "source": {
+      "saisie": "Saisie",
+      "telematique": "Télématique",
+      "estimation": "Estimation"
+    },
+    "categories": {
+      "vehicule_leger": "Véhicule léger",
+      "camionnette": "Camionnette / fourgonnette",
+      "camion_moyen": "Camion moyen (cl. 4-6)",
+      "camion_lourd": "Camion lourd (cl. 7-8)",
+      "autobus_urbain_12m": "Autobus urbain 12 m",
+      "autre": "Autre"
+    },
+    "fuels": {
+      "diesel": "Diesel",
+      "essence": "Essence",
+      "hybride": "Hybride",
+      "phev": "Hybride rechargeable",
+      "bev": "Électrique",
+      "fcev": "Hydrogène",
+      "gnc": "GNC",
+      "propane": "Propane",
+      "autre": "Autre"
+    },
+    "statuses": {
+      "actif": "Actif",
+      "inactif": "Inactif",
+      "reforme": "Réformé",
+      "vendu": "Vendu"
+    },
+    "add": {
+      "button": "Ajouter un véhicule",
+      "title": "Nouveau véhicule",
+      "subtitle": "Les champs marqués * sont requis ; le reste peut être complété plus tard.",
+      "consumption": "Consommation réelle /100 km",
+      "consumptionHint": "vide = estimation par catégorie",
+      "confirm": "Ajouter"
+    },
+    "toast": {
+      "added": "Véhicule ajouté"
+    },
+    "import": {
+      "button": "Importer CSV/Excel",
+      "title": "Importer la flotte",
+      "subtitle": "CSV ou Excel avec entêtes (unité, marque, modèle, année, catégorie, carburant, km/an, consommation, dépôt…). Aucune ligne invalide n'est importée.",
+      "choose": "Choisir un fichier…",
+      "preview": "{{valid}} ligne(s) valide(s), {{errors}} erreur(s)",
+      "errorLine": "Ligne {{line}}, champ {{field}}",
+      "confirm": "Importer {{count}} véhicule(s)",
+      "done": "{{count}} véhicule(s) importé(s)",
+      "readError": "Fichier illisible"
+    }
+  },
   "pages_marketing": {
     "privacy": {
       "title": "Politique de confidentialité",

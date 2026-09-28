@@ -750,6 +750,51 @@ export type Database = {
           },
         ]
       }
+      project_vehicles: {
+        Row: {
+          created_at: string
+          id: string
+          project_id: string
+          replacement_year: number | null
+          target_technology: string | null
+          updated_at: string
+          vehicle_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          project_id: string
+          replacement_year?: number | null
+          target_technology?: string | null
+          updated_at?: string
+          vehicle_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          project_id?: string
+          replacement_year?: number | null
+          target_technology?: string | null
+          updated_at?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_vehicles_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_vehicles_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
           country_or_region: string
@@ -2056,6 +2101,93 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      vehicles: {
+        Row: {
+          annual_km: number | null
+          category: string
+          consumption_per_100km: number | null
+          consumption_source: string
+          created_at: string
+          department: string | null
+          depot: string | null
+          fuel_type: string
+          id: string
+          in_service_date: string | null
+          make: string | null
+          model: string | null
+          model_year: number | null
+          notes: string | null
+          organization_id: string
+          status: string
+          telematics_vehicle_id: string | null
+          unit_number: string
+          updated_at: string
+          usage_profile: string | null
+          vin: string | null
+        }
+        Insert: {
+          annual_km?: number | null
+          category: string
+          consumption_per_100km?: number | null
+          consumption_source?: string
+          created_at?: string
+          department?: string | null
+          depot?: string | null
+          fuel_type?: string
+          id?: string
+          in_service_date?: string | null
+          make?: string | null
+          model?: string | null
+          model_year?: number | null
+          notes?: string | null
+          organization_id: string
+          status?: string
+          telematics_vehicle_id?: string | null
+          unit_number: string
+          updated_at?: string
+          usage_profile?: string | null
+          vin?: string | null
+        }
+        Update: {
+          annual_km?: number | null
+          category?: string
+          consumption_per_100km?: number | null
+          consumption_source?: string
+          created_at?: string
+          department?: string | null
+          depot?: string | null
+          fuel_type?: string
+          id?: string
+          in_service_date?: string | null
+          make?: string | null
+          model?: string | null
+          model_year?: number | null
+          notes?: string | null
+          organization_id?: string
+          status?: string
+          telematics_vehicle_id?: string | null
+          unit_number?: string
+          updated_at?: string
+          usage_profile?: string | null
+          vin?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vehicles_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vehicles_telematics_vehicle_id_fkey"
+            columns: ["telematics_vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "telematics_vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
