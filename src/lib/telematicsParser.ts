@@ -1,4 +1,11 @@
-// Telematics API response parsers for Geotab and Samsara
+// Parseurs des réponses API télématique (Geotab, Samsara).
+//
+// Règle (Phase 2c refonte) : AUCUNE valeur inventée. Une donnée vient de
+// l'API (mesurée) ou c'est le DÉFAUT DE CATÉGORIE du moteur TCO
+// (déterministe, sourcé — src/lib/tco/assumptions), marqué « estimation ».
+// Le hasard n'a pas sa place dans des données présentées comme réelles.
+import { DEFAUTS_CATEGORIES } from '@/lib/tco';
+import type { CategorieVehicule } from '@/lib/tco';
 import { MockVehicle } from './mockTelematicsData';
 
 // Geotab Device interface (with odometer data from API)
@@ -37,56 +44,55 @@ interface SamsaraVehicle {
 // Vehicle type detection based on name/model
 function detectVehicleType(name: string, vehicleType?: string): 'Light Van' | 'Medium Truck' | 'Heavy Truck' {
   const lowerName = (name + ' ' + (vehicleType || '')).toLowerCase();
-  
+
   // Light Van indicators
   if (lowerName.includes('van') || lowerName.includes('transit') || lowerName.includes('sprinter') ||
       lowerName.includes('promaster') || lowerName.includes('express') || lowerName.includes('savana')) {
     return 'Light Van';
   }
-  
+
   // Heavy Truck indicators
   if (lowerName.includes('semi') || lowerName.includes('trailer') || lowerName.includes('cascadia') ||
       lowerName.includes('vnl') || lowerName.includes('t680') || lowerName.includes('579') ||
       lowerName.includes('anthem') || lowerName.includes('class 8') || lowerName.includes('heavy')) {
     return 'Heavy Truck';
   }
-  
+
   // Default to Medium Truck
   return 'Medium Truck';
 }
 
-// Estimate annual km based on vehicle type
-function estimateAnnualKm(vehicleType: 'Light Van' | 'Medium Truck' | 'Heavy Truck'): number {
-  const baseWorkingDays = 250;
+/** Catégorie du moteur TCO correspondant au type détecté. */
+export function categorieTco(vehicleType: 'Light Van' | 'Medium Truck' | 'Heavy Truck'): CategorieVehicule {
   switch (vehicleType) {
     case 'Light Van':
-      return Math.floor((40 + Math.random() * 40) * baseWorkingDays); // 40-80 km/day
+      return 'camionnette';
     case 'Medium Truck':
-      return Math.floor((100 + Math.random() * 150) * baseWorkingDays); // 100-250 km/day
+      return 'camion_moyen';
     case 'Heavy Truck':
-      return Math.floor((300 + Math.random() * 200) * baseWorkingDays); // 300-500 km/day
+      return 'camion_lourd';
   }
 }
 
-// Estimate fuel consumption based on vehicle type
-function estimateFuelConsumption(vehicleType: 'Light Van' | 'Medium Truck' | 'Heavy Truck'): number {
-  switch (vehicleType) {
-    case 'Light Van':
-      return 12 + Math.floor(Math.random() * 6); // 12-18 L/100km
-    case 'Medium Truck':
-      return 22 + Math.floor(Math.random() * 6); // 22-28 L/100km
-    case 'Heavy Truck':
-      return 32 + Math.floor(Math.random() * 6); // 32-38 L/100km
-  }
+/** Défaut de catégorie (déterministe, sourcé) pour le km annuel. */
+function kmParAnParDefaut(vehicleType: 'Light Van' | 'Medium Truck' | 'Heavy Truck'): number {
+  return DEFAUTS_CATEGORIES[categorieTco(vehicleType)].kmParAnDefaut;
 }
 
-// Determine route type based on vehicle type
-function determineRouteType(vehicleType: 'Light Van' | 'Medium Truck' | 'Heavy Truck'): 'Urban' | 'Regional' | 'Long-haul' {
+/** Défaut de catégorie (déterministe, sourcé) pour la consommation diesel. */
+function consommationParDefaut(vehicleType: 'Light Van' | 'Medium Truck' | 'Heavy Truck'): number {
+  return DEFAUTS_CATEGORIES[categorieTco(vehicleType)].consommation.diesel.valeur;
+}
+
+// Type de trajet : jamais fourni par ces APIs — attribution DÉTERMINISTE
+// par type de véhicule, marquée estimation via consumptionSource côté
+// consommation et hasRealOdometer côté kilométrage.
+function routeTypeParDefaut(vehicleType: 'Light Van' | 'Medium Truck' | 'Heavy Truck'): 'Urban' | 'Regional' | 'Long-haul' {
   switch (vehicleType) {
     case 'Light Van':
-      return Math.random() > 0.2 ? 'Urban' : 'Regional';
+      return 'Urban';
     case 'Medium Truck':
-      return Math.random() > 0.3 ? 'Regional' : 'Urban';
+      return 'Regional';
     case 'Heavy Truck':
       return 'Long-haul';
   }
@@ -98,27 +104,30 @@ function calculateDailyKm(annualKm: number): number {
 }
 
 /**
- * Parse Geotab Device to our internal MockVehicle format
- * Uses real odometer data if available, otherwise estimates
+ * Parse Geotab Device to our internal vehicle format.
+ * Odomètre réel si l'API le fournit ; sinon défaut de catégorie marqué
+ * estimation (hasRealOdometer=false). VIN importé quand présent.
  */
 export function parseGeotabVehicle(device: GeotabDevice): MockVehicle {
   const vehicleType = detectVehicleType(device.name, device.deviceType);
-  
-  // Use real annual km from odometer if available, otherwise estimate
-  const annualKm = device.annualKm && device.annualKm > 0 
-    ? device.annualKm 
-    : estimateAnnualKm(vehicleType);
-  
+
   const hasRealOdometer = device.annualKm !== null && device.annualKm !== undefined && device.annualKm > 0;
-  
+  const annualKm = hasRealOdometer ? (device.annualKm as number) : kmParAnParDefaut(vehicleType);
+
   return {
     id: crypto.randomUUID(),
     externalId: device.id,
     vehicleType,
     makeModel: device.name,
+    vin:
+      device.vin ||
+      device.vehicleIdentificationNumber ||
+      device.engineVehicleIdentificationNumber ||
+      undefined,
     annualKm,
-    fuelConsumption: estimateFuelConsumption(vehicleType),
-    routeType: determineRouteType(vehicleType),
+    fuelConsumption: consommationParDefaut(vehicleType),
+    consumptionSource: 'estimation',
+    routeType: routeTypeParDefaut(vehicleType),
     dailyKm: calculateDailyKm(annualKm),
     hasRealOdometer,
     currentOdometer: device.currentOdometer || undefined,
@@ -126,31 +135,32 @@ export function parseGeotabVehicle(device: GeotabDevice): MockVehicle {
 }
 
 /**
- * Parse Samsara Vehicle to our internal MockVehicle format
- * Uses real odometer data if available, otherwise estimates
+ * Parse Samsara Vehicle to our internal vehicle format.
+ * VIN, marque, modèle et année importés quand l'API les fournit.
  */
 export function parseSamsaraVehicle(vehicle: SamsaraVehicle): MockVehicle {
   const vehicleType = detectVehicleType(vehicle.name, vehicle.vehicleType);
-  
-  // Use real annual km from odometer if available, otherwise estimate
-  const annualKm = vehicle.annualKm && vehicle.annualKm > 0 
-    ? vehicle.annualKm 
-    : estimateAnnualKm(vehicleType);
-  
+
   const hasRealOdometer = vehicle.annualKm !== null && vehicle.annualKm !== undefined && vehicle.annualKm > 0;
-  
-  const makeModel = vehicle.make && vehicle.model 
+  const annualKm = hasRealOdometer ? (vehicle.annualKm as number) : kmParAnParDefaut(vehicleType);
+
+  const makeModel = vehicle.make && vehicle.model
     ? `${vehicle.make} ${vehicle.model}${vehicle.year ? ` ${vehicle.year}` : ''}`
     : vehicle.name;
-  
+
   return {
     id: crypto.randomUUID(),
     externalId: vehicle.id,
     vehicleType,
     makeModel,
+    vin: vehicle.vin || undefined,
+    make: vehicle.make || undefined,
+    model: vehicle.model || undefined,
+    modelYear: vehicle.year || undefined,
     annualKm,
-    fuelConsumption: estimateFuelConsumption(vehicleType),
-    routeType: determineRouteType(vehicleType),
+    fuelConsumption: consommationParDefaut(vehicleType),
+    consumptionSource: 'estimation',
+    routeType: routeTypeParDefaut(vehicleType),
     dailyKm: calculateDailyKm(annualKm),
     hasRealOdometer,
     currentOdometer: vehicle.currentOdometer || undefined,
@@ -158,14 +168,14 @@ export function parseSamsaraVehicle(vehicle: SamsaraVehicle): MockVehicle {
 }
 
 /**
- * Parse an array of Geotab devices to MockVehicles
+ * Parse an array of Geotab devices to vehicles
  */
 export function parseGeotabFleet(devices: GeotabDevice[]): MockVehicle[] {
   return devices.map(parseGeotabVehicle);
 }
 
 /**
- * Parse an array of Samsara vehicles to MockVehicles
+ * Parse an array of Samsara vehicles to vehicles
  */
 export function parseSamsaraFleet(vehicles: SamsaraVehicle[]): MockVehicle[] {
   return vehicles.map(parseSamsaraVehicle);

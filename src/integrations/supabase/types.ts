@@ -1807,8 +1807,13 @@ export type Database = {
           has_real_odometer: boolean | null
           id: string
           last_updated_at: string | null
+          consumption_source: string
+          make: string | null
           make_model: string
+          model: string | null
+          model_year: number | null
           route_type: string
+          vin: string | null
           user_id: string
           vehicle_type: string
         }
@@ -1826,6 +1831,7 @@ export type Database = {
           last_updated_at?: string | null
           make_model: string
           route_type?: string
+          vin?: string | null
           user_id: string
           vehicle_type: string
         }
@@ -1841,8 +1847,13 @@ export type Database = {
           has_real_odometer?: boolean | null
           id?: string
           last_updated_at?: string | null
+          consumption_source?: string
+          make?: string | null
           make_model?: string
+          model?: string | null
+          model_year?: number | null
           route_type?: string
+          vin?: string | null
           user_id?: string
           vehicle_type?: string
         }

@@ -5,8 +5,17 @@ export interface MockVehicle {
   externalId: string;
   vehicleType: 'Light Van' | 'Medium Truck' | 'Heavy Truck';
   makeModel: string;
+  // Identité importée de l'API quand elle la fournit (Phase 2c)
+  vin?: string;
+  make?: string;
+  model?: string;
+  modelYear?: number;
   annualKm: number;
   fuelConsumption: number; // L/100km
+  /** Provenance de la consommation : « telematique » = mesurée par
+   *  l'API ; « estimation » = défaut de catégorie du moteur TCO.
+   *  Jamais de valeur inventée (Phase 2c). */
+  consumptionSource?: 'telematique' | 'estimation';
   routeType: 'Urban' | 'Regional' | 'Long-haul';
   dailyKm: number;
   // Optional: indicates if annualKm comes from real odometer data

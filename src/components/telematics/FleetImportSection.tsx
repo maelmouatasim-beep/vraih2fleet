@@ -95,29 +95,26 @@ const FleetImportSection = ({
           throw new Error(data?.error || 'No vehicles returned');
         }
       } catch (error) {
+        // Phase 2c : PLUS JAMAIS de bascule silencieuse vers une flotte
+        // factice. Un échec d'API est un échec, point — le mode démo est
+        // un choix explicite de l'utilisateur, jamais un repli.
         console.error('Real API import failed:', error);
-        toast.warning(t('pages.telematics.import.apiError'), {
-          description: t('pages.telematics.import.usingMockFallback'),
+        toast.error(t('pages.telematics.import.apiError'), {
+          description: error instanceof Error ? error.message : undefined,
         });
-        // Fall through to mock data
+        setIsImporting(false);
+        return;
       }
     }
-    
-    // Use mock data if real API failed or user opted for mock
-    if (source === 'mock' || importedVehicles.length === 0) {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // Mode démo EXPLICITE seulement (interrupteur ou compte démo)
+    if (shouldUseMockData) {
       const count = Math.min(500, Math.max(10, vehicleCount));
       importedVehicles = generateMockFleet(count);
       source = 'mock';
-      
-      if (!shouldUseMockData) {
-        // This was a fallback
-        toast.info(t('pages.telematics.import.mockDataFallback'));
-      } else {
-        toast.success(t('pages.telematics.import.success'), {
-          description: t('pages.telematics.import.successDesc', { count: importedVehicles.length }),
-        });
-      }
+      toast.success(t('pages.telematics.import.success'), {
+        description: t('pages.telematics.import.successDesc', { count: importedVehicles.length }),
+      });
     }
     
     setVehicles(importedVehicles);
@@ -145,8 +142,13 @@ const FleetImportSection = ({
         external_id: v.externalId,
         vehicle_type: v.vehicleType,
         make_model: v.makeModel,
+        vin: v.vin || null,
+        make: v.make || null,
+        model: v.model || null,
+        model_year: v.modelYear || null,
         annual_km: v.annualKm,
         fuel_consumption: v.fuelConsumption,
+        consumption_source: v.consumptionSource ?? 'estimation',
         route_type: v.routeType,
         daily_km: v.dailyKm,
         has_real_odometer: v.hasRealOdometer || false,
@@ -205,6 +207,12 @@ const FleetImportSection = ({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+        {importSource === 'mock' && (
+          <div className="rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm flex items-center gap-2 font-medium">
+            <AlertTriangle className="w-4 h-4 text-destructive shrink-0" />
+            {t('pages.telematics.import.demoBanner')}
+          </div>
+        )}
           {/* Admin-only Test Mode */}
           {isAdmin && (
             <Card className="border-dashed border-orange-400 bg-orange-50/50 dark:bg-orange-950/20">
@@ -304,7 +312,7 @@ const FleetImportSection = ({
             )}
             {importSource && (
               <Badge 
-                variant={importSource === 'real' ? 'default' : 'secondary'}
+                variant={importSource === 'real' ? 'default' : 'destructive'}
                 className="flex items-center gap-1"
               >
                 {importSource === 'real' ? (

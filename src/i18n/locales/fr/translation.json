@@ -3154,6 +3154,7 @@
         "useMockDataHint": "À des fins de test et de démonstration",
         "sourceReal": "Données Réelles",
         "sourceMock": "Simulé",
+        "demoBanner": "MODE DÉMONSTRATION — ces véhicules sont FICTIFS et ne représentent aucune flotte réelle.",
         "importedVehicles": "Véhicules Importés",
         "selectVehicles": "Sélectionnez les véhicules à analyser pour les recommandations de transition",
         "selectAll": "Tout Sélectionner",

@@ -99,16 +99,17 @@ export function useInfrastructureTelematics() {
 
         if (fetchError) throw fetchError;
 
-        // Add mock geographic data based on vehicle type
+        // Ces véhicules n'ont PAS de position GPS : on les répartit sur
+        // une grille DÉTERMINISTE autour du centre de leur province pour
+        // l'affichage (Phase 2c : plus d'aléatoire déguisé en donnée).
         const vehiclesWithLocation = (data || []).map((v, index) => {
-          // Distribute vehicles across Canadian provinces
           const provinces = Object.keys(PROVINCE_CENTERS);
           const province = provinces[index % provinces.length];
           const center = PROVINCE_CENTERS[province];
-          
-          // Add some random offset
-          const lat = center.lat + (Math.random() - 0.5) * 4;
-          const lng = center.lng + (Math.random() - 0.5) * 6;
+
+          const rang = Math.floor(index / provinces.length);
+          const lat = center.lat + ((rang % 5) - 2) * 0.8;
+          const lng = center.lng + ((Math.floor(rang / 5) % 7) - 3) * 0.9;
 
           return {
             ...v,

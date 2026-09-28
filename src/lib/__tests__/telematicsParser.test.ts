@@ -266,3 +266,47 @@ describe('Telematics Parser', () => {
     });
   });
 });
+
+describe('Phase 2c — déterminisme et identité importée', () => {
+  it('aucune valeur aléatoire : deux parses identiques donnent les mêmes chiffres', () => {
+    const device = { id: 'd1', name: 'Van-042', annualKm: null, currentOdometer: null };
+    const a = parseGeotabVehicle(device);
+    const b = parseGeotabVehicle(device);
+    expect(a.annualKm).toBe(b.annualKm);
+    expect(a.fuelConsumption).toBe(b.fuelConsumption);
+    expect(a.routeType).toBe(b.routeType);
+  });
+
+  it('consommation jamais mesurée par ces APIs ⇒ défaut de catégorie marqué « estimation »', () => {
+    const v = parseSamsaraVehicle({ id: 's1', name: 'Cascadia 07', annualKm: 88000 });
+    expect(v.consumptionSource).toBe('estimation');
+    // défaut de catégorie camion_lourd du moteur TCO (36 L/100 km)
+    expect(v.fuelConsumption).toBe(36);
+    expect(v.hasRealOdometer).toBe(true);
+  });
+
+  it('VIN, marque, modèle et année importés quand l\'API les fournit', () => {
+    const v = parseSamsaraVehicle({
+      id: 's2',
+      name: 'Unit 9',
+      vin: '1FUJGLDR2LLL12345',
+      make: 'Freightliner',
+      model: 'eCascadia',
+      year: 2025,
+      annualKm: 60000,
+    });
+    expect(v.vin).toBe('1FUJGLDR2LLL12345');
+    expect(v.make).toBe('Freightliner');
+    expect(v.model).toBe('eCascadia');
+    expect(v.modelYear).toBe(2025);
+
+    const g = parseGeotabVehicle({ id: 'g2', name: 'Truck 3', vehicleIdentificationNumber: 'VINGEO123456789XX' });
+    expect(g.vin).toBe('VINGEO123456789XX');
+  });
+
+  it('km inconnu ⇒ défaut de catégorie (hasRealOdometer=false), jamais un tirage', () => {
+    const v = parseGeotabVehicle({ id: 'g3', name: 'Sprinter 12' });
+    expect(v.hasRealOdometer).toBe(false);
+    expect(v.annualKm).toBe(30000); // kmParAnDefaut camionnette (src/lib/tco)
+  });
+});

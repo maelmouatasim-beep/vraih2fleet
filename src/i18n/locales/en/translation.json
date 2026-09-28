@@ -3201,6 +3201,7 @@
         "useMockDataHint": "For testing and demonstration purposes",
         "sourceReal": "Live Data",
         "sourceMock": "Simulated",
+        "demoBanner": "DEMO MODE — these vehicles are FICTIONAL and do not represent any real fleet.",
         "importedVehicles": "Imported Vehicles",
         "selectVehicles": "Select vehicles to analyze for transition recommendations",
         "selectAll": "Select All",
