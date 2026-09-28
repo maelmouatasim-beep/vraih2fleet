@@ -36,3 +36,4 @@ __pycache__/
 # Artefacts locaux de la CLI Supabase
 supabase/.branches
 supabase/.temp
+coverage/
