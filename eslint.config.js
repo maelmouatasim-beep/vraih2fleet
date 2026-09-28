@@ -21,6 +21,21 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": "off",
+      // Ancien moteur TCO : aucun NOUVEL import (les imports existants sont
+      // figés dans la baseline de lint et disparaissent avec les phases 2-3
+      // de la refonte). Le moteur unique est src/lib/tco.
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@/lib/calculations", "@/lib/calculations/*", "**/lib/calculations", "**/lib/calculations/*"],
+              message:
+                "Ancien moteur TCO (suppression Phase 3) — utiliser src/lib/tco (docs/tco-methodologie.md).",
+            },
+          ],
+        },
+      ],
     },
   },
 );

@@ -30,7 +30,6 @@ import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
-import ScenarioDetail from "./pages/ScenarioDetail";
 import NewScenario from "./pages/NewScenario";
 import NewFlexibleScenario from "./pages/NewFlexibleScenario";
 import ScenarioResults from "./pages/ScenarioResults";
@@ -134,9 +133,6 @@ const App = () => (
             } />
             <Route path="/dashboard/projects/:projectId/compare" element={
               <ProtectedRoute><ScenarioComparison /></ProtectedRoute>
-            } />
-            <Route path="/dashboard/scenarios/:scenarioId" element={
-              <ProtectedRoute><ScenarioDetail /></ProtectedRoute>
             } />
             <Route path="/dashboard/scenarios/:scenarioId/results" element={
               <ProtectedRoute><ScenarioResults /></ProtectedRoute>

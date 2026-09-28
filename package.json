@@ -16,7 +16,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "check": "npm run typecheck && npm run lint:ci && npm run test",
-    "docs:tco": "REGEN=1 vitest run src/lib/tco/__tests__/hypotheses-doc.test.ts"
+    "docs:tco": "REGEN=1 vitest run src/lib/tco/__tests__/hypotheses-doc.test.ts",
+    "test:tco": "vitest run src/lib/tco --coverage.enabled --coverage.include=src/lib/tco/** --coverage.exclude=src/lib/tco/assumption-types.ts --coverage.exclude=src/lib/tco/index.ts --coverage.exclude=src/lib/tco/__tests__/** --coverage.thresholds.lines=95 --coverage.thresholds.branches=95 --coverage.thresholds.functions=95 --coverage.thresholds.statements=95"
   },
   "dependencies": {
     "@fontsource/plus-jakarta-sans": "^5.2.8",
@@ -88,10 +89,12 @@
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react-swc": "^3.11.0",
+    "@vitest/coverage-v8": "^4.0.16",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.32.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
+    "fast-check": "^4.10.2",
     "globals": "^15.15.0",
     "happy-dom": "^20.14.5",
     "lovable-tagger": "^1.1.13",

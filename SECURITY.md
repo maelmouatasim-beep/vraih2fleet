@@ -46,7 +46,7 @@ appelant via `supabase/functions/_shared/auth.ts` :
 | `send-email` (subsidy_reminder) | interne | `requireInternalSecret` (x-internal-secret) |
 | `notify-subsidy-deadlines` | pg_cron | `requireCronSecret` (x-cron-secret) |
 | `sync-telematics-data` | pg_cron ou utilisateur | secret cron, OU JWT + propriété de la connexion |
-| `calculate-tco` | utilisateur | `getUserOrThrow` + client RLS (pas de service role) |
+| `calculate-tco` | — | **RETIRÉE (Phase 1B refonte)** : moteur remplacé par `src/lib/tco` côté client ; `api-gateway` répond 410 sur `/scenarios/:id/calculate`. La fonction encore déployée chez Supabase doit être supprimée à la main (liste pré-pilote). |
 | `assistant-chat` | utilisateur | `getUserOrThrow` + rate limit par utilisateur |
 | `authenticate-telematics`, `fetch-telematics-vehicles` | utilisateur | `getUserOrThrow` |
 | `get-mapbox-token` | utilisateur | verify_jwt (jeton public Mapbox uniquement) |

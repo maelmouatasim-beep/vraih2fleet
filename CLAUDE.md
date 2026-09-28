@@ -21,8 +21,13 @@ hydrogène : TCO, infrastructure, subventions canadiennes, télématique
   `reports/`, `telematics/`, …) ; `ui/` = primitives shadcn, ne pas y
   mettre de logique métier.
 - `src/hooks/` — hooks de données et d'état (Supabase, TanStack Query).
-- `src/lib/calculations/` — **moteur de calcul TCO/CAPEX/émissions** ;
-  ses tests sont dans `src/lib/calculations/__tests__/`.
+- `src/lib/tco/` — **LE moteur de calcul TCO/émissions** (pur, testé,
+  hypothèses sourcées) ; spec : `docs/tco-methodologie.md` ; tout import
+  passe par le barrel `src/lib/tco`. `src/lib/calculations/` est
+  l'ANCIEN moteur, en sursis (suppression au bloc 3 de la Phase 3) :
+  tout NOUVEL import en est interdit (lint `no-restricted-imports`) et
+  les constantes d'hypothèses hors `src/lib/tco/` sont bloquées par
+  `scripts/check-hypothesis-constants.mjs` (baseline décroissante).
 - `src/i18n/locales/{fr,en}/translation.json` — tous les textes UI.
 - `src/integrations/supabase/` — client et types générés (ne pas éditer
   à la main sauf nécessité ; fichiers marqués « automatically generated »).
@@ -48,6 +53,8 @@ npm run lint:ci        # échoue seulement sur les NOUVELLES erreurs vs scripts/
 npm run lint:baseline  # verrouille la baseline après une résorption de dette
 npm run build          # build de production
 npm run build:preview  # build de l'APERÇU hébergé (hash routing, base ./)
+npm run test:tco       # tests du moteur TCO avec seuils de couverture 95 %
+npm run docs:tco       # régénère docs/tco-hypotheses.md depuis assumptions.ts
 ```
 
 ## Aperçu du site (règle permanente)
@@ -126,9 +133,21 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
 `docs/tco-methodologie.md` (annexe des rapports et future page publique).
 
 - **Phase 0 — cartographie et plan : livrée, ok reçu.**
-- **Phase 1 — moteur TCO unique (`src/lib/tco/`) : 1A LIVRÉE, en
-  attente du « ok » avant 1B (moteur + tests + nettoyage).**
-  Livré : `docs/tco-methodologie.md` (spec complète) ;
+- **Phase 1 — moteur TCO unique (`src/lib/tco/`) : 1B LIVRÉE, en
+  attente du « ok » avant la Phase 2.**
+  1B : moteur pur `engine.ts` (engineVersion 1.0.0, empreinte des
+  entrées, vue économique + budgétaire) + `sensitivity.ts` (relance le
+  vrai moteur, 3 scénarios, tornade, risque calculé) +
+  `subsidy-resolver.ts` (plafonds/cumul) ; 61 tests dont les 6 cas de
+  référence à ±0,01 $ et des propriétés fast-check ; couverture 100 %
+  lignes / 97,6 % branches (`npm run test:tco`, seuil CI 95 %) ;
+  garde-fous : lint interdisant tout nouvel import de
+  `src/lib/calculations`, constantes d'hypothèses bloquées hors
+  `src/lib/tco/` (baseline 20 fichiers hérités) ; supprimés :
+  `src/lib/calculations.ts`, `ScenarioDetail.tsx` + route,
+  `supabase/functions/calculate-tco` (410 dans api-gateway) ;
+  méthodologie v1.1 (§10 : points normatifs tranchés).
+  1A (livrée) : `docs/tco-methodologie.md` (spec complète) ;
   `src/lib/tco/{assumption-types,assumptions,subsidy-programs,units,generate-hypotheses-doc}.ts` ;
   `docs/tco-hypotheses.md` GÉNÉRÉ (`npm run docs:tco`, test CI de
   fraîcheur) ; 6 cas de référence contre-calculés par un agent

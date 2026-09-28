@@ -5,10 +5,6 @@ project_id = "fihklznbfufhowopwwuc"
 # dans son code (_shared/auth.ts) : JWT réel (getUserOrThrow), secret cron
 # (requireCronSecret) ou secret interne (requireInternalSecret).
 
-# JWT vérifié dans le code (getUserOrThrow) + passerelle
-[functions.calculate-tco]
-verify_jwt = true
-
 [functions.authenticate-telematics]
 verify_jwt = true
 

@@ -1,0 +1,153 @@
+/**
+ * Chemins de bord du moteur : événements majeurs, avertissements,
+ * subventions d'infrastructure, erreurs de construction.
+ */
+import { describe, expect, it } from 'vitest';
+import * as barrel from '../index';
+import { calculerPlan } from '../engine';
+import { programmesActifs, PROGRAMMES } from '../subsidy-programs';
+import type { PlanTcoEntree } from '../types';
+import { PARAMETRES_CAS } from './cas-de-reference';
+
+function base(): PlanTcoEntree {
+  return {
+    parametres: { ...PARAMETRES_CAS },
+    vehicules: [
+      {
+        id: 'v1',
+        kmParAn: 30000,
+        classeEmissionDiesel: 'legers',
+        reference: {
+          technologie: 'diesel',
+          prixAvantTaxes: 68000,
+          consommationPar100km: 15,
+          entretienParKm: 0.14,
+          evenements: [{ libelle: 'révision moteur', annee: 6, coutAvantTaxes: 12000 }],
+        },
+        alternative: {
+          technologie: 'BEV',
+          prixAvantTaxes: 95000,
+          consommationPar100km: 32,
+          entretienParKm: 0.1,
+          evenements: [
+            { libelle: 'remplacement batterie', annee: 8, coutAvantTaxes: 30000 },
+            { libelle: 'hors horizon', annee: 25, coutAvantTaxes: 999999 },
+          ],
+        },
+        subventionsAlternative: [{ libelle: 'tardive', montant: 1000, annee: 15 }],
+        dureeVieAns: 30,
+      },
+    ],
+    sitesInfra: [
+      {
+        id: 's1',
+        capexAvantTaxes: 15000,
+        vehiculeIds: ['v1'],
+        subventions: [
+          { libelle: 'PIVEZ (saisi)', montant: 5000, annee: 1 },
+          { libelle: 'infra tardive', montant: 100, annee: 20 },
+        ],
+      },
+    ],
+  };
+}
+
+describe('événements majeurs et avertissements', () => {
+  it('les événements datés sont comptés à leur année, ceux hors horizon ignorés', () => {
+    const r = calculerPlan(base());
+    expect(r.alternative.flux.evenements[8]).toBe(30000);
+    expect(r.reference.flux.evenements[6]).toBe(12000);
+    expect(r.alternative.flux.evenements.reduce((a, b) => a + b, 0)).toBe(30000);
+  });
+
+  it('subvention versée après l’horizon : ignorée + avertissement (véhicule et site)', () => {
+    const r = calculerPlan(base());
+    expect(r.alternative.flux.subventions.reduce((a, b) => a + b, 0)).toBe(5000); // seule celle du site, an 1
+    expect(r.avertissements.some((a) => a.includes('tardive'))).toBe(true);
+    expect(r.avertissements.some((a) => a.includes('infra tardive'))).toBe(true);
+  });
+
+  it('subvention d’infrastructure comptée à son année de versement', () => {
+    const r = calculerPlan(base());
+    expect(r.alternative.flux.subventions[1]).toBe(5000);
+  });
+
+  it('durée de vie de l’infra < horizon : avertissement, pas de résiduel', () => {
+    const plan = base();
+    plan.parametres = { ...PARAMETRES_CAS, infra: { entretienAnnuelPctCapex: 0.03, dureeVieAns: 5 } };
+    const r = calculerPlan(plan);
+    expect(r.avertissements.some((a) => a.includes('durée de vie'))).toBe(true);
+    // le seul résiduel restant est celui du véhicule
+    const residuelInfra = r.alternative.flux.residuels[10] - Math.max(0.82 ** 10, 0.1) * 95000;
+    expect(Math.abs(residuelInfra)).toBeLessThan(1e-9);
+  });
+
+  it('site avec des technologies mixtes : parts égales + avertissement', () => {
+    const plan = base();
+    plan.vehicules.push({
+      id: 'v2',
+      kmParAn: 60000,
+      classeEmissionDiesel: 'lourds',
+      reference: { technologie: 'diesel', prixAvantTaxes: 200000, consommationPar100km: 36, entretienParKm: 0.35 },
+      alternative: { technologie: 'FCEV', prixAvantTaxes: 720000, consommationPar100km: 8, entretienParKm: 0.32 },
+      dureeVieAns: 30,
+    });
+    plan.sitesInfra = [{ id: 's1', capexAvantTaxes: 100000, vehiculeIds: ['v1', 'v2'] }];
+    const r = calculerPlan(plan);
+    expect(r.avertissements.some((a) => a.includes('mixtes'))).toBe(true);
+    expect(r.partsInfra.map((p) => p.part)).toEqual([50000, 50000]);
+  });
+
+  it('site référençant un véhicule inconnu : erreur explicite', () => {
+    const plan = base();
+    plan.sitesInfra = [{ id: 's1', capexAvantTaxes: 1000, vehiculeIds: ['inconnu'] }];
+    expect(() => calculerPlan(plan)).toThrow(/inconnu/);
+  });
+
+  it('référence non diesel rejetée par la validation', () => {
+    const plan = base();
+    (plan.vehicules[0].reference as { technologie: string }).technologie = 'BEV';
+    expect(() => calculerPlan(plan)).toThrow();
+  });
+
+  it('économies annuelles nulles ou négatives : raison de payback dédiée', () => {
+    const plan = base();
+    // alternative strictement plus chère à l'achat ET à l'exploitation
+    plan.vehicules[0].alternative = {
+      technologie: 'BEV',
+      prixAvantTaxes: 95000,
+      consommationPar100km: 500,
+      entretienParKm: 2,
+    };
+    plan.vehicules[0].subventionsAlternative = [];
+    const r = calculerPlan(plan);
+    expect(r.paybackSimple.annees).toBeNull();
+    expect(r.paybackSimple.raison).toBe('les économies annuelles sont nulles ou négatives');
+  });
+
+  it('aucune tonne évitée ⇒ coût par tonne null', () => {
+    const plan = base();
+    plan.vehicules[0].alternative = { ...plan.vehicules[0].reference, evenements: [] };
+    plan.vehicules[0].subventionsAlternative = [];
+    plan.sitesInfra = [];
+    const r = calculerPlan(plan);
+    expect(r.coutParTonneWtw).toBeNull();
+  });
+});
+
+describe('barrel et registre', () => {
+  it('le barrel expose le moteur, le registre et les utilitaires', () => {
+    expect(typeof barrel.calculerPlan).toBe('function');
+    expect(typeof barrel.analyserSensibilite).toBe('function');
+    expect(typeof barrel.resoudreSubventionsVehicule).toBe('function');
+    expect(barrel.ENGINE_VERSION).toMatch(/^\d+\.\d+\.\d+$/);
+    expect(barrel.HYPOTHESES.prix_diesel.unite).toBe('$/L');
+  });
+
+  it('programmesActifs ne retourne que les programmes actifs', () => {
+    const actifs = programmesActifs();
+    expect(actifs.length).toBeGreaterThan(0);
+    expect(actifs.every((p) => p.statut === 'actif')).toBe(true);
+    expect(actifs.length).toBeLessThan(PROGRAMMES.length);
+  });
+});

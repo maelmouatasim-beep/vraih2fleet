@@ -166,7 +166,7 @@ Deno.serve(async (req) => {
       if (!hasScope(scopes, "trigger:calculate")) {
         return jsonError(403, "Scope 'trigger:calculate' required.", "insufficient_scope");
       }
-      return await handleCalculateScenario(supabase, supabaseUrl, serviceRoleKey, userId, pathParts[1]);
+      return handleCalculateScenario();
     }
 
     // GET /reference-data
@@ -501,78 +501,12 @@ async function handleCreateScenario(supabase: SupabaseClient, userId: string, bo
   );
 }
 
-async function handleCalculateScenario(
-  supabase: SupabaseClient,
-  supabaseUrl: string,
-  serviceRoleKey: string,
-  userId: string,
-  scenarioId: string
-) {
-  // Vérifier que le scénario appartient à l'utilisateur
-  const { data: scenario, error: scenarioError } = await supabase
-    .from("scenarios")
-    .select(`
-      id, name,
-      projects!inner(id, user_id)
-    `)
-    .eq("id", scenarioId)
-    .single();
-
-  if (scenarioError || !scenario) {
-    return jsonError(404, "Scenario not found.", "not_found");
-  }
-
-  const project = scenario.projects as { user_id: string };
-  if (project.user_id !== userId) {
-    return jsonError(403, "Access denied.", "forbidden");
-  }
-
-  // Appeler la fonction calculate-tco existante
-  const calculateResponse = await fetch(`${supabaseUrl}/functions/v1/calculate-tco`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${serviceRoleKey}`,
-    },
-    body: JSON.stringify({ scenarioId }),
-  });
-
-  if (!calculateResponse.ok) {
-    const errorText = await calculateResponse.text();
-    console.error("Calculate TCO error:", errorText);
-    return jsonError(500, "Calculation failed.", "calculation_error");
-  }
-
-  const calcResult = await calculateResponse.json();
-
-  // Récupérer les résultats sauvegardés
-  const { data: result } = await supabase
-    .from("tco_results")
-    .select("id, tco_total, co2_savings_percent, created_at")
-    .eq("scenario_id", scenarioId)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .single();
-
-  // Déclencher webhooks (async, ne pas attendre)
-  triggerWebhooks(supabase, userId, "tco.calculated", {
-    scenario_id: scenarioId,
-    scenario_name: scenario.name,
-    tco_total: result?.tco_total,
-    co2_savings_percent: result?.co2_savings_percent,
-  });
-
-  return jsonResponse({
-    data: {
-      status: "completed",
-      result_id: result?.id,
-      calculated_at: result?.created_at || new Date().toISOString(),
-      summary: {
-        tco_total: result?.tco_total || calcResult.tco_total,
-        co2_savings_percent: result?.co2_savings_percent || calcResult.co2_savings_percent,
-      },
-    },
-  });
+function handleCalculateScenario() {
+  // L'edge function calculate-tco (moteur serveur divergent, jamais
+  // joignable depuis le front) a été retirée en Phase 1B de la refonte :
+  // le calcul vit dans le moteur unique src/lib/tco (docs/tco-methodologie.md).
+  // 410 Gone : l'endpoint est retiré définitivement, pas déplacé.
+  return jsonError(410, "TCO calculation endpoint retired.", "gone");
 }
 
 async function handleGetReferenceData(supabase: SupabaseClient, url: URL) {

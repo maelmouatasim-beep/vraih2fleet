@@ -1,7 +1,13 @@
 # Méthodologie de calcul du coût total de possession (TCO)
 
 **H2Fleet — spécification du moteur de calcul `src/lib/tco/`**
-Version 1.0 (Phase 1A) — 2026-09-28 — statut : **en validation**
+Version 1.1 (Phase 1B) — 2026-09-28 — statut : **en validation**
+
+> Historique : v1.0 = spécification initiale (Phase 1A). v1.1 intègre les
+> précisions issues du contre-calcul indépendant des 6 cas de référence
+> (les « ambiguïtés » relevées, tranchées en §10) ; le moteur
+> `src/lib/tco/engine.ts` (engineVersion 1.0.0) implémente cette version
+> et reproduit les 6 cas à ±0,01 $.
 
 Ce document est la référence unique de la méthode de calcul. Il est écrit
 pour être lu par un directeur des finances municipal : chaque formule est
@@ -561,3 +567,47 @@ sont retirées avec lui.
 - Les émissions de la fabrication des véhicules (analyse de cycle de vie
   complète) sont hors périmètre : les périmètres affichés sont TTW et
   WTW carburant.
+
+## 10. Précisions normatives (v1.1) — points tranchés après contre-calcul
+
+Chaque point ci-dessous était une zone muette de la v1.0, relevée par le
+contre-calcul indépendant des cas de référence ; la règle retenue est
+désormais NORMATIVE et testée dans le moteur.
+
+1. **Assiette de la valeur résiduelle** : le prix AVANT taxes payé pour
+   ce véhicule (pour un rachat futur : le prix indexé effectivement
+   payé), en dollars nominaux, NON indexée entre l'achat et la revente.
+2. **Re-remplacement (§3.8)** : le véhicule remplacé en fin de vie utile
+   est repris à sa valeur **plancher** (10 % du prix avant taxes de son
+   cycle) — la formule géométrique ne vaut que pour une revente avant la
+   fin de vie (fin d'horizon). Le rachat se fait au prix avant taxes
+   indexé à l'inflation générale (trajectoire technologique désactivée
+   par défaut), taxes non récupérables ajoutées, **sans subvention**
+   (aucun programme actuel ne garantit un barème à cet horizon).
+3. **Subventions** : montants nominaux NON indexés ; comptées à leur
+   année de versement, y compris dans le calcul du délai de
+   récupération. Versement par défaut : an 0 (point de vente — PAVÉ,
+   Roulez vert), an 1 (après livraison et approbation — Écocamionnage).
+4. **Majoration hivernale** : s'applique aux BEV **et aux FCEV**
+   (chauffage de cabine), sur les coûts ET les quantités d'énergie qui
+   servent aux émissions.
+5. **Émissions de l'électricité** : calculées sur les kWh **au
+   compteur** (pertes de recharge incluses).
+6. **Infrastructure** : entretien = % du capex AVANT taxes, indexé à
+   l'inflation entretien dès l'année 1 ; taxes non récupérables sur le
+   capex seulement ; valeur résiduelle linéaire sur le capex avant
+   taxes ; si la durée de vie de l'infra est inférieure à l'horizon,
+   aucun ré-investissement n'est modélisé en v1 (avertissement émis).
+7. **Délai de récupération (§6.1)** : cumul des écarts nominaux
+   (référence − alternative) **depuis l'année 0 incluse**, subventions
+   et valeurs résiduelles comptées à leur année ; le résultat est la
+   première année entière où le cumul devient ≥ 0. Version actualisée :
+   mêmes flux actualisés. Raisons de `null` : « les économies annuelles
+   sont nulles ou négatives » ou « le surcoût n'est pas résorbé à
+   l'horizon H=… ».
+8. **TCO par km** : TCO actualisé ÷ kilomètres des années 1..H
+   actualisés au même taux (cohérence numérateur/dénominateur).
+9. **Événements majeurs (§3.4)** : montants saisis en dollars courants
+   de leur année (devis) — ni taxes ajoutées, ni indexation.
+10. **Coût par tonne évitée** : signé — négatif = gain net par tonne ;
+    `null` si aucune tonne n'est évitée.
