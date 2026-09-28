@@ -84,7 +84,7 @@ jobs:
       - name: Taxes — RC4049, remboursement TVQ municipalités, taux TPS/TVQ
         continue-on-error: true
         run: |
-          curl -sL --max-time 60 "https://www.canada.ca/fr/agence-revenu/services/formulaires-publications/publications/rc4049/renseignements-sur-tps-tvh-municipalites.html" -o archive/rc4049.html
+          curl -sL --max-time 60 "https://www.canada.ca/fr/agence-revenu/services/formulaires-publications/publications/rc4049.html" -o archive/rc4049.html
           python3 -c "import re,html;t=open('archive/rc4049.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/rc4049.txt','w').write(t)"
           echo "=== RC4049 REMBOURSEMENT 100 % ==="
           grep -o -E ".{250}(100 %|100%|remboursement).{350}" archive/rc4049.txt | head -14
@@ -108,8 +108,10 @@ jobs:
           PDF=$(grep -oE 'href="[^"]*\.pdf[^"]*"' archive/regie-bulletins.html | head -1 | sed 's/href="//;s/"$//')
           case "$PDF" in http*) URL="$PDF";; *) URL="https://www.regie-energie.qc.ca$PDF";; esac
           echo "Bulletin : $URL" | tee archive/regie-bulletin.url
-          curl -sL --max-time 120 -o archive/regie-bulletin.pdf "$URL"
-          pdftotext -layout archive/regie-bulletin.pdf archive/regie-bulletin.txt || true
+          curl -sL --max-time 120 -o bulletin-temporaire.pdf "$URL"
+          pdftotext -layout bulletin-temporaire.pdf archive/regie-bulletin.txt || true
+          # PDF trop volumineux pour le dépôt : l'extraction texte fait foi,
+          # l'URL datée est conservée dans regie-bulletin.url
           echo "=== RÉGIE — DIESEL (extraits) ==="
           grep -n -i -B2 -A8 "diesel" archive/regie-bulletin.txt | head -60
           # StatCan : tableau 18-10-0001-01, diesel, Montréal (2320) et Québec (2312)
@@ -130,11 +132,11 @@ jobs:
           prod = {m["memberNameFr"]: m["memberId"] for m in dims[1]["member"]}
           print("GEO disponibles:", {k: v for k, v in geo.items() if "ontr" in k or "uébec" in k})
           print("PRODUITS:", prod)
-          diesel = [v for k, v in prod.items() if "iesel" in k]
+          diesel = [v for k, v in prod.items() if "iesel" in k]  # service complet ET libre-service
           villes = [(k, v) for k, v in geo.items() if ("Montréal" in k or k.startswith("Québec"))]
           series = []
           for nomv, gid in villes[:3]:
-              for pid in diesel[:1]:
+              for pid in diesel:
                   coord = f"{gid}.{pid}.0.0.0.0.0.0.0.0"
                   req2 = urllib.request.Request(
                       "https://www150.statcan.gc.ca/t1/wds/rest/getDataFromCubePidCoordAndLatestNPeriods",
@@ -178,12 +180,57 @@ jobs:
           grep -o -E ".{250}(électri|autobus|taux|aide).{350}" archive/pagtcp.txt | head -16 || true
 
       # ----------------------------------------------------------------
+      # Pages à rendu JavaScript ou WAF (PAVÉ, Revenu Québec, PAGTCP) :
+      # rendu navigateur réel, texte archivé
+      # ----------------------------------------------------------------
+      - name: Pages dynamiques — rendu navigateur (PAVÉ, RQ, PAGTCP)
+        continue-on-error: true
+        run: |
+          npm init -y >/dev/null 2>&1 || true
+          npm install --no-save playwright@1.49 >/dev/null 2>&1
+          npx playwright install chromium --with-deps >/dev/null 2>&1
+          cat > rendu.mjs <<'JS'
+          import { chromium } from 'playwright';
+          const PAGES = [
+            ['pave-rendu', 'https://tc.canada.ca/en/road-transportation/innovative-technologies/electric-vehicles/electric-vehicle-affordability-program'],
+            ['pave-rendu-fr', 'https://tc.canada.ca/fr/transport-routier/technologies-novatrices/vehicules-electriques/programme-abordabilite-vehicules-electriques'],
+            ['tvq-municipalites-rendu', 'https://www.revenuquebec.ca/fr/entreprises/taxes/tpstvh-et-tvq/situations-particulieres-liees-a-la-tpstvh-et-a-la-tvq/organismes-de-services-publics-tpstvh-et-tvq/remboursement-de-tps-et-de-tvq-accorde-aux-osp/depenses-qui-donnent-droit-au-remboursement/remboursement-partiel-de-la-tvq-aux-municipalites-et-aux-organismes-designes-comme-municipalites/'],
+            ['taux-taxes-rendu', 'https://www.revenuquebec.ca/fr/entreprises/taxes/tpstvh-et-tvq/perception-de-la-tps-et-de-la-tvq/calcul-des-taxes/'],
+            ['pagtcp-rendu', 'https://www.transports.gouv.qc.ca/fr/aide-finan/transport-collectif/Pages/transport-collectif.aspx'],
+          ];
+          const nav = await chromium.launch();
+          const ctx = await nav.newContext({ locale: 'fr-CA', userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36' });
+          for (const [nom, url] of PAGES) {
+            try {
+              const page = await ctx.newPage();
+              await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
+              const texte = await page.evaluate(() => document.body.innerText);
+              const fs = await import('node:fs');
+              fs.writeFileSync(`archive/${nom}.txt`, texte);
+              console.log(`--- ${nom} : ${texte.length} caractères`);
+              await page.close();
+            } catch (e) { console.log(`--- ${nom} : ÉCHEC ${e.message}`); }
+          }
+          await nav.close();
+          JS
+          node rendu.mjs
+          echo "=== PAVE RENDU (montants/années/limites) ==="
+          grep -o -E ".{200}(5,000|4,000|3,000|2,000|municipal|submitted|fleet).{250}" archive/pave-rendu.txt 2>/dev/null | head -24 || true
+          grep -o -E ".{200}(5 000|4 000|3 000|2 000|municipal).{250}" archive/pave-rendu-fr.txt 2>/dev/null | head -16 || true
+          echo "=== TVQ MUNICIPALITES RENDU ==="
+          grep -o -E ".{250}(50 %|50%|remboursement).{300}" archive/tvq-municipalites-rendu.txt 2>/dev/null | head -10 || true
+          echo "=== TAUX TPS/TVQ RENDU ==="
+          grep -o -E ".{120}(5 %|9,975|9.975).{250}" archive/taux-taxes-rendu.txt 2>/dev/null | head -8 || true
+          echo "=== PAGTCP RENDU ==="
+          grep -o -E ".{200}(électri|autobus|taux).{300}" archive/pagtcp-rendu.txt 2>/dev/null | head -10 || true
+
+      # ----------------------------------------------------------------
       # Régie de l'énergie du Canada — Avenir énergétique (projections)
       # ----------------------------------------------------------------
       - name: REC — Avenir énergétique du Canada (repérage des données de prix)
         continue-on-error: true
         run: |
-          curl -sL --max-time 90 "https://www.cer-rec.gc.ca/fr/donnees-analyse/avenir-energetique-canada/index.html" -o archive/rec-avenir.html || true
+          curl -sL --max-time 90 "https://www.cer-rec.gc.ca/fr/donnees-analyse/avenir-energetique-canada/2026/index.html" -o archive/rec-avenir.html || true
           python3 -c "import re,html;t=open('archive/rec-avenir.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/rec-avenir.txt','w').write(t)" || true
           echo "=== REC LIENS DONNÉES ==="
           grep -oE 'href="[^"]*(donnees|data|telecharg|download)[^"]*"' archive/rec-avenir.html | sort -u | head -20 || true
