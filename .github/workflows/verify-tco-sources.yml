@@ -1,49 +1,210 @@
-# Outil de documentation : lit les sources officielles des hypothèses TCO
-# (bloquées par le proxy de la sandbox de dev) et imprime des extraits dans
-# les logs pour vérification humaine/agent. Aucun secret, lecture seule.
-# Utilisé pour tenir à jour src/lib/tco/assumptions.ts (statut « vérifié »).
+# Outil de vérification : lit les sources officielles des hypothèses TCO
+# (bloquées par le proxy de la sandbox de dev), imprime des extraits dans
+# les logs ET ARCHIVE les documents lus dans data/sources/<date>/ (commit
+# sur la branche). Règle du projet : « vérifié » = source réellement lue
+# ET archivée — le bulletin de la Régie est écrasé chaque semaine, sans
+# archive la vérification n'est pas reproductible. Aucun secret.
 name: Vérification des sources TCO
 
 on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   fetch-sources:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Installer poppler (pdftotext)
         run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
 
-      - name: Écocamionnage — Tableau 2 complet (plafonds classes 3 à 8)
+      - name: Préparer le dossier d'archive
+        run: |
+          echo "JOUR=$(date -u +%F)" >> "$GITHUB_ENV"
+          mkdir -p archive
+
+      # ----------------------------------------------------------------
+      # Écocamionnage 2025-2028 — modalités complètes (PDF archivé)
+      # ----------------------------------------------------------------
+      - name: Écocamionnage — modalités (archive + extraits ciblés)
         continue-on-error: true
         run: |
-          curl -sL --max-time 60 "https://www.quebec.ca/transports/aide-financiere/electrification/ecocamionnage/volet-1" -o eco.html
-          PDF=$(grep -oE 'href="[^"]*[Mm]odalit[^"]*\.pdf[^"]*"' eco.html | head -1 | sed 's/href="//;s/"$//')
+          curl -sL --max-time 60 "https://www.quebec.ca/transports/aide-financiere/electrification/ecocamionnage/volet-1" -o archive/ecocamionnage-volet1.html
+          PDF=$(grep -oE 'href="[^"]*[Mm]odalit[^"]*\.pdf[^"]*"' archive/ecocamionnage-volet1.html | head -1 | sed 's/href="//;s/"$//')
           case "$PDF" in http*) URL="$PDF";; *) URL="https://www.quebec.ca$PDF";; esac
-          curl -sL --max-time 120 -o modalites.pdf "$URL"
-          pdftotext -layout modalites.pdf modalites.txt || true
-          echo "=== ECO TABLEAU 2 COMPLET ==="
-          awk '/Tableau 2/{f=1} f{print NR": "$0} f&&/Tableau 3/{exit}' modalites.txt | head -90
-          echo "=== ECO INFRASTRUCTURE RECHARGE ==="
-          grep -n -i -B2 -A14 "borne\|recharge\|ravitaillement" modalites.txt | head -80
+          echo "URL modalités : $URL" | tee archive/ecocamionnage-modalites.url
+          curl -sL --max-time 120 -o archive/ecocamionnage-modalites.pdf "$URL"
+          pdftotext -layout archive/ecocamionnage-modalites.pdf archive/ecocamionnage-modalites.layout.txt || true
+          pdftotext -raw archive/ecocamionnage-modalites.pdf archive/ecocamionnage-modalites.raw.txt || true
+          T=archive/ecocamionnage-modalites.layout.txt
+          R=archive/ecocamionnage-modalites.raw.txt
+          echo "=== ECO TABLEAU 1 (classe 2b, montants par année) ==="
+          awk '/Tableau 1/{f=1} f{print NR": "$0} f&&/Tableau 2/{exit}' "$T" | head -60
+          echo "=== ECO TABLEAU 2 COMPLET (layout) ==="
+          awk '/Tableau 2/{f=1} f{print NR": "$0} f&&/Tableau 3/{exit}' "$T" | head -120
+          echo "=== ECO TABLEAU 2 COMPLET (raw — pour les % que layout perd) ==="
+          awk '/Tableau 2/{f=1} f{print NR": "$0} f&&/Tableau 3/{exit}' "$R" | head -120
+          echo "=== ECO LIGNES AVEC % (contexte classes) ==="
+          grep -n -B3 -A3 "%" "$T" | grep -i -B3 -A3 "classe\|5 à 7\|5-7\|classe 8\|coût d.achat" | head -100
+          echo "=== ECO ADMISSIBILITÉ (qui peut demander — municipalités ? CTQ ?) ==="
+          grep -n -i -B4 -A20 "organismes admissibles\|demandeurs admissibles\|sont admissibles\|admissibilité du demandeur" "$T" | head -120
+          echo "=== ECO MUNICIPALIT (toutes occurrences) ==="
+          grep -n -i -B3 -A6 "municipalit" "$T" | head -100
+          echo "=== ECO ART. 4 / CUMUL ==="
+          grep -n -i -B3 -A20 "cumul\|aide financière totale\|autres programmes\|autre aide gouvernementale" "$T" | head -160
+          echo "=== ECO 7.14 (règles générales, 75 % ?) ==="
+          awk '/7\.14/{f=1} f{print NR": "$0} f&&/7\.16/{exit}' "$T" | head -80
+          grep -n -B3 -A12 "75 %\|75%" "$T" | head -80
+          echo "=== ECO BONIFICATION ACHAT LOCAL (dans ou hors plafond ?) ==="
+          grep -n -i -B5 -A15 "bonifi\|15 %\|15%\|assemblé au Québec\|fabriqué au Québec" "$T" | head -120
+          echo "=== ECO FIN DU PROGRAMME / DATES ==="
+          grep -n -i -B2 -A6 "31 mars 2028\|prend fin\|se termine\|durée du programme" "$T" | head -60
 
-      - name: ECCC — intensité réseau Québec (grep direct)
+      # ----------------------------------------------------------------
+      # PAVÉ (fédéral) — dégressivité et limite municipale (page archivée)
+      # ----------------------------------------------------------------
+      - name: PAVÉ — dégressivité par année et limites (archive + extraits)
         continue-on-error: true
         run: |
-          curl -sL --max-time 60 "https://www.canada.ca/fr/services/environnement/meteo/changementsclimatiques/plan-climatique/electricite-propre/apercu-quebec.html" -o qcgrid.html
-          python3 -c "import re,html;t=open('qcgrid.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('qcgrid.txt','w').write(t)"
-          echo "=== QC GRID EXTRAITS ==="
-          grep -o -E ".{300}(éq\. CO|intensité|émissions).{400}" qcgrid.txt | head -12
+          curl -sL --max-time 60 "https://tc.canada.ca/en/road-transportation/innovative-technologies/electric-vehicles/electric-vehicle-affordability-program" -o archive/pave-overview.html
+          python3 -c "import re,html;t=open('archive/pave-overview.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/pave-overview.txt','w').write(t)"
+          echo "=== PAVE MONTANTS PAR ANNÉE ==="
+          grep -o -E ".{200}(5,000|4,000|3,000|2,000|\\\$5|\\\$4|\\\$3|\\\$2).{300}" archive/pave-overview.txt | head -20
+          echo "=== PAVE LIMITES (municipal, fleet, 10) ==="
+          grep -o -E ".{250}(municipal|fleet|maximum|limit).{350}" archive/pave-overview.txt | head -20
+          echo "=== PAVE ANNÉE APPLICABLE (date de soumission) ==="
+          grep -o -E ".{250}(submitted|submission|dealer|point of sale).{350}" archive/pave-overview.txt | head -12
 
-      - name: Guide QC quantification GES — facteurs routiers (annexe)
+      # ----------------------------------------------------------------
+      # Taxes : TPS municipalités (RC4049) + TVQ 50 % (Revenu Québec) + taux
+      # ----------------------------------------------------------------
+      - name: Taxes — RC4049, remboursement TVQ municipalités, taux TPS/TVQ
         continue-on-error: true
         run: |
-          curl -sL --max-time 180 -o guide.pdf "https://www.environnement.gouv.qc.ca/changements/ges/guide-quantification/guide-quantification-ges.pdf"
-          pdftotext -layout guide.pdf guide.txt || true
-          echo "=== GUIDE QC 2,68 ==="
-          grep -n -B6 -A10 "2 681\|2,681\|2681" guide.txt | head -120
-          echo "=== GUIDE QC TABLEAU VEHICULES ROUTIERS ==="
-          grep -n -i -B4 -A30 "véhicules automobiles à moteur diesel\|routier.*diesel.*facteur\|facteurs d.émission.*routier" guide.txt | head -140
+          curl -sL --max-time 60 "https://www.canada.ca/fr/agence-revenu/services/formulaires-publications/publications/rc4049/renseignements-sur-tps-tvh-municipalites.html" -o archive/rc4049.html
+          python3 -c "import re,html;t=open('archive/rc4049.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/rc4049.txt','w').write(t)"
+          echo "=== RC4049 REMBOURSEMENT 100 % ==="
+          grep -o -E ".{250}(100 %|100%|remboursement).{350}" archive/rc4049.txt | head -14
+          curl -sL --max-time 60 "https://www.revenuquebec.ca/fr/entreprises/taxes/tpstvh-et-tvq/situations-particulieres-liees-a-la-tpstvh-et-a-la-tvq/organismes-de-services-publics-tpstvh-et-tvq/remboursement-de-tps-et-de-tvq-accorde-aux-osp/depenses-qui-donnent-droit-au-remboursement/remboursement-partiel-de-la-tvq-aux-municipalites-et-aux-organismes-designes-comme-municipalites/" -o archive/tvq-municipalites.html
+          python3 -c "import re,html;t=open('archive/tvq-municipalites.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/tvq-municipalites.txt','w').write(t)"
+          echo "=== TVQ MUNICIPALITÉS (50 % ?) ==="
+          grep -o -E ".{250}(50 %|50%|taux du remboursement).{350}" archive/tvq-municipalites.txt | head -14
+          curl -sL --max-time 60 "https://www.revenuquebec.ca/fr/entreprises/taxes/tpstvh-et-tvq/perception-de-la-tps-et-de-la-tvq/calcul-des-taxes/" -o archive/taux-taxes.html
+          python3 -c "import re,html;t=open('archive/taux-taxes.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/taux-taxes.txt','w').write(t)"
+          echo "=== TAUX TPS/TVQ ==="
+          grep -o -E ".{120}(5 %|9,975|9.975).{250}" archive/taux-taxes.txt | head -10
+
+      # ----------------------------------------------------------------
+      # Diesel : Régie de l'énergie (bulletin hebdo, PDF ARCHIVÉ) +
+      # StatCan 18-10-0001-01 (12 derniers mois, Montréal et Québec)
+      # ----------------------------------------------------------------
+      - name: Diesel — bulletin Régie (archive) + StatCan 12 mois
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 60 "https://www.regie-energie.qc.ca/fr/participants/produits-petroliers/bulletins-dinformation-sur-les-prix-des-produits-petroliers" -o archive/regie-bulletins.html
+          PDF=$(grep -oE 'href="[^"]*\.pdf[^"]*"' archive/regie-bulletins.html | head -1 | sed 's/href="//;s/"$//')
+          case "$PDF" in http*) URL="$PDF";; *) URL="https://www.regie-energie.qc.ca$PDF";; esac
+          echo "Bulletin : $URL" | tee archive/regie-bulletin.url
+          curl -sL --max-time 120 -o archive/regie-bulletin.pdf "$URL"
+          pdftotext -layout archive/regie-bulletin.pdf archive/regie-bulletin.txt || true
+          echo "=== RÉGIE — DIESEL (extraits) ==="
+          grep -n -i -B2 -A8 "diesel" archive/regie-bulletin.txt | head -60
+          # StatCan : tableau 18-10-0001-01, diesel, Montréal (2320) et Québec (2312)
+          # via l'API Web Data Service (getDataFromCubePidCoordAndLatestNPeriods)
+          python3 - <<'PY'
+          import json, urllib.request
+          # productId 18100001 ; coordonnées : géographie.produit (diesel = 3)
+          # Montréal = 12, Québec (ville) = 11 dans la dimension Geography du cube.
+          # On interroge les métadonnées pour résoudre les membres sans rien coder en dur.
+          req = urllib.request.Request(
+              "https://www150.statcan.gc.ca/t1/wds/rest/getCubeMetadata",
+              data=json.dumps([{"productId": 18100001}]).encode(),
+              headers={"Content-Type": "application/json"})
+          meta = json.load(urllib.request.urlopen(req, timeout=60))
+          open("archive/statcan-18100001-metadata.json", "w").write(json.dumps(meta, ensure_ascii=False, indent=1))
+          dims = meta[0]["object"]["dimension"]
+          geo = {m["memberNameFr"]: m["memberId"] for m in dims[0]["member"]}
+          prod = {m["memberNameFr"]: m["memberId"] for m in dims[1]["member"]}
+          print("GEO disponibles:", {k: v for k, v in geo.items() if "ontr" in k or "uébec" in k})
+          print("PRODUITS:", prod)
+          diesel = [v for k, v in prod.items() if "iesel" in k]
+          villes = [(k, v) for k, v in geo.items() if ("Montréal" in k or k.startswith("Québec"))]
+          series = []
+          for nomv, gid in villes[:3]:
+              for pid in diesel[:1]:
+                  coord = f"{gid}.{pid}.0.0.0.0.0.0.0.0"
+                  req2 = urllib.request.Request(
+                      "https://www150.statcan.gc.ca/t1/wds/rest/getDataFromCubePidCoordAndLatestNPeriods",
+                      data=json.dumps([{"productId": 18100001, "coordinate": coord, "latestN": 14}]).encode(),
+                      headers={"Content-Type": "application/json"})
+                  d = json.load(urllib.request.urlopen(req2, timeout=60))
+                  series.append({"ville": nomv, "coordinate": coord, "reponse": d})
+                  pts = d[0]["object"]["vectorDataPoint"] if d[0]["status"] == "SUCCESS" else []
+                  print(f"=== STATCAN DIESEL {nomv} (cents/L, 14 derniers mois) ===")
+                  for p in pts:
+                      print(p["refPer"], p["value"])
+          open("archive/statcan-diesel-12mois.json", "w").write(json.dumps(series, ensure_ascii=False, indent=1))
+          PY
+
+      # ----------------------------------------------------------------
+      # Hydro-Québec — grille tarifaire (PDF archivé)
+      # ----------------------------------------------------------------
+      - name: Hydro-Québec — tarifs (archive + extraits M et G)
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 120 -o archive/hq-tarifs.pdf "https://www.hydroquebec.com/data/documents-donnees/pdf/tarifs-electricite.pdf"
+          pdftotext -layout archive/hq-tarifs.pdf archive/hq-tarifs.txt || true
+          echo "=== HQ TARIF M ==="
+          grep -n -B2 -A14 "6,292\|18,242\|tarif M" archive/hq-tarifs.txt | head -60
+          echo "=== HQ TARIF G ==="
+          grep -n -B2 -A14 "12,388\|tarif G" archive/hq-tarifs.txt | head -40
+
+      # ----------------------------------------------------------------
+      # FTCZE + PAGTCP (statuts autobus) — nouvelle tentative depuis le runner
+      # ----------------------------------------------------------------
+      - name: FTCZE et PAGTCP — statuts et taux (archive + extraits)
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 90 "https://logement-infrastructure.canada.ca/zero-emissions-trans-zero-emissions/index-fra.html" -o archive/ftcze.html || true
+          python3 -c "import re,html;t=open('archive/ftcze.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/ftcze.txt','w').write(t)" || true
+          echo "=== FTCZE STATUT/GUICHET ==="
+          grep -o -E ".{250}(demande|guichet|fermé|ouvert|contribution|50 %|50%).{350}" archive/ftcze.txt | head -16 || true
+          curl -sL --max-time 90 "https://www.transports.gouv.qc.ca/fr/aide-finan/transport-collectif/Pages/transport-collectif.aspx" -o archive/pagtcp.html || true
+          python3 -c "import re,html;t=open('archive/pagtcp.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/pagtcp.txt','w').write(t)" || true
+          echo "=== PAGTCP ÉLECTRIFICATION ==="
+          grep -o -E ".{250}(électri|autobus|taux|aide).{350}" archive/pagtcp.txt | head -16 || true
+
+      # ----------------------------------------------------------------
+      # Régie de l'énergie du Canada — Avenir énergétique (projections)
+      # ----------------------------------------------------------------
+      - name: REC — Avenir énergétique du Canada (repérage des données de prix)
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 90 "https://www.cer-rec.gc.ca/fr/donnees-analyse/avenir-energetique-canada/index.html" -o archive/rec-avenir.html || true
+          python3 -c "import re,html;t=open('archive/rec-avenir.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/rec-avenir.txt','w').write(t)" || true
+          echo "=== REC LIENS DONNÉES ==="
+          grep -oE 'href="[^"]*(donnees|data|telecharg|download)[^"]*"' archive/rec-avenir.html | sort -u | head -20 || true
+
+      # ----------------------------------------------------------------
+      # Archivage : commit de tous les documents lus
+      # ----------------------------------------------------------------
+      - name: Committer l'archive dans data/sources/<date>/
+        run: |
+          DEST="data/sources/$JOUR"
+          mkdir -p "$DEST"
+          cp -r archive/* "$DEST"/ 2>/dev/null || true
+          ls -la "$DEST"
+          git config user.name "verify-tco-sources[bot]"
+          git config user.email "actions@github.com"
+          git add "$DEST"
+          git commit -m "data(sources): archive des sources officielles lues le $JOUR
+
+Documents téléchargés par le workflow de vérification (Écocamionnage,
+PAVÉ, RC4049/TVQ, Régie, StatCan 18-10-0001-01, Hydro-Québec, FTCZE,
+PAGTCP, REC) — la règle « vérifié = lu ET archivé » exige ces copies,
+le bulletin de la Régie étant écrasé chaque semaine." || echo "rien à committer"
+          git pull --rebase origin "${GITHUB_REF_NAME}" || true
+          git push origin "HEAD:${GITHUB_REF_NAME}"
