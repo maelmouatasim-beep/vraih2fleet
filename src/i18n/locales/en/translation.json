@@ -843,7 +843,8 @@
         "press": "Press",
         "privacy": "Privacy Policy",
         "terms": "Terms of Service",
-        "refund": "Refund Policy"
+        "refund": "Refund Policy",
+        "methodology": "Methodology"
       },
       "copyright": "© {{year}} H2Fleet Planner. All rights reserved.",
       "madeWith": "Made with 💚 for energy transition"
@@ -999,7 +1000,11 @@
       "support": "Support",
       "settings": "Settings",
       "logout": "Logout",
-      "loggingOut": "Logging out..."
+      "loggingOut": "Logging out...",
+      "home": "Home",
+      "fleet": "My fleet",
+      "library": "Library",
+      "organization": "Organization"
     },
     "header": {
       "search": "Search...",
@@ -5448,5 +5453,105 @@
       "openRoadmap": "Open Roadmap",
       "viewProject": "View Project"
     }
+  },
+  "library": {
+    "title": "Library",
+    "subtitle": "Reference data, custom data and telematics sources",
+    "items": {
+      "referenceData": {
+        "title": "Reference data",
+        "description": "Prices, emission factors and reference costs by region."
+      },
+      "customData": {
+        "title": "Custom data",
+        "description": "Your own rates and costs, overriding the references."
+      },
+      "telematics": {
+        "title": "Telematics",
+        "description": "Geotab/Samsara connections and imported vehicles."
+      }
+    }
+  },
+  "organization": {
+    "title": "Organization",
+    "subtitle": "Your organization's identity and team members",
+    "identity": {
+      "title": "Identity",
+      "subtitle": "This information feeds the calculations (recoverable taxes, region).",
+      "name": "Name",
+      "type": "Organization type",
+      "typeHint": "Determines recoverable taxes in the TCO calculation.",
+      "region": "Region",
+      "save": "Save"
+    },
+    "types": {
+      "municipalite": "Municipality",
+      "societe_transport": "Transit agency",
+      "entreprise": "Business"
+    },
+    "members": {
+      "title": "Members",
+      "subtitle": "Invitations and role management: coming in Phase 3.",
+      "member": "Member",
+      "role": "Role",
+      "since": "Since"
+    },
+    "roles": {
+      "admin": "Admin",
+      "member": "Member",
+      "reader": "Reader"
+    },
+    "toast": {
+      "saved": "Organization saved"
+    }
+  },
+  "journey": {
+    "subtitle": "Project journey: from your real fleet to a tracked plan",
+    "backToProjects": "Projects",
+    "nextStep": "Next step",
+    "cta": {
+      "openFleet": "Open My fleet",
+      "newScenario": "New scenario",
+      "compare": "Compare scenarios",
+      "projectOverview": "Project overview"
+    },
+    "steps": {
+      "flotte": {
+        "title": "Fleet",
+        "description": "The real vehicles included in this project.",
+        "placeholder": "Selecting the project's vehicles (from My fleet) arrives in Phase 3. Meanwhile, build your inventory in My fleet."
+      },
+      "faisabilite": {
+        "title": "Feasibility",
+        "description": "Which vehicles can switch to electric or hydrogen, and why.",
+        "placeholder": "The per-vehicle verdict (range, age, duty cycle) with its quantified reason arrives in Phase 3."
+      },
+      "strategies": {
+        "title": "Strategies",
+        "description": "Compare 2-3 replacement strategies priced by the TCO engine.",
+        "placeholder": "The side-by-side comparison on the new TCO engine arrives in Phase 3. Existing scenario tools remain available below."
+      },
+      "plan": {
+        "title": "Plan",
+        "description": "The vehicle-by-vehicle, year-by-year replacement plan.",
+        "placeholder": "The multi-year plan with annual budget (capital/operating) arrives in Phase 3."
+      },
+      "financement": {
+        "title": "Funding",
+        "description": "Applicable subsidy programs, amounts and deadlines.",
+        "placeholder": "Programs (EVAP, Écocamionnage…) with caps, stacking and deadlines arrive in Phase 3 — statuses already verified in the engine registry."
+      },
+      "rapports": {
+        "title": "Reports",
+        "description": "The council-ready case: PDF in French and English.",
+        "placeholder": "The council-ready report (methodology annex included) arrives in Phase 3."
+      },
+      "suivi": {
+        "title": "Tracking",
+        "description": "Actual vs planned, and team tasks linked to the project.",
+        "placeholder": "Actual-vs-planned tracking and integrated tasks (linked to vehicle, year and subsidy) arrive in Phase 3."
+      }
+    },
+    "open": "Project journey"
   }
 }

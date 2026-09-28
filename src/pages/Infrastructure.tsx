@@ -551,7 +551,7 @@ export default function Infrastructure() {
                   </p>
                 </div>
                 <Button asChild>
-                  <Link to="/dashboard/scenarios/new">
+                  <Link to="/dashboard/projects">
                     <Plus className="h-4 w-4 mr-2" />
                     {t('infrastructure.scenarioSource.createScenario', 'Créer un scénario')}
                   </Link>
@@ -986,7 +986,7 @@ export default function Infrastructure() {
               <div className="text-sm text-muted-foreground p-3 bg-muted rounded-lg">
                 <p>{t('infrastructure.scenarioSource.noScenarios', 'Aucun scénario disponible.')}</p>
                 <Button asChild variant="link" className="p-0 h-auto mt-1">
-                  <Link to="/dashboard/scenarios/new">
+                  <Link to="/dashboard/projects">
                     {t('infrastructure.scenarioSource.createScenario', 'Créer un scénario')}
                   </Link>
                 </Button>

@@ -143,7 +143,7 @@ export function BudgetAlternativesPanel({
                   </Button>
                 ) : alt.actionType === 'subsidies' ? (
                   <Button variant="outline" size="sm" className="w-full text-xs" asChild>
-                    <Link to="/dashboard/subsidies">
+                    <Link to="/dashboard/projects">
                       {t('scenarios.recommendations.alternatives.viewSubsidies', 'Explorer les subventions')}
                       <ArrowRight className="h-3 w-3 ml-1" />
                     </Link>

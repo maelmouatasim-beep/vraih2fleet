@@ -23,7 +23,7 @@ export const KNOWLEDGE_BASE = {
 - /dashboard/scenarios : Scénarios TCO
 - /dashboard/analytics : Analyses avancées
 - /dashboard/infrastructure : Planification infrastructure
-- /dashboard/subsidies : Subventions disponibles
+- /dashboard/projects : Projets (les subventions se gèrent à l'étape Financement du parcours projet)
 - /dashboard/donnees-ref : Données de référence`,
 
     "créer scénario": `**COMMENT CRÉER UN SCÉNARIO TCO:**

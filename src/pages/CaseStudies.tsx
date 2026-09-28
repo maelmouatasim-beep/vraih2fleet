@@ -534,7 +534,7 @@ const CaseStudies = () => {
                     {t('caseStudies.actions.downloadReport')}
                   </Button>
                   <Button asChild className="gap-2">
-                    <Link to="/dashboard/scenarios/new">
+                    <Link to="/dashboard/projects">
                       {t('caseStudies.actions.tryScenario')}
                       <ArrowRight className="w-4 h-4" />
                     </Link>
@@ -557,7 +557,7 @@ const CaseStudies = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link to="/dashboard/scenarios">
+              <Link to="/dashboard/projects">
                 {t('caseStudies.cta.button')}
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>

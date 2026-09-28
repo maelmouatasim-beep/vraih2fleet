@@ -5,23 +5,20 @@ import { Leaf, Linkedin, Twitter, Github } from "lucide-react";
 const Footer = () => {
   const { t } = useTranslation();
 
+  // Refonte 2f : les pages vides (roadmap, changelog, docs, api,
+  // careers, press) sont retirées — plus aucun lien mort.
   const footerLinks = {
     product: [
       { labelKey: "landing.footer.links.features", href: "/features" },
-      { labelKey: "landing.footer.links.roadmap", href: "/roadmap" },
-      { labelKey: "landing.footer.links.changelog", href: "/changelog" },
+      { labelKey: "landing.footer.links.methodology", href: "/methodology" },
     ],
     resources: [
-      { labelKey: "landing.footer.links.documentation", href: "/docs" },
       { labelKey: "landing.footer.links.guides", href: "/guides" },
-      { labelKey: "landing.footer.links.apiReference", href: "/api" },
       { labelKey: "landing.footer.links.caseStudies", href: "/case-studies" },
     ],
     company: [
       { labelKey: "landing.footer.links.about", href: "/about" },
       { labelKey: "landing.footer.links.contact", href: "/contact" },
-      { labelKey: "landing.footer.links.careers", href: "/careers" },
-      { labelKey: "landing.footer.links.press", href: "/press" },
     ],
     legal: [
       { labelKey: "landing.footer.links.terms", href: "/terms" },

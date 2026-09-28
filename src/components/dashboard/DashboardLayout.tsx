@@ -6,25 +6,19 @@ import { useTranslation } from "react-i18next";
 import { PUBLIC_API_ENABLED } from "@/lib/constants";
 import {
   LayoutDashboard,
-  FolderKanban, 
-  BarChart3, 
+  FolderKanban,
   Settings,
   LogOut,
   ChevronLeft,
   Search,
   Leaf,
   Plus,
-  Database,
-  FileJson,
-  Headphones,
-  TrendingUp,
   Code,
   Loader2,
   Building2,
-  Plug,
-  Banknote,
+  BookOpen,
+  Truck,
   GraduationCap,
-  Map
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,33 +40,24 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const navigate = useNavigate();
   const { user, profile, role, signOut } = useAuth();
 
-  // SECTION 1 - Main workflow
+  // Menu réduit à 6 entrées (direction produit, refonte 2f) :
+  // Accueil, Projets, Ma flotte, Bibliothèque, Organisation, Aide.
   const mainLinks = [
-    { icon: LayoutDashboard, labelKey: "dashboard.menu.dashboard", href: "/dashboard" },
+    { icon: LayoutDashboard, labelKey: "dashboard.menu.home", href: "/dashboard" },
     { icon: FolderKanban, labelKey: "dashboard.menu.projects", href: "/dashboard/projects" },
-    { icon: BarChart3, labelKey: "dashboard.menu.scenarios", href: "/dashboard/scenarios" },
-    { icon: TrendingUp, labelKey: "dashboard.menu.analytics", href: "/dashboard/analytics" },
-    { icon: Building2, labelKey: "dashboard.menu.infrastructure", href: "/dashboard/infrastructure" },
-    { icon: Map, labelKey: "dashboard.menu.roadmap", href: "/dashboard/roadmap" },
+    { icon: Truck, labelKey: "dashboard.menu.fleet", href: "/dashboard/fleet" },
+    { icon: BookOpen, labelKey: "dashboard.menu.library", href: "/dashboard/library" },
+    { icon: Building2, labelKey: "dashboard.menu.organization", href: "/dashboard/organization" },
+    { icon: GraduationCap, labelKey: "dashboard.menu.helpTraining", href: "/dashboard/help" },
   ];
 
-  // SECTION 2 - Data sources
-  const dataLinks = [
-    { icon: Plug, labelKey: "dashboard.menu.telematics", href: "/dashboard/telematics" },
-    { icon: Database, labelKey: "dashboard.menu.referenceData", href: "/dashboard/donnees-ref" },
-    { icon: FileJson, labelKey: "dashboard.menu.customData", href: "/dashboard/custom-data" },
-    { icon: Building2, labelKey: "dashboard.menu.suppliers", href: "/dashboard/suppliers" },
-    { icon: Banknote, labelKey: "dashboard.menu.subsidies", href: "/dashboard/subsidies" },
-  ];
+  const dataLinks: typeof mainLinks = [];
 
-  // SECTION 3 - Configuration
-  const configLinks = [
+  const configLinks: typeof mainLinks = [
     // API publique reportée : entrée masquée tant que le drapeau est éteint.
     ...(PUBLIC_API_ENABLED
       ? [{ icon: Code, labelKey: "dashboard.menu.api", href: "/dashboard/api" }]
       : []),
-    { icon: GraduationCap, labelKey: "dashboard.menu.helpTraining", href: "/dashboard/help" },
-    { icon: Headphones, labelKey: "dashboard.menu.support", href: "/dashboard/support" },
   ];
 
   const handleNewProject = () => {
@@ -140,7 +125,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           {/* Section 1: Main workflow */}
           <div className="space-y-1">
             {mainLinks.map((link) => {
-              const isActive = location.pathname === link.href;
+              const isActive =
+                link.href === "/dashboard"
+                  ? location.pathname === link.href
+                  : location.pathname.startsWith(link.href);
               return (
                 <Link
                   key={link.href}
@@ -161,9 +149,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </div>
 
           {/* Separator */}
-          <div className={`my-3 ${sidebarCollapsed ? "mx-2" : "mx-3"}`}>
-            <div className="border-t border-sidebar-border" />
-          </div>
+          {dataLinks.length > 0 && (
+            <div className={`my-3 ${sidebarCollapsed ? "mx-2" : "mx-3"}`}>
+              <div className="border-t border-sidebar-border" />
+            </div>
+          )}
 
           {/* Section 2: Data sources */}
           <div className="space-y-1">
@@ -189,9 +179,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </div>
 
           {/* Separator */}
-          <div className={`my-3 ${sidebarCollapsed ? "mx-2" : "mx-3"}`}>
-            <div className="border-t border-sidebar-border" />
-          </div>
+          {configLinks.length > 0 && (
+            <div className={`my-3 ${sidebarCollapsed ? "mx-2" : "mx-3"}`}>
+              <div className="border-t border-sidebar-border" />
+            </div>
+          )}
 
           {/* Section 3: Configuration */}
           <div className="space-y-1">

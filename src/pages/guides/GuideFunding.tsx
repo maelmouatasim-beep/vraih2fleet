@@ -23,7 +23,7 @@ const GuideFunding = () => {
       readTimeKey="guides.funding.readTime"
       icon={Coins}
       tableOfContents={tableOfContents}
-      ctaLink="/dashboard/subsidies"
+      ctaLink="/dashboard/projects"
       ctaLabelKey="guides.funding.cta.exploreSubsidies"
     >
       {/* Introduction */}
@@ -79,7 +79,7 @@ const GuideFunding = () => {
           type="tool"
           titleKey="guides.funding.optimization.callout.title"
           descriptionKey="guides.funding.optimization.callout.description"
-          linkTo="/dashboard/subsidies"
+          linkTo="/dashboard/projects"
           linkTextKey="guides.funding.optimization.callout.link"
         />
       </GuideSection>

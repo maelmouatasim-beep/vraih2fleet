@@ -135,13 +135,13 @@ const GuideLayout = ({
                     </h3>
                     <div className="space-y-2">
                       <Link
-                        to="/dashboard/scenarios/new"
+                        to="/dashboard/projects"
                         className="block text-sm text-primary hover:underline"
                       >
                         {t("guides.relatedTools.tcoCalculator", "TCO Calculator")}
                       </Link>
                       <Link
-                        to="/dashboard/subsidies"
+                        to="/dashboard/projects"
                         className="block text-sm text-primary hover:underline"
                       >
                         {t("guides.relatedTools.subsidies", "Subsidies Explorer")}

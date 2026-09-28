@@ -180,15 +180,9 @@ const Ecosystem = () => {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" variant="heroOutline" asChild>
-                <Link to="/dashboard/incentives">
+                <Link to="/signup">
                   <DollarSign className="w-5 h-5 mr-2" />
-                  {isEnglish ? 'Calculate My Incentives' : 'Calculer mes subventions'}
-                </Link>
-              </Button>
-              <Button size="lg" variant="heroOutline" asChild>
-                <Link to="/dashboard/suppliers">
-                  <Globe className="w-5 h-5 mr-2" />
-                  {isEnglish ? 'Browse Suppliers' : 'Voir les fournisseurs'}
+                  {isEnglish ? 'Plan My Transition' : 'Planifier ma transition'}
                 </Link>
               </Button>
             </div>
@@ -196,109 +190,7 @@ const Ecosystem = () => {
         </div>
       </section>
 
-      {/* Suppliers Section */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <Badge variant="outline" className="mb-4">
-              {isEnglish ? 'Partners' : 'Partenaires'}
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              {isEnglish ? 'Key Industry Players' : 'Acteurs Clés de l\'Industrie'}
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              {isEnglish
-                ? 'Connect with verified suppliers across the hydrogen value chain'
-                : 'Connectez-vous avec des fournisseurs vérifiés de la chaîne de valeur hydrogène'
-              }
-            </p>
-          </div>
-
-          <div className="grid gap-8 md:grid-cols-2">
-            {Object.entries(supplierTypeLabels).map(([type, label]) => {
-              const typeSuppliers = suppliersByType[type] || [];
-              const Icon = supplierTypeIcons[type as keyof typeof supplierTypeIcons];
-              const displaySuppliers = typeSuppliers.slice(0, 4);
-
-              return (
-                <Card key={type} className="group hover:shadow-lg transition-all duration-300 border-border/50">
-                  <CardHeader>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-primary/10 text-primary">
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg">{label}</CardTitle>
-                        <CardDescription>
-                          {typeSuppliers.length} {isEnglish ? 'verified partners' : 'partenaires vérifiés'}
-                        </CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3 mb-4">
-                      {displaySuppliers.length > 0 ? (
-                        displaySuppliers.map((supplier) => (
-                          <div 
-                            key={supplier.id} 
-                            className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center text-sm font-bold text-primary border border-border">
-                                {supplier.company_name.substring(0, 2).toUpperCase()}
-                              </div>
-                              <div>
-                                <p className="font-medium text-sm">{supplier.company_name}</p>
-                                <p className="text-xs text-muted-foreground flex items-center gap-1">
-                                  <MapPin className="w-3 h-3" />
-                                  {supplier.province_state || supplier.country}
-                                </p>
-                              </div>
-                            </div>
-                            {supplier.website_url && (
-                              <a 
-                                href={supplier.website_url} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="text-primary hover:text-primary/80"
-                              >
-                                <ExternalLink className="w-4 h-4" />
-                              </a>
-                            )}
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-muted-foreground text-sm py-4 text-center">
-                          {isEnglish ? 'No suppliers available yet' : 'Aucun fournisseur disponible'}
-                        </p>
-                      )}
-                    </div>
-                    
-                    {typeSuppliers.length > 4 && (
-                      <Link 
-                        to="/dashboard/suppliers" 
-                        className="inline-flex items-center text-sm text-primary hover:text-primary/80 font-medium"
-                      >
-                        {isEnglish ? 'View all' : 'Voir tout'}
-                        <ChevronRight className="w-4 h-4 ml-1" />
-                      </Link>
-                    )}
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-
-          <div className="text-center mt-10">
-            <Button asChild size="lg">
-              <Link to="/dashboard/suppliers">
-                {isEnglish ? 'View All Suppliers' : 'Voir tous les fournisseurs'}
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* Section fournisseurs retirée (refonte 2f) : module annuaire supprimé */}
 
       {/* Incentives Section */}
       <section className="py-20 bg-muted/30">
@@ -441,8 +333,8 @@ const Ecosystem = () => {
               </Card>
 
               <Button asChild size="lg" className="w-full">
-                <Link to="/dashboard/incentives">
-                  {isEnglish ? 'Calculate My Incentives' : 'Calculer mes subventions'}
+                <Link to="/signup">
+                  {isEnglish ? 'Plan My Transition' : 'Planifier ma transition'}
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
               </Button>

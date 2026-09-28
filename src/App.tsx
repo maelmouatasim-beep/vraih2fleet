@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, HashRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, HashRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import ScrollToTop from "@/components/ScrollToTop";
 import { PUBLIC_API_ENABLED } from "@/lib/constants";
@@ -16,26 +16,21 @@ import Contact from "./pages/Contact";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Refund from "./pages/Refund";
-import Roadmap from "./pages/Roadmap";
-import Changelog from "./pages/Changelog";
 import Methodology from "./pages/Methodology";
-import Docs from "./pages/Docs";
-import Api from "./pages/Api";
 import CaseStudies from "./pages/CaseStudies";
-import Careers from "./pages/Careers";
-import Press from "./pages/Press";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Projects from "./pages/Projects";
 import MyFleet from "./pages/MyFleet";
+import Library from "./pages/Library";
+import OrganizationPage from "./pages/OrganizationPage";
 import ProjectDetail from "./pages/ProjectDetail";
+import ProjectJourney, { ETAPES_PARCOURS } from "./pages/project/ProjectJourney";
 import NewScenario from "./pages/NewScenario";
 import NewFlexibleScenario from "./pages/NewFlexibleScenario";
 import ScenarioResults from "./pages/ScenarioResults";
-import Scenarios from "./pages/Scenarios";
-import Admin from "./pages/Admin";
 import DonneesRef from "./pages/DonneesRef";
 import CustomReferenceData from "./pages/CustomReferenceData";
 import Support from "./pages/Support";
@@ -44,15 +39,11 @@ import ApiDocumentation from "./pages/ApiDocumentation";
 
 import Settings from "./pages/Settings";
 import HelpTraining from "./pages/HelpTraining";
-import IncentivesPage from "./pages/IncentivesPage";
-import SuppliersPage from "./pages/SuppliersPage";
 import Ecosystem from "./pages/Ecosystem";
 import Telematics from "./pages/Telematics";
 import Infrastructure from "./pages/Infrastructure";
-import Subsidies from "./pages/Subsidies";
 import ScenarioComparison from "./pages/ScenarioComparison";
 import RoadmapBuilder from "./pages/RoadmapBuilder";
-import TaskBoardPage from "./pages/TaskBoardPage";
 import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 import OAuthConsent from "./pages/OAuthConsent";
@@ -83,7 +74,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
 
             <Route path="/features" element={<Features />} />
-            
+
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
@@ -92,16 +83,17 @@ const App = () => (
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/refund" element={<Refund />} />
-            <Route path="/roadmap" element={<Roadmap />} />
-            <Route path="/changelog" element={<Changelog />} />
             <Route path="/methodology" element={<Methodology />} />
-            <Route path="/docs" element={<Docs />} />
-            <Route path="/api" element={<Api />} />
             <Route path="/case-studies" element={<CaseStudies />} />
-            <Route path="/careers" element={<Careers />} />
-            <Route path="/press" element={<Press />} />
             <Route path="/ecosystem" element={<Ecosystem />} />
             <Route path="/calculator" element={<Navigate to="/features" replace />} />
+            {/* Pages publiques vides retirées (refonte 2f) : redirections propres */}
+            <Route path="/roadmap" element={<Navigate to="/" replace />} />
+            <Route path="/changelog" element={<Navigate to="/" replace />} />
+            <Route path="/docs" element={<Navigate to="/guides" replace />} />
+            <Route path="/api" element={<Navigate to="/" replace />} />
+            <Route path="/careers" element={<Navigate to="/" replace />} />
+            <Route path="/press" element={<Navigate to="/" replace />} />
             <Route path="/guides" element={<Guides />} />
             <Route path="/guides/technology/bev" element={<GuideBEV />} />
             <Route path="/guides/technology/fcev" element={<GuideFCEV />} />
@@ -112,8 +104,8 @@ const App = () => (
             <Route path="/guides/planning" element={<GuidePlanning />} />
             <Route path="/guides/funding" element={<GuideFunding />} />
             <Route path="/guides/operations" element={<GuideOperations />} />
-            
-            {/* Protected routes */}
+
+            {/* Protected routes — menu 6 entrées */}
             <Route path="/dashboard" element={
               <ProtectedRoute><Dashboard /></ProtectedRoute>
             } />
@@ -123,17 +115,32 @@ const App = () => (
             <Route path="/dashboard/fleet" element={
               <ProtectedRoute><MyFleet /></ProtectedRoute>
             } />
+            <Route path="/dashboard/library" element={
+              <ProtectedRoute><Library /></ProtectedRoute>
+            } />
+            <Route path="/dashboard/organization" element={
+              <ProtectedRoute><OrganizationPage /></ProtectedRoute>
+            } />
+            <Route path="/dashboard/help" element={
+              <ProtectedRoute><HelpTraining /></ProtectedRoute>
+            } />
+
+            {/* Parcours projet en 7 étapes */}
             <Route path="/dashboard/projects/:projectId" element={
               <ProtectedRoute><ProjectDetail /></ProtectedRoute>
             } />
+            {ETAPES_PARCOURS.map((etape) => (
+              <Route
+                key={etape}
+                path={`/dashboard/projects/:projectId/${etape}`}
+                element={<ProtectedRoute><ProjectJourney etape={etape} /></ProtectedRoute>}
+              />
+            ))}
             <Route path="/dashboard/projects/:projectId/scenarios/new" element={
               <ProtectedRoute><NewScenario /></ProtectedRoute>
             } />
             <Route path="/dashboard/projects/:projectId/scenarios/new-flexible" element={
               <ProtectedRoute><NewFlexibleScenario /></ProtectedRoute>
-            } />
-            <Route path="/dashboard/scenarios" element={
-              <ProtectedRoute><Scenarios /></ProtectedRoute>
             } />
             <Route path="/dashboard/projects/:projectId/compare" element={
               <ProtectedRoute><ScenarioComparison /></ProtectedRoute>
@@ -141,20 +148,34 @@ const App = () => (
             <Route path="/dashboard/scenarios/:scenarioId/results" element={
               <ProtectedRoute><ScenarioResults /></ProtectedRoute>
             } />
-            <Route path="/dashboard/admin" element={
-              <ProtectedRoute><Admin /></ProtectedRoute>
-            } />
+
+            {/* Outils conservés, accessibles hors menu (absorbés au fil de la Phase 3) */}
             <Route path="/dashboard/donnees-ref" element={
               <ProtectedRoute><DonneesRef /></ProtectedRoute>
             } />
             <Route path="/dashboard/custom-data" element={
               <ProtectedRoute><CustomReferenceData /></ProtectedRoute>
             } />
-            <Route path="/dashboard/support" element={
-              <ProtectedRoute><Support /></ProtectedRoute>
+            <Route path="/dashboard/telematics" element={
+              <ProtectedRoute><Telematics /></ProtectedRoute>
+            } />
+            <Route path="/dashboard/infrastructure" element={
+              <ProtectedRoute><Infrastructure /></ProtectedRoute>
             } />
             <Route path="/dashboard/analytics" element={
               <ProtectedRoute><Analytics /></ProtectedRoute>
+            } />
+            <Route path="/dashboard/roadmap" element={
+              <ProtectedRoute><RoadmapBuilder /></ProtectedRoute>
+            } />
+            <Route path="/dashboard/wizard" element={
+              <ProtectedRoute><TransitionWizard /></ProtectedRoute>
+            } />
+            <Route path="/dashboard/support" element={
+              <ProtectedRoute><Support /></ProtectedRoute>
+            } />
+            <Route path="/dashboard/notifications" element={
+              <ProtectedRoute><Notifications /></ProtectedRoute>
             } />
             {PUBLIC_API_ENABLED && (
               <Route path="/dashboard/api" element={
@@ -164,40 +185,16 @@ const App = () => (
             <Route path="/dashboard/settings" element={
               <ProtectedRoute><Settings /></ProtectedRoute>
             } />
-            <Route path="/dashboard/help" element={
-              <ProtectedRoute><HelpTraining /></ProtectedRoute>
-            } />
-            <Route path="/dashboard/incentives" element={
-              <ProtectedRoute><Subsidies /></ProtectedRoute>
-            } />
-            <Route path="/dashboard/suppliers" element={
-              <ProtectedRoute><SuppliersPage /></ProtectedRoute>
-            } />
-            <Route path="/dashboard/telematics" element={
-              <ProtectedRoute><Telematics /></ProtectedRoute>
-            } />
-            <Route path="/dashboard/infrastructure" element={
-              <ProtectedRoute><Infrastructure /></ProtectedRoute>
-            } />
-            <Route path="/dashboard/subsidies" element={
-              <ProtectedRoute><Subsidies /></ProtectedRoute>
-            } />
-            <Route path="/dashboard/roadmap" element={
-              <ProtectedRoute><RoadmapBuilder /></ProtectedRoute>
-            } />
-            <Route path="/dashboard/projects/:projectId/tasks" element={
-              <ProtectedRoute><TaskBoardPage /></ProtectedRoute>
-            } />
-            <Route path="/dashboard/notifications" element={
-              <ProtectedRoute><Notifications /></ProtectedRoute>
-            } />
-            <Route path="/dashboard/wizard" element={
-              <ProtectedRoute><TransitionWizard /></ProtectedRoute>
-            } />
-            <Route path="/dashboard/scenarios/new" element={
-              <ProtectedRoute><NewScenario /></ProtectedRoute>
-            } />
-            
+
+            {/* Modules retirés (refonte 2f) : redirections, aucune donnée supprimée */}
+            <Route path="/dashboard/scenarios" element={<Navigate to="/dashboard/projects" replace />} />
+            <Route path="/dashboard/scenarios/new" element={<Navigate to="/dashboard/projects" replace />} />
+            <Route path="/dashboard/subsidies" element={<Navigate to="/dashboard/projects" replace />} />
+            <Route path="/dashboard/incentives" element={<Navigate to="/dashboard/projects" replace />} />
+            <Route path="/dashboard/suppliers" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard/admin" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard/projects/:projectId/tasks" element={<TacheVersSuivi />} />
+
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -207,5 +204,11 @@ const App = () => (
     </Router>
   </QueryClientProvider>
 );
+
+// Le kanban autonome est intégré à l'étape « Suivi » du parcours projet.
+function TacheVersSuivi() {
+  const { projectId } = useParams();
+  return <Navigate to={`/dashboard/projects/${projectId}/suivi`} replace />;
+}
 
 export default App;

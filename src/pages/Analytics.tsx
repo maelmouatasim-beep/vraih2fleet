@@ -355,7 +355,7 @@ const AnalyticsDashboard = () => {
                   icon={BarChart3}
                   message={t('analytics.noKpis', 'No KPI data available. Create scenarios to see metrics.')}
                   actionLabel={t('analytics.createScenario', 'Create Scenario')}
-                  actionHref="/dashboard/scenarios"
+                  actionHref="/dashboard/projects"
                 />
               )}
             </div>
@@ -381,7 +381,7 @@ const AnalyticsDashboard = () => {
                 icon={Layers}
                 message={t('analytics.noFleetComparison', 'Create scenarios to compare fleet compositions.')}
                 actionLabel={t('analytics.createScenario', 'Create Scenario')}
-                actionHref="/dashboard/scenarios"
+                actionHref="/dashboard/projects"
               />
             )}
             
@@ -401,7 +401,7 @@ const AnalyticsDashboard = () => {
                 icon={TrendingUp}
                 message={t('analytics.noRoi', 'Calculate TCO for scenarios to see ROI projections.')}
                 actionLabel={t('analytics.goToScenarios', 'View Scenarios')}
-                actionHref="/dashboard/scenarios"
+                actionHref="/dashboard/projects"
               />
             )}
             
@@ -442,7 +442,7 @@ const AnalyticsDashboard = () => {
               icon={Sliders}
               message={t('analytics.noRiskAnalysis', 'L\'analyse de risque nécessite au moins un scénario avec TCO calculé.')}
               actionLabel={t('analytics.createScenario', 'Create Scenario')}
-              actionHref="/dashboard/scenarios"
+              actionHref="/dashboard/projects"
             />
           )}
         </TabsContent>
@@ -482,7 +482,7 @@ const AnalyticsDashboard = () => {
               icon={Layers}
               message={t('analytics.noScenarios', 'No scenario data available. Create transition scenarios to compare.')}
               actionLabel={t('analytics.createScenario', 'Create Scenario')}
-              actionHref="/dashboard/scenarios"
+              actionHref="/dashboard/projects"
             />
           )}
         </TabsContent>

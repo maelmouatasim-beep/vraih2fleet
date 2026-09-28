@@ -161,9 +161,26 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   2026-12-31, Écocamionnage 2025-2028 (plafonds 30/75/100/150 k$ + 15 %
   achat local), PIVEZ fermé aux demandes, diesel QC ≈ 2,95 $/L
   (2026-09-21), tarif M HQ 6,292 ¢/kWh + 18,242 $/kW.
-- Phase 2 — fondations des données (organizations, table vehicles,
-  télématique sans aléatoire, tco_results courant unique, i18n/région)
-  + menu 6 entrées + parcours 7 étapes : à venir.
+- **Phase 2 — fondations des données + navigation : LIVRÉE, en attente
+  du « ok » avant la Phase 3.**
+  2a organizations/organization_members (admin/member/reader, org auto
+  à l'inscription, projets rattachés, RLS + tests Deno, fix
+  listProjects/getProjectById) ; 2b table vehicles (« Ma flotte »,
+  /dashboard/fleet, import CSV/Excel validé ligne à ligne) +
+  project_vehicles (année de remplacement + techno cible par véhicule) ;
+  2c télématique sans AUCUNE valeur aléatoire (défauts de catégorie du
+  moteur TCO marqués estimation, VIN/marque/année importés, échec API =
+  erreur, mode démo explicite avec bandeau) ; 2d tco_results.is_current
+  (index unique partiel + trigger, lecteurs filtrés, agrégats « une
+  flotte par projet ») ; 2e i18n fr par défaut, doublons fusionnés,
+  parité fr↔en 0 écart + test CI, préférences persistées (CAD/QC sur
+  l'organisation) ; 2f menu 6 entrées (Accueil, Projets, Ma flotte,
+  Bibliothèque, Organisation, Aide), parcours projet 7 étapes
+  (`/dashboard/projects/:id/{flotte,faisabilite,strategies,plan,financement,rapports,suivi}`,
+  coquilles — contenu en Phase 3), pages Library/Organization,
+  retraits + redirections (scenarios global, subsidies/incentives,
+  suppliers, tasks autonome, admin mock, pages publiques vides), code
+  mort supprimé (13 pages + module fournisseurs).
 - Phase 3 — contenu des 7 étapes (stress test dans Stratégies via
   sensitivity.ts, subventions enrichies, vrai .xlsx, tâches dans Suivi,
   assistant réaligné) : à venir. **Critère bloquant : suppression

@@ -148,7 +148,7 @@ export const useRecommendedActions = () => {
         title: t('recommendedActions.subsidyExpiring.title', '{{program}} expires soon', { program: programName }),
         description: t('recommendedActions.subsidyExpiring.description', '{{days}} days left to apply', { days: daysLeft }),
         actionLabel: t('recommendedActions.subsidyExpiring.action', 'View details'),
-        href: '/dashboard/subsidies',
+        href: '/dashboard/projects',
         badge: daysLeft <= 30 
           ? { text: t('recommendedActions.urgent', 'URGENT'), variant: 'destructive' as const }
           : { text: t('recommendedActions.expiringSoon', '{{days}}d left', { days: daysLeft }), variant: 'warning' as const },

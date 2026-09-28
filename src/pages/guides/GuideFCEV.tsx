@@ -186,7 +186,7 @@ const GuideFCEV = () => {
           type="success"
           titleKey="guides.fcev.funding.callout.title"
           descriptionKey="guides.fcev.funding.callout.description"
-          linkTo="/dashboard/subsidies"
+          linkTo="/dashboard/projects"
           linkTextKey="guides.cta.exploreTools"
         />
       </GuideSection>

@@ -233,6 +233,11 @@ export default function ProjectDetail() {
             </div>
           </div>
           <div className="flex gap-2">
+            <Button asChild variant="default" className="gap-2">
+              <Link to={`/dashboard/projects/${project.id}/flotte`}>
+                {t('journey.open')}
+              </Link>
+            </Button>
             <ShareProjectButton projectId={project.id} />
             {scenariosWithResults.filter(s => s.tco_result).length >= 2 && (
               <ComparisonPDFDownloadButton 
@@ -345,7 +350,7 @@ export default function ProjectDetail() {
                   {t('projects.detail.scenarios')}
                 </CardTitle>
                 <Button variant="ghost" size="sm" asChild className="gap-1">
-                  <Link to="/dashboard/scenarios">
+                  <Link to="/dashboard/projects">
                     {t('projects.detail.viewAll')}
                     <ArrowRight className="w-4 h-4" />
                   </Link>

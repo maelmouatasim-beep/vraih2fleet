@@ -345,7 +345,7 @@ const Dashboard = () => {
               {t('pages.dashboard.exportData')}
             </Button>
             <Button asChild>
-              <Link to="/dashboard/scenarios">
+              <Link to="/dashboard/projects">
                 <Calculator className="w-4 h-4 mr-2" />
                 {t('pages.dashboard.calculateTco')}
               </Link>
@@ -439,7 +439,7 @@ const Dashboard = () => {
                 {t('pages.dashboard.tcoSection.title')}
               </CardTitle>
               <Button variant="ghost" size="sm" className="gap-1" asChild>
-                <Link to="/dashboard/scenarios">
+                <Link to="/dashboard/projects">
                   {t('pages.dashboard.tcoSection.open')}
                   <ArrowRight className="w-4 h-4" />
                 </Link>
@@ -462,7 +462,7 @@ const Dashboard = () => {
                 </div>
               </div>
               <Button className="w-full" asChild>
-                <Link to="/dashboard/scenarios">
+                <Link to="/dashboard/projects">
                   <Zap className="w-4 h-4 mr-2" />
                   {t('pages.dashboard.tcoSection.newCalculation')}
                 </Link>

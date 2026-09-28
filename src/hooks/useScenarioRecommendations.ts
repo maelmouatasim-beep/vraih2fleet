@@ -125,7 +125,7 @@ export function useScenarioRecommendations({
           description: 'payback.longDesc',
           impact: `${payback.toFixed(1)} years`,
           actionLabel: 'viewSubsidies',
-          actionLink: '/dashboard/subsidies',
+          actionLink: '/dashboard/projects',
         });
       } else if (payback <= RECOMMENDATION_THRESHOLDS.payback.excellent) {
         recommendations.push({
@@ -172,7 +172,7 @@ export function useScenarioRecommendations({
         description: 'subsidies.fcevEligibleDesc',
         estimatedSavings: h2Count * 200000, // Up to $200k per FCEV
         actionLabel: 'viewSubsidies',
-        actionLink: '/dashboard/subsidies',
+        actionLink: '/dashboard/projects',
       });
     }
     
@@ -187,7 +187,7 @@ export function useScenarioRecommendations({
         description: 'subsidies.bevEligibleDesc',
         estimatedSavings: evCount * 100000, // Up to $100k per BEV
         actionLabel: 'viewSubsidies',
-        actionLink: '/dashboard/subsidies',
+        actionLink: '/dashboard/projects',
       });
     }
     
