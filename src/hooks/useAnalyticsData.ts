@@ -95,7 +95,8 @@ export function useAnalyticsData(): AnalyticsData {
             const { data: tcoData, error: tcoError } = await supabase
               .from("tco_results")
               .select("scenario_id, co2_savings, co2_total")
-              .in("scenario_id", scenarioIds);
+              .in("scenario_id", scenarioIds)
+              .eq("is_current", true);
 
             if (tcoError) throw tcoError;
             tcoResults = tcoData || [];

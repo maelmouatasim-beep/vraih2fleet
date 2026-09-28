@@ -122,7 +122,8 @@ export default function ProjectDetail() {
           const { data: tcoResults } = await supabase
             .from('tco_results')
             .select('scenario_id, tco_total, tco_per_km, capex, opex_total, co2_total, co2_savings_percent, npv, payback_period_years')
-            .in('scenario_id', scenarioIds);
+            .in('scenario_id', scenarioIds)
+            .eq('is_current', true);
 
           const resultsMap = new Map(
             (tcoResults || []).map((r) => [r.scenario_id, r])

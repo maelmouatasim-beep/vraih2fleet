@@ -178,6 +178,7 @@ export default function Scenarios() {
       const { data, error } = await supabase
         .from('scenarios')
         .select('*, tco_results(*)')
+        .eq('tco_results.is_current', true)
         .order('created_at', { ascending: false })
         .limit(20);
 

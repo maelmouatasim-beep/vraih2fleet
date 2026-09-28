@@ -21,8 +21,7 @@ export default defineTool({
       .from("tco_results")
       .select("*")
       .eq("scenario_id", scenario_id)
-      .order("created_at", { ascending: false })
-      .limit(1)
+      .eq("is_current", true)
       .maybeSingle();
 
     if (error) {

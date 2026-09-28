@@ -148,8 +148,7 @@ export async function getLatestTCOResult(scenarioId: string): Promise<TCOResult 
     .from('tco_results')
     .select('*')
     .eq('scenario_id', scenarioId)
-    .order('created_at', { ascending: false })
-    .limit(1)
+    .eq('is_current', true)
     .maybeSingle();
 
   if (error) {

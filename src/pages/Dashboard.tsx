@@ -126,20 +126,36 @@ const Dashboard = () => {
           const { data: tcoData, error: tcoError } = await supabase
             .from("tco_results")
             .select("*")
-            .in("scenario_id", scenarioIds);
+            .in("scenario_id", scenarioIds)
+            .eq("is_current", true);
 
           if (tcoError) throw tcoError;
           setTcoResults(tcoData || []);
 
-          const totalVehicles = scenariosData.reduce((acc, s) => {
+          // Phase 2d : une flotte comptée UNE fois par projet — on retient
+          // le scénario le plus récent de chaque projet (sinon 3 scénarios
+          // d'un même projet de 40 véhicules affichaient 120 véhicules).
+          const representatifParProjet = new Map<string, (typeof scenariosData)[number]>();
+          scenariosData.forEach((s) => {
+            const courant = representatifParProjet.get(s.project_id);
+            if (!courant || new Date(s.created_at) > new Date(courant.created_at)) {
+              representatifParProjet.set(s.project_id, s);
+            }
+          });
+          const representatifs = Array.from(representatifParProjet.values());
+          const idsRepresentatifs = new Set(representatifs.map((s) => s.id));
+
+          const totalVehicles = representatifs.reduce((acc, s) => {
             const composition = s.fleet_composition as Scenario['fleet_composition'];
-            return acc + 
-              (composition?.diesel?.count || 0) + 
-              (composition?.ev?.count || 0) + 
+            return acc +
+              (composition?.diesel?.count || 0) +
+              (composition?.ev?.count || 0) +
               (composition?.hydrogen?.count || 0);
           }, 0);
 
-          const totalCo2Savings = (tcoData || []).reduce((acc, r) => acc + (r.co2_savings || 0), 0);
+          const totalCo2Savings = (tcoData || [])
+            .filter((r) => idsRepresentatifs.has(r.scenario_id))
+            .reduce((acc, r) => acc + (r.co2_savings || 0), 0);
 
           setStats({
             projectCount: projectsData.length,

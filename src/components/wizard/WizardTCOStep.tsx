@@ -88,10 +88,13 @@ const WizardTCOStep = ({ scenarioId, onComplete, onBack }: WizardTCOStepProps) =
         payback_period_years: result.paybackPeriodYears || null,
       };
 
-      // Save to database
+      // Phase 2d : insertion simple — le trigger demote_previous_tco_results
+      // fait de cette ligne LE résultat courant et bascule les précédentes
+      // à l'historique. (L'ancien upsert onConflict:'scenario_id' visait
+      // une contrainte UNIQUE qui n'a jamais existé.)
       const { error } = await supabase
         .from('tco_results')
-        .upsert({
+        .insert({
           scenario_id: scenarioId,
           tco_total: tcoData.tco_total,
           capex: tcoData.capex,
@@ -99,7 +102,7 @@ const WizardTCOStep = ({ scenarioId, onComplete, onBack }: WizardTCOStepProps) =
           co2_total: tcoData.co2_total,
           co2_savings: tcoData.co2_savings,
           payback_period_years: tcoData.payback_period_years,
-        }, { onConflict: 'scenario_id' });
+        });
 
       if (error) throw error;
 

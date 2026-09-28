@@ -70,7 +70,8 @@ export const useRecommendedActions = () => {
       const { data, error } = await supabase
         .from('tco_results')
         .select('scenario_id')
-        .in('scenario_id', scenarioIds);
+        .in('scenario_id', scenarioIds)
+        .eq('is_current', true);
       if (error) throw error;
       return data || [];
     },

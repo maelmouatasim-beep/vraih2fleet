@@ -100,7 +100,8 @@ export function useReconciliation(projectId?: string) {
             const { data: tcoData } = await supabase
               .from('tco_results')
               .select('scenario_id, opex_total, baseline_tco, applied_diesel_price')
-              .in('scenario_id', scenarioIds);
+              .in('scenario_id', scenarioIds)
+              .eq('is_current', true);
             
             setTcoResults(tcoData || []);
           }

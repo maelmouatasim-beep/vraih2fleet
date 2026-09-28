@@ -1636,6 +1636,7 @@ export type Database = {
           h2_stations: number | null
           h2_stations_cost: number | null
           id: string
+          is_current: boolean
           insurance_cost: number | null
           npv: number | null
           opex_total: number
@@ -1669,6 +1670,7 @@ export type Database = {
           h2_stations?: number | null
           h2_stations_cost?: number | null
           id?: string
+          is_current?: boolean
           insurance_cost?: number | null
           npv?: number | null
           opex_total: number
@@ -1702,6 +1704,7 @@ export type Database = {
           h2_stations?: number | null
           h2_stations_cost?: number | null
           id?: string
+          is_current?: boolean
           insurance_cost?: number | null
           npv?: number | null
           opex_total?: number

@@ -236,7 +236,8 @@ export function useEnhancedAnalytics(filters: AnalyticsFilters): EnhancedAnalyti
           const { data: tcoData, error: tcoError } = await supabase
             .from("tco_results")
             .select("*, tco_savings, baseline_tco, applied_diesel_price, applied_electricity_price, applied_hydrogen_price")
-            .in("scenario_id", scenarioIds);
+            .in("scenario_id", scenarioIds)
+            .eq("is_current", true);
 
           if (tcoError) throw tcoError;
           tcoResults = tcoData || [];
@@ -256,7 +257,24 @@ export function useEnhancedAnalytics(filters: AnalyticsFilters): EnhancedAnalyti
         let fcevCount = 0;
         let dieselCount = 0;
 
-        scenarios?.forEach(scenario => {
+        // Phase 2d : chaque flotte est comptée UNE fois par projet — le
+        // scénario représentatif est le plus récent du projet (sinon un
+        // projet à 3 scénarios affichait 120 véhicules pour 40 réels).
+        type LigneScenario = NonNullable<typeof scenarios>[number];
+        const representativeByProject = new Map<string, LigneScenario>();
+        scenarios?.forEach((s) => {
+          const courant = representativeByProject.get(s.project_id);
+          if (!courant || new Date(s.created_at) > new Date(courant.created_at)) {
+            representativeByProject.set(s.project_id, s);
+          }
+        });
+        const representativeScenarios: LigneScenario[] = filters.scenarioId
+          ? scenarios || []
+          : Array.from(representativeByProject.values());
+        const representativeIds = new Set(representativeScenarios.map((s) => s.id));
+        const representativeTcoResults = tcoResults.filter((r) => representativeIds.has(r.scenario_id));
+
+        representativeScenarios.forEach(scenario => {
           const fleet = scenario.fleet_composition as any;
           if (fleet) {
             const ev = fleet.ev?.count || fleet.bev?.count || 0;
@@ -283,8 +301,9 @@ export function useEnhancedAnalytics(filters: AnalyticsFilters): EnhancedAnalyti
           }
         }
 
-        const totalCo2Savings = tcoResults.reduce((sum, r) => sum + (r.co2_savings || 0), 0);
-        const totalCo2 = tcoResults.reduce((sum, r) => sum + (r.co2_total || 0), 0);
+        // CO2 : une flotte par projet (scénarios représentatifs seulement)
+        const totalCo2Savings = representativeTcoResults.reduce((sum, r) => sum + (r.co2_savings || 0), 0);
+        const totalCo2 = representativeTcoResults.reduce((sum, r) => sum + (r.co2_total || 0), 0);
         const co2ReductionPercent = totalCo2 > 0 ? (totalCo2Savings / (totalCo2 + totalCo2Savings)) * 100 : 0;
 
         const paybackYears = tcoResults
@@ -309,7 +328,7 @@ export function useEnhancedAnalytics(filters: AnalyticsFilters): EnhancedAnalyti
 
         // Calculate total fleet km for Cost per km (raw sum for fleet distance)
         let totalFleetKm = 0;
-        scenarios?.forEach(scenario => {
+        representativeScenarios.forEach(scenario => {
           const fleet = scenario.fleet_composition as any;
           const analysisYears = scenario.analysis_years || 10;
           if (fleet) {
@@ -322,7 +341,7 @@ export function useEnhancedAnalytics(filters: AnalyticsFilters): EnhancedAnalyti
 
         // Calculate total subsidies for Subsidy Risk (subsidy risk percent calculated after TCO aggregation)
         let totalSubsidies = 0;
-        scenarios?.forEach(scenario => {
+        representativeScenarios.forEach(scenario => {
           const fleet = scenario.fleet_composition as any;
           if (fleet) {
             const evCount = fleet.ev?.count || fleet.bev?.count || 0;

@@ -83,6 +83,7 @@ export default function ScenarioComparison() {
             .from('tco_results')
             .select('tco_total, tco_per_km, capex, opex_total, co2_total, co2_savings, co2_savings_percent, npv, payback_period_years')
             .eq('scenario_id', scenario.id)
+            .eq('is_current', true)
             .maybeSingle();
 
           return {

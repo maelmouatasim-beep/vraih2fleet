@@ -69,6 +69,7 @@ export function SubsidiesAssistant() {
               .from('tco_results')
               .select('*')
               .in('scenario_id', scenarioIds)
+              .eq('is_current', true)
               .limit(1);
 
             if (tcoResults && tcoResults.length > 0) {
