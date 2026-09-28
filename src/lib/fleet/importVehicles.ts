@@ -14,8 +14,10 @@ import {
   PROFILS_USAGE,
   SOURCES_CONSOMMATION,
   STATUTS_VEHICULE,
-  type VehicleInsert,
-} from "./vehicles";
+} from "./constants";
+// import type seulement : effacé à la compilation, le client Supabase
+// n'est jamais chargé par ce module (testable sans environnement)
+import type { VehicleInsert } from "./vehicles";
 
 // ---------------------------------------------------------------------------
 // Correspondance des entêtes (fr/en, accents et espaces ignorés)

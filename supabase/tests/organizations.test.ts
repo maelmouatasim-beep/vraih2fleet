@@ -16,7 +16,7 @@ async function orgOf(user: TestUser): Promise<{ id: string; role: string }> {
 }
 
 Deno.test("chaque nouvel utilisateur reçoit sa propre organisation et en est admin", async () => {
-  const a = await createTestUser();
+  const a = await createTestUser('org-test-1');
   const { id, role } = await orgOf(a);
   assertEquals(role, "admin");
   const { data: org } = await a.client.from("organizations").select("*").eq("id", id).single();
@@ -26,8 +26,8 @@ Deno.test("chaque nouvel utilisateur reçoit sa propre organisation et en est ad
 });
 
 Deno.test("un utilisateur ne voit ni l'organisation ni les membres d'une autre organisation", async () => {
-  const a = await createTestUser();
-  const b = await createTestUser();
+  const a = await createTestUser('org-test-2');
+  const b = await createTestUser('org-test-3');
   const orgA = await orgOf(a);
 
   const { data: orgsVues } = await b.client.from("organizations").select("id").eq("id", orgA.id);
@@ -41,8 +41,8 @@ Deno.test("un utilisateur ne voit ni l'organisation ni les membres d'une autre o
 });
 
 Deno.test("un membre de l'organisation voit les projets de l'organisation sans en être propriétaire", async () => {
-  const a = await createTestUser();
-  const b = await createTestUser();
+  const a = await createTestUser('org-test-4');
+  const b = await createTestUser('org-test-5');
   const orgA = await orgOf(a);
 
   // A crée un projet rattaché à son organisation
@@ -78,8 +78,8 @@ Deno.test("un membre de l'organisation voit les projets de l'organisation sans e
 });
 
 Deno.test("seul un admin de l'organisation peut ajouter des membres", async () => {
-  const a = await createTestUser();
-  const b = await createTestUser();
+  const a = await createTestUser('org-test-6');
+  const b = await createTestUser('org-test-7');
   const orgA = await orgOf(a);
 
   // B (étranger) ne peut pas s'inviter lui-même

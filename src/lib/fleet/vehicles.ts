@@ -5,30 +5,13 @@ export type VehicleRow = Tables<"vehicles">;
 export type VehicleInsert = TablesInsert<"vehicles">;
 export type VehicleUpdate = TablesUpdate<"vehicles">;
 
-export const CATEGORIES_VEHICULE = [
-  "vehicule_leger",
-  "camionnette",
-  "camion_moyen",
-  "camion_lourd",
-  "autobus_urbain_12m",
-  "autre",
-] as const;
-
-export const CARBURANTS = [
-  "diesel",
-  "essence",
-  "hybride",
-  "phev",
-  "bev",
-  "fcev",
-  "gnc",
-  "propane",
-  "autre",
-] as const;
-
-export const SOURCES_CONSOMMATION = ["saisie", "telematique", "estimation"] as const;
-export const STATUTS_VEHICULE = ["actif", "inactif", "reforme", "vendu"] as const;
-export const PROFILS_USAGE = ["urbain", "regional", "longue_distance", "mixte", "hors_route"] as const;
+export {
+  CARBURANTS,
+  CATEGORIES_VEHICULE,
+  PROFILS_USAGE,
+  SOURCES_CONSOMMATION,
+  STATUTS_VEHICULE,
+} from "./constants";
 
 export async function listVehicles(organizationId: string): Promise<VehicleRow[]> {
   const { data, error } = await supabase

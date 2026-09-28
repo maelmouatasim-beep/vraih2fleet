@@ -1,0 +1,28 @@
+/**
+ * Constantes de la flotte — module PUR (aucun import du client Supabase)
+ * pour que la validation d'import reste testable sans environnement.
+ */
+export const CATEGORIES_VEHICULE = [
+  "vehicule_leger",
+  "camionnette",
+  "camion_moyen",
+  "camion_lourd",
+  "autobus_urbain_12m",
+  "autre",
+] as const;
+
+export const CARBURANTS = [
+  "diesel",
+  "essence",
+  "hybride",
+  "phev",
+  "bev",
+  "fcev",
+  "gnc",
+  "propane",
+  "autre",
+] as const;
+
+export const SOURCES_CONSOMMATION = ["saisie", "telematique", "estimation"] as const;
+export const STATUTS_VEHICULE = ["actif", "inactif", "reforme", "vendu"] as const;
+export const PROFILS_USAGE = ["urbain", "regional", "longue_distance", "mixte", "hors_route"] as const;
