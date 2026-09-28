@@ -200,11 +200,9 @@ jobs:
           git config user.name "verify-tco-sources[bot]"
           git config user.email "actions@github.com"
           git add "$DEST"
-          git commit -m "data(sources): archive des sources officielles lues le $JOUR
-
-Documents téléchargés par le workflow de vérification (Écocamionnage,
-PAVÉ, RC4049/TVQ, Régie, StatCan 18-10-0001-01, Hydro-Québec, FTCZE,
-PAGTCP, REC) — la règle « vérifié = lu ET archivé » exige ces copies,
-le bulletin de la Régie étant écrasé chaque semaine." || echo "rien à committer"
+          git commit \
+            -m "data(sources): archive des sources officielles lues le $JOUR" \
+            -m "Documents téléchargés par le workflow de vérification (Écocamionnage, PAVÉ, RC4049/TVQ, Régie, StatCan 18-10-0001-01, Hydro-Québec, FTCZE, PAGTCP, REC). La règle « vérifié = lu ET archivé » exige ces copies : le bulletin de la Régie est écrasé chaque semaine." \
+            || echo "rien à committer"
           git pull --rebase origin "${GITHUB_REF_NAME}" || true
           git push origin "HEAD:${GITHUB_REF_NAME}"
