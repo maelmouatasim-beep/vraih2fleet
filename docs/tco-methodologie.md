@@ -1,13 +1,14 @@
 # Méthodologie de calcul du coût total de possession (TCO)
 
 **H2Fleet — spécification du moteur de calcul `src/lib/tco/`**
-Version 1.1 (Phase 1B) — 2026-09-28 — statut : **en validation**
+Version 1.2 (Phase 3) — 2026-09-28 — statut : **en validation**
 
 > Historique : v1.0 = spécification initiale (Phase 1A). v1.1 intègre les
 > précisions issues du contre-calcul indépendant des 6 cas de référence
-> (les « ambiguïtés » relevées, tranchées en §10) ; le moteur
-> `src/lib/tco/engine.ts` (engineVersion 1.0.0) implémente cette version
-> et reproduit les 6 cas à ±0,01 $.
+> (les « ambiguïtés » relevées, tranchées en §10). v1.2 (Phase 3) ajoute
+> l'année d'acquisition par véhicule (§10.11) pour le plan pluriannuel ;
+> le moteur `src/lib/tco/engine.ts` (engineVersion 1.1.0) implémente
+> cette version et reproduit toujours les 6 cas à ±0,01 $.
 
 Ce document est la référence unique de la méthode de calcul. Il est écrit
 pour être lu par un directeur des finances municipal : chaque formule est
@@ -568,7 +569,7 @@ sont retirées avec lui.
   complète) sont hors périmètre : les périmètres affichés sont TTW et
   WTW carburant.
 
-## 10. Précisions normatives (v1.1) — points tranchés après contre-calcul
+## 10. Précisions normatives (v1.1-v1.2) — points tranchés après contre-calcul
 
 Chaque point ci-dessous était une zone muette de la v1.0, relevée par le
 contre-calcul indépendant des cas de référence ; la règle retenue est
@@ -611,3 +612,16 @@ désormais NORMATIVE et testée dans le moteur.
    de leur année (devis) — ni taxes ajoutées, ni indexation.
 10. **Coût par tonne évitée** : signé — négatif = gain net par tonne ;
     `null` si aucune tonne n'est évitée.
+11. **Année d'acquisition par véhicule (v1.2, engineVersion 1.1.0)** :
+    chaque véhicule du plan porte une `anneeAcquisition` (défaut 0 =
+    année de référence). Les DEUX scénarios achètent la même année
+    (« même calendrier de fin de vie », §4) : avant l'acquisition, le
+    véhicule actuel est identique des deux côtés et le différentiel est
+    nul — ses coûts réels d'avant remplacement n'apparaissent dans aucun
+    des deux scénarios. Le prix de l'achat en année k est indexé à
+    l'inflation générale (§3.8) ; l'exploitation court des années k+1 à
+    H ; les émissions comptent H−k années ; les kilomètres actualisés du
+    TCO/km ne comptent que les années k+1..H de chaque véhicule ; les
+    re-remplacements partent de k (k, k+durée, …). Les années de
+    versement des subventions restent ABSOLUES dans le plan (point de
+    vente = k). Une acquisition à k ≥ H est signalée et sans effet.

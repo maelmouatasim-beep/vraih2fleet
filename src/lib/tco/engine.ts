@@ -42,10 +42,10 @@ function fluxVides(h: number): FluxAnnuels {
   };
 }
 
-/** Années d'achat d'un véhicule sur l'horizon (0, durée, 2×durée, … < H). */
-function anneesAchat(dureeVieAns: number, horizon: number): number[] {
+/** Années d'achat d'un véhicule sur l'horizon (début, début+durée, … < H). */
+function anneesAchat(dureeVieAns: number, horizon: number, debut: number): number[] {
   const achats: number[] = [];
-  for (let p = 0; p < horizon; p += dureeVieAns) achats.push(p);
+  for (let p = debut; p < horizon; p += dureeVieAns) achats.push(p);
   return achats;
 }
 
@@ -101,23 +101,35 @@ function ajouterVehiculeAuScenario(
   avertissements: string[],
 ): { ttw: number; wtw: number } {
   const h = p.horizonAns;
+  const debut = vehicule.anneeAcquisition;
   const spec = nom === 'alternative' ? vehicule.alternative : vehicule.reference;
   const taxes = 1 + p.tauxTaxesNonRecuperables;
   const depreciation = p.depreciationAnnuelle[spec.technologie];
+
+  // Acquisition différée (§10.11) : au-delà de l'horizon, le véhicule ne
+  // contribue à aucun des deux scénarios (différentiel nul partout).
+  if (debut >= h) {
+    if (nom === 'alternative') {
+      avertissements.push(
+        `${vehicule.id} : année d'acquisition (${debut}) hors de l'horizon H=${h} — véhicule sans effet sur le plan`,
+      );
+    }
+    return { ttw: 0, wtw: 0 };
+  }
 
   // Achats et re-remplacements (docs/tco-methodologie.md §3.8) : le prix
   // d'un achat futur est indexé à l'inflation générale (trajectoire
   // technologique désactivée par défaut) ; le véhicule remplacé en fin de
   // vie est repris à sa valeur plancher ; le dernier véhicule est crédité
   // de sa valeur résiduelle géométrique (planchée) en fin d'horizon.
-  const achats = anneesAchat(vehicule.dureeVieAns, h);
+  const achats = anneesAchat(vehicule.dureeVieAns, h, debut);
   let prixBasePrecedent = 0;
-  let dernierAchat = 0;
+  let dernierAchat = debut;
   let prixBaseDernier = 0;
   for (const annee of achats) {
     const prixBase = spec.prixAvantTaxes * Math.pow(1 + p.inflations.generale, annee);
     flux.investissement[annee] += prixBase * taxes;
-    if (annee > 0) {
+    if (annee > debut) {
       flux.residuels[annee] += p.plancherResiduel * prixBasePrecedent;
     }
     prixBasePrecedent = prixBase;
@@ -142,9 +154,10 @@ function ajouterVehiculeAuScenario(
     }
   }
 
-  // Exploitation, années 1..H.
+  // Exploitation, années début+1..H (avant l'acquisition, le véhicule
+  // actuel est identique dans les deux scénarios : différentiel nul).
   const energieAnnuelle = energieAnnuelleFacturee(spec, vehicule.kmParAn, p);
-  for (let n = 1; n <= h; n++) {
+  for (let n = debut + 1; n <= h; n++) {
     flux.energie[n] += energieAnnuelle * prixEnergieAnnee(spec, p, n);
     flux.entretien[n] += vehicule.kmParAn * spec.entretienParKm * Math.pow(1 + p.inflations.entretien, n);
   }
@@ -156,7 +169,7 @@ function ajouterVehiculeAuScenario(
   }
 
   const [ttwAnnuel, wtwAnnuel] = emissionsAnnuelles(spec, vehicule, p);
-  return { ttw: ttwAnnuel * h, wtw: wtwAnnuel * h };
+  return { ttw: ttwAnnuel * (h - debut), wtw: wtwAnnuel * (h - debut) };
 }
 
 function ajouterInfra(
@@ -283,9 +296,14 @@ export function calculerPlan(entree: PlanTcoEntree): ResultatPlan {
 
   const vanDifferentielle = reference.tcoActualise - alternative.tcoActualise;
 
-  const kmTotalAnnuel = plan.vehicules.reduce((a, v) => a + v.kmParAn, 0);
+  // Kilomètres actualisés : chaque véhicule ne roule (dans le plan) qu'à
+  // partir de l'année suivant son acquisition (§10.11).
   let kmActualises = 0;
-  for (let n = 1; n <= h; n++) kmActualises += kmTotalAnnuel / Math.pow(1 + p.tauxActualisationNominal, n);
+  for (const v of plan.vehicules) {
+    for (let n = v.anneeAcquisition + 1; n <= h; n++) {
+      kmActualises += v.kmParAn / Math.pow(1 + p.tauxActualisationNominal, n);
+    }
+  }
 
   const diffs = reference.flux.net.map((r, n) => r - alternative.flux.net[n]);
   const paybackSimple = calculerPayback(diffs, false, p);
@@ -324,7 +342,7 @@ export function calculerPlan(entree: PlanTcoEntree): ResultatPlan {
     reference,
     vanDifferentielle,
     kmActualises,
-    tcoParKmAlt: alternative.tcoActualise / kmActualises,
+    tcoParKmAlt: kmActualises > 0 ? alternative.tcoActualise / kmActualises : 0,
     paybackSimple,
     paybackActualise,
     co2EviteTtwTonnes,

@@ -79,7 +79,9 @@ export type SpecVehicule = z.infer<typeof zSpecVehicule>;
 export const zSubventionAppliquee = z.object({
   libelle: z.string().min(1),
   montant: zMontantNonNegatif,
-  /** Année de versement (0 = point de vente, année d'acquisition). */
+  /** Année de versement ABSOLUE dans le plan (0 = année de référence).
+   *  Pour un véhicule acquis en année k, un versement « au point de
+   *  vente » se code k, un versement un an après la livraison k+1. */
   annee: z.number().int().min(0),
 });
 export type SubventionAppliquee = z.infer<typeof zSubventionAppliquee>;
@@ -99,6 +101,11 @@ export const zVehiculePlan = z.object({
   subventionsAlternative: z.array(zSubventionAppliquee).default([]),
   /** Durée de vie utile : re-remplacement si elle échoit avant l'horizon. */
   dureeVieAns: z.number().int().min(1).max(40),
+  /** Année du plan où le véhicule est remplacé (0 = année de référence).
+   *  Les DEUX scénarios achètent la même année (« même calendrier de fin
+   *  de vie », §4) : avant l'acquisition, le véhicule actuel est
+   *  identique des deux côtés et le différentiel est nul (§10.11). */
+  anneeAcquisition: z.number().int().min(0).max(40).default(0),
 });
 export type VehiculePlan = z.infer<typeof zVehiculePlan>;
 
