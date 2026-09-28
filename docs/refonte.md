@@ -93,6 +93,7 @@ diesel 1,48 / 1,50 / 1,52 / 1,68 / 1,85 selon le fichier ; station H2
 - `WizardTCOStep` : upsert `onConflict: scenario_id` sans contrainte
   UNIQUE en base.
 
+
 ## 2. Cible produit (rappel)
 
 > À partir de ma flotte réelle, obtenir un plan de remplacement
@@ -104,111 +105,194 @@ diesel 1,48 / 1,50 / 1,52 / 1,68 / 1,85 selon le fichier ; station H2
   Financement → Rapports → Suivi**, avec barre de progression.
 - Planification véhicule par véhicule.
 
-## 3. Plan détaillé des phases 1 à 3
+## 3. Plan des phases (mis à jour après l'audit du 2026-09-28)
 
 ### Phase 1 — Moteur TCO unique (`src/lib/tco/`)
 
-**Objectif** : un seul module pur, testé, source unique de toutes les
-hypothèses ; les moteurs dupliqués morts sont supprimés.
+Exigence absolue : chiffres **exacts, traçables et défendables** — ils
+seront présentés à des conseils municipaux et audités. Deux sous-phases,
+arrêt pour « ok » à la fin de 1A.
 
-**Fichiers créés** :
-- `src/lib/tco/types.ts` — `VehicleInput` (type, âge, km/an, conso
-  actuelle, techno cible, prix d'achat, coût énergie, maintenance, part
-  d'infra, subventions, valeur résiduelle, horizon), `ProjectAssumptions`,
-  `VehicleTcoResult`, `PlanTcoResult`.
-- `src/lib/tco/assumptions.ts` — **la** table d'hypothèses par défaut
-  (prix énergie, facteurs CO₂, consos par catégorie, coûts infra,
-  actualisation, inflation), visible et surchargée par projet.
-- `src/lib/tco/engine.ts` — fonctions pures : TCO par véhicule par année,
-  coût total du plan, économies vs statu quo (statu quo = flotte actuelle
-  réelle, pas des défauts), CO₂ évité. **Subventions déduites du CAPEX.**
-  NPV avec taux en % converti une seule fois.
-- `src/lib/tco/__tests__/engine.test.ts` + `assumptions.test.ts` — cas
-  CAD : diesel vs BEV vs FCEV, subvention, résiduel, inflation, CO₂,
-  statu quo, horizon variable.
+**1A — Méthode, hypothèses, cas de référence (aucun code moteur)**
+- `docs/tco-methodologie.md` : spécification complète en français,
+  formules écrites, lisible par un directeur des finances municipal.
+  Conventions : année 0 = acquisition ; flux en fin d'année ; flux
+  NOMINAUX avec inflation par poste (diesel, électricité, H2, entretien,
+  général) actualisés au taux NOMINAL ; CAD de l'année de référence du
+  projet ; taux stockés en décimal (0.05), % à l'affichage seulement ;
+  unités explicites et typées avec une seule fonction de conversion
+  testée. Entrées PAR VÉHICULE alignées sur la future table `vehicles` ;
+  conso « inconnue » → défaut de catégorie marqué « estimation ».
+- Postes : acquisition (taxes NON récupérables paramétrées par type
+  d'organisation) ; subventions déduites l'année de versement (plafonds,
+  admissibilité, cumul ; programme suspendu/fermé non compté par défaut) ;
+  énergie (diesel $/L ; élec = kWh véhicule ÷ rendement de recharge, coût
+  effectif avec frais de puissance Hydro-Québec ; H2 $/kg livré ;
+  majoration hivernale paramétrable) ; entretien $/km + événements
+  majeurs datés ; infrastructure calculée UNE FOIS au niveau site/plan
+  puis répartie (somme des parts = total) ; assurance/immatriculation si
+  fournies ; valeur résiduelle dégressive avec plancher, ≤ prix d'achat ;
+  horizon ≠ durée de vie (re-remplacement ou résiduel de fin d'horizon).
+- Référence statu quo corrigée : même flotte réelle, même calendrier de
+  fin de vie, remplacement diesel neuf équivalent, mêmes hypothèses ;
+  économies = alternative − référence, poste par poste.
+- Émissions réservoir-à-roue ET puits-à-roue (diesel avec CH4/N2O — ECCC
+  RIN ; électricité par province, QC par défaut ; H2 par filière) ;
+  tCO2e/an, cumulées, évitées, coût/tonne évitée ; coût social du
+  carbone d'ECCC affiché SÉPARÉMENT, hors TCO.
+- Sorties : vue économique (TCO actualisé, TCO/km, VAN différentielle,
+  récupération simple et actualisée avec null expliqué, coût/tonne) et
+  vue budgétaire (flux nominaux par année, investissement PTI vs
+  fonctionnement, subventions à leur année, reste à financer) ;
+  ventilation ligne par ligne ; engineVersion + empreinte des hypothèses.
+- Incertitude : `src/lib/tco/sensitivity.ts` relance le VRAI moteur sur
+  la flotte réelle (remplace la logique inventée de useRiskAnalysis) ;
+  chaque hypothèse externe a une plage basse/centrale/haute sourcée ou
+  « à_valider » ; 3 scénarios cohérents (Prudent/Central/Favorable),
+  toujours une fourchette ; trajectoire du prix d'achat (batteries)
+  sourcée et désactivable ; change USD-CNY/CAD et douanes selon
+  l'origine ; devis Hydro-Québec saisi prioritaire sur l'estimation ;
+  niveau de risque CALCULÉ + 3 paramètres les plus influents.
+- `src/lib/tco/assumptions.ts` : SOURCE UNIQUE des défauts — valeur,
+  unité, plage, région, année des dollars, source {organisme, document,
+  année, tableau/page, URL}, date de vérification, statut
+  `vérifié | estimation | à_valider`. Règle d'honnêteté : « vérifié »
+  seulement si la source a été réellement ouverte ; sinon « à_valider »
+  + URL exacte ; aucune valeur/URL/montant inventé.
+- `src/lib/tco/subsidy-programs.ts` : admissibilité, montant ou %,
+  plafond, cumul, statut, date limite, date de vérification.
+- Sort de `reference_data_ranges` : défauts dans le code, versionnés et
+  sourcés ; en base, seulement des surcharges par projet réellement lues
+  par le moteur (les catégories seedées ≠ cherchées et les surcharges
+  d'experts ignorées disparaissent avec l'ancien système).
+- `docs/tco-hypotheses.md` GÉNÉRÉ depuis assumptions.ts + test CI de
+  fraîcheur.
+- 6 cas de référence québécois calculés INDÉPENDAMMENT par un sous-agent
+  n'ayant accès qu'à la méthodologie et aux hypothèses (jamais au code) :
+  camionnette BEV, autobus 12 m BEV, camion lourd BEV, véhicule léger
+  BEV, camion/autobus H2, mini-plan 5 véhicules (infra partagée,
+  2 subventions cumulées, re-remplacement). Livrables :
+  `docs/tco-cas-de-reference.md` (année par année) +
+  `docs/tco-verification.xlsx` (formules visibles, aucune valeur collée)
+  + écart ancien moteur → nouveau avec causes.
+- Fin 1A : résumé (conventions, tableau des hypothèses, « à valider »
+  avec URL, écarts ancien/nouveau) → push → **attendre ok**.
 
-**Fichiers supprimés** (duplication morte, aucun impact utilisateur) :
-- `src/lib/calculations.ts` (ancien moteur) + `src/pages/ScenarioDetail.tsx`
-  (mock) + sa route.
-- `supabase/functions/calculate-tco/` (injoignable : 401 permanent depuis
-  api-gateway ; le front ne l'appelle jamais) + l'appel dans
-  `api-gateway` remplacé par 501/410.
+**1B — Moteur, tests, nettoyage (après ok)**
+- `src/lib/tco/{types,units,assumptions,subsidy-programs,engine,sensitivity}.ts` :
+  fonctions PURES, déterministes (ni réseau, ni base, ni date implicite),
+  centimes entiers ou décimal (arrondi à l'affichage), zod, jamais de
+  NaN/Infinity. La spec est mise à jour si le code révèle un trou.
+- Tests ≥ 95 % lignes et branches : 6 cas ±0,01 $ (en cas d'écart,
+  trouver qui a tort, jamais modifier un cas pour passer) ; fast-check
+  (km↑⇒énergie↑ ; subvention↑⇒TCO↓ jamais sous le coût net ; taux 0 ⇒
+  somme simple ; équivalence Fisher nominal/réel ; référence vs
+  elle-même = 0 ; N identiques = N×1 ; Σ parts infra = total ;
+  résiduel ≤ prix ; plafonds/cumul ; sens de chaque sensibilité) ;
+  conversions d'unités ; régression figée.
+- Reproductibilité : engineVersion + empreinte d'hypothèses dans chaque
+  résultat ; type « snapshot d'hypothèses » prêt pour la persistance.
+- Garde-fous CI : constantes d'hypothèses (2.68, 2.6, 2.69, prix diesel,
+  365/300/250…) interdites hors `src/lib/tco/` ; tout NOUVEL import de
+  `src/lib/calculations/` interdit (lint).
+- Nettoyage : `src/lib/calculations.ts`, `ScenarioDetail.tsx` + route,
+  `supabase/functions/calculate-tco` (410 dans api-gateway).
+- **Critère bloquant noté** : `src/lib/calculations/` entièrement
+  supprimé à la fin du bloc 3 de la Phase 3.
+- Hors périmètre Phase 1 : aucun changement d'interface ; identifiants
+  télématiques non touchés.
 
-**Gardé provisoirement** : `src/lib/calculations/*` reste tel quel tant
-que les pages scénarios existantes s'en servent — elles disparaissent en
-phase 2/3 ; le retirer ici casserait la moitié du site pour rien.
-(Décision simple notée, réversible.)
+### Phase 2 — Fondations des données + navigation
 
-**Ordre** : types → assumptions → engine → tests → suppressions → check.
+- **2a. Organisations** : aucune entité organisation n'existe
+  (`profiles.company` = texte libre). Créer `organizations` +
+  `organization_members` (admin / membre / lecteur), rattacher projets et
+  flotte à une organisation, RLS dès la migration, migration de
+  peuplement : chaque utilisateur existant reçoit sa propre organisation
+  (aucune perte de données). `pending_invitations` réutilisée pour
+  inviter l'équipe ; `project_collaborators` conservé pour les invités
+  externes. Corriger `getProjectById`/`listProjects` (filtre `user_id` →
+  un projet partagé devient « introuvable »).
+- **2b. Table `vehicles` (« Ma flotte »)** au niveau organisation, une
+  ligne par véhicule : numéro d'unité, VIN (opt.), marque, modèle,
+  année, mise en service, catégorie/classe, carburant, km/an, conso
+  réelle + source (saisie / télématique / estimation), usage/trajet,
+  département, dépôt, statut. Import CSV/Excel validé. Lien
+  `telematics_vehicles` → `vehicles`. Table `project_vehicles` : les
+  véhicules d'un projet avec année de remplacement + techno cible.
+- **2c. Télématique** : supprimer TOUTE valeur aléatoire (conso, trajet,
+  km/an) ; conso mesurée sinon « inconnue » → défaut de catégorie marqué
+  « estimation » ; importer VIN/marque/année quand l'API les fournit ;
+  plus de bascule silencieuse vers une flotte factice — mode démo
+  explicite, impossible à confondre. (Stockage des identifiants : hors
+  périmètre.)
+- **2d. tco_results** : un seul résultat courant par scénario
+  (`is_current` ou versionnage, migration additive, historique conservé) ;
+  les agrégats comptent chaque flotte UNE fois par projet (bug actuel :
+  120 véh. affichés pour une flotte de 40 ; 178 088 t CO2/an).
+- **2e. Langue et région** : fr par défaut (détection navigateur, repli
+  fr) ; clés i18n en double réparées (`pages_marketing`, `onboarding` —
+  la page Confidentialité affiche des clés brutes) ; test CI échouant
+  sur clé en double ou manquante ; textes en dur des pages conservées
+  traduits ; région QC, devise CAD ; paramètres langue/région/devise
+  réellement enregistrés (CAD ajouté).
+- **2f. Menu 6 entrées + parcours 7 étapes** : comme au plan initial
+  (layout `ProjectJourney`, retraits + redirections, code mort supprimé).
 
-**Risques** : divergence temporaire ancien/nouveau moteur (assumée,
-documentée ici) ; suppression de calculate-tco = nouvelle migration
-inutile (aucune table touchée). Aucune donnée supprimée en base.
+### Phase 3 — Contenu des 7 étapes
 
-### Phase 2 — Navigation : menu 6 entrées + parcours 7 étapes
+Les 8 blocs du plan initial (Flotte/import, Faisabilité, Stratégies,
+Plan, Financement, Rapports, Suivi, Démo ~40 véhicules), avec :
+- **Stratégies** : le stress test d'Analytics (RiskAnalysisPanel) y
+  déménage, rebranché sur `src/lib/tco/sensitivity.ts`.
+- **Financement** : modèle de subventions enrichi (montant ou %,
+  plafonds, cumul, programmes d'infrastructure, statut CALCULÉ à partir
+  des dates, date de vérification visible). Aujourd'hui 3 des
+  6 programmes en base sont échus mais marqués actifs.
+- **Rapports** : un vrai export .xlsx (les boutons « Excel » actuels
+  produisent des CSV) ; taux « 500 % » corrigé.
+- **Suivi** : tâches intégrées ; correction du double trigger de
+  notification d'assignation.
+- **Assistant IA** : base de connaissances et liens réalignés sur la
+  nouvelle structure et le nouveau moteur, aucun chiffre figé non sourcé.
+- Fin du bloc 3 (Stratégies) : **suppression complète de
+  `src/lib/calculations/`** (critère bloquant).
 
-**Menu** (`DashboardLayout.tsx` réécrit) : Accueil (`/dashboard`),
-Projets (`/dashboard/projects`), Ma flotte (`/dashboard/fleet`),
-Bibliothèque (`/dashboard/library` : données de référence + données
-personnalisées + télématique), Organisation (`/dashboard/organization` :
-profil, équipe, paramètres), Aide (`/dashboard/help` + support fusionné).
+### Phase 4 — Site public et conformité (obligatoire avant toute démo)
 
-**Parcours projet** : `src/pages/project/ProjectJourney.tsx` — layout
-avec barre de progression 7 étapes, routes
-`/dashboard/projects/:id/{flotte,faisabilite,strategies,plan,financement,rapports,suivi}` ;
-en phase 2 chaque étape est une coquille qui embarque l'existant quand il
-y en a (ProjectDetail éclaté), le contenu réel arrive en phase 3.
+- **Études de cas** (STM, Winnipeg, ERA/AZETEC) : chiffres inventés
+  présentés comme « résultats prouvés » pour des organisations non
+  clientes → retirer, ou transformer en « exemples illustratifs »
+  clairement étiquetés, calculés par le nouveau moteur, sans suggérer de
+  relation client.
+- **Tarification** : 3 versions contradictoires dans le code → une seule
+  page ; **les prix sont demandés à l'utilisateur, aucun choix autonome**.
+- **Retirer les promesses non livrées** : API publique, SSO/SAML, marque
+  blanche, SLA, essai 14 jours, paiement ACH, faux liens sociaux,
+  « partenaires vérifiés », « rejoignez les entreprises… », calculateur
+  gratuit sans suite.
+- **Méthodologie publique** = rendu de `docs/tco-methodologie.md`.
+- **Légal** : CGU, confidentialité, remboursement en fr ET en, droit du
+  Québec, conformité Loi 25 ; **nom légal de l'entreprise demandé à
+  l'utilisateur** (ne pas inventer) ; pages marquées « à faire valider
+  par un juriste ».
+- `/dashboard/admin` protégé par `has_role` (aujourd'hui accessible à
+  tout utilisateur connecté) ; README à jour (VITE_ADMIN_EMAILS obsolète,
+  tests Deno).
 
-**Accueil** : tableau de bord recentré (projets en cours, prochaine
-échéance de subvention, avancement du plan).
+## 4. Liste pré-pilote (tenue à jour dans CLAUDE.md)
 
-**Retraits** (routes + menu + redirections `<Navigate>` ; les tables
-restent en base) : suppliers, scenarios (page globale), subsidies/
-incentives autonomes, tasks autonome, pages publiques vides (api,
-careers, press, changelog, roadmap public, docs), Ecosystem §fournisseurs.
+- Chiffrement des identifiants télématiques (aujourd'hui simple base64).
+- Secrets à régénérer / créer (liste de l'audit sécurité : CRON_SECRET,
+  INTERNAL_FUNCTION_SECRET, ALLOWED_ORIGINS…).
+- Retrait de la fonction `calculate-tco` déployée chez Supabase.
+- Facturation réelle (aujourd'hui DEMO_MODE donne le plan le plus élevé
+  à tous).
+- Revue juridique des pages légales (Loi 25, CGU, confidentialité).
 
-**Code mort supprimé** : IncentivesPage, Auth.tsx, Admin.tsx,
-TasksQuickStats, IncentivesCalculator, composants suppliers/*.
-
-**i18n** : nouvelles clés fr + en (insertions ciblées — jamais de
-réécriture des JSON : clés dupliquées).
-
-**Risques** : liens internes cassés (balayage `grep` des `to=`/`navigate`
-avant push) ; l'aperçu artifact et Pages doivent être republiés (hash
-routing).
-
-### Phase 3 — Contenu des 7 étapes + démo
-
-Ordre de construction (chaque bloc = commit) :
-1. **Flotte** : import CSV/Excel (papaparse/xlsx), table véhicules
-   éditables → « Ma flotte » partagée, sélection par projet.
-2. **Faisabilité** : verdict par véhicule (faisable BEV / FCEV / à
-   reporter) + raison chiffrée (km/j vs autonomie, âge, catégorie).
-3. **Stratégies** : 2-3 scénarios comparés côte à côte (moteur
-   `src/lib/tco/`), absorbe NewFlexibleScenario/ScenarioComparison ;
-   suppression de `src/lib/calculations/*` à la fin de ce bloc.
-4. **Plan** : remplacements véhicule par véhicule sur l'horizon, budget
-   annuel, graphique de trésorerie.
-5. **Financement** : programmes + montants + échéances (absorbe les
-   composants subsidies), rattachés au plan.
-6. **Rapports** : PDF fr/en « prêt pour le conseil » (react-pdf existant,
-   taux d'actualisation corrigé).
-7. **Suivi** : réalisé vs prévu + **tâches intégrées** (composants kanban
-   réutilisés ; migration additive : colonnes `vehicle_id`, `plan_year`,
-   `subsidy_program_id` sur `tasks` + RLS ; tâches auto-créées depuis les
-   échéances de subventions ; vue liste par statut ; assignation).
-8. **Démo** : municipalité québécoise ~40 véhicules (seed local,
-   `seedDemoData` réécrit sur le nouveau moteur).
-
-**Risques** : volume — découpé en 8 commits testables ; migration tasks
-(additive, RLS, jamais modifier l'existant) ; i18n massif (deux locales à
-chaque bloc).
-
-## 4. Limites connues / hors périmètre refonte
+## 5. Limites connues / hors périmètre refonte
 
 - Stockage des identifiants télématiques : **non touché** (étape dédiée
   après la refonte).
 - Tables devenues orphelines (hydrogen_suppliers, user_favorite_suppliers,
   scenarios globaux…) : conservées en base, aucune suppression.
-- `calculate-tco` supprimé du dépôt mais la fonction déployée chez
-  Supabase doit être retirée à la main (liste pré-pilote).

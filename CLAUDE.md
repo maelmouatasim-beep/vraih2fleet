@@ -122,20 +122,38 @@ bloque autre chose.
 ## Avancement de la refonte
 
 Plan complet : `docs/refonte.md` (cartographie, classement des pages,
-plan détaillé des phases 1-3, risques).
+plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
+`docs/tco-methodologie.md` (annexe des rapports et future page publique).
 
-- **Phase 0 — cartographie et plan : livrée, en attente du « ok »**.
-  Constats clés : 3 moteurs TCO indépendants sans constante partagée
-  (`src/lib/calculations/*`, `supabase/functions/calculate-tco`
-  injoignable, `src/lib/calculations.ts` mock) + ~15 calculs inline ;
-  subventions jamais déduites du TCO ; référence « diesel seul » faussée.
-- Phase 1 — moteur TCO unique (`src/lib/tco/`) : à venir.
-- Phase 2 — menu 6 entrées + parcours projet 7 étapes : à venir.
-- Phase 3 — contenu des étapes + tâches dans Suivi + démo ~40 véhicules :
-  à venir.
+- **Phase 0 — cartographie et plan : livrée, ok reçu.**
+- **Phase 1 — moteur TCO unique (`src/lib/tco/`) : 1A en cours**
+  (méthodologie, hypothèses sourcées, cas de référence indépendants —
+  aucun code moteur ; arrêt pour ok avant 1B moteur+tests+nettoyage).
+- Phase 2 — fondations des données (organizations, table vehicles,
+  télématique sans aléatoire, tco_results courant unique, i18n/région)
+  + menu 6 entrées + parcours 7 étapes : à venir.
+- Phase 3 — contenu des 7 étapes (stress test dans Stratégies via
+  sensitivity.ts, subventions enrichies, vrai .xlsx, tâches dans Suivi,
+  assistant réaligné) : à venir. **Critère bloquant : suppression
+  complète de `src/lib/calculations/` à la fin du bloc 3 (Stratégies).**
+- Phase 4 — site public et conformité (études de cas re-étiquetées,
+  tarification unique — prix demandés à l'utilisateur, promesses non
+  livrées retirées, légal fr/en Loi 25 — nom légal demandé, admin
+  protégé par has_role) : à venir, obligatoire avant toute démo prospect.
 
 Rappels de méthode : chaque phase finit par `npm run check` vert → push →
 résumé court → **attendre le « ok » de l'utilisateur** ; kanban intégré à
 l'étape Suivi (pas de module autonome) ; aucune suppression de données en
 base (retraits = routes/menus seulement) ; identifiants télématiques non
-touchés.
+touchés ; hypothèses de calcul : jamais de valeur, URL ou montant
+inventé — statut « vérifié » seulement si la source a été réellement lue,
+sinon « à_valider » avec l'URL à consulter.
+
+### Liste pré-pilote (à tenir à jour)
+
+- Chiffrement des identifiants télématiques (aujourd'hui simple base64).
+- Secrets à régénérer / créer (audit sécurité : CRON_SECRET,
+  INTERNAL_FUNCTION_SECRET, ALLOWED_ORIGINS…).
+- Retrait de la fonction `calculate-tco` déployée chez Supabase.
+- Facturation réelle (DEMO_MODE donne le plan le plus élevé à tous).
+- Revue juridique des pages légales (Loi 25, CGU, confidentialité).
