@@ -116,6 +116,7 @@ export function evaluerFaisabiliteVehicule(
       technologie,
       prixAvantTaxes: prixAlternative,
       typeOrganisme: options.typeOrganisme,
+      anneeAchatCalendaire: options.anneeReference,
     });
 
     const resultat = calculerPlan({

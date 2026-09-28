@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import fc from 'fast-check';
 import { resoudreSubventionsVehicule } from '../subsidy-resolver';
-import { PROGRAMMES } from '../subsidy-programs';
+import { PROGRAMMES, statutEffectif } from '../subsidy-programs';
 
 describe('résolveur de subventions', () => {
   it('véhicule léger BEV ≤ 50 k$ : PAVÉ 5 000 $ (an 0) + Roulez vert 2 000 $ (an 0), cumulés', () => {
@@ -149,6 +149,15 @@ describe('résolveur de subventions', () => {
     const achat2029 = resoudreSubventionsVehicule({ ...base, anneeAchatCalendaire: 2029 });
     expect(achat2029.some((x) => x.libelle.includes('Roulez vert'))).toBe(false);
     expect(achat2029.some((x) => x.libelle.includes('PAVÉ'))).toBe(true);
+  });
+
+  it('statutEffectif : un programme dont la date de fin est passée est « ferme », le statut stocké ne fait pas foi', () => {
+    const rv = PROGRAMMES.find((p) => p.id === 'roulez_vert')!;
+    expect(rv.dateFin).toBe('2026-12-31');
+    expect(statutEffectif(rv, '2026-06-01')).toBe('actif');
+    expect(statutEffectif(rv, '2027-01-01')).toBe('ferme');
+    const pivez = PROGRAMMES.find((p) => p.statut !== 'actif');
+    if (pivez) expect(statutEffectif(pivez, '2026-06-01')).toBe(pivez.statut);
   });
 
   it('le registre ne compte automatiquement que des programmes actifs à barème défini', () => {

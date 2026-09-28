@@ -5717,6 +5717,47 @@
         "gap": "Écart vs statu quo"
       },
       "note": "Montants en dollars courants (vue budgétaire). Un véhicule sans technologie cible reste au diesel (statu quo) ; ajustez-le à l'étape Flotte. L'infrastructure est comptée à l'année de référence."
+    },
+    "financing": {
+      "stats": {
+        "planned": "Subventions du plan",
+        "aidedVehicles": "Véhicules aidés",
+        "toFinance": "Reste à financer",
+        "activePrograms": "Programmes actifs à ce jour"
+      },
+      "planTitle": "Subventions prévues au plan",
+      "planSubtitle": "Résolues par le registre pour chaque véhicule zéro émission (admissibilité, plafonds, cumul) ; un programme échu avant l'année d'achat prévue n'est pas compté.",
+      "columns": {
+        "purchaseYear": "Année d'achat",
+        "programs": "Programmes retenus",
+        "total": "Total"
+      },
+      "paidIn": "versée en {{year}}",
+      "noProgram": "Aucun programme applicable à ce jour",
+      "empty": "Aucun véhicule zéro émission au plan — choisissez les technologies cibles à l'étape Flotte.",
+      "registryTitle": "Registre des programmes",
+      "registrySubtitle": "Statut CALCULÉ à partir des dates (jamais le statut stocké seul), source officielle et date de la dernière vérification pour chaque programme.",
+      "status": {
+        "actif": "Actif",
+        "ferme": "Fermé",
+        "echu": "Échu depuis le {{date}}",
+        "suspendu": "Suspendu"
+      },
+      "level": {
+        "federal": "Fédéral",
+        "provincial": "Provincial"
+      },
+      "target": {
+        "vehicule": "Véhicules",
+        "infrastructure": "Infrastructure"
+      },
+      "maxPerVehicle": "Jusqu'à {{amount}} par véhicule",
+      "localBonus": "Bonification achat local : +{{percent}} %",
+      "until": "Jusqu'au {{date}}",
+      "verified": "Vérifié",
+      "toValidate": "À valider",
+      "verifiedOn": "vérifié le {{date}}",
+      "disclaimer": "Montants estimés selon les barèmes en vigueur à la date de vérification : rien n'est garanti avant l'acceptation d'une demande, et plusieurs programmes ferment à l'épuisement des fonds. Les programmes « à valider » n'ont pas encore été lus à la source — consultez le lien avant de budgéter."
     }
   }
 }

@@ -321,3 +321,15 @@ export const PROGRAMMES: ProgrammeSubvention[] = [
 export function programmesActifs(): ProgrammeSubvention[] {
   return PROGRAMMES.filter((p) => p.statut === 'actif');
 }
+
+/**
+ * Statut EFFECTIF à une date donnée (ISO AAAA-MM-JJ) : un programme dont
+ * la date de fin est passée est « ferme », quel que soit le statut
+ * stocké — le statut affiché est toujours calculé à partir des dates,
+ * jamais lu tel quel (des registres périmés affichaient des programmes
+ * échus comme actifs).
+ */
+export function statutEffectif(prog: ProgrammeSubvention, dateIso: string): StatutProgramme {
+  if (prog.dateFin !== undefined && prog.dateFin < dateIso) return 'ferme';
+  return prog.statut;
+}

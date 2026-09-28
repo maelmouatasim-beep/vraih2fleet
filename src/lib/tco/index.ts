@@ -5,7 +5,7 @@
 export * from './assumption-types';
 export * from './types';
 export { HYPOTHESES, DEFAUTS_CATEGORIES, LISTE_HYPOTHESES } from './assumptions';
-export { PROGRAMMES, programmesActifs } from './subsidy-programs';
+export { PROGRAMMES, programmesActifs, statutEffectif } from './subsidy-programs';
 export type { ProgrammeSubvention, TypeOrganisme, StatutProgramme } from './subsidy-programs';
 export { resoudreSubventionsVehicule } from './subsidy-resolver';
 export type { DemandeSubventions } from './subsidy-resolver';

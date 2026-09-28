@@ -5717,6 +5717,47 @@
         "gap": "Gap vs status quo"
       },
       "note": "Amounts in current dollars (budget view). A vehicle without a target technology stays diesel (status quo); adjust it in the Fleet step. Infrastructure is booked in the reference year."
+    },
+    "financing": {
+      "stats": {
+        "planned": "Plan subsidies",
+        "aidedVehicles": "Vehicles with aid",
+        "toFinance": "Left to finance",
+        "activePrograms": "Programs active today"
+      },
+      "planTitle": "Subsidies expected in the plan",
+      "planSubtitle": "Resolved by the registry for each zero-emission vehicle (eligibility, caps, stacking); a program that expires before the planned purchase year is not counted.",
+      "columns": {
+        "purchaseYear": "Purchase year",
+        "programs": "Selected programs",
+        "total": "Total"
+      },
+      "paidIn": "paid in {{year}}",
+      "noProgram": "No applicable program today",
+      "empty": "No zero-emission vehicle in the plan — choose target technologies in the Fleet step.",
+      "registryTitle": "Program registry",
+      "registrySubtitle": "Status COMPUTED from dates (never the stored status alone), official source and last verification date for each program.",
+      "status": {
+        "actif": "Active",
+        "ferme": "Closed",
+        "echu": "Expired since {{date}}",
+        "suspendu": "Suspended"
+      },
+      "level": {
+        "federal": "Federal",
+        "provincial": "Provincial"
+      },
+      "target": {
+        "vehicule": "Vehicles",
+        "infrastructure": "Infrastructure"
+      },
+      "maxPerVehicle": "Up to {{amount}} per vehicle",
+      "localBonus": "Local purchase bonus: +{{percent}}%",
+      "until": "Until {{date}}",
+      "verified": "Verified",
+      "toValidate": "To validate",
+      "verifiedOn": "verified on {{date}}",
+      "disclaimer": "Amounts estimated from the scales in force at the verification date: nothing is guaranteed before an application is accepted, and several programs close when funds run out. “To validate” programs have not yet been read at the source — check the link before budgeting."
     }
   }
 }
