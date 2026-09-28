@@ -32,10 +32,12 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEmailNotifications } from "@/hooks/useEmailNotifications";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
+import { useOrganization } from "@/hooks/useOrganization";
+import { updateOrganization } from "@/lib/supabase/organizations";
 import { FeatureDocDownloadButton } from "@/components/reports";
 
 const Settings = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, profile, updateProfile } = useAuth();
   const { preferences: emailPreferences, togglePreference, isSaving: isSavingEmail } = useEmailNotifications();
   const [isSaving, setIsSaving] = useState(false);
@@ -53,11 +55,38 @@ const Settings = () => {
   
   const [passwordErrors, setPasswordErrors] = useState<Record<string, string>>({});
 
-  const [preferences, setPreferences] = useState({
-    language: "fr",
-    currency: "EUR",
-    region: "EU",
-  });
+  // Phase 2e : les préférences sont RÉELLEMENT enregistrées — la langue
+  // via i18next (persistée en localStorage par le détecteur), la devise
+  // et la région sur l'organisation (défauts produit : CAD, Québec).
+  const { organization, refetch: refetchOrganization } = useOrganization();
+  const languePref = i18n.language?.startsWith("en") ? "en" : "fr";
+
+  const changerLangue = (v: string) => {
+    void i18n.changeLanguage(v);
+  };
+
+  const changerOrganisation = async (patch: { currency?: string; region?: string }) => {
+    if (!organization) return;
+    if (organization.myRole !== "admin") {
+      toast({
+        title: t('pages.settings.toast.error'),
+        description: t('pages.settings.preferences.adminOnly'),
+        variant: "destructive",
+      });
+      return;
+    }
+    try {
+      await updateOrganization(organization.id, patch);
+      await refetchOrganization();
+      toast({ title: t('pages.settings.toast.saved'), description: t('pages.settings.toast.savedDesc') });
+    } catch {
+      toast({
+        title: t('pages.settings.toast.error'),
+        description: t('pages.settings.toast.errorSaving'),
+        variant: "destructive",
+      });
+    }
+  };
 
   const [notifications, setNotifications] = useState({
     emailReports: true,
@@ -279,51 +308,46 @@ const Settings = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label>{t('pages.settings.preferences.language')}</Label>
-                <Select
-                  value={preferences.language}
-                  onValueChange={(v) => setPreferences({ ...preferences, language: v })}
-                >
+                <Select value={languePref} onValueChange={changerLangue}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="fr">Français</SelectItem>
                     <SelectItem value="en">English</SelectItem>
-                    <SelectItem value="de">Deutsch</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
                 <Label>{t('pages.settings.preferences.defaultCurrency')}</Label>
                 <Select
-                  value={preferences.currency}
-                  onValueChange={(v) => setPreferences({ ...preferences, currency: v })}
+                  value={organization?.currency ?? "CAD"}
+                  onValueChange={(v) => void changerOrganisation({ currency: v })}
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="EUR">{t('settings.currencies.eur')}</SelectItem>
+                    <SelectItem value="CAD">{t('settings.currencies.cad')}</SelectItem>
                     <SelectItem value="USD">{t('settings.currencies.usd')}</SelectItem>
-                    <SelectItem value="GBP">{t('settings.currencies.gbp')}</SelectItem>
-                    <SelectItem value="CHF">{t('settings.currencies.chf')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
                 <Label>{t('pages.settings.preferences.defaultRegion')}</Label>
                 <Select
-                  value={preferences.region}
-                  onValueChange={(v) => setPreferences({ ...preferences, region: v })}
+                  value={organization?.region ?? "CA_QC"}
+                  onValueChange={(v) => void changerOrganisation({ region: v })}
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="EU">{t('settings.regions.eu')}</SelectItem>
-                    <SelectItem value="FR">{t('settings.regions.fr')}</SelectItem>
-                    <SelectItem value="DE">{t('settings.regions.de')}</SelectItem>
-                    <SelectItem value="UK">{t('settings.regions.uk')}</SelectItem>
+                    <SelectItem value="CA_QC">{t('settings.regions.ca_qc')}</SelectItem>
+                    <SelectItem value="CA_ON">{t('settings.regions.ca_on')}</SelectItem>
+                    <SelectItem value="CA_BC">{t('settings.regions.ca_bc')}</SelectItem>
+                    <SelectItem value="CA_AB">{t('settings.regions.ca_ab')}</SelectItem>
+                    <SelectItem value="CA">{t('settings.regions.ca')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

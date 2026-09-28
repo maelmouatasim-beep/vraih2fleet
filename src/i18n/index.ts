@@ -31,8 +31,11 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: 'en',
-    lng: 'en', // Force English as default
+    // Produit québécois : français par défaut. La langue vient du choix
+    // enregistré (localStorage), sinon du navigateur (fr-CA → fr via
+    // load:'languageOnly'), avec repli en français.
+    fallbackLng: 'fr',
+    load: 'languageOnly',
     interpolation: {
       // React échappe déjà toute valeur interpolée rendue en JSX.
       // CONTRAT DE SÉCURITÉ : ne jamais injecter une chaîne i18n via

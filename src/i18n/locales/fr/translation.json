@@ -104,19 +104,46 @@
           "provided": {
             "title": "1.1 Informations que vous fournissez",
             "intro": "Lorsque vous vous inscrivez et utilisez notre Service, vous pouvez fournir :",
-            "account": { "label": "Informations de compte", "value": "Nom, adresse courriel, nom de l'entreprise, titre du poste" },
-            "company": { "label": "Informations sur l'entreprise", "value": "Taille de la flotte, types de véhicules, régions d'exploitation" },
-            "payment": { "label": "Informations de paiement", "value": "Adresse de facturation (les données de carte sont traitées par Stripe et non stockées par nous)" },
-            "project": { "label": "Données de projet", "value": "Configurations de flotte, paramètres de scénario, données d'analyse" },
-            "communications": { "label": "Communications", "value": "Demandes de support, commentaires et correspondance avec nous" }
+            "account": {
+              "label": "Informations de compte",
+              "value": "Nom, adresse courriel, nom de l'entreprise, titre du poste"
+            },
+            "company": {
+              "label": "Informations sur l'entreprise",
+              "value": "Taille de la flotte, types de véhicules, régions d'exploitation"
+            },
+            "payment": {
+              "label": "Informations de paiement",
+              "value": "Adresse de facturation (les données de carte sont traitées par Stripe et non stockées par nous)"
+            },
+            "project": {
+              "label": "Données de projet",
+              "value": "Configurations de flotte, paramètres de scénario, données d'analyse"
+            },
+            "communications": {
+              "label": "Communications",
+              "value": "Demandes de support, commentaires et correspondance avec nous"
+            }
           },
           "automatic": {
             "title": "1.2 Informations collectées automatiquement",
             "intro": "Lorsque vous accédez à notre Service, nous collectons automatiquement :",
-            "usage": { "label": "Données d'utilisation", "value": "Fonctionnalités utilisées, actions effectuées, temps passé sur les pages" },
-            "device": { "label": "Informations sur l'appareil", "value": "Type de navigateur, système d'exploitation, identifiants d'appareil" },
-            "log": { "label": "Données de journal", "value": "Adresse IP, heures d'accès, pages consultées, URLs de provenance" },
-            "analytics": { "label": "Données analytiques", "value": "Tendances d'utilisation agrégées et métriques de performance" }
+            "usage": {
+              "label": "Données d'utilisation",
+              "value": "Fonctionnalités utilisées, actions effectuées, temps passé sur les pages"
+            },
+            "device": {
+              "label": "Informations sur l'appareil",
+              "value": "Type de navigateur, système d'exploitation, identifiants d'appareil"
+            },
+            "log": {
+              "label": "Données de journal",
+              "value": "Adresse IP, heures d'accès, pages consultées, URLs de provenance"
+            },
+            "analytics": {
+              "label": "Données analytiques",
+              "value": "Tendances d'utilisation agrégées et métriques de performance"
+            }
           },
           "thirdParty": {
             "title": "1.3 Informations provenant de tiers",
@@ -197,9 +224,18 @@
           "title": "5. Cookies et technologies de suivi",
           "types": {
             "title": "5.1 Types de cookies que nous utilisons",
-            "essential": { "label": "Cookies essentiels", "value": "Nécessaires au fonctionnement du Service (authentification, sécurité)" },
-            "functional": { "label": "Cookies fonctionnels", "value": "Mémorisent vos préférences et paramètres" },
-            "analytics": { "label": "Cookies analytiques", "value": "Nous aident à comprendre comment les utilisateurs interagissent avec le Service" }
+            "essential": {
+              "label": "Cookies essentiels",
+              "value": "Nécessaires au fonctionnement du Service (authentification, sécurité)"
+            },
+            "functional": {
+              "label": "Cookies fonctionnels",
+              "value": "Mémorisent vos préférences et paramètres"
+            },
+            "analytics": {
+              "label": "Cookies analytiques",
+              "value": "Nous aident à comprendre comment les utilisateurs interagissent avec le Service"
+            }
           },
           "managing": {
             "title": "5.2 Gestion des cookies",
@@ -257,6 +293,353 @@
         "refund": "Politique de remboursement",
         "contact": "Nous contacter"
       }
+    },
+    "features": {
+      "title": "Fonctionnalités",
+      "badge": "Plateforme complète",
+      "hero": {
+        "title": "Tous les outils pour réussir votre transition",
+        "subtitle": "H2Fleet Planner vous accompagne de l'analyse initiale à la mise en œuvre de votre stratégie de transition énergétique.",
+        "cta": {
+          "start": "Démarrer gratuitement",
+          "demo": "Voir une démo"
+        }
+      },
+      "mainFeatures": {
+        "title": "Fonctionnalités principales",
+        "subtitle": "Des outils puissants pour analyser, comparer et planifier votre transition vers les véhicules propres.",
+        "tcoCalculator": {
+          "title": "Calculateur TCO",
+          "description": "Analysez le coût total de possession de vos véhicules sur leur durée de vie complète.",
+          "details": [
+            "Comparaison diesel vs électrique vs hydrogène",
+            "CAPEX, OPEX et valeur résiduelle",
+            "Flux de trésorerie actualisés sur 10-15 ans",
+            "Calcul de la NPV et du payback period"
+          ]
+        },
+        "scenarioManagement": {
+          "title": "Gestion de scénarios",
+          "description": "Créez et comparez différents scénarios de transition pour trouver la meilleure stratégie.",
+          "details": [
+            "Comparaison multi-scénarios côte à côte",
+            "Paramètres personnalisables par groupe",
+            "Templates pré-configurés",
+            "Duplication et modification rapide"
+          ]
+        },
+        "infrastructure": {
+          "title": "Planification Infrastructure",
+          "description": "Planifiez vos stations H₂ et réseau de recharge EV selon les besoins de votre flotte et contraintes opérationnelles.",
+          "details": [
+            "Analyse capacité réseau",
+            "Planning phases de déploiement",
+            "Évaluation de faisabilité",
+            "Optimisation des coûts par site"
+          ]
+        },
+        "roadmap": {
+          "title": "Constructeur de Roadmap",
+          "description": "Découpez votre transition en phases gérables avec diagrammes Gantt visuels et suivi des jalons.",
+          "details": [
+            "Timeline Gantt visuelle",
+            "Gestion des jalons et échéances",
+            "Allocation budget par phase",
+            "Tableau de bord de progression"
+          ]
+        },
+        "co2Analysis": {
+          "title": "Analyse CO₂",
+          "description": "Mesurez l'impact environnemental de chaque scénario et suivez vos réductions d'émissions.",
+          "details": [
+            "Calcul des émissions par type de carburant",
+            "Comparaison avec baseline diesel",
+            "Facteurs CO₂ par région",
+            "Suivi des objectifs de réduction"
+          ]
+        },
+        "reports": {
+          "title": "Rapports professionnels",
+          "description": "Générez des rapports détaillés pour vos présentations et prises de décision.",
+          "details": [
+            "Export PDF haute qualité",
+            "Export Excel avec données brutes",
+            "Graphiques et tableaux personnalisables",
+            "Résumés exécutifs automatiques"
+          ]
+        }
+      },
+      "additionalFeatures": {
+        "title": "Et bien plus encore",
+        "subtitle": "Une suite complète d'outils pour gérer tous les aspects de votre transition.",
+        "telematics": {
+          "title": "Intégration Télématique",
+          "description": "Connectez Geotab ou Samsara pour importer vos données réelles et générer automatiquement des scénarios optimisés."
+        },
+        "subsidies": {
+          "title": "Subventions & Financement",
+          "description": "Accédez aux programmes fédéraux et provinciaux canadiens. Calculez éligibilité et préparez vos dossiers."
+        },
+        "analytics": {
+          "title": "Analytique Avancée",
+          "description": "Suivez ROI, période de retour et analyses de sensibilité avec projections financières détaillées."
+        },
+        "assistant": {
+          "title": "Assistant IA",
+          "description": "Obtenez des conseils contextuels et réponses de notre assistant intelligent formé sur les meilleures pratiques."
+        },
+        "tasks": {
+          "title": "Gestion des Tâches",
+          "description": "Tableau Kanban pour suivre les tâches de transition, jalons et collaboration d'équipe avec commentaires."
+        },
+        "multiRegion": {
+          "title": "Multi-régions",
+          "description": "Données de référence adaptées à votre pays : prix énergies, facteurs CO₂, réglementations."
+        }
+      },
+      "benefits": {
+        "title": "Pourquoi choisir H2Fleet ?",
+        "subtitle": "Des bénéfices concrets pour votre organisation.",
+        "costReduction": {
+          "title": "Réduction des coûts",
+          "description": "Identifiez les opportunités d'économies et optimisez vos investissements."
+        },
+        "riskMitigation": {
+          "title": "Maîtrise des risques",
+          "description": "Anticipez les évolutions du marché et sécurisez vos décisions."
+        },
+        "sustainability": {
+          "title": "Durabilité",
+          "description": "Atteignez vos objectifs environnementaux et réglementaires."
+        }
+      },
+      "cta": {
+        "title": "Prêt à transformer votre flotte ?",
+        "subtitle": "Commencez votre analyse dès aujourd'hui et découvrez le potentiel de votre transition.",
+        "start": "Créer mon compte gratuit",
+        "pricing": "Voir les tarifs"
+      }
+    },
+    "pricing": {
+      "title": "Tarifs",
+      "comparison": {
+        "title": "Comparaison détaillée",
+        "subtitle": "Tous les plans incluent les mêmes fonctionnalités de base. La tarification évolue avec la taille de votre flotte.",
+        "feature": "Fonctionnalité",
+        "features": [
+          {
+            "name": "Prix par véhicule",
+            "small": "24$/mois",
+            "medium": "19$/mois",
+            "large": "14$/mois"
+          },
+          {
+            "name": "Taille de flotte",
+            "small": "10-49",
+            "medium": "50-199",
+            "large": "200+"
+          },
+          {
+            "name": "Projets",
+            "small": "Illimité",
+            "medium": "Illimité",
+            "large": "Illimité"
+          },
+          {
+            "name": "Scénarios",
+            "small": "Illimité",
+            "medium": "Illimité",
+            "large": "Illimité"
+          },
+          {
+            "name": "Analyse TCO",
+            "small": "✓",
+            "medium": "✓",
+            "large": "✓"
+          },
+          {
+            "name": "Suivi CO₂",
+            "small": "✓",
+            "medium": "✓",
+            "large": "✓"
+          },
+          {
+            "name": "Export PDF & Excel",
+            "small": "✓",
+            "medium": "✓",
+            "large": "✓"
+          },
+          {
+            "name": "Accès API",
+            "small": "—",
+            "medium": "✓",
+            "large": "✓"
+          },
+          {
+            "name": "Support prioritaire",
+            "small": "—",
+            "medium": "✓",
+            "large": "✓"
+          },
+          {
+            "name": "SSO/SAML",
+            "small": "—",
+            "medium": "—",
+            "large": "✓"
+          },
+          {
+            "name": "Manager dédié",
+            "small": "—",
+            "medium": "—",
+            "large": "✓"
+          }
+        ]
+      },
+      "faq": {
+        "title": "Questions fréquentes",
+        "subtitle": "Tout ce que vous devez savoir sur nos tarifs."
+      },
+      "faqs": [
+        {
+          "question": "Y a-t-il un essai gratuit ?",
+          "answer": "Oui ! Tous les plans incluent un essai gratuit de 14 jours. Aucune carte de crédit requise pour commencer."
+        },
+        {
+          "question": "Comment ma taille de flotte est-elle calculée ?",
+          "answer": "La taille de flotte est basée sur le nombre de véhicules actifs dans votre compte. Vous pouvez ajouter ou retirer des véhicules à tout moment."
+        },
+        {
+          "question": "Puis-je changer de plan au fur et à mesure que ma flotte grandit ?",
+          "answer": "Absolument. Vous pouvez passer à un plan supérieur ou inférieur à tout moment. La facturation s'ajuste automatiquement en fonction de votre taille de flotte actuelle."
+        },
+        {
+          "question": "Quels moyens de paiement acceptez-vous ?",
+          "answer": "Nous acceptons toutes les principales cartes de crédit (Visa, Mastercard, American Express) et les virements bancaires ACH pour les plans annuels."
+        },
+        {
+          "question": "La facturation annuelle est-elle disponible ?",
+          "answer": "Oui, la facturation annuelle est disponible avec 2 mois offerts (payez 10 mois, obtenez 12)."
+        },
+        {
+          "question": "Quel support est inclus ?",
+          "answer": "Tous les plans incluent le support par email. Les plans Flotte Moyenne et Grande incluent un support prioritaire avec des temps de réponse plus rapides."
+        }
+      ],
+      "cta": {
+        "title": "Prêt à commencer ?",
+        "subtitle": "Rejoignez les entreprises qui planifient efficacement leur transition énergétique de flotte.",
+        "start": "Démarrer l'essai gratuit",
+        "contact": "Contacter les ventes"
+      }
+    },
+    "about": {
+      "title": "À propos",
+      "badge": "Notre histoire",
+      "hero": {
+        "title": "Accélérer la transition énergétique des flottes",
+        "subtitle": "Nous aidons les gestionnaires de flottes à prendre des décisions éclairées pour leur transition vers les véhicules propres."
+      },
+      "mission": {
+        "title": "Notre mission",
+        "description1": "H2Fleet Planner est né d'un constat simple : la transition énergétique des flottes de véhicules est complexe et les outils existants ne sont pas adaptés aux besoins des gestionnaires de flottes.",
+        "description2": "Notre mission est de démocratiser l'accès aux analyses TCO et de permettre à chaque entreprise de planifier sereinement sa transition vers les véhicules électriques et hydrogène."
+      },
+      "vision": {
+        "title": "Notre vision",
+        "description1": "Nous envisageons un monde où chaque flotte de véhicules peut facilement évaluer et planifier sa transition énergétique, contribuant ainsi à la réduction des émissions de CO₂ du transport.",
+        "description2": "D'ici 2030, nous voulons avoir accompagné la transition de plus d'un million de véhicules vers des motorisations propres."
+      },
+      "stats": {
+        "founded": "Année de création",
+        "clients": "Clients actifs",
+        "vehicles": "Véhicules analysés",
+        "countries": "Pays couverts"
+      },
+      "values": {
+        "title": "Nos valeurs",
+        "subtitle": "Les principes qui guident notre travail au quotidien.",
+        "sustainability": {
+          "title": "Durabilité",
+          "description": "Nous contribuons activement à la réduction des émissions du transport."
+        },
+        "innovation": {
+          "title": "Innovation",
+          "description": "Nous développons des outils à la pointe de la technologie."
+        },
+        "collaboration": {
+          "title": "Collaboration",
+          "description": "Nous travaillons en partenariat avec nos clients et l'écosystème."
+        },
+        "transparency": {
+          "title": "Transparence",
+          "description": "Nous fournissons des données et analyses fiables et vérifiables."
+        }
+      },
+      "cta": {
+        "title": "Rejoignez le mouvement",
+        "subtitle": "Ensemble, accélérons la transition énergétique des flottes.",
+        "start": "Créer mon compte",
+        "contact": "Nous contacter"
+      }
+    },
+    "contact": {
+      "title": "Contact",
+      "badge": "Parlons-en",
+      "hero": {
+        "title": "Contactez notre équipe",
+        "subtitle": "Une question sur nos solutions ? Besoin d'une démonstration personnalisée ? Notre équipe est là pour vous aider."
+      },
+      "info": {
+        "title": "Informations de contact",
+        "email": {
+          "title": "Email"
+        },
+        "phone": {
+          "title": "Téléphone"
+        },
+        "address": {
+          "title": "Adresse",
+          "value": "123 Rue de l'Innovation\n75001 Paris, France"
+        },
+        "hours": {
+          "title": "Horaires d'ouverture",
+          "weekdays": "Lundi - Vendredi : 9h00 - 18h00",
+          "weekend": "Weekend : Fermé"
+        }
+      },
+      "form": {
+        "title": "Envoyez-nous un message",
+        "subtitle": "Nous vous répondrons dans les 24-48h.",
+        "fields": {
+          "name": "Nom complet",
+          "email": "Email professionnel",
+          "company": "Entreprise",
+          "fleetSize": "Taille de flotte",
+          "subject": "Sujet",
+          "message": "Votre message"
+        },
+        "placeholders": {
+          "name": "Jean Dupont",
+          "email": "jean@entreprise.com",
+          "company": "Nom de votre entreprise",
+          "fleetSize": "Sélectionnez une taille",
+          "subject": "Sélectionnez un sujet",
+          "message": "Décrivez votre projet ou posez vos questions..."
+        },
+        "subjects": {
+          "demo": "Demande de démonstration",
+          "pricing": "Question sur les tarifs",
+          "support": "Support technique",
+          "partnership": "Partenariat",
+          "other": "Autre"
+        },
+        "submit": "Envoyer le message",
+        "submitting": "Envoi en cours...",
+        "success": {
+          "title": "Message envoyé !",
+          "message": "Notre équipe vous contactera dans les 24-48h."
+        }
+      }
     }
   },
   "landing": {
@@ -268,7 +651,7 @@
       "and": "et",
       "subtitle": "Simulez, comparez et optimisez vos scénarios de transition. TCO, CAPEX/OPEX, émissions CO₂ et infrastructure – tout en un seul outil.",
       "cta": {
-      "start": "Demander une démo",
+        "start": "Demander une démo",
         "demo": "Visite guidée"
       },
       "benefits": {
@@ -340,22 +723,38 @@
         "step1": {
           "title": "Modélisez votre flotte",
           "description": "Créez votre projet et définissez vos groupes de véhicules actuels : camions, bus, utilitaires. Renseignez kilométrage, consommation et coûts.",
-          "features": ["Import CSV disponible", "Profils véhicules pré-configurés", "Calculs automatiques"]
+          "features": [
+            "Import CSV disponible",
+            "Profils véhicules pré-configurés",
+            "Calculs automatiques"
+          ]
         },
         "step2": {
           "title": "Créez vos scénarios",
           "description": "Définissez différents scénarios de transition : tout électrique, tout H₂, ou mix. Configurez les paramètres par groupe de véhicules.",
-          "features": ["Comparaison multi-scénarios", "Paramètres personnalisables", "Données de référence incluses"]
+          "features": [
+            "Comparaison multi-scénarios",
+            "Paramètres personnalisables",
+            "Données de référence incluses"
+          ]
         },
         "step3": {
           "title": "Analysez les résultats",
           "description": "Visualisez TCO, CAPEX/OPEX, émissions CO₂ et besoins infrastructure. Comparez les scénarios côte à côte sur des graphiques interactifs.",
-          "features": ["Tableaux de bord visuels", "Graphiques interactifs", "Indicateurs clés"]
+          "features": [
+            "Tableaux de bord visuels",
+            "Graphiques interactifs",
+            "Indicateurs clés"
+          ]
         },
         "step4": {
           "title": "Planifiez et exportez",
           "description": "Découpez votre transition en phases, lissez vos investissements et exportez vos rapports pour présenter à vos décideurs.",
-          "features": ["Planning par phases", "Export PDF & Excel", "Rapports professionnels"]
+          "features": [
+            "Planning par phases",
+            "Export PDF & Excel",
+            "Rapports professionnels"
+          ]
         }
       }
     },
@@ -1056,7 +1455,14 @@
       "title": "Bienvenue sur H2Fleet !",
       "subtitle": "Je vais vous guider en 4 étapes pour créer votre premier projet",
       "startGuide": "Commencer le guide",
-      "skipGuide": "Passer - Explorer seul"
+      "skipGuide": "Passer - Explorer seul",
+      "calculateTCO": "Calculez votre TCO",
+      "calculateTCODesc": "Comparez les coûts totaux de possession",
+      "reduceEmissions": "Réduisez vos émissions",
+      "reduceEmissionsDesc": "Mesurez l'impact environnemental",
+      "exportReports": "Exportez vos rapports",
+      "exportReportsDesc": "Générez des analyses détaillées",
+      "skipExplore": "Passer - Explorer seul"
     },
     "steps": {
       "current": "Étape {{current}} sur {{total}}"
@@ -1125,7 +1531,14 @@
         "type": "Type",
         "distance": "Distance/jour",
         "charging": "Recharge"
-      }
+      },
+      "subtitle": "Génération automatique de 2 scénarios: \"Diesel actuel\" et \"{{powertrain}}\"",
+      "bevLabel": "Électrique BEV",
+      "fcevLabel": "Hydrogène FCEV",
+      "mixLabel": "Mix BEV/FCEV",
+      "changeTemplate": "Changer de template",
+      "createFirstProject": "Créer votre premier projet",
+      "createFirstProjectDesc": "Configurez les paramètres de base pour démarrer."
     },
     "results": {
       "title": "Vos résultats instantanés",
@@ -1133,16 +1546,58 @@
       "tcoDiesel": "TCO Diesel (10 ans)",
       "tcoElectric": "TCO Électrique (10 ans)",
       "savings": "Économies estimées",
-      "co2Avoided": "CO₂ évités sur 10 ans",
+      "co2Avoided": "CO₂ évité sur 10 ans",
       "tons": "tonnes",
       "message": "Vous pouvez maintenant modifier les paramètres ou exporter le rapport",
       "modifyProject": "Modifier mon projet",
       "createScenario": "Créer nouveau scénario",
-      "exportPdf": "Exporter PDF"
+      "exportPdf": "Exporter PDF",
+      "estimatedSavings": "Économies estimées",
+      "tonnes": "tonnes",
+      "editNote": "Vous pouvez maintenant modifier les paramètres ou exporter le rapport",
+      "editProject": "Modifier mon projet",
+      "newScenario": "Créer nouveau scénario",
+      "exportPdfDesc": "Fonctionnalité disponible dans le détail du projet."
     },
     "toast": {
       "success": "Projet créé avec succès !",
       "description": "Vous pouvez maintenant explorer et modifier votre projet."
+    },
+    "profile": {
+      "title": "Parlez-nous de votre flotte",
+      "subtitle": "Optionnel — cela nous aide à adapter H2Fleet à votre organisation. Vous pourrez compléter plus tard.",
+      "save": "Enregistrer",
+      "later": "Plus tard",
+      "saved": "Profil enregistré"
+    },
+    "stepOf": "Étape {{step}} sur {{total}}",
+    "templates": {
+      "title": "Choisissez un template pour démarrer rapidement",
+      "subtitle": "Sélectionnez un scénario pré-configuré adapté à votre activité",
+      "urbanDelivery": "Livraison urbaine",
+      "urbanDeliveryDesc": "40 VUL, 100km/jour, recharge nuit",
+      "regionalTransport": "Transport régional",
+      "regionalTransportDesc": "25 camions 19T, 250km/jour, mix BEV/H₂",
+      "urbanBus": "Bus urbains",
+      "urbanBusDesc": "15 bus 12m, 180km/jour, recharge dépôt",
+      "startFromScratch": "Partir de zéro",
+      "startFromScratchDesc": "Configurez tous les paramètres manuellement",
+      "vehicles": "véhicules",
+      "kmPerDay": "km/jour",
+      "back": "Retour",
+      "createEmptyProject": "Créer un projet vide",
+      "useTemplate": "Utiliser ce template",
+      "vehicleType": "Type",
+      "dailyDistance": "Distance/jour",
+      "charging": "Recharge",
+      "nightCharging": "Recharge nocturne au dépôt",
+      "mixCharging": "Mix recharge dépôt + stations H₂",
+      "depotCharging": "Recharge au dépôt (nuit + opportunité)",
+      "custom": "Personnalisé",
+      "tbd": "À définir",
+      "vul35t": "VUL 3.5T",
+      "porteur19t": "Porteur 19T",
+      "bus12m": "Bus 12m"
     }
   },
   "motorization": {
@@ -1415,85 +1870,9 @@
       }
     }
   },
-  "onboarding": {
-    "profile": {
-      "title": "Parlez-nous de votre flotte",
-      "subtitle": "Optionnel — cela nous aide à adapter H2Fleet à votre organisation. Vous pourrez compléter plus tard.",
-      "save": "Enregistrer",
-      "later": "Plus tard",
-      "saved": "Profil enregistré"
-    },
-    "stepOf": "Étape {{step}} sur {{total}}",
-    "welcome": {
-      "title": "Bienvenue sur H2Fleet !",
-      "subtitle": "Je vais vous guider en 4 étapes pour créer votre premier projet",
-      "calculateTCO": "Calculez votre TCO",
-      "calculateTCODesc": "Comparez les coûts totaux de possession",
-      "reduceEmissions": "Réduisez vos émissions",
-      "reduceEmissionsDesc": "Mesurez l'impact environnemental",
-      "exportReports": "Exportez vos rapports",
-      "exportReportsDesc": "Générez des analyses détaillées",
-      "startGuide": "Commencer le guide",
-      "skipExplore": "Passer - Explorer seul"
-    },
-    "templates": {
-      "title": "Choisissez un template pour démarrer rapidement",
-      "subtitle": "Sélectionnez un scénario pré-configuré adapté à votre activité",
-      "urbanDelivery": "Livraison urbaine",
-      "urbanDeliveryDesc": "40 VUL, 100km/jour, recharge nuit",
-      "regionalTransport": "Transport régional",
-      "regionalTransportDesc": "25 camions 19T, 250km/jour, mix BEV/H₂",
-      "urbanBus": "Bus urbains",
-      "urbanBusDesc": "15 bus 12m, 180km/jour, recharge dépôt",
-      "startFromScratch": "Partir de zéro",
-      "startFromScratchDesc": "Configurez tous les paramètres manuellement",
-      "vehicles": "véhicules",
-      "kmPerDay": "km/jour",
-      "back": "Retour",
-      "createEmptyProject": "Créer un projet vide",
-      "useTemplate": "Utiliser ce template",
-      "vehicleType": "Type",
-      "dailyDistance": "Distance/jour",
-      "charging": "Recharge",
-      "nightCharging": "Recharge nocturne au dépôt",
-      "mixCharging": "Mix recharge dépôt + stations H₂",
-      "depotCharging": "Recharge au dépôt (nuit + opportunité)",
-      "custom": "Personnalisé",
-      "tbd": "À définir",
-      "vul35t": "VUL 3.5T",
-      "porteur19t": "Porteur 19T",
-      "bus12m": "Bus 12m"
-    },
-    "creation": {
-      "title": "Création de votre projet",
-      "subtitle": "Génération automatique de 2 scénarios: \"Diesel actuel\" et \"{{powertrain}}\"",
-      "bevLabel": "Électrique BEV",
-      "fcevLabel": "Hydrogène FCEV",
-      "mixLabel": "Mix BEV/FCEV",
-      "changeTemplate": "Changer de template",
-      "createProject": "Créer le projet",
-      "creating": "Création en cours...",
-      "createFirstProject": "Créer votre premier projet",
-      "createFirstProjectDesc": "Configurez les paramètres de base pour démarrer."
-    },
-    "results": {
-      "title": "Vos résultats instantanés",
-      "subtitle": "Projection sur 10 ans pour votre flotte de {{count}} véhicules",
-      "tcoDiesel": "TCO Diesel (10 ans)",
-      "tcoElectric": "TCO Électrique (10 ans)",
-      "estimatedSavings": "Économies estimées",
-      "co2Avoided": "CO₂ évité sur 10 ans",
-      "tonnes": "tonnes",
-      "editNote": "Vous pouvez maintenant modifier les paramètres ou exporter le rapport",
-      "editProject": "Modifier mon projet",
-      "newScenario": "Créer nouveau scénario",
-      "exportPdf": "Exporter PDF",
-      "exportPdfDesc": "Fonctionnalité disponible dans le détail du projet."
-    }
-  },
   "settings": {
     "currencies": {
-      "cad": "Dollar canadien (CAD)",
+      "cad": "CAD — Dollar canadien",
       "eur": "Euro (€)",
       "usd": "Dollar US ($)",
       "gbp": "Livre (£)",
@@ -1507,7 +1886,12 @@
       "qc": "Québec",
       "on": "Ontario",
       "ab": "Alberta",
-      "bc": "Colombie-Britannique"
+      "bc": "Colombie-Britannique",
+      "ca_qc": "Québec",
+      "ca_on": "Ontario",
+      "ca_bc": "Colombie-Britannique",
+      "ca_ab": "Alberta",
+      "ca": "Canada (moyenne)"
     }
   },
   "projects": {
@@ -1552,6 +1936,269 @@
         "fast": "DC Rapide (50-150 kW)",
         "ultra": "Ultra-rapide (350+ kW)"
       }
+    },
+    "title": "Planification d'Infrastructure",
+    "subtitle": "Planifiez vos stations H₂ et votre infrastructure de recharge",
+    "emptyState": {
+      "noData": "Entrez les données de flotte dans le calculateur ci-dessous pour voir les KPIs d'infrastructure"
+    },
+    "pricing": {
+      "title": "Source des coûts",
+      "description": "Choisissez l'origine des coûts unitaires pour le calcul",
+      "reference": "Données de référence",
+      "default": "Par défaut",
+      "custom": "Coûts personnalisés",
+      "customDesc": "Entrez vos propres coûts unitaires",
+      "project": "Importer d'un projet",
+      "projectDesc": "Récupérer les coûts d'un projet existant",
+      "h2Station": "Station H₂:",
+      "evChargerFast": "Chargeur rapide:",
+      "gridConnection": "Connexion réseau:",
+      "h2Costs": "Coûts stations hydrogène",
+      "stationCost": "Coût station ($/unité)",
+      "landPermits": "Terrain & permis ($/unité)",
+      "evCosts": "Coûts chargeurs électriques",
+      "chargerSlow": "Lent 7kW",
+      "chargerFast": "Rapide 50kW",
+      "chargerUltra": "Ultra 150kW",
+      "gridConnectionCost": "Connexion réseau ($/unité)",
+      "save": "Sauvegarder",
+      "reset": "Réinitialiser",
+      "selectProject": "Sélectionner un projet",
+      "hasPricing": "Coûts personnalisés",
+      "noProjects": "Aucun projet disponible",
+      "customApplied": "Les coûts personnalisés seront utilisés pour tous les calculs. N'oubliez pas de sauvegarder.",
+      "referenceApplied": "Les coûts de référence 2024-2025 (moyenne canadienne) sont appliqués.",
+      "unitCost": "Coût unitaire"
+    },
+    "save": "Sauvegarder",
+    "calculations": "Calculs",
+    "costBreakdown": "Détail des Coûts",
+    "total10Year": "Coût Total sur 10 Ans",
+    "requestQuote": "Demander un Devis",
+    "h2": {
+      "title": "Besoins en Stations H₂",
+      "description": "Planifiez l'infrastructure de ravitaillement hydrogène pour votre flotte",
+      "fleetSize": "Taille de flotte H₂",
+      "dailyConsumption": "H₂ quotidien par véhicule (kg)",
+      "refuelingFreq": "Fréquence ravitaillement/jour",
+      "stationCapacity": "Capacité station (kg/jour)",
+      "operatingHours": "Heures d'exploitation/jour",
+      "stationsRequired": "Stations Requises",
+      "totalCapacity": "Capacité Totale Nécessaire",
+      "peakDemand": "Demande de Pointe",
+      "storageRecommended": "Stockage Recommandé",
+      "capexPerStation": "CAPEX par station",
+      "landPermits": "Terrain & permis",
+      "totalCapex": "CAPEX H₂ Total",
+      "annualOpex": "OPEX Annuel",
+      "providers": "Fournisseurs de Stations H₂",
+      "stations": "Stations H₂",
+      "stationsLower": "stations H₂"
+    },
+    "ev": {
+      "title": "Infrastructure de Recharge Électrique",
+      "description": "Planifiez l'infrastructure de recharge pour votre flotte électrique",
+      "fleetSize": "Taille de flotte VE",
+      "batteryCapacity": "Capacité batterie moy. (kWh)",
+      "dailyCharging": "Besoin recharge quotidien (kWh)",
+      "chargingSpeed": "Vitesse de recharge",
+      "chargingHours": "Heures de recharge disponibles",
+      "chargersRequired": "Bornes Requises",
+      "totalPower": "Puissance Totale",
+      "chargeTime": "Temps de Charge/Véhicule",
+      "gridUpgrade": "Mise à Niveau Réseau",
+      "required": "Requise",
+      "notRequired": "Non Requise",
+      "capexPerCharger": "CAPEX par borne (incl. install.)",
+      "gridUpgradeCost": "Coût mise à niveau réseau",
+      "totalCapex": "CAPEX VE Total",
+      "annualOpex": "OPEX Annuel",
+      "providers": "Fournisseurs de Bornes",
+      "chargers": "Bornes VE",
+      "chargersLower": "bornes",
+      "speeds": {
+        "slow": "Lente",
+        "fast": "Rapide",
+        "ultra": "Ultra-rapide"
+      }
+    },
+    "summary": {
+      "title": "Investissement Infrastructure Total",
+      "description": "Investissement combiné pour l'infrastructure H₂ et VE",
+      "totalCapex": "CAPEX Total",
+      "totalOpex10y": "OPEX Total (10 ans)",
+      "costPerVehicle": "Coût par Véhicule",
+      "total10Year": "Investissement Total 10 Ans",
+      "recommendedPhasing": "Phasage Recommandé"
+    },
+    "charts": {
+      "costBreakdown": "Répartition des Coûts par Type",
+      "phasing": "Calendrier de Déploiement Recommandé"
+    },
+    "phasing": {
+      "year1": "Année 1",
+      "year2": "Année 2",
+      "year3": "Année 3"
+    },
+    "export": {
+      "pdf": "Télécharger le Plan",
+      "pdfTitle": "Export PDF",
+      "pdfDesc": "Export du plan d'infrastructure bientôt disponible"
+    },
+    "toast": {
+      "scenarioLoaded": "Scénario chargé",
+      "scenarioLoadedDesc": "Les données du plan existant ont été restaurées",
+      "saved": "Infrastructure appliquée !",
+      "savedDesc": "Les coûts ont été ajoutés au scénario.",
+      "savedDescWithRecalc": "Les coûts ont été ajoutés au scénario et le TCO a été recalculé.",
+      "error": "Erreur",
+      "errorDesc": "Impossible de sauvegarder le plan",
+      "loginRequired": "Connectez-vous pour sauvegarder"
+    },
+    "scenarioSource": {
+      "title": "Source des données de flotte",
+      "description": "Connectez un scénario TCO pour éviter la double saisie",
+      "noScenarios": "Aucun scénario TCO trouvé",
+      "createFirst": "Créez d'abord un scénario pour connecter l'infrastructure",
+      "createScenario": "Créer un scénario",
+      "selectPlaceholder": "Sélectionner un scénario...",
+      "manualEntry": "Saisie manuelle (sans scénario)",
+      "linked": "Lié",
+      "lastUpdated": "Mis à jour"
+    },
+    "actions": {
+      "applyToScenario": "Appliquer à un scénario",
+      "applyToSelected": "Appliquer au scénario sélectionné",
+      "updateScenario": "Mettre à jour le scénario"
+    },
+    "modal": {
+      "title": "Appliquer à un scénario",
+      "description": "Les coûts d'infrastructure seront ajoutés au scénario et le TCO sera recalculé automatiquement.",
+      "selectScenario": "Sélectionner le scénario",
+      "choosePlaceholder": "Choisir un scénario..."
+    },
+    "telematicsConnected": "Télématique connectée",
+    "tabs": {
+      "calculator": "Calculateur",
+      "map": "Carte",
+      "feasibility": "Faisabilité",
+      "grid": "Réseau",
+      "scenarios": "Scénarios",
+      "providers": "Fournisseurs"
+    },
+    "map": {
+      "title": "Carte Interactive",
+      "description": "Visualisez votre flotte et les besoins en infrastructure",
+      "noToken": "Clé Mapbox requise pour afficher la carte",
+      "vehicles": "Véhicules",
+      "heatmap": "Heat Map",
+      "stations": "Stations",
+      "evCharger": "Borne EV",
+      "h2Station": "Station H₂",
+      "recommendations": "Recommandations de placement"
+    },
+    "feasibility": {
+      "title": "Validation Faisabilité",
+      "description": "Vérification capacité infrastructure en temps réel",
+      "sufficient": "Capacité suffisante",
+      "attention": "Attention requise",
+      "evChargers": "Bornes EV",
+      "h2Stations": "Stations H₂",
+      "avgWait": "Attente moy.",
+      "peakHours": "Heures pointe",
+      "simulation": "Simulation Journalière",
+      "simulationDesc": "Utilisation et files d'attente sur 24h",
+      "evUtil": "Utilisation EV %",
+      "h2Util": "Utilisation H₂ %",
+      "waitTime": "Temps attente (min)",
+      "alerts": "Alertes & Recommandations"
+    },
+    "grid": {
+      "title": "Gestion Capacité Réseau",
+      "description": "Optimisation demande électrique et intégration renouvelable",
+      "upgradeRequired": "Mise à niveau requise",
+      "dailyDemand": "Demande quotidienne",
+      "peakDemand": "Puissance crête",
+      "renewable": "Renouvelable",
+      "v2gPotential": "Potentiel V2G",
+      "smartCharging": "Recharge Intelligente",
+      "enableSmartCharging": "Éviter heures de pointe",
+      "enableV2G": "Vehicle-to-Grid (V2G)",
+      "renewableTarget": "Objectif renouvelable",
+      "potentialSavings": "Économies potentielles",
+      "daily": "Quotidien",
+      "annual": "Annuel",
+      "loadProfile": "Profil de charge",
+      "standard": "Standard",
+      "optimized": "Optimisé",
+      "pricing": "Tarification horaire",
+      "upgradeNeeded": "Mise à niveau réseau nécessaire",
+      "upgradeDesc": "La puissance demandée dépasse la capacité standard. Coût estimé:"
+    },
+    "scenarios": {
+      "title": "Scénarios de Déploiement",
+      "description": "Comparez différentes stratégies de déploiement",
+      "rapid": "Déploiement Rapide",
+      "progressive": "Déploiement Progressif",
+      "conservative": "Déploiement Conservateur",
+      "duration": "Durée",
+      "evYear1": "EV An 1",
+      "h2Year1": "H₂ An 1",
+      "totalCapex": "CAPEX Total",
+      "timeline": "Calendrier de déploiement",
+      "evChargers": "Bornes EV",
+      "h2Stations": "Stations H₂",
+      "whatIf": "Simulation What-If",
+      "additionalVehicles": "Véhicules supplémentaires",
+      "additionalEv": "Bornes EV add.",
+      "additionalH2": "Stations H₂ add.",
+      "additionalCapex": "CAPEX add."
+    },
+    "kpis": {
+      "title": "KPIs Infrastructure",
+      "uptime": "Uptime",
+      "evUtil": "Utilisation EV",
+      "h2Util": "Utilisation H₂",
+      "costPerCharge": "Coût/charge",
+      "evChargers": "Bornes EV",
+      "h2Stations": "Stations H₂",
+      "costPerVehicle": "Coût/Véhicule",
+      "maintenance": "Maintenance",
+      "totalCapex": "CAPEX Total",
+      "annualOpex": "OPEX Annuel",
+      "evNeeded": "Bornes EV",
+      "h2Needed": "Stations H₂",
+      "priorityZones": "Zones Prioritaires",
+      "current": "Actuel",
+      "fromTelematics": "Depuis télématique",
+      "totalPower": "total",
+      "stationsRequired": "Stations requises",
+      "totalInvestment": "Investissement total",
+      "utilization": "Utilisation",
+      "viewAllKPIs": "Voir tous les KPIs"
+    },
+    "telematicsIntegration": {
+      "realData": "Données Réelles",
+      "showRealFleet": "Afficher Flotte Réelle",
+      "usingRealData": "Utilisation des données télématiques réelles",
+      "usingEstimates": "Utilisation des données estimées",
+      "vehicleCount": "{{count}} véhicules connectés"
+    },
+    "realDataBadge": "Basé sur Données Réelles",
+    "dataSource": {
+      "fromScenario": "Depuis scénario",
+      "viewSource": "Voir source",
+      "calculatedFrom": "Calculé à partir des paramètres",
+      "h2StationsFormula": "Coût par station plus terrain et permis",
+      "evChargersFormula": "Coût par borne incluant l'installation",
+      "gridUpgradeNote": "Coût de mise à niveau réseau saisi par l'utilisateur"
+    },
+    "recommendedLocations": {
+      "title": "Emplacements Recommandés",
+      "fromTelematics": "Depuis Télématique",
+      "vehicles": "véhicules",
+      "noData": "Connectez la télématique pour voir les recommandations"
     }
   },
   "common": {
@@ -1722,7 +2369,8 @@
         "subtitle": "Paramètres régionaux et d'affichage",
         "language": "Langue",
         "defaultCurrency": "Devise par défaut",
-        "defaultRegion": "Région par défaut"
+        "defaultRegion": "Région par défaut",
+        "adminOnly": "Seul un administrateur de l'organisation peut modifier la devise et la région."
       },
       "notifications": {
         "title": "Notifications",
@@ -1755,12 +2403,37 @@
       "effectiveDate": "Date d'entrée en vigueur",
       "lastUpdated": "Dernière mise à jour",
       "sections": {
+        "collect": {
+          "title": "1. Renseignements que nous recueillons",
+          "provided": {
+            "title": "1.1 Renseignements que vous fournissez",
+            "intro": "Lorsque vous créez un compte et utilisez notre Service, vous pouvez fournir :",
+            "items": [
+              "Renseignements de compte : nom, adresse courriel, nom de l'organisation, fonction",
+              "Renseignements sur l'organisation : taille de la flotte, types de véhicules, régions d'exploitation",
+              "Renseignements de facturation : adresse de facturation (les données de carte de paiement sont traitées par Stripe et ne sont pas conservées par nous)",
+              "Données de projet : composition de la flotte, paramètres de scénarios, intrants d'analyse",
+              "Communications : demandes de soutien, commentaires et correspondance avec nous"
+            ]
+          },
+          "automatic": {
+            "title": "1.2 Renseignements recueillis automatiquement",
+            "intro": "Lorsque vous accédez à notre Service, nous recueillons automatiquement :",
+            "items": [
+              "Données d'utilisation : fonctionnalités utilisées, actions effectuées, temps passé sur les pages",
+              "Renseignements sur l'appareil : type de navigateur, système d'exploitation, identifiants de l'appareil",
+              "Données de journal : adresse IP, heures d'accès, pages consultées, URL de provenance",
+              "Données analytiques : tendances d'utilisation agrégées et mesures de performance"
+            ]
+          },
+          "thirdParty": {
+            "title": "1.3 Renseignements provenant de tiers",
+            "content": "Nous pouvons recevoir des renseignements de services tiers que vous connectez à votre compte, comme les fournisseurs d'authentification unique. Nous ne recueillons que les renseignements nécessaires à la prestation du Service."
+          }
+        },
         "introduction": {
           "p1": "H2Fleet Technologies Inc. (\"H2Fleet\", \"nous\", \"notre\") s'engage à protéger votre vie privée. Cette Politique de Confidentialité explique comment nous collectons, utilisons, divulguons et protégeons vos informations lorsque vous utilisez notre plateforme et services H2Fleet Planner (le \"Service\").",
           "p2": "En tant qu'entreprise canadienne, nous respectons la Loi sur la protection des renseignements personnels et les documents électroniques (LPRPDE). Pour les utilisateurs de l'Espace économique européen, nous intégrons également des considérations conformes au Règlement général sur la protection des données (RGPD)."
-        },
-        "collect": {
-          "title": "1. Informations que Nous Collectons"
         },
         "use": {
           "title": "2. Comment Nous Utilisons Vos Informations"
@@ -1962,252 +2635,6 @@
       "subtitle": "Créez votre premier projet gratuitement et découvrez le potentiel de votre transition.",
       "startFree": "Essayer gratuitement",
       "viewPricing": "Voir les tarifs"
-    }
-  },
-  "pages_marketing": {
-    "features": {
-      "title": "Fonctionnalités",
-      "badge": "Plateforme complète",
-      "hero": {
-        "title": "Tous les outils pour réussir votre transition",
-        "subtitle": "H2Fleet Planner vous accompagne de l'analyse initiale à la mise en œuvre de votre stratégie de transition énergétique.",
-        "cta": {
-          "start": "Démarrer gratuitement",
-          "demo": "Voir une démo"
-        }
-      },
-      "mainFeatures": {
-        "title": "Fonctionnalités principales",
-        "subtitle": "Des outils puissants pour analyser, comparer et planifier votre transition vers les véhicules propres.",
-        "tcoCalculator": {
-          "title": "Calculateur TCO",
-          "description": "Analysez le coût total de possession de vos véhicules sur leur durée de vie complète.",
-          "details": ["Comparaison diesel vs électrique vs hydrogène", "CAPEX, OPEX et valeur résiduelle", "Flux de trésorerie actualisés sur 10-15 ans", "Calcul de la NPV et du payback period"]
-        },
-        "scenarioManagement": {
-          "title": "Gestion de scénarios",
-          "description": "Créez et comparez différents scénarios de transition pour trouver la meilleure stratégie.",
-          "details": ["Comparaison multi-scénarios côte à côte", "Paramètres personnalisables par groupe", "Templates pré-configurés", "Duplication et modification rapide"]
-        },
-        "infrastructure": {
-          "title": "Planification Infrastructure",
-          "description": "Planifiez vos stations H₂ et réseau de recharge EV selon les besoins de votre flotte et contraintes opérationnelles.",
-          "details": ["Analyse capacité réseau", "Planning phases de déploiement", "Évaluation de faisabilité", "Optimisation des coûts par site"]
-        },
-        "roadmap": {
-          "title": "Constructeur de Roadmap",
-          "description": "Découpez votre transition en phases gérables avec diagrammes Gantt visuels et suivi des jalons.",
-          "details": ["Timeline Gantt visuelle", "Gestion des jalons et échéances", "Allocation budget par phase", "Tableau de bord de progression"]
-        },
-        "co2Analysis": {
-          "title": "Analyse CO₂",
-          "description": "Mesurez l'impact environnemental de chaque scénario et suivez vos réductions d'émissions.",
-          "details": ["Calcul des émissions par type de carburant", "Comparaison avec baseline diesel", "Facteurs CO₂ par région", "Suivi des objectifs de réduction"]
-        },
-        "reports": {
-          "title": "Rapports professionnels",
-          "description": "Générez des rapports détaillés pour vos présentations et prises de décision.",
-          "details": ["Export PDF haute qualité", "Export Excel avec données brutes", "Graphiques et tableaux personnalisables", "Résumés exécutifs automatiques"]
-        }
-      },
-      "additionalFeatures": {
-        "title": "Et bien plus encore",
-        "subtitle": "Une suite complète d'outils pour gérer tous les aspects de votre transition.",
-        "telematics": {
-          "title": "Intégration Télématique",
-          "description": "Connectez Geotab ou Samsara pour importer vos données réelles et générer automatiquement des scénarios optimisés."
-        },
-        "subsidies": {
-          "title": "Subventions & Financement",
-          "description": "Accédez aux programmes fédéraux et provinciaux canadiens. Calculez éligibilité et préparez vos dossiers."
-        },
-        "analytics": {
-          "title": "Analytique Avancée",
-          "description": "Suivez ROI, période de retour et analyses de sensibilité avec projections financières détaillées."
-        },
-        "assistant": {
-          "title": "Assistant IA",
-          "description": "Obtenez des conseils contextuels et réponses de notre assistant intelligent formé sur les meilleures pratiques."
-        },
-        "tasks": {
-          "title": "Gestion des Tâches",
-          "description": "Tableau Kanban pour suivre les tâches de transition, jalons et collaboration d'équipe avec commentaires."
-        },
-        "multiRegion": {
-          "title": "Multi-régions",
-          "description": "Données de référence adaptées à votre pays : prix énergies, facteurs CO₂, réglementations."
-        }
-      },
-      "benefits": {
-        "title": "Pourquoi choisir H2Fleet ?",
-        "subtitle": "Des bénéfices concrets pour votre organisation.",
-        "costReduction": {
-          "title": "Réduction des coûts",
-          "description": "Identifiez les opportunités d'économies et optimisez vos investissements."
-        },
-        "riskMitigation": {
-          "title": "Maîtrise des risques",
-          "description": "Anticipez les évolutions du marché et sécurisez vos décisions."
-        },
-        "sustainability": {
-          "title": "Durabilité",
-          "description": "Atteignez vos objectifs environnementaux et réglementaires."
-        }
-      },
-      "cta": {
-        "title": "Prêt à transformer votre flotte ?",
-        "subtitle": "Commencez votre analyse dès aujourd'hui et découvrez le potentiel de votre transition.",
-        "start": "Créer mon compte gratuit",
-        "pricing": "Voir les tarifs"
-      }
-    },
-    "pricing": {
-      "title": "Tarifs",
-      "comparison": {
-        "title": "Comparaison détaillée",
-        "subtitle": "Tous les plans incluent les mêmes fonctionnalités de base. La tarification évolue avec la taille de votre flotte.",
-        "feature": "Fonctionnalité",
-        "features": [
-          { "name": "Prix par véhicule", "small": "24$/mois", "medium": "19$/mois", "large": "14$/mois" },
-          { "name": "Taille de flotte", "small": "10-49", "medium": "50-199", "large": "200+" },
-          { "name": "Projets", "small": "Illimité", "medium": "Illimité", "large": "Illimité" },
-          { "name": "Scénarios", "small": "Illimité", "medium": "Illimité", "large": "Illimité" },
-          { "name": "Analyse TCO", "small": "✓", "medium": "✓", "large": "✓" },
-          { "name": "Suivi CO₂", "small": "✓", "medium": "✓", "large": "✓" },
-          { "name": "Export PDF & Excel", "small": "✓", "medium": "✓", "large": "✓" },
-          { "name": "Accès API", "small": "—", "medium": "✓", "large": "✓" },
-          { "name": "Support prioritaire", "small": "—", "medium": "✓", "large": "✓" },
-          { "name": "SSO/SAML", "small": "—", "medium": "—", "large": "✓" },
-          { "name": "Manager dédié", "small": "—", "medium": "—", "large": "✓" }
-        ]
-      },
-      "faq": {
-        "title": "Questions fréquentes",
-        "subtitle": "Tout ce que vous devez savoir sur nos tarifs."
-      },
-      "faqs": [
-        { "question": "Y a-t-il un essai gratuit ?", "answer": "Oui ! Tous les plans incluent un essai gratuit de 14 jours. Aucune carte de crédit requise pour commencer." },
-        { "question": "Comment ma taille de flotte est-elle calculée ?", "answer": "La taille de flotte est basée sur le nombre de véhicules actifs dans votre compte. Vous pouvez ajouter ou retirer des véhicules à tout moment." },
-        { "question": "Puis-je changer de plan au fur et à mesure que ma flotte grandit ?", "answer": "Absolument. Vous pouvez passer à un plan supérieur ou inférieur à tout moment. La facturation s'ajuste automatiquement en fonction de votre taille de flotte actuelle." },
-        { "question": "Quels moyens de paiement acceptez-vous ?", "answer": "Nous acceptons toutes les principales cartes de crédit (Visa, Mastercard, American Express) et les virements bancaires ACH pour les plans annuels." },
-        { "question": "La facturation annuelle est-elle disponible ?", "answer": "Oui, la facturation annuelle est disponible avec 2 mois offerts (payez 10 mois, obtenez 12)." },
-        { "question": "Quel support est inclus ?", "answer": "Tous les plans incluent le support par email. Les plans Flotte Moyenne et Grande incluent un support prioritaire avec des temps de réponse plus rapides." }
-      ],
-      "cta": {
-        "title": "Prêt à commencer ?",
-        "subtitle": "Rejoignez les entreprises qui planifient efficacement leur transition énergétique de flotte.",
-        "start": "Démarrer l'essai gratuit",
-        "contact": "Contacter les ventes"
-      }
-    },
-    "about": {
-      "title": "À propos",
-      "badge": "Notre histoire",
-      "hero": {
-        "title": "Accélérer la transition énergétique des flottes",
-        "subtitle": "Nous aidons les gestionnaires de flottes à prendre des décisions éclairées pour leur transition vers les véhicules propres."
-      },
-      "mission": {
-        "title": "Notre mission",
-        "description1": "H2Fleet Planner est né d'un constat simple : la transition énergétique des flottes de véhicules est complexe et les outils existants ne sont pas adaptés aux besoins des gestionnaires de flottes.",
-        "description2": "Notre mission est de démocratiser l'accès aux analyses TCO et de permettre à chaque entreprise de planifier sereinement sa transition vers les véhicules électriques et hydrogène."
-      },
-      "vision": {
-        "title": "Notre vision",
-        "description1": "Nous envisageons un monde où chaque flotte de véhicules peut facilement évaluer et planifier sa transition énergétique, contribuant ainsi à la réduction des émissions de CO₂ du transport.",
-        "description2": "D'ici 2030, nous voulons avoir accompagné la transition de plus d'un million de véhicules vers des motorisations propres."
-      },
-      "stats": {
-        "founded": "Année de création",
-        "clients": "Clients actifs",
-        "vehicles": "Véhicules analysés",
-        "countries": "Pays couverts"
-      },
-      "values": {
-        "title": "Nos valeurs",
-        "subtitle": "Les principes qui guident notre travail au quotidien.",
-        "sustainability": {
-          "title": "Durabilité",
-          "description": "Nous contribuons activement à la réduction des émissions du transport."
-        },
-        "innovation": {
-          "title": "Innovation",
-          "description": "Nous développons des outils à la pointe de la technologie."
-        },
-        "collaboration": {
-          "title": "Collaboration",
-          "description": "Nous travaillons en partenariat avec nos clients et l'écosystème."
-        },
-        "transparency": {
-          "title": "Transparence",
-          "description": "Nous fournissons des données et analyses fiables et vérifiables."
-        }
-      },
-      "cta": {
-        "title": "Rejoignez le mouvement",
-        "subtitle": "Ensemble, accélérons la transition énergétique des flottes.",
-        "start": "Créer mon compte",
-        "contact": "Nous contacter"
-      }
-    },
-    "contact": {
-      "title": "Contact",
-      "badge": "Parlons-en",
-      "hero": {
-        "title": "Contactez notre équipe",
-        "subtitle": "Une question sur nos solutions ? Besoin d'une démonstration personnalisée ? Notre équipe est là pour vous aider."
-      },
-      "info": {
-        "title": "Informations de contact",
-        "email": {
-          "title": "Email"
-        },
-        "phone": {
-          "title": "Téléphone"
-        },
-        "address": {
-          "title": "Adresse",
-          "value": "123 Rue de l'Innovation\n75001 Paris, France"
-        },
-        "hours": {
-          "title": "Horaires d'ouverture",
-          "weekdays": "Lundi - Vendredi : 9h00 - 18h00",
-          "weekend": "Weekend : Fermé"
-        }
-      },
-      "form": {
-        "title": "Envoyez-nous un message",
-        "subtitle": "Nous vous répondrons dans les 24-48h.",
-        "fields": {
-          "name": "Nom complet",
-          "email": "Email professionnel",
-          "company": "Entreprise",
-          "fleetSize": "Taille de flotte",
-          "subject": "Sujet",
-          "message": "Votre message"
-        },
-        "placeholders": {
-          "name": "Jean Dupont",
-          "email": "jean@entreprise.com",
-          "company": "Nom de votre entreprise",
-          "fleetSize": "Sélectionnez une taille",
-          "subject": "Sélectionnez un sujet",
-          "message": "Décrivez votre projet ou posez vos questions..."
-        },
-        "subjects": {
-          "demo": "Demande de démonstration",
-          "pricing": "Question sur les tarifs",
-          "support": "Support technique",
-          "partnership": "Partenariat",
-          "other": "Autre"
-        },
-        "submit": "Envoyer le message",
-        "submitting": "Envoi en cours...",
-        "success": {
-          "title": "Message envoyé !",
-          "message": "Notre équipe vous contactera dans les 24-48h."
-        }
-      }
     }
   },
   "apiKeys": {
@@ -2860,274 +3287,6 @@
       }
     }
   },
-"infrastructure": {
-    "title": "Planification d'Infrastructure",
-    "subtitle": "Planifiez vos stations H₂ et votre infrastructure de recharge",
-    "emptyState": {
-      "noData": "Entrez les données de flotte dans le calculateur ci-dessous pour voir les KPIs d'infrastructure"
-    },
-    "pricing": {
-      "title": "Source des coûts",
-      "description": "Choisissez l'origine des coûts unitaires pour le calcul",
-      "reference": "Données de référence",
-      "default": "Par défaut",
-      "custom": "Coûts personnalisés",
-      "customDesc": "Entrez vos propres coûts unitaires",
-      "project": "Importer d'un projet",
-      "projectDesc": "Récupérer les coûts d'un projet existant",
-      "h2Station": "Station H₂:",
-      "evChargerFast": "Chargeur rapide:",
-      "gridConnection": "Connexion réseau:",
-      "h2Costs": "Coûts stations hydrogène",
-      "stationCost": "Coût station ($/unité)",
-      "landPermits": "Terrain & permis ($/unité)",
-      "evCosts": "Coûts chargeurs électriques",
-      "chargerSlow": "Lent 7kW",
-      "chargerFast": "Rapide 50kW",
-      "chargerUltra": "Ultra 150kW",
-      "gridConnectionCost": "Connexion réseau ($/unité)",
-      "save": "Sauvegarder",
-      "reset": "Réinitialiser",
-      "selectProject": "Sélectionner un projet",
-      "hasPricing": "Coûts personnalisés",
-      "noProjects": "Aucun projet disponible",
-      "customApplied": "Les coûts personnalisés seront utilisés pour tous les calculs. N'oubliez pas de sauvegarder.",
-      "referenceApplied": "Les coûts de référence 2024-2025 (moyenne canadienne) sont appliqués.",
-      "unitCost": "Coût unitaire"
-    },
-    "save": "Sauvegarder",
-    "calculations": "Calculs",
-    "costBreakdown": "Détail des Coûts",
-    "total10Year": "Coût Total sur 10 Ans",
-    "requestQuote": "Demander un Devis",
-    "h2": {
-      "title": "Besoins en Stations H₂",
-      "description": "Planifiez l'infrastructure de ravitaillement hydrogène pour votre flotte",
-      "fleetSize": "Taille de flotte H₂",
-      "dailyConsumption": "H₂ quotidien par véhicule (kg)",
-      "refuelingFreq": "Fréquence ravitaillement/jour",
-      "stationCapacity": "Capacité station (kg/jour)",
-      "operatingHours": "Heures d'exploitation/jour",
-      "stationsRequired": "Stations Requises",
-      "totalCapacity": "Capacité Totale Nécessaire",
-      "peakDemand": "Demande de Pointe",
-      "storageRecommended": "Stockage Recommandé",
-      "capexPerStation": "CAPEX par station",
-      "landPermits": "Terrain & permis",
-      "totalCapex": "CAPEX H₂ Total",
-      "annualOpex": "OPEX Annuel",
-      "providers": "Fournisseurs de Stations H₂",
-      "stations": "Stations H₂",
-      "stationsLower": "stations H₂"
-    },
-    "ev": {
-      "title": "Infrastructure de Recharge Électrique",
-      "description": "Planifiez l'infrastructure de recharge pour votre flotte électrique",
-      "fleetSize": "Taille de flotte VE",
-      "batteryCapacity": "Capacité batterie moy. (kWh)",
-      "dailyCharging": "Besoin recharge quotidien (kWh)",
-      "chargingSpeed": "Vitesse de recharge",
-      "chargingHours": "Heures de recharge disponibles",
-      "chargersRequired": "Bornes Requises",
-      "totalPower": "Puissance Totale",
-      "chargeTime": "Temps de Charge/Véhicule",
-      "gridUpgrade": "Mise à Niveau Réseau",
-      "required": "Requise",
-      "notRequired": "Non Requise",
-      "capexPerCharger": "CAPEX par borne (incl. install.)",
-      "gridUpgradeCost": "Coût mise à niveau réseau",
-      "totalCapex": "CAPEX VE Total",
-      "annualOpex": "OPEX Annuel",
-      "providers": "Fournisseurs de Bornes",
-      "chargers": "Bornes VE",
-      "chargersLower": "bornes",
-      "speeds": {
-        "slow": "Lente",
-        "fast": "Rapide",
-        "ultra": "Ultra-rapide"
-      }
-    },
-    "summary": {
-      "title": "Investissement Infrastructure Total",
-      "description": "Investissement combiné pour l'infrastructure H₂ et VE",
-      "totalCapex": "CAPEX Total",
-      "totalOpex10y": "OPEX Total (10 ans)",
-      "costPerVehicle": "Coût par Véhicule",
-      "total10Year": "Investissement Total 10 Ans",
-      "recommendedPhasing": "Phasage Recommandé"
-    },
-    "charts": {
-      "costBreakdown": "Répartition des Coûts par Type",
-      "phasing": "Calendrier de Déploiement Recommandé"
-    },
-    "phasing": {
-      "year1": "Année 1",
-      "year2": "Année 2",
-      "year3": "Année 3"
-    },
-    "export": {
-      "pdf": "Télécharger le Plan",
-      "pdfTitle": "Export PDF",
-      "pdfDesc": "Export du plan d'infrastructure bientôt disponible"
-    },
-    "toast": {
-      "scenarioLoaded": "Scénario chargé",
-      "scenarioLoadedDesc": "Les données du plan existant ont été restaurées",
-      "saved": "Infrastructure appliquée !",
-      "savedDesc": "Les coûts ont été ajoutés au scénario.",
-      "savedDescWithRecalc": "Les coûts ont été ajoutés au scénario et le TCO a été recalculé.",
-      "error": "Erreur",
-      "errorDesc": "Impossible de sauvegarder le plan",
-      "loginRequired": "Connectez-vous pour sauvegarder"
-    },
-    "scenarioSource": {
-      "title": "Source des données de flotte",
-      "description": "Connectez un scénario TCO pour éviter la double saisie",
-      "noScenarios": "Aucun scénario TCO trouvé",
-      "createFirst": "Créez d'abord un scénario pour connecter l'infrastructure",
-      "createScenario": "Créer un scénario",
-      "selectPlaceholder": "Sélectionner un scénario...",
-      "manualEntry": "Saisie manuelle (sans scénario)",
-      "linked": "Lié",
-      "lastUpdated": "Mis à jour"
-    },
-    "actions": {
-      "applyToScenario": "Appliquer à un scénario",
-      "applyToSelected": "Appliquer au scénario sélectionné",
-      "updateScenario": "Mettre à jour le scénario"
-    },
-    "modal": {
-      "title": "Appliquer à un scénario",
-      "description": "Les coûts d'infrastructure seront ajoutés au scénario et le TCO sera recalculé automatiquement.",
-      "selectScenario": "Sélectionner le scénario",
-      "choosePlaceholder": "Choisir un scénario..."
-    },
-    "telematicsConnected": "Télématique connectée",
-    "tabs": {
-      "calculator": "Calculateur",
-      "map": "Carte",
-      "feasibility": "Faisabilité",
-      "grid": "Réseau",
-      "scenarios": "Scénarios",
-      "providers": "Fournisseurs"
-    },
-    "map": {
-      "title": "Carte Interactive",
-      "description": "Visualisez votre flotte et les besoins en infrastructure",
-      "noToken": "Clé Mapbox requise pour afficher la carte",
-      "vehicles": "Véhicules",
-      "heatmap": "Heat Map",
-      "stations": "Stations",
-      "evCharger": "Borne EV",
-      "h2Station": "Station H₂",
-      "recommendations": "Recommandations de placement"
-    },
-    "feasibility": {
-      "title": "Validation Faisabilité",
-      "description": "Vérification capacité infrastructure en temps réel",
-      "sufficient": "Capacité suffisante",
-      "attention": "Attention requise",
-      "evChargers": "Bornes EV",
-      "h2Stations": "Stations H₂",
-      "avgWait": "Attente moy.",
-      "peakHours": "Heures pointe",
-      "simulation": "Simulation Journalière",
-      "simulationDesc": "Utilisation et files d'attente sur 24h",
-      "evUtil": "Utilisation EV %",
-      "h2Util": "Utilisation H₂ %",
-      "waitTime": "Temps attente (min)",
-      "alerts": "Alertes & Recommandations"
-    },
-    "grid": {
-      "title": "Gestion Capacité Réseau",
-      "description": "Optimisation demande électrique et intégration renouvelable",
-      "upgradeRequired": "Mise à niveau requise",
-      "dailyDemand": "Demande quotidienne",
-      "peakDemand": "Puissance crête",
-      "renewable": "Renouvelable",
-      "v2gPotential": "Potentiel V2G",
-      "smartCharging": "Recharge Intelligente",
-      "enableSmartCharging": "Éviter heures de pointe",
-      "enableV2G": "Vehicle-to-Grid (V2G)",
-      "renewableTarget": "Objectif renouvelable",
-      "potentialSavings": "Économies potentielles",
-      "daily": "Quotidien",
-      "annual": "Annuel",
-      "loadProfile": "Profil de charge",
-      "standard": "Standard",
-      "optimized": "Optimisé",
-      "pricing": "Tarification horaire",
-      "upgradeNeeded": "Mise à niveau réseau nécessaire",
-      "upgradeDesc": "La puissance demandée dépasse la capacité standard. Coût estimé:"
-    },
-    "scenarios": {
-      "title": "Scénarios de Déploiement",
-      "description": "Comparez différentes stratégies de déploiement",
-      "rapid": "Déploiement Rapide",
-      "progressive": "Déploiement Progressif",
-      "conservative": "Déploiement Conservateur",
-      "duration": "Durée",
-      "evYear1": "EV An 1",
-      "h2Year1": "H₂ An 1",
-      "totalCapex": "CAPEX Total",
-      "timeline": "Calendrier de déploiement",
-      "evChargers": "Bornes EV",
-      "h2Stations": "Stations H₂",
-      "whatIf": "Simulation What-If",
-      "additionalVehicles": "Véhicules supplémentaires",
-      "additionalEv": "Bornes EV add.",
-      "additionalH2": "Stations H₂ add.",
-      "additionalCapex": "CAPEX add."
-    },
-    "kpis": {
-      "title": "KPIs Infrastructure",
-      "uptime": "Uptime",
-      "evUtil": "Utilisation EV",
-      "h2Util": "Utilisation H₂",
-      "costPerCharge": "Coût/charge",
-      "evChargers": "Bornes EV",
-      "h2Stations": "Stations H₂",
-      "costPerVehicle": "Coût/Véhicule",
-      "maintenance": "Maintenance",
-      "totalCapex": "CAPEX Total",
-      "annualOpex": "OPEX Annuel",
-      "evNeeded": "Bornes EV",
-      "h2Needed": "Stations H₂",
-      "priorityZones": "Zones Prioritaires",
-      "current": "Actuel",
-      "fromTelematics": "Depuis télématique",
-      "totalPower": "total",
-      "stationsRequired": "Stations requises",
-      "totalInvestment": "Investissement total",
-      "utilization": "Utilisation",
-      "viewAllKPIs": "Voir tous les KPIs"
-    },
-    "emptyState": {
-      "noData": "Entrez les données de flotte dans le calculateur ci-dessous pour voir les KPIs d'infrastructure"
-    },
-    "telematicsIntegration": {
-      "realData": "Données Réelles",
-      "showRealFleet": "Afficher Flotte Réelle",
-      "usingRealData": "Utilisation des données télématiques réelles",
-      "usingEstimates": "Utilisation des données estimées",
-      "vehicleCount": "{{count}} véhicules connectés"
-    },
-    "realDataBadge": "Basé sur Données Réelles",
-    "dataSource": {
-      "fromScenario": "Depuis scénario",
-      "viewSource": "Voir source",
-      "calculatedFrom": "Calculé à partir des paramètres",
-      "h2StationsFormula": "Coût par station plus terrain et permis",
-      "evChargersFormula": "Coût par borne incluant l'installation",
-      "gridUpgradeNote": "Coût de mise à niveau réseau saisi par l'utilisateur"
-    },
-    "recommendedLocations": {
-      "title": "Emplacements Recommandés",
-      "fromTelematics": "Depuis Télématique",
-      "vehicles": "véhicules",
-      "noData": "Connectez la télématique pour voir les recommandations"
-    }
-  },
   "pages_telematics": {
     "tryDemo": "Essayer la Démo avec une Flotte Exemple",
     "demoBanner": "Vous visualisez des données de démonstration. Connectez un fournisseur télématique pour voir votre flotte réelle.",
@@ -3371,7 +3530,8 @@
     },
     "export": {
       "pdfSuccess": "PDF exporté avec succès",
-      "excelSuccess": "Excel exporté avec succès"
+      "excelSuccess": "Excel exporté avec succès",
+      "noData": "Aucune donnée à exporter"
     },
     "investment": {
       "title": "Répartition des investissements",
@@ -3413,11 +3573,6 @@
     "noScenarios": "Aucune donnée de scénario disponible. Créez des scénarios de transition à comparer.",
     "noInfrastructureData": "Aucun plan d'infrastructure créé. Planifiez votre infrastructure de recharge et H₂.",
     "noSensitivity": "L'analyse de sensibilité nécessite des données de scénario avec des calculs TCO.",
-    "export": {
-      "pdfSuccess": "PDF exporté avec succès",
-      "excelSuccess": "Excel exporté avec succès",
-      "noData": "Aucune donnée à exporter"
-    },
     "infrastructure": {
       "title": "Économie Infrastructure",
       "description": "Métriques financières de l'infrastructure",
