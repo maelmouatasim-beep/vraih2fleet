@@ -5552,6 +5552,47 @@
         "placeholder": "Le suivi réalisé/prévu et les tâches intégrées (liées au véhicule, à l'année et à la subvention) arrivent à la Phase 3."
       }
     },
-    "open": "Parcours du projet"
+    "open": "Parcours du projet",
+    "fleet": {
+      "addButton": "Ajouter des véhicules",
+      "tableTitle": "Véhicules inclus dans ce projet",
+      "suggestedNote": "Année suggérée à l'ajout = mise en service + durée de vie de la catégorie (estimation du moteur TCO, modifiable).",
+      "stats": {
+        "included": "Véhicules au projet",
+        "zeroEmissionTarget": "Cible zéro émission",
+        "noTarget": "Technologie à choisir",
+        "noYear": "Sans année de remplacement"
+      },
+      "columns": {
+        "replacementYear": "Année de remplacement",
+        "target": "Technologie cible"
+      },
+      "targets": {
+        "diesel": "Diesel (statu quo)",
+        "bev": "Électrique (BEV)",
+        "fcev": "Hydrogène (FCEV)"
+      },
+      "chooseTarget": "À choisir",
+      "remove": "Retirer",
+      "empty": {
+        "title": "Aucun véhicule dans ce projet",
+        "subtitle": "Ajoutez des véhicules depuis votre inventaire « Ma flotte » pour démarrer le plan."
+      },
+      "emptyInventory": {
+        "title": "Votre inventaire « Ma flotte » est vide",
+        "subtitle": "Commencez par saisir ou importer vos véhicules réels, puis revenez les sélectionner ici."
+      },
+      "dialog": {
+        "title": "Ajouter des véhicules au projet",
+        "subtitle": "Sélectionnez les véhicules de votre inventaire « Ma flotte » à inclure dans ce projet.",
+        "selectAll": "Tout sélectionner",
+        "empty": "Tous les véhicules de votre inventaire sont déjà inclus dans ce projet.",
+        "confirm": "Ajouter {{count}} véhicule(s)"
+      },
+      "toast": {
+        "removed": "Véhicule retiré du projet (il reste dans Ma flotte)",
+        "added": "{{count}} véhicule(s) ajouté(s) au projet"
+      }
+    }
   }
 }

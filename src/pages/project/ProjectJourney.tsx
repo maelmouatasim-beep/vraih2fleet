@@ -5,6 +5,7 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getProjectById } from "@/lib/supabase/projects";
+import FleetStep from "@/components/journey/FleetStep";
 import { cn } from "@/lib/utils";
 import {
   ArrowLeft,
@@ -47,9 +48,9 @@ interface ProjectJourneyProps {
 }
 
 /**
- * Coquille du parcours (Phase 2f) : navigation, barre de progression et
- * renvois vers les outils existants. Le contenu réel de chaque étape
- * arrive en Phase 3, bloc par bloc, branché sur le moteur src/lib/tco.
+ * Parcours projet : navigation, barre de progression et contenu des
+ * étapes. Le contenu réel arrive en Phase 3, bloc par bloc, branché sur
+ * le moteur src/lib/tco ; les étapes non livrées gardent leur coquille.
  */
 export default function ProjectJourney({ etape }: ProjectJourneyProps) {
   const { t } = useTranslation();
@@ -65,7 +66,6 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
   const base = `/dashboard/projects/${projectId}`;
 
   const ctaParEtape: Partial<Record<EtapeParcours, { href: string; libelle: string }[]>> = {
-    flotte: [{ href: "/dashboard/fleet", libelle: t("journey.cta.openFleet") }],
     strategies: [
       { href: `${base}/scenarios/new-flexible`, libelle: t("journey.cta.newScenario") },
       { href: `${base}/compare`, libelle: t("journey.cta.compare") },
@@ -138,36 +138,44 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
           </ol>
         </div>
 
-        {/* Contenu de l'étape (coquille Phase 2f) */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              {(() => {
-                const Icone = ICONES[etape];
-                return <Icone className="w-5 h-5" />;
-              })()}
-              {t(`journey.steps.${etape}.title`)}
-            </CardTitle>
-            <CardDescription>{t(`journey.steps.${etape}.description`)}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground">{t(`journey.steps.${etape}.placeholder`)}</p>
-            <div className="flex flex-wrap gap-2">
-              {(ctaParEtape[etape] ?? []).map((cta) => (
-                <Button key={cta.href} variant="outline" asChild>
-                  <Link to={cta.href}>{cta.libelle}</Link>
-                </Button>
-              ))}
-              {indexEtape < ETAPES_PARCOURS.length - 1 && (
-                <Button asChild>
-                  <Link to={`${base}/${ETAPES_PARCOURS[indexEtape + 1]}`}>
-                    {t("journey.nextStep")} <ArrowRight className="w-4 h-4 ml-2" />
-                  </Link>
-                </Button>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+        {/* Contenu de l'étape (Phase 3, bloc par bloc) */}
+        {etape === "flotte" && projectId ? (
+          <FleetStep projectId={projectId} />
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                {(() => {
+                  const Icone = ICONES[etape];
+                  return <Icone className="w-5 h-5" />;
+                })()}
+                {t(`journey.steps.${etape}.title`)}
+              </CardTitle>
+              <CardDescription>{t(`journey.steps.${etape}.description`)}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground">{t(`journey.steps.${etape}.placeholder`)}</p>
+              <div className="flex flex-wrap gap-2">
+                {(ctaParEtape[etape] ?? []).map((cta) => (
+                  <Button key={cta.href} variant="outline" asChild>
+                    <Link to={cta.href}>{cta.libelle}</Link>
+                  </Button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Navigation vers l'étape suivante */}
+        {indexEtape < ETAPES_PARCOURS.length - 1 && (
+          <div className="flex justify-end">
+            <Button asChild>
+              <Link to={`${base}/${ETAPES_PARCOURS[indexEtape + 1]}`}>
+                {t("journey.nextStep")} <ArrowRight className="w-4 h-4 ml-2" />
+              </Link>
+            </Button>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );

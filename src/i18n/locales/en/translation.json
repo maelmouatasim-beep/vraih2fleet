@@ -5552,6 +5552,47 @@
         "placeholder": "Actual-vs-planned tracking and integrated tasks (linked to vehicle, year and subsidy) arrive in Phase 3."
       }
     },
-    "open": "Project journey"
+    "open": "Project journey",
+    "fleet": {
+      "addButton": "Add vehicles",
+      "tableTitle": "Vehicles included in this project",
+      "suggestedNote": "Suggested year at add time = in-service year + category service life (TCO engine estimate, editable).",
+      "stats": {
+        "included": "Vehicles in project",
+        "zeroEmissionTarget": "Zero-emission target",
+        "noTarget": "Technology to choose",
+        "noYear": "No replacement year"
+      },
+      "columns": {
+        "replacementYear": "Replacement year",
+        "target": "Target technology"
+      },
+      "targets": {
+        "diesel": "Diesel (status quo)",
+        "bev": "Electric (BEV)",
+        "fcev": "Hydrogen (FCEV)"
+      },
+      "chooseTarget": "To choose",
+      "remove": "Remove",
+      "empty": {
+        "title": "No vehicles in this project",
+        "subtitle": "Add vehicles from your “My fleet” inventory to start the plan."
+      },
+      "emptyInventory": {
+        "title": "Your “My fleet” inventory is empty",
+        "subtitle": "Start by entering or importing your real vehicles, then come back to select them here."
+      },
+      "dialog": {
+        "title": "Add vehicles to the project",
+        "subtitle": "Select the vehicles from your “My fleet” inventory to include in this project.",
+        "selectAll": "Select all",
+        "empty": "All vehicles in your inventory are already included in this project.",
+        "confirm": "Add {{count}} vehicle(s)"
+      },
+      "toast": {
+        "removed": "Vehicle removed from the project (it stays in My fleet)",
+        "added": "{{count}} vehicle(s) added to the project"
+      }
+    }
   }
 }
