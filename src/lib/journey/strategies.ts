@@ -255,6 +255,47 @@ export function construireStrategie(
   };
 }
 
+export type CibleVehicule = "diesel" | "bev" | "fcev";
+
+export interface ChangementCible {
+  vehiculeId: string;
+  cibleActuelle: CibleVehicule | null;
+  cibleNouvelle: CibleVehicule;
+}
+
+/**
+ * C3 — « Appliquer cette stratégie au plan » : liste PURE des
+ * technologies cibles que la stratégie donnerait à chaque véhicule du
+ * projet, limitée aux véhicules qui CHANGENT. Les véhicules de
+ * catégorie inconnue (« autre ») et ceux dont le remplacement tombe
+ * après l'horizon ne sont jamais modifiés (ils sont exclus du calcul
+ * de la stratégie elle-même).
+ */
+export function changementsStrategie(
+  vehicules: VehiculeProjet[],
+  cle: CleStrategie,
+  options: OptionsParametres,
+): ChangementCible[] {
+  const changements: ChangementCible[] = [];
+  for (const v of vehicules) {
+    const { defauts } = analyserDonneesVehicule(v);
+    if (!defauts) continue;
+    if (
+      v.replacement_year != null &&
+      Math.max(v.replacement_year - options.anneeReference, 0) >= options.horizonAns
+    ) {
+      continue;
+    }
+    const techno = technoCible(cle, v, options);
+    const nouvelle: CibleVehicule = techno === "BEV" ? "bev" : techno === "FCEV" ? "fcev" : "diesel";
+    const actuelle = (v.target_technology ?? null) as CibleVehicule | null;
+    if (actuelle !== nouvelle) {
+      changements.push({ vehiculeId: v.id, cibleActuelle: actuelle, cibleNouvelle: nouvelle });
+    }
+  }
+  return changements;
+}
+
 export function construireStrategies(
   vehicules: VehiculeProjet[],
   options: OptionsParametres,

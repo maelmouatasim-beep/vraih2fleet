@@ -5733,7 +5733,21 @@
         "vanRange": "Savings (NPV) at the assumption's bounds",
         "note": "Central savings: {{van}}. Each bar shows the savings recomputed by the engine as the assumption moves from its low to its high bound (registry ranges)."
       },
-      "outOfHorizon": "{{count}} vehicle(s) scheduled for replacement after the analysis horizon — excluded from every total and from financing: {{liste}}."
+      "outOfHorizon": "{{count}} vehicle(s) scheduled for replacement after the analysis horizon — excluded from every total and from financing: {{liste}}.",
+      "apply": {
+        "title": "Apply “{{strategy}}” to the plan",
+        "pending": "{{count}} vehicle(s) would change target technology.",
+        "noChange": "No target change: the plan already matches this strategy.",
+        "noChangeDetail": "No target changes; the strategy will simply be recorded as the project’s retained strategy.",
+        "current": "Current retained strategy: {{strategy}} (applied on {{date}}).",
+        "button": "Apply this strategy to the plan",
+        "dialogTitle": "Apply “{{strategy}}”?",
+        "dialogSubtitle": "The target technologies below will be updated in the Fleet step and the Plan. Replacement years are unchanged.",
+        "none": "none",
+        "confirm": "Apply ({{count}} change(s))",
+        "done": "Strategy applied to the plan — {{count}} target(s) updated",
+        "retained": "Retained strategy"
+      }
     },
     "plan": {
       "empty": {

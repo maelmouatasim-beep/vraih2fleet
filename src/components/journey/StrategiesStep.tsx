@@ -7,17 +7,32 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { toast } from "@/hooks/use-toast";
 import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useConfirmedSubsidies } from "@/hooks/useConfirmedSubsidies";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
-import { construireStrategies, type CleStrategie } from "@/lib/journey/strategies";
+import {
+  changementsStrategie,
+  construireStrategies,
+  type CleStrategie,
+  type VehiculeProjet,
+} from "@/lib/journey/strategies";
 import { formateurCad } from "@/lib/format";
-import type { ProjectDTO } from "@/lib/supabase/projects";
+import { setProjectStrategy, type ProjectDTO } from "@/lib/supabase/projects";
 import { cn } from "@/lib/utils";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, ClipboardCheck, Loader2 } from "lucide-react";
 import StressTestPanel from "./StressTestPanel";
 
 interface StrategiesStepProps {
@@ -28,24 +43,60 @@ interface StrategiesStepProps {
 export default function StrategiesStep({ projectId, project }: StrategiesStepProps) {
   const { t, i18n } = useTranslation();
   const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
-  const { projectVehicles, isLoading } = useProjectVehicles(projectId);
+  const { projectVehicles, isLoading, modifier } = useProjectVehicles(projectId);
   const { confirmeesParVehicule } = useConfirmedSubsidies(projectId);
+  const queryClient = useQueryClient();
   const [selection, setSelection] = useState<CleStrategie>("plan_actuel");
+  const [applicationOuverte, setApplicationOuverte] = useState(false);
+  const [applicationEnCours, setApplicationEnCours] = useState(false);
 
   const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
 
-  const strategies = useMemo(() => {
-    if (!options || projectVehicles.length === 0) return null;
-    return construireStrategies(
+  const vehiculesProjet = useMemo(
+    (): VehiculeProjet[] =>
       projectVehicles.map((pv) => ({
         ...pv.vehicles,
         replacement_year: pv.replacement_year,
         target_technology: pv.target_technology,
         subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
       })),
-      options,
-    );
-  }, [options, projectVehicles, confirmeesParVehicule]);
+    [projectVehicles, confirmeesParVehicule],
+  );
+
+  const strategies = useMemo(() => {
+    if (!options || vehiculesProjet.length === 0) return null;
+    return construireStrategies(vehiculesProjet, options);
+  }, [options, vehiculesProjet]);
+
+  // C3 : détail des cibles que la stratégie sélectionnée changerait
+  const changements = useMemo(() => {
+    if (!options || vehiculesProjet.length === 0) return [];
+    return changementsStrategie(vehiculesProjet, selection, options);
+  }, [options, vehiculesProjet, selection]);
+
+  const uniteDe = useMemo(() => {
+    const parId = new Map(projectVehicles.map((pv) => [pv.vehicle_id, pv]));
+    return (vehiculeId: string) => parId.get(vehiculeId);
+  }, [projectVehicles]);
+
+  const appliquerAuPlan = async () => {
+    setApplicationEnCours(true);
+    try {
+      for (const c of changements) {
+        const pv = uniteDe(c.vehiculeId);
+        if (!pv) continue;
+        await modifier.mutateAsync({ id: pv.id, patch: { target_technology: c.cibleNouvelle } });
+      }
+      await setProjectStrategy(projectId, selection);
+      await queryClient.invalidateQueries({ queryKey: ["project", projectId] });
+      toast({ title: t("journey.strategies.apply.done", { count: changements.length }) });
+      setApplicationOuverte(false);
+    } catch (e) {
+      toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
+    } finally {
+      setApplicationEnCours(false);
+    }
+  };
 
   if (orgLoading || isLoading || (projectVehicles.length > 0 && !strategies)) {
     return (
@@ -114,6 +165,12 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
                   <p className="text-xs text-muted-foreground mt-0.5">
                     {t(`journey.strategies.options.${s.cle}.description`)}
                   </p>
+                  {project?.selectedStrategy === s.cle && (
+                    <Badge className="mt-1.5" variant="default">
+                      <ClipboardCheck className="w-3 h-3 mr-1" />
+                      {t("journey.strategies.apply.retained")}
+                    </Badge>
+                  )}
                 </div>
                 {active && <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />}
               </div>
@@ -156,6 +213,36 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
         })}
       </div>
 
+      {/* C3 — appliquer la stratégie sélectionnée au plan (project_vehicles) */}
+      <Card>
+        <CardContent className="flex flex-wrap items-center justify-between gap-3 py-4">
+          <div className="text-sm">
+            <p className="font-medium">
+              {t("journey.strategies.apply.title", {
+                strategy: t(`journey.strategies.options.${selectionnee.cle}.title`),
+              })}
+            </p>
+            <p className="text-muted-foreground">
+              {changements.length > 0
+                ? t("journey.strategies.apply.pending", { count: changements.length })
+                : t("journey.strategies.apply.noChange")}
+            </p>
+            {project?.selectedStrategy && project.strategyAppliedAt && (
+              <p className="text-xs text-muted-foreground mt-1">
+                {t("journey.strategies.apply.current", {
+                  strategy: t(`journey.strategies.options.${project.selectedStrategy}.title`),
+                  date: new Date(project.strategyAppliedAt).toLocaleDateString(i18n.language === "en" ? "en-CA" : "fr-CA"),
+                })}
+              </p>
+            )}
+          </div>
+          <Button onClick={() => setApplicationOuverte(true)} disabled={!selectionnee.resultat}>
+            <ClipboardCheck className="w-4 h-4 mr-2" />
+            {t("journey.strategies.apply.button")}
+          </Button>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle className="text-base">{t("journey.strategies.methodTitle")}</CardTitle>
@@ -191,6 +278,54 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
       </Card>
 
       {selectionnee.plan && <StressTestPanel plan={selectionnee.plan} />}
+
+      {/* Confirmation avec le DÉTAIL des changements avant écriture */}
+      <Dialog open={applicationOuverte} onOpenChange={(o) => !applicationEnCours && setApplicationOuverte(o)}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>
+              {t("journey.strategies.apply.dialogTitle", {
+                strategy: t(`journey.strategies.options.${selection}.title`),
+              })}
+            </DialogTitle>
+            <DialogDescription>{t("journey.strategies.apply.dialogSubtitle")}</DialogDescription>
+          </DialogHeader>
+          <div className="py-2 text-sm space-y-2">
+            {changements.length === 0 ? (
+              <p className="text-muted-foreground">{t("journey.strategies.apply.noChangeDetail")}</p>
+            ) : (
+              <div className="max-h-64 overflow-y-auto rounded-md border border-border divide-y divide-border">
+                {changements.map((c) => {
+                  const pv = uniteDe(c.vehiculeId);
+                  return (
+                    <div key={c.vehiculeId} className="flex items-center justify-between px-3 py-2">
+                      <span className="font-medium">{pv?.vehicles.unit_number ?? "?"}</span>
+                      <span className="text-muted-foreground">
+                        {c.cibleActuelle
+                          ? t(`journey.fleet.targets.${c.cibleActuelle}`)
+                          : t("journey.strategies.apply.none")}
+                        {" → "}
+                        <span className="text-foreground font-medium">
+                          {t(`journey.fleet.targets.${c.cibleNouvelle}`)}
+                        </span>
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setApplicationOuverte(false)} disabled={applicationEnCours}>
+              {t("common.cancel")}
+            </Button>
+            <Button onClick={() => void appliquerAuPlan()} disabled={applicationEnCours}>
+              {applicationEnCours ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+              {t("journey.strategies.apply.confirm", { count: changements.length })}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

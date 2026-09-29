@@ -15,6 +15,9 @@ export interface ProjectDTO {
   updatedAt: string;
   userId: string | null;
   organizationId: string | null;
+  /** Stratégie retenue à l'étape 3 (C3), null tant qu'aucune n'est appliquée. */
+  selectedStrategy: string | null;
+  strategyAppliedAt: string | null;
 }
 
 export interface CreateProjectInput {
@@ -39,7 +42,18 @@ function rowToProject(row: ProjectRow): ProjectDTO {
     updatedAt: row.updated_at,
     userId: row.user_id,
     organizationId: row.organization_id,
+    selectedStrategy: row.selected_strategy,
+    strategyAppliedAt: row.strategy_applied_at,
   };
+}
+
+/** Enregistre la stratégie retenue (C3) et la date d'application au plan. */
+export async function setProjectStrategy(projectId: string, strategy: string): Promise<void> {
+  const { error } = await supabase
+    .from("projects")
+    .update({ selected_strategy: strategy, strategy_applied_at: new Date().toISOString() })
+    .eq("id", projectId);
+  if (error) throw error;
 }
 
 // La visibilité est entièrement portée par la RLS (propriétaire,

@@ -926,6 +926,8 @@ export type Database = {
           id: string
           name: string
           organization_id: string | null
+          selected_strategy: string | null
+          strategy_applied_at: string | null
           updated_at: string
           user_id: string | null
         }
@@ -939,6 +941,8 @@ export type Database = {
           id?: string
           name: string
           organization_id?: string | null
+          selected_strategy?: string | null
+          strategy_applied_at?: string | null
           updated_at?: string
           user_id?: string | null
         }
@@ -952,6 +956,8 @@ export type Database = {
           id?: string
           name?: string
           organization_id?: string | null
+          selected_strategy?: string | null
+          strategy_applied_at?: string | null
           updated_at?: string
           user_id?: string | null
         }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { HYPOTHESES } from "@/lib/tco";
-import { construireStrategie, construireStrategies, type VehiculeProjet } from "../strategies";
+import { changementsStrategie, construireStrategie, construireStrategies, type VehiculeProjet } from "../strategies";
 
 const OPTIONS = {
   anneeReference: 2026,
@@ -192,5 +192,59 @@ describe("construireStrategie", () => {
     const s = construireStrategie([vehicule({ category: "autre" })], "plan_actuel", OPTIONS);
     expect(s.resultat).toBeNull();
     expect(s.nbVehicules).toBe(0);
+  });
+});
+
+describe("changementsStrategie (C3 — appliquer la stratégie au plan)", () => {
+  it("tout_electrique : les cibles non-BEV deviennent BEV, les BEV existants ne changent pas", () => {
+    const changements = changementsStrategie(
+      [
+        vehicule({ id: "a", target_technology: "bev" }),
+        vehicule({ id: "b", target_technology: null }),
+        vehicule({ id: "c", target_technology: "fcev" }),
+      ],
+      "tout_electrique",
+      OPTIONS,
+    );
+    expect(changements.map((c) => c.vehiculeId).sort()).toEqual(["b", "c"]);
+    for (const c of changements) expect(c.cibleNouvelle).toBe("bev");
+    expect(changements.find((c) => c.vehiculeId === "b")!.cibleActuelle).toBeNull();
+  });
+
+  it("plan_actuel : une cible absente devient explicitement « diesel » (statu quo enregistré)", () => {
+    const changements = changementsStrategie(
+      [vehicule({ id: "a", target_technology: null })],
+      "plan_actuel",
+      OPTIONS,
+    );
+    expect(changements).toEqual([
+      { vehiculeId: "a", cibleActuelle: null, cibleNouvelle: "diesel" },
+    ]);
+  });
+
+  it("ne touche JAMAIS les véhicules de catégorie inconnue ni ceux hors horizon", () => {
+    const changements = changementsStrategie(
+      [
+        vehicule({ id: "autre", category: "autre", target_technology: null }),
+        vehicule({ id: "tard", replacement_year: 2045, target_technology: null }),
+        vehicule({ id: "ok", target_technology: null }),
+      ],
+      "tout_electrique",
+      OPTIONS,
+    );
+    expect(changements.map((c) => c.vehiculeId)).toEqual(["ok"]);
+  });
+
+  it("economies_d_abord suit le verdict du moteur : la cible proposée reste cohérente avec la stratégie construite", () => {
+    const v = vehicule({ id: "eco", target_technology: null });
+    const changements = changementsStrategie([v], "economies_d_abord", OPTIONS);
+    const s = construireStrategie([v], "economies_d_abord", OPTIONS);
+    const technoPlan = s.plan!.vehicules[0].alternative.technologie;
+    const attendue = technoPlan === "BEV" ? "bev" : technoPlan === "FCEV" ? "fcev" : "diesel";
+    if (attendue === "diesel") {
+      expect(changements).toEqual([{ vehiculeId: "eco", cibleActuelle: null, cibleNouvelle: "diesel" }]);
+    } else {
+      expect(changements[0]?.cibleNouvelle).toBe(attendue);
+    }
   });
 });

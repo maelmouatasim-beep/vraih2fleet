@@ -5733,7 +5733,21 @@
         "vanRange": "Économie (VAN) aux bornes de l'hypothèse",
         "note": "Économie centrale : {{van}}. Chaque barre montre l'économie recalculée par le moteur quand l'hypothèse passe de sa borne basse à sa borne haute (plages du registre)."
       },
-      "outOfHorizon": "{{count}} véhicule(s) dont le remplacement est prévu après l'horizon d'analyse — exclus de tous les totaux et du financement : {{liste}}."
+      "outOfHorizon": "{{count}} véhicule(s) dont le remplacement est prévu après l'horizon d'analyse — exclus de tous les totaux et du financement : {{liste}}.",
+      "apply": {
+        "title": "Appliquer « {{strategy}} » au plan",
+        "pending": "{{count}} véhicule(s) changeraient de technologie cible.",
+        "noChange": "Aucun changement de cible : le plan correspond déjà à cette stratégie.",
+        "noChangeDetail": "Aucune cible ne change ; la stratégie sera simplement enregistrée comme stratégie retenue du projet.",
+        "current": "Stratégie retenue actuelle : {{strategy}} (appliquée le {{date}}).",
+        "button": "Appliquer cette stratégie au plan",
+        "dialogTitle": "Appliquer « {{strategy}} » ?",
+        "dialogSubtitle": "Les technologies cibles ci-dessous seront mises à jour dans l'étape Flotte et le Plan. Les années de remplacement ne changent pas.",
+        "none": "aucune",
+        "confirm": "Appliquer ({{count}} changement(s))",
+        "done": "Stratégie appliquée au plan — {{count}} cible(s) mise(s) à jour",
+        "retained": "Stratégie retenue"
+      }
     },
     "plan": {
       "empty": {
