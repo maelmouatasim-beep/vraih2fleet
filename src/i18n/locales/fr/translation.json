@@ -5782,7 +5782,13 @@
         "item3": "Feuille « Hypothèses » : les 40 hypothèses avec statut, source et date de vérification",
         "download": "Télécharger le .xlsx"
       },
-      "note": "Le rapport porte l'empreinte des entrées et la version du moteur : la même empreinte reproduit exactement les mêmes chiffres. Les hypothèses « à valider » sont affichées comme telles — vérifiez-les avant une présentation officielle."
+      "note": "Le rapport porte l'empreinte des entrées et la version du moteur : la même empreinte reproduit exactement les mêmes chiffres. Les hypothèses « à valider » sont affichées comme telles — vérifiez-les avant une présentation officielle.",
+      "snapshot": {
+        "updatedTitle": "Données mises à jour disponibles",
+        "updatedBody": "Le dernier rapport (généré le {{date}}) a été figé avec une économie (VAN) de {{avant}}. Avec les données actuelles, elle serait de {{apres}}. Le rapport émis ne change JAMAIS : générez un nouveau rapport pour prendre en compte les nouvelles données.",
+        "upToDate": "Dernier rapport figé le {{date}} (moteur {{version}}) — à jour avec les données actuelles.",
+        "saveError": "Le rapport a été téléchargé, mais le snapshot n'a pas pu être enregistré."
+      }
     },
     "tracking": {
       "states": {

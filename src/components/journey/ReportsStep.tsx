@@ -7,8 +7,10 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { pdf } from "@react-pdf/renderer";
 import * as XLSX from "xlsx";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
@@ -16,9 +18,16 @@ import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { construireClasseurPlan, type MetaRapport } from "@/lib/journey/report";
 import { construireStrategie } from "@/lib/journey/strategies";
-import { analyserSensibilite } from "@/lib/tco";
+import { analyserSensibilite, ENGINE_VERSION } from "@/lib/tco";
+import {
+  dernierSnapshotRapport,
+  insererSnapshotRapport,
+  type NouveauSnapshot,
+} from "@/lib/supabase/reportSnapshots";
+import { formateurCad } from "@/lib/format";
+import type { Json } from "@/integrations/supabase/types";
 import type { ProjectDTO } from "@/lib/supabase/projects";
-import { FileSpreadsheet, FileText, Loader2 } from "lucide-react";
+import { FileSpreadsheet, FileText, Info, Loader2 } from "lucide-react";
 import CouncilReportPDF from "./CouncilReportPDF";
 
 interface ReportsStepProps {
@@ -36,7 +45,8 @@ function telecharger(blob: Blob, nom: string) {
 }
 
 export default function ReportsStep({ projectId, project }: ReportsStepProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
   const { options, donneesClient, organization, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading } = useProjectVehicles(projectId);
   const [enCours, setEnCours] = useState<string | null>(null);
@@ -66,6 +76,39 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
     return { strategie, meta, unites };
   }, [options, donneesClient, organization, project, projectVehicles]);
 
+  // Règle A1 : chaque rapport généré FIGE le plan (snapshot immuable).
+  // La bannière compare l'empreinte courante au dernier snapshot.
+  const queryClient = useQueryClient();
+  const { data: dernierSnapshot } = useQuery({
+    queryKey: ["report-snapshot", projectId],
+    queryFn: () => dernierSnapshotRapport(projectId),
+  });
+
+  const figerLeRapport = async (reportKind: NouveauSnapshot["reportKind"]) => {
+    const resultat = donnees!.strategie.resultat!;
+    try {
+      await insererSnapshotRapport({
+        projectId,
+        strategyKey: "plan_actuel",
+        reportKind,
+        engineVersion: ENGINE_VERSION,
+        fingerprint: resultat.empreinteEntree,
+        parameters: {
+          parametres: donnees!.strategie.plan!.parametres,
+          donneesClient: donnees!.meta.donneesClient ?? [],
+        } as unknown as Json,
+        van: resultat.vanDifferentielle,
+        tcoAlt: resultat.alternative.tcoActualise,
+        tcoRef: resultat.reference.tcoActualise,
+      });
+      queryClient.invalidateQueries({ queryKey: ["report-snapshot", projectId] });
+    } catch {
+      // Le rapport est déjà téléchargé : l'échec du snapshot ne doit pas
+      // le faire disparaître — on le signale seulement.
+      toast({ title: t("journey.reports.snapshot.saveError"), variant: "destructive" });
+    }
+  };
+
   const genererPdf = async (langue: "fr" | "en") => {
     if (!donnees) return;
     setEnCours(`pdf-${langue}`);
@@ -81,6 +124,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
         />,
       ).toBlob();
       telecharger(blob, `h2fleet-plan-${donnees.meta.dateIso}-${langue}.pdf`);
+      await figerLeRapport(langue === "fr" ? "pdf_fr" : "pdf_en");
     } catch (e) {
       toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
     } finally {
@@ -88,7 +132,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
     }
   };
 
-  const genererXlsx = () => {
+  const genererXlsx = async () => {
     if (!donnees) return;
     setEnCours("xlsx");
     try {
@@ -98,6 +142,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
         XLSX.utils.book_append_sheet(classeur, XLSX.utils.aoa_to_sheet(f.lignes), f.nom);
       }
       XLSX.writeFile(classeur, `h2fleet-plan-${donnees.meta.dateIso}.xlsx`);
+      await figerLeRapport("xlsx");
     } catch (e) {
       toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
     } finally {
@@ -131,8 +176,33 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
     );
   }
 
+  const resultatCourant = donnees.strategie.resultat!;
+  const donneesMisesAJour =
+    !!dernierSnapshot && dernierSnapshot.fingerprint !== resultatCourant.empreinteEntree;
+
   return (
     <div className="space-y-4">
+      {donneesMisesAJour && (
+        <Alert>
+          <Info className="h-4 w-4" />
+          <AlertTitle>{t("journey.reports.snapshot.updatedTitle")}</AlertTitle>
+          <AlertDescription>
+            {t("journey.reports.snapshot.updatedBody", {
+              date: (dernierSnapshot!.created_at ?? "").slice(0, 10),
+              avant: argent.format(dernierSnapshot!.van ?? 0),
+              apres: argent.format(resultatCourant.vanDifferentielle),
+            })}
+          </AlertDescription>
+        </Alert>
+      )}
+      {dernierSnapshot && !donneesMisesAJour && (
+        <p className="text-xs text-muted-foreground">
+          {t("journey.reports.snapshot.upToDate", {
+            date: (dernierSnapshot.created_at ?? "").slice(0, 10),
+            version: dernierSnapshot.engine_version,
+          })}
+        </p>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
           <CardHeader>

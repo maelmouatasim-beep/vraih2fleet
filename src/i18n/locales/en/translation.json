@@ -5782,7 +5782,13 @@
         "item3": "“Hypothèses” sheet: all 40 assumptions with status, source and verification date",
         "download": "Download the .xlsx"
       },
-      "note": "The report carries the input fingerprint and engine version: the same fingerprint reproduces exactly the same figures. “To validate” assumptions are shown as such — check them before an official presentation."
+      "note": "The report carries the input fingerprint and engine version: the same fingerprint reproduces exactly the same figures. “To validate” assumptions are shown as such — check them before an official presentation.",
+      "snapshot": {
+        "updatedTitle": "Updated data available",
+        "updatedBody": "The last report (generated on {{date}}) was frozen with a net saving (NPV) of {{avant}}. With current data it would be {{apres}}. An issued report NEVER changes: generate a new report to reflect the new data.",
+        "upToDate": "Last report frozen on {{date}} (engine {{version}}) — up to date with current data.",
+        "saveError": "The report was downloaded, but the snapshot could not be saved."
+      }
     },
     "tracking": {
       "states": {

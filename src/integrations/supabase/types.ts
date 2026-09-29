@@ -902,6 +902,59 @@ export type Database = {
           },
         ]
       }
+      report_snapshots: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          engine_version: string
+          fingerprint: string
+          id: string
+          parameters: Json
+          project_id: string
+          report_kind: string
+          strategy_key: string
+          tco_alt: number | null
+          tco_ref: number | null
+          van: number | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          engine_version: string
+          fingerprint: string
+          id?: string
+          parameters: Json
+          project_id: string
+          report_kind: string
+          strategy_key: string
+          tco_alt?: number | null
+          tco_ref?: number | null
+          van?: number | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          engine_version?: string
+          fingerprint?: string
+          id?: string
+          parameters?: Json
+          project_id?: string
+          report_kind?: string
+          strategy_key?: string
+          tco_alt?: number | null
+          tco_ref?: number | null
+          van?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "report_snapshots_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reference_data_conditions: {
         Row: {
           condition_type: string
