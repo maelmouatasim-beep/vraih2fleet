@@ -17,9 +17,16 @@ import {
 } from "@/components/ui/table";
 import EnergyClientDataCard from "@/components/organization/EnergyClientDataCard";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { useOrganization } from "@/hooks/useOrganization";
-import { listOrganizationMembers, updateOrganization } from "@/lib/supabase/organizations";
-import { Building2, Loader2, Users } from "lucide-react";
+import {
+  deleteOrganization,
+  getOrganizationDeletionEffects,
+  listOrganizationMembers,
+  updateOrganization,
+} from "@/lib/supabase/organizations";
+import { supabase } from "@/integrations/supabase/client";
+import { AlertTriangle, Building2, Loader2, Users } from "lucide-react";
 
 const selectCls =
   "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -29,11 +36,15 @@ const selectCls =
  *  Invitations et gestion fine des rôles : Phase 3. */
 export default function OrganizationPage() {
   const { t } = useTranslation();
-  const { organization, isLoading, refetch } = useOrganization();
+  const { user } = useAuth();
+  const { organization, organizations, changerOrganisation, isLoading, refetch } = useOrganization();
   const estAdmin = organization?.myRole === "admin";
 
   const [forme, setForme] = useState({ name: "", orgType: "municipalite", region: "CA_QC" });
   const [enregistrement, setEnregistrement] = useState(false);
+  const [nomConfirme, setNomConfirme] = useState("");
+  const [effets, setEffets] = useState<{ vehicules: number; projets: number; membres: number } | null>(null);
+  const [suppression, setSuppression] = useState(false);
 
   useEffect(() => {
     if (organization) {
@@ -46,6 +57,38 @@ export default function OrganizationPage() {
     queryFn: () => listOrganizationMembers(organization!.id),
     enabled: !!organization?.id,
   });
+
+  const chargerEffets = async () => {
+    if (!organization) return;
+    try {
+      setEffets(await getOrganizationDeletionEffects(organization.id));
+    } catch {
+      toast({ title: t("common.error"), variant: "destructive" });
+    }
+  };
+
+  const supprimerOrganisation = async () => {
+    if (!organization || !user || nomConfirme.trim() !== organization.name) return;
+    setSuppression(true);
+    try {
+      await deleteOrganization(organization.id);
+      // B6 : un utilisateur a toujours une organisation — on en recrée
+      // une vide immédiatement (le trigger le rend admin).
+      await supabase.from("organizations").insert({ name: t("organization.danger.newOrgName"), created_by: user.id });
+      setNomConfirme("");
+      setEffets(null);
+      await refetch();
+      toast({ title: t("organization.danger.deleted") });
+    } catch (e) {
+      toast({
+        title: t("common.error"),
+        description: e instanceof Error ? e.message : "",
+        variant: "destructive",
+      });
+    } finally {
+      setSuppression(false);
+    }
+  };
 
   const enregistrer = async () => {
     if (!organization) return;
@@ -74,6 +117,29 @@ export default function OrganizationPage() {
           </h1>
           <p className="text-muted-foreground">{t("organization.subtitle")}</p>
         </div>
+
+        {organizations.length > 1 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">{t("organization.switcher.title")}</CardTitle>
+              <CardDescription>{t("organization.switcher.subtitle")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <select
+                aria-label={t("organization.switcher.title")}
+                className={selectCls + " max-w-md"}
+                value={organization?.id ?? ""}
+                onChange={(e) => changerOrganisation.mutate(e.target.value)}
+              >
+                {organizations.map((o) => (
+                  <option key={o.id} value={o.id}>
+                    {o.name} ({t(`organization.roles.${o.myRole}`)})
+                  </option>
+                ))}
+              </select>
+            </CardContent>
+          </Card>
+        )}
 
         <Card>
           <CardHeader>
@@ -172,6 +238,54 @@ export default function OrganizationPage() {
             </Table>
           </CardContent>
         </Card>
+
+        {estAdmin && organization && (
+          <Card className="border-destructive/50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base text-destructive">
+                <AlertTriangle className="w-5 h-5" /> {t("organization.danger.title")}
+              </CardTitle>
+              <CardDescription>{t("organization.danger.subtitle")}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {effets === null ? (
+                <Button variant="outline" size="sm" onClick={chargerEffets}>
+                  {t("organization.danger.showEffects")}
+                </Button>
+              ) : (
+                <>
+                  <p className="text-sm font-medium text-destructive">
+                    {t("organization.danger.effects", {
+                      vehicules: effets.vehicules,
+                      projets: effets.projets,
+                      membres: effets.membres,
+                    })}
+                  </p>
+                  <div className="space-y-2 max-w-md">
+                    <Label htmlFor="org-delete-confirm">
+                      {t("organization.danger.typeName", { name: organization.name })}
+                    </Label>
+                    <Input
+                      id="org-delete-confirm"
+                      value={nomConfirme}
+                      onChange={(e) => setNomConfirme(e.target.value)}
+                      placeholder={organization.name}
+                    />
+                  </div>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    disabled={nomConfirme.trim() !== organization.name || suppression}
+                    onClick={supprimerOrganisation}
+                  >
+                    {suppression ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+                    {t("organization.danger.confirm")}
+                  </Button>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
     </DashboardLayout>
   );

@@ -1759,7 +1759,9 @@
       "fleetSize": "Taille de la flotte",
       "fleetType": "Type de flotte",
       "multipleChoices": "(plusieurs choix possibles)",
-      "confirmPassword": "Confirmer le mot de passe"
+      "confirmPassword": "Confirmer le mot de passe",
+      "orgType": "Type d'organisme",
+      "orgTypeHint": "Pilote les taxes récupérables du calcul (modifiable ensuite dans Organisation)."
     },
     "placeholders": {
       "email": "votre@email.com",
@@ -5505,6 +5507,20 @@
     },
     "toast": {
       "saved": "Organisation enregistrée"
+    },
+    "switcher": {
+      "title": "Organisation courante",
+      "subtitle": "Tu appartiens à plusieurs organisations : choisis celle dans laquelle tu travailles."
+    },
+    "danger": {
+      "title": "Zone dangereuse — supprimer l'organisation",
+      "subtitle": "Action définitive : la flotte de l'organisation est SUPPRIMÉE, les projets sont détachés (ils restent à leurs propriétaires) et les membres perdent l'accès.",
+      "showEffects": "Voir l'effet de la suppression",
+      "effects": "Seront supprimés ou détachés : {{vehicules}} véhicule(s) SUPPRIMÉ(S), {{projets}} projet(s) détaché(s), {{membres}} membre(s) retiré(s).",
+      "typeName": "Pour confirmer, tape le nom exact de l'organisation : « {{name}} »",
+      "confirm": "Supprimer définitivement l'organisation",
+      "deleted": "Organisation supprimée — une nouvelle organisation vide a été créée pour toi.",
+      "newOrgName": "Mon organisation"
     }
   },
   "journey": {

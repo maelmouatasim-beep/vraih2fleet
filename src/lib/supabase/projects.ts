@@ -14,6 +14,7 @@ export interface ProjectDTO {
   createdAt: string;
   updatedAt: string;
   userId: string | null;
+  organizationId: string | null;
 }
 
 export interface CreateProjectInput {
@@ -37,6 +38,7 @@ function rowToProject(row: ProjectRow): ProjectDTO {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     userId: row.user_id,
+    organizationId: row.organization_id,
   };
 }
 
@@ -64,15 +66,23 @@ export async function getProjectById(projectId: string): Promise<ProjectDTO | nu
   return data ? rowToProject(data) : null;
 }
 
+// Organisation COURANTE de l'utilisateur (revue B5) : celle choisie sur
+// le profil si l'utilisateur en est membre, sinon la première par date
+// d'adhésion (ordre déterministe).
 async function myOrganizationId(userId: string): Promise<string | null> {
-  const { data } = await supabase
-    .from("organization_members")
-    .select("organization_id")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: true })
-    .limit(1)
-    .maybeSingle();
-  return data?.organization_id ?? null;
+  const [membres, profil] = await Promise.all([
+    supabase
+      .from("organization_members")
+      .select("organization_id, created_at")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: true })
+      .order("organization_id", { ascending: true }),
+    supabase.from("profiles").select("current_organization_id").eq("id", userId).maybeSingle(),
+  ]);
+  const ids = (membres.data ?? []).map((m) => m.organization_id);
+  const choisie = profil.data?.current_organization_id;
+  if (choisie && ids.includes(choisie)) return choisie;
+  return ids[0] ?? null;
 }
 
 export async function createProject(userId: string, input: CreateProjectInput): Promise<ProjectDTO> {

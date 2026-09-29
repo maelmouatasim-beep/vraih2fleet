@@ -28,7 +28,7 @@ export default function Signup() {
 
   const signupSchema = createSignupSchema(t);
 
-  const [formData, setFormData] = useState({ fullName: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ fullName: '', email: '', password: '', orgType: 'municipalite' });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -55,6 +55,7 @@ export default function Signup() {
     try {
       const { error } = await signUp(formData.email, formData.password, {
         full_name: formData.fullName.trim(),
+        org_type: formData.orgType,
       });
       if (error) {
         if (error.message.includes('already registered')) {
@@ -134,6 +135,22 @@ export default function Signup() {
                     disabled={isLoading}
                   />
                   {errors.fullName && <p className="text-sm text-destructive">{errors.fullName}</p>}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="orgType">{t('auth.fields.orgType')}</Label>
+                  <select
+                    id="orgType"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    value={formData.orgType}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, orgType: e.target.value }))}
+                    disabled={isLoading}
+                  >
+                    <option value="municipalite">{t('organization.types.municipalite')}</option>
+                    <option value="societe_transport">{t('organization.types.societe_transport')}</option>
+                    <option value="entreprise">{t('organization.types.entreprise')}</option>
+                  </select>
+                  <p className="text-xs text-muted-foreground">{t('auth.fields.orgTypeHint')}</p>
                 </div>
 
                 <div className="space-y-2">

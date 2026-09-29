@@ -19,6 +19,9 @@ interface UserRole {
 
 interface SignUpMetadata {
   full_name: string;
+  /** Type d'organisme choisi à l'inscription (revue B6) : pilote le
+   *  type de l'organisation créée automatiquement. */
+  org_type?: string;
   // Optionnels : le profil se complète après la première connexion
   // (ProfileOnboardingDialog), plus au signup.
   company?: string;

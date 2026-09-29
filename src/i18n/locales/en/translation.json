@@ -1759,7 +1759,9 @@
       "fleetSize": "Fleet size",
       "fleetType": "Fleet type",
       "multipleChoices": "(multiple choices)",
-      "confirmPassword": "Confirm password"
+      "confirmPassword": "Confirm password",
+      "orgType": "Organization type",
+      "orgTypeHint": "Drives recoverable taxes in the calculation (editable later under Organization)."
     },
     "placeholders": {
       "email": "your@email.com",
@@ -5505,6 +5507,20 @@
     },
     "toast": {
       "saved": "Organization saved"
+    },
+    "switcher": {
+      "title": "Current organization",
+      "subtitle": "You belong to several organizations: pick the one you are working in."
+    },
+    "danger": {
+      "title": "Danger zone — delete organization",
+      "subtitle": "Permanent action: the organization's fleet is DELETED, projects are detached (they stay with their owners) and members lose access.",
+      "showEffects": "Show deletion effects",
+      "effects": "Will be deleted or detached: {{vehicules}} vehicle(s) DELETED, {{projets}} project(s) detached, {{membres}} member(s) removed.",
+      "typeName": "To confirm, type the organization's exact name: “{{name}}”",
+      "confirm": "Permanently delete organization",
+      "deleted": "Organization deleted — a new empty organization was created for you.",
+      "newOrgName": "My organization"
     }
   },
   "journey": {

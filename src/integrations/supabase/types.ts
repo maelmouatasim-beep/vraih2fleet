@@ -697,6 +697,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          current_organization_id: string | null
           avatar_url: string | null
           company: string | null
           created_at: string
@@ -711,6 +712,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          current_organization_id?: string | null
           avatar_url?: string | null
           company?: string | null
           created_at?: string
@@ -725,6 +727,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          current_organization_id?: string | null
           avatar_url?: string | null
           company?: string | null
           created_at?: string
@@ -2563,6 +2566,7 @@ export type Database = {
         Returns: boolean
       }
       is_project_owner: { Args: { project_uuid: string }; Returns: boolean }
+      get_project_org_type: { Args: { _project: string }; Returns: string | null }
     }
     Enums: {
       app_role: "admin" | "user"

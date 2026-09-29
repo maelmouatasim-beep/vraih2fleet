@@ -7,6 +7,7 @@
  */
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { useOrganization } from "@/hooks/useOrganization";
 import {
   fusionnerSurcharges,
@@ -54,14 +55,36 @@ export function useOptionsProjet(project: ProjectDTO | null | undefined, project
   const { organization, isLoading: orgLoading } = useOrganization();
   const { surcharges, isLoading: energieLoading } = useEnergyClientInputs(projectId);
 
+  // Revue B5 : le parcours calcule avec le type d'organisme du PROJET
+  // (son organisation), pas celui de l'utilisateur courant — un
+  // collaborateur externe d'une entreprise ne doit pas transformer une
+  // municipalité en entreprise dans les taxes.
+  const typeProjet = useQuery({
+    queryKey: ["project-org-type", project?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_project_org_type", { _project: project!.id });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!project?.id && !!project?.organizationId,
+    staleTime: 5 * 60 * 1000,
+  });
+
   const options = useMemo((): OptionsParametres | null => {
     if (!project || !organization) return null;
+    if (project.organizationId && typeProjet.isLoading) return null;
+    const typeOrganisme =
+      typeProjet.data === "municipalite" ||
+      typeProjet.data === "societe_transport" ||
+      typeProjet.data === "entreprise"
+        ? typeProjet.data
+        : organization.orgType;
     return {
       anneeReference: new Date().getFullYear(),
       horizonAns: project.defaultAnalysisHorizonYears,
       // defaultDiscountRate est stocké en pour cent (5 = 5 %)
       tauxActualisationNominal: project.defaultDiscountRate / 100,
-      typeOrganisme: organization.orgType,
+      typeOrganisme,
       surchargesEnergie: {
         dieselParL: surcharges.dieselParL,
         electriciteEffectiveParKwh: surcharges.electriciteEffectiveParKwh,
@@ -69,12 +92,12 @@ export function useOptionsProjet(project: ProjectDTO | null | undefined, project
         devisRaccordement: surcharges.devisRaccordement,
       },
     };
-  }, [project, organization, surcharges]);
+  }, [project, organization, surcharges, typeProjet.data, typeProjet.isLoading]);
 
   return {
     options,
     donneesClient: surcharges.provenances,
-    isLoading: orgLoading || energieLoading,
+    isLoading: orgLoading || energieLoading || (!!project?.organizationId && typeProjet.isLoading),
     organization,
   };
 }
