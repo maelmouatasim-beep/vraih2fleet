@@ -268,9 +268,10 @@ jobs:
           grep -o -E ".{200}(5,000|4,000|3,000|2,000|municipal|fleet|10 incentives|maximum).{300}" archive/pave-apercu.txt 2>/dev/null | head -30 || true
           echo "=== FTCZE RENDU ==="
           grep -o -E ".{200}(demande|guichet|fermé|ouvert|contribution|50 %).{300}" archive/ftcze-rendu.txt 2>/dev/null | head -12 || true
-          # RC4049 publication complète (lien depuis la page de garde)
-          LIEN=$(grep -oE 'href="[^"]*rc4049[^"]*\.html"' archive/rc4049.html | head -1 | sed 's/href="//;s/"$//')
-          case "$LIEN" in http*) URLRC="$LIEN";; *) URLRC="https://www.canada.ca$LIEN";; esac
+          # RC4049 publication complète — URL exacte relevée dans la page de
+          # garde archivée (le lien « rc4049-f.html » ; un grep générique
+          # retombait sur l'auto-référence de la page)
+          URLRC="https://www.canada.ca/fr/agence-revenu/services/formulaires-publications/publications/rc4049/renseignements-tps-tvh-municipalites.html"
           echo "RC4049 complet : $URLRC" | tee archive/rc4049-complet.url
           curl -sL --max-time 90 "$URLRC" -o archive/rc4049-complet.html
           python3 -c "import re,html;t=open('archive/rc4049-complet.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/rc4049-complet.txt','w').write(t)"
@@ -286,6 +287,21 @@ jobs:
           python3 -c "import re,html;t=open('archive/arc-taux.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/arc-taux.txt','w').write(t)"
           echo "=== ARC — TAUX TPS ==="
           grep -o -E ".{150}(5 %|5%).{250}" archive/arc-taux.txt | head -8 || true
+          # Taux de la TVQ (9,975 %) : article 16 de la Loi sur la taxe de
+          # vente du Québec, LégisQuébec (rendu serveur — Revenu Québec est
+          # une SPA impénétrable). Deux formes d'URL essayées.
+          for U in \
+            "https://www.legisquebec.gouv.qc.ca/fr/version/lc/T-0.1?code=se:16" \
+            "https://www.legisquebec.gouv.qc.ca/fr/document/lc/T-0.1"; do
+            curl -sL --max-time 120 "$U" -o archive/ltvq-art16.html || continue
+            python3 -c "import re,html;t=open('archive/ltvq-art16.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/ltvq-art16.txt','w').write(t)"
+            if grep -q "9,975" archive/ltvq-art16.txt; then
+              echo "TVQ 9,975 % : $U" | tee archive/ltvq-art16.url
+              break
+            fi
+          done
+          echo "=== LTVQ ART. 16 — TAUX TVQ ==="
+          grep -o -E ".{200}9,975.{250}" archive/ltvq-art16.txt 2>/dev/null | head -4 || true
 
       # ----------------------------------------------------------------
       # Archivage : commit de tous les documents lus
