@@ -97,14 +97,17 @@ function ajouterVehicule(flux, vehicule, spec, estAlternative, p) {
     }
   }
 
+  // Taxes SYMÉTRIQUES (§3.1 v2.2) : énergie, entretien et événements
+  // sont saisis AVANT TPS/TVQ, la part non récupérable s'ajoute comme
+  // sur l'acquisition ; l'assurance (prime payée) fait exception.
   const e = energieAnnuelle(spec, vehicule.kmParAn, p);
   for (let n = debut + 1; n <= h; n++) {
-    flux.energie[n] += e * prixEnergie(spec, p, n);
-    flux.entretien[n] += vehicule.kmParAn * spec.entretienParKm * (1 + p.inflations.entretien) ** n;
+    flux.energie[n] += e * prixEnergie(spec, p, n) * taxes;
+    flux.entretien[n] += vehicule.kmParAn * spec.entretienParKm * (1 + p.inflations.entretien) ** n * taxes;
     flux.assurance[n] += (spec.assuranceParAn ?? 0) * (1 + p.inflations.generale) ** n;
   }
   for (const ev of spec.evenements ?? []) {
-    if (ev.annee <= h) flux.evenements[ev.annee] += ev.coutAvantTaxes;
+    if (ev.annee <= h) flux.evenements[ev.annee] += ev.coutAvantTaxes * taxes;
   }
 
   const [ttw, wtw] = emissionsAnnuelles(spec, vehicule, p);
@@ -139,8 +142,9 @@ function ajouterInfra(flux, plan, p) {
       if (s.annee <= h) flux.subventions[s.annee] += s.montant;
     }
     for (let n = debut + 1; n <= h; n++) {
+      // Entretien d'infrastructure : dépense taxable (taxes symétriques).
       flux.opexInfra[n] +=
-        site.capexAvantTaxes * p.infra.entretienAnnuelPctCapex * (1 + p.inflations.entretien) ** n;
+        site.capexAvantTaxes * p.infra.entretienAnnuelPctCapex * (1 + p.inflations.entretien) ** n * taxes;
     }
   }
 }

@@ -52,9 +52,11 @@ describe('anneeAcquisition (§10.11)', () => {
       expect(r.alternative.flux.entretien[n]).toBe(0);
       expect(r.reference.flux.net[n]).toBe(0);
     }
-    // première année d'exploitation : k+1
+    // première année d'exploitation : k+1 (taxes symétriques §3.1 v2.2 :
+    // part non récupérable ajoutée sur l'énergie)
     const energieAnnuelle = ((30000 * 32) / 100) * (1 + P.majorationHivernaleAnnualisee) / P.rendementRecharge;
-    const attenduEnergie = energieAnnuelle * P.prixAnnee0.electriciteEffectiveParKwh * Math.pow(1 + P.inflations.electricite, k + 1);
+    const attenduEnergie =
+      energieAnnuelle * P.prixAnnee0.electriciteEffectiveParKwh * Math.pow(1 + P.inflations.electricite, k + 1) * taxes;
     expect(r.alternative.flux.energie[k + 1]).toBeCloseTo(attenduEnergie, 6);
   });
 

@@ -1,7 +1,7 @@
 # Méthodologie de calcul du coût total de possession (TCO)
 
 **H2Fleet — spécification du moteur de calcul `src/lib/tco/`**
-Version 2.1 (révision de la revue externe) — 2026-09-29 — statut : **en validation**
+Version 2.2 (révision de la revue externe) — 2026-09-29 — statut : **en validation**
 
 > Historique : v1.0 = spécification initiale (Phase 1A). v1.1 intègre les
 > précisions issues du contre-calcul indépendant des 6 cas de référence
@@ -16,10 +16,14 @@ Version 2.1 (révision de la revue externe) — 2026-09-29 — statut : **en val
 > barèmes dégressifs par année d'achat (PAVÉ, Écocamionnage 2b),
 > bonification dans le plafond, plafond de cumul des aides publiques
 > (art. 7.14.2 : 75 %), avertissements retournés — les formules du
-> moteur et les 7 cas de référence sont inchangés. Le moteur
-> (engineVersion 2.0.0) implémente cette version ; les 7 cas de
-> référence sont régénérés par le contre-calculateur indépendant
-> committé (scripts/reference-cases/).
+> moteur sont inchangées en v2.1. v2.2 (revue externe, suite) rend les
+> taxes SYMÉTRIQUES (§3.1) : tous les postes de dépense sont saisis
+> avant TPS/TVQ et portent la part non récupérable (énergie, entretien,
+> événements et opex d'infrastructure compris) ; taux municipaux
+> vérifiés et archivés (TPS remboursée à 100 %, TVQ à 50 %) ; prix du
+> diesel ramené avant TPS/TVQ. Le moteur (engineVersion 2.1.0)
+> implémente cette version ; les 7 cas de référence sont régénérés par
+> le contre-calculateur indépendant committé (scripts/reference-cases/).
 
 Ce document est la référence unique de la méthode de calcul. Il est écrit
 pour être lu par un directeur des finances municipal : chaque formule est
@@ -166,20 +170,38 @@ Coût(v, 0) = Acquisition(v) − Subventions(v, versées à l'achat) + PartInfra
 Coût(v, H) −= ValeurRésiduelle(v, H)                      [recette en fin d'horizon]
 ```
 
-### 3.1 Acquisition et taxes
+### 3.1 Taxes de vente — traitement SYMÉTRIQUE de tous les postes (v2.2)
+
+Tous les prix et coûts d'entrée du moteur s'entendent **AVANT TPS/TVQ**
+(véhicules, infrastructure, énergie, entretien, événements majeurs), et
+la portion **non récupérable** des taxes de vente s'ajoute de la même
+façon sur chacun de ces postes :
 
 ```
-Acquisition = PrixAvantTaxes × (1 + TauxTaxesNonRécupérables)
+Coût comptabilisé = MontantAvantTaxes × (1 + TauxTaxesNonRécupérables)
 ```
 
-Seule la portion **non récupérable** des taxes de vente est un coût. Le
-taux dépend du type d'organisation (paramètre du projet) :
+Exceptions, documentées :
 
-- **Municipalité (Québec)** : les municipalités récupèrent 100 % de la
-  TPS et une partie de la TVQ ; le taux non récupérable par défaut est
-  fourni dans `assumptions.ts` avec le statut `à_valider` (source : ARC —
-  remboursement aux organismes de services publics ; Revenu Québec).
-- **Société de transport** : traitement analogue, `à_valider`.
+- **assurance** : les primes d'assurance ne sont pas assujetties à la
+  TPS/TVQ — `assuranceParAn` est la prime annuelle réellement payée,
+  aucune taxe n'est ajoutée par le moteur ;
+- **valeurs résiduelles** : produit de revente, compté sans taxe (les
+  taxes perçues du racheteur sont remises, pas conservées) ;
+- **subventions** : montants versés, tels quels.
+
+Le taux non récupérable dépend du type d'organisation (paramètre du
+projet) :
+
+- **Municipalité (Québec)** : remboursement de **100 % de la TPS**
+  (RC4049, publication complète lue et archivée) et de **50 % de la TVQ
+  depuis le 1er janvier 2015** (Finances Québec, fiche des dépenses
+  fiscales 310302, lue et archivée) → taux non récupérable
+  = 9,975 % × 50 % ≈ **4,99 %** du prix avant taxes. Le taux de TVQ
+  lui-même (9,975 %) reste `à_valider` (aucune source officielle lisible
+  depuis nos environnements — voir l'hypothèse `taux_tvq`).
+- **Société de transport** : traité comme une municipalité par défaut,
+  `à_valider` (statut d'organisme désigné à confirmer).
 - **Entreprise** : TPS et TVQ intégralement récupérées (CTI/RTI) → taux
   non récupérable 0 %.
 
@@ -248,10 +270,14 @@ poste.
 Énergie_diesel(v, n) = km/an × (L/100 km ÷ 100) × Prix_diesel_0 × (1 + g_diesel)^n
 ```
 
-Le prix du diesel est le prix à la pompe observé (Régie de l'énergie du
-Québec), qui inclut déjà les taxes sur les carburants et le coût du
-système de plafonnement (SPEDE). On n'ajoute **aucune** taxe carbone
-par-dessus.
+Le prix du diesel est le prix observé à la pompe (Régie de l'énergie du
+Québec), **ramené AVANT TPS/TVQ** (÷ 1,14975 — la TPS et la TVQ se
+calculent sur le prix accise comprise) : il inclut les taxes sur les
+carburants (accises) et le coût du système de plafonnement (SPEDE), qui
+ne sont récupérables pour personne. La part non récupérable de TPS/TVQ
+est ensuite ajoutée par le moteur (§3.1) — comme pour l'électricité et
+l'hydrogène, dont les tarifs et devis s'entendent avant taxes. On
+n'ajoute **aucune** taxe carbone par-dessus.
 
 **Électricité**
 
@@ -310,13 +336,16 @@ compression/distribution), pas le coût de production théorique.
 Entretien(v, n) = km/an × Coût_$/km(techno, catégorie) × (1 + g_entretien)^n
 ```
 
-- Coûts en $/km par technologie et par catégorie (défauts sourcés, § 8).
+- Coûts en $/km par technologie et par catégorie (défauts sourcés, § 8),
+  **avant taxes** — part non récupérable ajoutée par le moteur (§3.1
+  v2.2, taxes symétriques).
 - **Événements majeurs optionnels et datés**, ajoutés à l'année où ils se
   produisent : remplacement de batterie (BEV), remplacement de la pile à
   combustible (FCEV), réfection majeure moteur/transmission (diesel).
-  Chacun est défini par (année, coût, probabilité optionnelle) et
-  apparaît comme une ligne distincte dans la ventilation — jamais fondu
-  dans le $/km.
+  Chacun est défini par (année, coût AVANT taxes en dollars courants de
+  son année, probabilité optionnelle) et apparaît comme une ligne
+  distincte dans la ventilation — jamais fondu dans le $/km ; part non
+  récupérable ajoutée, aucune indexation.
 
 **Remplacement de batterie ou de pile à combustible** : sur les longues
 durées (vie complète d'un autobus, horizon 15-16 ans), un remplacement
@@ -662,14 +691,14 @@ désormais NORMATIVE et testée dans le moteur.
    servent aux émissions.
 5. **Émissions de l'électricité** : calculées sur les kWh **au
    compteur** (pertes de recharge incluses).
-6. **Infrastructure — RÉVISÉ v2.0** : entretien = % du capex AVANT
-   taxes, indexé à l'inflation entretien après la mise en service ;
-   taxes non récupérables sur le capex seulement ; capex payé à
-   l'**année de mise en service** (défaut : arrivée des premiers
-   véhicules du site), indexé à l'inflation générale ;
-   **ré-investissement** en fin de durée de vie tant que l'horizon la
-   dépasse ; valeur résiduelle linéaire du dernier équipement en fin
-   d'horizon.
+6. **Infrastructure — RÉVISÉ v2.0, v2.2** : entretien = % du capex AVANT
+   taxes, indexé à l'inflation entretien après la mise en service, taxes
+   non récupérables ajoutées (taxes symétriques, §3.1 v2.2) ; capex payé
+   à l'**année de mise en service** (défaut : arrivée des premiers
+   véhicules du site), indexé à l'inflation générale, taxes non
+   récupérables ajoutées ; **ré-investissement** en fin de durée de vie
+   tant que l'horizon la dépasse ; valeur résiduelle linéaire du dernier
+   équipement en fin d'horizon.
 7. **Délai de récupération (§6.1)** : cumul des écarts nominaux
    (référence − alternative) **depuis l'année 0 incluse**, subventions
    et valeurs résiduelles comptées à leur année ; le résultat est la
@@ -679,8 +708,9 @@ désormais NORMATIVE et testée dans le moteur.
    l'horizon H=… ».
 8. **TCO par km** : TCO actualisé ÷ kilomètres des années 1..H
    actualisés au même taux (cohérence numérateur/dénominateur).
-9. **Événements majeurs (§3.4)** : montants saisis en dollars courants
-   de leur année (devis) — ni taxes ajoutées, ni indexation.
+9. **Événements majeurs (§3.4) — RÉVISÉ v2.2** : montants saisis AVANT
+   TAXES en dollars courants de leur année (devis) — part non
+   récupérable ajoutée (taxes symétriques, §3.1), aucune indexation.
 10. **Coût par tonne évitée** : signé — négatif = gain net par tonne ;
     `null` si aucune tonne n'est évitée.
 11. **Année d'acquisition par véhicule (v1.2, engineVersion 1.1.0)** :

@@ -10,7 +10,10 @@ export const PARAMETRES_CAS = {
   horizonAns: 10,
   tauxActualisationNominal: 0.05,
   inflations: { diesel: 0.03, electricite: 0.035, hydrogene: 0.0, entretien: 0.025, generale: 0.021 },
-  prixAnnee0: { dieselParL: 2.95, electriciteEffectiveParKwh: 0.1, h2LivreParKg: 16.5 },
+  // Prix AVANT TPS/TVQ (§3.1 v2.2) : diesel = 2,95 $ TTC à la pompe
+  // (relevé 2026-09-21) ÷ 1,14975 = 2,5658 $ (accise et SPEDE compris) ;
+  // le tarif HQ et le prix H2 livré s'entendent déjà avant taxes.
+  prixAnnee0: { dieselParL: 2.5658, electriciteEffectiveParKwh: 0.1, h2LivreParKg: 16.5 },
   rendementRecharge: 0.9,
   majorationHivernaleAnnualisee: 0.25 * 0.33,
   tauxTaxesNonRecuperables: 0.049875,

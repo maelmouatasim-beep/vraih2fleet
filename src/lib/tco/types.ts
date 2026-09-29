@@ -27,6 +27,9 @@ export const zParametresProjet = z.object({
     entretien: zRatio,
     generale: zRatio,
   }),
+  /** Prix de l'énergie AVANT TPS/TVQ (§3.1 v2.2, taxes symétriques) :
+   *  la part non récupérable est ajoutée par le moteur. Le diesel
+   *  comprend les accises et le SPEDE (non récupérables). */
   prixAnnee0: z.object({
     dieselParL: zMontantPositif,
     /** Coût EFFECTIF au compteur du dépôt (énergie + prime de puissance amortie). */

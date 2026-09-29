@@ -61,19 +61,21 @@ export const HYPOTHESES = {
   // ----- Énergie : prix ----------------------------------------------------
   prix_diesel: {
     id: 'prix_diesel',
-    description: 'Prix du diesel à la pompe, moyenne provinciale Québec',
-    valeur: 2.95,
+    description: 'Prix du diesel HORS TPS/TVQ (accise et SPEDE compris), moyenne provinciale Québec',
+    valeur: 2.5658,
     unite: '$/L',
-    plage: { basse: 1.8, haute: 3.4 },
+    plage: { basse: 1.5656, haute: 2.9572 },
     region: 'QC',
     anneeDollars: 2026,
     source: SRC_REGIE_BULLETIN,
     dateVerification: V,
     statut: 'verifie',
     notes:
-      'Relevé du 2026-09-21 : ~294-300 ¢/L selon la région (rampe de chargement 237 ¢/L). ' +
-      'Très volatil ; la taxe d’accise fédérale a été suspendue du 2026-04-20 au 2026-09-07. ' +
-      'À remplacer par une moyenne mobile 12 mois quand la série sera intégrée.',
+      'Prix pompe TTC du relevé 2026-09-21 (~2,95 $/L) ÷ 1,14975 (TPS 5 % + TVQ 9,975 %, calculées sur le ' +
+      'prix accise comprise) = 2,5658 $/L AVANT TPS/TVQ — le moteur ajoute la part non récupérable selon ' +
+      'l’organisme (§3.1 v2.2, taxes symétriques). Le taux de TVQ utilisé pour la conversion est à_valider ' +
+      '(hypothèse taux_tvq). Plage convertie de même (1,80-3,40 $ TTC). Très volatil ; prix de crise — ' +
+      'À REMPLACER par la moyenne mobile 12 mois StatCan (couche A1) : moyenne 2025-08→2026-08 ≈ 2,09 $ TTC.',
   },
   hq_tarif_m_energie: {
     id: 'hq_tarif_m_energie',
@@ -425,12 +427,13 @@ export const HYPOTHESES = {
     region: 'CA',
     source: {
       organisme: 'ARC',
-      document: 'Taux de TPS/TVH en vigueur',
+      document: 'Facturer ou percevoir la TPS/TVH — quel taux appliquer (page lue et archivée : TPS de 5 % dans les provinces non participantes)',
       annee: 2026,
       url: 'https://www.canada.ca/fr/agence-revenu/services/impot/entreprises/sujets/tps-tvh-entreprises/facturer-percevoir-quel-taux.html',
     },
-    dateVerification: V,
-    statut: 'a_valider',
+    dateVerification: '2026-09-29',
+    statut: 'verifie',
+    notes: 'Archive : data/sources/2026-09-29/arc-taux.txt (« facture la TPS de 5 % », province non participante).',
   },
   taux_tvq: {
     id: 'taux_tvq',
@@ -441,12 +444,16 @@ export const HYPOTHESES = {
     region: 'QC',
     source: {
       organisme: 'Revenu Québec',
-      document: 'Taux de la TVQ en vigueur',
+      document: 'Taux de la TVQ en vigueur (art. 16, Loi sur la taxe de vente du Québec)',
       annee: 2026,
       url: 'https://www.revenuquebec.ca/fr/entreprises/taxes/tpstvh-et-tvq/perception-de-la-tps-et-de-la-tvq/calcul-des-taxes/',
     },
     dateVerification: V,
     statut: 'a_valider',
+    notes:
+      'Aucune source officielle n’a pu être LUE depuis nos environnements (Revenu Québec = application ' +
+      'JavaScript sans contenu serveur ; LégisQuébec art. 16 LTVQ = 403 CloudFront) — taux usuel depuis 2013, ' +
+      'à faire valider manuellement sur la page Revenu Québec ci-dessus.',
   },
   taux_recup_tps_municipalite: {
     id: 'taux_recup_tps_municipalite',
@@ -457,12 +464,15 @@ export const HYPOTHESES = {
     region: 'CA',
     source: {
       organisme: 'ARC',
-      document: 'RC4049 — Renseignements sur la TPS/TVH pour les municipalités (remboursement de 100 %)',
-      annee: 2024,
-      url: 'https://www.canada.ca/fr/agence-revenu/services/formulaires-publications/publications/rc4049.html',
+      document: 'RC4049 — Renseignements sur la TPS/TVH pour les municipalités (publication complète, lue et archivée)',
+      annee: 2025,
+      url: 'https://www.canada.ca/fr/agence-revenu/services/formulaires-publications/publications/rc4049/renseignements-tps-tvh-municipalites.html',
     },
-    dateVerification: V,
-    statut: 'a_valider',
+    dateVerification: '2026-09-29',
+    statut: 'verifie',
+    notes:
+      'VÉRIFIÉ : « Remboursement municipal … dont le taux est de 100 % de la TPS et de la partie fédérale ' +
+      'de la TVH » (archive : data/sources/2026-09-29/rc4049-complet.txt).',
   },
   taux_recup_tvq_municipalite: {
     id: 'taux_recup_tvq_municipalite',
@@ -472,16 +482,20 @@ export const HYPOTHESES = {
     plage: { basse: 0.5, haute: 0.628 },
     region: 'QC',
     source: {
-      organisme: 'Revenu Québec',
-      document: 'Remboursement partiel de la TVQ aux municipalités et organismes désignés',
-      annee: 2024,
-      url: 'https://www.revenuquebec.ca/fr/entreprises/taxes/tpstvh-et-tvq/situations-particulieres-liees-a-la-tpstvh-et-a-la-tvq/organismes-de-services-publics-tpstvh-et-tvq/remboursement-de-tps-et-de-tvq-accorde-aux-osp/depenses-qui-donnent-droit-au-remboursement/remboursement-partiel-de-la-tvq-aux-municipalites-et-aux-organismes-designes-comme-municipalites/',
+      organisme: 'Finances Québec',
+      document:
+        'Dépenses fiscales 2025, fiche 310302 — Remboursement accordé aux écoles, collèges, universités, hôpitaux et municipalités (lue et archivée)',
+      annee: 2025,
+      url: 'https://www.budget.finances.gouv.qc.ca/budget/outils/depenses-fiscales/fiches/fiche-310302.asp',
     },
-    dateVerification: V,
-    statut: 'a_valider',
+    dateVerification: '2026-09-28',
+    statut: 'verifie',
     notes:
-      'Taux non récupérable municipal résultant ≈ 0,5 × 9,975 % = 4,99 % du prix avant taxes. ' +
-      'Entreprises : CTI/RTI complets → 0 %. Sociétés de transport : à confirmer avec le même document.',
+      'VÉRIFIÉ : « le taux de remboursement des municipalités … de 50 % depuis le 1er janvier 2015 » ' +
+      '(62,8 % en 2014, 43 % avant l’abolition de 1997) — archive : ' +
+      'data/sources/2026-09-28/qc-depenses-fiscales-310302.txt. Taux non récupérable municipal résultant ' +
+      '≈ 0,5 × 9,975 % = 4,99 % du prix avant taxes. Entreprises : CTI/RTI complets → 0 %. Sociétés de ' +
+      'transport : à confirmer (organismes désignés ou non selon leur statut).',
   },
 
   // ----- Valeur résiduelle et durées de vie ----------------------------------

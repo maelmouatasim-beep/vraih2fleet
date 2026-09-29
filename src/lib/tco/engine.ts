@@ -163,19 +163,23 @@ function ajouterVehiculeAuScenario(
 
   // Exploitation, années début+1..H (avant l'acquisition, le véhicule
   // actuel est identique dans les deux scénarios : différentiel nul).
+  // Taxes SYMÉTRIQUES (§3.1 v2.2) : énergie, entretien et événements sont
+  // des dépenses taxables saisies AVANT TPS/TVQ — la part non récupérable
+  // s'ajoute comme sur l'acquisition. L'assurance fait exception : les
+  // primes ne sont pas assujetties à la TPS/TVQ, on saisit la prime payée.
   const energieAnnuelle = energieAnnuelleFacturee(spec, vehicule.kmParAn, p);
   for (let n = debut + 1; n <= h; n++) {
-    flux.energie[n] += energieAnnuelle * prixEnergieAnnee(spec, p, n);
-    flux.entretien[n] += vehicule.kmParAn * spec.entretienParKm * Math.pow(1 + p.inflations.entretien, n);
+    flux.energie[n] += energieAnnuelle * prixEnergieAnnee(spec, p, n) * taxes;
+    flux.entretien[n] += vehicule.kmParAn * spec.entretienParKm * Math.pow(1 + p.inflations.entretien, n) * taxes;
     // Assurance/immatriculation (§3.6) : $/an fournis, indexés à
     // l'inflation générale ; 0 si non fournis.
     flux.assurance[n] += spec.assuranceParAn * Math.pow(1 + p.inflations.generale, n);
   }
   for (const ev of spec.evenements) {
     if (ev.annee > h) continue;
-    // Coût daté saisi en dollars courants de son année (devis) : ni taxes
-    // ajoutées, ni indexation (méthodologie §3.4).
-    flux.evenements[ev.annee] += ev.coutAvantTaxes;
+    // Coût daté saisi AVANT TAXES en dollars courants de son année
+    // (devis) : part non récupérable ajoutée, aucune indexation (§3.4).
+    flux.evenements[ev.annee] += ev.coutAvantTaxes * taxes;
   }
 
   const [ttwAnnuel, wtwAnnuel] = emissionsAnnuelles(spec, vehicule, p);
@@ -226,8 +230,9 @@ function ajouterInfra(
       flux.subventions[s.annee] += s.montant;
     }
     for (let n = debut + 1; n <= h; n++) {
+      // Entretien d'infrastructure : dépense taxable (taxes symétriques).
       flux.opexInfra[n] +=
-        site.capexAvantTaxes * p.infra.entretienAnnuelPctCapex * Math.pow(1 + p.inflations.entretien, n);
+        site.capexAvantTaxes * p.infra.entretienAnnuelPctCapex * Math.pow(1 + p.inflations.entretien, n) * taxes;
     }
 
     // Répartition par véhicule : au prorata de l'énergie facturée de

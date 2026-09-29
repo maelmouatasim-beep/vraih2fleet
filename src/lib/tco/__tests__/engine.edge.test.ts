@@ -53,11 +53,12 @@ function base(): PlanTcoEntree {
 }
 
 describe('événements majeurs et avertissements', () => {
-  it('les événements datés sont comptés à leur année, ceux hors horizon ignorés', () => {
+  it('les événements datés sont comptés à leur année (part non récupérable ajoutée), ceux hors horizon ignorés', () => {
     const r = calculerPlan(base());
-    expect(r.alternative.flux.evenements[8]).toBe(30000);
-    expect(r.reference.flux.evenements[6]).toBe(12000);
-    expect(r.alternative.flux.evenements.reduce((a, b) => a + b, 0)).toBe(30000);
+    const taxes = 1 + PARAMETRES_CAS.tauxTaxesNonRecuperables;
+    expect(r.alternative.flux.evenements[8]).toBeCloseTo(30000 * taxes, 9);
+    expect(r.reference.flux.evenements[6]).toBeCloseTo(12000 * taxes, 9);
+    expect(r.alternative.flux.evenements.reduce((a, b) => a + b, 0)).toBeCloseTo(30000 * taxes, 9);
   });
 
   it('subvention versée après l’horizon : ignorée + avertissement (véhicule et site)', () => {
