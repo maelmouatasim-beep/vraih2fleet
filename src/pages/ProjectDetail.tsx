@@ -12,7 +12,6 @@ import {
   FolderKanban,
   ArrowRight,
   Users,
-  CheckSquare,
   Map as MapIcon,
   FileText,
 } from "lucide-react";
@@ -25,7 +24,6 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShareProjectButton } from "@/components/collaboration";
 import { ComparisonPDFDownloadButton } from "@/components/reports";
-import { TaskBoard } from "@/components/tasks";
 import { useTasks } from "@/hooks/useTasks";
 import { useProjectRoadmaps } from "@/hooks/useRoadmap";
 import { formatCurrency } from "@/lib/currency";
@@ -283,15 +281,6 @@ export default function ProjectDetail() {
               <FolderKanban className="w-4 h-4" />
               {t('projects.detail.overview')}
             </TabsTrigger>
-            <TabsTrigger value="tasks" className="gap-2">
-              <CheckSquare className="w-4 h-4" />
-              {t('projects.detail.tasks')}
-              {taskStats.total > 0 && (
-                <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs">
-                  {taskStats.total}
-                </Badge>
-              )}
-            </TabsTrigger>
             <TabsTrigger value="roadmap" className="gap-2">
               <MapIcon className="w-4 h-4" />
               {t('projects.detail.roadmap')}
@@ -386,10 +375,8 @@ export default function ProjectDetail() {
             </Card>
           </TabsContent>
 
-          {/* Tasks Tab */}
-          <TabsContent value="tasks" className="min-h-[600px]">
-            <TaskBoard projectId={project.id} />
-          </TabsContent>
+          {/* Les tâches vivent à l'étape Suivi du parcours (C8 : un seul
+              tableau de tâches, plus de doublon ici). */}
 
           {/* Roadmap Tab */}
           <TabsContent value="roadmap">

@@ -81,10 +81,10 @@ const Projects = () => {
   const [newProject, setNewProject] = useState<CreateProjectForm>({
     name: "",
     description: "",
-    countryOrRegion: "EU",
-    currency: "EUR",
+    countryOrRegion: "CA_QC",
+    currency: "CAD",
     defaultAnalysisHorizonYears: 10,
-    defaultDiscountRate: 0.06,
+    defaultDiscountRate: 0.05,
   });
 
   useEffect(() => {
@@ -170,10 +170,10 @@ const Projects = () => {
       setNewProject({
         name: "",
         description: "",
-        countryOrRegion: "EU",
-        currency: "EUR",
+        countryOrRegion: "CA_QC",
+        currency: "CAD",
         defaultAnalysisHorizonYears: 10,
-        defaultDiscountRate: 0.06,
+        defaultDiscountRate: 0.05,
       });
 
       toast({
@@ -181,7 +181,7 @@ const Projects = () => {
         description: t('pages.projects.toast.createdDesc', { name: created.name }),
       });
 
-      navigate(`/dashboard/projects/${created.id}`);
+      navigate(`/dashboard/projects/${created.id}/flotte`);
     } catch (error) {
       console.error("Error creating project:", error);
       toast({
