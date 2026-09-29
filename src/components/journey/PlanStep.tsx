@@ -36,6 +36,7 @@ import { construireStrategie } from "@/lib/journey/strategies";
 import { formateurCad, formateurCadCompact } from "@/lib/format";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 import { Loader2 } from "lucide-react";
+import DepotInfrastructureCard from "./DepotInfrastructureCard";
 
 interface PlanStepProps {
   projectId: string;
@@ -261,6 +262,21 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
           </Table>
         </CardContent>
       </Card>
+
+      {options && (
+        <DepotInfrastructureCard
+          vehicules={projectVehicles.map((pv) => ({
+            id: pv.vehicle_id,
+            unit_number: pv.vehicles.unit_number,
+            category: pv.vehicles.category,
+            depot: pv.vehicles.depot,
+            replacement_year: pv.replacement_year,
+            target_technology: pv.target_technology,
+          }))}
+          anneeReference={options.anneeReference}
+          devisRaccordement={options.surchargesEnergie?.devisRaccordement ?? null}
+        />
+      )}
 
       <p className="text-xs text-muted-foreground">{t("journey.plan.note")}</p>
     </div>

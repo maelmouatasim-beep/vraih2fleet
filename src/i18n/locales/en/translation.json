@@ -5946,6 +5946,29 @@
         "added": "Application added",
         "updated": "Application updated"
       }
+    },
+    "infra": {
+      "title": "Charging infrastructure by depot",
+      "subtitle": "Minimal sizing: one charger per zero-emission vehicle, commissioned in its replacement year. Registry estimates — a quote replaces these amounts.",
+      "noDepot": "Depot not specified",
+      "noDepotBadge": "set it in My fleet",
+      "commissioning": "Commissioning: {{year}}",
+      "chargers": "Chargers",
+      "power": "Demand (power)",
+      "capexChargers": "Chargers CAPEX",
+      "connection": "Grid connection (estimate)",
+      "h2": "{{count}} hydrogen vehicle(s): depot H2 station estimated at {{amount}}.",
+      "unknownCategories": "{{count}} vehicle(s) in category “other”: charger to size manually.",
+      "phasing": "Phasing (chargers added per year):",
+      "clientQuote": "Grid-connection quote entered in the project: {{amount}} — it REPLACES the connection estimates above.",
+      "quoteHint": "No grid-connection quote entered: connection amounts are the registry assumption. Enter the Hydro-Québec quote in “Client data” (Feasibility or Organization).",
+      "total": "Total infrastructure CAPEX: {{amount}}",
+      "sourceNote": "Typical costs from {{source}}, verified on {{date}} — to be replaced by quotes.",
+      "borneTypes": {
+        "niveau2": "level 2 charger (7-19 kW)",
+        "rapide50": "50 kW fast charger",
+        "rapide150": "150 kW fast charger"
+      }
     }
   },
   "energyClient": {

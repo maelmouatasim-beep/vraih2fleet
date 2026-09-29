@@ -5946,6 +5946,29 @@
         "added": "Demande ajoutée",
         "updated": "Demande mise à jour"
       }
+    },
+    "infra": {
+      "title": "Infrastructure de recharge par dépôt",
+      "subtitle": "Dimensionnement minimal : une borne par véhicule zéro émission, mise en service l'année du remplacement. Estimations du registre — un devis remplace ces montants.",
+      "noDepot": "Dépôt non précisé",
+      "noDepotBadge": "à renseigner dans Ma flotte",
+      "commissioning": "Mise en service : {{year}}",
+      "chargers": "Bornes",
+      "power": "Puissance appelée",
+      "capexChargers": "CAPEX bornes",
+      "connection": "Raccordement (estimation)",
+      "h2": "{{count}} véhicule(s) hydrogène : station H2 au dépôt estimée à {{amount}}.",
+      "unknownCategories": "{{count}} véhicule(s) de catégorie « autre » : borne à dimensionner manuellement.",
+      "phasing": "Phasage (bornes ajoutées par année) :",
+      "clientQuote": "Devis de raccordement saisi dans le projet : {{amount}} — il REMPLACE les estimations de raccordement ci-dessus.",
+      "quoteHint": "Aucun devis de raccordement saisi : les montants de raccordement sont l'hypothèse du registre. Saisissez le devis Hydro-Québec dans « Données client » (Faisabilité ou Organisation).",
+      "total": "CAPEX infrastructure total : {{amount}}",
+      "sourceNote": "Coûts types {{source}}, vérifiés le {{date}} — à remplacer par des soumissions.",
+      "borneTypes": {
+        "niveau2": "borne niveau 2 (7-19 kW)",
+        "rapide50": "borne rapide 50 kW",
+        "rapide150": "borne rapide 150 kW"
+      }
     }
   },
   "energyClient": {
