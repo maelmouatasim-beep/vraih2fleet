@@ -21,6 +21,9 @@ export interface MetaRapport {
   dateIso: string; // AAAA-MM-JJ
   anneeReference: number;
   horizonAns: number;
+  /** Taux d'actualisation RÉELLEMENT utilisé (paramètre du projet) :
+   *  l'annexe l'affiche à la place du défaut du registre (revue A5). */
+  tauxActualisationNominal: number;
   /** Libellés « donnée client » (couche 3, §3.3 v2.2) : champs saisis
    *  par le client qui PRIMENT sur les défauts du registre. */
   donneesClient?: string[];
@@ -126,9 +129,13 @@ export function construireClasseurPlan(
     ...LISTE_HYPOTHESES.map((h) => [
       h.id,
       h.description,
-      h.valeur,
+      // Le taux d'actualisation affiché est celui RÉELLEMENT utilisé
+      // (paramètre du projet), pas le défaut du registre (revue A5).
+      h.id === "taux_actualisation_nominal" ? meta.tauxActualisationNominal : h.valeur,
       h.unite,
-      STATUTS_FR[h.statut] ?? h.statut,
+      h.id === "taux_actualisation_nominal"
+        ? "paramètre du projet"
+        : (STATUTS_FR[h.statut] ?? h.statut),
       `${h.source.organisme} — ${h.source.document}`,
       h.source.annee,
       h.dateVerification,

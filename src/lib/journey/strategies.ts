@@ -51,6 +51,10 @@ export interface StrategieConstruite {
   exclusions: string[];
   /** Véhicules sans année de remplacement (traités à l'année 0). */
   sansAnnee: string[];
+  /** Véhicules dont le remplacement tombe APRÈS l'horizon d'analyse
+   *  (revue A5) : exclus des totaux, du budget et du financement,
+   *  signalés en clair (année prévue). */
+  horsHorizon: { id: string; anneeRemplacement: number }[];
   /** Conditions et prudences du résolveur de subventions (classe de
    *  poids inconnue, % à valider, limites par organisation…), dédupliquées. */
   avertissementsSubventions: string[];
@@ -91,6 +95,7 @@ export function construireStrategie(
   const parametres = parametresParDefaut(options);
   const exclusions: string[] = [];
   const sansAnnee: string[] = [];
+  const horsHorizon: { id: string; anneeRemplacement: number }[] = [];
   const avertissementsSubventions = new Set<string>();
   const plansVehicules: NonNullable<PlanTcoEntree["vehicules"]> = [];
   const bevIds: string[] = [];
@@ -107,7 +112,14 @@ export function construireStrategie(
     if (v.replacement_year == null) {
       sansAnnee.push(v.id);
     } else {
-      k = Math.min(Math.max(v.replacement_year - options.anneeReference, 0), options.horizonAns);
+      k = Math.max(v.replacement_year - options.anneeReference, 0);
+      // Remplacement APRÈS l'horizon d'analyse (revue A5) : le véhicule
+      // n'a aucun effet dans la fenêtre — exclu des totaux et signalé
+      // en clair (jamais un identifiant technique à l'écran).
+      if (k >= options.horizonAns) {
+        horsHorizon.push({ id: v.id, anneeRemplacement: options.anneeReference + k });
+        continue;
+      }
     }
 
     const techno = technoCible(cle, v, options);
@@ -177,6 +189,7 @@ export function construireStrategie(
       subventionsTotal: 0,
       exclusions,
       sansAnnee,
+      horsHorizon,
       avertissementsSubventions: [...avertissementsSubventions],
     };
   }
@@ -221,6 +234,7 @@ export function construireStrategie(
     subventionsTotal,
     exclusions,
     sansAnnee,
+    horsHorizon,
     avertissementsSubventions: [...avertissementsSubventions],
   };
 }

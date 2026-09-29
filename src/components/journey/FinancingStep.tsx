@@ -67,7 +67,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
       (a, l) => a + l.resteAFinancerAlt,
       0,
     );
-    return { lignes, total: strategie.subventionsTotal, resteAFinancer, anneeReference };
+    return { lignes, total: strategie.subventionsTotal, resteAFinancer, anneeReference, strategie };
   }, [options, projectVehicles]);
 
   if (orgLoading || isLoading) {
@@ -107,6 +107,19 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
 
   return (
     <div className="space-y-4">
+      {donnees && donnees.strategie.horsHorizon.length > 0 && (
+        <p className="text-sm text-muted-foreground">
+          {t("journey.strategies.outOfHorizon", {
+            count: donnees.strategie.horsHorizon.length,
+            liste: donnees.strategie.horsHorizon
+              .map(
+                (h) =>
+                  `${projectVehicles.find((pv) => pv.vehicle_id === h.id)?.vehicles.unit_number ?? "?"} (${h.anneeRemplacement})`,
+              )
+              .join(", "),
+          })}
+        </p>
+      )}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {(
           [

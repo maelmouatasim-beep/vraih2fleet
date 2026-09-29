@@ -23,6 +23,27 @@ function vehicule(patch: Partial<VehiculeFaisabilite> = {}): VehiculeFaisabilite
 }
 
 describe("evaluerFaisabiliteVehicule", () => {
+  it("MÊME année d'acquisition que le Plan (revue A5) : un remplacement différé change l'économie", () => {
+    const immediat = evaluerFaisabiliteVehicule(vehicule(), OPTIONS);
+    const differe = evaluerFaisabiliteVehicule(vehicule({ replacement_year: 2029 }), OPTIONS);
+    // même calendrier que le Plan : le différentiel est nul avant 2029,
+    // l'économie actualisée diffère donc du remplacement immédiat
+    expect(differe.evaluations![0].economieActualisee).not.toBeCloseTo(
+      immediat.evaluations![0].economieActualisee,
+      2,
+    );
+    // les subventions sont versées à partir de l'année d'acquisition (k=3)
+    for (const s of differe.evaluations![0].subventions) {
+      expect(s.annee).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it("remplacement APRÈS l'horizon : aucun calcul, signalement clair (revue A5)", () => {
+    const r = evaluerFaisabiliteVehicule(vehicule({ replacement_year: 2040 }), OPTIONS);
+    expect(r.evaluations).toBeNull();
+    expect(r.horsHorizon).toEqual({ anneeRemplacement: 2040, horizonAns: 10 });
+  });
+
   it("évalue BEV et FCEV avec le moteur (économie chiffrée, cohérence verdict/économie)", () => {
     const r = evaluerFaisabiliteVehicule(vehicule(), OPTIONS);
     expect(r.evaluations).not.toBeNull();

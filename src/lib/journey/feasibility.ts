@@ -29,6 +29,10 @@ export interface VehiculeFaisabilite {
   consumption_per_100km: number | null;
   consumption_source: string; // saisie | telematique | estimation
   usage_profile: string | null;
+  /** Année CALENDAIRE de remplacement prévue au plan. La Faisabilité
+   *  calcule avec la MÊME année d'acquisition que le Plan (revue A5) ;
+   *  absente = remplacement immédiat (année de référence). */
+  replacement_year?: number | null;
 }
 
 export type VerdictFaisabilite = "favorable" | "conditionnel" | "defavorable";
@@ -50,10 +54,14 @@ export interface EvaluationTechno {
 
 export interface FaisabiliteVehicule {
   vehiculeId: string;
-  /** null quand la catégorie n'est pas connue du moteur (« autre »). */
+  /** null quand la catégorie n'est pas connue du moteur (« autre »)
+   *  ou quand le remplacement tombe APRÈS l'horizon d'analyse. */
   evaluations: EvaluationTechno[] | null;
   kmParAnRetenu: number | null;
   donneesEstimees: DonneeEstimee[];
+  /** Remplacement prévu après la fin de l'horizon d'analyse (revue A5) :
+   *  véhicule exclu des calculs et des totaux, signalé en clair. */
+  horsHorizon?: { anneeRemplacement: number; horizonAns: number };
 }
 
 export function classeEmission(category: string): "legers" | "lourds" {
@@ -107,6 +115,26 @@ export function evaluerFaisabiliteVehicule(
     return { vehiculeId: vehicule.id, evaluations: null, kmParAnRetenu: null, donneesEstimees: [] };
   }
 
+  // MÊME année d'acquisition que le Plan (revue A5) : la Faisabilité et
+  // le Plan chiffrent le même calendrier. Remplacement après l'horizon :
+  // aucun calcul possible dans la fenêtre — exclu et signalé en clair.
+  const k =
+    vehicule.replacement_year != null
+      ? Math.max(vehicule.replacement_year - options.anneeReference, 0)
+      : 0;
+  if (k >= options.horizonAns) {
+    return {
+      vehiculeId: vehicule.id,
+      evaluations: null,
+      kmParAnRetenu: kmParAn,
+      donneesEstimees,
+      horsHorizon: {
+        anneeRemplacement: options.anneeReference + k,
+        horizonAns: options.horizonAns,
+      },
+    };
+  }
+
   const parametres = parametresParDefaut(options);
 
   const evaluations = (["BEV", "FCEV"] as const).map((technologie): EvaluationTechno => {
@@ -116,8 +144,8 @@ export function evaluerFaisabiliteVehicule(
       technologie,
       prixAvantTaxes: prixAlternative,
       typeOrganisme: options.typeOrganisme,
-      anneeAchatCalendaire: options.anneeReference,
-    });
+      anneeAchatCalendaire: options.anneeReference + k,
+    }).map((s) => ({ ...s, annee: s.annee + k }));
 
     const resultat = calculerPlan({
       parametres,
@@ -140,6 +168,7 @@ export function evaluerFaisabiliteVehicule(
           },
           subventionsAlternative: subventions,
           dureeVieAns: defauts.dureeVieAns,
+          anneeAcquisition: k,
         },
       ],
       sitesInfra: [],

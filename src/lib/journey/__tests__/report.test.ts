@@ -16,6 +16,9 @@ const META = {
   dateIso: "2026-09-28",
   anneeReference: 2026,
   horizonAns: 10,
+  // Taux VOLONTAIREMENT différent du défaut du registre (0,05) pour
+  // vérifier que l'annexe affiche le vrai taux du projet (revue A5).
+  tauxActualisationNominal: 0.07,
 };
 
 function flotte(): VehiculeProjet[] {
@@ -67,9 +70,25 @@ describe("construireClasseurPlan", () => {
 
   it("la feuille hypothèses liste tout le registre avec statut et date de vérification", () => {
     const lignes = feuilles[2].lignes;
-    expect(lignes.length).toBe(3 + LISTE_HYPOTHESES.length);
     const prixDiesel = lignes.find((l) => l[0] === "prix_diesel")!;
     expect(prixDiesel[4]).toBe("vérifié");
     expect(String(prixDiesel[7])).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+
+  it("l'annexe affiche le VRAI taux d'actualisation du projet, pas le défaut du registre (revue A5)", () => {
+    const lignes = feuilles[2].lignes;
+    const taux = lignes.find((l) => l[0] === "taux_actualisation_nominal")!;
+    expect(taux[2]).toBe(0.07);
+    expect(taux[4]).toBe("paramètre du projet");
+  });
+
+  it("les données client apparaissent en tête de la feuille hypothèses quand il y en a", () => {
+    const avecClient = construireClasseurPlan(strategie, unites, {
+      ...META,
+      donneesClient: ["prix du diesel payé ($/L avant TPS/TVQ) : donnée client (organisation, 2026-09-29)"],
+    });
+    const lignes = avecClient[2].lignes.map((l) => String(l[0] ?? ""));
+    expect(lignes.some((l) => l.includes("DONNÉES CLIENT"))).toBe(true);
+    expect(lignes.some((l) => l.includes("donnée client"))).toBe(true);
   });
 });

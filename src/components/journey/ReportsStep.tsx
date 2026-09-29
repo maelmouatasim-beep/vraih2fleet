@@ -70,6 +70,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
       dateIso: new Date().toISOString().slice(0, 10),
       anneeReference,
       horizonAns: project.defaultAnalysisHorizonYears,
+      tauxActualisationNominal: options.tauxActualisationNominal,
       donneesClient,
     };
     const unites = new Map(projectVehicles.map((pv) => [pv.vehicle_id, pv.vehicles.unit_number]));

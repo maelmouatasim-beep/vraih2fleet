@@ -5633,7 +5633,8 @@
         "title": "No vehicles to assess",
         "subtitle": "First select the project vehicles in the Fleet step."
       },
-      "disclaimer": "Range is not modelled in this version: long-distance and off-road uses are flagged as caveats. Amounts rely on the registry assumptions (statuses and verification dates in the Library) and are refined in the next steps."
+      "disclaimer": "Range is not modelled in this version: long-distance and off-road uses are flagged as caveats. Amounts rely on the registry assumptions (statuses and verification dates in the Library) and are refined in the next steps.",
+      "outOfHorizon": "Replacement planned in {{annee}}, after the {{horizon}}-year analysis horizon — vehicle excluded from calculations and totals. Move the replacement year closer or extend the project horizon to assess it."
     },
     "strategies": {
       "empty": {
@@ -5685,7 +5686,8 @@
         "tcoCompare": "Strategy TCO {{alt}} vs status quo {{ref}}",
         "vanRange": "Savings (NPV) at the assumption's bounds",
         "note": "Central savings: {{van}}. Each bar shows the savings recomputed by the engine as the assumption moves from its low to its high bound (registry ranges)."
-      }
+      },
+      "outOfHorizon": "{{count}} vehicle(s) scheduled for replacement after the analysis horizon — excluded from every total and from financing: {{liste}}."
     },
     "plan": {
       "empty": {

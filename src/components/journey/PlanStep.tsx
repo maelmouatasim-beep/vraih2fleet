@@ -130,6 +130,19 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
 
   return (
     <div className="space-y-4">
+      {donnees && donnees.strategie.horsHorizon.length > 0 && (
+        <p className="text-sm text-muted-foreground">
+          {t("journey.strategies.outOfHorizon", {
+            count: donnees.strategie.horsHorizon.length,
+            liste: donnees.strategie.horsHorizon
+              .map(
+                (h) =>
+                  `${projectVehicles.find((pv) => pv.vehicle_id === h.id)?.vehicles.unit_number ?? "?"} (${h.anneeRemplacement})`,
+              )
+              .join(", "),
+          })}
+        </p>
+      )}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {(
           [

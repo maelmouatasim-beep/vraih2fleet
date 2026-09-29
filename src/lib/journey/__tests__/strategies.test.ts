@@ -113,6 +113,23 @@ describe("construireStrategie", () => {
     expect(en2030.subventionsTotal).toBeLessThan(en2026.subventionsTotal);
   });
 
+  it("remplacement APRÈS l'horizon : véhicule exclu du plan et des totaux, signalé sans identifiant technique (revue A5)", () => {
+    const s = construireStrategie(
+      [vehicule({ id: "ok" }), vehicule({ id: "tard", replacement_year: 2040 })],
+      "plan_actuel",
+      OPTIONS,
+    );
+    expect(s.horsHorizon).toEqual([{ id: "tard", anneeRemplacement: 2040 }]);
+    expect(s.plan!.vehicules.map((v) => v.id)).toEqual(["ok"]);
+    expect(s.nbVehicules).toBe(1);
+    // le moteur ne reçoit jamais ce véhicule : aucun avertissement avec
+    // son identifiant technique à l'écran ni au PDF
+    expect(s.resultat!.avertissements.some((a) => a.includes("tard"))).toBe(false);
+    // mêmes totaux que si le véhicule n'existait pas
+    const sans = construireStrategie([vehicule({ id: "ok" })], "plan_actuel", OPTIONS);
+    expect(s.resultat!.vanDifferentielle).toBeCloseTo(sans.resultat!.vanDifferentielle, 6);
+  });
+
   it("l'infrastructure est mise en service à l'année d'arrivée des premiers véhicules", () => {
     const s = construireStrategie(
       [

@@ -186,6 +186,7 @@ export default function CouncilReportPDF({
         </Text>
         {(strategie.exclusions.length > 0 ||
           strategie.sansAnnee.length > 0 ||
+          strategie.horsHorizon.length > 0 ||
           resultat.avertissements.length > 0 ||
           strategie.avertissementsSubventions.length > 0) && (
           <>
@@ -202,6 +203,18 @@ export default function CouncilReportPDF({
                 {en
                   ? `${strategie.sansAnnee.length} vehicle(s) without a replacement year, treated as replaced in ${meta.anneeReference}.`
                   : `${strategie.sansAnnee.length} véhicule(s) sans année de remplacement, traités comme remplacés en ${meta.anneeReference}.`}
+              </Text>
+            )}
+            {strategie.horsHorizon.length > 0 && (
+              <Text style={s.note}>
+                {(() => {
+                  const liste = strategie.horsHorizon
+                    .map((h) => `${unites.get(h.id) ?? "?"} (${h.anneeRemplacement})`)
+                    .join(", ");
+                  return en
+                    ? `${strategie.horsHorizon.length} vehicle(s) scheduled for replacement AFTER the ${meta.horizonAns}-year analysis horizon — excluded from every total and from the financing table: ${liste}.`
+                    : `${strategie.horsHorizon.length} véhicule(s) dont le remplacement est prévu APRÈS l'horizon d'analyse de ${meta.horizonAns} ans — exclus de tous les totaux et du tableau de financement : ${liste}.`;
+                })()}
               </Text>
             )}
             {[...strategie.avertissementsSubventions, ...resultat.avertissements].slice(0, 9).map((a, i) => (
@@ -309,9 +322,19 @@ export default function CouncilReportPDF({
         {LISTE_HYPOTHESES.map((h) => (
           <View key={h.id} style={s.ligneTable} wrap={false}>
             <Text style={[s.cel, { flex: 2.5 }]}>{h.description}</Text>
-            <Text style={[s.cel, s.droite, { flex: 0.8 }]}>{h.valeur}</Text>
+            <Text style={[s.cel, s.droite, { flex: 0.8 }]}>
+              {/* Taux d'actualisation : la valeur RÉELLEMENT utilisée
+                  (paramètre du projet), pas le défaut du registre (A5). */}
+              {h.id === "taux_actualisation_nominal" ? meta.tauxActualisationNominal : h.valeur}
+            </Text>
             <Text style={[s.cel, { flex: 0.8 }]}>{h.unite}</Text>
-            <Text style={[s.cel, { flex: 0.8 }]}>{statutsHyp[h.statut] ?? h.statut}</Text>
+            <Text style={[s.cel, { flex: 0.8 }]}>
+              {h.id === "taux_actualisation_nominal"
+                ? en
+                  ? "project setting"
+                  : "paramètre du projet"
+                : (statutsHyp[h.statut] ?? h.statut)}
+            </Text>
             <Text style={[s.cel, { flex: 1.6 }]}>
               {h.source.organisme} ({h.source.annee})
             </Text>

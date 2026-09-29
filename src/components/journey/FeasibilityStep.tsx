@@ -44,7 +44,11 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
     if (!options) return null;
     const parVehicule = new Map<string, FaisabiliteVehicule>();
     for (const pv of projectVehicles) {
-      parVehicule.set(pv.vehicle_id, evaluerFaisabiliteVehicule(pv.vehicles, options));
+      // MÊME année d'acquisition que le Plan (revue A5).
+      parVehicule.set(
+        pv.vehicle_id,
+        evaluerFaisabiliteVehicule({ ...pv.vehicles, replacement_year: pv.replacement_year }, options),
+      );
     }
     return parVehicule;
   }, [options, projectVehicles]);
@@ -177,6 +181,19 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
             <TableBody>
               {projectVehicles.map((pv) => {
                 const f = evaluations.get(pv.vehicle_id);
+                if (f?.horsHorizon) {
+                  return (
+                    <TableRow key={pv.id}>
+                      <TableCell className="font-medium">{pv.vehicles.unit_number}</TableCell>
+                      <TableCell colSpan={5} className="text-sm text-muted-foreground">
+                        {t("journey.feasibility.outOfHorizon", {
+                          annee: f.horsHorizon.anneeRemplacement,
+                          horizon: f.horsHorizon.horizonAns,
+                        })}
+                      </TableCell>
+                    </TableRow>
+                  );
+                }
                 const [bev, fcev] = f?.evaluations ?? [undefined, undefined];
                 const reserves = new Set([...(bev?.reserves ?? []), ...(fcev?.reserves ?? [])]);
                 return (

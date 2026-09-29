@@ -160,6 +160,19 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
         <CardContent className="text-sm text-muted-foreground space-y-1">
           <p>{t("journey.strategies.methodNote1")}</p>
           <p>{t("journey.strategies.methodNote2")}</p>
+          {selectionnee.horsHorizon.length > 0 && (
+            <p>
+              {t("journey.strategies.outOfHorizon", {
+                count: selectionnee.horsHorizon.length,
+                liste: selectionnee.horsHorizon
+                  .map(
+                    (h) =>
+                      `${projectVehicles.find((pv) => pv.vehicle_id === h.id)?.vehicles.unit_number ?? "?"} (${h.anneeRemplacement})`,
+                  )
+                  .join(", "),
+              })}
+            </p>
+          )}
           {selectionnee.resultat &&
             (selectionnee.resultat.avertissements.length > 0 ||
               selectionnee.avertissementsSubventions.length > 0) && (
