@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table";
 import { TaskBoard } from "@/components/tasks";
 import { toast } from "@/hooks/use-toast";
-import { useOrganization } from "@/hooks/useOrganization";
+import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -47,7 +47,7 @@ const BADGES: Record<EtatRemplacement, "default" | "secondary" | "destructive" |
 
 export default function TrackingStep({ projectId, project }: TrackingStepProps) {
   const { t } = useTranslation();
-  const { organization, isLoading: orgLoading } = useOrganization();
+  const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading } = useProjectVehicles(projectId);
   const [generation, setGeneration] = useState(false);
   const [cleTableau, setCleTableau] = useState(0);
@@ -74,17 +74,12 @@ export default function TrackingStep({ projectId, project }: TrackingStepProps) 
   }, [projectVehicles, anneeCourante]);
 
   const genererTaches = async () => {
-    if (!organization || !project) return;
+    if (!options) return;
     setGeneration(true);
     try {
       const proposees = tachesDuPlan(
         suivi.vehicules,
-        {
-          anneeReference: anneeCourante,
-          horizonAns: project.defaultAnalysisHorizonYears,
-          tauxActualisationNominal: project.defaultDiscountRate / 100,
-          typeOrganisme: organization.orgType,
-        },
+        { ...options, anneeReference: anneeCourante },
       );
       const { data: existantes, error: errLecture } = await supabase
         .from("tasks")

@@ -29,7 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useOrganization } from "@/hooks/useOrganization";
+import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { construireStrategie } from "@/lib/journey/strategies";
 import { formateurCad, formateurCadCompact } from "@/lib/format";
@@ -43,15 +43,15 @@ interface PlanStepProps {
 
 export default function PlanStep({ projectId, project }: PlanStepProps) {
   const { t, i18n } = useTranslation();
-  const { organization, isLoading: orgLoading } = useOrganization();
+  const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading } = useProjectVehicles(projectId);
 
   const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
   const compact = useMemo(() => formateurCadCompact(i18n.language), [i18n.language]);
 
   const donnees = useMemo(() => {
-    if (!project || !organization || projectVehicles.length === 0) return null;
-    const anneeReference = new Date().getFullYear();
+    if (!options || projectVehicles.length === 0) return null;
+    const anneeReference = options.anneeReference;
     const strategie = construireStrategie(
       projectVehicles.map((pv) => ({
         ...pv.vehicles,
@@ -59,12 +59,7 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
         target_technology: pv.target_technology,
       })),
       "plan_actuel",
-      {
-        anneeReference,
-        horizonAns: project.defaultAnalysisHorizonYears,
-        tauxActualisationNominal: project.defaultDiscountRate / 100,
-        typeOrganisme: organization.orgType,
-      },
+      options,
     );
     if (!strategie.resultat || !strategie.plan) return null;
 
@@ -88,7 +83,7 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
     );
 
     return { strategie, resultat: strategie.resultat, remplacements, totaux };
-  }, [project, organization, projectVehicles]);
+  }, [options, projectVehicles]);
 
   if (orgLoading || isLoading) {
     return (

@@ -12,7 +12,7 @@ import * as XLSX from "xlsx";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
-import { useOrganization } from "@/hooks/useOrganization";
+import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { construireClasseurPlan, type MetaRapport } from "@/lib/journey/report";
 import { construireStrategie } from "@/lib/journey/strategies";
@@ -37,13 +37,13 @@ function telecharger(blob: Blob, nom: string) {
 
 export default function ReportsStep({ projectId, project }: ReportsStepProps) {
   const { t } = useTranslation();
-  const { organization, isLoading: orgLoading } = useOrganization();
+  const { options, donneesClient, organization, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading } = useProjectVehicles(projectId);
   const [enCours, setEnCours] = useState<string | null>(null);
 
   const donnees = useMemo(() => {
-    if (!project || !organization || projectVehicles.length === 0) return null;
-    const anneeReference = new Date().getFullYear();
+    if (!options || !organization || projectVehicles.length === 0) return null;
+    const anneeReference = options.anneeReference;
     const strategie = construireStrategie(
       projectVehicles.map((pv) => ({
         ...pv.vehicles,
@@ -51,12 +51,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
         target_technology: pv.target_technology,
       })),
       "plan_actuel",
-      {
-        anneeReference,
-        horizonAns: project.defaultAnalysisHorizonYears,
-        tauxActualisationNominal: project.defaultDiscountRate / 100,
-        typeOrganisme: organization.orgType,
-      },
+      options,
     );
     if (!strategie.plan || !strategie.resultat) return null;
     const meta: MetaRapport = {
@@ -65,10 +60,11 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
       dateIso: new Date().toISOString().slice(0, 10),
       anneeReference,
       horizonAns: project.defaultAnalysisHorizonYears,
+      donneesClient,
     };
     const unites = new Map(projectVehicles.map((pv) => [pv.vehicle_id, pv.vehicles.unit_number]));
     return { strategie, meta, unites };
-  }, [project, organization, projectVehicles]);
+  }, [options, donneesClient, organization, project, projectVehicles]);
 
   const genererPdf = async (langue: "fr" | "en") => {
     if (!donnees) return;

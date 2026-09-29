@@ -281,6 +281,23 @@ export default function CouncilReportPDF({
             ? "Method (docs/tco-methodologie.md): year 0 = acquisition (undiscounted); operating flows are nominal (per-item inflation) and discounted at the nominal rate; the reference is the same fleet replaced on the same schedule by equivalent new diesels; subsidies are counted in their payment year and capped by stacking rules; residual values are geometric with a floor. Every assumption below carries an honest status: an amount is only “verified” if the official source was actually read on the indicated date."
             : "Méthode (docs/tco-methodologie.md) : année 0 = acquisition (non actualisée) ; flux d'exploitation nominaux (inflation par poste) actualisés au taux nominal ; la référence est la même flotte remplacée au même calendrier par des diesels neufs équivalents ; les subventions sont comptées à leur année de versement et plafonnées par les règles de cumul ; valeurs résiduelles géométriques avec plancher. Chaque hypothèse ci-dessous porte un statut honnête : un montant n'est « vérifié » que si la source officielle a réellement été lue à la date indiquée."}
         </Text>
+        {(meta.donneesClient?.length ?? 0) > 0 && (
+          <>
+            <Text style={[s.h2, { marginTop: 6 }]}>
+              {en ? "Client data" : "Données client"}
+            </Text>
+            <Text style={s.note}>
+              {en
+                ? "The following values were provided by the organization and take precedence over the registry defaults below:"
+                : "Les valeurs suivantes ont été fournies par l'organisation et priment sur les défauts du registre ci-dessous :"}
+            </Text>
+            {meta.donneesClient!.map((d, i) => (
+              <Text key={i} style={s.note}>
+                • {d}
+              </Text>
+            ))}
+          </>
+        )}
         <View style={[s.enTeteTable, { marginTop: 8 }]}>
           <Text style={[s.cel, { flex: 2.5 }]}>{en ? "Assumption" : "Hypothèse"}</Text>
           <Text style={[s.cel, s.droite, { flex: 0.8 }]}>{en ? "Value" : "Valeur"}</Text>

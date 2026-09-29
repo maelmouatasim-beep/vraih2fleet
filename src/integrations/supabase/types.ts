@@ -125,6 +125,63 @@ export type Database = {
         }
         Relationships: []
       }
+      energy_client_inputs: {
+        Row: {
+          created_at: string
+          diesel_price_per_l: number | null
+          electricity_cost_per_kwh: number | null
+          grid_connection_quote: number | null
+          h2_price_per_kg: number | null
+          id: string
+          notes: string | null
+          organization_id: string
+          project_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          diesel_price_per_l?: number | null
+          electricity_cost_per_kwh?: number | null
+          grid_connection_quote?: number | null
+          h2_price_per_kg?: number | null
+          id?: string
+          notes?: string | null
+          organization_id: string
+          project_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          diesel_price_per_l?: number | null
+          electricity_cost_per_kwh?: number | null
+          grid_connection_quote?: number | null
+          h2_price_per_kg?: number | null
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          project_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "energy_client_inputs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "energy_client_inputs_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hydrogen_suppliers: {
         Row: {
           certifications: string[] | null

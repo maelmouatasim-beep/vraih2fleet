@@ -5806,5 +5806,22 @@
         "upToDate": "Plan tasks already exist — nothing to create."
       }
     }
+  },
+  "energyClient": {
+    "title": "Energy data (client)",
+    "subtitleOrg": "Prices your organization actually pays — they take precedence over registry defaults for all projects. Leave blank to use the default.",
+    "subtitleProject": "Overrides for THIS project — they take precedence over organization values and registry defaults. Leave blank to fall back.",
+    "fields": {
+      "diesel_price_per_l": "Diesel price paid",
+      "electricity_cost_per_kwh": "Effective electricity cost",
+      "h2_price_per_kg": "Delivered hydrogen price",
+      "grid_connection_quote": "Depot grid-connection quote",
+      "notes": "Provenance (invoice, contract, quote)"
+    },
+    "defaultPlaceholder": "default: {{valeur}}",
+    "notesPlaceholder": "e.g. Hydro-Québec invoice March 2026, 2026 fuel contract…",
+    "beforeTaxNote": "All amounts are BEFORE GST/QST (diesel includes excise taxes). Entered values are labelled “client data” in reports.",
+    "save": "Save client data",
+    "saved": "Energy data saved"
   }
 }

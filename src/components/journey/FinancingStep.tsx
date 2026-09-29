@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useOrganization } from "@/hooks/useOrganization";
+import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { construireStrategie } from "@/lib/journey/strategies";
 import { PROGRAMMES, statutEffectif } from "@/lib/tco";
@@ -33,15 +33,15 @@ interface FinancingStepProps {
 
 export default function FinancingStep({ projectId, project }: FinancingStepProps) {
   const { t, i18n } = useTranslation();
-  const { organization, isLoading: orgLoading } = useOrganization();
+  const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading } = useProjectVehicles(projectId);
 
   const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
   const aujourdHui = new Date().toISOString().slice(0, 10);
 
   const donnees = useMemo(() => {
-    if (!project || !organization || projectVehicles.length === 0) return null;
-    const anneeReference = new Date().getFullYear();
+    if (!options || projectVehicles.length === 0) return null;
+    const anneeReference = options.anneeReference;
     const strategie = construireStrategie(
       projectVehicles.map((pv) => ({
         ...pv.vehicles,
@@ -49,12 +49,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
         target_technology: pv.target_technology,
       })),
       "plan_actuel",
-      {
-        anneeReference,
-        horizonAns: project.defaultAnalysisHorizonYears,
-        tauxActualisationNominal: project.defaultDiscountRate / 100,
-        typeOrganisme: organization.orgType,
-      },
+      options,
     );
     if (!strategie.plan || !strategie.resultat) return null;
     const uniteParId = new Map(projectVehicles.map((pv) => [pv.vehicle_id, pv.vehicles.unit_number]));
@@ -73,7 +68,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
       0,
     );
     return { lignes, total: strategie.subventionsTotal, resteAFinancer, anneeReference };
-  }, [project, organization, projectVehicles]);
+  }, [options, projectVehicles]);
 
   if (orgLoading || isLoading) {
     return (

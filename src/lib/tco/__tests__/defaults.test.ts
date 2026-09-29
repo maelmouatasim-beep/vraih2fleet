@@ -28,6 +28,22 @@ describe('parametresParDefaut', () => {
   });
 });
 
+describe('surcharges « donnée client » (couche 3, §3.3 v2.2)', () => {
+  it('les valeurs client priment sur les défauts du registre, champ par champ', () => {
+    const p = parametresParDefaut({
+      anneeReference: 2026,
+      horizonAns: 10,
+      tauxActualisationNominal: 0.05,
+      typeOrganisme: 'municipalite',
+      surchargesEnergie: { dieselParL: 1.62, electriciteEffectiveParKwh: 0.084 },
+    });
+    expect(p.prixAnnee0.dieselParL).toBe(1.62);
+    expect(p.prixAnnee0.electriciteEffectiveParKwh).toBe(0.084);
+    // champ non fourni : défaut du registre inchangé
+    expect(p.prixAnnee0.h2LivreParKg).toBe(HYPOTHESES.prix_h2_livre.valeur);
+  });
+});
+
 describe('tauxTaxesNonRecuperables', () => {
   it('municipalité : TPS remboursée à 100 %, TVQ à 50 % (hypothèses du registre)', () => {
     const attendu =

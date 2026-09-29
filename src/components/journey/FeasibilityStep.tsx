@@ -18,8 +18,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useOrganization } from "@/hooks/useOrganization";
+import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
+import EnergyClientDataCard from "@/components/organization/EnergyClientDataCard";
 import {
   evaluerFaisabiliteVehicule,
   type EvaluationTechno,
@@ -36,24 +37,17 @@ interface FeasibilityStepProps {
 
 export default function FeasibilityStep({ projectId, project }: FeasibilityStepProps) {
   const { t, i18n } = useTranslation();
-  const { organization, isLoading: orgLoading } = useOrganization();
+  const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading } = useProjectVehicles(projectId);
 
   const evaluations = useMemo(() => {
-    if (!project || !organization) return null;
-    const options = {
-      anneeReference: new Date().getFullYear(),
-      horizonAns: project.defaultAnalysisHorizonYears,
-      // defaultDiscountRate est stocké en pour cent (5 = 5 %)
-      tauxActualisationNominal: project.defaultDiscountRate / 100,
-      typeOrganisme: organization.orgType,
-    };
+    if (!options) return null;
     const parVehicule = new Map<string, FaisabiliteVehicule>();
     for (const pv of projectVehicles) {
       parVehicule.set(pv.vehicle_id, evaluerFaisabiliteVehicule(pv.vehicles, options));
     }
     return parVehicule;
-  }, [project, organization, projectVehicles]);
+  }, [options, projectVehicles]);
 
   const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
 
@@ -136,6 +130,7 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
 
   return (
     <div className="space-y-4">
+      <EnergyClientDataCard projectId={projectId} />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {(
           [

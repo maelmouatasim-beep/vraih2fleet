@@ -21,6 +21,9 @@ export interface MetaRapport {
   dateIso: string; // AAAA-MM-JJ
   anneeReference: number;
   horizonAns: number;
+  /** Libellés « donnée client » (couche 3, §3.3 v2.2) : champs saisis
+   *  par le client qui PRIMENT sur les défauts du registre. */
+  donneesClient?: string[];
 }
 
 const STATUTS_FR: Record<string, string> = {
@@ -111,6 +114,13 @@ export function construireClasseurPlan(
 
   const hypotheses: Cellule[][] = [
     ["Hypothèses du registre (docs/tco-methodologie.md §8 — statuts honnêtes)"],
+    ...(meta.donneesClient && meta.donneesClient.length > 0
+      ? [
+          [],
+          ["DONNÉES CLIENT (elles priment sur les défauts du registre ci-dessous) :"],
+          ...meta.donneesClient.map((d): Cellule[] => [d]),
+        ]
+      : []),
     [],
     ["Identifiant", "Description", "Valeur", "Unité", "Statut", "Source", "Année", "Vérifiée le"],
     ...LISTE_HYPOTHESES.map((h) => [

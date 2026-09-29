@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useOrganization } from "@/hooks/useOrganization";
+import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { construireStrategies, type CleStrategie } from "@/lib/journey/strategies";
 import { formateurCad } from "@/lib/format";
@@ -26,20 +26,14 @@ interface StrategiesStepProps {
 
 export default function StrategiesStep({ projectId, project }: StrategiesStepProps) {
   const { t, i18n } = useTranslation();
-  const { organization, isLoading: orgLoading } = useOrganization();
+  const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading } = useProjectVehicles(projectId);
   const [selection, setSelection] = useState<CleStrategie>("plan_actuel");
 
   const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
 
   const strategies = useMemo(() => {
-    if (!project || !organization || projectVehicles.length === 0) return null;
-    const options = {
-      anneeReference: new Date().getFullYear(),
-      horizonAns: project.defaultAnalysisHorizonYears,
-      tauxActualisationNominal: project.defaultDiscountRate / 100,
-      typeOrganisme: organization.orgType,
-    };
+    if (!options || projectVehicles.length === 0) return null;
     return construireStrategies(
       projectVehicles.map((pv) => ({
         ...pv.vehicles,
@@ -48,7 +42,7 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
       })),
       options,
     );
-  }, [project, organization, projectVehicles]);
+  }, [options, projectVehicles]);
 
   if (orgLoading || isLoading || (projectVehicles.length > 0 && !strategies)) {
     return (

@@ -5806,5 +5806,22 @@
         "upToDate": "Les tâches du plan existent déjà — rien à créer."
       }
     }
+  },
+  "energyClient": {
+    "title": "Données énergie (client)",
+    "subtitleOrg": "Prix réellement payés par votre organisation — ils priment sur les défauts du registre pour tous les projets. Laisser vide = valeur par défaut.",
+    "subtitleProject": "Surcharges propres à CE projet — elles priment sur les valeurs de l'organisation et sur les défauts du registre. Laisser vide = couche inférieure.",
+    "fields": {
+      "diesel_price_per_l": "Prix du diesel payé",
+      "electricity_cost_per_kwh": "Coût effectif de l'électricité",
+      "h2_price_per_kg": "Prix de l'hydrogène livré",
+      "grid_connection_quote": "Devis de raccordement du dépôt",
+      "notes": "Provenance (facture, contrat, devis)"
+    },
+    "defaultPlaceholder": "défaut : {{valeur}}",
+    "notesPlaceholder": "ex. facture Hydro-Québec de mars 2026, contrat carburant 2026…",
+    "beforeTaxNote": "Tous les montants s'entendent AVANT TPS/TVQ (le diesel comprend les taxes d'accise). Les valeurs saisies sont marquées « donnée client » dans les rapports.",
+    "save": "Enregistrer les données client",
+    "saved": "Données énergie enregistrées"
   }
 }

@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import EnergyClientDataCard from "@/components/organization/EnergyClientDataCard";
 import { toast } from "@/hooks/use-toast";
 import { useOrganization } from "@/hooks/useOrganization";
 import { listOrganizationMembers, updateOrganization } from "@/lib/supabase/organizations";
@@ -136,6 +137,8 @@ export default function OrganizationPage() {
             )}
           </CardContent>
         </Card>
+
+        <EnergyClientDataCard />
 
         <Card>
           <CardHeader>

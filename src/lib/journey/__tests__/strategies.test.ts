@@ -143,6 +143,28 @@ describe("construireStrategie", () => {
     expect(s.resultat!.avertissements.some((a) => a.includes("technologies mixtes"))).toBe(false);
   });
 
+  it("devis client de raccordement : il remplace l'hypothèse du registre dans l'infra", () => {
+    const avecDevis = construireStrategie([vehicule()], "plan_actuel", {
+      ...OPTIONS,
+      surchargesEnergie: { devisRaccordement: 123456 },
+    });
+    const sansDevis = construireStrategie([vehicule()], "plan_actuel", OPTIONS);
+    expect(avecDevis.infraCapex - sansDevis.infraCapex).toBe(
+      123456 - HYPOTHESES.raccordement_depot.valeur,
+    );
+  });
+
+  it("prix client du diesel : il change le TCO de la référence (donnée client prioritaire)", () => {
+    const client = construireStrategie([vehicule()], "plan_actuel", {
+      ...OPTIONS,
+      surchargesEnergie: { dieselParL: 3.0 },
+    });
+    const defaut = construireStrategie([vehicule()], "plan_actuel", OPTIONS);
+    expect(client.resultat!.reference.tcoActualise).toBeGreaterThan(
+      defaut.resultat!.reference.tcoActualise,
+    );
+  });
+
   it("construireStrategies renvoie les trois stratégies", () => {
     const tout = construireStrategies([vehicule()], OPTIONS);
     expect(tout.map((s) => s.cle)).toEqual(["plan_actuel", "tout_electrique", "economies_d_abord"]);

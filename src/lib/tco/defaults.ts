@@ -15,6 +15,16 @@ export interface OptionsParametres {
   /** Taux NOMINAL, en décimal (0.05 = 5 %). */
   tauxActualisationNominal: number;
   typeOrganisme: TypeOrganisme;
+  /** Couche « données client » (§3.3 v2.2) : les valeurs fournies par le
+   *  client PRIMENT sur les défauts du registre. Tous les montants
+   *  s'entendent AVANT TPS/TVQ. `devisRaccordement` remplace l'hypothèse
+   *  raccordement_depot dans le dimensionnement d'infrastructure. */
+  surchargesEnergie?: {
+    dieselParL?: number;
+    electriciteEffectiveParKwh?: number;
+    h2LivreParKg?: number;
+    devisRaccordement?: number;
+  };
 }
 
 /**
@@ -44,9 +54,11 @@ export function parametresParDefaut(options: OptionsParametres): ParametresProje
       generale: HYPOTHESES.inflation_generale.valeur,
     },
     prixAnnee0: {
-      dieselParL: HYPOTHESES.prix_diesel.valeur,
-      electriciteEffectiveParKwh: HYPOTHESES.cout_effectif_elec_depot.valeur,
-      h2LivreParKg: HYPOTHESES.prix_h2_livre.valeur,
+      dieselParL: options.surchargesEnergie?.dieselParL ?? HYPOTHESES.prix_diesel.valeur,
+      electriciteEffectiveParKwh:
+        options.surchargesEnergie?.electriciteEffectiveParKwh ??
+        HYPOTHESES.cout_effectif_elec_depot.valeur,
+      h2LivreParKg: options.surchargesEnergie?.h2LivreParKg ?? HYPOTHESES.prix_h2_livre.valeur,
     },
     rendementRecharge: HYPOTHESES.rendement_recharge.valeur,
     majorationHivernaleAnnualisee:

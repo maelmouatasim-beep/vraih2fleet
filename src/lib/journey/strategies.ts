@@ -187,7 +187,9 @@ export function construireStrategie(
     Math.min(...plansVehicules.filter((v) => ids.includes(v.id)).map((v) => v.anneeAcquisition ?? 0));
   const sitesInfra: NonNullable<PlanTcoEntree["sitesInfra"]> = [];
   if (bevIds.length > 0) {
-    infraRecharge += HYPOTHESES.raccordement_depot.valeur;
+    // Devis client de raccordement (donnée client, §3.3 couche 3)
+    // prioritaire sur l'hypothèse du registre.
+    infraRecharge += options.surchargesEnergie?.devisRaccordement ?? HYPOTHESES.raccordement_depot.valeur;
     sitesInfra.push({
       id: "depot-recharge",
       capexAvantTaxes: infraRecharge,
