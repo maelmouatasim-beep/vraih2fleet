@@ -1,0 +1,10 @@
+Icône d'avertissement
+UN PROBLÈME EST SURVENU.
+
+Plusieurs raisons peuvent expliquer la situation.
+
+Veuillez actualiser la page ou réessayer dans quelques minutes. Si le problème persiste, communiquez avec nous et mentionnez le code d'erreur ainsi que l’adresse IP indiqués ci-dessous :
+
+Code d’erreur : a426bd86cacaf42c
+
+Adresse IP : 172.172.87.86

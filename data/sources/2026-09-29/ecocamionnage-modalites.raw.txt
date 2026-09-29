@@ -1,0 +1,827 @@
+MINISTÈRE DESTRANSPORTSETDE LA MOBILITÉ DURABLE
+Programme d’aide à la réduction
+des émissions de gaz à effet de
+serre dans le transport routier des
+marchandises (Écocamionnage)
+Modalités d’application 2025-2028
+Septembre 2025
+Cette publication a été réalisée par la Direction générale de la sécurité et du camionnage et éditée par
+la Direction générale des communications du ministère des Transports et de la Mobilité durable.
+Le contenu de cette publication se trouve à l’adresse : www.quebec.ca/transports/aide-financiere.
+Pour obtenir des renseignements :
+• Composez le 511 (au Québec) ou le 1 888 355-0511 (partout en Amérique du Nord)
+• Consultez le site Web du ministère des Transports et de la Mobilité durable à l’adresse suivante :
+www.transports.gouv.qc.ca.
+• Écrivez à l’adresse suivante : Direction générale des communications
+Ministère des Transports et de la Mobilité durable
+500, boulevard René-Lévesque Ouest, bureau 4.010
+Montréal (Québec) H2Z 1W7
+© Gouvernement du Québec, ministère des Transports et de la Mobilité durable, 2025
+ISBN 978-2-555-02758-9 (PDF)
+Dépôt légal – 2025
+Bibliothèque et Archives nationales du Québec
+Tous droits réservés. Reproduction à des fins commerciales par quelque procédé que ce soit et
+traduction, même partielles, interdites sans l’autorisation écrite des Publications du Québec.
+TABLE DES MATIÈRES
+1. INTRODUCTION ........................................................................................................................................... 3
+2. OBJECTIF........................................................................................................................................................ 4
+3. DURÉE DU PROGRAMME .......................................................................................................................... 4
+4. MODALITÉS GÉNÉRALES DU PROGRAMME........................................................................................ 4
+5. GESTION DU PROGRAMME ...................................................................................................................... 5
+6. MODALITÉS RELATIVES AUX DIFFÉRENTS VOLETS......................................................................... 5
+6.1. Volet « Acquisition des technologies »......................................................................................................................... 5
+6.2. Volet « Acquisition de véhicules lourds d’occasion ».............................................................................................11
+6.3. Volet « Projet de logistique ».........................................................................................................................................14
+7. MODALITÉS GÉNÉRALES CONCERNANT LE VERSEMENT DES AIDES FINANCIÈRES...........18
+8. REDDITION DE COMPTES DU PROGRAMME.....................................................................................23
+ANNEXE – DÉFINITIONS ...................................................................................................................................24
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+3
+1. INTRODUCTION
+En 2022, le secteur du transport routier représentait 32,3 % des émissions totales de gaz à effet de serre
+(GES) au Québec. À eux seuls, les véhicules lourds dans le transport routier ont émis 7,56 Mt d’émissions,
+ce qui représente 29,6 % des émissions de GES du secteur du transport routier. Les émissions de GES des
+véhicules lourds ont également augmenté de 80,9 % par rapport à 1990. Il est donc primordial de soutenir
+ce secteur afin d’en réduire l’impact environnemental.
+Soutenir la modernisation technologique et l’électrification du transport des marchandises permet de réduire
+l’empreinte carbone d’une grande frange émettrice au Québec dont il est important de réduire l’impact. De
+plus, la circulation des véhicules lourds cause non seulement des émissions de GES, mais également des
+émissions polluantes et des particules qui peuvent causer du smog urbain. Il est donc tout aussi nécessaire
+de soutenir rapidement et maintenant ce secteur dans la réduction de ces émissions pour avoir un impact
+environnemental significativement moindre à moyen et à long terme.
+Sur le plan économique, subventionner l’industrie du transport des marchandises dans ses efforts de
+réduction des émissions de GES impacte positivement la concurrence de ce secteur en réduisant ses coûts
+d’exploitation, notamment la consommation de carburant. Par ailleurs, le fait d’améliorer l’efficacité de ce
+secteur, et de converger vers la carboneutralité du transport routier des marchandises, vient réduire notre
+consommation et notre dépendance au pétrole, ayant ainsi un effet positif sur la balance commerciale du
+Québec.
+Dans le cadre du Plan pour une économie verte 2030 (PEV 2030) du gouvernement du Québec, le ministère
+des Transports et de la Mobilité durable (Ministère) a notamment pour mandat de contribuer à
+l’action R1-120 qui vise à réduire les émissions de GES du secteur du transport routier de marchandises.
+La mise en œuvre de cette action se traduit par le renouvellement du Programme d’aide à la réduction des
+émissions de GES dans le transport routier des marchandises (Écocamionnage, ci-après « le programme »).
+Le programme compte trois volets :
+− Volet « Acquisition des technologies »;
+− Volet « Acquisition de véhicules lourds d’occasion »;
+− Volet « Projet de logistique »;
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+4
+2. OBJECTIF
+Le programme vise à réduire les émissions de GES dans l’industrie du transport routier des marchandises et
+des véhicules de service par des mesures permettant l’électrification, l’amélioration de l’efficacité
+énergétique ou par l’utilisation d’énergies de remplacement. Ce programme ne s’applique pas au secteur du
+transport des personnes.
+3. DURÉE DU PROGRAMME
+Le programme entre en vigueur dès la date de son approbation par le Conseil du trésor et se termine au plus
+tard le 31 mars 2028 ou lorsque le budget est écoulé.
+4. MODALITÉS GÉNÉRALES DU PROGRAMME
+4.1 Les modalités d’application et administratives relatives au programme sont déterminées par le
+ministre des Transports et de la Mobilité durable (ministre) et approuvées par le Conseil du trésor.
+Ces informations sont rendues disponibles au public lors du lancement du programme.
+4.2 Les technologies admissibles à un financement dans le cadre du programme font l’objet d’une
+évaluation préalable par un comité technique du Ministère, dirigé par le ministre. Ce comité est
+composé de représentants du ministère de l’Environnement, de la Lutte contre les changements
+climatiques, de la Faune et des Parcs (MELCCFP) et du Ministère.
+4.3 Les projets définis au volet « Projet de logistique » font l’objet d’une évaluation par un comité de
+sélection du Ministère, dirigé par le ministre en fonction de critères déterminés. Ce comité est
+composé de représentants du MELCCFP, du ministère de l’Économie, de l’Innovation et de l’Énergie
+(MEIE) et du Ministère.
+4.4 Les véhicules admissibles dans le cadre du programme sont ceux qui sont considérés comme des
+véhicules lourds au sens de la Loi concernant les propriétaires, les exploitants et les conducteurs
+de véhicules lourds (RLRQ, chapitre P-30.3) (PECVL), les véhicules lourds hors route, les véhicules
+légers de type fourgonnette utilisés à des fins commerciales immatriculés d’une plaque F ou L et
+dont le poids nominal brut du véhicule (PNBV) est situé entre 3 856 et 4 535 kg, les véhicules
+électriques à basse vitesse (VBV) ainsi que les vélos cargo à assistance électrique.
+Parmi ces véhicules, ne sont pas admissibles :
+− Les véhicules démonstrateurs indiquant plus de 10 000 km à l’odomètre (sauf pour le volet « Acquisition
+de véhicules lourds d’occasion »);
+− Les véhicules de service d’urgence et les véhicules outils.
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+5
+4.5 Pour bénéficier de l’aide financière prévue au programme, le bénéficiaire, par l’entremise de son
+représentant autorisé, devra préalablement conclure, avec le ministre ou tout fonctionnaire
+autorisé par le ministre, un engagement portant sur le respect des conditions du programme et des
+obligations en découlant, engagement dont la forme est déterminée par le ministre.
+4.6 Les organismes suivants ne sont pas admissibles au programme :
+− Les ministères, les organismes et les entreprises du gouvernement du Québec énumérés dans les
+annexes 1, 2 et 3 de la Loi sur l’administration financière (RLRQ, chapitre A-6.001);
+− Les personnes désignées par l’Assemblée nationale;
+− Les ministères et les organismes fédéraux.
+De plus, le demandeur qui se trouve dans l’une des situations suivantes n’est pas admissible :
+− S’il est dans une situation de faillite ou d’insolvabilité au sens de la Loi sur la faillite et l’insolvabilité
+(L.R.C. [1985], ch. B-3);
+− S’il est inscrit, incluant ses sous-traitants, au Registre des entreprises non admissibles aux contrats
+publics (RENA);
+− S’il a fait défaut de respecter ses obligations après avoir été dûment mis en demeure en lien avec l’octroi
+d’une aide financière antérieure par un ministère ou un organisme du gouvernement du Québec.
+5. GESTION DU PROGRAMME
+Le Ministère a la responsabilité de toutes les étapes du processus de traitement des demandes reçues dans
+le cadre du programme (réception des demandes, analyse des demandes, réception des pièces justificatives,
+envoi de chèques, etc.).
+6. MODALITÉS RELATIVES AUX DIFFÉRENTS VOLETS
+6.1. Volet « Acquisition des technologies »
+6.1.1.Objectif spécifique
+Ce volet vise à augmenter le taux de pénétration des technologies ayant démontré leur efficacité sur le plan
+des réductions des émissions de GES auprès des entreprises qui œuvrent dans le secteur du transport routier
+des marchandises et des véhicules de services.
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+6
+6.1.2.Critères d’admissibilité
+Afin d’être admissibles au volet, les entreprises, les personnes, les organismes ou les municipalités doivent :
+− Être titulaires d’une inscription au Registre des propriétaires et des exploitants de véhicules lourds
+(RPEVL) de la Commission des transports du Québec (CTQ) avec la cote de sécurité satisfaisante, à
+l’exception des concessionnaires, de l’achat d’une fourgonnette, d’un vélo cargo ou d’un VBV. Le
+demandeur doit alors fournir son numéro d’entreprise du Québec (NEQ);
+− Être le futur propriétaire ou exploitant du ou des véhicules visés par la demande au sens de la Loi PECVL;
+− Avoir leur siège social ou un établissement au Québec et être légalement constitué ou, dans le cas
+d’une entreprise individuelle, être légalement constituée et être en affaires depuis au moins deux ans;
+− Effectuer l’acquisition auprès d’un fournisseur, d’un concessionnaire ou d’un fabricant situé au Québec.
+Dans le cas où aucun fournisseur, concessionnaire ou fabricant n’est établi au Québec pour le véhicule
+ou la technologie visée, l’acquisition peut être réalisée ailleurs au Canada.
+De plus, les technologies doivent être neuves et figurer sur la liste des technologies admissibles au
+financement du programme.
+Des conditions supplémentaires sont aussi applicables en ce qui concerne les véhicules, outre les vélos cargo
+et véhicules lourds circulant exclusivement hors du réseau. Ils doivent :
+• Être immatriculés au Québec;
+• Pour les véhicules légers, être de type fourgonnette et non admissible à Roulez vert sur la base du
+prix de détail suggéré par le fabricant (PDSF) maximum déterminé dans le cadre de ce programme;
+• Dans le cas d’une demande faite par un concessionnaire pour un véhicule lourd, un maximum de
+deux véhicules par concessionnaire par année est imposé. Ces véhicules doivent être de classe 6, 7
+ou 8.
+Concernant la liste des technologies admissibles, les exigences en lien avec l’inscription sur cette liste sont
+indiquées dans le guide de demande d’homologation. L’homologation s’applique aux technologies
+commercialisables ou déjà introduites sur le marché. Si la technologie n’apparaît pas sur la liste des
+technologies admissibles, le fabricant ou le demandeur doit remplir le formulaire de demande
+d’homologation et fournir toute l’information requise par le ministre.
+6.1.3.Dépenses admissibles
+Les dépenses admissibles doivent avoir été engagées par le bénéficiaire après le 6 septembre 2024. Les
+types de dépenses admissibles aux fins de l’aide financière sont :
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+7
+− Les frais d’acquisition de la technologie (soit le coût d’acquisition ou le surcoût par rapport au coût d’une
+technologie existante ou standard);
+− Les frais d’installation de la technologie, lesquels ne peuvent toutefois excéder 10 % des dépenses
+admissibles.
+6.1.4. Dépenses non admissibles
+Les dépenses suivantes ne sont pas admissibles :
+− La taxe de vente provinciale (TVQ) et la taxe sur les produits et services (TPS);
+− Les dépenses de fonctionnement et d’entretien de la technologie;
+− Les coûts de la main-d’œuvre liés à la préparation de la demande;
+− Les frais de déplacement, de livraison et de transport de la technologie;
+− Les frais d’administration liés à la demande;
+− Le véhicule acquis en remplacement suivant une perte totale d’un véhicule ayant déjà bénéficié d’une
+aide financière en vertu du programme.
+6.1.5.Octroi des aides financières
+Clause d’achat local
+Une bonification de 15 % de l’aide financière est accordée au demandeur d’une technologie ou d’un véhicule
+assemblé ou fabriqué au Québec. Le guide d’homologation des technologies admissibles à la clause d’achat
+local est disponible sur le site Web du gouvernement du Québec et détaille la procédure à suivre.
+6.1.5.1. Aide financière à l’acquisition d’une technologie électrique liée au
+fonctionnement de l’équipement du véhicule ou à l’assistance du moteur
+Une aide financière représentant 50 % des dépenses admissibles et pouvant atteindre un montant maximal
+de 1 000 $ pour un véhicule léger de type fourgonnettes (classe 2 b) et de 50 000 $ pour un véhicule lourd
+est accordée pour l’acquisition d’une technologie électrique liée au fonctionnement de l’équipement du
+véhicule ou à l’assistance du moteur. L’aide financière pour les technologies prévues à cet article peut être
+basée soit sur le coût de la technologie ou sur le surcoût que représente l’achat de ce type de technologie
+par rapport au coût d’une technologie conventionnelle fonctionnant au diesel ou à essence.
+6.1.5.2. Aide financière pour l’acquisition d’un véhicule neuf électrique, hybride
+rechargeable ou à pile à combustible (VPC)
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+8
+Véhicules légers de type fourgonnettes (classe 2 b)
+Une aide financière d’un montant forfaitaire de 5 000 $ est accordée pour l’acquisition d’un véhicule léger de
+type fourgonnettes (classe 2 b) électrique ou à pile à combustible (VPC) et de 2 500 $ pour un véhicule léger
+de type fourgonnettes (classe 2 b) hybride rechargeable selon les conditions présentées au tableau 1. Cette
+aide financière est régressive et sera déterminée en fonction de la date d’acquisition du véhicule (date inscrite
+sur la facture d’achat). La diminution de l’aide financière entre en vigueur au 1er
+avril de chaque année.
+Tableau 1 – Aide financière pour l’acquisition d’un véhicule léger de types fourgonnettes neuf électrique, à
+pile à combustible (VPC) ou hybride rechargeable
+Catégorie de véhicule
+Catégorie de
+technologie
+Montant de l’aide financière ($)
+2025-2026 2026-2027 2027-2028
+Véhicule léger
+Classe 2 b
+PNBV entre 3 856 et
+4 535 kg
+Entièrement électrique
+ou VPC 5 000 2 500 0
+Hybride rechargeable 2 500 1 250 0
+Véhicules lourds (classes 3 à 8)
+Une aide financière est accordée pour l’acquisition de véhicules électriques, à pile à combustible ou hybride
+rechargeable de classe 3 à 8 selon les proportions du coût d’achat, jusqu’à concurrence de l’atteinte des
+montants maximaux, qui sont déterminés au tableau 2. Le coût d’achat représente le coût du véhicule avant
+toutes options et taxes.
+Tableau 2 – Aide financière pour l’acquisition d’un véhicule neuf électrique, à pile à combustible (VPC) ou
+hybride rechargeable
+Catégorie de véhicule
+Catégorie de
+technologie
+Part du coût d’achat
+(%)
+Montant maximal de
+l’aide financière ($)
+Camion moyen
+Classe 3
+PNBV entre 4 536 kg et
+6 350 kg
+Entièrement électrique
+ou VPC
+25
+30 000
+Hybride rechargeable 10 000
+Camion moyen
+Classe 4
+PNBV entre 6 351 kg et
+7 257 kg
+Entièrement électrique
+ou VPC
+35
+75 000
+Hybride rechargeable 25 000
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+9
+Catégorie de véhicule
+Catégorie de
+technologie
+Part du coût d’achat
+(%)
+Montant maximal de
+l’aide financière ($)
+Camion moyen
+Classe 5, 6 et 7
+PNBV entre 7 258 kg et
+14 969 kg
+Entièrement électrique
+ou VPC
+100 000
+Hybride rechargeable 30 000
+Camion lourd
+Classe 8
+PNBV de 14 970 kg et
+plus
+Entièrement électrique
+ou VPC
+150 000
+Hybride rechargeable 40 000
+6.1.5.3. Aide financière pour l’acquisition d’un véhicule à basse vitesse (VBV)
+Une aide financière d’un montant de 3 000 $ est accordée pour l’acquisition d’un VBV. Par ailleurs, les VBV
+admissibles doivent être conçus principalement pour le transport de biens et avoir une charge utile
+respectant les critères définis dans le guide de demande d’homologation.
+6.1.5.4. Aide financière pour l’acquisition d’un vélo cargo à assistance électrique
+Une aide financière représentant jusqu’à 35 % du coût d’achat et pouvant atteindre un montant maximal de
+3 000 $ est accordée pour l’acquisition d’un vélo cargo à assistance électrique. Le coût d’achat représente le
+coût du vélo cargo à assistance électrique avant toutes options et taxes. Par ailleurs, le vélo cargo à
+assistance électrique doit avoir un volume de chargement et une charge utile respectant les critères définis
+dans le guide de demande d’homologation.
+6.1.6.Versement des aides financières
+Les aides financières prévues au volet sont versées en un seul versement, à la suite de l’approbation du
+ministre et, le cas échéant, de la signature de l’engagement prévu à l’article 4.5. Aucune aide financière ne
+sera versée avant la livraison du véhicule. Une technologie ne peut obtenir qu’une seule aide financière.
+Présentation d’une demande d’aide financière
+Étape 1
+Le demandeur doit transmettre au Ministère :
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+10
+− Le formulaire « Demande d’aide financière pour l’acquisition d’une technologie » et son annexe,
+disponibles sur le site Web du gouvernement du Québec;
+− Une copie de la commande pour l’acquisition de la technologie ou du véhicule, sans possibilité
+d’annulation, sauf en cas de force majeure, acceptée et signée par les parties;
+− Un règlement interne ou une résolution qui atteste que la personne qui signe le formulaire de demande
+d’aide financière et la commande pour le demandeur et au nom de celui-ci est autorisée à le faire et est
+dûment autorisée pour signer tout document ou entente à cet effet avec le ministre;
+− Une description détaillée de la technologie ou du véhicule.
+Dans le cas d’un rabais à l’achat directement chez le constructeur, le fournisseur ou le concessionnaire, le
+demandeur doit également fournir :
+− Le formulaire de cession de l’aide financière disponible sur le site Web du gouvernement du Québec
+signé par les deux parties et attestant que le demandeur autorise le gouvernement à verser l’aide
+financière directement au constructeur, au fournisseur ou au concessionnaire;
+− Une attestation de Revenu Québec confirmant que le demandeur n’a pas de compte en souffrance en
+vertu des lois fiscales québécoises ou, s’il a un compte en souffrance, qu’il a conclu une entente de
+paiement qu’il respecte ou que le recouvrement de ses dettes a été légalement suspendu. Si cette
+exigence n’est pas respectée, le demandeur ne peut se prévaloir de l’aide financière sous forme de rabais
+à l’achat.
+Après s’être assuré de l’admissibilité de la demande, le ministre informe le demandeur et le constructeur, le
+fournisseur ou le concessionnaire, du montant maximal de l’aide financière pouvant être octroyé dans le
+cadre du volet.
+Étape 2
+Afin d’obtenir l’aide financière, le demandeur dispose d’un délai maximal de douze mois à compter de la date
+du dépôt de la demande d’aide financière pour transmettre les pièces justificatives suivantes :
+− Une copie de la facture d’achat du véhicule ou de la technologie;
+− Une copie du certificat d’immatriculation signé et en vigueur;
+− Une copie de la description du véhicule par le constructeur;
+− Une preuve d’installation de la technologie, le cas échéant;
+− Si la demande concerne l’achat ou la location d’un véhicule, une copie du contrat de l’attestation de
+transaction avec un commerçant délivrée par le constructeur, le fournisseur ou le concessionnaire.
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+11
+Ces pièces justificatives devront confirmer les sommes déboursées par le demandeur en ce qui a trait à la
+technologie ainsi que les informations concernant le ou les véhicules mentionnés dans le formulaire de
+demande.
+Si le constructeur, le fournisseur ou le concessionnaire est dans l’incapacité de livrer le ou les véhicules visés
+par la demande d’aide financière dans les délais impartis, c’est-à-dire dans les douze mois suivant la date de
+dépôt de la demande d’aide, il doit en informer le demandeur qui devra soumettre une demande officielle au
+ministre, avant l’écoulement de ce délai, indiquant les motifs et le délai supplémentaire requis.
+La demande de prolongation sera analysée par le ministre, et il incombe au constructeur ou au fournisseur
+de démontrer que les motifs invoqués s’appliquent à son cas particulier. À l’issue de son analyse, le ministre
+fournira une réponse au demandeur.
+Le délai supplémentaire ne pourra jamais dépasser six mois. Si ce nouveau délai n’est pas respecté, la
+demande sera fermée, et le demandeur ne pourra pas obtenir son aide financière. Toutefois, le demandeur
+pourra refaire une demande pour le véhicule qui sera livré hors délais.
+Enfin, le véhicule ou la technologie ayant fait l’objet d’une aide financière en vertu de ce volet ne peut pas
+être vendu ou autrement aliéné sans l’autorisation préalable du ministre avant d’avoir atteint quatre années
+d’utilisation à compter de la date d’acquisition de la technologie. Si le véhicule ou la technologie est vendu
+avant d’avoir atteint quatre années d’utilisation, l’aide financière versée devra être remboursée par le
+bénéficiaire au prorata de la période non atteinte, comptabilisée sur une base mensuelle, par rapport à la
+durée totale de quatre ans.
+Si l’aide financière est versée à un concessionnaire pour l’acquisition d’un véhicule démonstrateur, le
+concessionnaire doit, avant de vendre le véhicule, faire signer à l’acheteur du véhicule un engagement à ne
+pas vendre ou autrement aliéner le véhicule jusqu’à ce que les quatre années soient écoulées depuis la date
+d’acquisition de la technologie et, en cas de défaut, à rembourser l’aide financière au prorata du temps non
+écoulé.
+Dans le cas d’accidents de la route où le véhicule est une perte totale ou d’un remplacement par le fabricant,
+le bénéficiaire devra fournir une preuve au Ministère (par exemple par un rapport de police, un rapport
+d’assurances ou une lettre du fabricant) ainsi que le numéro d’identification du véhicule.
+6.2. Volet « Acquisition de véhicules lourds d’occasion »
+6.2.1. Objectif spécifique
+Ce volet vise à augmenter le taux de pénétration des véhicules lourds d’occasion ayant démontré leur
+efficacité sur le plan environnemental auprès des entreprises qui œuvrent dans le secteur du transport routier
+des marchandises afin de réduire les émissions de GES.
+6.2.2. Critères d’admissibilité
+Afin d’être admissibles au volet, les entreprises, les personnes, les organismes ou les municipalités doivent :
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+12
+− Être titulaires d’une inscription au RPEVL de la CTQ avec la cote de sécurité satisfaisante.
+− Être le futur propriétaire ou exploitant du ou des véhicules visés par la demande au sens de la Loi PECVL;
+− Avoir leur siège social ou un établissement au Québec et être légalement constitué ou, dans le cas d’une
+entreprise individuelle, être légalement constituée et être en affaires depuis au moins deux ans.
+Certains véhicules lourds ne sont pas admissibles sous réserve de l’article 4.5. Par ailleurs, en plus des
+critères d’admissibilité mentionnés ci-dessus, le véhicule doit répondre aux critères suivants :
+− Avoir entre deux et six ans;
+− Être immatriculé au Québec et être considéré comme un véhicule lourd;
+− Être inscrit sur la liste des technologies admissibles;
+− Être acheté auprès d’un concessionnaire d’automobiles ayant un établissement au Québec;
+− Être immatriculé pour la première fois au Québec (donc en provenance de l’extérieur du Québec) ou
+n’avoir jamais fait l’objet d’une aide financière à l’achat ou à la location dans le cadre du volet
+« Acquisition des technologies » du programme;
+− Être immatriculé au nom du demandeur au moment du dépôt de la demande d’aide financière;
+− Avoir été inspecté afin d’évaluer la capacité résiduelle de la batterie par rapport à la capacité initiale.
+6.2.3. Dépenses admissibles
+Les dépenses admissibles doivent avoir été engagées par le bénéficiaire après le 6 septembre 2024. Les
+types de dépenses admissibles aux fins de l’aide financière sont :
+− L’acquisition de véhicules lourds d’occasion.
+6.2.4. Dépenses non admissibles
+Les dépenses suivantes ne sont pas admissibles :
+− La taxe de vente provinciale (TVQ) et la taxe sur les produits et services (TPS);
+− Les coûts de la main-d’œuvre liés à la préparation de la demande;
+− Les frais de déplacement, de livraison et de transport;
+− Les frais d’administration liés à la demande.
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+13
+6.2.5.Octroi des aides financières
+6.2.5.1. Aide financière pour l’acquisition de véhicules lourds d’occasion électriques, à
+pile à combustible (VPC) ou hybride rechargeable
+Une aide financière pouvant atteindre un pourcentage maximal de 20 % de l’aide financière allouée pour un
+véhicule neuf est accordée pour l’acquisition de véhicules lourds d’occasion électriques, à pile à combustible
+(VPC) ou hybride rechargeable. L’âge du véhicule est déterminé en fonction de la date de la transaction par
+rapport à l’année de fabrication du véhicule indiquée sur le certificat d’immatriculation.
+Tableau 3 – Aide financière pour l’acquisition de véhicules lourds d’occasion électriques, à pile à combustible
+(VPC) ou hybride rechargeable
+Proportion de l’aide selon l’âge du véhicule
+Âge du véhicule (années) Aide financière (%)
+2 20
+3 17,5
+4 15
+5 12,5
+6 10
+6.2.6.Versement des aides financières
+Les aides financières prévues au volet sont versées en un seul versement, à la suite de l’approbation du
+ministre et, le cas échéant, de la signature de l’engagement prévu à l’article 4.5. Aucune aide financière ne
+sera versée avant la livraison du véhicule. Un véhicule ne peut obtenir qu’une seule aide financière.
+Présentation d’une demande d’aide financière
+Étape 1
+Le demandeur doit transmettre au Ministère :
+− Le formulaire « Demande d’aide financière pour l’acquisition d’un véhicule » et son annexe, disponibles
+sur le site Web du gouvernement du Québec;
+− Une copie de la commande pour l’acquisition du véhicule, sans possibilité d’annulation, sauf en cas de
+force majeure, acceptée et signée par les parties;
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+14
+− Un règlement interne ou une résolution qui atteste que la personne qui signe le formulaire de demande
+d’aide financière et la commande pour ce demandeur et au nom de celui-ci est autorisée à le faire et est
+dûment autorisée pour signer tout document ou entente à cet effet avec le ministre.
+Après s’être assuré de l’admissibilité de la demande, le ministre informera le demandeur du montant
+maximal de l’aide financière pouvant être octroyé dans le cadre du volet.
+Étape 2
+Afin d’obtenir l’aide financière, le demandeur dispose de 30 jours pour transmettre au Ministère les
+documents suivants :
+− Une copie de la facture d’achat du véhicule;
+− Une copie du certificat d’immatriculation signé et en vigueur;
+− Une copie de la description du véhicule par le constructeur;
+− Le certificat de vérification mécanique délivré par la Société de l’assurance automobile du Québec
+(SAAQ).
+Ces pièces justificatives devront confirmer les sommes déboursées par le demandeur en ce qui a trait à la
+technologie ainsi que les informations concernant le ou les véhicules mentionnés dans le formulaire de
+demande.
+Enfin, le véhicule ou la technologie subventionnée en vertu de ce volet ne peut pas être vendu ou autrement
+aliéné sans l’autorisation préalable du ministre avant d’avoir atteint trois années d’utilisation à compter de la
+date d’acquisition de la technologie. Si le véhicule ou la technologie est vendu avant d’avoir atteint trois
+années d’utilisation, l’aide financière versée devra être remboursée par le bénéficiaire au prorata de la période
+non atteinte, comptabilisée sur une base mensuelle, par rapport à la durée totale de trois ans.
+6.3. Volet « Projet de logistique »
+6.3.1. Objectif spécifique
+Ce volet vise à réduire les émissions de GES par l’amélioration de la logistique des entreprises de transport
+routier des marchandises. Cela peut se traduire, entre autres, par :
+− Une réduction des transports sans chargement;
+− Une optimisation des trajets;
+− Une optimisation du chargement.
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+15
+6.3.2. Critères d’admissibilité
+Les demandeurs suivants sont admissibles et peuvent présenter une demande d’aide financière :
+− Toute personne qui exploite une entreprise;
+− Un organisme à but non lucratif ou une coopérative;
+− Une municipalité (locale, régionale de comté, les regroupements de municipalités liées par une entente
+ou une communauté métropolitaine, de même qu’un organisme municipal ou intermunicipal relevant de
+celle-ci).
+Le demandeur doit avoir son siège social ou un établissement au Québec et être légalement constitué ou,
+dans le cas d’une entreprise individuelle, être légalement constituée et être en affaires depuis au moins deux
+ans.
+Le ou les véhicules visés par le projet doivent être immatriculés au Québec, lorsque l’obligation
+d’immatriculation est applicable, et considérés comme admissibles selon l’article 4.4.
+6.3.3.Présentation d’une demande d’aide financière
+Les demandes peuvent être déposées en tout temps pendant la durée du programme et sont analysées en
+continu. Les demandeurs doivent déposer leur demande à l’aide du formulaire sur le site Web du
+gouvernement du Québec.
+6.3.4.Durée des projets admissibles
+Un projet doit être réalisé dans les 24 mois suivant la signature de l’engagement prévu à l’article 4.5, à défaut
+de quoi le ministre pourra résilier l’engagement.
+À la demande du bénéficiaire, et sous réserve de l’acceptation du ministre, un délai supplémentaire maximal
+de six mois peut être accordé en raison de circonstances exceptionnelles. Dans ce cas, il faut que le
+bénéficiaire fasse la démonstration des circonstances qui justifient ce délai et que le délai additionnel
+demandé permette effectivement de finaliser le projet. Si le bénéficiaire n’est pas en mesure de respecter ce
+délai additionnel, le ministre se réserve le droit de cesser tout versement et d’exiger le remboursement total
+ou partiel du montant de l’aide financière qui aura été versée pour les travaux qui n’auront pas été effectués
+à la date de résiliation.
+6.3.5.Critères de sélection
+Les renseignements présentés dans le formulaire et dans la description du projet seront analysés et évalués
+selon les critères présentés dans le tableau 4. Le comité de sélection attribuera une note pour chacun des
+critères ainsi qu’une note totale.
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+16
+Tableau 4 – Critères d’évaluation pour l’analyse des demandes
+Critères d’évaluation Note Critère éliminatoire
+Qualité du projet sur les plans technologique et
+méthodologique
+/30 15/30
+Impacts du projet sur la réduction des émissions de
+GES
+/40 24/40
+Impacts socioéconomiques du projet /15 s. o.
+Garantie de réalisation du projet /15 s. o.
+Total /100 65/100
+L’obtention de l’aide financière est confirmée par une lettre signée par le ministre. Le bénéficiaire peut lancer
+son projet à compter de la date de signature de l’engagement par le bénéficiaire prévu à l’article 4.5.
+6.3.6.Dépenses admissibles
+Les dépenses doivent être effectuées après la date inscrite sur la lettre de confirmation de l’octroi de l’aide
+financière, à l’exception des dépenses en lien avec le rapport de quantification estimant les réductions des
+émissions de GES exigé par le Ministère. De plus, les dépenses admissibles aux fins de l’aide financière sont :
+− Le salaire et les avantages sociaux, sans aucune majoration, du personnel interne du participant et des
+partenaires travaillant directement sur le projet;
+− Les dépenses pour l’équipement utilisé dans le cadre du projet;
+− Les dépenses pour le matériel et les fournitures utilisés dans le cadre du projet;
+− Les dépenses en lien avec l’acquisition de matériel de traitement de données et de logiciels devant servir
+au projet;
+− Les frais pour la formation directement liée au projet;
+− Les dépenses pour les services externes requis pour le projet;
+− Les dépenses en lien avec les rapports de quantification et de vérification des émissions de GES réduites;
+− Les frais de déplacement et de subsistance à l’intérieur du Québec. Les frais de déplacement,
+d’hébergement et de repas admissibles au programme doivent respecter les barèmes en vigueur au
+gouvernement du Québec.
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+17
+6.3.7.Dépenses non admissibles
+Les dépenses suivantes ne sont pas admissibles :
+− Toute dépense ayant trait au financement d’une dette ou au remboursement d’emprunts à venir;
+− Les frais d’acquisition de biens meubles et immeubles (ordinateurs, bureaux, etc.);
+− Les coûts liés à des activités qui n’ont pas été prévues au devis de projet;
+− Les pertes de production ou les autres pertes occasionnées par des activités liées à la réalisation du
+projet;
+− Tous les types de taxes et d’impôts;
+− Les dépenses engagées pour préparer la demande d’aide financière;
+− Les dépenses non nécessaires et non justifiables au regard du projet, telles que le salaire des dirigeants
+ou des cadres, ou les dépenses qui ne constituent pas un coût additionnel pour le participant;
+− Les frais associés au montage financier du projet et à toutes les autres dépenses réalisées avant le dépôt
+de la demande d’aide financière;
+− Les frais d’administration;
+− Toute autre dépense qui n’est pas directement associée au projet.
+6.3.8.Octroi des aides financières
+Une aide financière représentant 50 % des dépenses admissibles et pouvant atteindre un montant maximal
+de 500 000 $ est accordée sur recommandation d’un comité de sélection décrit à l’article 4.3. Par ailleurs,
+cette aide financière ne peut dépasser 400 $ par tonne d’émissions de GES réduite. Ces tonnes réduites sont
+cumulatives et calculées sur une période maximale de trois ans.
+Remarque : Les frais engagés liés à la production du rapport de quantification et de vérification indiqués à
+l’article 6.3.9 seront remboursés au demandeur. Ce remboursement n’est pas comptabilisé dans le calcul de
+l’aide financière et vient donc s’ajouter à l’aide financière déjà octroyée dans le cadre du projet. Le montant
+de ce remboursement ne peut dépasser 15 000 $.
+6.3.9.Versement des aides financières
+Deux versements sont prévus :
+− Le premier versement (25 % de l’aide financière) est versé à la suite du dépôt :
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+18
+• des pièces justificatives;
+• du formulaire de demande;
+• des factures;
+• de la signature de l’engagement prévu à l’article 4.5;
+• de la quantification de la réduction de la consommation de carburant et des émissions de GES en lien
+avec son projet effectuée par un organisme indépendant. Cette analyse doit être effectuée par une
+personne reconnue par l’Association canadienne de normalisation pour l’application de la
+norme ISO 14064-2. Par ailleurs, toute déclaration de réduction d’émission de GES doit faire l’objet
+d’une validation et d’une vérification par une tierce partie conformément aux spécifications et aux
+lignes directrices de la norme ISO 14064-3;
+• de tout autre document jugé nécessaire par le ministre.
+− Le second versement (jusqu’à 75 % de l’aide financière) est versé à la fin du projet à la suite du dépôt
+d’un rapport de vérification certifiant le tonnage des émissions de GES réduites. Ce rapport doit être
+effectué par un organisme indépendant. Le ministre se réserve le droit de diminuer sa contribution au
+projet si les émissions de GES réduites n’atteignent pas les objectifs du rapport de quantification
+accompagnant le dépôt de la demande.
+Une seule aide financière par projet peut être accordée.
+7. MODALITÉS GÉNÉRALES CONCERNANT LE VERSEMENT DES AIDES
+FINANCIÈRES
+7.1. Le Bénéficiaire doit utiliser l’aide financière aux seules fins prévues au programme;
+7.2. Le Bénéficiaire doit déclarer au ministre toutes autres aides gouvernementales directement ou
+indirectement reçues des ministères ou organismes du gouvernement du Canada ou du Québec,
+ou d’organismes municipaux, en lien avec l’objet du programme;
+7.3. Le Bénéficiaire doit garantir et faciliter en tout temps, toute activité de vérification devant être
+effectuée dans le cadre du programme par le ministre ou son mandataire ainsi que par tout autre
+personne ou organisme dans le cadre des fonctions qu’il exerce ou des mandats qui lui sont
+confiés;
+7.4. Le Bénéficiaire doit fournir à tout moment au ministre ou à son mandataire, sur demande, tout
+document ou renseignement pertinent à l’obtention ou à l’utilisation de l’aide financière;
+7.5. Le Bénéficiaire doit transmettre à la demande du ministre et pour une période de 5 ans à
+compter de la date apparaissant sur la lettre d’annonce de l’aide financière du ministre, toutes
+les données et informations requises aux fins du suivi et de l’évaluation du programme;
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+19
+7.6. Le Bénéficiaire s’engage à éviter toute situation mettant en conflit son propre intérêt et celui du
+ministre ou créant l’apparence d’un tel conflit. Si une telle situation se présente, le Bénéficiaire
+doit immédiatement en informer le ministre qui pourra, à sa discrétion, émettre une directive
+indiquant au Bénéficiaire comment remédier à ce conflit d’intérêts ou de résilier l’aide financière;
+7.7. Le Bénéficiaire est responsable de tout dommage causé par lui, ses employés, agents,
+représentants ou sous-traitants dans le cours ou à l’occasion de l’exécution de tout acte ou
+omission lié à l’aide financière versée par le ministre, y compris le dommage résultant d’un
+manquement à un engagement découlant de cette aide financière.
+Le Bénéficiaire s’engage à indemniser le ministre de tous les recours, les réclamations, les
+demandes et les poursuites pris en raison de dommages ainsi causés.
+7.8. Les droits et les obligations découlant de l’aide financière octroyée ne peuvent, sous peine de
+nullité, être cédés en tout ou en partie sans l’autorisation écrite préalable du ministre, qui peut
+alors prévoir des conditions à cette fin.
+Ne sera pas considéré comme une cession de droits ou une cession de biens, une cession ou un
+transfert ou autre opération de cette nature, qui a lieu en faveur d’une filiale du Bénéficiaire,
+d’une société d’État fédérale, d’une agence fédérale ou à tout ministre de Sa Majesté du Chef
+du Canada ou dans l’éventualité où Sa Majesté du Chef du Canada nommait une autre entité
+pour succéder au Bénéficiaire en conformité avec les lois applicables.
+7.9. Le bénéficiaire s’engage à respecter les lois, les normes et les règlements en vigueur au Québec
+et à obtenir les autorisations requises avant l’exécution du projet.
+7.10. L’aide financière maximale que peut recevoir un demandeur ne peut excéder un million de
+dollars annuellement, et ce, malgré les modalités prévues aux différents volets concernant les
+montants admissibles. Cette limite sera calculée par année civile en fonction de la date
+d’acquisition des technologies. Si la limite annuelle est atteinte pour une entreprise, les
+technologies non subventionnées peuvent faire l’objet d’une nouvelle demande lors d’une
+année subséquente. Ce plafond s’applique à tous les projets, à l’exception des projets
+d’acquisition concernant l’article 6.1.5.2, dont le plafond est fixé à trois millions de dollars.
+7.11. Sauf disposition contraire, tout avis, instruction, recommandation, approbation ou document
+exigé par le ministre et découlant de l’aide financière versée doit, pour être valide et lier les
+Parties, être donné par écrit au représentant de la partie, en mains propres ou par un moyen
+permettant d’en prouver la réception à un moment précis, aux coordonnées de la partie
+concernée.
+Si l’une des Parties change de coordonnées, elle doit en aviser l’autre Partie dans les meilleurs
+délais
+7.12. Aucun intérêt n’est exigible sur les soldes à verser ou à récupérer.
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+20
+7.13. Les bénéficiaires d’aides financières accordées pour les projets retenus seront informés par une
+lettre signée par le ministre, le sous-ministre ou un fonctionnaire autorisé par règlement du
+gouvernement et publiée dans la Gazette officielle du Québec.
+7.14. L’autorisation et le versement des aides financières sont soumis aux conditions suivantes :
+7.14.1. Le budget du programme est conditionnel aux fonds disponibles. Le ministre se réserve le
+droit de limiter le nombre de projets autorisés afin de respecter l’enveloppe budgétaire, en
+référence aux articles 21 et 51 de la Loi sur l’administration financière (RLRQ, chapitre
+A-6.001).
+7.14.2. Le calcul du cumul des aides financières directes ou indirectes reçues des ministères, des
+organismes et des sociétés d’État des gouvernements du Québec et du Canada, incluant
+les crédits d’impôt ainsi que des entités municipales qui ne sont pas directement
+bénéficiaires du programme, ne doit pas dépasser 75 % des dépenses admissibles.
+Aux fins des règles de calcul du taux de cumul des aides financières publiques, le terme
+« entités municipales » réfère aux organismes municipaux compris à l’article 5 de la Loi sur
+l’accès aux documents des organismes publics et sur la protection des renseignements
+personnels (RLRQ, chapitre A-2.1).
+L’actif visé au paragraphe 1 du premier alinéa de l’article 89 de la Loi instituant le
+gouvernement régional d’Eeyou Istchee Baie-James (RLRQ, chapitre G-1.04) n’est pas
+considéré dans la règle de cumul de la présente norme.
+Le calcul du cumul de ces aides exclut la contribution des bénéficiaires au projet.
+Toute somme supérieure à cette règle de cumul sera déduite de l’aide accordée dans le
+cadre du programme.
+La contribution financière minimale du demandeur devra toutefois correspondre à 25 %
+des dépenses admissibles.
+Aux fins des règles de calcul du taux de cumul, toutes les formes d’aide financière
+accordées par un organisme public doivent être calculées à 100 % de leur valeur, qu’elles
+soient remboursables ou non.
+Par ailleurs, les aides financières provenant de la Banque de développement du Canada
+(BDC), de Financement agricole Canada (FAC) et de La Financière agricole du Québec
+(FAQ) sont à considérer comme des contributions privées si elles n’offrent aucun avantage
+conféré, soit qu’elles sont convenues aux conditions du marché.
+7.14.3. Un projet déposé dans le cadre du programme ne peut recevoir une aide financière
+provenant d’un autre programme ou action du Plan de mise en œuvre du Plan pour une
+économie verte 2030.
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+21
+7.14.4. Le montant de toute aide financière repose sur les dépenses admissibles directement liées
+au projet.
+7.15. Sur demande, les bénéficiaires doivent transmettre au ministre les données opérationnelles,
+financières et environnementales dont ils disposent et qui sont nécessaires au processus
+d’évaluation du programme, notamment le nombre d’heures d’utilisation de la technologie, le
+kilométrage des véhicules, la consommation moyenne de carburant, etc.
+7.16. Les demandes de paiement découlant de l'aide financière octroyée par le ministre peuvent faire
+l'objet d'une vérification par ce dernier ou par toute autre personne ou organisme dans le cadre
+des fonctions qu’il exerce ou des mandats qui lui sont confiés, notamment par le Vérificateur
+général en vertu de la Loi sur le vérificateur général (RLRQ, chapitre V-5.01) et par le Contrôleur
+des finances en vertu de la Loi sur le ministère des Finances (RLRQ, chapitre M-24.01).
+7.17. Dans le cadre du volet « Projet de logistique », le bénéficiaire s’engage à produire, à l’intention
+du ministre, au plus tard le 31 octobre de chaque année, un document sous la forme exigée par
+le ministre démontrant le pourcentage d’avancement des travaux réalisés au 30 septembre et,
+au plus tard le 31 janvier de chaque année, un document démontrant le pourcentage
+d’avancement des travaux estimés au 31 mars.
+7.18. Le ministre se réserve le droit de refuser d’accorder une aide financière ou de cesser de lui verser
+cette aide financière si le demandeur ou le bénéficiaire ne satisfait pas aux exigences élevées
+d’intégrité auxquelles le public est en droit de s’attendre d’un bénéficiaire d’une aide financière
+versée à même des fonds publics. Pour ce faire, le ministre adresse un avis écrit au bénéficiaire
+énonçant le motif de refus, de modification, de réduction ou de résiliation. Le bénéficiaire aura
+alors l’occasion de présenter ses observations et, s’il y a lieu, de produire des documents pour
+compléter son dossier. Le ministre pourra tenir compte de ces observations ou de ces
+documents pour prendre sa décision.
+7.19. Le ministre peut, sur avis écrit au Bénéficiaire énonçant le motif, résilier l’aide financière si :
+7.19.1. le Bénéficiaire lui a présenté des renseignements faux ou trompeurs ou lui a fait de fausses
+représentations;
+7.19.2. le ministre est d’avis qu’il se produit une situation qui, pour un motif d’intérêt public, remet
+en cause les fins pour lesquelles l’aide financière a été octroyée;
+7.19.3. le Bénéficiaire fait défaut de remplir l’une ou l’autre des obligations qui lui incombent, et
+que le Bénéficiaire n’a pas remédié à ce défaut dans un délai raisonnable à la lumière des
+circonstances, lequel ne peut excéder 30 jours, à la suite de la réception d’un avis du
+ministre notifiant le Bénéficiaire de son défaut;
+7.19.4. le Bénéficiaire cesse ses opérations de quelque façon que ce soit, y compris en raison de
+la faillite, la liquidation ou la cession de ses biens.
+La constatation du défaut par cet avis équivaut à une mise en demeure.
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+22
+Dans les cas prévus aux articles 7.19.1, 7.19.2 et 7.19.4, l’engagement du ministre au
+versement de l’aide financière sera résilié à compter de la date de réception de l’avis par le
+Bénéficiaire. Le ministre se réserve le droit d’exiger le remboursement total ou partiel du
+montant de l’aide financière qui a été versé à la date de la résiliation.
+Dans les cas prévus à l’article 7.19.3, le Bénéficiaire a trente (30) jours ouvrables pour remédier
+aux défauts énoncés dans l’avis et en aviser le ministre, à défaut de quoi l’engagement du
+ministre au versement de l’aide financière sera automatiquement résilié à compter de la date de
+réception de cet avis, sans compensation ni indemnité pour quelque cause ou raison que ce soit.
+Le ministre cesse tout versement de l’aide financière à compter de la résiliation.
+Le fait que le ministre n’exerce pas son droit à la résiliation ne doit pas être interprété comme
+une renonciation à son exercice.
+La résiliation de l’engagement du ministre au versement de l’aide financière ne met pas fin aux
+autres obligations du bénéficiaire, dont celles relatives à la responsabilité.
+Activités de communication
+7.20. Le bénéficiaire accepte que le ministre ou la personne qui le représente puisse annoncer
+publiquement les éléments importants du projet et de l’aide financière versée en fonction du
+programme, notamment la nature du projet, son emplacement, son coût estimé, le montant de
+l’aide financière et les autres bénéfices escomptés à la suite de la réalisation du projet.
+7.21. Le bénéficiaire consent à la publication par le ministre de toute information relative à l’octroi de
+son aide financière.
+7.22. Le bénéficiaire s’engage à se conformer au protocole de visibilité pour les programmes d’aide
+disponible sur le site Web du Ministère : Protocole de visibilité pour les programmes d’aide. Le
+bénéficiaire accepte que le ministre ou la personne qui le représente puisse annoncer
+publiquement les éléments importants du projet et de l’aide financière versée, notamment la
+nature du projet, son emplacement, son coût estimé, le montant de l’aide financière et les
+bénéfices escomptés à la suite de la réalisation du projet. Le bénéficiaire consent à la
+publication, par le ministre, de toute information relative à l’octroi de son aide financière.
+7.23. Le contenu disponible à un hyperlien en fait partie intégrante; En cas de conflit entre le contenu
+disponible à un hyperlien et le programme, ce dernier prévaut.
+7.24. Le ministère des Transports et de la Mobilité durable devra transmettre à son Secrétariat (Sous-
+secrétariat aux politiques budgétaires et aux programmes), au plus tard le 30 novembre 2027
+ou préalablement à toute demande de renouvellement ou prolongation du cadre normatif, un
+bilan du Programme d’aide à la réduction des émissions de gaz à effet de serre dans le transport
+routier des marchandises (Écocamionnage), dont la forme et les modalités devront être
+convenues avec ce dernier.
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+23
+8. REDDITION DE COMPTES DU PROGRAMME
+À des fins de reddition de comptes, le Ministère transmettra au Secrétariat du Conseil du trésor un bilan du
+programme qui devra rendre minimalement compte des indicateurs de résultats suivants :
+− Nombre de demandeurs bénéficiant d’une aide financière par volet;
+− Nombre de projets financés et réalisés par volet;
+− Nombre et type de technologies financées et installées au volet « Acquisition des technologies »;
+− Nombre et type de véhicules financés au volet « Acquisition des technologies »;
+− Nombre et type de véhicules financés au volet « Acquisition de véhicules lourds d’occasion »;
+− Nombre de projets de logistique financés et réalisés;
+− Montant d’aides financières octroyées et versées par année financière;
+− Montant d’aides financières octroyées et versées par volet;
+− Nombre de tonnes de GES réduites.
+24
+ANNEXE – DÉFINITIONS
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+25
+Dans le cadre de ce programme, on entend par :
+« Demandeur » : l’entité qui soumet un projet au ministère des Transports et de la Mobilité durable dans le
+cadre du programme.
+« Camion moyen » (classes 3 et 4) : un camion ayant un PNBV se trouvant entre 4 536 kg et 7 257 kg.
+« Camion moyen » (classes 5, 6 et 7) : un camion ayant un PNBV se trouvant entre 7 258 kg et 14 969 kg.
+« Camion lourd » : un camion ou tracteur ayant un PNBV de plus de 14 970 kg (classe 8).
+« Camionnette (“pick-up”) » : véhicule utilitaire léger comportant une cabine fermée et une caisse découverte
+munie d’un hayon, servant au transport des matières ou des marchandises.
+« Établissement » : bâtiment ou partie de bâtiment utilisé par le demandeur aux fins d’exploitation et de
+fonctionnement de l’entreprise, de la municipalité ou de l’organisme public.
+« Fourgonnette (van) » : véhicule muni d’une carrosserie-fourgon profilée, dont l’espace intérieur servant à la
+conduite du véhicule et au transport des marchandises occupe une même section intégrale.
+« ISO 14064-2 » : spécifications et lignes directrices, à l’échelle des projets, pour la quantification, la
+surveillance et la rédaction de rapports sur les réductions d’émissions ou les accroissements de suppressions
+des gaz à effet de serre.
+« ISO 14064-3 » : spécifications et lignes directrices pour la vérification et la validation des déclarations des
+gaz à effet de serre.
+« Marchandises » : produit qui fait l’objet d’une transaction commerciale, qui s’achète ou qui se vend.
+« Numéro d’identification du véhicule » : code alphanumérique unique attitré à chaque véhicule afin de fournir
+des renseignements sur celui-ci.
+« Prix de détail suggéré par le fabricant (PDSF) » : prix de base établi pour le Québec par le constructeur
+automobile pour chaque modèle et chaque version sans les options, les taxes, ni les frais de transport et
+d’inspection avant livraison.
+« Poids nominal brut du véhicule » : masse nette du véhicule additionné de sa capacité maximale de
+chargement.
+« Technologie » : un équipement, un appareil, un dispositif ou un accessoire qui s’installe sur un véhicule.
+« Véhicule à pile à combustible » : véhicule dont la motorisation est entièrement électrique et qui utilise une
+pile à combustible à l’hydrogène alimentée par un réservoir.
+« Véhicule de service » : véhicule muni des équipements permettant de sécuriser les lieux d’un incident,
+d’approvisionner, de réparer, de remorquer les véhicules routiers, ou de rendre un service commercial qui
+exige un véhicule admissible pour le transport de matériel.
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE PROGRAMME D’AIDE À LA RÉDUCTION DES ÉMISSIONS
+DE GAZ À EFFET DE SERRE DANS LE TRANSPORT
+ROUTIER DES MARCHANDISES (ÉCOCAMIONNAGE)
+26
+« Véhicule électrique » : une motorisation entièrement électrique qui emploie l’énergie provenant d’une
+batterie, laquelle doit être rechargée à partir d’une source d’électricité externe.
+« Véhicule électrique à basse vitesse (VBV) » : un véhicule à basse vitesse à propulsion entièrement
+électrique, autorisé par la SAAQ à circuler sur le réseau routier public au Québec.
+« Véhicule hybride rechargeable » : une motorisation électrique et à essence ou électrique et au diesel qui
+utilise l’énergie provenant d’une batterie, laquelle peut être rechargée à partir d’une source d’électricité
+externe.
+« Véhicule léger » : un véhicule ayant un PNBV inférieur ou égal à 4 535 kg.
+« Véhicule lourd » : un camion ou un tracteur routier ayant un PNBV supérieur à 4 535 kg. Les véhicules
+lourds sont divisés en deux catégories : les camions moyens et les camions lourds.
+« Véhicule lourd hors route » : un camion ou un tracteur routier ayant un PNBV supérieur à 4 535 kg et qui
+circule exclusivement hors du réseau routier, comme dans un port, un aéroport ou un site minier.
+« Véhicule-outil » : un véhicule routier, autre qu’un véhicule monté sur un châssis de camion, fabriqué pour
+effectuer un travail et dont le poste de travail est intégré au poste de conduite du véhicule.
+« Vélo cargo à assistance électrique » : un vélo ayant une assistance électrique conçu pour le transport de
+marchandises pour la livraison locale.
+
