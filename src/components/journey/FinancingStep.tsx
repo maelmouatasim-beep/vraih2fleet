@@ -27,6 +27,7 @@ import { formateurCad } from "@/lib/format";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 import { ExternalLink, Loader2 } from "lucide-react";
 import ConfirmedSubsidiesCard from "./ConfirmedSubsidiesCard";
+import SubsidyApplicationsCard from "./SubsidyApplicationsCard";
 
 interface FinancingStepProps {
   projectId: string;
@@ -208,6 +209,14 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
           )}
         </CardContent>
       </Card>
+
+      <SubsidyApplicationsCard
+        projectId={projectId}
+        vehicules={projectVehicles.map((pv) => ({
+          vehicleId: pv.vehicle_id,
+          unite: pv.vehicles.unit_number,
+        }))}
+      />
 
       <ConfirmedSubsidiesCard
         projectId={projectId}

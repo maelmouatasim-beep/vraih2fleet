@@ -5893,6 +5893,59 @@
         "cleared": "Réalisé retiré pour {{unit}}",
         "totalActual": "Coût réel cumulé des remplacements réalisés : {{amount}}"
       }
+    },
+    "applications": {
+      "title": "Suivi des demandes de subvention",
+      "subtitle": "Une ligne par demande : statut, montants et dates. L'échéance vient de la tâche du plan ou de la date de fin du programme.",
+      "empty": "Aucune demande suivie pour l'instant. Ajoutez la première ci-dessus.",
+      "invalidAmount": "Montant invalide : nombre positif attendu",
+      "wholeProjectShort": "Projet entier",
+      "statuses": {
+        "a_preparer": "À préparer",
+        "deposee": "Déposée",
+        "accordee": "Accordée",
+        "recue": "Reçue"
+      },
+      "columns": {
+        "program": "Programme",
+        "vehicle": "Véhicule",
+        "status": "Statut",
+        "requested": "Montant demandé",
+        "awarded": "Montant accordé",
+        "deadline": "Échéance"
+      },
+      "deadlineSource": {
+        "tache": "tâche du plan",
+        "programme": "fin du programme"
+      },
+      "dates": {
+        "submitted": "déposée le {{date}}",
+        "decided": "décision le {{date}}",
+        "received": "reçue le {{date}}"
+      },
+      "form": {
+        "program": "Programme",
+        "chooseProgram": "Choisir…",
+        "other": "Autre programme…",
+        "label": "Nom du programme",
+        "vehicle": "Véhicule",
+        "wholeProject": "Projet entier",
+        "amount": "Montant demandé (CAD)",
+        "add": "Ajouter"
+      },
+      "edit": {
+        "title": "Modifier la demande",
+        "subtitle": "Montants et dates de la demande.",
+        "submittedDate": "Date de dépôt",
+        "decisionDate": "Date de décision",
+        "receivedDate": "Date de réception",
+        "notes": "Notes"
+      },
+      "totals": "Total accordé : {{awarded}} · dont reçu : {{received}}",
+      "toast": {
+        "added": "Demande ajoutée",
+        "updated": "Demande mise à jour"
+      }
     }
   },
   "energyClient": {

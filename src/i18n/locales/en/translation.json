@@ -5893,6 +5893,59 @@
         "cleared": "Completion cleared for {{unit}}",
         "totalActual": "Cumulative actual cost of completed replacements: {{amount}}"
       }
+    },
+    "applications": {
+      "title": "Subsidy application tracking",
+      "subtitle": "One row per application: status, amounts and dates. The deadline comes from the plan task or the program end date.",
+      "empty": "No application tracked yet. Add the first one above.",
+      "invalidAmount": "Invalid amount: positive number expected",
+      "wholeProjectShort": "Whole project",
+      "statuses": {
+        "a_preparer": "To prepare",
+        "deposee": "Submitted",
+        "accordee": "Awarded",
+        "recue": "Received"
+      },
+      "columns": {
+        "program": "Program",
+        "vehicle": "Vehicle",
+        "status": "Status",
+        "requested": "Amount requested",
+        "awarded": "Amount awarded",
+        "deadline": "Deadline"
+      },
+      "deadlineSource": {
+        "tache": "plan task",
+        "programme": "program end"
+      },
+      "dates": {
+        "submitted": "submitted {{date}}",
+        "decided": "decision {{date}}",
+        "received": "received {{date}}"
+      },
+      "form": {
+        "program": "Program",
+        "chooseProgram": "Choose…",
+        "other": "Other program…",
+        "label": "Program name",
+        "vehicle": "Vehicle",
+        "wholeProject": "Whole project",
+        "amount": "Amount requested (CAD)",
+        "add": "Add"
+      },
+      "edit": {
+        "title": "Edit application",
+        "subtitle": "Amounts and dates of the application.",
+        "submittedDate": "Submission date",
+        "decisionDate": "Decision date",
+        "receivedDate": "Receipt date",
+        "notes": "Notes"
+      },
+      "totals": "Total awarded: {{awarded}} · received: {{received}}",
+      "toast": {
+        "added": "Application added",
+        "updated": "Application updated"
+      }
     }
   },
   "energyClient": {

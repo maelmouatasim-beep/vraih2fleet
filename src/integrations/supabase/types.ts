@@ -1637,6 +1637,75 @@ export type Database = {
         }
         Relationships: []
       }
+      subsidy_applications: {
+        Row: {
+          amount_awarded: number | null
+          amount_requested: number | null
+          created_at: string
+          created_by: string | null
+          decision_date: string | null
+          id: string
+          label: string | null
+          notes: string | null
+          program_id: string
+          project_id: string
+          received_date: string | null
+          status: string
+          submitted_date: string | null
+          updated_at: string
+          vehicle_id: string | null
+        }
+        Insert: {
+          amount_awarded?: number | null
+          amount_requested?: number | null
+          created_at?: string
+          created_by?: string | null
+          decision_date?: string | null
+          id?: string
+          label?: string | null
+          notes?: string | null
+          program_id: string
+          project_id: string
+          received_date?: string | null
+          status?: string
+          submitted_date?: string | null
+          updated_at?: string
+          vehicle_id?: string | null
+        }
+        Update: {
+          amount_awarded?: number | null
+          amount_requested?: number | null
+          created_at?: string
+          created_by?: string | null
+          decision_date?: string | null
+          id?: string
+          label?: string | null
+          notes?: string | null
+          program_id?: string
+          project_id?: string
+          received_date?: string | null
+          status?: string
+          submitted_date?: string | null
+          updated_at?: string
+          vehicle_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subsidy_applications_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subsidy_applications_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       task_attachments: {
         Row: {
           created_at: string | null
