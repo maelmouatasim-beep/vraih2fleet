@@ -27,7 +27,12 @@ export async function listProjectVehicles(projectId: string): Promise<ProjectVeh
     .select("*, vehicles(*)")
     .eq("project_id", projectId);
   if (error) throw error;
-  const lignes = (data ?? []) as unknown as ProjectVehicleWithVehicle[];
+  // Défense en profondeur (revue B3) : si la RLS cache le véhicule joint
+  // (données plus anciennes que la policy « project viewers »), la ligne
+  // est ignorée au lieu de faire planter l'écran sur vehicles=null.
+  const lignes = ((data ?? []) as unknown as (ProjectVehicleWithVehicle | { vehicles: null })[]).filter(
+    (l): l is ProjectVehicleWithVehicle => l.vehicles !== null,
+  );
   return lignes.sort((a, b) =>
     a.vehicles.unit_number.localeCompare(b.vehicles.unit_number, "fr", { numeric: true }),
   );
