@@ -6,17 +6,11 @@
  */
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
+import { fusionnerSurcharges, type SurchargesEnergieClient } from "@/lib/energyClient";
 
 export type EnergyClientInputs = Tables<"energy_client_inputs">;
-
-export interface SurchargesEnergieClient {
-  dieselParL?: number;
-  electriciteEffectiveParKwh?: number;
-  h2LivreParKg?: number;
-  devisRaccordement?: number;
-  /** Libellés « donnée client » (champ + provenance + date) pour les rapports. */
-  provenances: string[];
-}
+export { fusionnerSurcharges };
+export type { SurchargesEnergieClient };
 
 export async function getEnergyInputs(
   organizationId: string,
@@ -66,41 +60,4 @@ export async function upsertEnergyInputs(
     .single();
   if (error) throw error;
   return data;
-}
-
-const LIBELLES: Record<string, string> = {
-  diesel_price_per_l: "prix du diesel payé ($/L avant TPS/TVQ)",
-  electricity_cost_per_kwh: "coût effectif de l’électricité ($/kWh avant taxes)",
-  h2_price_per_kg: "prix de l’hydrogène livré ($/kg avant taxes)",
-  grid_connection_quote: "devis de raccordement du dépôt ($ avant taxes)",
-};
-
-/** Fusionne organisation + projet (le projet prime) en surcharges pour
- *  `parametresParDefaut`, avec les libellés « donnée client ». */
-export function fusionnerSurcharges(
-  organisation: EnergyClientInputs | null,
-  projet: EnergyClientInputs | null,
-): SurchargesEnergieClient {
-  const provenances: string[] = [];
-  const prend = (champ: keyof typeof LIBELLES & keyof EnergyClientInputs): number | undefined => {
-    for (const [ligne, niveau] of [
-      [projet, "projet"],
-      [organisation, "organisation"],
-    ] as const) {
-      const v = ligne?.[champ];
-      if (typeof v === "number" && Number.isFinite(v)) {
-        const date = (ligne!.updated_at ?? "").slice(0, 10);
-        provenances.push(`${LIBELLES[champ]} : donnée client (${niveau}${date ? `, ${date}` : ""})`);
-        return v;
-      }
-    }
-    return undefined;
-  };
-  return {
-    dieselParL: prend("diesel_price_per_l"),
-    electriciteEffectiveParKwh: prend("electricity_cost_per_kwh"),
-    h2LivreParKg: prend("h2_price_per_kg"),
-    devisRaccordement: prend("grid_connection_quote"),
-    provenances,
-  };
 }

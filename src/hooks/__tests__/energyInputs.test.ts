@@ -4,20 +4,17 @@
  * valeur retenue produit son libellé « donnée client » pour les rapports.
  */
 import { describe, expect, it } from "vitest";
-import { fusionnerSurcharges, type EnergyClientInputs } from "@/lib/supabase/energyInputs";
+// module PUR (src/lib/energyClient.ts) : aucun client Supabase au
+// chargement — la CI n'a pas de VITE_SUPABASE_URL.
+import { fusionnerSurcharges, type LigneEnergieClient } from "@/lib/energyClient";
 
-function ligne(patch: Partial<EnergyClientInputs>): EnergyClientInputs {
+function ligne(patch: Partial<LigneEnergieClient>): LigneEnergieClient {
   return {
-    id: "x",
-    organization_id: "org",
     project_id: null,
     diesel_price_per_l: null,
     electricity_cost_per_kwh: null,
     h2_price_per_kg: null,
     grid_connection_quote: null,
-    notes: null,
-    updated_by: null,
-    created_at: "2026-09-29T00:00:00Z",
     updated_at: "2026-09-29T00:00:00Z",
     ...patch,
   };
