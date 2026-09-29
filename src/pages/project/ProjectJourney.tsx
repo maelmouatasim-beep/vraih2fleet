@@ -142,7 +142,7 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
 
         {/* Contenu de l'étape (Phase 3, bloc par bloc) */}
         {etape === "flotte" && projectId ? (
-          <FleetStep projectId={projectId} />
+          <FleetStep projectId={projectId} project={project} />
         ) : etape === "faisabilite" && projectId ? (
           <FeasibilityStep projectId={projectId} project={project} />
         ) : etape === "strategies" && projectId ? (

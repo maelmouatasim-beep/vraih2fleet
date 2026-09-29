@@ -5626,7 +5626,21 @@
       "toast": {
         "removed": "Vehicle removed from the project (it stays in My fleet)",
         "added": "{{count}} vehicle(s) added to the project"
-      }
+      },
+      "bulk": {
+        "selected": "{{count}} vehicle(s) selected",
+        "selectAll": "Select all",
+        "chooseYear": "Year…",
+        "applyYear": "Apply year",
+        "chooseTarget": "Target…",
+        "applyTarget": "Apply target",
+        "applySuggested": "Suggested targets",
+        "remove": "Remove from project",
+        "applied": "{{count}} vehicle(s) updated",
+        "removed": "{{count}} vehicle(s) removed from project"
+      },
+      "suggestion": "Feasibility suggestion: {{target}}",
+      "suggestedSuffix": "(suggested)"
     },
     "feasibility": {
       "tableTitle": "Verdict per vehicle",

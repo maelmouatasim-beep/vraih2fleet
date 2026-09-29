@@ -5626,7 +5626,21 @@
       "toast": {
         "removed": "Véhicule retiré du projet (il reste dans Ma flotte)",
         "added": "{{count}} véhicule(s) ajouté(s) au projet"
-      }
+      },
+      "bulk": {
+        "selected": "{{count}} véhicule(s) sélectionné(s)",
+        "selectAll": "Tout sélectionner",
+        "chooseYear": "Année…",
+        "applyYear": "Appliquer l'année",
+        "chooseTarget": "Cible…",
+        "applyTarget": "Appliquer la cible",
+        "applySuggested": "Cibles suggérées",
+        "remove": "Retirer du projet",
+        "applied": "{{count}} véhicule(s) mis à jour",
+        "removed": "{{count}} véhicule(s) retiré(s) du projet"
+      },
+      "suggestion": "Suggestion Faisabilité : {{target}}",
+      "suggestedSuffix": "(suggérée)"
     },
     "feasibility": {
       "tableTitle": "Verdict par véhicule",

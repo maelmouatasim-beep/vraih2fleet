@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DEFAUTS_CATEGORIES } from "@/lib/tco";
-import { evaluerFaisabiliteVehicule, type VehiculeFaisabilite } from "../feasibility";
+import { cibleSuggeree, evaluerFaisabiliteVehicule, type VehiculeFaisabilite } from "../feasibility";
 
 const OPTIONS = {
   anneeReference: 2026,
@@ -106,5 +106,60 @@ describe("evaluerFaisabiliteVehicule", () => {
       expect(s.montant).toBeGreaterThan(0);
       expect(s.annee).toBeGreaterThanOrEqual(0);
     }
+  });
+});
+
+describe("cibleSuggeree (C2 — cible pré-suggérée à l'étape Flotte)", () => {
+  it("retient la meilleure technologie non défavorable (économie la plus élevée)", () => {
+    const f = evaluerFaisabiliteVehicule(vehicule(), OPTIONS);
+    const s = cibleSuggeree(f);
+    const nonDefavorables = f.evaluations!.filter((e) => e.verdict !== "defavorable");
+    if (nonDefavorables.length === 0) {
+      expect(s).toBeNull();
+    } else {
+      const meilleure = nonDefavorables.reduce((a, b) =>
+        b.economieActualisee > a.economieActualisee ? b : a,
+      );
+      expect(s).toBe(meilleure.technologie === "BEV" ? "bev" : "fcev");
+    }
+  });
+
+  it("null quand le véhicule n'est pas évaluable (catégorie inconnue, hors horizon)", () => {
+    expect(cibleSuggeree(evaluerFaisabiliteVehicule(vehicule({ category: "autre" }), OPTIONS))).toBeNull();
+    expect(
+      cibleSuggeree(evaluerFaisabiliteVehicule(vehicule({ replacement_year: 2045 }), OPTIONS)),
+    ).toBeNull();
+  });
+
+  it("null quand BEV et FCEV sont tous deux défavorables", () => {
+    expect(
+      cibleSuggeree({
+        vehiculeId: "x",
+        kmParAnRetenu: 1,
+        donneesEstimees: [],
+        evaluations: [
+          {
+            technologie: "BEV",
+            verdict: "defavorable",
+            economieActualisee: -1000,
+            paybackActualiseAns: null,
+            co2EviteWtwTonnes: 0,
+            coutParTonneWtw: null,
+            subventions: [],
+            reserves: [],
+          },
+          {
+            technologie: "FCEV",
+            verdict: "defavorable",
+            economieActualisee: -5000,
+            paybackActualiseAns: null,
+            co2EviteWtwTonnes: 0,
+            coutParTonneWtw: null,
+            subventions: [],
+            reserves: [],
+          },
+        ],
+      }),
+    ).toBeNull();
   });
 });

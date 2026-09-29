@@ -106,6 +106,22 @@ export function analyserDonneesVehicule(vehicule: VehiculeFaisabilite): DonneesV
   return { defauts, kmParAn, consoReference, donneesEstimees };
 }
 
+/**
+ * Cible PRÉ-SUGGÉRÉE par la Faisabilité pour l'étape Flotte : la
+ * meilleure technologie au verdict non défavorable (économie actualisée
+ * la plus élevée) ; null quand aucune n'est favorable/conditionnelle ou
+ * que le véhicule n'est pas évaluable (catégorie inconnue, hors horizon).
+ */
+export function cibleSuggeree(f: FaisabiliteVehicule): "bev" | "fcev" | null {
+  if (!f.evaluations) return null;
+  const candidates = f.evaluations.filter((e) => e.verdict !== "defavorable");
+  if (candidates.length === 0) return null;
+  const meilleure = candidates.reduce((a, b) =>
+    b.economieActualisee > a.economieActualisee ? b : a,
+  );
+  return meilleure.technologie === "BEV" ? "bev" : "fcev";
+}
+
 export function evaluerFaisabiliteVehicule(
   vehicule: VehiculeFaisabilite,
   options: OptionsParametres,

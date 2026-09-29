@@ -2,8 +2,12 @@
  * Étape 1 du parcours projet — Flotte : quels véhicules réels de
  * l'organisation (« Ma flotte ») sont inclus dans ce projet, avec
  * l'année de remplacement et la technologie cible PAR VÉHICULE.
- * L'année suggérée à l'ajout = mise en service + durée de vie de la
- * catégorie (défauts « estimation » du moteur TCO), toujours modifiable.
+ * - L'année suggérée à l'ajout = mise en service + durée de vie de la
+ *   catégorie (défauts « estimation » du moteur TCO), toujours modifiable.
+ * - La cible est PRÉ-SUGGÉRÉE par la Faisabilité (meilleure technologie
+ *   au verdict non défavorable), affichée à côté du choix et applicable
+ *   en un clic à la sélection.
+ * - Tableau triable et actions groupées (année, cible, retrait).
  */
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
@@ -29,28 +33,41 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "@/hooks/use-toast";
+import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useOrganization } from "@/hooks/useOrganization";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { useVehicles } from "@/hooks/useVehicles";
 import { anneeRemplacementSuggeree } from "@/lib/fleet/replacement";
 import { TECHNOLOGIES_CIBLES, type ProjectVehicleInsert } from "@/lib/fleet/projectVehicles";
-import { Loader2, Plus, Truck } from "lucide-react";
+import { cibleSuggeree, evaluerFaisabiliteVehicule } from "@/lib/journey/feasibility";
+import type { ProjectDTO } from "@/lib/supabase/projects";
+import { ArrowDown, ArrowUp, ArrowUpDown, Loader2, Plus, Sparkles, Truck } from "lucide-react";
 
 const selectCls =
   "flex h-9 rounded-md border border-input bg-background px-2 py-1 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
 
+type CleTri = "unit" | "vehicle" | "category" | "km" | "year" | "target";
+
 interface FleetStepProps {
   projectId: string;
+  project: ProjectDTO | null | undefined;
 }
 
-export default function FleetStep({ projectId }: FleetStepProps) {
+export default function FleetStep({ projectId, project }: FleetStepProps) {
   const { t } = useTranslation();
   const { organization, isLoading: orgLoading } = useOrganization();
   const { vehicles, isLoading: fleetLoading } = useVehicles(organization?.id);
   const { projectVehicles, isLoading, ajouter, modifier, retirer } = useProjectVehicles(projectId);
+  const { options } = useOptionsProjet(project, projectId);
 
   const [dialogOuvert, setDialogOuvert] = useState(false);
   const [selection, setSelection] = useState<Set<string>>(new Set());
+  // sélection de LIGNES du projet (actions groupées), distincte de la
+  // sélection d'ajout depuis « Ma flotte »
+  const [lignesChoisies, setLignesChoisies] = useState<Set<string>>(new Set());
+  const [tri, setTri] = useState<{ cle: CleTri; asc: boolean }>({ cle: "unit", asc: true });
+  const [anneeGroupee, setAnneeGroupee] = useState<string>("");
+  const [cibleGroupee, setCibleGroupee] = useState<string>("");
 
   const anneeCourante = new Date().getFullYear();
   const anneesChoix = useMemo(() => {
@@ -73,6 +90,53 @@ export default function FleetStep({ projectId }: FleetStepProps) {
     [vehicles, inclus],
   );
 
+  // Cible pré-suggérée par la Faisabilité (même moteur, mêmes options
+  // que l'étape 2) — null tant que les options du projet chargent.
+  const suggestions = useMemo(() => {
+    if (!options) return null;
+    const parVehicule = new Map<string, "bev" | "fcev" | null>();
+    for (const pv of projectVehicles) {
+      parVehicule.set(
+        pv.vehicle_id,
+        cibleSuggeree(
+          evaluerFaisabiliteVehicule(
+            { ...pv.vehicles, replacement_year: pv.replacement_year },
+            options,
+          ),
+        ),
+      );
+    }
+    return parVehicule;
+  }, [options, projectVehicles]);
+
+  const lignesTriees = useMemo(() => {
+    const valeur = (pv: (typeof projectVehicles)[number]): string | number => {
+      switch (tri.cle) {
+        case "unit":
+          return pv.vehicles.unit_number;
+        case "vehicle":
+          return [pv.vehicles.make, pv.vehicles.model, pv.vehicles.model_year].filter(Boolean).join(" ");
+        case "category":
+          return t(`fleet.categories.${pv.vehicles.category}`);
+        case "km":
+          return pv.vehicles.annual_km ?? -1;
+        case "year":
+          return pv.replacement_year ?? Number.MAX_SAFE_INTEGER;
+        case "target":
+          return pv.target_technology ?? "";
+      }
+    };
+    return [...projectVehicles].sort((a, b) => {
+      const va = valeur(a);
+      const vb = valeur(b);
+      const cmp =
+        typeof va === "number" && typeof vb === "number"
+          ? va - vb
+          : String(va).localeCompare(String(vb), "fr", { numeric: true });
+      return tri.asc ? cmp : -cmp;
+    });
+  }, [projectVehicles, tri, t]);
+
   const stats = useMemo(() => {
     const zeroEmission = projectVehicles.filter(
       (pv) => pv.target_technology === "bev" || pv.target_technology === "fcev",
@@ -81,6 +145,19 @@ export default function FleetStep({ projectId }: FleetStepProps) {
     const sansAnnee = projectVehicles.filter((pv) => pv.replacement_year == null).length;
     return { total: projectVehicles.length, zeroEmission, sansCible, sansAnnee };
   }, [projectVehicles]);
+
+  const trierPar = (cle: CleTri) => {
+    setTri((prev) => (prev.cle === cle ? { cle, asc: !prev.asc } : { cle, asc: true }));
+  };
+
+  const iconeTri = (cle: CleTri) => {
+    if (tri.cle !== cle) return <ArrowUpDown className="w-3 h-3 inline ml-1 opacity-40" />;
+    return tri.asc ? (
+      <ArrowUp className="w-3 h-3 inline ml-1" />
+    ) : (
+      <ArrowDown className="w-3 h-3 inline ml-1" />
+    );
+  };
 
   const basculer = (id: string) => {
     setSelection((prev) => {
@@ -94,6 +171,21 @@ export default function FleetStep({ projectId }: FleetStepProps) {
   const toutSelectionner = () => {
     setSelection((prev) =>
       prev.size === disponibles.length ? new Set() : new Set(disponibles.map((v) => v.id)),
+    );
+  };
+
+  const basculerLigne = (id: string) => {
+    setLignesChoisies((prev) => {
+      const suivant = new Set(prev);
+      if (suivant.has(id)) suivant.delete(id);
+      else suivant.add(id);
+      return suivant;
+    });
+  };
+
+  const toutesLignes = () => {
+    setLignesChoisies((prev) =>
+      prev.size === projectVehicles.length ? new Set() : new Set(projectVehicles.map((pv) => pv.id)),
     );
   };
 
@@ -124,10 +216,47 @@ export default function FleetStep({ projectId }: FleetStepProps) {
     }
   };
 
+  // Actions groupées sur les lignes cochées du tableau du projet
+  const appliquerGroupe = async (
+    patchPour: (pv: (typeof projectVehicles)[number]) => { replacement_year?: number | null; target_technology?: string | null } | null,
+  ) => {
+    const cibles = projectVehicles.filter((pv) => lignesChoisies.has(pv.id));
+    let appliques = 0;
+    try {
+      for (const pv of cibles) {
+        const patch = patchPour(pv);
+        if (!patch) continue;
+        await modifier.mutateAsync({ id: pv.id, patch });
+        appliques += 1;
+      }
+      toast({ title: t("journey.fleet.bulk.applied", { count: appliques }) });
+    } catch (e) {
+      toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
+    }
+  };
+
+  const retirerGroupe = async () => {
+    const ids = [...lignesChoisies];
+    try {
+      for (const id of ids) {
+        await retirer.mutateAsync(id);
+      }
+      toast({ title: t("journey.fleet.bulk.removed", { count: ids.length }) });
+      setLignesChoisies(new Set());
+    } catch (e) {
+      toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
+    }
+  };
+
   const retirerLigne = async (id: string) => {
     try {
       await retirer.mutateAsync(id);
       toast({ title: t("journey.fleet.toast.removed") });
+      setLignesChoisies((prev) => {
+        const suivant = new Set(prev);
+        suivant.delete(id);
+        return suivant;
+      });
     } catch (e) {
       toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
     }
@@ -164,6 +293,13 @@ export default function FleetStep({ projectId }: FleetStepProps) {
       </Card>
     );
   }
+
+  const entetesTriables: Array<{ cle: CleTri; label: string; alignRight?: boolean }> = [
+    { cle: "unit", label: t("fleet.columns.unit") },
+    { cle: "vehicle", label: t("fleet.columns.vehicle") },
+    { cle: "category", label: t("fleet.columns.category") },
+    { cle: "km", label: t("fleet.columns.annualKm"), alignRight: true },
+  ];
 
   return (
     <div className="space-y-4">
@@ -206,81 +342,195 @@ export default function FleetStep({ projectId }: FleetStepProps) {
               <p className="text-sm text-muted-foreground">{t("journey.fleet.empty.subtitle")}</p>
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t("fleet.columns.unit")}</TableHead>
-                  <TableHead>{t("fleet.columns.vehicle")}</TableHead>
-                  <TableHead>{t("fleet.columns.category")}</TableHead>
-                  <TableHead className="text-right">{t("fleet.columns.annualKm")}</TableHead>
-                  <TableHead>{t("fleet.columns.source")}</TableHead>
-                  <TableHead>{t("journey.fleet.columns.replacementYear")}</TableHead>
-                  <TableHead>{t("journey.fleet.columns.target")}</TableHead>
-                  <TableHead />
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {projectVehicles.map((pv) => (
-                  <TableRow key={pv.id}>
-                    <TableCell className="font-medium">{pv.vehicles.unit_number}</TableCell>
-                    <TableCell>
-                      {[pv.vehicles.make, pv.vehicles.model, pv.vehicles.model_year]
-                        .filter(Boolean)
-                        .join(" ") || "—"}
-                    </TableCell>
-                    <TableCell>{t(`fleet.categories.${pv.vehicles.category}`)}</TableCell>
-                    <TableCell className="text-right">
-                      {pv.vehicles.annual_km != null
-                        ? pv.vehicles.annual_km.toLocaleString("fr-CA")
-                        : "—"}
-                    </TableCell>
-                    <TableCell>{sourceBadge(pv.vehicles.consumption_source)}</TableCell>
-                    <TableCell>
-                      <select
-                        className={selectCls}
-                        aria-label={t("journey.fleet.columns.replacementYear")}
-                        value={pv.replacement_year ?? ""}
-                        onChange={(e) =>
-                          void majLigne(pv.id, {
-                            replacement_year: e.target.value ? Number(e.target.value) : null,
-                          })
-                        }
+            <>
+              {lignesChoisies.size > 0 && (
+                <div className="flex flex-wrap items-center gap-2 border-b border-border bg-muted/40 px-4 py-3 text-sm">
+                  <span className="font-medium">
+                    {t("journey.fleet.bulk.selected", { count: lignesChoisies.size })}
+                  </span>
+                  <select
+                    className={selectCls}
+                    aria-label={t("journey.fleet.columns.replacementYear")}
+                    value={anneeGroupee}
+                    onChange={(e) => setAnneeGroupee(e.target.value)}
+                  >
+                    <option value="">{t("journey.fleet.bulk.chooseYear")}</option>
+                    {anneesChoix.map((a) => (
+                      <option key={a} value={a}>{a}</option>
+                    ))}
+                  </select>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={!anneeGroupee || modifier.isPending}
+                    onClick={() =>
+                      void appliquerGroupe(() => ({ replacement_year: Number(anneeGroupee) }))
+                    }
+                  >
+                    {t("journey.fleet.bulk.applyYear")}
+                  </Button>
+                  <select
+                    className={selectCls}
+                    aria-label={t("journey.fleet.columns.target")}
+                    value={cibleGroupee}
+                    onChange={(e) => setCibleGroupee(e.target.value)}
+                  >
+                    <option value="">{t("journey.fleet.bulk.chooseTarget")}</option>
+                    {TECHNOLOGIES_CIBLES.map((tech) => (
+                      <option key={tech} value={tech}>{t(`journey.fleet.targets.${tech}`)}</option>
+                    ))}
+                  </select>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={!cibleGroupee || modifier.isPending}
+                    onClick={() =>
+                      void appliquerGroupe(() => ({ target_technology: cibleGroupee }))
+                    }
+                  >
+                    {t("journey.fleet.bulk.applyTarget")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={!suggestions || modifier.isPending}
+                    onClick={() =>
+                      void appliquerGroupe((pv) => {
+                        const s = suggestions?.get(pv.vehicle_id);
+                        return s ? { target_technology: s } : null;
+                      })
+                    }
+                  >
+                    <Sparkles className="w-3.5 h-3.5 mr-1" />
+                    {t("journey.fleet.bulk.applySuggested")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-destructive"
+                    disabled={retirer.isPending}
+                    onClick={() => void retirerGroupe()}
+                  >
+                    {t("journey.fleet.bulk.remove")}
+                  </Button>
+                </div>
+              )}
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-10">
+                      <Checkbox
+                        checked={lignesChoisies.size === projectVehicles.length && projectVehicles.length > 0}
+                        onCheckedChange={toutesLignes}
+                        aria-label={t("journey.fleet.bulk.selectAll")}
+                      />
+                    </TableHead>
+                    {entetesTriables.map(({ cle, label, alignRight }) => (
+                      <TableHead
+                        key={cle}
+                        className={`cursor-pointer select-none ${alignRight ? "text-right" : ""}`}
+                        onClick={() => trierPar(cle)}
                       >
-                        <option value="">—</option>
-                        {anneesChoix.map((a) => (
-                          <option key={a} value={a}>{a}</option>
-                        ))}
-                      </select>
-                    </TableCell>
-                    <TableCell>
-                      <select
-                        className={selectCls}
-                        aria-label={t("journey.fleet.columns.target")}
-                        value={pv.target_technology ?? ""}
-                        onChange={(e) =>
-                          void majLigne(pv.id, { target_technology: e.target.value || null })
-                        }
-                      >
-                        <option value="">{t("journey.fleet.chooseTarget")}</option>
-                        {TECHNOLOGIES_CIBLES.map((tech) => (
-                          <option key={tech} value={tech}>{t(`journey.fleet.targets.${tech}`)}</option>
-                        ))}
-                      </select>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => void retirerLigne(pv.id)}
-                        disabled={retirer.isPending}
-                      >
-                        {t("journey.fleet.remove")}
-                      </Button>
-                    </TableCell>
+                        {label}
+                        {iconeTri(cle)}
+                      </TableHead>
+                    ))}
+                    <TableHead>{t("fleet.columns.source")}</TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => trierPar("year")}>
+                      {t("journey.fleet.columns.replacementYear")}
+                      {iconeTri("year")}
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => trierPar("target")}>
+                      {t("journey.fleet.columns.target")}
+                      {iconeTri("target")}
+                    </TableHead>
+                    <TableHead />
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {lignesTriees.map((pv) => {
+                    const suggestion = suggestions?.get(pv.vehicle_id) ?? null;
+                    return (
+                      <TableRow key={pv.id}>
+                        <TableCell>
+                          <Checkbox
+                            checked={lignesChoisies.has(pv.id)}
+                            onCheckedChange={() => basculerLigne(pv.id)}
+                            aria-label={pv.vehicles.unit_number}
+                          />
+                        </TableCell>
+                        <TableCell className="font-medium">{pv.vehicles.unit_number}</TableCell>
+                        <TableCell>
+                          {[pv.vehicles.make, pv.vehicles.model, pv.vehicles.model_year]
+                            .filter(Boolean)
+                            .join(" ") || "—"}
+                        </TableCell>
+                        <TableCell>{t(`fleet.categories.${pv.vehicles.category}`)}</TableCell>
+                        <TableCell className="text-right">
+                          {pv.vehicles.annual_km != null
+                            ? pv.vehicles.annual_km.toLocaleString("fr-CA")
+                            : "—"}
+                        </TableCell>
+                        <TableCell>{sourceBadge(pv.vehicles.consumption_source)}</TableCell>
+                        <TableCell>
+                          <select
+                            className={selectCls}
+                            aria-label={t("journey.fleet.columns.replacementYear")}
+                            value={pv.replacement_year ?? ""}
+                            onChange={(e) =>
+                              void majLigne(pv.id, {
+                                replacement_year: e.target.value ? Number(e.target.value) : null,
+                              })
+                            }
+                          >
+                            <option value="">—</option>
+                            {anneesChoix.map((a) => (
+                              <option key={a} value={a}>{a}</option>
+                            ))}
+                          </select>
+                        </TableCell>
+                        <TableCell>
+                          <select
+                            className={selectCls}
+                            aria-label={t("journey.fleet.columns.target")}
+                            value={pv.target_technology ?? ""}
+                            onChange={(e) =>
+                              void majLigne(pv.id, { target_technology: e.target.value || null })
+                            }
+                          >
+                            <option value="">{t("journey.fleet.chooseTarget")}</option>
+                            {TECHNOLOGIES_CIBLES.map((tech) => (
+                              <option key={tech} value={tech}>
+                                {t(`journey.fleet.targets.${tech}`)}
+                                {suggestion === tech ? ` ${t("journey.fleet.suggestedSuffix")}` : ""}
+                              </option>
+                            ))}
+                          </select>
+                          {!pv.target_technology && suggestion && (
+                            <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                              <Sparkles className="w-3 h-3" />
+                              {t("journey.fleet.suggestion", {
+                                target: t(`journey.fleet.targets.${suggestion}`),
+                              })}
+                            </p>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => void retirerLigne(pv.id)}
+                            disabled={retirer.isPending}
+                          >
+                            {t("journey.fleet.remove")}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </>
           )}
         </CardContent>
       </Card>
