@@ -872,6 +872,9 @@ export type Database = {
       }
       project_vehicles: {
         Row: {
+          acquired_vehicle: string | null
+          actual_cost: number | null
+          completed_date: string | null
           created_at: string
           id: string
           project_id: string
@@ -881,6 +884,9 @@ export type Database = {
           vehicle_id: string
         }
         Insert: {
+          acquired_vehicle?: string | null
+          actual_cost?: number | null
+          completed_date?: string | null
           created_at?: string
           id?: string
           project_id: string
@@ -890,6 +896,9 @@ export type Database = {
           vehicle_id: string
         }
         Update: {
+          acquired_vehicle?: string | null
+          actual_cost?: number | null
+          completed_date?: string | null
           created_at?: string
           id?: string
           project_id?: string

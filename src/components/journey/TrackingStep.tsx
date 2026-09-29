@@ -11,6 +11,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
   Table,
   TableBody,
   TableCell,
@@ -29,8 +39,9 @@ import {
   type EtatRemplacement,
   type VehiculeSuivi,
 } from "@/lib/journey/tracking";
+import { formateurCad } from "@/lib/format";
 import type { ProjectDTO } from "@/lib/supabase/projects";
-import { ListChecks, Loader2, Sparkles } from "lucide-react";
+import { CheckCircle2, ListChecks, Loader2, Sparkles } from "lucide-react";
 
 interface TrackingStepProps {
   projectId: string;
@@ -45,33 +56,100 @@ const BADGES: Record<EtatRemplacement, "default" | "secondary" | "destructive" |
   sans_plan: "outline",
 };
 
+interface FormulaireRealise {
+  ligneId: string; // id project_vehicles
+  unite: string;
+  date: string;
+  vehiculeAcquis: string;
+  coutReel: string;
+  dejaRealise: boolean;
+}
+
 export default function TrackingStep({ projectId, project }: TrackingStepProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
-  const { projectVehicles, isLoading } = useProjectVehicles(projectId);
+  const { projectVehicles, isLoading, modifier } = useProjectVehicles(projectId);
   const [generation, setGeneration] = useState(false);
   const [cleTableau, setCleTableau] = useState(0);
+  const [realise, setRealise] = useState<FormulaireRealise | null>(null);
 
   const anneeCourante = new Date().getFullYear();
+  const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
 
   const suivi = useMemo(() => {
-    const vehicules: (VehiculeSuivi & { etat: EtatRemplacement })[] = projectVehicles.map((pv) => {
-      const v: VehiculeSuivi = {
-        ...pv.vehicles,
-        replacement_year: pv.replacement_year,
-        target_technology: pv.target_technology,
-      };
-      return { ...v, etat: etatRemplacement(v, anneeCourante) };
-    });
+    const vehicules: (VehiculeSuivi & { etat: EtatRemplacement; ligneId: string })[] =
+      projectVehicles.map((pv) => {
+        const v: VehiculeSuivi = {
+          ...pv.vehicles,
+          replacement_year: pv.replacement_year,
+          target_technology: pv.target_technology,
+          completed_date: pv.completed_date,
+          actual_cost: pv.actual_cost,
+          acquired_vehicle: pv.acquired_vehicle,
+        };
+        return { ...v, etat: etatRemplacement(v, anneeCourante), ligneId: pv.id };
+      });
     const compte = (etat: EtatRemplacement) => vehicules.filter((v) => v.etat === etat).length;
+    const coutReelTotal = vehicules.reduce((a, v) => a + (v.actual_cost ?? 0), 0);
     return {
       vehicules,
       realises: compte("realise"),
       enRetard: compte("en_retard"),
       cetteAnnee: compte("cette_annee"),
       aVenir: compte("a_venir"),
+      coutReelTotal,
     };
   }, [projectVehicles, anneeCourante]);
+
+  const ouvrirRealise = (v: (typeof suivi.vehicules)[number]) => {
+    setRealise({
+      ligneId: v.ligneId,
+      unite: v.unit_number,
+      date: v.completed_date ?? new Date().toISOString().slice(0, 10),
+      vehiculeAcquis: v.acquired_vehicle ?? "",
+      coutReel: v.actual_cost != null ? String(v.actual_cost) : "",
+      dejaRealise: !!v.completed_date,
+    });
+  };
+
+  const enregistrerRealise = async () => {
+    if (!realise) return;
+    const cout = realise.coutReel.trim()
+      ? Number(realise.coutReel.replace(/\s/g, "").replace(",", "."))
+      : null;
+    if (cout != null && (!Number.isFinite(cout) || cout < 0)) {
+      toast({ title: t("journey.tracking.completed.invalidCost"), variant: "destructive" });
+      return;
+    }
+    try {
+      await modifier.mutateAsync({
+        id: realise.ligneId,
+        patch: {
+          completed_date: realise.date || null,
+          acquired_vehicle: realise.vehiculeAcquis.trim() || null,
+          actual_cost: cout,
+        },
+      });
+      toast({ title: t("journey.tracking.completed.saved", { unit: realise.unite }) });
+      setRealise(null);
+    } catch (e) {
+      toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
+    }
+  };
+
+  const annulerRealise = async () => {
+    if (!realise) return;
+    try {
+      await modifier.mutateAsync({
+        id: realise.ligneId,
+        patch: { completed_date: null, acquired_vehicle: null, actual_cost: null },
+      });
+      toast({ title: t("journey.tracking.completed.cleared", { unit: realise.unite }) });
+      setRealise(null);
+    } catch (e) {
+      toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
+    }
+  };
 
   const genererTaches = async () => {
     if (!options) return;
@@ -80,6 +158,12 @@ export default function TrackingStep({ projectId, project }: TrackingStepProps) 
       const proposees = tachesDuPlan(
         suivi.vehicules,
         { ...options, anneeReference: anneeCourante },
+        {
+          remplacement: ({ unite, techno }) =>
+            t("journey.tracking.tasks.replaceTitle", { unit: unite, techno }),
+          subvention: ({ programme, unite }) =>
+            t("journey.tracking.tasks.submitTitle", { program: programme, unit: unite }),
+        },
       );
       const { data: existantes, error: errLecture } = await supabase
         .from("tasks")
@@ -184,6 +268,8 @@ export default function TrackingStep({ projectId, project }: TrackingStepProps) 
                   <TableHead>{t("journey.fleet.columns.target")}</TableHead>
                   <TableHead>{t("fleet.columns.fuel")}</TableHead>
                   <TableHead>{t("journey.tracking.columns.state")}</TableHead>
+                  <TableHead>{t("journey.tracking.columns.completed")}</TableHead>
+                  <TableHead />
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -201,13 +287,104 @@ export default function TrackingStep({ projectId, project }: TrackingStepProps) 
                     <TableCell>
                       <Badge variant={BADGES[v.etat]}>{t(`journey.tracking.states.${v.etat}`)}</Badge>
                     </TableCell>
+                    <TableCell className="text-xs">
+                      {v.completed_date ? (
+                        <div className="space-y-0.5">
+                          <p>{v.completed_date}</p>
+                          {v.acquired_vehicle && (
+                            <p className="text-muted-foreground">{v.acquired_vehicle}</p>
+                          )}
+                          {v.actual_cost != null && (
+                            <p className="text-muted-foreground">{argent.format(v.actual_cost)}</p>
+                          )}
+                        </div>
+                      ) : (
+                        "—"
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="outline" size="sm" onClick={() => ouvrirRealise(v)}>
+                        <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                        {v.completed_date
+                          ? t("journey.tracking.completed.editButton")
+                          : t("journey.tracking.completed.markButton")}
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           )}
         </CardContent>
+        {suivi.coutReelTotal > 0 && (
+          <CardContent className="border-t border-border py-3 text-sm text-muted-foreground">
+            {t("journey.tracking.completed.totalActual", {
+              amount: argent.format(suivi.coutReelTotal),
+            })}
+          </CardContent>
+        )}
       </Card>
+
+      {/* C4 — marquer un remplacement réalisé (date, véhicule acquis, coût réel) */}
+      <Dialog open={realise !== null} onOpenChange={(o) => !o && setRealise(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              {t("journey.tracking.completed.dialogTitle", { unit: realise?.unite ?? "" })}
+            </DialogTitle>
+            <DialogDescription>{t("journey.tracking.completed.dialogSubtitle")}</DialogDescription>
+          </DialogHeader>
+          {realise && (
+            <div className="space-y-4 py-2">
+              <div className="space-y-2">
+                <Label htmlFor="tr-date">{t("journey.tracking.completed.date")} *</Label>
+                <Input
+                  id="tr-date"
+                  type="date"
+                  value={realise.date}
+                  onChange={(e) => setRealise({ ...realise, date: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="tr-veh">{t("journey.tracking.completed.acquiredVehicle")}</Label>
+                <Input
+                  id="tr-veh"
+                  placeholder={t("journey.tracking.completed.acquiredVehicleHint")}
+                  value={realise.vehiculeAcquis}
+                  onChange={(e) => setRealise({ ...realise, vehiculeAcquis: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="tr-cout">{t("journey.tracking.completed.actualCost")}</Label>
+                <Input
+                  id="tr-cout"
+                  inputMode="decimal"
+                  placeholder={t("journey.tracking.completed.actualCostHint")}
+                  value={realise.coutReel}
+                  onChange={(e) => setRealise({ ...realise, coutReel: e.target.value })}
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter className="gap-2">
+            {realise?.dejaRealise && (
+              <Button
+                variant="ghost"
+                className="text-destructive mr-auto"
+                onClick={() => void annulerRealise()}
+                disabled={modifier.isPending}
+              >
+                {t("journey.tracking.completed.clear")}
+              </Button>
+            )}
+            <Button variant="ghost" onClick={() => setRealise(null)}>{t("common.cancel")}</Button>
+            <Button onClick={() => void enregistrerRealise()} disabled={modifier.isPending || !realise?.date}>
+              {modifier.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+              {t("journey.tracking.completed.save")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Card>
         <CardHeader>

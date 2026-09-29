@@ -5863,7 +5863,8 @@
       "tableTitle": "Actual vs planned",
       "tableSubtitle": "“Done” = the vehicle's current technology matches its target (or, diesel target, the model year reaches the planned year) — update the vehicle in My fleet after each replacement.",
       "columns": {
-        "state": "Status"
+        "state": "Status",
+        "completed": "Completed"
       },
       "empty": "No vehicles in the plan — select them in the Fleet step.",
       "tasks": {
@@ -5871,7 +5872,26 @@
         "subtitle": "Kanban and list views, assignment and comments; generated tasks are linked to the vehicle, the plan year and the subsidy program.",
         "generate": "Generate plan tasks",
         "generated": "{{count}} task(s) created from the plan deadlines",
-        "upToDate": "Plan tasks already exist — nothing to create."
+        "upToDate": "Plan tasks already exist — nothing to create.",
+        "replaceTitle": "Replace {{unit}} ({{techno}})",
+        "submitTitle": "Submit the {{program}} application — {{unit}}"
+      },
+      "completed": {
+        "markButton": "Mark completed",
+        "editButton": "Edit completion",
+        "dialogTitle": "Replacement of {{unit}} completed",
+        "dialogSubtitle": "This information feeds the project’s actual vs planned tracking.",
+        "date": "Replacement date",
+        "acquiredVehicle": "Vehicle acquired",
+        "acquiredVehicleHint": "e.g. 2027 electric Ford F-600",
+        "actualCost": "Actual cost (CAD, before taxes)",
+        "actualCostHint": "leave empty if unknown",
+        "invalidCost": "Invalid actual cost: positive number expected",
+        "save": "Save",
+        "clear": "Clear completion",
+        "saved": "Replacement of {{unit}} marked completed",
+        "cleared": "Completion cleared for {{unit}}",
+        "totalActual": "Cumulative actual cost of completed replacements: {{amount}}"
       }
     }
   },

@@ -5863,7 +5863,8 @@
       "tableTitle": "Réalisé vs prévu",
       "tableSubtitle": "« Réalisé » = la technologie actuelle du véhicule correspond à sa cible (ou, cible diesel, l'année-modèle atteint l'année prévue) — mettez la fiche du véhicule à jour dans Ma flotte après chaque remplacement.",
       "columns": {
-        "state": "État"
+        "state": "État",
+        "completed": "Réalisé"
       },
       "empty": "Aucun véhicule au plan — sélectionnez-les à l'étape Flotte.",
       "tasks": {
@@ -5871,7 +5872,26 @@
         "subtitle": "Kanban et vue liste, assignation et commentaires ; les tâches générées sont liées au véhicule, à l'année du plan et au programme de subvention.",
         "generate": "Générer les tâches du plan",
         "generated": "{{count}} tâche(s) créée(s) depuis les échéances du plan",
-        "upToDate": "Les tâches du plan existent déjà — rien à créer."
+        "upToDate": "Les tâches du plan existent déjà — rien à créer.",
+        "replaceTitle": "Remplacer {{unit}} ({{techno}})",
+        "submitTitle": "Déposer la demande {{program}} — {{unit}}"
+      },
+      "completed": {
+        "markButton": "Marquer réalisé",
+        "editButton": "Modifier le réalisé",
+        "dialogTitle": "Remplacement de {{unit}} réalisé",
+        "dialogSubtitle": "Ces informations alimentent le réalisé vs prévu du projet.",
+        "date": "Date du remplacement",
+        "acquiredVehicle": "Véhicule acquis",
+        "acquiredVehicleHint": "ex. Ford F-600 électrique 2027",
+        "actualCost": "Coût réel (CAD, avant taxes)",
+        "actualCostHint": "laisser vide si inconnu",
+        "invalidCost": "Coût réel invalide : nombre positif attendu",
+        "save": "Enregistrer",
+        "clear": "Annuler le réalisé",
+        "saved": "Remplacement de {{unit}} marqué réalisé",
+        "cleared": "Réalisé retiré pour {{unit}}",
+        "totalActual": "Coût réel cumulé des remplacements réalisés : {{amount}}"
       }
     }
   },

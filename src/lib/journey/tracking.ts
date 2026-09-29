@@ -10,16 +10,22 @@ export interface VehiculeSuivi extends VehiculeFaisabilite {
   unit_number: string;
   replacement_year: number | null;
   target_technology: string | null; // 'diesel' | 'bev' | 'fcev' | null
+  /** C4 — remplacement MARQUÉ réalisé par le client (source de vérité). */
+  completed_date?: string | null;
+  actual_cost?: number | null;
+  acquired_vehicle?: string | null;
 }
 
 export type EtatRemplacement = "realise" | "en_retard" | "cette_annee" | "a_venir" | "sans_plan";
 
 /**
- * État d'un véhicule du plan. « Réalisé » est une heuristique honnête :
+ * État d'un véhicule du plan. Un remplacement MARQUÉ réalisé par le
+ * client (completed_date, C4) fait foi ; à défaut, heuristique honnête :
  * la technologie actuelle du véhicule correspond à la cible zéro
  * émission, ou (cible diesel) l'année-modèle atteint l'année prévue.
  */
 export function etatRemplacement(v: VehiculeSuivi, anneeCourante: number): EtatRemplacement {
+  if (v.completed_date) return "realise";
   if (v.replacement_year == null || !v.target_technology) return "sans_plan";
   const cible = v.target_technology;
   const realise =
@@ -43,6 +49,17 @@ export interface TacheAuto {
 
 const LIBELLES_TECHNO: Record<string, string> = { bev: "BEV", fcev: "FCEV", diesel: "diesel" };
 
+/** Libellés des tâches générées (C4 : traduits par l'appelant, i18n). */
+export interface LibellesTaches {
+  remplacement: (p: { unite: string; techno: string }) => string;
+  subvention: (p: { programme: string; unite: string }) => string;
+}
+
+const LIBELLES_DEFAUT: LibellesTaches = {
+  remplacement: ({ unite, techno }) => `Remplacer ${unite} (${techno})`,
+  subvention: ({ programme, unite }) => `Déposer la demande ${programme} — ${unite}`,
+};
+
 /**
  * Tâches auto-créées depuis les échéances du plan :
  * - remplacement : échéance au 31 mars de l'année prévue (préparation
@@ -55,6 +72,7 @@ const LIBELLES_TECHNO: Record<string, string> = { bev: "BEV", fcev: "FCEV", dies
 export function tachesDuPlan(
   vehicules: VehiculeSuivi[],
   options: OptionsParametres,
+  libelles: LibellesTaches = LIBELLES_DEFAUT,
 ): TacheAuto[] {
   const taches: TacheAuto[] = [];
   for (const v of vehicules) {
@@ -63,7 +81,7 @@ export function tachesDuPlan(
     const techno = LIBELLES_TECHNO[v.target_technology] ?? v.target_technology;
     taches.push({
       auto_key: `remplacement:${v.id}:${v.replacement_year}`,
-      title: `Remplacer ${v.unit_number} (${techno})`,
+      title: libelles.remplacement({ unite: v.unit_number, techno }),
       due_date: `${v.replacement_year}-03-31`,
       vehicle_id: v.id,
       plan_year: v.replacement_year,
@@ -85,7 +103,10 @@ export function tachesDuPlan(
         if (!prog || statutEffectif(prog, `${options.anneeReference}-01-01`) !== "actif") continue;
         taches.push({
           auto_key: `subvention:${v.id}:${prog.id}`,
-          title: `Déposer la demande ${prog.nom.split("—")[0].trim()} — ${v.unit_number}`,
+          title: libelles.subvention({
+            programme: prog.nom.split("—")[0].trim(),
+            unite: v.unit_number,
+          }),
           due_date: prog.dateFin ?? `${v.replacement_year}-03-31`,
           vehicle_id: v.id,
           plan_year: v.replacement_year,

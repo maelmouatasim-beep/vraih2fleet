@@ -81,3 +81,27 @@ describe("tachesDuPlan", () => {
     expect(taches.some((t) => t.auto_key.startsWith("remplacement:"))).toBe(true);
   });
 });
+
+describe("C4 — remplacement marqué réalisé et libellés traduits", () => {
+  it("completed_date fait foi : réalisé même si l'heuristique dirait « en retard »", () => {
+    const v = vehicule({ replacement_year: 2020, target_technology: "bev", fuel_type: "diesel" });
+    expect(etatRemplacement(v, 2026)).toBe("en_retard");
+    expect(etatRemplacement({ ...v, completed_date: "2025-06-01" }, 2026)).toBe("realise");
+  });
+
+  it("un véhicule marqué réalisé ne génère plus de tâches", () => {
+    expect(tachesDuPlan([vehicule({ completed_date: "2025-06-01" })], OPTIONS)).toEqual([]);
+  });
+
+  it("les titres des tâches passent par les libellés fournis (i18n)", () => {
+    const taches = tachesDuPlan([vehicule()], OPTIONS, {
+      remplacement: ({ unite, techno }) => `Replace ${unite} (${techno})`,
+      subvention: ({ programme, unite }) => `Submit ${programme} — ${unite}`,
+    });
+    const remplacement = taches.find((t) => t.auto_key.startsWith("remplacement:"));
+    expect(remplacement!.title).toMatch(/^Replace /);
+    for (const t2 of taches.filter((t3) => t3.auto_key.startsWith("subvention:"))) {
+      expect(t2.title).toMatch(/^Submit /);
+    }
+  });
+});
