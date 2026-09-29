@@ -19,12 +19,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
+import { useConfirmedSubsidies } from "@/hooks/useConfirmedSubsidies";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { construireStrategie } from "@/lib/journey/strategies";
 import { PROGRAMMES, statutEffectif } from "@/lib/tco";
 import { formateurCad } from "@/lib/format";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 import { ExternalLink, Loader2 } from "lucide-react";
+import ConfirmedSubsidiesCard from "./ConfirmedSubsidiesCard";
 
 interface FinancingStepProps {
   projectId: string;
@@ -35,6 +37,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
   const { t, i18n } = useTranslation();
   const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading } = useProjectVehicles(projectId);
+  const { confirmeesParVehicule } = useConfirmedSubsidies(projectId);
 
   const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
   const aujourdHui = new Date().toISOString().slice(0, 10);
@@ -47,6 +50,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
         ...pv.vehicles,
         replacement_year: pv.replacement_year,
         target_technology: pv.target_technology,
+        subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
       })),
       "plan_actuel",
       options,
@@ -68,7 +72,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
       0,
     );
     return { lignes, total: strategie.subventionsTotal, resteAFinancer, anneeReference, strategie };
-  }, [options, projectVehicles]);
+  }, [options, projectVehicles, confirmeesParVehicule]);
 
   if (orgLoading || isLoading) {
     return (
@@ -204,6 +208,14 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
           )}
         </CardContent>
       </Card>
+
+      <ConfirmedSubsidiesCard
+        projectId={projectId}
+        vehicules={projectVehicles.map((pv) => ({
+          vehicleId: pv.vehicle_id,
+          unite: pv.vehicles.unit_number,
+        }))}
+      />
 
       <Card>
         <CardHeader>

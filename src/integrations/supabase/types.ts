@@ -59,6 +59,66 @@ export type Database = {
         }
         Relationships: []
       }
+      confirmed_subsidies: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          document_reference: string
+          id: string
+          label: string | null
+          notes: string | null
+          payment_year: number | null
+          program_id: string
+          project_id: string
+          updated_at: string
+          vehicle_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          document_reference: string
+          id?: string
+          label?: string | null
+          notes?: string | null
+          payment_year?: number | null
+          program_id: string
+          project_id: string
+          updated_at?: string
+          vehicle_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          document_reference?: string
+          id?: string
+          label?: string | null
+          notes?: string | null
+          payment_year?: number | null
+          program_id?: string
+          project_id?: string
+          updated_at?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "confirmed_subsidies_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "confirmed_subsidies_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       custom_reference_data: {
         Row: {
           category: string

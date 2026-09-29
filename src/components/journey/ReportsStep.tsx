@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
+import { useConfirmedSubsidies } from "@/hooks/useConfirmedSubsidies";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { construireClasseurPlan, type MetaRapport } from "@/lib/journey/report";
 import { construireStrategie } from "@/lib/journey/strategies";
@@ -49,6 +50,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
   const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
   const { options, donneesClient, organization, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading } = useProjectVehicles(projectId);
+  const { confirmeesParVehicule } = useConfirmedSubsidies(projectId);
   const [enCours, setEnCours] = useState<string | null>(null);
 
   const donnees = useMemo(() => {
@@ -59,6 +61,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
         ...pv.vehicles,
         replacement_year: pv.replacement_year,
         target_technology: pv.target_technology,
+        subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
       })),
       "plan_actuel",
       options,
@@ -75,7 +78,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
     };
     const unites = new Map(projectVehicles.map((pv) => [pv.vehicle_id, pv.vehicles.unit_number]));
     return { strategie, meta, unites };
-  }, [options, donneesClient, organization, project, projectVehicles]);
+  }, [options, donneesClient, organization, project, projectVehicles, confirmeesParVehicule]);
 
   // Règle A1 : chaque rapport généré FIGE le plan (snapshot immuable).
   // La bannière compare l'empreinte courante au dernier snapshot.

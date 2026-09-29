@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
+import { useConfirmedSubsidies } from "@/hooks/useConfirmedSubsidies";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { construireStrategies, type CleStrategie } from "@/lib/journey/strategies";
 import { formateurCad } from "@/lib/format";
@@ -28,6 +29,7 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
   const { t, i18n } = useTranslation();
   const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading } = useProjectVehicles(projectId);
+  const { confirmeesParVehicule } = useConfirmedSubsidies(projectId);
   const [selection, setSelection] = useState<CleStrategie>("plan_actuel");
 
   const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
@@ -39,10 +41,11 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
         ...pv.vehicles,
         replacement_year: pv.replacement_year,
         target_technology: pv.target_technology,
+        subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
       })),
       options,
     );
-  }, [options, projectVehicles]);
+  }, [options, projectVehicles, confirmeesParVehicule]);
 
   if (orgLoading || isLoading || (projectVehicles.length > 0 && !strategies)) {
     return (

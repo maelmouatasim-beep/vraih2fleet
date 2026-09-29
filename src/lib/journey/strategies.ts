@@ -20,6 +20,10 @@ import {
   type ResultatPlan,
 } from "@/lib/tco";
 import {
+  appliquerSubventionsConfirmees,
+  type SubventionConfirmee,
+} from "@/lib/confirmedSubsidies";
+import {
   analyserDonneesVehicule,
   classeEmission,
   evaluerFaisabiliteVehicule,
@@ -29,6 +33,10 @@ import {
 export interface VehiculeProjet extends VehiculeFaisabilite {
   replacement_year: number | null;
   target_technology: string | null; // 'diesel' | 'bev' | 'fcev' | null
+  /** Subventions CONFIRMÉES par le client (lettre d'octroi…) : elles
+   *  REMPLACENT la subvention résolue automatiquement du même
+   *  programme et sont marquées « confirmée par le client (réf. …) ». */
+  subventionsConfirmees?: SubventionConfirmee[];
 }
 
 export type CleStrategie = "plan_actuel" | "tout_electrique" | "economies_d_abord";
@@ -157,6 +165,14 @@ export function construireStrategie(
         annee: s.annee + k,
       }));
       for (const a of resolution.avertissements) avertissementsSubventions.add(a);
+      // PRIORITÉ AU CLIENT : un montant confirmé par document remplace
+      // la subvention résolue du même programme ; les autres s'ajoutent.
+      subventions = appliquerSubventionsConfirmees(
+        subventions,
+        v.subventionsConfirmees,
+        k,
+        options.anneeReference,
+      );
     }
 
     plansVehicules.push({

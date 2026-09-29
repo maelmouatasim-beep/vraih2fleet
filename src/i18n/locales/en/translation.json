@@ -5831,5 +5831,32 @@
     "beforeTaxNote": "All amounts are BEFORE GST/QST (diesel includes excise taxes). Entered values are labelled “client data” in reports.",
     "save": "Save client data",
     "saved": "Energy data saved"
+  },
+  "confirmedSubsidies": {
+    "title": "Client-confirmed subsidies",
+    "subtitle": "For programs the engine cannot quantify automatically (PAGTCP, ZETF, Écocamionnage class 5-8 percentage pending validation…): enter the actually confirmed amount with the document reference (award letter, decision).",
+    "confirmed": "confirmed",
+    "purchaseYear": "purchase year",
+    "columns": {
+      "program": "Program",
+      "amount": "Amount",
+      "year": "Payment",
+      "reference": "Document reference"
+    },
+    "form": {
+      "vehicle": "Vehicle",
+      "program": "Program",
+      "other": "Other program…",
+      "label": "Program label",
+      "amount": "Confirmed amount ($)",
+      "year": "Payment year (calendar)",
+      "reference": "Document reference (required)",
+      "referencePlaceholder": "e.g. MTMD award letter #2026-1234 dated May 15, 2026",
+      "save": "Add confirmed subsidy"
+    },
+    "priorityNote": "Client priority: a confirmed amount replaces the estimated subsidy of the same program for this vehicle; others are added. Reports mark them as “client-confirmed (ref. …)”.",
+    "invalid": "Vehicle, positive amount and document reference are required.",
+    "invalidYear": "Invalid payment year (YYYY between 2000 and 2100).",
+    "saved": "Confirmed subsidy added"
   }
 }

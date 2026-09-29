@@ -5831,5 +5831,32 @@
     "beforeTaxNote": "Tous les montants s'entendent AVANT TPS/TVQ (le diesel comprend les taxes d'accise). Les valeurs saisies sont marquées « donnée client » dans les rapports.",
     "save": "Enregistrer les données client",
     "saved": "Données énergie enregistrées"
+  },
+  "confirmedSubsidies": {
+    "title": "Subventions confirmées par le client",
+    "subtitle": "Pour les programmes que le moteur ne peut pas chiffrer automatiquement (PAGTCP, FTCZE, pourcentage Écocamionnage classes 5-8 à valider…) : saisis le montant réellement confirmé avec la référence du document (lettre d'octroi, décision).",
+    "confirmed": "confirmée",
+    "purchaseYear": "année d'achat",
+    "columns": {
+      "program": "Programme",
+      "amount": "Montant",
+      "year": "Versement",
+      "reference": "Référence du document"
+    },
+    "form": {
+      "vehicle": "Véhicule",
+      "program": "Programme",
+      "other": "Autre programme…",
+      "label": "Libellé du programme",
+      "amount": "Montant confirmé ($)",
+      "year": "Année de versement (calendaire)",
+      "reference": "Référence du document (obligatoire)",
+      "referencePlaceholder": "ex. lettre d'octroi MTMD n° 2026-1234 du 15 mai 2026",
+      "save": "Ajouter la subvention confirmée"
+    },
+    "priorityNote": "Priorité au client : un montant confirmé remplace la subvention estimée du même programme pour ce véhicule ; les autres s'ajoutent. Le rapport les marque « confirmée par le client (réf. …) ».",
+    "invalid": "Véhicule, montant positif et référence du document sont obligatoires.",
+    "invalidYear": "Année de versement invalide (AAAA entre 2000 et 2100).",
+    "saved": "Subvention confirmée ajoutée"
   }
 }

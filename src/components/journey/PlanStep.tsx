@@ -30,6 +30,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
+import { useConfirmedSubsidies } from "@/hooks/useConfirmedSubsidies";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { construireStrategie } from "@/lib/journey/strategies";
 import { formateurCad, formateurCadCompact } from "@/lib/format";
@@ -45,6 +46,7 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
   const { t, i18n } = useTranslation();
   const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading } = useProjectVehicles(projectId);
+  const { confirmeesParVehicule } = useConfirmedSubsidies(projectId);
 
   const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
   const compact = useMemo(() => formateurCadCompact(i18n.language), [i18n.language]);
@@ -57,6 +59,7 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
         ...pv.vehicles,
         replacement_year: pv.replacement_year,
         target_technology: pv.target_technology,
+        subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
       })),
       "plan_actuel",
       options,
@@ -83,7 +86,7 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
     );
 
     return { strategie, resultat: strategie.resultat, remplacements, totaux };
-  }, [options, projectVehicles]);
+  }, [options, projectVehicles, confirmeesParVehicule]);
 
   if (orgLoading || isLoading) {
     return (
