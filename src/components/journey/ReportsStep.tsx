@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { pdf } from "@react-pdf/renderer";
-import * as XLSX from "xlsx";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -141,11 +140,19 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
     setEnCours("xlsx");
     try {
       const feuilles = construireClasseurPlan(donnees.strategie, donnees.unites, donnees.meta);
-      const classeur = XLSX.utils.book_new();
+      // exceljs (SheetJS retiré : CVE-2023-30533 / CVE-2024-22363)
+      const ExcelJS = await import("exceljs");
+      const classeur = new ExcelJS.Workbook();
       for (const f of feuilles) {
-        XLSX.utils.book_append_sheet(classeur, XLSX.utils.aoa_to_sheet(f.lignes), f.nom);
+        classeur.addWorksheet(f.nom).addRows(f.lignes.map((l) => l.map((c) => c ?? null)));
       }
-      XLSX.writeFile(classeur, `h2fleet-plan-${donnees.meta.dateIso}.xlsx`);
+      const tampon = await classeur.xlsx.writeBuffer();
+      telecharger(
+        new Blob([tampon], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        }),
+        `h2fleet-plan-${donnees.meta.dateIso}.xlsx`,
+      );
       await figerLeRapport("xlsx");
     } catch (e) {
       toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });

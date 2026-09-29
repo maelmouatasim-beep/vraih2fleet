@@ -371,10 +371,12 @@ async function handleGetScenarioResults(supabase: SupabaseClient, userId: string
   }
 
   // Récupérer les résultats les plus récents
+  // Revue B7 : LE résultat courant (is_current), pas « le plus récent »
   const { data: result, error: resultError } = await supabase
     .from("tco_results")
     .select("*")
     .eq("scenario_id", scenarioId)
+    .eq("is_current", true)
     .order("created_at", { ascending: false })
     .limit(1)
     .single();

@@ -120,7 +120,7 @@ var get_tco_results_default = defineTool4({
       return { content: [{ type: "text", text: "Not authenticated" }], isError: true };
     }
     const supabase = supabaseForUser(ctx);
-    const { data, error } = await supabase.from("tco_results").select("*").eq("scenario_id", scenario_id).order("created_at", { ascending: false }).limit(1).maybeSingle();
+    const { data, error } = await supabase.from("tco_results").select("*").eq("scenario_id", scenario_id).eq("is_current", true).order("created_at", { ascending: false }).limit(1).maybeSingle();
     if (error) {
       return { content: [{ type: "text", text: error.message }], isError: true };
     }

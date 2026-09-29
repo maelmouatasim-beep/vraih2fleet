@@ -7,7 +7,6 @@
  */
 import { z } from "zod";
 import Papa from "papaparse";
-import * as XLSX from "xlsx";
 import {
   CARBURANTS,
   CATEGORIES_VEHICULE,
@@ -287,7 +286,25 @@ export function validerLignes(
   return { valides, erreurs };
 }
 
-/** Lit un fichier CSV (papaparse) ou Excel (SheetJS) en lignes brutes. */
+/** Valeur brute d'une cellule exceljs : texte riche, formule, lien et
+ *  date sont ramenés à une valeur simple ; une DATE Excel devient
+ *  « AAAA-MM-JJ » (jamais un numéro de série). */
+function valeurCellule(v: unknown): unknown {
+  if (v === null || v === undefined) return "";
+  if (v instanceof Date) return v.toISOString().slice(0, 10);
+  if (typeof v === "object") {
+    const o = v as { richText?: { text: string }[]; text?: unknown; result?: unknown; hyperlink?: unknown };
+    if (Array.isArray(o.richText)) return o.richText.map((r) => r.text).join("");
+    if (o.result !== undefined) return valeurCellule(o.result);
+    if (o.text !== undefined) return valeurCellule(o.text);
+    return "";
+  }
+  return v;
+}
+
+/** Lit un fichier CSV (papaparse) ou Excel .xlsx (exceljs — SheetJS
+ *  0.18.5 est retiré : CVE-2023-30533 / CVE-2024-22363). Le vieux
+ *  format .xls n'est plus accepté : exporter en .xlsx ou CSV. */
 export async function lireFichier(file: File): Promise<Array<Record<string, unknown>>> {
   const nom = file.name.toLowerCase();
   if (nom.endsWith(".csv") || nom.endsWith(".txt")) {
@@ -298,11 +315,38 @@ export async function lireFichier(file: File): Promise<Array<Record<string, unkn
     });
     return resultat.data;
   }
-  if (nom.endsWith(".xlsx") || nom.endsWith(".xls")) {
-    const buffer = await file.arrayBuffer();
-    const classeur = XLSX.read(buffer, { type: "array" });
-    const feuille = classeur.Sheets[classeur.SheetNames[0]];
-    return XLSX.utils.sheet_to_json<Record<string, unknown>>(feuille, { raw: true, defval: "" });
+  if (nom.endsWith(".xlsx")) {
+    const ExcelJS = await import("exceljs");
+    const classeur = new ExcelJS.Workbook();
+    await classeur.xlsx.load(await file.arrayBuffer());
+    const feuille = classeur.worksheets[0];
+    if (!feuille) return [];
+    const entetes: string[] = [];
+    feuille.getRow(1).eachCell({ includeEmpty: true }, (cellule, col) => {
+      entetes[col] = String(valeurCellule(cellule.value)).trim();
+    });
+    const lignes: Array<Record<string, unknown>> = [];
+    for (let r = 2; r <= feuille.rowCount; r++) {
+      const rangee = feuille.getRow(r);
+      const objet: Record<string, unknown> = {};
+      let vide = true;
+      rangee.eachCell({ includeEmpty: true }, (cellule, col) => {
+        const cle = entetes[col];
+        if (!cle) return;
+        const valeur = valeurCellule(cellule.value);
+        objet[cle] = valeur;
+        if (valeur !== "" && valeur !== null) vide = false;
+      });
+      // les colonnes sans cellule restent définies (comme defval: "")
+      for (const cle of entetes) {
+        if (cle && !(cle in objet)) objet[cle] = "";
+      }
+      if (!vide) lignes.push(objet);
+    }
+    return lignes;
   }
-  throw new Error("format non pris en charge (CSV, XLSX ou XLS attendu)");
+  if (nom.endsWith(".xls")) {
+    throw new Error("le format .xls (Excel 97-2003) n'est plus pris en charge : enregistrer en .xlsx ou en CSV");
+  }
+  throw new Error("format non pris en charge (CSV ou XLSX attendu)");
 }
