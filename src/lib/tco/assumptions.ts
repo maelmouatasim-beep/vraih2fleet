@@ -14,6 +14,9 @@
  */
 
 import type { CategorieVehicule, Hypothese, Technologie } from './assumption-types';
+import DONNEES_ENERGIE from './energy-data.json';
+
+export { DONNEES_ENERGIE };
 
 // ---------------------------------------------------------------------------
 // Sources fréquemment citées
@@ -61,21 +64,36 @@ export const HYPOTHESES = {
   // ----- Énergie : prix ----------------------------------------------------
   prix_diesel: {
     id: 'prix_diesel',
-    description: 'Prix du diesel HORS TPS/TVQ (accise et SPEDE compris), moyenne provinciale Québec',
-    valeur: 2.5658,
+    description:
+      'Prix du diesel HORS TPS/TVQ (accises et SPEDE compris) — MOYENNE MOBILE 12 MOIS StatCan, Montréal/Québec',
+    valeur: DONNEES_ENERGIE.diesel.moyenne12MoisAvantTpsTvqParL,
     unite: '$/L',
-    plage: { basse: 1.5656, haute: 2.9572 },
+    plage: {
+      basse: DONNEES_ENERGIE.diesel.minMensuelAvantTpsTvqParL,
+      haute: DONNEES_ENERGIE.diesel.spotCriseAvantTpsTvqParL,
+    },
     region: 'QC',
     anneeDollars: 2026,
-    source: SRC_REGIE_BULLETIN,
-    dateVerification: V,
+    source: {
+      organisme: 'Statistique Canada',
+      document:
+        'Tableau 18-10-0001-01 — diesel libre-service, moyenne 12 mois (' +
+        DONNEES_ENERGIE.diesel.periode +
+        ') des villes de Montréal et de Québec, série archivée (' +
+        DONNEES_ENERGIE.diesel.source.archive +
+        ')',
+      annee: 2026,
+      url: 'https://www150.statcan.gc.ca/t1/tbl1/fr/tv.action?pid=1810000101',
+    },
+    dateVerification: DONNEES_ENERGIE.diesel.dateVerification,
     statut: 'verifie',
     notes:
-      'Prix pompe TTC du relevé 2026-09-21 (~2,95 $/L) ÷ 1,14975 (TPS 5 % + TVQ 9,975 %, calculées sur le ' +
-      'prix accise comprise) = 2,5658 $/L AVANT TPS/TVQ — le moteur ajoute la part non récupérable selon ' +
-      'l’organisme (§3.1 v2.2, taxes symétriques). Le taux de TVQ utilisé pour la conversion est à_valider ' +
-      '(hypothèse taux_tvq). Plage convertie de même (1,80-3,40 $ TTC). Très volatil ; prix de crise — ' +
-      'À REMPLACER par la moyenne mobile 12 mois StatCan (couche A1) : moyenne 2025-08→2026-08 ≈ 2,09 $ TTC.',
+      'Valeur et plage lues depuis src/lib/tco/energy-data.json, mis à jour par le workflow hebdomadaire ' +
+      'update-energy-data.yml (variation > 20 % = mise en attente, jamais appliquée automatiquement). ' +
+      'Moyenne 12 mois 2,0902 $ TTC ÷ 1,14975 = 1,8179 $ AVANT TPS/TVQ — le moteur ajoute la part non ' +
+      'récupérable selon l’organisme (§3.1 v2.2). Le taux de TVQ de la conversion est à_valider (taux_tvq). ' +
+      'Borne basse = mois le plus bas des 12 derniers ; borne haute = SPOT DE CRISE du bulletin de la Régie ' +
+      'du 2026-09-21 (2,95 $ TTC → 2,5658 $), utilisé UNIQUEMENT comme borne du scénario Favorable.',
   },
   hq_tarif_m_energie: {
     id: 'hq_tarif_m_energie',

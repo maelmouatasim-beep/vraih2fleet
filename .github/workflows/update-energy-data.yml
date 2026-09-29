@@ -1,0 +1,127 @@
+# Couche « collecte » des prix de l'énergie (règle A1 de la revue) :
+# chaque semaine, lit et ARCHIVE les sources officielles (bulletin de la
+# Régie — écrasé chaque semaine, StatCan 18-10-0001-01, grille
+# Hydro-Québec — nouvelle grille au 1er avril, page REC Avenir
+# énergétique), puis met à jour src/lib/tco/energy-data.json (moyenne
+# mobile 12 mois du diesel) SOUS GARDE D'ANOMALIE : une variation de
+# plus de 20 % n'est JAMAIS appliquée automatiquement — elle est écrite
+# dans data/energie/en-attente-<date>.json et attend une décision
+# humaine. Après une mise à jour appliquée, le document d'hypothèses et
+# le JSON des cas de référence sont régénérés pour garder la CI verte.
+# Aucun secret.
+name: Mise à jour des prix de l'énergie
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Mardi 11 h 47 UTC (StatCan publie le mensuel en milieu de mois ;
+    # le bulletin de la Régie sort le mardi). Minute décalée (règle CI).
+    - cron: '47 11 * * 2'
+
+permissions:
+  contents: write
+
+jobs:
+  update-energy-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer poppler (pdftotext)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+
+      - name: Préparer le dossier d'archive
+        run: |
+          echo "JOUR=$(date -u +%F)" >> "$GITHUB_ENV"
+          mkdir -p archive
+
+      - name: Régie — bulletin hebdomadaire (texte archivé, URL datée)
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 60 "https://www.regie-energie.qc.ca/fr/participants/produits-petroliers/bulletins-dinformation-sur-les-prix-des-produits-petroliers" -o archive/regie-bulletins.html
+          PDF=$(grep -oE 'href="[^"]*\.pdf[^"]*"' archive/regie-bulletins.html | head -1 | sed 's/href="//;s/"$//')
+          case "$PDF" in http*) URL="$PDF";; *) URL="https://www.regie-energie.qc.ca$PDF";; esac
+          echo "Bulletin : $URL (lu le $JOUR)" | tee archive/regie-bulletin.url
+          curl -sL --max-time 120 -o bulletin-temporaire.pdf "$URL"
+          pdftotext -layout bulletin-temporaire.pdf archive/regie-bulletin.txt || true
+          echo "=== RÉGIE — DIESEL (extraits) ==="
+          grep -n -i -B2 -A8 "diesel" archive/regie-bulletin.txt | head -40 || true
+
+      - name: StatCan 18-10-0001-01 — diesel, 16 derniers mois (API WDS)
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request
+          req = urllib.request.Request(
+              "https://www150.statcan.gc.ca/t1/wds/rest/getCubeMetadata",
+              data=json.dumps([{"productId": 18100001}]).encode(),
+              headers={"Content-Type": "application/json"})
+          meta = json.load(urllib.request.urlopen(req, timeout=60))
+          open("archive/statcan-18100001-metadata.json", "w").write(json.dumps(meta, ensure_ascii=False, indent=1))
+          dims = meta[0]["object"]["dimension"]
+          geo = {m["memberNameFr"]: m["memberId"] for m in dims[0]["member"]}
+          prod = {m["memberNameFr"]: m["memberId"] for m in dims[1]["member"]}
+          diesel = [v for k, v in prod.items() if "iesel" in k]
+          villes = [(k, v) for k, v in geo.items() if ("Montréal" in k or k.startswith("Québec"))]
+          series = []
+          for nomv, gid in villes[:3]:
+              for pid in diesel:
+                  coord = f"{gid}.{pid}.0.0.0.0.0.0.0.0"
+                  req2 = urllib.request.Request(
+                      "https://www150.statcan.gc.ca/t1/wds/rest/getDataFromCubePidCoordAndLatestNPeriods",
+                      data=json.dumps([{"productId": 18100001, "coordinate": coord, "latestN": 16}]).encode(),
+                      headers={"Content-Type": "application/json"})
+                  d = json.load(urllib.request.urlopen(req2, timeout=60))
+                  series.append({"ville": nomv, "coordinate": coord, "reponse": d})
+          open("archive/statcan-diesel-12mois.json", "w").write(json.dumps(series, ensure_ascii=False, indent=1))
+          PY
+
+      - name: Hydro-Québec — grille tarifaire (PDF archivé)
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 120 -o archive/hq-tarifs.pdf "https://www.hydroquebec.com/data/documents-donnees/pdf/tarifs-electricite.pdf"
+          pdftotext -layout archive/hq-tarifs.pdf archive/hq-tarifs.txt || true
+          echo "=== HQ — TARIF M (extraits) ==="
+          grep -n -i -B2 -A6 "tarif m" archive/hq-tarifs.txt | head -30 || true
+
+      - name: REC — Avenir énergétique (page archivée)
+        continue-on-error: true
+        run: |
+          curl -sL --max-time 90 "https://www.cer-rec.gc.ca/fr/donnees-analyse/avenir-energetique-canada/index.html" -o archive/rec-avenir.html
+          python3 -c "import re,html;t=open('archive/rec-avenir.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/rec-avenir.txt','w').write(t)"
+
+      - name: Copier l'archive du jour
+        run: |
+          DEST="data/sources/$JOUR"
+          mkdir -p "$DEST"
+          cp -r archive/* "$DEST"/
+
+      - name: Moyenne 12 mois + garde d'anomalie (± 20 % = mise en attente)
+        run: |
+          node scripts/energie/update-energy-data.mjs \
+            "data/sources/$JOUR/statcan-diesel-12mois.json" \
+            src/lib/tco/energy-data.json \
+            "data/sources/$JOUR/statcan-diesel-12mois.json" \
+            data/energie | tee decision.txt
+
+      - name: Régénérer les documents dérivés si la valeur a changé
+        run: |
+          if git diff --quiet src/lib/tco/energy-data.json; then
+            echo "energy-data.json inchangé — rien à régénérer."
+          else
+            npm ci
+            npm run docs:tco
+            node scripts/reference-cases/generate.mjs
+            npm run test:tco
+          fi
+
+      - name: Committer l'archive et les mises à jour
+        run: |
+          git config user.name "update-energy-data[bot]"
+          git config user.email "actions@github.com"
+          git add "data/sources/$JOUR" data/energie src/lib/tco/energy-data.json docs/tco-hypotheses.md docs/tco-cas-de-reference.json 2>/dev/null || true
+          git commit \
+            -m "data(energie): collecte du $JOUR — $(head -c 160 decision.txt | tr '\n' ' ')" \
+            -m "Sources lues et archivées (Régie, StatCan 18-10-0001-01, Hydro-Québec, REC) par le workflow update-energy-data. Garde d'anomalie : une variation de plus de 20 % est mise en attente dans data/energie/, jamais appliquée automatiquement." \
+            || echo "rien à committer"
+          git pull --rebase origin "${GITHUB_REF_NAME}" || true
+          git push origin "HEAD:${GITHUB_REF_NAME}"

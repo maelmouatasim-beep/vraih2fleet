@@ -5,15 +5,32 @@
  * jamais écrites à la main, jamais copiées depuis le moteur.
  */
 
+import { readFileSync } from 'node:fs';
+
+// Le prix du diesel des cas suit la couche « données » (src/lib/tco/
+// energy-data.json, mise à jour par le workflow update-energy-data.yml) :
+// le test defaults.test.ts exige l'égalité parametresParDefaut ≡
+// PARAMETRES_CAS, et le workflow régénère le JSON des cas après chaque
+// mise à jour appliquée.
+const DONNEES_ENERGIE = JSON.parse(
+  readFileSync(new URL('../../src/lib/tco/energy-data.json', import.meta.url), 'utf8'),
+);
+
 export const PARAMETRES_CAS = {
   anneeReference: 2026,
   horizonAns: 10,
   tauxActualisationNominal: 0.05,
   inflations: { diesel: 0.03, electricite: 0.035, hydrogene: 0.0, entretien: 0.025, generale: 0.021 },
-  // Prix AVANT TPS/TVQ (§3.1 v2.2) : diesel = 2,95 $ TTC à la pompe
-  // (relevé 2026-09-21) ÷ 1,14975 = 2,5658 $ (accise et SPEDE compris) ;
-  // le tarif HQ et le prix H2 livré s'entendent déjà avant taxes.
-  prixAnnee0: { dieselParL: 2.5658, electriciteEffectiveParKwh: 0.1, h2LivreParKg: 16.5 },
+  // Prix AVANT TPS/TVQ (§3.1 v2.2). Diesel : MOYENNE MOBILE 12 MOIS
+  // StatCan 18-10-0001-01 (Montréal/Québec libre-service, TTC ÷ 1,14975),
+  // lue depuis energy-data.json — le spot de crise (2,95 $ TTC) n'est que
+  // la borne haute du scénario Favorable. Le tarif HQ et le prix H2
+  // livré s'entendent déjà avant taxes.
+  prixAnnee0: {
+    dieselParL: DONNEES_ENERGIE.diesel.moyenne12MoisAvantTpsTvqParL,
+    electriciteEffectiveParKwh: 0.1,
+    h2LivreParKg: 16.5,
+  },
   rendementRecharge: 0.9,
   majorationHivernaleAnnualisee: 0.25 * 0.33,
   tauxTaxesNonRecuperables: 0.049875,

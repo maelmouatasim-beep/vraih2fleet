@@ -107,6 +107,88 @@ export function parametresStandards(plan: PlanTco): ParametreSensibilite[] {
       },
     },
     {
+      // Trajectoire du prix du diesel (revue A1b) : l'inflation propre au
+      // diesel est aussi incertaine que son niveau — plage du registre.
+      id: 'inflation_diesel',
+      libelle: 'Inflation annuelle du prix du diesel',
+      sens: 'hausse_favorable',
+      basse: HYPOTHESES.inflation_diesel.plage.basse,
+      centrale: p.inflations.diesel,
+      haute: HYPOTHESES.inflation_diesel.plage.haute,
+      appliquer: (pl, v) => {
+        const c = cloner(pl);
+        c.parametres.inflations.diesel = v;
+        return c;
+      },
+    },
+    {
+      // Économie d'entretien VE : l'hypothèse la moins mûre du registre
+      // (statut estimation) — plage relative des défauts de catégorie
+      // (ex. camionnette BEV 0,05-0,10 $/km pour 0,07).
+      id: 'entretien_alternative',
+      libelle: 'Coût d’entretien des véhicules zéro émission (facteur)',
+      sens: 'hausse_defavorable',
+      basse: 0.7,
+      centrale: 1,
+      haute: 1.4,
+      appliquer: (pl, v) => {
+        const c = cloner(pl);
+        for (const veh of c.vehicules) {
+          if (veh.alternative.technologie !== 'diesel') veh.alternative.entretienParKm *= v;
+        }
+        return c;
+      },
+    },
+    {
+      // Consommation réelle des VE : plage relative des défauts du
+      // registre (ex. autobus BEV 120-170 kWh/100 km pour 140).
+      id: 'consommation_alternative',
+      libelle: 'Consommation des véhicules zéro émission (facteur)',
+      sens: 'hausse_defavorable',
+      basse: 0.85,
+      centrale: 1,
+      haute: 1.2,
+      appliquer: (pl, v) => {
+        const c = cloner(pl);
+        for (const veh of c.vehicules) {
+          if (veh.alternative.technologie !== 'diesel') veh.alternative.consommationPar100km *= v;
+        }
+        return c;
+      },
+    },
+    {
+      // Valeur résiduelle des VE : facteur sur la dépréciation annuelle
+      // des technologies alternatives, borné par la plage relative du
+      // registre (depreciation_bev 0,13-0,25 pour 0,18).
+      id: 'valeur_residuelle_alternative',
+      libelle: 'Dépréciation des véhicules zéro émission (facteur)',
+      sens: 'hausse_defavorable',
+      basse: HYPOTHESES.depreciation_bev.plage.basse / HYPOTHESES.depreciation_bev.valeur,
+      centrale: 1,
+      haute: HYPOTHESES.depreciation_bev.plage.haute / HYPOTHESES.depreciation_bev.valeur,
+      appliquer: (pl, v) => {
+        const c = cloner(pl);
+        c.parametres.depreciationAnnuelle.BEV = Math.min(0.99, c.parametres.depreciationAnnuelle.BEV * v);
+        c.parametres.depreciationAnnuelle.FCEV = Math.min(0.99, c.parametres.depreciationAnnuelle.FCEV * v);
+        return c;
+      },
+    },
+    {
+      // Majoration hivernale annualisée : plages du registre (majoration
+      // 10-40 % × part des km d'hiver 25-42 %).
+      id: 'majoration_hivernale',
+      libelle: 'Majoration hivernale annualisée (BEV/FCEV)',
+      sens: 'hausse_defavorable',
+      basse: HYPOTHESES.majoration_hivernale_bev.plage.basse * HYPOTHESES.part_km_hiver.plage.basse,
+      centrale: p.majorationHivernaleAnnualisee,
+      haute: HYPOTHESES.majoration_hivernale_bev.plage.haute * HYPOTHESES.part_km_hiver.plage.haute,
+      appliquer: (pl, v) => {
+        const c = cloner(pl);
+        c.parametres.majorationHivernaleAnnualisee = v;
+        return c;
+      },
+    },
+    {
       id: 'taux_actualisation',
       libelle: 'Taux d’actualisation nominal',
       sens: 'hausse_defavorable',

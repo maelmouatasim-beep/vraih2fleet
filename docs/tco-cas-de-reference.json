@@ -12,7 +12,7 @@
    "generale": 0.021
   },
   "prixAnnee0": {
-   "dieselParL": 2.5658,
+   "dieselParL": 1.8179,
    "electriciteEffectiveParKwh": 0.1,
    "h2LivreParKg": 16.5
   },
@@ -55,7 +55,7 @@
       "generale": 0.021
      },
      "prixAnnee0": {
-      "dieselParL": 2.5658,
+      "dieselParL": 1.8179,
       "electriciteEffectiveParKwh": 0.1,
       "h2LivreParKg": 16.5
      },
@@ -119,16 +119,16 @@
    },
    "sorties": {
     "tcoActualiseAlt": 145029.96,
-    "tcoActualiseRef": 211105.82,
-    "vanDifferentielle": 66075.85,
+    "tcoActualiseRef": 179269.73,
+    "vanDifferentielle": 34239.77,
     "tcoParKmAlt": 0.6261,
-    "paybackSimpleAns": 4,
+    "paybackSimpleAns": 5,
     "paybackSimpleRaison": null,
-    "paybackActualiseAns": 4,
+    "paybackActualiseAns": 6,
     "paybackActualiseRaison": null,
     "co2EviteTtwTonnes": 123.345,
     "co2EviteWtwTonnes": 154.043,
-    "coutParTonneWtw": -428.95
+    "coutParTonneWtw": -222.27
    }
   },
   {
@@ -148,7 +148,7 @@
       "generale": 0.021
      },
      "prixAnnee0": {
-      "dieselParL": 2.5658,
+      "dieselParL": 1.8179,
       "electriciteEffectiveParKwh": 0.1,
       "h2LivreParKg": 16.5
      },
@@ -205,8 +205,8 @@
    },
    "sorties": {
     "tcoActualiseAlt": 2426314.81,
-    "tcoActualiseRef": 1877476.15,
-    "vanDifferentielle": -548838.66,
+    "tcoActualiseRef": 1686459.67,
+    "vanDifferentielle": -739855.14,
     "tcoParKmAlt": 5.237,
     "paybackSimpleAns": null,
     "paybackSimpleRaison": "le surcoût n'est pas résorbé à l'horizon H=10",
@@ -214,7 +214,7 @@
     "paybackActualiseRaison": "le surcoût n'est pas résorbé à l'horizon H=10",
     "co2EviteTtwTonnes": 735.48,
     "co2EviteWtwTonnes": 918.138,
-    "coutParTonneWtw": 597.77
+    "coutParTonneWtw": 805.82
    }
   },
   {
@@ -234,7 +234,7 @@
       "generale": 0.021
      },
      "prixAnnee0": {
-      "dieselParL": 2.5658,
+      "dieselParL": 1.8179,
       "electriciteEffectiveParKwh": 0.1,
       "h2LivreParKg": 16.5
      },
@@ -298,16 +298,16 @@
    },
    "sorties": {
     "tcoActualiseAlt": 833878.55,
-    "tcoActualiseRef": 903623.67,
-    "vanDifferentielle": 69745.12,
+    "tcoActualiseRef": 750810.49,
+    "vanDifferentielle": -83068.06,
     "tcoParKmAlt": 1.7999,
-    "paybackSimpleAns": 8,
+    "paybackSimpleAns": 10,
     "paybackSimpleRaison": null,
-    "paybackActualiseAns": 10,
-    "paybackActualiseRaison": null,
+    "paybackActualiseAns": null,
+    "paybackActualiseRaison": "le surcoût n'est pas résorbé à l'horizon H=10",
     "co2EviteTtwTonnes": 588.384,
     "co2EviteWtwTonnes": 734.484,
-    "coutParTonneWtw": -94.96
+    "coutParTonneWtw": 113.1
    }
   },
   {
@@ -327,7 +327,7 @@
       "generale": 0.021
      },
      "prixAnnee0": {
-      "dieselParL": 2.5658,
+      "dieselParL": 1.8179,
       "electriciteEffectiveParKwh": 0.1,
       "h2LivreParKg": 16.5
      },
@@ -391,16 +391,16 @@
    },
    "sorties": {
     "tcoActualiseAlt": 79587.62,
-    "tcoActualiseRef": 119459.07,
-    "vanDifferentielle": 39871.45,
+    "tcoActualiseRef": 103541.03,
+    "vanDifferentielle": 23953.41,
     "tcoParKmAlt": 0.4123,
-    "paybackSimpleAns": 3,
+    "paybackSimpleAns": 4,
     "paybackSimpleRaison": null,
-    "paybackActualiseAns": 3,
+    "paybackActualiseAns": 4,
     "paybackActualiseRaison": null,
     "co2EviteTtwTonnes": 61.673,
     "co2EviteWtwTonnes": 77.018,
-    "coutParTonneWtw": -517.69
+    "coutParTonneWtw": -311.01
    }
   },
   {
@@ -420,7 +420,7 @@
       "generale": 0.021
      },
      "prixAnnee0": {
-      "dieselParL": 2.5658,
+      "dieselParL": 1.8179,
       "electriciteEffectiveParKwh": 0.1,
       "h2LivreParKg": 16.5
      },
@@ -476,8 +476,8 @@
    },
    "sorties": {
     "tcoActualiseAlt": 1437602.59,
-    "tcoActualiseRef": 903623.67,
-    "vanDifferentielle": -533978.91,
+    "tcoActualiseRef": 750810.49,
+    "vanDifferentielle": -686792.1,
     "tcoParKmAlt": 3.1029,
     "paybackSimpleAns": null,
     "paybackSimpleRaison": "le surcoût n'est pas résorbé à l'horizon H=10",
@@ -485,7 +485,7 @@
     "paybackActualiseRaison": "le surcoût n'est pas résorbé à l'horizon H=10",
     "co2EviteTtwTonnes": 588.384,
     "co2EviteWtwTonnes": 683.52,
-    "coutParTonneWtw": 781.22
+    "coutParTonneWtw": 1004.79
    }
   },
   {
@@ -505,7 +505,7 @@
       "generale": 0.021
      },
      "prixAnnee0": {
-      "dieselParL": 2.5658,
+      "dieselParL": 1.8179,
       "electriciteEffectiveParKwh": 0.1,
       "h2LivreParKg": 16.5
      },
@@ -673,16 +673,16 @@
    },
    "sorties": {
     "tcoActualiseAlt": 1124208.36,
-    "tcoActualiseRef": 1514486,
-    "vanDifferentielle": 390277.64,
+    "tcoActualiseRef": 1287813.2,
+    "vanDifferentielle": 163604.85,
     "tcoParKmAlt": 0.8456,
-    "paybackSimpleAns": 5,
+    "paybackSimpleAns": 7,
     "paybackSimpleRaison": null,
-    "paybackActualiseAns": 6,
+    "paybackActualiseAns": 9,
     "paybackActualiseRaison": null,
     "co2EviteTtwTonnes": 890.95,
     "co2EviteWtwTonnes": 1112.596,
-    "coutParTonneWtw": -350.78
+    "coutParTonneWtw": -147.05
    }
   },
   {
@@ -702,7 +702,7 @@
       "generale": 0.021
      },
      "prixAnnee0": {
-      "dieselParL": 2.5658,
+      "dieselParL": 1.8179,
       "electriciteEffectiveParKwh": 0.1,
       "h2LivreParKg": 16.5
      },
@@ -759,16 +759,16 @@
    },
    "sorties": {
     "tcoActualiseAlt": 2848091.45,
-    "tcoActualiseRef": 2530119.8,
-    "vanDifferentielle": -317971.65,
+    "tcoActualiseRef": 2240933.64,
+    "vanDifferentielle": -607157.8,
     "tcoParKmAlt": 4.3799,
-    "paybackSimpleAns": 16,
-    "paybackSimpleRaison": null,
+    "paybackSimpleAns": null,
+    "paybackSimpleRaison": "le surcoût n'est pas résorbé à l'horizon H=16",
     "paybackActualiseAns": null,
     "paybackActualiseRaison": "le surcoût n'est pas résorbé à l'horizon H=16",
     "co2EviteTtwTonnes": 1176.768,
     "co2EviteWtwTonnes": 1469.02,
-    "coutParTonneWtw": 216.45
+    "coutParTonneWtw": 413.31
    }
   }
  ]

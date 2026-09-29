@@ -1,0 +1,24 @@
+{
+  "$commentaire": "Données de prix de l'énergie MISES À JOUR PAR LE WORKFLOW .github/workflows/update-energy-data.yml (couche « collecte » de la règle A1). Ne pas éditer à la main : toute valeur porte sa date, sa source, son archive et sa méthode. Une variation de plus de 20 % par rapport à la valeur en place n'est JAMAIS appliquée automatiquement : elle est écrite dans data/energie/en-attente-<date>.json et attend une action humaine.",
+  "versionDonnees": "2026-09-29",
+  "diesel": {
+    "moyenne12MoisTtcParL": 2.0902,
+    "moyenne12MoisAvantTpsTvqParL": 1.8179,
+    "minMensuelAvantTpsTvqParL": 1.4751,
+    "spotCriseAvantTpsTvqParL": 2.5658,
+    "periode": "2025-09 à 2026-08",
+    "mois": ["2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08"],
+    "serieTtcCentsParL": {
+      "quebec": [169.6, 170.2, 185.7, 178.1, 175.0, 188.8, 237.4, 248.0, 244.0, 219.4, 231.6, 252.3],
+      "montreal": [171.4, 170.7, 186.8, 177.0, 177.1, 192.4, 241.5, 244.5, 240.2, 221.0, 237.1, 256.6]
+    },
+    "methode": "Moyenne des 12 derniers mois publiés (2025-09 à 2026-08), diesel libre-service, moyenne des villes de Montréal et de Québec ; TTC ÷ 1,14975 (TPS 5 % + TVQ 9,975 %) pour le prix avant TPS/TVQ (accises et SPEDE compris). Le spot de crise (2,95 $ TTC, relevé Régie du 2026-09-21) sert UNIQUEMENT de borne haute du scénario Favorable.",
+    "source": {
+      "organisme": "Statistique Canada",
+      "document": "Tableau 18-10-0001-01 — Prix mensuels moyens au détail de l'essence et du mazout, par ville (diesel libre-service), via l'API WDS",
+      "url": "https://www150.statcan.gc.ca/t1/tbl1/fr/tv.action?pid=1810000101",
+      "archive": "data/sources/2026-09-29/statcan-diesel-12mois.json"
+    },
+    "dateVerification": "2026-09-29"
+  }
+}

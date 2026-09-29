@@ -21,7 +21,12 @@ Version 2.2 (révision de la revue externe) — 2026-09-29 — statut : **en val
 > avant TPS/TVQ et portent la part non récupérable (énergie, entretien,
 > événements et opex d'infrastructure compris) ; taux municipaux
 > vérifiés et archivés (TPS remboursée à 100 %, TVQ à 50 %) ; prix du
-> diesel ramené avant TPS/TVQ. Le moteur (engineVersion 2.1.0)
+> diesel ramené avant TPS/TVQ, et remplacé par la moyenne mobile 12
+> mois StatCan servie par trois couches de prix (§3.3 : collecte
+> hebdomadaire archivée sous garde d'anomalie, défaut du registre,
+> données client) ; stress test enrichi (inflation diesel, entretien,
+> consommation, dépréciation, majoration hivernale). Le moteur
+> (engineVersion 2.1.0)
 > implémente cette version ; les 7 cas de référence sont régénérés par
 > le contre-calculateur indépendant committé (scripts/reference-cases/).
 
@@ -270,14 +275,34 @@ poste.
 Énergie_diesel(v, n) = km/an × (L/100 km ÷ 100) × Prix_diesel_0 × (1 + g_diesel)^n
 ```
 
-Le prix du diesel est le prix observé à la pompe (Régie de l'énergie du
-Québec), **ramené AVANT TPS/TVQ** (÷ 1,14975 — la TPS et la TVQ se
-calculent sur le prix accise comprise) : il inclut les taxes sur les
-carburants (accises) et le coût du système de plafonnement (SPEDE), qui
-ne sont récupérables pour personne. La part non récupérable de TPS/TVQ
-est ensuite ajoutée par le moteur (§3.1) — comme pour l'électricité et
-l'hydrogène, dont les tarifs et devis s'entendent avant taxes. On
-n'ajoute **aucune** taxe carbone par-dessus.
+Le prix du diesel est **ramené AVANT TPS/TVQ** (÷ 1,14975 — la TPS et
+la TVQ se calculent sur le prix accise comprise) : il inclut les taxes
+sur les carburants (accises) et le coût du système de plafonnement
+(SPEDE), qui ne sont récupérables pour personne. La part non
+récupérable de TPS/TVQ est ensuite ajoutée par le moteur (§3.1) — comme
+pour l'électricité et l'hydrogène, dont les tarifs et devis s'entendent
+avant taxes. On n'ajoute **aucune** taxe carbone par-dessus.
+
+**Trois couches de prix (v2.2)**, de la plus générale à la plus forte :
+
+1. **Collecte automatisée et archivée** : le workflow hebdomadaire
+   `update-energy-data.yml` lit et archive les sources officielles
+   (bulletin de la Régie — écrasé chaque semaine, StatCan 18-10-0001-01,
+   grille Hydro-Québec, REC) et met à jour
+   `src/lib/tco/energy-data.json` sous **garde d'anomalie** : une
+   variation de plus de 20 % n'est JAMAIS appliquée automatiquement —
+   elle est mise en attente (`data/energie/`) pour décision humaine.
+   Chaque valeur porte sa date, sa source, sa méthode et le chemin de
+   son archive.
+2. **Défaut du registre** : le prix central du diesel est la **moyenne
+   mobile 12 mois** StatCan (Montréal/Québec, libre-service), pas un
+   relevé ponctuel. Le spot de crise (2,95 $ TTC, 2026-09-21) ne sert
+   que de **borne haute du scénario Favorable** ; la borne basse est le
+   mois le plus bas des 12 derniers.
+3. **Données client** (prioritaires quand fournies) : prix carburant
+   réellement payé, tarif et puissance du dépôt (facture HQ), devis de
+   raccordement — saisies au niveau de l'organisation ou du projet et
+   marquées « donnée client » dans les rapports.
 
 **Électricité**
 
