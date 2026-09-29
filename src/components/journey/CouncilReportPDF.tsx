@@ -184,7 +184,10 @@ export default function CouncilReportPDF({
             ? "Each scenario re-runs the full engine at the sourced bounds of every assumption (registry ranges) — never an arbitrary ±20%. The status quo replaces the same vehicles in the same years with equivalent new diesels."
             : "Chaque scénario relance le moteur complet aux bornes sourcées de chaque hypothèse (plages du registre) — jamais un ±20 % arbitraire. Le statu quo remplace les mêmes véhicules, les mêmes années, par des diesels neufs équivalents."}
         </Text>
-        {(strategie.exclusions.length > 0 || strategie.sansAnnee.length > 0 || resultat.avertissements.length > 0) && (
+        {(strategie.exclusions.length > 0 ||
+          strategie.sansAnnee.length > 0 ||
+          resultat.avertissements.length > 0 ||
+          strategie.avertissementsSubventions.length > 0) && (
           <>
             <Text style={s.h2}>{en ? "Warnings" : "Avertissements"}</Text>
             {strategie.exclusions.length > 0 && (
@@ -201,7 +204,7 @@ export default function CouncilReportPDF({
                   : `${strategie.sansAnnee.length} véhicule(s) sans année de remplacement, traités comme remplacés en ${meta.anneeReference}.`}
               </Text>
             )}
-            {resultat.avertissements.slice(0, 6).map((a, i) => (
+            {[...strategie.avertissementsSubventions, ...resultat.avertissements].slice(0, 9).map((a, i) => (
               <Text key={i} style={s.note}>
                 • {a}
               </Text>

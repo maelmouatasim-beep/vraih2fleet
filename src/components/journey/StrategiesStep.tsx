@@ -166,13 +166,17 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
         <CardContent className="text-sm text-muted-foreground space-y-1">
           <p>{t("journey.strategies.methodNote1")}</p>
           <p>{t("journey.strategies.methodNote2")}</p>
-          {selectionnee.resultat && selectionnee.resultat.avertissements.length > 0 && (
-            <ul className="list-disc pl-5 pt-1">
-              {selectionnee.resultat.avertissements.slice(0, 5).map((a, i) => (
-                <li key={i}>{a}</li>
-              ))}
-            </ul>
-          )}
+          {selectionnee.resultat &&
+            (selectionnee.resultat.avertissements.length > 0 ||
+              selectionnee.avertissementsSubventions.length > 0) && (
+              <ul className="list-disc pl-5 pt-1">
+                {[...selectionnee.avertissementsSubventions, ...selectionnee.resultat.avertissements]
+                  .slice(0, 8)
+                  .map((a, i) => (
+                    <li key={i}>{a}</li>
+                  ))}
+              </ul>
+            )}
         </CardContent>
       </Card>
 

@@ -19,14 +19,33 @@ export type StatutProgramme = 'actif' | 'ferme' | 'suspendu';
 
 export type TypeOrganisme = 'municipalite' | 'societe_transport' | 'entreprise';
 
+/** Classe de poids réglementaire (PNBV) — les barèmes Écocamionnage sont
+ *  définis PAR CLASSE, pas par catégorie produit (tableau 2 des
+ *  modalités). '2b' = fourgonnette 3 856-4 535 kg. */
+export type ClassePoids = '2b' | '3' | '4' | '5' | '6' | '7' | '8';
+
 export interface BaremeSubvention {
   /** Catégories de véhicules admissibles à ce barème. */
   categories: CategorieVehicule[];
   technologies: Technologie[];
+  /** Classes de poids (PNBV) couvertes par ce barème, si le programme
+   *  distingue les classes. Sans classe connue côté demande, le
+   *  résolveur retient le barème LE PLUS BAS des classes possibles de la
+   *  catégorie (jamais le plus élevé) et l'indique en avertissement. */
+  classesPoids?: ClassePoids[];
   /** Pourcentage du coût admissible (décimal), s'il y a lieu. */
   pourcentage?: number;
+  /** Le pourcentage est une position prudente à valider (ex. cellule
+   *  vide dans le tableau officiel) : avertissement à l'application. */
+  pourcentageAValider?: boolean;
   /** Montant fixe ou plafond par véhicule, en CAD. */
   plafondParVehicule: number;
+  /** Montant forfaitaire selon l'ANNÉE CALENDAIRE d'achat (barème
+   *  dégressif). Convention prudente pour les barèmes en année
+   *  financière (1er avril) : l'année calendaire N reçoit le montant de
+   *  l'année financière N→N+1 (le plus bas des deux qu'elle chevauche,
+   *  le barème étant décroissant). Année absente = 0 (non compté). */
+  montantParAnneeAchat?: Record<number, number>;
   notes?: string;
 }
 
@@ -38,8 +57,14 @@ export interface ProgrammeSubvention {
   statut: StatutProgramme;
   organismesAdmissibles: TypeOrganisme[];
   baremes: BaremeSubvention[];
-  /** Bonification multiplicative (ex. +15 % achat local Québec), décimal. */
+  /** Bonification multiplicative (ex. +15 % achat local Québec), décimal.
+   *  Appliquée DANS le plafond du barème (lecture prudente : « bonification
+   *  de 15 % de l'aide financière », modalités Écocamionnage 6.1.5). */
   bonificationAchatLocal?: number;
+  /** Plafond de CUMUL des aides publiques (toutes sources) en fraction
+   *  des dépenses admissibles ; l'excédent est déduit de l'aide de CE
+   *  programme (ex. Écocamionnage art. 7.14.2 : 75 %). */
+  plafondCumulAidePubliquePct?: number;
   /** Règles de cumul, en clair. */
   cumul: string;
   /** Limites par organisme (nombre d'incitatifs, plafonds). */
@@ -68,15 +93,19 @@ export const PROGRAMMES: ProgrammeSubvention[] = [
         categories: ['vehicule_leger'],
         technologies: ['BEV', 'FCEV'],
         plafondParVehicule: 5000,
+        montantParAnneeAchat: { 2026: 5000, 2027: 4000, 2028: 3000, 2029: 3000, 2030: 2000, 2031: 2000 },
         notes:
           'Véhicules légers (< 8 500 lb) neufs, transaction ≤ 50 000 $ (sans plafond si fabriqué au Canada). ' +
-          'Dégressif : 5 000 $ (2026) → 4 000 $ (2027) → 3 000 $ (2028-2029) → 2 000 $ (2030-2031).',
+          'Barème dégressif VÉRIFIÉ (tableau de la page Overview, archivée) : 5 000 $ (2026), 4 000 $ (2027), ' +
+          '3 000 $ (2028 et 2029), 2 000 $ (2030 et 2031).',
       },
     ],
     cumul: 'Cumulable avec Roulez vert (programmes de paliers différents).',
     limites:
-      'Administrations municipales : max 10 incitatifs sur les 5 ans du programme (vérifié). ' +
-      'Le montant dépend de la date de soumission de la demande par le concessionnaire, pas de la date d’achat.',
+      'VÉRIFIÉ (page Overview archivée) : particuliers 1 incitatif ; organisations et entreprises max 10 ; ' +
+      'gouvernements provinciaux, territoriaux et MUNICIPAUX max 10 sur les 5 ans du programme. ' +
+      'Le montant dépend de la date de soumission de l’évaluation d’admissibilité par le concessionnaire, ' +
+      'pas de la date d’achat.',
     anneeVersementDefaut: 0,
     dateFin: '2031-03-31',
     source: {
@@ -138,14 +167,19 @@ export const PROGRAMMES: ProgrammeSubvention[] = [
       {
         categories: ['camionnette'],
         technologies: ['BEV', 'FCEV'],
+        classesPoids: ['2b'],
         plafondParVehicule: 2500,
+        montantParAnneeAchat: { 2025: 5000, 2026: 2500, 2027: 0, 2028: 0 },
         notes:
           'Fourgonnette classe 2b (PNBV 3 856-4 535 kg), non admissible à Roulez vert : montant forfaitaire ' +
-          'régressif — 5 000 $ (2025-2026), 2 500 $ (2026-2027, en vigueur), 0 $ (2027-2028). Vérifié (tableau 1).',
+          'DÉGRESSIF PAR ANNÉE FINANCIÈRE (bascule au 1er avril, date de la facture) — 5 000 $ (2025-2026), ' +
+          '2 500 $ (2026-2027, en vigueur), 0 $ (2027-2028). Vérifié (tableau 1). Convention prudente : ' +
+          'l’année calendaire N reçoit le montant de l’année financière N→N+1.',
       },
       {
-        categories: ['camion_moyen'],
+        categories: ['camionnette'],
         technologies: ['BEV', 'FCEV'],
+        classesPoids: ['3'],
         pourcentage: 0.25,
         plafondParVehicule: 30000,
         notes: 'Classe 3 (PNBV 4 536-6 350 kg) : 25 % du coût d’achat, max 30 000 $. Vérifié (tableau 2).',
@@ -153,31 +187,49 @@ export const PROGRAMMES: ProgrammeSubvention[] = [
       {
         categories: ['camion_moyen'],
         technologies: ['BEV', 'FCEV'],
+        classesPoids: ['4'],
         pourcentage: 0.35,
         plafondParVehicule: 75000,
         notes: 'Classe 4 (PNBV 6 351-7 257 kg) : 35 % du coût d’achat, max 75 000 $. Vérifié (tableau 2).',
       },
       {
-        categories: ['camion_moyen'],
+        categories: ['camion_moyen', 'camion_lourd'],
         technologies: ['BEV', 'FCEV'],
+        classesPoids: ['5', '6', '7'],
+        pourcentage: 0.25,
+        pourcentageAValider: true,
         plafondParVehicule: 100000,
         notes:
-          'Classes 5-7 (PNBV 7 258-14 969 kg) : max 100 000 $ (vérifié) ; le % du coût d’achat n’a pas pu ' +
-          'être extrait du PDF (mise en page) — À VALIDER dans les modalités, section 6.1.5.2, tableau 2.',
+          'Classes 5-7 (PNBV 7 258-14 969 kg) : max 100 000 $ (vérifié). La cellule « Part du coût d’achat ' +
+          '(%) » de ces classes est VIDE dans le tableau 2 du PDF officiel (constaté sur le document archivé, ' +
+          'rendu image haute résolution) alors que l’intro 6.1.5.2 annonce des proportions — coquille ' +
+          'probable. Position prudente : 25 % (borne basse du même tableau), plafonné — À VALIDER auprès du MTMD.',
       },
       {
         categories: ['camion_lourd'],
         technologies: ['BEV', 'FCEV'],
+        classesPoids: ['8'],
+        pourcentage: 0.25,
+        pourcentageAValider: true,
         plafondParVehicule: 150000,
         notes:
-          'Classe 8 (PNBV ≥ 14 970 kg) : max 150 000 $ (vérifié) ; % du coût d’achat À VALIDER (même raison). ' +
-          'Avec bonification achat local : max effectif 172 500 $.',
+          'Classe 8 (PNBV ≥ 14 970 kg) : max 150 000 $ (vérifié) ; % du coût d’achat À VALIDER (cellule vide, ' +
+          'même raison que les classes 5-7) — 25 % retenu par prudence. La bonification achat local s’applique ' +
+          'DANS le plafond : le maximum reste 150 000 $.',
       },
     ],
     bonificationAchatLocal: 0.15,
+    plafondCumulAidePubliquePct: 0.75,
     cumul:
       '« Un véhicule ne peut obtenir qu’une seule aide financière » au sein du programme (vérifié, 6.1.6). ' +
-      'Cumul avec un programme fédéral : non interdit par les extraits lus — règle précise À VALIDER (modalités, art. 4).',
+      'Art. 7.14.2 (VÉRIFIÉ) : le cumul des aides publiques (gouvernements du Québec et du Canada, crédits ' +
+      'd’impôt inclus) ne peut dépasser 75 % des dépenses admissibles ; tout excédent est déduit de l’aide ' +
+      'du programme — la contribution minimale du demandeur est de 25 %.',
+    limites:
+      'VÉRIFIÉ : plafond de 3 M$ d’aide par demandeur par année financière pour les acquisitions de ' +
+      'véhicules (7.10 ; 1 M$/an pour les autres volets). Municipalités ADMISSIBLES au volet 1 (6.1.2). ' +
+      'Inscription au Registre des propriétaires et exploitants de véhicules lourds (RPEVL) avec cote de ' +
+      'sécurité satisfaisante requise, SAUF pour les fourgonnettes classe 2b (6.1.2).',
     anneeVersementDefaut: 1,
     // Programme « 2025-2028 » (titre des modalités lues) ; fin posée au
     // 31 mars 2028 par convention d'année financière québécoise — date
@@ -263,7 +315,7 @@ export const PROGRAMMES: ProgrammeSubvention[] = [
     nom: 'FTCZE — Fonds pour le transport en commun à zéro émission (fédéral, LICC)',
     palier: 'federal',
     cible: 'vehicule',
-    statut: 'actif',
+    statut: 'suspendu',
     organismesAdmissibles: ['municipalite', 'societe_transport'],
     baremes: [
       {
@@ -284,11 +336,12 @@ export const PROGRAMMES: ProgrammeSubvention[] = [
       url: 'https://logement-infrastructure.canada.ca/zero-emissions-trans-zero-emissions/index-fra.html',
     },
     dateVerification: V,
-    statutVerification: 'a_valider',
+    statutVerification: 'verifie',
     notes:
-      'La page officielle n’a pas pu être lue (délai réseau des deux hôtes, 2026-09-28) ; activité ' +
-      'récente attestée par un communiqué de mars 2026 (investissement Transdev). À VALIDER : statut du ' +
-      'guichet, part contributive type.',
+      'VÉRIFIÉ (page officielle lue et archivée le 2026-09-28) : « La période de soumission des demandes ' +
+      'pour les projets de planification et les projets d’immobilisations… est maintenant terminée » — ' +
+      'guichet FERMÉ aux nouvelles demandes, résultats à venir. Statut « suspendu » : NON COMPTÉ par ' +
+      'défaut ; saisir le montant réel si un projet a été retenu. Part contributive type non publiée.',
   },
   {
     id: 'pagtcp',

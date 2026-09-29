@@ -97,8 +97,10 @@ export const CAS = [
     id: 3,
     titre: 'Camion lourd BEV (classe 8)',
     notes:
-      'Écocamionnage classe 8 : 25 % x 460 000 = 115 000 $ (sous le plafond de 150 000 $), année 1. ' +
-      'Le pourcentage des classes 5-8 vient des modalités (borne basse retenue en Phase 1A).',
+      'Écocamionnage classe 8 (classe de poids CONNUE) : 25 % x 460 000 = 115 000 $ (sous le plafond de ' +
+      '150 000 $), année 1. Le % des classes 5-8 est une position prudente À VALIDER : la cellule « Part ' +
+      'du coût d’achat (%) » est vide dans le tableau 2 du PDF officiel archivé (coquille probable) — ' +
+      '25 % = borne basse du même tableau.',
     plan: {
       parametres: PARAMETRES_CAS,
       vehicules: [

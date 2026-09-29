@@ -1,7 +1,7 @@
 # Méthodologie de calcul du coût total de possession (TCO)
 
 **H2Fleet — spécification du moteur de calcul `src/lib/tco/`**
-Version 2.0 (révision de la revue externe) — 2026-09-28 — statut : **en validation**
+Version 2.1 (révision de la revue externe) — 2026-09-29 — statut : **en validation**
 
 > Historique : v1.0 = spécification initiale (Phase 1A). v1.1 intègre les
 > précisions issues du contre-calcul indépendant des 6 cas de référence
@@ -10,9 +10,16 @@ Version 2.0 (révision de la revue externe) — 2026-09-28 — statut : **en val
 > révise : VR unifiée au re-remplacement (§10.2), infrastructure à
 > l'année de mise en service avec ré-investissement (§3.5), assurance
 > codée (§3.6), convention des consommations nominales tempérées (§3.3),
-> convention du coût par tonne (§6.1). Le moteur (engineVersion 2.0.0)
-> implémente cette version ; les 7 cas de référence sont régénérés par
-> le contre-calculateur indépendant committé (scripts/reference-cases/).
+> convention du coût par tonne (§6.1). v2.1 (revue externe, suite)
+> révise le résolveur de subventions (§3.2) : barème de la classe de
+> poids exacte (le plus bas par prudence si la classe est inconnue),
+> barèmes dégressifs par année d'achat (PAVÉ, Écocamionnage 2b),
+> bonification dans le plafond, plafond de cumul des aides publiques
+> (art. 7.14.2 : 75 %), avertissements retournés — les formules du
+> moteur et les 7 cas de référence sont inchangés. Le moteur
+> (engineVersion 2.0.0) implémente cette version ; les 7 cas de
+> référence sont régénérés par le contre-calculateur indépendant
+> committé (scripts/reference-cases/).
 
 Ce document est la référence unique de la méthode de calcul. Il est écrit
 pour être lu par un directeur des finances municipal : chaque formule est
@@ -195,19 +202,36 @@ Règles, dans l'ordre :
    fonds sont épuisés **n'est pas compté par défaut** — il peut être
    inclus manuellement avec un marquage explicite « hypothèse : programme
    renouvelé ».
-2. **Montant** : fixe ($) ou pourcentage d'un coût admissible, selon la
-   définition du programme.
-3. **Plafonds** : par véhicule, par demande et par organisme quand le
-   programme en fixe.
-4. **Cumul** : les règles de cumul du programme sont appliquées (certains
-   programmes fédéraux et provinciaux sont cumulables, d'autres
-   plafonnent le total d'aide publique). Le total des subventions ne peut
-   **jamais dépasser le coût admissible** :
-   `Σ Subventions ≤ min(coût admissible, Σ plafonds applicables)`.
-5. **Année de versement** : chaque subvention est comptée l'année où elle
+2. **Barème de la classe de poids EXACTE** : quand un programme distingue
+   les classes (Écocamionnage, tableau 2), le barème appliqué est celui de
+   la classe (PNBV) du véhicule. Classe inconnue : le barème **le plus
+   bas** des classes possibles de la catégorie est retenu par prudence —
+   jamais le plus élevé — et un avertissement invite à renseigner la
+   classe.
+3. **Montant** : fixe ($), fixe **dégressif selon l'année d'achat**
+   (PAVÉ ; Écocamionnage 2b, bascule d'année financière au 1er avril :
+   convention prudente, l'année calendaire N reçoit le montant de l'année
+   financière N→N+1), ou pourcentage d'un coût admissible plafonné, selon
+   la définition du programme.
+4. **Bonification** (ex. +15 % achat local Écocamionnage) : appliquée
+   **dans le plafond** du barème (lecture prudente des modalités 6.1.5) —
+   le maximum du barème n'est jamais dépassé.
+5. **Plafonds et cumul** : par véhicule, par demande et par organisme
+   quand le programme en fixe. Un programme portant un **plafond de cumul
+   des aides publiques** (Écocamionnage art. 7.14.2 : 75 % des dépenses
+   admissibles, tous gouvernements et crédits d'impôt confondus) voit son
+   aide réduite de l'excédent. Le total des subventions ne peut **jamais
+   dépasser le coût admissible** :
+   `Σ Subventions ≤ min(coût admissible, plafonds de cumul applicables)`.
+6. **Année de versement** : chaque subvention est comptée l'année où elle
    est encaissée (point de vente = année 0 ; remboursement sur demande =
    généralement année 1), paramétrable par programme. La vue budgétaire
    la montre à son année réelle.
+
+Le résolveur retourne aussi des **avertissements** (classe de poids
+inconnue, pourcentage à valider, limites par organisation — PAVÉ 10
+incitatifs, Écocamionnage 3 M$/an et inscription RPEVL) affichés à
+l'étape Stratégies et repris dans les rapports.
 
 Les subventions d'**infrastructure** suivent les mêmes règles et se
 déduisent du coût d'infrastructure du site (§ 3.5), jamais du véhicule.

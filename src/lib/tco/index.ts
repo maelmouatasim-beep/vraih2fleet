@@ -6,9 +6,15 @@ export * from './assumption-types';
 export * from './types';
 export { HYPOTHESES, DEFAUTS_CATEGORIES, LISTE_HYPOTHESES } from './assumptions';
 export { PROGRAMMES, programmesActifs, statutEffectif } from './subsidy-programs';
-export type { ProgrammeSubvention, TypeOrganisme, StatutProgramme } from './subsidy-programs';
-export { resoudreSubventionsVehicule } from './subsidy-resolver';
-export type { DemandeSubventions } from './subsidy-resolver';
+export type {
+  ProgrammeSubvention,
+  TypeOrganisme,
+  StatutProgramme,
+  ClassePoids,
+  BaremeSubvention,
+} from './subsidy-programs';
+export { resoudreSubventions, resoudreSubventionsVehicule } from './subsidy-resolver';
+export type { DemandeSubventions, ResolutionSubventions } from './subsidy-resolver';
 export { calculerPlan, energieAnnuelleFacturee } from './engine';
 export { parametresParDefaut, tauxTaxesNonRecuperables } from './defaults';
 export type { OptionsParametres } from './defaults';

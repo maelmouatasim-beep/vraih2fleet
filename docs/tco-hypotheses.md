@@ -155,9 +155,9 @@ Palier : federal — cible : vehicule — **statut : actif** (✅ vérifié, le 
 
 Source : [Transports Canada — Electric Vehicle Affordability Program: Overview (page modifiée le 2026-09-10)](https://tc.canada.ca/en/road-transportation/innovative-technologies/electric-vehicles/electric-vehicle-affordability-program)
 
-- vehicule_leger × BEV/FCEV : jusqu’à 5 000 $ — Véhicules légers (< 8 500 lb) neufs, transaction ≤ 50 000 $ (sans plafond si fabriqué au Canada). Dégressif : 5 000 $ (2026) → 4 000 $ (2027) → 3 000 $ (2028-2029) → 2 000 $ (2030-2031).
+- vehicule_leger × BEV/FCEV : jusqu’à 5 000 $ — Véhicules légers (< 8 500 lb) neufs, transaction ≤ 50 000 $ (sans plafond si fabriqué au Canada). Barème dégressif VÉRIFIÉ (tableau de la page Overview, archivée) : 5 000 $ (2026), 4 000 $ (2027), 3 000 $ (2028 et 2029), 2 000 $ (2030 et 2031).
 - Cumul : Cumulable avec Roulez vert (programmes de paliers différents).
-- Limites : Administrations municipales : max 10 incitatifs sur les 5 ans du programme (vérifié). Le montant dépend de la date de soumission de la demande par le concessionnaire, pas de la date d’achat.
+- Limites : VÉRIFIÉ (page Overview archivée) : particuliers 1 incitatif ; organisations et entreprises max 10 ; gouvernements provinciaux, territoriaux et MUNICIPAUX max 10 sur les 5 ans du programme. Le montant dépend de la date de soumission de l’évaluation d’admissibilité par le concessionnaire, pas de la date d’achat.
 - Année de versement par défaut : année d’acquisition (point de vente)
 - Notes : Transactions à partir du 2026-02-16 ; jusqu’au 2031-03-31 ou épuisement des fonds (2,00 G$ restants au 2026-09-01 sur 2,275 G$ — vérifié). Appliqué au point de vente.
 
@@ -179,13 +179,14 @@ Palier : provincial — cible : vehicule — **statut : actif** (✅ vérifié, 
 
 Source : [MTMD (Québec) — Modalités d’application du programme Écocamionnage 2025-2028, section 6.1.5](https://www.quebec.ca/transports/aide-financiere/electrification/ecocamionnage/volet-1)
 
-- camionnette × BEV/FCEV : jusqu’à 2 500 $ — Fourgonnette classe 2b (PNBV 3 856-4 535 kg), non admissible à Roulez vert : montant forfaitaire régressif — 5 000 $ (2025-2026), 2 500 $ (2026-2027, en vigueur), 0 $ (2027-2028). Vérifié (tableau 1).
-- camion_moyen × BEV/FCEV : 25 % du coût, max 30 000 $ — Classe 3 (PNBV 4 536-6 350 kg) : 25 % du coût d’achat, max 30 000 $. Vérifié (tableau 2).
+- camionnette × BEV/FCEV : jusqu’à 2 500 $ — Fourgonnette classe 2b (PNBV 3 856-4 535 kg), non admissible à Roulez vert : montant forfaitaire DÉGRESSIF PAR ANNÉE FINANCIÈRE (bascule au 1er avril, date de la facture) — 5 000 $ (2025-2026), 2 500 $ (2026-2027, en vigueur), 0 $ (2027-2028). Vérifié (tableau 1). Convention prudente : l’année calendaire N reçoit le montant de l’année financière N→N+1.
+- camionnette × BEV/FCEV : 25 % du coût, max 30 000 $ — Classe 3 (PNBV 4 536-6 350 kg) : 25 % du coût d’achat, max 30 000 $. Vérifié (tableau 2).
 - camion_moyen × BEV/FCEV : 35 % du coût, max 75 000 $ — Classe 4 (PNBV 6 351-7 257 kg) : 35 % du coût d’achat, max 75 000 $. Vérifié (tableau 2).
-- camion_moyen × BEV/FCEV : jusqu’à 100 000 $ — Classes 5-7 (PNBV 7 258-14 969 kg) : max 100 000 $ (vérifié) ; le % du coût d’achat n’a pas pu être extrait du PDF (mise en page) — À VALIDER dans les modalités, section 6.1.5.2, tableau 2.
-- camion_lourd × BEV/FCEV : jusqu’à 150 000 $ — Classe 8 (PNBV ≥ 14 970 kg) : max 150 000 $ (vérifié) ; % du coût d’achat À VALIDER (même raison). Avec bonification achat local : max effectif 172 500 $.
+- camion_moyen, camion_lourd × BEV/FCEV : 25 % du coût, max 100 000 $ — Classes 5-7 (PNBV 7 258-14 969 kg) : max 100 000 $ (vérifié). La cellule « Part du coût d’achat (%) » de ces classes est VIDE dans le tableau 2 du PDF officiel (constaté sur le document archivé, rendu image haute résolution) alors que l’intro 6.1.5.2 annonce des proportions — coquille probable. Position prudente : 25 % (borne basse du même tableau), plafonné — À VALIDER auprès du MTMD.
+- camion_lourd × BEV/FCEV : 25 % du coût, max 150 000 $ — Classe 8 (PNBV ≥ 14 970 kg) : max 150 000 $ (vérifié) ; % du coût d’achat À VALIDER (cellule vide, même raison que les classes 5-7) — 25 % retenu par prudence. La bonification achat local s’applique DANS le plafond : le maximum reste 150 000 $.
 - Bonification achat local : +15 %
-- Cumul : « Un véhicule ne peut obtenir qu’une seule aide financière » au sein du programme (vérifié, 6.1.6). Cumul avec un programme fédéral : non interdit par les extraits lus — règle précise À VALIDER (modalités, art. 4).
+- Cumul : « Un véhicule ne peut obtenir qu’une seule aide financière » au sein du programme (vérifié, 6.1.6). Art. 7.14.2 (VÉRIFIÉ) : le cumul des aides publiques (gouvernements du Québec et du Canada, crédits d’impôt inclus) ne peut dépasser 75 % des dépenses admissibles ; tout excédent est déduit de l’aide du programme — la contribution minimale du demandeur est de 25 %.
+- Limites : VÉRIFIÉ : plafond de 3 M$ d’aide par demandeur par année financière pour les acquisitions de véhicules (7.10 ; 1 M$/an pour les autres volets). Municipalités ADMISSIBLES au volet 1 (6.1.2). Inscription au Registre des propriétaires et exploitants de véhicules lourds (RPEVL) avec cote de sécurité satisfaisante requise, SAUF pour les fourgonnettes classe 2b (6.1.2).
 - Année de versement par défaut : année suivant l’acquisition (après livraison/approbation)
 - Notes : Versement unique APRÈS livraison et approbation (vérifié, 6.1.6) → année de versement par défaut : 1. Conditions : inscription au Registre CTQ, établissement au Québec depuis 2 ans, achat chez un fournisseur québécois si disponible. Autobus urbains : programme distinct (PAGTCP), pas Écocamionnage.
 
@@ -213,14 +214,14 @@ Source : [RNCan — Page officielle PIVEZ : volets « Fermé aux demandes » (pr
 
 ### FTCZE — Fonds pour le transport en commun à zéro émission (fédéral, LICC)
 
-Palier : federal — cible : vehicule — **statut : actif** (⚠️ à valider, le 2026-09-28)
+Palier : federal — cible : vehicule — **statut : suspendu** (✅ vérifié, le 2026-09-28)
 
 Source : [Logement, Infrastructures et Collectivités Canada — Fonds pour le transport en commun à zéro émission (2,75 G$, objectif 5 000 autobus ZE)](https://logement-infrastructure.canada.ca/zero-emissions-trans-zero-emissions/index-fra.html)
 
 - autobus_urbain_12m × BEV/FCEV : montant du projet à saisir (jamais compté automatiquement) — Montants par projet (contribution + prêt BIC), pas de barème public par véhicule — saisir le montant réel du projet. Plafond 0 = jamais compté automatiquement.
 - Cumul : Se combine avec le financement de la Banque de l’infrastructure du Canada (prêts autobus).
 - Année de versement par défaut : année suivant l’acquisition (après livraison/approbation)
-- Notes : La page officielle n’a pas pu être lue (délai réseau des deux hôtes, 2026-09-28) ; activité récente attestée par un communiqué de mars 2026 (investissement Transdev). À VALIDER : statut du guichet, part contributive type.
+- Notes : VÉRIFIÉ (page officielle lue et archivée le 2026-09-28) : « La période de soumission des demandes pour les projets de planification et les projets d’immobilisations… est maintenant terminée » — guichet FERMÉ aux nouvelles demandes, résultats à venir. Statut « suspendu » : NON COMPTÉ par défaut ; saisir le montant réel si un projet a été retenu. Part contributive type non publiée.
 
 ### Programme d’aide gouvernementale au transport collectif (Québec, MTMD) — électrification des autobus
 
@@ -250,5 +251,4 @@ Source : [MTMD (Québec) — Programmes d’aide au transport collectif](https:/
 - Baisse annuelle attendue du prix des packs batterie (désactivée par défaut dans le moteur) → https://about.bnef.com/insights/clean-transport/lithium-ion-battery-pack-prices-fall-to-108-per-kilowatt-hour-despite-rising-metal-prices-bloombergnef/
 - Taux de change USD → CAD (véhicules importés des É.-U.) → https://www.banqueducanada.ca/taux/taux-de-change/
 - Droits de douane sur les VE fabriqués en Chine (régime de quota de février 2026) → https://www.canada.ca/fr/ministere-finances/nouvelles/2024/08/surtaxe-sur-les-vehicules-electriques-fabriques-en-chine.html
-- FTCZE — Fonds pour le transport en commun à zéro émission (fédéral, LICC) → https://logement-infrastructure.canada.ca/zero-emissions-trans-zero-emissions/index-fra.html
 - Programme d’aide gouvernementale au transport collectif (Québec, MTMD) — électrification des autobus → https://www.transports.gouv.qc.ca/fr/aide-finan/transport-collectif/Pages/transport-collectif.aspx

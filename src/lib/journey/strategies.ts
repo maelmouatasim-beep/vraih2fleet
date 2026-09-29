@@ -14,7 +14,7 @@ import {
   HYPOTHESES,
   calculerPlan,
   parametresParDefaut,
-  resoudreSubventionsVehicule,
+  resoudreSubventions,
   type OptionsParametres,
   type PlanTcoEntree,
   type ResultatPlan,
@@ -51,6 +51,9 @@ export interface StrategieConstruite {
   exclusions: string[];
   /** Véhicules sans année de remplacement (traités à l'année 0). */
   sansAnnee: string[];
+  /** Conditions et prudences du résolveur de subventions (classe de
+   *  poids inconnue, % à valider, limites par organisation…), dédupliquées. */
+  avertissementsSubventions: string[];
 }
 
 /** Borne de recharge par catégorie (hypothèses du registre). */
@@ -88,6 +91,7 @@ export function construireStrategie(
   const parametres = parametresParDefaut(options);
   const exclusions: string[] = [];
   const sansAnnee: string[] = [];
+  const avertissementsSubventions = new Set<string>();
   const plansVehicules: NonNullable<PlanTcoEntree["vehicules"]> = [];
   const bevIds: string[] = [];
   const fcevIds: string[] = [];
@@ -126,16 +130,22 @@ export function construireStrategie(
             entretienParKm: defauts.entretien[techno].valeur,
           };
 
-    const subventions =
-      techno === "diesel"
-        ? []
-        : resoudreSubventionsVehicule({
-            categorie: defauts.categorie,
-            technologie: techno,
-            prixAvantTaxes: alternative.prixAvantTaxes,
-            typeOrganisme: options.typeOrganisme,
-            anneeAchatCalendaire: options.anneeReference + k,
-          }).map((s) => ({ ...s, annee: s.annee + k }));
+    let subventions: { libelle: string; montant: number; annee: number }[] = [];
+    if (techno !== "diesel") {
+      const resolution = resoudreSubventions({
+        categorie: defauts.categorie,
+        technologie: techno,
+        prixAvantTaxes: alternative.prixAvantTaxes,
+        typeOrganisme: options.typeOrganisme,
+        anneeAchatCalendaire: options.anneeReference + k,
+      });
+      subventions = resolution.subventions.map((s) => ({
+        libelle: s.libelle,
+        montant: s.montant,
+        annee: s.annee + k,
+      }));
+      for (const a of resolution.avertissements) avertissementsSubventions.add(a);
+    }
 
     plansVehicules.push({
       id: v.id,
@@ -167,6 +177,7 @@ export function construireStrategie(
       subventionsTotal: 0,
       exclusions,
       sansAnnee,
+      avertissementsSubventions: [...avertissementsSubventions],
     };
   }
 
@@ -208,6 +219,7 @@ export function construireStrategie(
     subventionsTotal,
     exclusions,
     sansAnnee,
+    avertissementsSubventions: [...avertissementsSubventions],
   };
 }
 
