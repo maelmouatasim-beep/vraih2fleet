@@ -65,18 +65,34 @@
       "confirm": "Ajouter"
     },
     "toast": {
-      "added": "Véhicule ajouté"
+      "added": "Véhicule ajouté",
+      "updated": "Véhicule modifié",
+      "deleted": "Véhicule supprimé"
     },
     "import": {
       "button": "Importer CSV/Excel",
       "title": "Importer la flotte",
       "subtitle": "CSV ou Excel avec entêtes (unité, marque, modèle, année, catégorie, carburant, km/an, consommation, dépôt…). Aucune ligne invalide n'est importée.",
       "choose": "Choisir un fichier…",
-      "preview": "{{valid}} ligne(s) valide(s), {{errors}} erreur(s)",
+      "preview": "{{valid}} nouveau(x) véhicule(s), {{updates}} mise(s) à jour, {{errors}} erreur(s)",
       "errorLine": "Ligne {{line}}, champ {{field}}",
       "confirm": "Importer {{count}} véhicule(s)",
-      "done": "{{count}} véhicule(s) importé(s)",
-      "readError": "Fichier illisible"
+      "done": "{{count}} véhicule(s) importé(s), {{updated}} mis à jour",
+      "readError": "Fichier illisible",
+      "updatesTitle": "Unités déjà présentes — leurs champs fournis seront mis à jour :"
+    },
+    "edit": {
+      "title": "Modifier le véhicule {{unit}}",
+      "subtitle": "Les changements s'appliquent à la flotte et aux projets qui utilisent ce véhicule.",
+      "confirm": "Enregistrer"
+    },
+    "delete": {
+      "title": "Supprimer le véhicule {{unit}} ?",
+      "subtitle": "Cette action est définitive.",
+      "checking": "Vérification des projets liés…",
+      "projectImpact": "Ce véhicule est utilisé dans {{count}} projet(s) : il sera retiré de leur plan de remplacement.",
+      "noProject": "Ce véhicule n'est utilisé dans aucun projet.",
+      "confirm": "Supprimer définitivement"
     }
   },
   "pages_marketing": {

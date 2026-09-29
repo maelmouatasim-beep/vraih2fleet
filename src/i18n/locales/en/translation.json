@@ -65,18 +65,34 @@
       "confirm": "Add"
     },
     "toast": {
-      "added": "Vehicle added"
+      "added": "Vehicle added",
+      "updated": "Vehicle updated",
+      "deleted": "Vehicle deleted"
     },
     "import": {
       "button": "Import CSV/Excel",
       "title": "Import fleet",
       "subtitle": "CSV or Excel with headers (unit, make, model, year, category, fuel, km/yr, consumption, depot…). No invalid row is imported.",
       "choose": "Choose a file…",
-      "preview": "{{valid}} valid row(s), {{errors}} error(s)",
+      "preview": "{{valid}} new vehicle(s), {{updates}} update(s), {{errors}} error(s)",
       "errorLine": "Row {{line}}, field {{field}}",
       "confirm": "Import {{count}} vehicle(s)",
-      "done": "{{count}} vehicle(s) imported",
-      "readError": "Unreadable file"
+      "done": "{{count}} vehicle(s) imported, {{updated}} updated",
+      "readError": "Unreadable file",
+      "updatesTitle": "Units already in the fleet — their provided fields will be updated:"
+    },
+    "edit": {
+      "title": "Edit vehicle {{unit}}",
+      "subtitle": "Changes apply to the fleet and to every project using this vehicle.",
+      "confirm": "Save"
+    },
+    "delete": {
+      "title": "Delete vehicle {{unit}}?",
+      "subtitle": "This action is permanent.",
+      "checking": "Checking linked projects…",
+      "projectImpact": "This vehicle is used in {{count}} project(s): it will be removed from their replacement plan.",
+      "noProject": "This vehicle is not used in any project.",
+      "confirm": "Delete permanently"
     }
   },
   "pages_marketing": {

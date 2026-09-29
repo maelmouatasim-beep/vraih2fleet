@@ -42,6 +42,16 @@ export async function updateVehicle(id: string, patch: VehicleUpdate): Promise<v
   if (error) throw error;
 }
 
+/** Nombre de projets qui référencent ce véhicule (effet d'une suppression). */
+export async function countVehicleProjectLinks(vehicleId: string): Promise<number> {
+  const { count, error } = await supabase
+    .from("project_vehicles")
+    .select("id", { count: "exact", head: true })
+    .eq("vehicle_id", vehicleId);
+  if (error) throw error;
+  return count ?? 0;
+}
+
 export async function deleteVehicle(id: string): Promise<void> {
   const { error } = await supabase.from("vehicles").delete().eq("id", id);
   if (error) throw error;

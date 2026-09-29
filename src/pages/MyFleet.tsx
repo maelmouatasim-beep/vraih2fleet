@@ -28,36 +28,44 @@ import { useVehicles } from "@/hooks/useVehicles";
 import {
   CARBURANTS,
   CATEGORIES_VEHICULE,
+  STATUTS_VEHICULE,
+  countVehicleProjectLinks,
   type VehicleInsert,
+  type VehicleRow,
 } from "@/lib/fleet/vehicles";
 import { lireFichier, validerLignes, type ResultatImport } from "@/lib/fleet/importVehicles";
-import { Loader2, Plus, Truck, Upload } from "lucide-react";
+import { Loader2, Pencil, Plus, Trash2, Truck, Upload } from "lucide-react";
 
 const selectCls =
   "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
 
+const FORME_VIDE = {
+  unit_number: "",
+  make: "",
+  model: "",
+  model_year: "",
+  category: "camionnette",
+  fuel_type: "diesel",
+  annual_km: "",
+  consumption_per_100km: "",
+  depot: "",
+  status: "actif",
+};
+
 export default function MyFleet() {
   const { t } = useTranslation();
   const { organization, isLoading: orgLoading } = useOrganization();
-  const { vehicles, isLoading, creer, importer, supprimer } = useVehicles(organization?.id);
+  const { vehicles, isLoading, creer, importer, modifier, supprimer } = useVehicles(organization?.id);
 
   const [ajoutOuvert, setAjoutOuvert] = useState(false);
+  const [edition, setEdition] = useState<VehicleRow | null>(null);
+  const [suppression, setSuppression] = useState<{ vehicule: VehicleRow; projets: number | null } | null>(null);
   const [importOuvert, setImportOuvert] = useState(false);
   const [apercu, setApercu] = useState<ResultatImport | null>(null);
   const [nomFichier, setNomFichier] = useState<string>("");
   const fichierRef = useRef<HTMLInputElement>(null);
 
-  const [forme, setForme] = useState({
-    unit_number: "",
-    make: "",
-    model: "",
-    model_year: "",
-    category: "camionnette",
-    fuel_type: "diesel",
-    annual_km: "",
-    consumption_per_100km: "",
-    depot: "",
-  });
+  const [forme, setForme] = useState({ ...FORME_VIDE });
 
   const stats = useMemo(() => {
     const actifs = vehicles.filter((v) => v.status === "actif").length;
@@ -66,11 +74,34 @@ export default function MyFleet() {
     return { total: vehicles.length, actifs, zeroEmission, estimations };
   }, [vehicles]);
 
-  const ajouter = async () => {
+  const dialogueFormulaireOuvert = ajoutOuvert || edition !== null;
+
+  const ouvrirEdition = (v: VehicleRow) => {
+    setForme({
+      unit_number: v.unit_number,
+      make: v.make ?? "",
+      model: v.model ?? "",
+      model_year: v.model_year != null ? String(v.model_year) : "",
+      category: v.category,
+      fuel_type: v.fuel_type,
+      annual_km: v.annual_km != null ? String(v.annual_km) : "",
+      consumption_per_100km: v.consumption_per_100km != null ? String(v.consumption_per_100km) : "",
+      depot: v.depot ?? "",
+      status: v.status,
+    });
+    setEdition(v);
+  };
+
+  const fermerFormulaire = () => {
+    setAjoutOuvert(false);
+    setEdition(null);
+    setForme({ ...FORME_VIDE });
+  };
+
+  const enregistrer = async () => {
     if (!organization) return;
     const conso = forme.consumption_per_100km ? Number(forme.consumption_per_100km.replace(",", ".")) : null;
-    const vehicule: VehicleInsert = {
-      organization_id: organization.id,
+    const commun = {
       unit_number: forme.unit_number.trim(),
       make: forme.make.trim() || null,
       model: forme.model.trim() || null,
@@ -81,12 +112,42 @@ export default function MyFleet() {
       consumption_per_100km: conso,
       consumption_source: conso != null ? "saisie" : "estimation",
       depot: forme.depot.trim() || null,
+      status: forme.status,
     };
     try {
-      await creer.mutateAsync(vehicule);
-      toast({ title: t("fleet.toast.added") });
-      setAjoutOuvert(false);
-      setForme({ ...forme, unit_number: "", make: "", model: "", model_year: "", annual_km: "", consumption_per_100km: "" });
+      if (edition) {
+        // la source « télématique » d'un véhicule existant n'est pas
+        // écrasée si la consommation n'a pas changé
+        const patch = { ...commun } as Partial<VehicleInsert>;
+        if (conso === edition.consumption_per_100km) delete patch.consumption_source;
+        await modifier.mutateAsync({ id: edition.id, patch });
+        toast({ title: t("fleet.toast.updated") });
+      } else {
+        await creer.mutateAsync({ ...commun, organization_id: organization.id } as VehicleInsert);
+        toast({ title: t("fleet.toast.added") });
+      }
+      fermerFormulaire();
+    } catch (e) {
+      toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
+    }
+  };
+
+  const ouvrirSuppression = async (v: VehicleRow) => {
+    setSuppression({ vehicule: v, projets: null });
+    try {
+      const n = await countVehicleProjectLinks(v.id);
+      setSuppression((s) => (s && s.vehicule.id === v.id ? { ...s, projets: n } : s));
+    } catch {
+      setSuppression((s) => (s && s.vehicule.id === v.id ? { ...s, projets: 0 } : s));
+    }
+  };
+
+  const confirmerSuppression = async () => {
+    if (!suppression) return;
+    try {
+      await supprimer.mutateAsync(suppression.vehicule.id);
+      toast({ title: t("fleet.toast.deleted") });
+      setSuppression(null);
     } catch (e) {
       toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
     }
@@ -97,7 +158,8 @@ export default function MyFleet() {
     setNomFichier(file.name);
     try {
       const lignes = await lireFichier(file);
-      setApercu(validerLignes(lignes, organization.id));
+      const existantes = new Map(vehicles.map((v) => [v.unit_number, v.id]));
+      setApercu(validerLignes(lignes, organization.id, existantes));
     } catch (e) {
       toast({ title: t("fleet.import.readError"), description: e instanceof Error ? e.message : "", variant: "destructive" });
       setApercu(null);
@@ -105,10 +167,13 @@ export default function MyFleet() {
   };
 
   const confirmerImport = async () => {
-    if (!apercu || apercu.valides.length === 0) return;
+    if (!apercu || (apercu.valides.length === 0 && apercu.misesAJour.length === 0)) return;
     try {
-      const n = await importer.mutateAsync(apercu.valides);
-      toast({ title: t("fleet.import.done", { count: n }) });
+      const n = apercu.valides.length > 0 ? await importer.mutateAsync(apercu.valides) : 0;
+      for (const m of apercu.misesAJour) {
+        await modifier.mutateAsync({ id: m.id, patch: m.patch });
+      }
+      toast({ title: t("fleet.import.done", { count: n, updated: apercu.misesAJour.length }) });
       setImportOuvert(false);
       setApercu(null);
       setNomFichier("");
@@ -216,14 +281,19 @@ export default function MyFleet() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => supprimer.mutate(v.id)}
-                          disabled={supprimer.isPending}
-                        >
-                          {t("common.delete")}
-                        </Button>
+                        <div className="flex justify-end gap-1">
+                          <Button variant="ghost" size="sm" onClick={() => ouvrirEdition(v)} aria-label={t("common.edit")}>
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => void ouvrirSuppression(v)}
+                            aria-label={t("common.delete")}
+                          >
+                            <Trash2 className="w-4 h-4 text-destructive" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -234,12 +304,12 @@ export default function MyFleet() {
         </Card>
       </div>
 
-      {/* Ajout manuel */}
-      <Dialog open={ajoutOuvert} onOpenChange={setAjoutOuvert}>
+      {/* Ajout / modification */}
+      <Dialog open={dialogueFormulaireOuvert} onOpenChange={(o) => !o && fermerFormulaire()}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>{t("fleet.add.title")}</DialogTitle>
-            <DialogDescription>{t("fleet.add.subtitle")}</DialogDescription>
+            <DialogTitle>{edition ? t("fleet.edit.title", { unit: edition.unit_number }) : t("fleet.add.title")}</DialogTitle>
+            <DialogDescription>{edition ? t("fleet.edit.subtitle") : t("fleet.add.subtitle")}</DialogDescription>
           </DialogHeader>
           <div className="grid grid-cols-2 gap-4 py-2">
             <div className="space-y-2">
@@ -282,16 +352,63 @@ export default function MyFleet() {
               <Label htmlFor="fl-conso">{t("fleet.add.consumption")}</Label>
               <Input id="fl-conso" inputMode="decimal" placeholder={t("fleet.add.consumptionHint")} value={forme.consumption_per_100km} onChange={(e) => setForme({ ...forme, consumption_per_100km: e.target.value })} />
             </div>
-            <div className="space-y-2 col-span-2">
+            <div className="space-y-2">
               <Label htmlFor="fl-depot">{t("fleet.columns.depot")}</Label>
               <Input id="fl-depot" value={forme.depot} onChange={(e) => setForme({ ...forme, depot: e.target.value })} />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="fl-statut">{t("fleet.columns.status")}</Label>
+              <select id="fl-statut" className={selectCls} value={forme.status} onChange={(e) => setForme({ ...forme, status: e.target.value })}>
+                {STATUTS_VEHICULE.map((s) => (
+                  <option key={s} value={s}>{t(`fleet.statuses.${s}`)}</option>
+                ))}
+              </select>
+            </div>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setAjoutOuvert(false)}>{t("common.cancel")}</Button>
-            <Button onClick={ajouter} disabled={creer.isPending || !forme.unit_number.trim()}>
-              {creer.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-              {t("fleet.add.confirm")}
+            <Button variant="ghost" onClick={fermerFormulaire}>{t("common.cancel")}</Button>
+            <Button
+              onClick={enregistrer}
+              disabled={creer.isPending || modifier.isPending || !forme.unit_number.trim()}
+            >
+              {creer.isPending || modifier.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+              {edition ? t("fleet.edit.confirm") : t("fleet.add.confirm")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Confirmation de suppression (effet sur les projets affiché) */}
+      <Dialog open={suppression !== null} onOpenChange={(o) => !o && setSuppression(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("fleet.delete.title", { unit: suppression?.vehicule.unit_number ?? "" })}</DialogTitle>
+            <DialogDescription>{t("fleet.delete.subtitle")}</DialogDescription>
+          </DialogHeader>
+          {suppression && (
+            <div className="py-2 text-sm">
+              {suppression.projets === null ? (
+                <p className="flex items-center gap-2 text-muted-foreground">
+                  <Loader2 className="w-4 h-4 animate-spin" /> {t("fleet.delete.checking")}
+                </p>
+              ) : suppression.projets > 0 ? (
+                <p className="rounded-md border border-destructive/40 bg-destructive/5 p-3">
+                  {t("fleet.delete.projectImpact", { count: suppression.projets })}
+                </p>
+              ) : (
+                <p className="text-muted-foreground">{t("fleet.delete.noProject")}</p>
+              )}
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setSuppression(null)}>{t("common.cancel")}</Button>
+            <Button
+              variant="destructive"
+              onClick={confirmerSuppression}
+              disabled={supprimer.isPending || suppression?.projets === null}
+            >
+              {supprimer.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+              {t("fleet.delete.confirm")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -317,7 +434,7 @@ export default function MyFleet() {
             <input
               ref={fichierRef}
               type="file"
-              accept=".csv,.xlsx,.xls"
+              accept=".csv,.xlsx"
               className="hidden"
               onChange={(e) => {
                 const f = e.target.files?.[0];
@@ -331,8 +448,20 @@ export default function MyFleet() {
             {apercu && (
               <div className="space-y-3">
                 <p className="text-sm">
-                  {t("fleet.import.preview", { valid: apercu.valides.length, errors: apercu.erreurs.length })}
+                  {t("fleet.import.preview", {
+                    valid: apercu.valides.length,
+                    updates: apercu.misesAJour.length,
+                    errors: apercu.erreurs.length,
+                  })}
                 </p>
+                {apercu.misesAJour.length > 0 && (
+                  <div className="max-h-24 overflow-y-auto rounded-md border border-border bg-muted/40 p-3 text-xs space-y-1">
+                    <p className="font-medium">{t("fleet.import.updatesTitle")}</p>
+                    <p className="text-muted-foreground">
+                      {apercu.misesAJour.map((m) => m.unit_number).join(", ")}
+                    </p>
+                  </div>
+                )}
                 {apercu.erreurs.length > 0 && (
                   <div className="max-h-40 overflow-y-auto rounded-md border border-destructive/40 bg-destructive/5 p-3 text-xs space-y-1">
                     {apercu.erreurs.slice(0, 50).map((e, i) => (
@@ -347,9 +476,19 @@ export default function MyFleet() {
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setImportOuvert(false)}>{t("common.cancel")}</Button>
-            <Button onClick={confirmerImport} disabled={!apercu || apercu.valides.length === 0 || importer.isPending}>
-              {importer.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-              {t("fleet.import.confirm", { count: apercu?.valides.length ?? 0 })}
+            <Button
+              onClick={confirmerImport}
+              disabled={
+                !apercu ||
+                (apercu.valides.length === 0 && apercu.misesAJour.length === 0) ||
+                importer.isPending ||
+                modifier.isPending
+              }
+            >
+              {importer.isPending || modifier.isPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+              {t("fleet.import.confirm", {
+                count: (apercu?.valides.length ?? 0) + (apercu?.misesAJour.length ?? 0),
+              })}
             </Button>
           </DialogFooter>
         </DialogContent>
