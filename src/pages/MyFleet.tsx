@@ -34,6 +34,7 @@ import {
   type VehicleRow,
 } from "@/lib/fleet/vehicles";
 import { lireFichier, validerLignes, type ResultatImport } from "@/lib/fleet/importVehicles";
+import { estVehiculeDemo } from "@/lib/demoData/villeDemo";
 import { Loader2, Pencil, Plus, Trash2, Truck, Upload } from "lucide-react";
 
 const selectCls =
@@ -261,7 +262,12 @@ export default function MyFleet() {
                 <TableBody>
                   {vehicles.map((v) => (
                     <TableRow key={v.id}>
-                      <TableCell className="font-medium">{v.unit_number}</TableCell>
+                      <TableCell className="font-medium">
+                        {v.unit_number}
+                        {estVehiculeDemo(v.notes) && (
+                          <Badge variant="outline" className="ml-2">{t("fleet.demoBadge")}</Badge>
+                        )}
+                      </TableCell>
                       <TableCell>
                         {[v.make, v.model, v.model_year].filter(Boolean).join(" ") || "—"}
                       </TableCell>

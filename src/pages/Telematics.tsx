@@ -16,7 +16,6 @@ import FleetImportSection from "@/components/telematics/FleetImportSection";
 import VehicleGroupsSection from "@/components/telematics/VehicleGroupsSection";
 import FleetAnalyticsSection from "@/components/telematics/FleetAnalyticsSection";
 import ScenarioRecommendationsSection from "@/components/telematics/ScenarioRecommendationsSection";
-import AutoScenariosCard from "@/components/telematics/AutoScenariosCard";
 import ReauthDialog from "@/components/telematics/ReauthDialog";
 import ReconciliationCard from "@/components/telematics/ReconciliationCard";
 import { MockVehicle, VehicleGroup, groupVehicles, generateScenarioRecommendations, ScenarioRecommendation } from "@/lib/mockTelematicsData";
@@ -485,15 +484,7 @@ const Telematics = () => {
         {/* Analysis Results - Only show after analysis */}
         {hasAnalyzed && importedVehicles.length > 0 && (
           <>
-            {/* Scenario Creation Card - Two distinct paths */}
-            <AutoScenariosCard
-              groups={vehicleGroups}
-              recommendations={scenarioRecommendations}
-              totalVehicles={importedVehicles.length}
-              vehicles={importedVehicles}
-            />
-            
-            <VehicleGroupsSection groups={vehicleGroups} />
+                        <VehicleGroupsSection groups={vehicleGroups} />
             <FleetAnalyticsSection vehicles={importedVehicles} />
             <ScenarioRecommendationsSection 
               recommendations={scenarioRecommendations} 

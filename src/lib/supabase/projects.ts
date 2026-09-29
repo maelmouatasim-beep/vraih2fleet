@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
+import { NOM_PROJET_DEMO } from "@/lib/demoData/villeDemo";
 
 export type ProjectRow = Tables<"projects">;
 
@@ -121,8 +122,19 @@ export async function createProject(userId: string, input: CreateProjectInput): 
 }
 
 export async function deleteProject(projectId: string): Promise<void> {
+  // C7 : supprimer le projet DÉMO emporte aussi ses véhicules marqués —
+  // la flotte réelle n'est jamais touchée (filtre sur le marqueur).
+  const { data: projet } = await supabase
+    .from("projects")
+    .select("name, organization_id")
+    .eq("id", projectId)
+    .maybeSingle();
   const { error } = await supabase.from("projects").delete().eq("id", projectId);
   if (error) throw error;
+  if (projet?.name === NOM_PROJET_DEMO && projet.organization_id) {
+    const { deleteDemoVehicles } = await import("@/lib/demoData/seedDemoData");
+    await deleteDemoVehicles(projet.organization_id);
+  }
 }
 
 export async function duplicateProject(userId: string, projectId: string, newName: string): Promise<ProjectDTO> {

@@ -11,6 +11,11 @@ import { anneeRemplacementSuggeree } from "@/lib/fleet/replacement";
 export const NOM_PROJET_DEMO = "Démo — Ville de Rivière-Claire";
 export const MARQUEUR_DEMO = "demo-h2fleet";
 
+/** Un véhicule de la démo se reconnaît à son marqueur dans les notes (C7). */
+export function estVehiculeDemo(notes: string | null | undefined): boolean {
+  return !!notes && notes.includes(MARQUEUR_DEMO);
+}
+
 export interface VehiculeDemo {
   unit_number: string;
   make: string;
@@ -103,7 +108,8 @@ export function genererFlotteDemo(): VehiculeDemo[] {
         fuel_type: "diesel",
         annual_km: g.kmBase + i * g.kmPas,
         consumption_per_100km: arrondi(g.consoBase + (i % 5) * g.consoPas),
-        consumption_source: "saisie",
+        // C7 : donnée FICTIVE, jamais présentée comme une saisie réelle
+        consumption_source: "estimation",
         usage_profile: g.usage,
         department: g.departments[i % g.departments.length],
         depot: i % 3 === 0 ? "Dépôt Nord" : "Garage central",

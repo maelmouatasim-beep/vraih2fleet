@@ -28,29 +28,39 @@ async function organisationDe(userId: string): Promise<string> {
 }
 
 export async function checkDemoProjectExists(userId: string): Promise<string | null> {
+  // .limit(1) et pas maybeSingle : d'anciens rechargements interrompus
+  // peuvent avoir laissé plusieurs projets démo (C7 — jamais d'erreur ici)
   const { data } = await supabase
     .from("projects")
     .select("id")
     .eq("user_id", userId)
     .eq("name", NOM_PROJET_DEMO)
-    .maybeSingle();
-  return data?.id ?? null;
+    .limit(1);
+  return data?.[0]?.id ?? null;
 }
 
-/** Retire l'ancienne démo (projet + véhicules marqués) avant rechargement. */
+/** Retire l'ancienne démo (TOUS les projets démo + véhicules marqués)
+ *  avant rechargement — aucun doublon possible (C7). */
 export async function deleteDemoProject(userId: string, organizationId: string): Promise<void> {
-  const existant = await checkDemoProjectExists(userId);
-  if (existant) {
-    // project_vehicles et tasks suivent par ON DELETE CASCADE
-    const { error } = await supabase.from("projects").delete().eq("id", existant);
-    if (error) throw error;
-  }
-  const { error: errVehicules } = await supabase
+  // project_vehicles et tasks suivent par ON DELETE CASCADE
+  const { error } = await supabase
+    .from("projects")
+    .delete()
+    .eq("user_id", userId)
+    .eq("name", NOM_PROJET_DEMO);
+  if (error) throw error;
+  await deleteDemoVehicles(organizationId);
+}
+
+/** Supprime les véhicules MARQUÉS démo de l'organisation (C7 : appelés
+ *  aussi quand le projet démo est supprimé depuis la liste des projets). */
+export async function deleteDemoVehicles(organizationId: string): Promise<void> {
+  const { error } = await supabase
     .from("vehicles")
     .delete()
     .eq("organization_id", organizationId)
     .like("notes", `%${MARQUEUR_DEMO}%`);
-  if (errVehicules) throw errVehicules;
+  if (error) throw error;
 }
 
 export async function seedDemoProject(userId: string): Promise<{ projectId: string }> {

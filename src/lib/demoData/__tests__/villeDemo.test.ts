@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MARQUEUR_DEMO, genererFlotteDemo, planDemo } from "../villeDemo";
+import { MARQUEUR_DEMO, estVehiculeDemo, genererFlotteDemo, planDemo } from "../villeDemo";
 
 describe("flotte de démonstration (Ville de Rivière-Claire)", () => {
   const flotte = genererFlotteDemo();
@@ -33,5 +33,23 @@ describe("flotte de démonstration (Ville de Rivière-Claire)", () => {
     expect(technos.has("bev")).toBe(true);
     expect(technos.has("fcev")).toBe(true);
     expect(plan.filter((p) => p.target_technology === "fcev").length).toBe(2);
+  });
+});
+
+describe("C7 — démo propre", () => {
+  const flotte = genererFlotteDemo();
+
+  it("chaque véhicule démo porte le marqueur et est reconnu par estVehiculeDemo", () => {
+    for (const v of flotte) {
+      expect(estVehiculeDemo(v.notes)).toBe(true);
+    }
+    expect(estVehiculeDemo("véhicule réel du client")).toBe(false);
+    expect(estVehiculeDemo(null)).toBe(false);
+  });
+
+  it("les consommations FICTIVES sont marquées « estimation », jamais « saisie »", () => {
+    for (const v of flotte) {
+      expect(v.consumption_source).toBe("estimation");
+    }
   });
 });

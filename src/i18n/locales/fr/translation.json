@@ -93,7 +93,8 @@
       "projectImpact": "Ce véhicule est utilisé dans {{count}} projet(s) : il sera retiré de leur plan de remplacement.",
       "noProject": "Ce véhicule n'est utilisé dans aucun projet.",
       "confirm": "Supprimer définitivement"
-    }
+    },
+    "demoBadge": "démo"
   },
   "pages_marketing": {
     "privacy": {
