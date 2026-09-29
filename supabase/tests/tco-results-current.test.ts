@@ -18,11 +18,16 @@ async function scenario(user: Awaited<ReturnType<typeof createTestUser>>): Promi
   return s.id;
 }
 
+// colonnes NOT NULL de tco_results (capex, opex_total, tco_total, co2_total)
+const LIGNE = { capex: 100, opex_total: 50, tco_total: 150, co2_total: 10 };
+
 Deno.test("chaque insertion devient LA courante, la précédente passe à l'historique", async () => {
   const a = await createTestUser("current-1");
   const sid = await scenario(a);
-  await a.client.from("tco_results").insert({ scenario_id: sid });
-  await a.client.from("tco_results").insert({ scenario_id: sid });
+  const r1 = await a.client.from("tco_results").insert({ scenario_id: sid, ...LIGNE });
+  assertEquals(r1.error, null, `insertion refusée : ${r1.error?.message}`);
+  const r2 = await a.client.from("tco_results").insert({ scenario_id: sid, ...LIGNE });
+  assertEquals(r2.error, null, `insertion refusée : ${r2.error?.message}`);
   const { data } = await a.client
     .from("tco_results")
     .select("id, is_current")
@@ -35,7 +40,7 @@ Deno.test("insertions CONCURRENTES : toutes réussissent, une seule ligne couran
   const a = await createTestUser("current-2");
   const sid = await scenario(a);
   const resultats = await Promise.all(
-    Array.from({ length: 6 }, () => a.client.from("tco_results").insert({ scenario_id: sid })),
+    Array.from({ length: 6 }, () => a.client.from("tco_results").insert({ scenario_id: sid, ...LIGNE })),
   );
   for (const r of resultats) {
     assertEquals(r.error, null, `insertion concurrente refusée : ${r.error?.message}`);
