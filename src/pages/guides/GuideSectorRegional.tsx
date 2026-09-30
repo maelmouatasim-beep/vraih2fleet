@@ -83,7 +83,7 @@ const GuideSectorRegional = () => {
         <div className="space-y-4">
           <div className="border rounded-lg p-6">
             <h3 className="font-semibold text-foreground mb-4">
-              {t("guides.sectorRegional.decisionTree.q1")}
+              {t("guides.sectorRegional.decisionTree.question1")}
             </h3>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="bg-green-50 dark:bg-green-950/30 p-4 rounded-lg border border-green-200 dark:border-green-800">
@@ -92,7 +92,7 @@ const GuideSectorRegional = () => {
                   <span className="font-medium text-green-800 dark:text-green-300">&lt; 250 km</span>
                 </div>
                 <p className="text-sm text-green-700 dark:text-green-400">
-                  {t("guides.sectorRegional.decisionTree.a1yes")}
+                  {t("guides.sectorRegional.decisionTree.answer1Yes")}
                 </p>
               </div>
               <div className="bg-muted/50 p-4 rounded-lg">
@@ -100,7 +100,7 @@ const GuideSectorRegional = () => {
                   <span className="font-medium text-foreground">&gt; 250 km</span>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {t("guides.sectorRegional.decisionTree.a1no")}
+                  {t("guides.sectorRegional.decisionTree.answer1No")}
                 </p>
               </div>
             </div>
@@ -108,7 +108,7 @@ const GuideSectorRegional = () => {
 
           <div className="border rounded-lg p-6">
             <h3 className="font-semibold text-foreground mb-4">
-              {t("guides.sectorRegional.decisionTree.q2")}
+              {t("guides.sectorRegional.decisionTree.question2")}
             </h3>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="bg-green-50 dark:bg-green-950/30 p-4 rounded-lg border border-green-200 dark:border-green-800">
@@ -117,7 +117,7 @@ const GuideSectorRegional = () => {
                   <span className="font-medium text-green-800 dark:text-green-300">4h+</span>
                 </div>
                 <p className="text-sm text-green-700 dark:text-green-400">
-                  {t("guides.sectorRegional.decisionTree.a2yes")}
+                  {t("guides.sectorRegional.decisionTree.answer2Yes")}
                 </p>
               </div>
               <div className="bg-muted/50 p-4 rounded-lg">
@@ -125,7 +125,7 @@ const GuideSectorRegional = () => {
                   <span className="font-medium text-foreground">&lt; 4h</span>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {t("guides.sectorRegional.decisionTree.a2no")}
+                  {t("guides.sectorRegional.decisionTree.answer2No")}
                 </p>
               </div>
             </div>

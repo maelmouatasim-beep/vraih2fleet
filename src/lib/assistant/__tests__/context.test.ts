@@ -57,6 +57,9 @@ describe("aucun ancien chiffre dans l'aide, les guides et l'assistant (D3)", () 
     /\$\s?\d+(?:[.,]\d+)?\s?\/\s?(kg|L|kWh)\b/i, // « $12.00/kg »
     /\d+\s?[k]?\$\s?(?:par|per)\s?(véhicule|borne|station|vehicle|charger)/i,
     /iMHZEV[^.]*(offre|jusqu)/i, // programme fermé présenté comme ouvert
+    /\d[\d\s,.–-]*\s?\$\s?(?:par|per)\s?(camion|truck)/i, // « 200 000 $ par camion »
+    /\d[\d\s,.–-]*\s?\$\s?\/\s?km\b/i, // « 1,20-1,50 $/km »
+    /(iVMLZE|iMHZEV|ZEVIP|PIVEZ)\s?:\s?[^.]*\d/i, // montant ou % accolé à un programme
   ];
   const sources: [string, string[]][] = [
     ["fr.helpTraining", textes((fr as Arbre).helpTraining)],

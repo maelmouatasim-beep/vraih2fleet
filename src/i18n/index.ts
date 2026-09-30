@@ -4,22 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import fr from './locales/fr/translation.json';
 import en from './locales/en/translation.json';
-
-type TranslationDict = Record<string, any>;
-
-function normalizeTranslations(input: TranslationDict): TranslationDict {
-  const { pages_marketing, pages_support, pages_telematics, ...rest } = input;
-
-  return {
-    ...rest,
-    pages: {
-      ...(rest.pages ?? {}),
-      ...(pages_marketing ?? {}),
-      ...(pages_support ?? {}),
-      ...(pages_telematics ?? {}),
-    },
-  };
-}
+import { normalizeTranslations, type TranslationDict } from './normalize';
 
 const resources = {
   fr: { translation: normalizeTranslations(fr as unknown as TranslationDict) },

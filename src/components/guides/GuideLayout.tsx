@@ -141,13 +141,13 @@ const GuideLayout = ({
                         {t("guides.relatedTools.tcoCalculator", "TCO Calculator")}
                       </Link>
                       <Link
-                        to="/dashboard/projects"
+                        to="/dashboard/library"
                         className="block text-sm text-primary hover:underline"
                       >
                         {t("guides.relatedTools.subsidies", "Subsidies Explorer")}
                       </Link>
                       <Link
-                        to="/dashboard/infrastructure"
+                        to="/dashboard/fleet"
                         className="block text-sm text-primary hover:underline"
                       >
                         {t("guides.relatedTools.infrastructure", "Infrastructure Planner")}

@@ -655,6 +655,10 @@
         "success": {
           "title": "Message envoyé !",
           "message": "Notre équipe vous contactera dans les 24-48h."
+        },
+        "error": {
+          "title": "Erreur",
+          "message": "Le message n'a pas pu être envoyé. Réessayez."
         }
       }
     }
@@ -1790,7 +1794,9 @@
     },
     "errors": {
       "emailInUse": "Cet email est déjà utilisé",
-      "accountCreationError": "Une erreur est survenue lors de la création du compte"
+      "accountCreationError": "Une erreur est survenue lors de la création du compte",
+      "loginError": "Erreur de connexion",
+      "invalidCredentials": "Courriel ou mot de passe invalide"
     },
     "login": {
       "title": "Connexion",
@@ -1892,7 +1898,9 @@
         "step2": "Créez des scénarios de transition",
         "step3": "Comparez TCO, CO₂ et infrastructure"
       }
-    }
+    },
+    "loginSuccess": "Connexion réussie",
+    "welcomeBack": "Bienvenue sur H2Fleet !"
   },
   "settings": {
     "currencies": {
@@ -2266,7 +2274,15 @@
     "yearLabel": "Année {{n}}",
     "projectNotFound": "Projet non trouvé",
     "scenarioNotFound": "Scénario non trouvé",
-    "ofTotal": "% du total"
+    "ofTotal": "% du total",
+    "close": "Fermer",
+    "send": "Envoyer",
+    "none": "Aucun",
+    "share": "Partager",
+    "export": "Exporter",
+    "back": "Retour",
+    "contactUs": "Nous contacter",
+    "never": "Jamais"
   },
   "pages": {
     "dashboard": {
@@ -2418,7 +2434,8 @@
         "projectUpdates": "Mises à jour projets",
         "projectUpdatesDesc": "Notifications des modifications de projets",
         "weeklyDigest": "Résumé hebdomadaire",
-        "weeklyDigestDesc": "Recevoir un résumé de l'activité chaque semaine"
+        "weeklyDigestDesc": "Recevoir un résumé de l'activité chaque semaine",
+        "preferencesSaved": "Préférences de notification enregistrées"
       },
       "appearance": {
         "title": "Apparence",
@@ -2433,6 +2450,18 @@
         "savedDesc": "Vos modifications ont été enregistrées avec succès.",
         "passwordChanged": "Mot de passe modifié",
         "passwordChangedDesc": "Votre mot de passe a été mis à jour avec succès."
+      },
+      "emailNotifications": {
+        "title": "Notifications par courriel",
+        "subtitle": "Recevez des courriels pour les événements importants",
+        "subsidyReminders": "Rappels d'échéances de subventions",
+        "subsidyRemindersDesc": "Rappels 7 jours et 1 jour avant les dates limites de demande",
+        "collaborationInvites": "Invitations à collaborer",
+        "collaborationInvitesDesc": "Quand quelqu'un vous ajoute à un projet",
+        "projectComments": "Commentaires sur mes projets",
+        "projectCommentsDesc": "Quand quelqu'un commente un de vos projets",
+        "weeklyDigest": "Résumé hebdomadaire",
+        "weeklyDigestDesc": "Un récapitulatif de l'activité de vos projets chaque lundi"
       }
     },
     "privacy": {
@@ -2586,6 +2615,10 @@
     "success": {
       "title": "Demande envoyée !",
       "message": "Notre équipe vous contactera dans les 24-48h pour planifier votre démo."
+    },
+    "error": {
+      "title": "Erreur",
+      "message": "La demande n'a pas pu être envoyée. Réessayez."
     }
   },
   "demo": {
@@ -4007,7 +4040,11 @@
         "owner": "Propriétaire",
         "editor": "Éditeur",
         "viewer": "Lecteur"
-      }
+      },
+      "added": "Collaborateur ajouté",
+      "addedDesc": "L'utilisateur a été ajouté au projet.",
+      "inviteSent": "Invitation enregistrée",
+      "inviteSentDesc": "La personne sera ajoutée au projet dès qu'elle créera son compte avec cette adresse. Prévenez-la : aucun courriel n'est envoyé automatiquement pour l'instant."
     },
     "comments": {
       "title": "Commentaires",
@@ -4068,7 +4105,16 @@
       "invitation": "Invitation",
       "version": "Version",
       "role_change": "Changement de rôle"
-    }
+    },
+    "viewAll": "Voir toutes les notifications",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "thisWeek": "Cette semaine",
+    "older": "Plus ancien",
+    "unreadCount": "{{count}} non lue(s)",
+    "allRead": "Tout est à jour",
+    "emptyDesc": "Vous n'avez pas encore de notifications",
+    "emptyFilterDesc": "Aucune notification de ce type"
   },
   "helpTraining": {
     "title": "Aide et méthode",
@@ -4289,7 +4335,9 @@
       "seeDemo": "Voir la démo",
       "readGuide": "Lire le guide",
       "startCalculation": "Lancer le calcul",
-      "exploreTools": "Explorer les outils"
+      "exploreTools": "Explorer les outils",
+      "title": "Prêt à passer à votre flotte ?",
+      "description": "Importez votre flotte et obtenez un plan de remplacement chiffré, étape par étape."
     },
     "urban": {
       "title": "Livraison urbaine",
@@ -4389,7 +4437,7 @@
           "title": "Solutions pratiques",
           "items": [
             "Préchauffage branché (préserve la batterie)",
-            "Surdimensionner l'autonomie de 40%",
+            "Prévoir une marge d'autonomie pour l'hiver (majoration hivernale du registre)",
             "Garages chauffés (optionnel mais idéal)",
             "Planifier des routes plus courtes en hiver"
           ]
@@ -4481,8 +4529,8 @@
       "funding": {
         "title": "Financement disponible",
         "programs": [
-          "iVMLZE : 200 000 $ par camion H₂",
-          "ZEVIP : 50% des coûts d'infrastructure",
+          "iMHZEV (véhicules moyens et lourds) : statut calculé et date de vérification dans la Bibliothèque",
+          "PIVEZ (infrastructure) : statut calculé et date de vérification dans la Bibliothèque",
           "Crédits carbone fédéraux"
         ],
         "callout": {
@@ -4511,7 +4559,7 @@
         "benefits": [
           "Gaz naturel renouvelable (issu de déchets organiques)",
           "Compatible avec les moteurs diesel convertis",
-          "Réduction de 70-90% des GES vs diesel",
+          "Réduction des GES selon la filière, à documenter par le fournisseur",
           "Admissible aux mandats VZE au Canada"
         ]
       },
@@ -4644,7 +4692,7 @@
           "reasons": [
             "Autonomie adéquate (700 km)",
             "Presque pas de stations (2026)",
-            "TCO élevé (1,20-1,50 $/km vs 0,60 $ diesel)"
+            "Coût par km élevé aujourd'hui — chiffré véhicule par véhicule à l'étape Faisabilité"
           ]
         },
         "biomethane": {
@@ -4782,6 +4830,21 @@
       "cta": {
         "connectTelematics": "Connecter la télématique"
       }
+    },
+    "comparison": {
+      "criteria": "Critère",
+      "bev": "Électrique (BEV)",
+      "fcev": "Hydrogène (FCEV)",
+      "biomethane": "Biométhane",
+      "diesel": "Diesel"
+    },
+    "backToGuides": "Retour aux guides",
+    "tableOfContents": "Sommaire",
+    "relatedTools": {
+      "title": "Dans l’application",
+      "tcoCalculator": "Projets (parcours en 7 étapes)",
+      "subsidies": "Bibliothèque (programmes et hypothèses)",
+      "infrastructure": "Ma flotte"
     }
   },
   "reports": {
@@ -6110,5 +6173,13 @@
     "invalid": "Véhicule, montant positif et référence du document sont obligatoires.",
     "invalidYear": "Année de versement invalide (AAAA entre 2000 et 2100).",
     "saved": "Subvention confirmée ajoutée"
+  },
+  "methodology": {
+    "title": "Méthodologie",
+    "subtitle": "Comment H2Fleet calcule le coût total de possession d'une flotte et d'où viennent les hypothèses.",
+    "cta": {
+      "title": "Appliquer la méthode à votre flotte ?",
+      "desc": "Créez un compte, importez votre flotte et suivez le parcours en 7 étapes."
+    }
   }
 }
