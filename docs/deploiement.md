@@ -1,8 +1,11 @@
 # Déploiement sur le Supabase hébergé (B10)
 
 Procédure exacte pour mettre la base hébergée (`fihklznbfufhowopwwuc`) au
-niveau du dépôt : **51 migrations** (dont `20260929010000_energy_client_inputs`
-et `20260929013000_report_snapshots`, nécessaires au test du site) et
+niveau du dépôt : **63 migrations** (dont `20260929010000_energy_client_inputs`,
+`20260929013000_report_snapshots` et celles des blocs C à E — stratégie
+retenue, remplacements réalisés, demandes de subvention, taux
+d'actualisation en fraction, invitations d'équipe, défaut
+`tasks.created_by` — toutes nécessaires au test du site) et
 **9 edge functions**. À exécuter depuis ta machine — l'environnement de
 développement de Claude n'a que la clé anon, aucun accès d'administration.
 
@@ -69,8 +72,12 @@ supabase db push             # applique, dans l'ordre horodaté
 select table_name from information_schema.tables
 where table_schema = 'public'
   and table_name in ('organizations','organization_members','vehicles',
-    'project_vehicles','energy_client_inputs','report_snapshots')
-order by table_name;      -- attendu : les 6 lignes
+    'project_vehicles','energy_client_inputs','report_snapshots',
+    'confirmed_subsidies','subsidy_applications','organization_invitations')
+order by table_name;      -- attendu : les 9 lignes
+
+-- Taux d'actualisation en FRACTION (D4) : aucun projet ≥ 1 après migration
+select count(*) from public.projects where default_discount_rate >= 1;  -- attendu : 0
 
 -- Aucune table publique sans RLS :
 select c.relname from pg_class c

@@ -60,7 +60,14 @@ npm run build          # build de production
 npm run build:preview  # build de l'APERÇU hébergé (hash routing, base ./)
 npm run test:tco       # tests du moteur TCO avec seuils de couverture 95 %
 npm run docs:tco       # régénère docs/tco-hypotheses.md depuis assumptions.ts
+npm run e2e:local      # parcours complet Playwright contre Supabase LOCAL (voir scripts/e2e-parcours.mjs)
 ```
+
+Supabase local (Docker) : `npx supabase start` puis `npx supabase db reset
+--local` ; tests Deno en local : exporter `supabase status -o env` (comme
+dans `.github/workflows/ci.yml`) + `DENO_CERT=/root/.ccr/ca-bundle.crt`
+dans l'environnement de Claude. Base hébergée : procédure dans
+`docs/deploiement.md` (Claude n'y a pas d'accès admin).
 
 ## Aperçu du site (règle permanente)
 
@@ -219,6 +226,34 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   véhicules déterministes, aucun résultat pré-calculé — remplace la
   démo STM) + assistant IA réaligné (zéro chiffre figé, renvoi aux
   écrans avec source/date).
+- **Revue externe (blocs A → E) : LIVRÉE, en attente du « ok » avant la
+  Phase 4.** Un commit par point, un test par correction.
+  A (moteur 2.1.0) : taxes symétriques, résolveur (classe exacte, cumul,
+  PAVÉ dégressif), prix de l'énergie en 3 couches + snapshots de
+  rapport, cas de référence régénérés. B : RLS (UPDATE projects
+  verrouillé, can_view/can_edit étendus, gouvernance d'org, is_current
+  concurrent), exceljs au lieu de xlsx vulnérable, procédure
+  `docs/deploiement.md`, subventions CONFIRMÉES par le client
+  (`confirmed_subsidies`, prioritaires dans le moteur, citées au
+  rapport avec la référence du document). C : Ma flotte (édition,
+  suppression, import strict + mises à jour), choix groupés, appliquer
+  une stratégie au plan (`projects.selected_strategy`), remplacement
+  réalisé (`project_vehicles.completed_date/actual_cost`), suivi des
+  demandes (`subsidy_applications`), infrastructure par dépôt, démo
+  propre, création de projet → étape Flotte. D : Accueil réel,
+  Bibliothèque = registre, Aide/assistant sans chiffres figés,
+  Analytics/Comparaison/ProjectDetail retirés (redirections), taux
+  d'actualisation en FRACTION (bug 0,05 % corrigé, migration), import
+  télématique → Ma flotte, invitations d'équipe
+  (`organization_invitations`, sans envoi de courriel). E : test CI
+  des clés i18n appelées absentes, exports et registre en anglais,
+  `<html lang>` dynamique + sélecteur fiable, parcours complet
+  automatisé (`npm run e2e:local`, 12/12 étapes, 0 erreur) qui a révélé
+  et fait corriger : 403 à la génération des tâches (défaut
+  `tasks.created_by`), débordement horizontal du layout, assistant
+  d'accueil obsolète de Projets, libellés tronqués, kanban coupé.
+  Migrations de la revue : 20260929010000 → 20260930050000 (toutes
+  additives) — à appliquer sur la base hébergée via docs/deploiement.md.
 - Phase 4 — site public et conformité (études de cas re-étiquetées,
   tarification unique — prix demandés à l'utilisateur, promesses non
   livrées retirées, légal fr/en Loi 25 — nom légal demandé, admin
@@ -240,3 +275,16 @@ sinon « à_valider » avec l'URL à consulter.
 - Retrait de la fonction `calculate-tco` déployée chez Supabase.
 - Facturation réelle (DEMO_MODE donne le plan le plus élevé à tous).
 - Revue juridique des pages légales (Loi 25, CGU, confidentialité).
+- Hypothèses et programmes « à_valider » : vérification par
+  l'utilisateur (sources listées dans la Bibliothèque).
+- Appliquer les 14 migrations de la revue sur la base hébergée
+  (docs/deploiement.md) puis tester sur GitHub Pages.
+- Invitations d'équipe : aucun courriel envoyé automatiquement (la
+  personne voit l'invitation en se connectant) — brancher send-email.
+- Récapitulatif hebdomadaire (préférence courriel) non implémenté.
+- /dashboard/roadmap encore accessible hors menu (à retirer ou
+  intégrer au Suivi).
+- Pages publiques (études de cas, Ecosystem) encore chiffrées :
+  Phase 4.
+- npm audit : avis sur le serveur de dev Vite (correctif = Vite 8,
+  montée de version majeure à planifier).
