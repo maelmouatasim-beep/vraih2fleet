@@ -5,6 +5,7 @@
  * client), pour que Faisabilité, Stratégies, Plan, Financement,
  * Rapports et Suivi calculent tous avec LES MÊMES entrées.
  */
+import { tauxActualisationDepuisProjet } from "@/lib/projectParams";
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -82,8 +83,8 @@ export function useOptionsProjet(project: ProjectDTO | null | undefined, project
     return {
       anneeReference: new Date().getFullYear(),
       horizonAns: project.defaultAnalysisHorizonYears,
-      // defaultDiscountRate est stocké en pour cent (5 = 5 %)
-      tauxActualisationNominal: project.defaultDiscountRate / 100,
+      // fraction décimale (0.05 = 5 %) — anciens instantanés en % convertis
+      tauxActualisationNominal: tauxActualisationDepuisProjet(project.defaultDiscountRate),
       typeOrganisme,
       surchargesEnergie: {
         dieselParL: surcharges.dieselParL,

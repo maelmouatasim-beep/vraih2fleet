@@ -1,3 +1,4 @@
+import { tauxActualisationDepuisProjet } from "@/lib/projectParams";
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -133,7 +134,8 @@ export function useProjectVersions(projectId: string | undefined) {
           country_or_region: version.snapshot.project.country_or_region,
           currency: version.snapshot.project.currency,
           default_analysis_horizon_years: version.snapshot.project.default_analysis_horizon_years,
-          default_discount_rate: version.snapshot.project.default_discount_rate,
+          // anciens instantanés en % : convertis en fraction (convention unique)
+          default_discount_rate: tauxActualisationDepuisProjet(version.snapshot.project.default_discount_rate),
         })
         .eq("id", projectId);
 

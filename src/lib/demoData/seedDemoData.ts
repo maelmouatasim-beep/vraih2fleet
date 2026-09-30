@@ -77,7 +77,7 @@ export async function seedDemoProject(userId: string): Promise<{ projectId: stri
       country_or_region: "CA_QC",
       currency: "CAD",
       default_analysis_horizon_years: 10,
-      default_discount_rate: 5,
+      default_discount_rate: 0.05,
       user_id: userId,
       organization_id: organizationId,
     })

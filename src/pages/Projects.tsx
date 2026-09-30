@@ -1,3 +1,4 @@
+import { tauxDepuisSaisiePourcent } from "@/lib/projectParams";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -419,7 +420,7 @@ const Projects = () => {
                         onChange={(e) =>
                           setNewProject({
                             ...newProject,
-                            defaultDiscountRate: parseFloat(e.target.value) / 100 || 0.06,
+                            defaultDiscountRate: tauxDepuisSaisiePourcent(e.target.value) ?? newProject.defaultDiscountRate,
                           })
                         }
                       />
