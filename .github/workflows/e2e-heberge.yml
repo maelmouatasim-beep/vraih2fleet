@@ -1,0 +1,85 @@
+name: E2E base hébergée
+
+# Parcours complet (scripts/e2e-parcours.mjs) contre le projet Supabase de
+# TEST : le site est construit avec les variables du dépôt (comme GitHub
+# Pages), servi localement sous /vraih2fleet/, et parcouru avec deux
+# comptes e2e-…@example.com créés confirmés pour l'occasion puis
+# SUPPRIMÉS (avec leurs organisations) en fin de run, même en cas d'échec.
+# Lancement manuel : Actions → E2E base hébergée → Run workflow.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-heberge
+  cancel-in-progress: false
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+      VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PROJECT_ID: ${{ vars.VITE_SUPABASE_PROJECT_ID }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
+    steps:
+      - name: Configuration présente et cohérente ?
+        run: |
+          for v in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_REF VITE_SUPABASE_URL VITE_SUPABASE_PROJECT_ID VITE_SUPABASE_PUBLISHABLE_KEY; do
+            [ -n "${!v}" ] || { echo "::error::$v manquant (docs/deploiement.md)"; exit 1; }
+          done
+          # Le site et les comptes doivent viser LE MÊME projet.
+          [ "$VITE_SUPABASE_URL" = "https://$SUPABASE_PROJECT_REF.supabase.co" ] || {
+            echo "::error::VITE_SUPABASE_URL ne correspond pas à SUPABASE_PROJECT_REF"; exit 1; }
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Navigateur Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Build (comme GitHub Pages)
+        env:
+          VITE_PREVIEW_HASH_ROUTER: "true"
+        run: npx vite build --base=/vraih2fleet/
+
+      - name: Servir le build sous /vraih2fleet/
+        run: |
+          npx vite preview --base=/vraih2fleet/ --port 4173 --strictPort --host 127.0.0.1 &
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:4173/vraih2fleet/ >/dev/null && break
+            sleep 1
+          done
+
+      - name: Créer les comptes de test
+        run: node scripts/comptes-e2e.mjs creer
+
+      - name: Parcours complet
+        env:
+          E2E_CIBLE: heberge
+          E2E_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          E2E_BASE: http://127.0.0.1:4173/vraih2fleet/
+          E2E_HASH: "1"
+        run: node scripts/e2e-parcours.mjs e2e-captures
+
+      - name: Supprimer les comptes de test
+        if: always()
+        run: node scripts/comptes-e2e.mjs supprimer
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-captures
+          path: e2e-captures/
+          retention-days: 7

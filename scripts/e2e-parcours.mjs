@@ -25,7 +25,7 @@
  * Supabase HÉBERGÉ (*.supabase.co) est bloquée et fait échouer le script.
  */
 import { chromium } from "playwright";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const BASE = process.env.E2E_BASE ?? "http://127.0.0.1:8080";
@@ -88,9 +88,12 @@ async function inscrire(page, nom, courriel) {
   await fermerOnboarding(page);
 }
 
-const navigateur = await chromium.launch({ executablePath: process.env.CHROMIUM ?? "/opt/pw-browsers/chromium" }).catch(() =>
-  chromium.launch(),
-);
+// Chromium préinstallé de l'environnement de dev s'il existe, sinon celui
+// de Playwright (CI : npx playwright install chromium).
+const CHROMIUM_LOCAL = "/opt/pw-browsers/chromium";
+const navigateur = await chromium.launch({
+  executablePath: process.env.CHROMIUM || (existsSync(CHROMIUM_LOCAL) ? CHROMIUM_LOCAL : undefined),
+});
 const contexte = await navigateur.newContext({ locale: "fr-CA", acceptDownloads: true, viewport: { width: 1360, height: 900 } });
 let versHeberge = null;
 async function bloquerHeberge(ctx) {
