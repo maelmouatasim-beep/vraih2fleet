@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/table";
 import { TaskBoard } from "@/components/tasks";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { supabase } from "@/integrations/supabase/client";
@@ -67,6 +68,7 @@ interface FormulaireRealise {
 
 export default function TrackingStep({ projectId, project }: TrackingStepProps) {
   const { t, i18n } = useTranslation();
+  const { user } = useAuth();
   const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading, modifier } = useProjectVehicles(projectId);
   const [generation, setGeneration] = useState(false);
@@ -187,6 +189,7 @@ export default function TrackingStep({ projectId, project }: TrackingStepProps) 
           plan_year: p.plan_year,
           subsidy_program: p.subsidy_program,
           auto_key: p.auto_key,
+          created_by: user?.id,
         })),
       );
       if (error) throw error;
@@ -275,7 +278,7 @@ export default function TrackingStep({ projectId, project }: TrackingStepProps) 
               <TableBody>
                 {suivi.vehicules.map((v) => (
                   <TableRow key={v.id}>
-                    <TableCell className="font-medium">{v.unit_number}</TableCell>
+                    <TableCell className="font-medium whitespace-nowrap">{v.unit_number}</TableCell>
                     <TableCell>{t(`fleet.categories.${v.category}`)}</TableCell>
                     <TableCell>{v.replacement_year ?? "—"}</TableCell>
                     <TableCell>
