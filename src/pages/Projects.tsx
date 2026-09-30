@@ -49,7 +49,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { OnboardingWizard } from "@/components/onboarding/OnboardingWizard";
 import { availableRegions, availableCurrencies } from "@/data/mockData";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -62,8 +61,6 @@ import {
   type ProjectDTO,
 } from "@/lib/supabase/projects";
 import { seedDemoProject, getDemoProjectInfo } from "@/lib/demoData";
-
-const ONBOARDING_KEY = "h2fleet_onboarding_completed";
 
 const Projects = () => {
   const { t } = useTranslation();
@@ -78,7 +75,6 @@ const Projects = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(false);
   const [newProject, setNewProject] = useState<CreateProjectForm>({
     name: "",
     description: "",
@@ -91,14 +87,6 @@ const Projects = () => {
   useEffect(() => {
     document.title = `${t('pages.projects.title')} | H2Fleet`;
   }, [t]);
-
-  // Check if first visit for onboarding
-  useEffect(() => {
-    const hasCompletedOnboarding = localStorage.getItem(ONBOARDING_KEY);
-    if (!hasCompletedOnboarding) {
-      setShowOnboarding(true);
-    }
-  }, []);
 
   // Open dialog if URL has ?create=true
   useEffect(() => {
@@ -135,16 +123,6 @@ const Projects = () => {
       cancelled = true;
     };
   }, [user?.id, t]);
-
-  const handleOnboardingComplete = () => {
-    localStorage.setItem(ONBOARDING_KEY, "true");
-    setShowOnboarding(false);
-  };
-
-  const handleOnboardingSkip = () => {
-    localStorage.setItem(ONBOARDING_KEY, "true");
-    setShowOnboarding(false);
-  };
 
   const filteredProjects = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -275,12 +253,6 @@ const Projects = () => {
 
   return (
     <>
-      {showOnboarding && (
-        <OnboardingWizard 
-          onComplete={handleOnboardingComplete} 
-          onSkip={handleOnboardingSkip} 
-        />
-      )}
       <DashboardLayout>
       <div className="space-y-6">
         {/* Header */}
