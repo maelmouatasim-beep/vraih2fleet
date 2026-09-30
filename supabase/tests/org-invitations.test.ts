@@ -53,7 +53,8 @@ Deno.test("D6 : l'admin invite, l'invité accepte et devient membre avec le rôl
 
   // la liste détaillée donne le courriel des membres, aux membres seulement
   const { data: liste } = await admin.client.rpc("list_organization_members_detail", { _org: org });
-  assert((liste ?? []).some((m: { email: string | null }) => m.email === invite.email.toLowerCase() || m.email === invite.email));
+  const courriels = (liste ?? []).map((m: { email: string | null }) => (m.email ?? "").toLowerCase());
+  assert(courriels.includes(invite.email.toLowerCase()), `courriel du nouveau membre absent : ${courriels.join(", ")}`);
   const { data: listeTiers } = await tiers.client.rpc("list_organization_members_detail", { _org: org });
   assertEquals(listeTiers ?? [], []);
 });
