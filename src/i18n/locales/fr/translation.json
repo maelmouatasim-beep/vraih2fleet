@@ -2282,7 +2282,8 @@
     "export": "Exporter",
     "back": "Retour",
     "contactUs": "Nous contacter",
-    "never": "Jamais"
+    "never": "Jamais",
+    "languageLabel": "Langue"
   },
   "pages": {
     "dashboard": {

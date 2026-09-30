@@ -34,6 +34,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
 import { useOrganization } from "@/hooks/useOrganization";
 import { updateOrganization } from "@/lib/supabase/organizations";
+import { langueCourte, memoriserChoixLangue } from "@/i18n/preference";
 
 const Settings = () => {
   const { t, i18n } = useTranslation();
@@ -58,10 +59,12 @@ const Settings = () => {
   // via i18next (persistée en localStorage par le détecteur), la devise
   // et la région sur l'organisation (défauts produit : CAD, Québec).
   const { organization, refetch: refetchOrganization } = useOrganization();
-  const languePref = i18n.language?.startsWith("en") ? "en" : "fr";
+  const languePref = langueCourte(i18n.resolvedLanguage ?? i18n.language);
 
   const changerLangue = (v: string) => {
-    void i18n.changeLanguage(v);
+    const langue = langueCourte(v);
+    memoriserChoixLangue(window.localStorage, langue);
+    void i18n.changeLanguage(langue);
   };
 
   const changerOrganisation = async (patch: { currency?: string; region?: string }) => {

@@ -7,49 +7,53 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Globe } from 'lucide-react';
+import { langueCourte, memoriserChoixLangue } from '@/i18n/preference';
 
+// Français d'abord : produit québécois
 const languages = [
-  { code: 'en', label: 'English', flag: '🇺🇸' },
-  { code: 'fr', label: 'Français', flag: '🇫🇷' },
-];
+  { code: 'fr', label: 'Français' },
+  { code: 'en', label: 'English' },
+] as const;
 
 interface LanguageSelectorProps {
   variant?: 'default' | 'landing';
 }
 
+/** Sélecteur de langue (E3) : la langue courante est lue sur la langue
+ *  RÉSOLUE (fr-CA → fr) et le choix est mémorisé explicitement. */
 const LanguageSelector = ({ variant = 'default' }: LanguageSelectorProps) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
+  const courante = langueCourte(i18n.resolvedLanguage ?? i18n.language);
 
-  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
-
-  const handleLanguageChange = (langCode: string) => {
-    i18n.changeLanguage(langCode);
+  const choisir = (code: 'fr' | 'en') => {
+    memoriserChoixLangue(typeof window !== 'undefined' ? window.localStorage : null, code);
+    void i18n.changeLanguage(code);
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           size="sm"
-          className={variant === 'landing' 
-            ? "text-primary-foreground hover:bg-primary-foreground/10 gap-2" 
+          aria-label={t('common.languageLabel')}
+          className={variant === 'landing'
+            ? "text-primary-foreground hover:bg-primary-foreground/10 gap-2"
             : "gap-2"
           }
         >
           <Globe className="w-4 h-4" />
-          <span className="hidden sm:inline">{currentLanguage.flag} {currentLanguage.code.toUpperCase()}</span>
-          <span className="sm:hidden">{currentLanguage.flag}</span>
+          <span>{courante.toUpperCase()}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onClick={() => handleLanguageChange(lang.code)}
-            className={i18n.language === lang.code ? 'bg-accent' : ''}
+            onClick={() => choisir(lang.code)}
+            className={courante === lang.code ? 'bg-accent' : ''}
+            lang={lang.code}
           >
-            <span className="mr-2">{lang.flag}</span>
             {lang.label}
           </DropdownMenuItem>
         ))}
