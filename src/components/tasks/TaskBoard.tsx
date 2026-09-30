@@ -129,7 +129,7 @@ export function TaskBoard({ projectId }: TaskBoardProps) {
       {/* Kanban Board */}
       {viewMode === 'kanban' && (
         <div className="flex-1 overflow-x-auto">
-          <div className="flex gap-4 min-w-max h-full pb-4">
+          <div className="flex gap-4 h-full pb-4">
             {STATUS_ORDER.map((status) => {
               const config = TASK_STATUS_CONFIG[status];
               const columnTasks = tasksByStatus[status];
@@ -138,7 +138,7 @@ export function TaskBoard({ projectId }: TaskBoardProps) {
                 <div
                   key={status}
                   className={cn(
-                    'w-72 flex-shrink-0 rounded-lg p-3',
+                    'flex-1 min-w-[15rem] rounded-lg p-3',
                     config.color
                   )}
                   onDragOver={handleDragOver}
