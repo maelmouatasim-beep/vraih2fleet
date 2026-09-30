@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getProjectById } from "@/lib/supabase/projects";
 import FleetStep from "@/components/journey/FleetStep";
+import ProjectSettingsDialog from "@/components/journey/ProjectSettingsDialog";
+import { ShareProjectButton } from "@/components/collaboration";
 import FeasibilityStep from "@/components/journey/FeasibilityStep";
 import StrategiesStep from "@/components/journey/StrategiesStep";
 import PlanStep from "@/components/journey/PlanStep";
@@ -72,7 +74,6 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
   const base = `/dashboard/projects/${projectId}`;
 
   const ctaParEtape: Partial<Record<EtapeParcours, { href: string; libelle: string }[]>> = {
-    rapports: [{ href: base, libelle: t("journey.cta.projectOverview") }],
   };
 
   return (
@@ -91,9 +92,12 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
             </h1>
             <p className="text-muted-foreground">{t("journey.subtitle")}</p>
           </div>
-          <Button variant="outline" asChild>
-            <Link to={base}>{t("journey.cta.projectOverview")}</Link>
-          </Button>
+          {project && (
+            <div className="flex flex-wrap gap-2">
+              <ShareProjectButton projectId={project.id} />
+              <ProjectSettingsDialog project={project} />
+            </div>
+          )}
         </div>
 
         {/* Barre de progression des 7 étapes */}

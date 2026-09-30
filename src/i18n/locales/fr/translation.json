@@ -6014,6 +6014,18 @@
         "rapide50": "borne rapide 50 kW",
         "rapide150": "borne rapide 150 kW"
       }
+    },
+    "settings": {
+      "button": "Paramètres du projet",
+      "title": "Paramètres du projet",
+      "subtitle": "Nom, horizon d'analyse et taux d'actualisation — toutes les étapes recalculent avec ces valeurs.",
+      "name": "Nom",
+      "description": "Description",
+      "horizon": "Horizon d'analyse (années, 1-30)",
+      "rate": "Taux d'actualisation nominal (%)",
+      "note": "Un rapport déjà généré reste figé ; l'étape Rapports signalera l'écart avec les nouvelles valeurs.",
+      "invalid": "Paramètres invalides : nom requis, horizon entier de 1 à 30, taux entre 0 et 100 %.",
+      "saved": "Paramètres du projet enregistrés"
     }
   },
   "energyClient": {

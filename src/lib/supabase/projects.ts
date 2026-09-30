@@ -150,3 +150,20 @@ export async function duplicateProject(userId: string, projectId: string, newNam
     defaultDiscountRate: original.defaultDiscountRate,
   });
 }
+
+/** Paramètres modifiables d'un projet (D4) — taux en FRACTION (0.05 = 5 %). */
+export async function updateProjectSettings(
+  projectId: string,
+  settings: { name: string; description: string | null; horizonYears: number; discountRate: number },
+): Promise<void> {
+  const { error } = await supabase
+    .from("projects")
+    .update({
+      name: settings.name,
+      description: settings.description,
+      default_analysis_horizon_years: settings.horizonYears,
+      default_discount_rate: settings.discountRate,
+    })
+    .eq("id", projectId);
+  if (error) throw error;
+}

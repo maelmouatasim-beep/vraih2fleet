@@ -6014,6 +6014,18 @@
         "rapide50": "50 kW fast charger",
         "rapide150": "150 kW fast charger"
       }
+    },
+    "settings": {
+      "button": "Project settings",
+      "title": "Project settings",
+      "subtitle": "Name, analysis horizon and discount rate — every step recalculates with these values.",
+      "name": "Name",
+      "description": "Description",
+      "horizon": "Analysis horizon (years, 1-30)",
+      "rate": "Nominal discount rate (%)",
+      "note": "A report already generated stays frozen; the Reports step will flag the difference with the new values.",
+      "invalid": "Invalid settings: name required, whole horizon from 1 to 30, rate between 0 and 100%.",
+      "saved": "Project settings saved"
     }
   },
   "energyClient": {

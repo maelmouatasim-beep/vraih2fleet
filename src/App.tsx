@@ -26,17 +26,14 @@ import Projects from "./pages/Projects";
 import MyFleet from "./pages/MyFleet";
 import Library from "./pages/Library";
 import OrganizationPage from "./pages/OrganizationPage";
-import ProjectDetail from "./pages/ProjectDetail";
 import ProjectJourney, { ETAPES_PARCOURS } from "./pages/project/ProjectJourney";
 import Support from "./pages/Support";
-import Analytics from "./pages/Analytics";
 import ApiDocumentation from "./pages/ApiDocumentation";
 
 import Settings from "./pages/Settings";
 import HelpTraining from "./pages/HelpTraining";
 import Ecosystem from "./pages/Ecosystem";
 import Telematics from "./pages/Telematics";
-import ScenarioComparison from "./pages/ScenarioComparison";
 import RoadmapBuilder from "./pages/RoadmapBuilder";
 import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
@@ -119,9 +116,8 @@ const App = () => (
             } />
 
             {/* Parcours projet en 7 étapes */}
-            <Route path="/dashboard/projects/:projectId" element={
-              <ProtectedRoute><ProjectDetail /></ProtectedRoute>
-            } />
+            {/* D4 : l'ancienne fiche projet (scénarios, anciens PDF, roadmap) est remplacée par le parcours */}
+            <Route path="/dashboard/projects/:projectId" element={<ProjetVersParcours />} />
             {ETAPES_PARCOURS.map((etape) => (
               <Route
                 key={etape}
@@ -129,9 +125,7 @@ const App = () => (
                 element={<ProtectedRoute><ProjectJourney etape={etape} /></ProtectedRoute>}
               />
             ))}
-            <Route path="/dashboard/projects/:projectId/compare" element={
-              <ProtectedRoute><ScenarioComparison /></ProtectedRoute>
-            } />
+            <Route path="/dashboard/projects/:projectId/compare" element={<ScenarioVersStrategies />} />
             {/* Ancien flux de scénarios (moteur supprimé au bloc 3) : l'étape Stratégies le remplace */}
             <Route path="/dashboard/projects/:projectId/scenarios/new" element={<ScenarioVersStrategies />} />
             <Route path="/dashboard/projects/:projectId/scenarios/new-flexible" element={<ScenarioVersStrategies />} />
@@ -147,9 +141,8 @@ const App = () => (
               <ProtectedRoute><Telematics /></ProtectedRoute>
             } />
             <Route path="/dashboard/infrastructure" element={<Navigate to="/dashboard/projects" replace />} />
-            <Route path="/dashboard/analytics" element={
-              <ProtectedRoute><Analytics /></ProtectedRoute>
-            } />
+            {/* D4 : Analytics lisait les anciens scénarios, pas le moteur — les résultats vivent dans le parcours */}
+            <Route path="/dashboard/analytics" element={<Navigate to="/dashboard/projects" replace />} />
             <Route path="/dashboard/roadmap" element={
               <ProtectedRoute><RoadmapBuilder /></ProtectedRoute>
             } />
@@ -195,6 +188,11 @@ function TacheVersSuivi() {
 }
 
 // L'ancien flux de création de scénarios est remplacé par l'étape Stratégies.
+function ProjetVersParcours() {
+  const { projectId } = useParams();
+  return <Navigate to={`/dashboard/projects/${projectId}/flotte`} replace />;
+}
+
 function ScenarioVersStrategies() {
   const { projectId } = useParams();
   return <Navigate to={`/dashboard/projects/${projectId}/strategies`} replace />;

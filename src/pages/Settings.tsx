@@ -34,7 +34,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
 import { useOrganization } from "@/hooks/useOrganization";
 import { updateOrganization } from "@/lib/supabase/organizations";
-import { FeatureDocDownloadButton } from "@/components/reports";
 
 const Settings = () => {
   const { t, i18n } = useTranslation();
@@ -480,22 +479,6 @@ const Settings = () => {
                 disabled={isSavingEmail}
               />
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Documentation Export Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="w-5 h-5" />
-              {t('pages.settings.documentation.title', 'Platform Documentation')}
-            </CardTitle>
-            <CardDescription>
-              {t('pages.settings.documentation.subtitle', 'Download comprehensive feature documentation with module descriptions')}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <FeatureDocDownloadButton />
           </CardContent>
         </Card>
 
