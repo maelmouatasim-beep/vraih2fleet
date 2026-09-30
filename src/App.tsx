@@ -28,8 +28,6 @@ import Library from "./pages/Library";
 import OrganizationPage from "./pages/OrganizationPage";
 import ProjectDetail from "./pages/ProjectDetail";
 import ProjectJourney, { ETAPES_PARCOURS } from "./pages/project/ProjectJourney";
-import DonneesRef from "./pages/DonneesRef";
-import CustomReferenceData from "./pages/CustomReferenceData";
 import Support from "./pages/Support";
 import Analytics from "./pages/Analytics";
 import ApiDocumentation from "./pages/ApiDocumentation";
@@ -140,12 +138,11 @@ const App = () => (
             <Route path="/dashboard/scenarios/:scenarioId/results" element={<Navigate to="/dashboard/projects" replace />} />
 
             {/* Outils conservés, accessibles hors menu (absorbés au fil de la Phase 3) */}
-            <Route path="/dashboard/donnees-ref" element={
-              <ProtectedRoute><DonneesRef /></ProtectedRoute>
-            } />
-            <Route path="/dashboard/custom-data" element={
-              <ProtectedRoute><CustomReferenceData /></ProtectedRoute>
-            } />
+            {/* D2 : anciennes données de référence / personnalisées, lues par
+                aucun calcul du moteur — redirigées vers le registre (aucune
+                donnée supprimée en base). */}
+            <Route path="/dashboard/donnees-ref" element={<Navigate to="/dashboard/library" replace />} />
+            <Route path="/dashboard/custom-data" element={<Navigate to="/dashboard/library" replace />} />
             <Route path="/dashboard/telematics" element={
               <ProtectedRoute><Telematics /></ProtectedRoute>
             } />

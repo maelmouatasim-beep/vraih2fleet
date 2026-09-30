@@ -5500,6 +5500,64 @@
         "title": "Telematics",
         "description": "Geotab/Samsara connections and imported vehicles."
       }
+    },
+    "subtitleRegistry": "The complete registry used by the TCO engine: sourced assumptions, subsidy programs, history of collected prices and priority client data.",
+    "counts": {
+      "total": "Engine assumptions",
+      "verifie": "Verified (source read)",
+      "estimation": "Estimates",
+      "a_valider": "To validate"
+    },
+    "status": {
+      "verifie": "verified",
+      "estimation": "estimate",
+      "a_valider": "to validate"
+    },
+    "tabs": {
+      "hypotheses": "Assumptions",
+      "programs": "Programs",
+      "history": "Price history",
+      "overrides": "Client data"
+    },
+    "search": "Search an assumption…",
+    "filterStatus": "Filter by status",
+    "allStatuses": "All statuses",
+    "columns": {
+      "hypothesis": "Assumption",
+      "value": "Value",
+      "range": "Range (stress test)",
+      "status": "Status",
+      "source": "Source"
+    },
+    "checkedOn": "checked on {{date}}",
+    "noMatch": "No assumption matches.",
+    "history": {
+      "title": "Diesel — collected monthly prices",
+      "subtitle": "Series archived by the weekly collection (data of {{version}}, checked on {{date}}). The engine uses the 12-month average.",
+      "month": "Month",
+      "quebec": "Québec (¢/L incl. taxes)",
+      "montreal": "Montréal (¢/L incl. taxes)",
+      "archive": "archive: {{path}}",
+      "note": "Values as published; nothing is filled in or extrapolated. A change of more than 20% is held for human validation."
+    },
+    "overrides": {
+      "title": "Client data taking priority over the registry",
+      "subtitle": "Only these entries replace assumptions in the calculations (they are flagged “client data” in reports).",
+      "energy": {
+        "title": "Energy prices and grid-connection quote",
+        "description": "Organization or project: diesel/electricity/H2 prices paid, Hydro-Québec quote.",
+        "action": "Organization"
+      },
+      "subsidies": {
+        "title": "Confirmed subsidies",
+        "description": "Per project and vehicle, with the document reference (Financing step).",
+        "action": "Projects"
+      },
+      "telematics": {
+        "title": "Telematics",
+        "description": "Actual mileage and consumption, to import into My fleet.",
+        "action": "Telematics"
+      }
     }
   },
   "organization": {

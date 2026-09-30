@@ -5500,6 +5500,64 @@
         "title": "Télématique",
         "description": "Connexions Geotab/Samsara et véhicules importés."
       }
+    },
+    "subtitleRegistry": "Le registre complet utilisé par le moteur TCO : hypothèses sourcées, programmes de subvention, historique des prix collectés et données client prioritaires.",
+    "counts": {
+      "total": "Hypothèses du moteur",
+      "verifie": "Vérifiées (source lue)",
+      "estimation": "Estimations",
+      "a_valider": "À valider"
+    },
+    "status": {
+      "verifie": "vérifiée",
+      "estimation": "estimation",
+      "a_valider": "à valider"
+    },
+    "tabs": {
+      "hypotheses": "Hypothèses",
+      "programs": "Programmes",
+      "history": "Historique des prix",
+      "overrides": "Données client"
+    },
+    "search": "Rechercher une hypothèse…",
+    "filterStatus": "Filtrer par statut",
+    "allStatuses": "Tous les statuts",
+    "columns": {
+      "hypothesis": "Hypothèse",
+      "value": "Valeur",
+      "range": "Plage (stress test)",
+      "status": "Statut",
+      "source": "Source"
+    },
+    "checkedOn": "vérifiée le {{date}}",
+    "noMatch": "Aucune hypothèse ne correspond.",
+    "history": {
+      "title": "Diesel — prix mensuels collectés",
+      "subtitle": "Série archivée par la collecte hebdomadaire (données du {{version}}, vérifiées le {{date}}). Le moteur utilise la moyenne des 12 mois.",
+      "month": "Mois",
+      "quebec": "Québec (¢/L TTC)",
+      "montreal": "Montréal (¢/L TTC)",
+      "archive": "archive : {{path}}",
+      "note": "Valeurs telles que publiées ; aucune valeur n'est complétée ni extrapolée. Une variation de plus de 20 % est mise en attente de validation humaine."
+    },
+    "overrides": {
+      "title": "Données client prioritaires sur le registre",
+      "subtitle": "Seules ces saisies remplacent les hypothèses dans les calculs (elles sont signalées « donnée client » dans les rapports).",
+      "energy": {
+        "title": "Prix de l’énergie et devis de raccordement",
+        "description": "Organisation ou projet : prix diesel/électricité/H2 payés, devis Hydro-Québec.",
+        "action": "Organisation"
+      },
+      "subsidies": {
+        "title": "Subventions confirmées",
+        "description": "Par projet et par véhicule, avec la référence du document (étape Financement).",
+        "action": "Projets"
+      },
+      "telematics": {
+        "title": "Télématique",
+        "description": "Kilométrages et consommations réels, à importer dans Ma flotte.",
+        "action": "Télématique"
+      }
     }
   },
   "organization": {
