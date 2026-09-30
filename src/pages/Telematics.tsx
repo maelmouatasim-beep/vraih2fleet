@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useTelematicsAuth } from "@/hooks/useTelematicsAuth";
 import FleetImportSection from "@/components/telematics/FleetImportSection";
 import VehicleGroupsSection from "@/components/telematics/VehicleGroupsSection";
+import ImportToFleetCard from "@/components/telematics/ImportToFleetCard";
 import FleetAnalyticsSection from "@/components/telematics/FleetAnalyticsSection";
 import ScenarioRecommendationsSection from "@/components/telematics/ScenarioRecommendationsSection";
 import ReauthDialog from "@/components/telematics/ReauthDialog";
@@ -475,6 +476,9 @@ const Telematics = () => {
             />
           </>
         )}
+
+        {/* D5 — import explicite vers Ma flotte (hors mode démo) */}
+        {!isDemoMode && <ImportToFleetCard />}
 
         {/* Reconciliation Card - Show when connected and has analyzed */}
         {connection && hasAnalyzed && (

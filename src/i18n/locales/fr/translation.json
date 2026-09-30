@@ -3084,6 +3084,34 @@
       "deviationGood": "Conforme",
       "deviationWarning": "À surveiller",
       "deviationAlert": "Alerte"
+    },
+    "importToFleet": {
+      "title": "Importer dans Ma flotte",
+      "subtitle": "Rapproche vos véhicules télématiques de Ma flotte (lien existant, puis NIV, puis numéro d'unité). Rien n'est écrit sans votre confirmation ; les données saisies par votre équipe ne sont jamais écrasées.",
+      "updates": "{{count}} mise(s) à jour",
+      "creations": "{{count}} création(s)",
+      "ignored": "{{count}} ignoré(s)",
+      "toRecheck": "{{count}} à revérifier",
+      "toRecheckNote": "Lignes créées avant la correction du 28 septembre 2026 (valeurs simulées) : seule leur identité (NIV, marque, modèle, année) est reprise. Relancez une synchronisation pour obtenir des mesures réelles.",
+      "matched": "Rapprochés :",
+      "by": {
+        "lien": "lien",
+        "vin": "NIV",
+        "unite": "unité"
+      },
+      "creationNote": "Véhicules sans correspondance : choisissez leur carburant (jamais deviné) pour les créer ; sinon ils sont ignorés.",
+      "fuel": "Carburant des nouveaux véhicules",
+      "noCreation": "Ne pas créer",
+      "category": "Catégorie si le fournisseur ne la donne pas",
+      "categoryFromProvider": "Celle du fournisseur seulement",
+      "reasons": {
+        "doublon_vin": "{{count}} doublon(s) de NIV",
+        "vehicule_deja_rapproche": "{{count}} véhicule(s) déjà rapproché(s) d’une autre ligne",
+        "categorie_inconnue": "{{count}} sans catégorie reconnue",
+        "choix_creation_absent": "{{count}} sans correspondance (choisissez un carburant pour les créer)"
+      },
+      "confirm": "Appliquer ({{count}})",
+      "done": "{{updated}} véhicule(s) mis à jour, {{created}} créé(s) dans Ma flotte"
     }
   },
   "pages_support": {

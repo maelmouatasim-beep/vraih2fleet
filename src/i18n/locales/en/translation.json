@@ -3084,6 +3084,34 @@
       "deviationGood": "In range",
       "deviationWarning": "Monitor",
       "deviationAlert": "Alert"
+    },
+    "importToFleet": {
+      "title": "Import into My fleet",
+      "subtitle": "Matches your telematics vehicles with My fleet (existing link, then VIN, then unit number). Nothing is written without your confirmation; data entered by your team is never overwritten.",
+      "updates": "{{count}} update(s)",
+      "creations": "{{count}} creation(s)",
+      "ignored": "{{count}} ignored",
+      "toRecheck": "{{count}} to recheck",
+      "toRecheckNote": "Rows created before the 28 September 2026 fix (simulated values): only their identity (VIN, make, model, year) is imported. Run a new sync to get real measurements.",
+      "matched": "Matched:",
+      "by": {
+        "lien": "link",
+        "vin": "VIN",
+        "unite": "unit"
+      },
+      "creationNote": "Unmatched vehicles: choose their fuel (never guessed) to create them; otherwise they are skipped.",
+      "fuel": "Fuel of new vehicles",
+      "noCreation": "Do not create",
+      "category": "Category if the provider gives none",
+      "categoryFromProvider": "Provider’s only",
+      "reasons": {
+        "doublon_vin": "{{count}} duplicate VIN(s)",
+        "vehicule_deja_rapproche": "{{count}} vehicle(s) already matched with another row",
+        "categorie_inconnue": "{{count}} without a recognized category",
+        "choix_creation_absent": "{{count}} unmatched (choose a fuel to create them)"
+      },
+      "confirm": "Apply ({{count}})",
+      "done": "{{updated}} vehicle(s) updated, {{created}} created in My fleet"
     }
   },
   "pages_support": {

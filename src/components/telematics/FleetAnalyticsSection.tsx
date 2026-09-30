@@ -8,6 +8,11 @@ import {
   PieChart, Pie, Cell, Legend 
 } from "recharts";
 import { Route, Fuel, TrendingUp } from "lucide-react";
+import energyData from "@/lib/tco/energy-data.json";
+
+// Prix diesel TTC du registre (moyenne 12 mois collectée, source et date
+// dans la Bibliothèque) — plus aucun prix inventé.
+const PRIX_DIESEL_TTC = energyData.diesel.moyenne12MoisTtcParL;
 
 interface FleetAnalyticsSectionProps {
   vehicles: MockVehicle[];
@@ -49,7 +54,7 @@ const FleetAnalyticsSection = ({ vehicles }: FleetAnalyticsSectionProps) => {
   // Fuel cost distribution (estimated)
   const fuelCostDistribution = vehicles.reduce((acc, v) => {
     const type = v.vehicleType;
-    const cost = (v.annualKm / 100) * v.fuelConsumption * 1.5; // Assume $1.50/L
+    const cost = (v.annualKm / 100) * v.fuelConsumption * PRIX_DIESEL_TTC;
     acc[type] = (acc[type] || 0) + cost;
     return acc;
   }, {} as Record<string, number>);
