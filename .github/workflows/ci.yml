@@ -75,6 +75,14 @@ jobs:
       - name: Démarrer Supabase local
         run: supabase start
 
+      # Le manifeste du schéma (tables + RLS, policies, fonctions, triggers)
+      # doit refléter exactement les migrations : c'est la référence du
+      # contrôle de santé de la base hébergée (workflow Deploy Supabase).
+      - name: Schéma conforme au manifeste (supabase/schema-attendu.json)
+        run: |
+          eval "$(supabase status -o env | sed 's/^/export /')"
+          SUPABASE_DB_URL="$DB_URL" node scripts/verifier-base.mjs --local
+
       - name: Servir les edge functions (env de test, jamais la production)
         run: |
           supabase functions serve --env-file supabase/tests/functions.env &
