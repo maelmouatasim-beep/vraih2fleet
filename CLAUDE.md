@@ -72,7 +72,9 @@ dans l'environnement de Claude. **Après toute nouvelle migration** :
 
 ## Projet Supabase hébergé (site de test)
 
-Projet Supabase PROPRE de l'utilisateur (l'ancien `fihklznbfufhowopwwuc`
+Projet Supabase PROPRE de l'utilisateur : ref `rjyvcogtvcgzwxeprgsm`
+(https://rjyvcogtvcgzwxeprgsm.supabase.co, clé publishable — valeurs
+publiques ; l'ancien `fihklznbfufhowopwwuc`
 appartient à Lovable Cloud, sans accès admin — abandonné, rien n'y est
 supprimé). Procédure et liste à cocher : `docs/deploiement.md`.
 - `.github/workflows/deploy-supabase.yml` : à chaque push, `db push` +

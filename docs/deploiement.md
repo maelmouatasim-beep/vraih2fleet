@@ -14,7 +14,14 @@ Supabase, jamais ailleurs.
 
 ---
 
-## Étape 1 — Créer le projet Supabase (toi)
+## Projet retenu (valeurs publiques)
+
+- Ref : `rjyvcogtvcgzwxeprgsm`
+- URL : `https://rjyvcogtvcgzwxeprgsm.supabase.co`
+- Clé publishable : celle transmise dans le chat (`sb_publishable_…`),
+  à saisir dans la variable `VITE_SUPABASE_PUBLISHABLE_KEY`.
+
+## Étape 1 — Créer le projet Supabase (toi) — FAIT
 
 1. https://supabase.com/dashboard → connexion (compte GitHub possible).
 2. Si demandé : **New organization** → nom libre, plan **Free**.
