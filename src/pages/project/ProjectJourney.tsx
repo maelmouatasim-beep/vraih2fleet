@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getProjectById } from "@/lib/supabase/projects";
 import FleetStep from "@/components/journey/FleetStep";
 import ProjectSettingsDialog from "@/components/journey/ProjectSettingsDialog";
@@ -73,8 +72,6 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
   const indexEtape = ETAPES_PARCOURS.indexOf(etape);
   const base = `/dashboard/projects/${projectId}`;
 
-  const ctaParEtape: Partial<Record<EtapeParcours, { href: string; libelle: string }[]>> = {
-  };
 
   return (
     <DashboardLayout>
@@ -159,30 +156,7 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
           <ReportsStep projectId={projectId} project={project} />
         ) : etape === "suivi" && projectId ? (
           <TrackingStep projectId={projectId} project={project} />
-        ) : (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                {(() => {
-                  const Icone = ICONES[etape];
-                  return <Icone className="w-5 h-5" />;
-                })()}
-                {t(`journey.steps.${etape}.title`)}
-              </CardTitle>
-              <CardDescription>{t(`journey.steps.${etape}.description`)}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground">{t(`journey.steps.${etape}.placeholder`)}</p>
-              <div className="flex flex-wrap gap-2">
-                {(ctaParEtape[etape] ?? []).map((cta) => (
-                  <Button key={cta.href} variant="outline" asChild>
-                    <Link to={cta.href}>{cta.libelle}</Link>
-                  </Button>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        ) : null}
 
         {/* Navigation vers l'étape suivante */}
         {indexEtape < ETAPES_PARCOURS.length - 1 && (

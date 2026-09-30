@@ -3993,8 +3993,6 @@
       "title": "Collaborators",
       "invite": "Invite",
       "invitePlaceholder": "email@example.com",
-      "inviteInfo": "Coming soon",
-      "inviteInfoDesc": "Email invitations will be available soon.",
       "removed": "Collaborator removed",
       "removedDesc": "The collaborator has been removed from the project.",
       "roleChanged": "Role changed",
@@ -5575,7 +5573,8 @@
       "type": "Organization type",
       "typeHint": "Determines recoverable taxes in the TCO calculation.",
       "region": "Region",
-      "save": "Save"
+      "save": "Save",
+      "regionHint": "The engine and the assumptions registry are calibrated for Québec (taxes, Hydro-Québec rates, programs): it is the only region offered for now."
     },
     "types": {
       "municipalite": "Municipality",
@@ -5584,7 +5583,7 @@
     },
     "members": {
       "title": "Members",
-      "subtitle": "Invitations and role management: coming in Phase 3.",
+      "subtitle": "Your team’s members, roles and invitations.",
       "member": "Member",
       "role": "Role",
       "since": "Since"
@@ -5610,6 +5609,26 @@
       "confirm": "Permanently delete organization",
       "deleted": "Organization deleted — a new empty organization was created for you.",
       "newOrgName": "My organization"
+    },
+    "team": {
+      "subtitle": "Admin: manages the organization and team · Member: edits fleet and projects · Reader: view only.",
+      "unknownMember": "Member (profile without a name)",
+      "you": "you",
+      "remove": "Remove",
+      "leave": "Leave",
+      "confirmRemove": "Remove this member from the organization? They immediately lose access to its data.",
+      "confirmLeave": "Leave this organization? You will lose access to its data.",
+      "inviteTitle": "Invite someone",
+      "email": "Email",
+      "invite": "Invite",
+      "invalidEmail": "Invalid email",
+      "invited": "Invitation created for {{email}}",
+      "howItWorks": "The person creates an account (or signs in) with THIS email: the invitation appears on their Home and Organization pages, where they accept it. No email is sent automatically yet — let them know. Valid for 14 days.",
+      "expires": "expires {{date}}",
+      "revoke": "Revoke",
+      "received": "Invitation to join “{{org}}” (role: {{role}})",
+      "accept": "Accept",
+      "accepted": "You joined the organization"
     }
   },
   "journey": {
@@ -5619,44 +5638,36 @@
     "cta": {
       "openFleet": "Open My fleet",
       "newScenario": "New scenario",
-      "compare": "Compare scenarios",
-      "projectOverview": "Project overview"
+      "compare": "Compare scenarios"
     },
     "steps": {
       "flotte": {
         "title": "Fleet",
-        "description": "The real vehicles included in this project.",
-        "placeholder": "Selecting the project's vehicles (from My fleet) arrives in Phase 3. Meanwhile, build your inventory in My fleet."
+        "description": "The real vehicles included in this project."
       },
       "faisabilite": {
         "title": "Feasibility",
-        "description": "Which vehicles can switch to electric or hydrogen, and why.",
-        "placeholder": "The per-vehicle verdict (range, age, duty cycle) with its quantified reason arrives in Phase 3."
+        "description": "Which vehicles can switch to electric or hydrogen, and why."
       },
       "strategies": {
         "title": "Strategies",
-        "description": "Compare 2-3 replacement strategies priced by the TCO engine.",
-        "placeholder": "The side-by-side comparison on the new TCO engine arrives in Phase 3. Existing scenario tools remain available below."
+        "description": "Compare 2-3 replacement strategies priced by the TCO engine."
       },
       "plan": {
         "title": "Plan",
-        "description": "The vehicle-by-vehicle, year-by-year replacement plan.",
-        "placeholder": "The multi-year plan with annual budget (capital/operating) arrives in Phase 3."
+        "description": "The vehicle-by-vehicle, year-by-year replacement plan."
       },
       "financement": {
         "title": "Funding",
-        "description": "Applicable subsidy programs, amounts and deadlines.",
-        "placeholder": "Programs (EVAP, Écocamionnage…) with caps, stacking and deadlines arrive in Phase 3 — statuses already verified in the engine registry."
+        "description": "Applicable subsidy programs, amounts and deadlines."
       },
       "rapports": {
         "title": "Reports",
-        "description": "The council-ready case: PDF in French and English.",
-        "placeholder": "The council-ready report (methodology annex included) arrives in Phase 3."
+        "description": "The council-ready case: PDF in French and English."
       },
       "suivi": {
         "title": "Tracking",
-        "description": "Actual vs planned, and team tasks linked to the project.",
-        "placeholder": "Actual-vs-planned tracking and integrated tasks (linked to vehicle, year and subsidy) arrive in Phase 3."
+        "description": "Actual vs planned, and team tasks linked to the project."
       }
     },
     "open": "Project journey",

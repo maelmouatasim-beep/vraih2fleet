@@ -354,23 +354,8 @@ const Projects = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>{t('pages.projects.createDialog.region')}</Label>
-                      <Select
-                        value={newProject.countryOrRegion}
-                        onValueChange={(v) =>
-                          setNewProject({ ...newProject, countryOrRegion: v })
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {availableRegions.map((r) => (
-                            <SelectItem key={r.value} value={r.value}>
-                              {r.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Input value={t('settings.regions.ca_qc')} disabled readOnly />
+                      <p className="text-xs text-muted-foreground">{t('organization.identity.regionHint')}</p>
                     </div>
                     <div className="space-y-2">
                       <Label>{t('pages.projects.createDialog.currency')}</Label>

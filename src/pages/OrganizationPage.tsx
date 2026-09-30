@@ -1,32 +1,23 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery } from "@tanstack/react-query";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import EnergyClientDataCard from "@/components/organization/EnergyClientDataCard";
+import ReceivedInvitationsCard from "@/components/organization/ReceivedInvitationsCard";
+import TeamCard from "@/components/organization/TeamCard";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useOrganization } from "@/hooks/useOrganization";
 import {
   deleteOrganization,
   getOrganizationDeletionEffects,
-  listOrganizationMembers,
   updateOrganization,
 } from "@/lib/supabase/organizations";
 import { supabase } from "@/integrations/supabase/client";
-import { AlertTriangle, Building2, Loader2, Users } from "lucide-react";
+import { AlertTriangle, Building2, Loader2 } from "lucide-react";
 
 const selectCls =
   "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -52,11 +43,6 @@ export default function OrganizationPage() {
     }
   }, [organization]);
 
-  const { data: membres = [] } = useQuery({
-    queryKey: ["organization-members", organization?.id],
-    queryFn: () => listOrganizationMembers(organization!.id),
-    enabled: !!organization?.id,
-  });
 
   const chargerEffets = async () => {
     if (!organization) return;
@@ -97,7 +83,7 @@ export default function OrganizationPage() {
       await updateOrganization(organization.id, {
         name: forme.name.trim() || organization.name,
         orgType: forme.orgType as "municipalite" | "societe_transport" | "entreprise",
-        region: forme.region,
+        region: "CA_QC",
       });
       await refetch();
       toast({ title: t("organization.toast.saved") });
@@ -178,19 +164,8 @@ export default function OrganizationPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="org-region">{t("organization.identity.region")}</Label>
-                    <select
-                      id="org-region"
-                      className={selectCls}
-                      value={forme.region}
-                      disabled={!estAdmin}
-                      onChange={(e) => setForme({ ...forme, region: e.target.value })}
-                    >
-                      <option value="CA_QC">{t("settings.regions.ca_qc")}</option>
-                      <option value="CA_ON">{t("settings.regions.ca_on")}</option>
-                      <option value="CA_BC">{t("settings.regions.ca_bc")}</option>
-                      <option value="CA_AB">{t("settings.regions.ca_ab")}</option>
-                      <option value="CA">{t("settings.regions.ca")}</option>
-                    </select>
+                    <Input id="org-region" value={t("settings.regions.ca_qc")} disabled readOnly />
+                    <p className="text-xs text-muted-foreground">{t("organization.identity.regionHint")}</p>
                   </div>
                 </div>
                 {estAdmin && (
@@ -204,40 +179,11 @@ export default function OrganizationPage() {
           </CardContent>
         </Card>
 
+        <ReceivedInvitationsCard />
+
         <EnergyClientDataCard />
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="w-5 h-5" /> {t("organization.members.title")}
-            </CardTitle>
-            <CardDescription>{t("organization.members.subtitle")}</CardDescription>
-          </CardHeader>
-          <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t("organization.members.member")}</TableHead>
-                  <TableHead>{t("organization.members.role")}</TableHead>
-                  <TableHead>{t("organization.members.since")}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {membres.map((m) => (
-                  <TableRow key={m.id}>
-                    <TableCell className="font-mono text-xs">{m.userId}</TableCell>
-                    <TableCell>
-                      <Badge variant={m.role === "admin" ? "default" : "secondary"}>
-                        {t(`organization.roles.${m.role}`)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{new Date(m.createdAt).toLocaleDateString("fr-CA")}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+        {organization && <TeamCard organization={organization} />}
 
         {estAdmin && organization && (
           <Card className="border-destructive/50">

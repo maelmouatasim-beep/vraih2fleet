@@ -16,6 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { SubscriptionBadge } from "@/components/dashboard/SubscriptionBadge";
 import RecommendedActionsCard from "@/components/dashboard/RecommendedActionsCard";
+import ReceivedInvitationsCard from "@/components/organization/ReceivedInvitationsCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useOrganization } from "@/hooks/useOrganization";
@@ -204,6 +205,8 @@ const Dashboard = () => {
             </Link>
           ))}
         </div>
+
+        <ReceivedInvitationsCard />
 
         <RecommendedActionsCard />
 

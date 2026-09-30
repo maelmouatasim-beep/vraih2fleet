@@ -3993,8 +3993,6 @@
       "title": "Collaborateurs",
       "invite": "Inviter",
       "invitePlaceholder": "email@example.com",
-      "inviteInfo": "Fonctionnalité à venir",
-      "inviteInfoDesc": "L'invitation par email sera disponible prochainement.",
       "removed": "Collaborateur retiré",
       "removedDesc": "Le collaborateur a été retiré du projet.",
       "roleChanged": "Rôle modifié",
@@ -5575,7 +5573,8 @@
       "type": "Type d'organisme",
       "typeHint": "Détermine les taxes récupérables dans le calcul du TCO.",
       "region": "Région",
-      "save": "Enregistrer"
+      "save": "Enregistrer",
+      "regionHint": "Le moteur et le registre d'hypothèses sont calibrés pour le Québec (taxes, tarifs Hydro-Québec, programmes) : c'est la seule région proposée pour l'instant."
     },
     "types": {
       "municipalite": "Municipalité",
@@ -5584,7 +5583,7 @@
     },
     "members": {
       "title": "Membres",
-      "subtitle": "Invitations et gestion des rôles : à venir (Phase 3).",
+      "subtitle": "Membres, rôles et invitations de votre équipe.",
       "member": "Membre",
       "role": "Rôle",
       "since": "Depuis"
@@ -5610,6 +5609,26 @@
       "confirm": "Supprimer définitivement l'organisation",
       "deleted": "Organisation supprimée — une nouvelle organisation vide a été créée pour toi.",
       "newOrgName": "Mon organisation"
+    },
+    "team": {
+      "subtitle": "Admin : gère l'organisation et l'équipe · Membre : modifie la flotte et les projets · Lecteur : consulte seulement.",
+      "unknownMember": "Membre (profil sans nom)",
+      "you": "vous",
+      "remove": "Retirer",
+      "leave": "Quitter",
+      "confirmRemove": "Retirer ce membre de l’organisation ? Il perd immédiatement l’accès aux données.",
+      "confirmLeave": "Quitter cette organisation ? Vous perdrez l’accès à ses données.",
+      "inviteTitle": "Inviter une personne",
+      "email": "Courriel",
+      "invite": "Inviter",
+      "invalidEmail": "Courriel invalide",
+      "invited": "Invitation créée pour {{email}}",
+      "howItWorks": "La personne crée son compte (ou se connecte) avec CE courriel : l'invitation apparaît sur son Accueil et sa page Organisation, où elle l'accepte. Aucun courriel n'est envoyé automatiquement pour l'instant — prévenez-la. Validité : 14 jours.",
+      "expires": "expire le {{date}}",
+      "revoke": "Révoquer",
+      "received": "Invitation à rejoindre « {{org}} » (rôle : {{role}})",
+      "accept": "Accepter",
+      "accepted": "Vous avez rejoint l’organisation"
     }
   },
   "journey": {
@@ -5619,44 +5638,36 @@
     "cta": {
       "openFleet": "Ouvrir Ma flotte",
       "newScenario": "Nouveau scénario",
-      "compare": "Comparer les scénarios",
-      "projectOverview": "Vue d'ensemble du projet"
+      "compare": "Comparer les scénarios"
     },
     "steps": {
       "flotte": {
         "title": "Flotte",
-        "description": "Les véhicules réels inclus dans ce projet.",
-        "placeholder": "La sélection des véhicules du projet (depuis Ma flotte) arrive à la Phase 3. En attendant, constituez votre inventaire dans Ma flotte."
+        "description": "Les véhicules réels inclus dans ce projet."
       },
       "faisabilite": {
         "title": "Faisabilité",
-        "description": "Quels véhicules peuvent passer à l'électrique ou à l'hydrogène, et pourquoi.",
-        "placeholder": "Le verdict véhicule par véhicule (autonomie, âge, usage) avec sa raison chiffrée arrive à la Phase 3."
+        "description": "Quels véhicules peuvent passer à l'électrique ou à l'hydrogène, et pourquoi."
       },
       "strategies": {
         "title": "Stratégies",
-        "description": "Comparer 2-3 stratégies de remplacement chiffrées par le moteur TCO.",
-        "placeholder": "La comparaison côte à côte branchée sur le nouveau moteur TCO arrive à la Phase 3. Les outils de scénarios existants restent accessibles ci-dessous."
+        "description": "Comparer 2-3 stratégies de remplacement chiffrées par le moteur TCO."
       },
       "plan": {
         "title": "Plan",
-        "description": "Le plan de remplacement véhicule par véhicule, année par année.",
-        "placeholder": "Le plan pluriannuel avec budget annuel (PTI/fonctionnement) arrive à la Phase 3."
+        "description": "Le plan de remplacement véhicule par véhicule, année par année."
       },
       "financement": {
         "title": "Financement",
-        "description": "Programmes de subventions applicables, montants et échéances.",
-        "placeholder": "Les programmes (PAVÉ, Écocamionnage…) avec plafonds, cumul et échéances arrivent à la Phase 3 — statuts déjà vérifiés dans le registre du moteur."
+        "description": "Programmes de subventions applicables, montants et échéances."
       },
       "rapports": {
         "title": "Rapports",
-        "description": "Le dossier défendable devant un conseil : PDF fr/en.",
-        "placeholder": "Le rapport « prêt pour le conseil » (méthodologie en annexe) arrive à la Phase 3."
+        "description": "Le dossier défendable devant un conseil : PDF fr/en."
       },
       "suivi": {
         "title": "Suivi",
-        "description": "Réalisé vs prévu, et les tâches de l'équipe liées au projet.",
-        "placeholder": "Le suivi réalisé/prévu et les tâches intégrées (liées au véhicule, à l'année et à la subvention) arrivent à la Phase 3."
+        "description": "Réalisé vs prévu, et les tâches de l'équipe liées au projet."
       }
     },
     "open": "Parcours du projet",
