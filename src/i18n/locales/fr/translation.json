@@ -2281,13 +2281,23 @@
         "activeProjects": "Projets actifs",
         "modeledVehicles": "Véhicules modélisés",
         "co2Avoided": "CO₂ évité (tonnes/an)",
-        "scenariosCreated": "Scénarios créés"
+        "scenariosCreated": "Scénarios créés",
+        "fleetVehicles": "Véhicules dans Ma flotte",
+        "fleetActive": "{{count}} actif(s)",
+        "zeroEmissionToday": "Zéro émission aujourd'hui",
+        "zeroEmissionTargeted": "{{count}} ciblé(s) dans les projets",
+        "projects": "Projets",
+        "plannedVehicles": "{{count}} véhicule(s) planifié(s)",
+        "completedReplacements": "Remplacements réalisés",
+        "completedOf": "sur {{count}} planifié(s)"
       },
       "charts": {
         "fleetDistribution": "Répartition flotte",
         "diesel": "Diesel",
         "electric": "Électrique",
-        "hydrogen": "Hydrogène"
+        "hydrogen": "Hydrogène",
+        "fleetDistributionSource": "Carburant actuel des véhicules de Ma flotte",
+        "emptyFleet": "Ma flotte est vide : ajoutez ou importez vos véhicules."
       },
       "tcoSection": {
         "title": "Scénarios TCO",
@@ -2302,7 +2312,8 @@
         "viewAll": "Voir tout",
         "noProjects": "Aucun projet récent",
         "scenarios": "scénarios",
-        "updated": "Mis à jour"
+        "updated": "Mis à jour",
+        "vehicles": "{{count}} véhicule(s)"
       },
       "toast": {
         "error": "Erreur",
@@ -2311,7 +2322,10 @@
         "noDataToExport": "Vous n'avez pas encore de projets à exporter.",
         "exportSuccess": "Export réussi",
         "exportSuccessDesc": "Les données du dashboard ont été exportées en CSV."
-      }
+      },
+      "subtitleOrg": "Votre flotte et vos projets — {{org}}",
+      "openFleet": "Ma flotte",
+      "newProject": "Nouveau projet"
     },
     "projects": {
       "title": "Projets",
@@ -5332,33 +5346,28 @@
     "expiringSoon": "{{days}}j restants",
     "createFirstProject": {
       "title": "Créez votre premier projet",
-      "description": "Démarrez avec notre assistant guidé pour créer un plan de transition complet",
-      "action": "Démarrer l'assistant"
+      "description": "Le parcours en 7 étapes transforme votre flotte en plan de remplacement chiffré",
+      "action": "Créer un projet"
     },
-    "subsidyExpiring": {
-      "title": "{{program}} expire bientôt",
-      "description": "{{days}} jours restants pour postuler",
-      "action": "Voir les détails"
+    "describeFleet": {
+      "title": "Décrivez votre flotte",
+      "description": "Ajoutez ou importez vos véhicules (CSV ou Excel) dans Ma flotte",
+      "action": "Ouvrir Ma flotte"
     },
-    "addScenario": {
-      "title": "Ajouter un scénario à {{project}}",
-      "description": "Créez un scénario TCO pour analyser les options de transition",
-      "action": "Créer un scénario"
+    "selectVehicles": {
+      "title": "Choisir les véhicules de « {{project}} »",
+      "description": "Étape 1 du parcours : sélectionnez les véhicules à planifier",
+      "action": "Ouvrir l’étape Flotte"
     },
-    "calculateTco": {
-      "title": "Calculer le TCO pour {{scenario}}",
-      "description": "Lancez le calcul pour voir l'analyse détaillée des coûts",
-      "action": "Calculer"
+    "completePlan": {
+      "title": "Compléter le plan de « {{project}} »",
+      "description": "{{count}} véhicule(s) sans année de remplacement ou sans cible",
+      "action": "Compléter"
     },
-    "createRoadmap": {
-      "title": "Planifier la transition pour {{project}}",
-      "description": "Créez une feuille de route avec phases et jalons",
-      "action": "Créer une roadmap"
-    },
-    "connectTelematics": {
-      "title": "Connectez votre flotte",
-      "description": "Importez des données réelles depuis Geotab ou Samsara",
-      "action": "Connecter"
+    "refineConsumptions": {
+      "title": "Préciser les consommations",
+      "description": "{{count}} véhicule(s) utilisent une consommation estimée par catégorie",
+      "action": "Ouvrir Ma flotte"
     }
   },
   "wizard": {

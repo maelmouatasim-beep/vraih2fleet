@@ -2281,13 +2281,23 @@
         "activeProjects": "Active projects",
         "modeledVehicles": "Modeled vehicles",
         "co2Avoided": "CO₂ avoided (tonnes/year)",
-        "scenariosCreated": "Scenarios created"
+        "scenariosCreated": "Scenarios created",
+        "fleetVehicles": "Vehicles in My fleet",
+        "fleetActive": "{{count}} active",
+        "zeroEmissionToday": "Zero-emission today",
+        "zeroEmissionTargeted": "{{count}} targeted in projects",
+        "projects": "Projects",
+        "plannedVehicles": "{{count}} vehicle(s) planned",
+        "completedReplacements": "Completed replacements",
+        "completedOf": "out of {{count}} planned"
       },
       "charts": {
         "fleetDistribution": "Fleet distribution",
         "diesel": "Diesel",
         "electric": "Electric",
-        "hydrogen": "Hydrogen"
+        "hydrogen": "Hydrogen",
+        "fleetDistributionSource": "Current fuel of the vehicles in My fleet",
+        "emptyFleet": "My fleet is empty: add or import your vehicles."
       },
       "tcoSection": {
         "title": "TCO Scenarios",
@@ -2302,7 +2312,8 @@
         "viewAll": "View all",
         "noProjects": "No recent projects",
         "scenarios": "scenarios",
-        "updated": "Updated"
+        "updated": "Updated",
+        "vehicles": "{{count}} vehicle(s)"
       },
       "toast": {
         "error": "Error",
@@ -2311,7 +2322,10 @@
         "noDataToExport": "You don't have any projects to export yet.",
         "exportSuccess": "Export successful",
         "exportSuccessDesc": "Dashboard data has been exported to CSV."
-      }
+      },
+      "subtitleOrg": "Your fleet and projects — {{org}}",
+      "openFleet": "My fleet",
+      "newProject": "New project"
     },
     "projects": {
       "title": "Projects",
@@ -5332,33 +5346,28 @@
     "expiringSoon": "{{days}}d left",
     "createFirstProject": {
       "title": "Create your first project",
-      "description": "Start with our guided wizard to create a complete transition plan",
-      "action": "Start Wizard"
+      "description": "The 7-step journey turns your fleet into a costed replacement plan",
+      "action": "Create a project"
     },
-    "subsidyExpiring": {
-      "title": "{{program}} expires soon",
-      "description": "{{days}} days left to apply",
-      "action": "View details"
+    "describeFleet": {
+      "title": "Describe your fleet",
+      "description": "Add or import your vehicles (CSV or Excel) in My fleet",
+      "action": "Open My fleet"
     },
-    "addScenario": {
-      "title": "Add scenario to {{project}}",
-      "description": "Create a TCO scenario to analyze transition options",
-      "action": "Create scenario"
+    "selectVehicles": {
+      "title": "Select the vehicles of “{{project}}”",
+      "description": "Journey step 1: select the vehicles to plan",
+      "action": "Open the Fleet step"
     },
-    "calculateTco": {
-      "title": "Calculate TCO for {{scenario}}",
-      "description": "Run the calculation to see detailed cost analysis",
-      "action": "Calculate"
+    "completePlan": {
+      "title": "Complete the plan of “{{project}}”",
+      "description": "{{count}} vehicle(s) without replacement year or target",
+      "action": "Complete"
     },
-    "createRoadmap": {
-      "title": "Plan transition for {{project}}",
-      "description": "Create a roadmap with phases and milestones",
-      "action": "Create roadmap"
-    },
-    "connectTelematics": {
-      "title": "Connect your fleet",
-      "description": "Import real data from Geotab or Samsara",
-      "action": "Connect"
+    "refineConsumptions": {
+      "title": "Refine fuel consumption",
+      "description": "{{count}} vehicle(s) use a category-estimated consumption",
+      "action": "Open My fleet"
     }
   },
   "wizard": {
