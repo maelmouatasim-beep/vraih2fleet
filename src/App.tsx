@@ -22,6 +22,8 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import AuthRedirectHandler from "@/components/auth/AuthRedirectHandler";
 import Projects from "./pages/Projects";
 import MyFleet from "./pages/MyFleet";
 import Library from "./pages/Library";
@@ -54,6 +56,7 @@ const App = () => (
     <Router>
       <ScrollToTop />
       <AuthProvider>
+        <AuthRedirectHandler />
         <SubscriptionProvider>
           <TooltipProvider delayDuration={0}>
           <Toaster />
@@ -70,6 +73,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/refund" element={<Refund />} />

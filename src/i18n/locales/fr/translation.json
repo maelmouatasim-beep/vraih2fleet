@@ -1900,7 +1900,22 @@
       }
     },
     "loginSuccess": "Connexion réussie",
-    "welcomeBack": "Bienvenue sur H2Fleet !"
+    "welcomeBack": "Bienvenue sur H2Fleet !",
+    "resetPassword": {
+      "title": "Nouveau mot de passe",
+      "subtitle": "Choisissez votre nouveau mot de passe.",
+      "newPassword": "Nouveau mot de passe",
+      "submit": "Enregistrer le mot de passe",
+      "saving": "Enregistrement…",
+      "success": "Mot de passe modifié",
+      "invalidTitle": "Lien invalide ou expiré",
+      "invalidBody": "Ce lien de réinitialisation n’est plus valable. Demandez-en un nouveau.",
+      "requestNew": "Demander un nouveau lien"
+    },
+    "linkError": {
+      "title": "Lien invalide ou expiré",
+      "description": "Le lien reçu par courriel n’est plus valable. Recommencez la démarche."
+    }
   },
   "settings": {
     "currencies": {
@@ -6182,5 +6197,9 @@
       "title": "Appliquer la méthode à votre flotte ?",
       "desc": "Créez un compte, importez votre flotte et suivez le parcours en 7 étapes."
     }
+  },
+  "notFound": {
+    "message": "Oups ! Cette page n’existe pas.",
+    "home": "Retour à l’accueil"
   }
 }

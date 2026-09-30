@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { urlRetourAuth } from "@/lib/authRedirect";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -34,7 +35,7 @@ const ForgotPassword = () => {
     setIsLoading(true);
     
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: urlRetourAuth("/reset-password"),
     });
     
     if (error) {

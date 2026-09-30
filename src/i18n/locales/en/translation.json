@@ -1900,7 +1900,22 @@
       }
     },
     "loginSuccess": "Login successful",
-    "welcomeBack": "Welcome to H2Fleet!"
+    "welcomeBack": "Welcome to H2Fleet!",
+    "resetPassword": {
+      "title": "New password",
+      "subtitle": "Choose your new password.",
+      "newPassword": "New password",
+      "submit": "Save password",
+      "saving": "Saving…",
+      "success": "Password changed",
+      "invalidTitle": "Invalid or expired link",
+      "invalidBody": "This reset link is no longer valid. Request a new one.",
+      "requestNew": "Request a new link"
+    },
+    "linkError": {
+      "title": "Invalid or expired link",
+      "description": "The link from your email is no longer valid. Please start again."
+    }
   },
   "settings": {
     "currencies": {
@@ -6182,5 +6197,9 @@
       "title": "Apply the method to your fleet?",
       "desc": "Create an account, import your fleet and follow the 7-step journey."
     }
+  },
+  "notFound": {
+    "message": "Oops! Page not found",
+    "home": "Return to Home"
   }
 }

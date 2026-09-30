@@ -1,5 +1,17 @@
 project_id = "fihklznbfufhowopwwuc"
 
+# Supabase LOCAL uniquement (supabase start) : URLs autorisées pour les
+# liens des courriels d'auth (serveur de dev 8080, build GitHub Pages
+# servi en local sous /vraih2fleet/ sur 4173). Le projet hébergé se règle
+# dans le tableau de bord (voir docs/deploiement.md), pas ici.
+[auth]
+site_url = "http://127.0.0.1:8080"
+additional_redirect_urls = [
+  "http://127.0.0.1:8080/**",
+  "http://localhost:8080/**",
+  "http://127.0.0.1:4173/**",
+]
+
 # Règle : verify_jwt n'est PAS une authentification (la clé anon publique
 # suffit à le franchir). Chaque fonction vérifie explicitement son appelant
 # dans son code (_shared/auth.ts) : JWT réel (getUserOrThrow), secret cron
