@@ -11,13 +11,21 @@
 import { chromium } from 'playwright';
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync } from 'node:fs';
 import { extname, join, resolve } from 'node:path';
 
 const DIST = resolve('dist');
 const SORTIE = resolve(process.argv[2] ?? 'screenshots');
 const PORT = 4179;
-const REF = 'fihklznbfufhowopwwuc';
+// Ref du projet Supabase lue dans le bundle construit (VITE_SUPABASE_URL
+// du .env) : la session factice suit le projet, quel qu'il soit.
+function refDuBundle() {
+  const index = readFileSync(join(DIST, 'index.html'), 'utf8').match(/assets\/index-[^"]+\.js/)?.[0];
+  const ref = index && readFileSync(join(DIST, index), 'utf8').match(/https:\/\/([a-z0-9]{20})\.supabase\.co/)?.[1];
+  if (!ref) throw new Error('ref Supabase introuvable dans dist/ — lancer npm run build:preview avec un .env renseigné');
+  return ref;
+}
+const REF = refDuBundle();
 const USER_ID = '11111111-1111-4111-8111-111111111111';
 const ORG_ID = '22222222-2222-4222-8222-222222222222';
 const PROJET_ID = '33333333-3333-4333-8333-333333333333';

@@ -177,7 +177,9 @@ var create_project_default = defineTool5({
 });
 
 // src/lib/mcp/index.ts
-var projectRef = "fihklznbfufhowopwwuc";
+// Ref du projet lue dans SUPABASE_URL (injectée par Supabase) : la
+// fonction suit le projet où elle est déployée (plus de ref Lovable figée).
+var projectRef = new URL(Deno.env.get("SUPABASE_URL") ?? "http://localhost").hostname.split(".")[0];
 var mcp_default = defineMcp({
   name: "h2fleet-mcp",
   title: "H2Fleet MCP",
