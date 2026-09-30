@@ -56,6 +56,12 @@ describe("traductions anglaises du registre (E2)", () => {
     expect(traduireLibelleSubvention(`${pave.nom} — confirmée par le client (réf. LO-12)`, "en")).toBe(
       `${PROGRAMMES_EN.pave.nom} — confirmed by the client (ref. LO-12)`,
     );
+    // Parcours E4 : la saisie Financement stocke le nom COURT du programme.
+    const court = (nom: string) => nom.split("—")[0].trim();
+    const pagtcp = PROGRAMMES.find((p) => p.id === "pagtcp")!;
+    expect(traduireLibelleSubvention(`${court(pagtcp.nom)} — confirmée par le client (réf. Lettre 117)`, "en")).toBe(
+      `${court(PROGRAMMES_EN.pagtcp.nom)} — confirmed by the client (ref. Lettre 117)`,
+    );
     expect(traduireDonneeClient("prix du diesel payé ($/L avant TPS/TVQ) : donnée client (projet, 2026-09-01)", "en")).toBe(
       "diesel price paid ($/L before GST/QST): client data (project, 2026-09-01)",
     );

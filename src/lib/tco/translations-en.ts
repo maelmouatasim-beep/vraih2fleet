@@ -125,6 +125,10 @@ function remplacerNomsProgrammes(texte: string): string {
   for (const p of PROGRAMMES) {
     t = t.split(p.nom).join(PROGRAMMES_EN[p.id].nom);
   }
+  // Noms COURTS (avant « — ») : libellés des subventions confirmées par le client.
+  for (const p of PROGRAMMES) {
+    t = t.split(p.nom.split("—")[0].trim()).join(PROGRAMMES_EN[p.id].nom.split("—")[0].trim());
+  }
   return t;
 }
 
