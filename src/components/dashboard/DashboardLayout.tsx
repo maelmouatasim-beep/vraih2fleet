@@ -242,7 +242,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       </aside>
 
       {/* Main content */}
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${
+      <div className={`flex-1 min-w-0 flex flex-col transition-all duration-300 ${
         sidebarCollapsed ? "ml-16" : "ml-64"
       }`}>
         {/* Top bar */}
