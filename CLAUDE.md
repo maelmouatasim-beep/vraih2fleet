@@ -66,8 +66,27 @@ npm run e2e:local      # parcours complet Playwright contre Supabase LOCAL (voir
 Supabase local (Docker) : `npx supabase start` puis `npx supabase db reset
 --local` ; tests Deno en local : exporter `supabase status -o env` (comme
 dans `.github/workflows/ci.yml`) + `DENO_CERT=/root/.ccr/ca-bundle.crt`
-dans l'environnement de Claude. Base hébergée : procédure dans
-`docs/deploiement.md` (Claude n'y a pas d'accès admin).
+dans l'environnement de Claude. **Après toute nouvelle migration** :
+`node scripts/verifier-base.mjs --generer` (manifeste
+`supabase/schema-attendu.json`, sinon la CI échoue).
+
+## Projet Supabase hébergé (site de test)
+
+Projet Supabase PROPRE de l'utilisateur (l'ancien `fihklznbfufhowopwwuc`
+appartient à Lovable Cloud, sans accès admin — abandonné, rien n'y est
+supprimé). Procédure et liste à cocher : `docs/deploiement.md`.
+- `.github/workflows/deploy-supabase.yml` : à chaque push, `db push` +
+  `functions deploy` + contrôle de santé (`scripts/verifier-base.mjs
+  --heberge`) ; secrets GitHub `SUPABASE_ACCESS_TOKEN`,
+  `SUPABASE_DB_PASSWORD`, `SUPABASE_PROJECT_REF` (saisis par
+  l'utilisateur ; Claude ne les voit jamais).
+- `.github/workflows/e2e-heberge.yml` (manuel) : parcours complet contre
+  la base hébergée avec comptes `e2e-…@example.com` créés puis supprimés
+  (`scripts/comptes-e2e.mjs`).
+- Seules des valeurs PUBLIQUES passent par le chat (ref, URL, clé
+  publishable/anon) ; jamais de mot de passe ni de jeton.
+- Tâches pg_cron : `supabase/snippets/taches-planifiees.sql` (secrets lus
+  dans le Vault), exécuté à la main une fois.
 
 ## Aperçu du site (règle permanente)
 
@@ -91,8 +110,11 @@ navigation. Le test fonctionnel (auth, données) se fait sur le site de
 test GitHub Pages, redéployé automatiquement à chaque push par
 `.github/workflows/deploy-pages.yml` :
 https://maelmouatasim-beep.github.io/vraih2fleet/
-La clé anon y vient de la variable de dépôt
-`VITE_SUPABASE_PUBLISHABLE_KEY` (Actions > Variables).
+Le projet Supabase visé vient des variables de dépôt
+`VITE_SUPABASE_URL`, `VITE_SUPABASE_PROJECT_ID`,
+`VITE_SUPABASE_PUBLISHABLE_KEY` (Actions > Variables) ; plus aucune
+lecture du bundle Lovable. Les liens des courriels d'auth pointent sur la
+racine du site (routage par hash) : `src/lib/authRedirect.ts`.
 
 ## Conventions
 
@@ -254,6 +276,15 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   d'accueil obsolète de Projets, libellés tronqués, kanban coupé.
   Migrations de la revue : 20260929010000 → 20260930050000 (toutes
   additives) — à appliquer sur la base hébergée via docs/deploiement.md.
+- **Migration vers le projet Supabase propre : code PRÊT, en attente des
+  étapes manuelles de l'utilisateur** (création du projet, secrets et
+  variables GitHub, liste à cocher Supabase — `docs/deploiement.md`).
+  Livré : workflows deploy-supabase / e2e-heberge, deploy-pages sur
+  variables de dépôt, contrôle de santé du schéma (manifeste vérifié en
+  CI), tâches pg_cron via Vault, page /reset-password (elle n'existait
+  pas) + liens de courriel compatibles GitHub Pages, ref MCP dérivée de
+  SUPABASE_URL. Point ouvert : fournisseur de l'assistant IA (passerelle
+  Lovable indisponible hors Lovable).
 - Phase 4 — site public et conformité (études de cas re-étiquetées,
   tarification unique — prix demandés à l'utilisateur, promesses non
   livrées retirées, légal fr/en Loi 25 — nom légal demandé, admin
@@ -272,13 +303,15 @@ sinon « à_valider » avec l'URL à consulter.
 - Chiffrement des identifiants télématiques (aujourd'hui simple base64).
 - Secrets à régénérer / créer (audit sécurité : CRON_SECRET,
   INTERNAL_FUNCTION_SECRET, ALLOWED_ORIGINS…).
-- Retrait de la fonction `calculate-tco` déployée chez Supabase.
+- Assistant IA : choisir un fournisseur hors passerelle Lovable
+  (`assistant-chat` dépend de `LOVABLE_API_KEY`).
+- SMTP personnalisé (courriels d'auth vers des testeurs externes).
 - Facturation réelle (DEMO_MODE donne le plan le plus élevé à tous).
 - Revue juridique des pages légales (Loi 25, CGU, confidentialité).
 - Hypothèses et programmes « à_valider » : vérification par
   l'utilisateur (sources listées dans la Bibliothèque).
-- Appliquer les 14 migrations de la revue sur la base hébergée
-  (docs/deploiement.md) puis tester sur GitHub Pages.
+- Bascule sur le projet Supabase propre (docs/deploiement.md), puis
+  « E2E base hébergée » vert et test manuel sur GitHub Pages.
 - Invitations d'équipe : aucun courriel envoyé automatiquement (la
   personne voit l'invitation en se connectant) — brancher send-email.
 - Récapitulatif hebdomadaire (préférence courriel) non implémenté.

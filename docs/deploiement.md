@@ -1,141 +1,171 @@
-# Déploiement sur le Supabase hébergé (B10)
+# Déploiement : projet Supabase propre + site de test GitHub Pages
 
-Procédure exacte pour mettre la base hébergée (`fihklznbfufhowopwwuc`) au
-niveau du dépôt : **63 migrations** (dont `20260929010000_energy_client_inputs`,
-`20260929013000_report_snapshots` et celles des blocs C à E — stratégie
-retenue, remplacements réalisés, demandes de subvention, taux
-d'actualisation en fraction, invitations d'équipe, défaut
-`tasks.created_by` — toutes nécessaires au test du site) et
-**9 edge functions**. À exécuter depuis ta machine — l'environnement de
-développement de Claude n'a que la clé anon, aucun accès d'administration.
+L'ancienne base (`fihklznbfufhowopwwuc`) appartient à Lovable Cloud :
+aucun accès administrateur, aucune des tables récentes. Le site de test
+bascule sur **ton propre projet Supabase**, déployé automatiquement par
+GitHub Actions. Rien n'est supprimé chez Lovable, et aucune donnée n'est
+reprise automatiquement : si des comptes ou projets de l'ancienne base
+doivent être conservés, le signaler avant la bascule.
 
-Tout est **additif** : aucune migration ne détruit de données.
+**Règle absolue** : seules des valeurs PUBLIQUES transitent par le chat
+(ref du projet, URL, clé publishable/anon). Mot de passe de la base,
+jetons d'accès, clés secrètes : saisis directement par toi dans GitHub ou
+Supabase, jamais ailleurs.
 
-## 0. Prérequis (une fois)
+---
 
-```bash
-# CLI Supabase (>= 2.x). Au choix :
-npm install -g supabase        # ou : brew install supabase/tap/supabase
-supabase login                 # ouvre le navigateur, crée un access token
-```
+## Étape 1 — Créer le projet Supabase (toi)
 
-Il te faut aussi le **mot de passe de la base** : Dashboard Supabase →
-projet → Settings → Database → « Database password » (bouton *Reset
-database password* si tu ne l'as plus — sans effet sur l'application,
-seule la connexion directe l'utilise).
+1. https://supabase.com/dashboard → connexion (compte GitHub possible).
+2. Si demandé : **New organization** → nom libre, plan **Free**.
+3. **New project** :
+   - Name : `h2fleet-test`
+   - Database password : **Generate a password** → copie-le dans ton
+     gestionnaire de mots de passe (il servira au secret GitHub
+     `SUPABASE_DB_PASSWORD` — jamais dans le chat).
+   - Region : **Canada (Central)** si la liste la propose ; sinon
+     **East US (North Virginia)** (la plus proche du Québec).
+   - Options de sécurité : laisser les valeurs par défaut.
+   - **Create new project** → attendre ~2 minutes (statut « Healthy »).
+4. Relever les trois valeurs PUBLIQUES :
+   - **Project ref** : Project Settings → General → *Project ID*
+     (20 lettres minuscules/chiffres).
+   - **URL** : `https://<ref>.supabase.co`.
+   - **Clé publique** : Project Settings → API Keys → *Publishable key*
+     (`sb_publishable_…`) ; si un onglet *Legacy API keys* affiche une clé
+     `anon` (`eyJ…`), l'une ou l'autre convient.
+5. **Jeton d'accès** (pour GitHub Actions) : avatar en haut à droite →
+   Account preferences → **Access Tokens** → *Generate new token* →
+   nom `github-actions-vraih2fleet` → copie-le directement dans le secret
+   GitHub de l'étape 2 (il n'est affiché qu'une fois).
 
-## 1. Lier le dépôt au projet hébergé
+**À me transmettre dans le chat** : le *Project ref*, l'URL et la clé
+publishable/anon. Rien d'autre.
 
-Depuis la racine du dépôt (`vraih2fleet/`) :
+## Étape 2 — Secrets GitHub (toi)
 
-```bash
-supabase link --project-ref fihklznbfufhowopwwuc
-# demande le mot de passe de la base
-```
+https://github.com/maelmouatasim-beep/vraih2fleet/settings/secrets/actions
+(Settings → Secrets and variables → Actions → onglet **Secrets** →
+**New repository secret**), un par un :
 
-## 2. Vérifier l'état des migrations
+| Nom exact | Valeur |
+|---|---|
+| `SUPABASE_ACCESS_TOKEN` | le jeton d'accès (étape 1.5) |
+| `SUPABASE_DB_PASSWORD` | le mot de passe de la base (étape 1.3) |
+| `SUPABASE_PROJECT_REF` | le Project ref (étape 1.4) |
 
-```bash
-supabase migration list --linked
-```
+## Étape 3 — Variables GitHub (toi, ou moi si tu me donnes les valeurs publiques)
 
-Trois cas possibles :
+Même page, onglet **Variables** → **New repository variable** :
 
-- **Toutes les lignes ont Local ET Remote** → déjà à jour, passe à l'étape 4.
-- **Les lignes récentes (2026-09-25 → 2026-09-29) n'ont que Local** →
-  cas attendu ; passe à l'étape 3.
-- **Les ANCIENNES lignes (2026-01-xx, appliquées du temps de Lovable)
-  n'apparaissent pas côté Remote alors que les tables existent** → il faut
-  d'abord « réparer » l'historique pour que `db push` ne les rejoue pas :
+| Nom exact | Valeur |
+|---|---|
+| `VITE_SUPABASE_PROJECT_ID` | le Project ref |
+| `VITE_SUPABASE_URL` | `https://<ref>.supabase.co` |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | la clé publishable/anon (remplace l'ancienne) |
 
-  ```bash
-  # marque comme déjà appliquées les versions dont les tables existent déjà
-  supabase migration repair --status applied <version1> <version2> ...
-  # <version> = le préfixe horodaté du fichier, ex. 20260126174225
-  ```
+Je n'ai pas d'outil pour écrire ces variables : c'est toi qui les saisis.
+Le workflow *Deploy Pages* vérifie que l'URL correspond au ref.
 
-  Pour savoir si une ancienne migration est déjà en base : SQL Editor →
-  `select * from supabase_migrations.schema_migrations order by version;`
-  et compare avec `ls supabase/migrations/`.
+## Étape 4 — Configuration côté Supabase (toi) — liste à cocher
 
-## 3. Appliquer les migrations en attente
+**Authentification** (Authentication → URL Configuration)
+- [ ] Site URL : `https://maelmouatasim-beep.github.io/vraih2fleet/`
+- [ ] Redirect URLs : ajouter `https://maelmouatasim-beep.github.io/vraih2fleet/**`
+      et `http://localhost:8080/**`
+- [ ] (Authentication → Sign In / Providers → Email) « Confirm email »
+      activé. NB : le service d'envoi par défaut de Supabase n'envoie qu'aux
+      membres de l'équipe du projet et à faible débit — pour des testeurs
+      externes, configurer un SMTP (Authentication → Emails → SMTP
+      Settings, ex. SendGrid).
 
-```bash
-supabase db push --dry-run   # montre ce qui serait joué, ne touche à rien
-supabase db push             # applique, dans l'ordre horodaté
-```
+**Secrets des edge functions** (Edge Functions → Secrets, ou
+`supabase secrets set`) — noms exacts :
+- [ ] `ALLOWED_ORIGINS` = `https://maelmouatasim-beep.github.io,http://localhost:8080`
+      (origines seulement, sans chemin)
+- [ ] `CRON_SECRET` = une valeur neuve (`openssl rand -hex 32`)
+- [ ] `INTERNAL_FUNCTION_SECRET` = une autre valeur neuve (`openssl rand -hex 32`)
+- [ ] `APP_BASE_URL` = `https://maelmouatasim-beep.github.io/vraih2fleet`
+- [ ] `SENDGRID_API_KEY` (envoi des courriels applicatifs) et
+      `CONTACT_INBOX_EMAIL` (boîte qui reçoit le formulaire de contact)
+- [ ] `MAPBOX_PUBLIC_TOKEN` (cartes), si utilisé
+- [ ] Assistant IA : **à décider** — la fonction `assistant-chat` passe
+      aujourd'hui par la passerelle IA de Lovable (`LOVABLE_API_KEY`),
+      qui n'existe pas hors Lovable. Voir « Points ouverts ».
+- [ ] (facultatif) `GEOTAB_API_URL`, `SAMSARA_API_URL` : seulement pour
+      remplacer les URLs par défaut des fournisseurs.
+- [ ] Ne PAS définir `FEATURE_PUBLIC_API` (API publique et MCP restent en 404).
 
-## 4. Vérification post-migration (SQL Editor)
+**Tâches planifiées** (pg_cron, extensions activées par les migrations)
+- [ ] Integrations → Vault → *Add new secret* : `h2fleet_project_url` =
+      `https://<ref>.supabase.co` ; `h2fleet_cron_secret` = la MÊME valeur
+      que `CRON_SECRET`.
+- [ ] SQL Editor → coller et exécuter `supabase/snippets/taches-planifiees.sql`
+      (3 tâches : rappels d'échéances de subventions chaque matin,
+      synchro télématique toutes les 6 h, purge du journal de limite de
+      débit). La dernière requête du script liste les 3 tâches.
 
-```sql
--- Les tables du bloc A/B doivent exister :
-select table_name from information_schema.tables
-where table_schema = 'public'
-  and table_name in ('organizations','organization_members','vehicles',
-    'project_vehicles','energy_client_inputs','report_snapshots',
-    'confirmed_subsidies','subsidy_applications','organization_invitations')
-order by table_name;      -- attendu : les 9 lignes
+## Étape 5 — Déploiement automatique (GitHub Actions)
 
--- Taux d'actualisation en FRACTION (D4) : aucun projet ≥ 1 après migration
-select count(*) from public.projects where default_discount_rate >= 1;  -- attendu : 0
+À chaque push sur `claude/code-integration-site-o88hza` :
 
--- Aucune table publique sans RLS :
-select c.relname from pg_class c
-join pg_namespace n on n.oid = c.relnamespace
-where n.nspname = 'public' and c.relkind = 'r' and not c.relrowsecurity;
--- attendu : 0 ligne
-```
+- **Deploy Supabase** (`.github/workflows/deploy-supabase.yml`) :
+  `supabase link` → `supabase db push --dry-run` (liste) →
+  `supabase db push` (toutes les migrations, additives) →
+  `supabase functions deploy` (toutes les fonctions, `verify_jwt` de
+  `supabase/config.toml`) → contrôle de santé. Sans les 3 secrets : le
+  run s'arrête proprement avec un avertissement.
+- **Deploy Pages** (`.github/workflows/deploy-pages.yml`) : build avec les
+  3 variables du dépôt → https://maelmouatasim-beep.github.io/vraih2fleet/.
+  Sans les variables : pas de redéploiement (le site en ligne reste tel
+  quel), avertissement.
 
-## 5. Redéployer les edge functions
+Premier déploiement : après les étapes 2 et 3, relancer les deux
+workflows (Actions → workflow → **Run workflow**) ou pousser un commit.
 
-`supabase/config.toml` porte les réglages `verify_jwt` par fonction — le
-déploiement depuis le dépôt les applique.
+En cas d'échec de `db push` : il s'arrête à la première migration en
+erreur, sans rien appliquer d'elle (chaque migration est une
+transaction). Le journal du run nomme le fichier ; on corrige par une
+NOUVELLE migration.
 
-```bash
-supabase functions deploy api-gateway
-supabase functions deploy assistant-chat
-supabase functions deploy authenticate-telematics
-supabase functions deploy fetch-telematics-vehicles
-supabase functions deploy get-mapbox-token
-supabase functions deploy mcp
-supabase functions deploy notify-subsidy-deadlines
-supabase functions deploy send-email
-supabase functions deploy sync-telematics-data
+## Étape 6 — Contrôles après migration
 
-# l'ancienne fonction calculate-tco a été SUPPRIMÉE du dépôt (Phase 1B) :
-supabase functions delete calculate-tco
-```
+1. **Santé de la base** : dernière étape de *Deploy Supabase*
+   (`node scripts/verifier-base.mjs --heberge`). Elle compare le projet au
+   manifeste `supabase/schema-attendu.json` (47 tables avec RLS,
+   161 policies, 37 fonctions SQL, 45 triggers, 1 bucket — régénéré et
+   vérifié en CI à chaque migration), puis vérifie : chaque edge function
+   déployée et active avec le bon `verify_jwt`, l'absence de
+   `calculate-tco`, les NOMS des secrets requis (les valeurs ne sont
+   jamais lues), la Site URL et les Redirect URLs GitHub Pages, les
+   3 tâches pg_cron.
+2. **Parcours complet** : Actions → **E2E base hébergée** → Run workflow.
+   Le site est construit comme GitHub Pages et servi dans le runner ;
+   deux comptes `e2e-…@example.com` sont créés confirmés (mot de passe
+   aléatoire masqué), le parcours des 7 étapes + rapports fr/en +
+   invitation d'équipe est joué contre la base hébergée (toute requête
+   vers un autre projet Supabase fait échouer le run), puis les comptes et
+   leurs organisations sont **supprimés** — même en cas d'échec. Les
+   captures sont jointes au run (artefact `e2e-captures`, 7 jours).
+3. **À la main** sur https://maelmouatasim-beep.github.io/vraih2fleet/ :
+   inscription avec ta vraie adresse, courriel de confirmation reçu,
+   lien → tableau de bord ; « Mot de passe oublié » → courriel → lien →
+   nouveau mot de passe.
 
-## 6. Secrets des fonctions (noms dans .env.example, valeurs jamais dans le dépôt)
+## Points ouverts
 
-```bash
-supabase secrets set \
-  ALLOWED_ORIGINS="https://maelmouatasim-beep.github.io,http://localhost:8080" \
-  CRON_SECRET="<génère : openssl rand -hex 32>" \
-  INTERNAL_FUNCTION_SECRET="<génère : openssl rand -hex 32>" \
-  APP_BASE_URL="https://maelmouatasim-beep.github.io/vraih2fleet"
-# + selon les besoins : SENDGRID_API_KEY, CONTACT_INBOX_EMAIL,
-#   MAPBOX_PUBLIC_TOKEN, LOVABLE_API_KEY, GEOTAB_API_URL, SAMSARA_API_URL
-# (liste complète et rôles : .env.example et SECURITY.md)
-```
+- **Assistant IA** : `assistant-chat` appelle la passerelle Lovable
+  (modèle Gemini via `LOVABLE_API_KEY`), indisponible hors Lovable.
+  Choix à faire : brancher un fournisseur dont tu as une clé (par ex.
+  l'API Anthropic avec `ANTHROPIC_API_KEY`, adaptation de la fonction à
+  prévoir) ou laisser l'assistant désactivé sur le site de test.
+- **Courriels** : SMTP personnalisé nécessaire pour des testeurs externes
+  (voir étape 4).
 
-Rappel de l'audit sécurité : CRON_SECRET et INTERNAL_FUNCTION_SECRET
-doivent être **régénérés** (jamais réutiliser d'anciennes valeurs).
+## Supabase local (développement, CI)
 
-## 7. Côté site de test (GitHub Pages)
-
-1. La clé « anon public » du projet (Dashboard → Settings → API Keys) va
-   dans la **variable de dépôt** GitHub `VITE_SUPABASE_PUBLISHABLE_KEY`
-   (Settings → Secrets and variables → Actions → Variables).
-2. Relancer le workflow **Deploy Pages** (Actions → Deploy Pages →
-   Run workflow) ou pousser n'importe quel commit.
-3. Tester : https://maelmouatasim-beep.github.io/vraih2fleet/ —
-   inscription/connexion, puis le parcours projet.
-
-## En cas d'échec de `db push`
-
-- `db push` s'arrête à la PREMIÈRE migration en erreur et n'applique pas
-  les suivantes : copie le message d'erreur tel quel dans la conversation,
-  rien n'est corrompu (chaque migration est une transaction).
-- Erreur du type « relation already exists » sur une ancienne migration :
-  c'est le cas « historique à réparer » de l'étape 2 (`migration repair`).
+`npx supabase start` puis `npx supabase db reset --local` ; les URLs de
+redirection locales sont dans `supabase/config.toml` (section `[auth]`,
+sans effet sur le projet hébergé). Après toute nouvelle migration :
+`node scripts/verifier-base.mjs --generer` pour mettre à jour le
+manifeste (la CI échoue sinon). Parcours local : `npm run e2e:local`.
