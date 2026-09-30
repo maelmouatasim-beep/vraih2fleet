@@ -459,7 +459,7 @@ export default function FleetStep({ projectId, project }: FleetStepProps) {
                             aria-label={pv.vehicles.unit_number}
                           />
                         </TableCell>
-                        <TableCell className="font-medium">{pv.vehicles.unit_number}</TableCell>
+                        <TableCell className="font-medium whitespace-nowrap">{pv.vehicles.unit_number}</TableCell>
                         <TableCell>
                           {[pv.vehicles.make, pv.vehicles.model, pv.vehicles.model_year]
                             .filter(Boolean)

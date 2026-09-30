@@ -6009,7 +6009,7 @@
         "sans_plan": "No plan"
       },
       "tableTitle": "Actual vs planned",
-      "tableSubtitle": "“Done” = the vehicle's current technology matches its target (or, diesel target, the model year reaches the planned year) — update the vehicle in My fleet after each replacement.",
+      "tableSubtitle": "“Done” = replacement marked as done (date, vehicle acquired, actual cost); otherwise, the vehicle's current technology matches its target (or, diesel target, the model year reaches the planned year). Also update the vehicle in My fleet.",
       "columns": {
         "state": "Status",
         "completed": "Completed"

@@ -99,7 +99,7 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
 
         {/* Barre de progression des 7 étapes */}
         <div className="rounded-xl border border-border bg-card p-4 overflow-x-auto">
-          <ol className="flex items-center gap-2 min-w-[720px]">
+          <ol className="flex items-center gap-1 min-w-[720px]">
             {ETAPES_PARCOURS.map((e, i) => {
               const Icone = ICONES[e];
               const actif = e === etape;
@@ -108,8 +108,9 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
                 <li key={e} className="flex items-center flex-1 min-w-0">
                   <Link
                     to={`${base}/${e}`}
+                    title={t(`journey.steps.${e}.title`)}
                     className={cn(
-                      "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors w-full",
+                      "flex items-center gap-2 rounded-lg px-2 2xl:px-3 py-2 text-sm font-medium transition-colors w-full",
                       actif
                         ? "bg-primary text-primary-foreground"
                         : fait
@@ -129,11 +130,12 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
                     >
                       {i + 1}
                     </span>
-                    <Icone className="w-4 h-4 shrink-0" />
+                    {/* Icône et flèches seulement sur grand écran : le numéro suffit, le libellé reste lisible. */}
+                    <Icone className="w-4 h-4 shrink-0 hidden 2xl:block" />
                     <span className="truncate">{t(`journey.steps.${e}.title`)}</span>
                   </Link>
                   {i < ETAPES_PARCOURS.length - 1 && (
-                    <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0 mx-1" />
+                    <ArrowRight className="w-4 h-4 text-muted-foreground shrink-0 mx-1 hidden 2xl:block" />
                   )}
                 </li>
               );

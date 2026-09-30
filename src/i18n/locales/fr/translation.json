@@ -6002,14 +6002,14 @@
     },
     "tracking": {
       "states": {
-        "realise": "Réalisés",
+        "realise": "Réalisé",
         "en_retard": "En retard",
         "cette_annee": "Cette année",
         "a_venir": "À venir",
         "sans_plan": "Sans plan"
       },
       "tableTitle": "Réalisé vs prévu",
-      "tableSubtitle": "« Réalisé » = la technologie actuelle du véhicule correspond à sa cible (ou, cible diesel, l'année-modèle atteint l'année prévue) — mettez la fiche du véhicule à jour dans Ma flotte après chaque remplacement.",
+      "tableSubtitle": "« Réalisé » = remplacement marqué réalisé (date, véhicule acquis, coût réel) ; à défaut, la technologie actuelle du véhicule correspond à sa cible (ou, cible diesel, l'année-modèle atteint l'année prévue). Mettez aussi la fiche du véhicule à jour dans Ma flotte.",
       "columns": {
         "state": "État",
         "completed": "Réalisé"
