@@ -18,6 +18,7 @@
 import { execFileSync } from "node:child_process";
 import { readFileSync, readdirSync, writeFileSync, statSync } from "node:fs";
 import { join } from "node:path";
+import { api, exigerEnv, sqlHeberge } from "./lib/gestion-supabase.mjs";
 
 const MANIFESTE = "supabase/schema-attendu.json";
 const URL_PAGES = "https://maelmouatasim-beep.github.io/vraih2fleet/";
@@ -45,25 +46,6 @@ const trier = (inv) => Object.fromEntries(Object.entries(inv).map(([k, v]) => [k
 function sqlLocal(sql) {
   const url = process.env.SUPABASE_DB_URL ?? process.env.DB_URL ?? "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
   return execFileSync("psql", [url, "-At", "-v", "ON_ERROR_STOP=1", "-c", sql], { encoding: "utf8" }).trim();
-}
-
-const API = "https://api.supabase.com/v1";
-function exigerEnv(nom) {
-  const v = process.env[nom];
-  if (!v) throw new Error(`${nom} manquant (secret GitHub du dépôt — voir docs/deploiement.md)`);
-  return v;
-}
-async function api(chemin, options = {}) {
-  const r = await fetch(`${API}${chemin}`, {
-    ...options,
-    headers: { Authorization: `Bearer ${exigerEnv("SUPABASE_ACCESS_TOKEN")}`, "Content-Type": "application/json", ...(options.headers ?? {}) },
-  });
-  if (!r.ok) throw new Error(`API de gestion ${chemin} → HTTP ${r.status} ${(await r.text()).slice(0, 200)}`);
-  return r.json();
-}
-export async function sqlHeberge(sql) {
-  const ref = exigerEnv("SUPABASE_PROJECT_REF");
-  return api(`/projects/${ref}/database/query`, { method: "POST", body: JSON.stringify({ query: sql }) });
 }
 
 // ── Comparaison ─────────────────────────────────────────────────────────
