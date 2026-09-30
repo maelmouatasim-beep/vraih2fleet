@@ -37,3 +37,6 @@ __pycache__/
 supabase/.branches
 supabase/.temp
 coverage/
+
+# Captures du parcours automatisé (npm run e2e:local)
+e2e-captures/
