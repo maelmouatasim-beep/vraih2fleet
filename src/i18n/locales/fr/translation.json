@@ -4045,93 +4045,73 @@
     }
   },
   "helpTraining": {
-    "title": "Aide et Formation",
-    "subtitle": "Apprenez à utiliser les outils H2Fleet Planner et comprenez nos calculs",
+    "title": "Aide et méthode",
+    "subtitle": "Comment H2Fleet transforme votre flotte réelle en plan de remplacement chiffré — et d’où viennent les chiffres.",
+    "openLibrary": "Voir le registre des hypothèses (Bibliothèque)",
     "disclaimer": {
-      "title": "Avis important",
-      "text": "Les estimations TCO sont à des fins de planification uniquement. Les coûts réels peuvent varier selon les conditions locales, les fluctuations du marché et les facteurs opérationnels. Pour des décisions financières critiques, consultez un expert qualifié."
+      "title": "À lire avant de présenter un résultat",
+      "text": "Les résultats sont des estimations de planification calculées par le moteur TCO à partir de votre flotte et d'un registre d'hypothèses sourcées. Chaque valeur y porte sa source, sa date de vérification et un statut (vérifiée, estimation, à valider). Remplacez les estimations par vos données (prix payés, devis, subventions confirmées) avant une décision."
     },
-    "sections": {
-      "methodology": "Méthodologie TCO",
-      "maintenance": "Coûts de maintenance",
-      "consumption": "Consommation énergétique",
-      "infrastructure": "Dimensionnement infrastructure",
-      "referenceData": "Données de référence",
-      "sources": "Sources de données",
-      "residual": "Valeur résiduelle",
-      "faq": "Questions fréquentes"
+    "journey": {
+      "title": "Le parcours en 7 étapes",
+      "p1": "Flotte : choisissez les véhicules réels du projet (depuis Ma flotte), leur année de remplacement et leur technologie cible ; tri et actions groupées, cible suggérée par la Faisabilité.",
+      "p2": "Faisabilité : verdict électrique et hydrogène par véhicule, chiffré par le moteur (économie ou surcoût actualisé, récupération, CO₂ évité, subventions), avec réserves (usage longue distance, hors route, ravitaillement H₂).",
+      "p3": "Stratégies : trois stratégies comparées au statu quo, stress test, puis « Appliquer cette stratégie au plan » après confirmation détaillée ; la stratégie retenue est enregistrée.",
+      "p4": "Plan : budget annuel (investissement, subventions, reste à financer, fonctionnement) et infrastructure de recharge par dépôt (bornes, puissance, phasage).",
+      "p5": "Financement : subventions du plan par véhicule, subventions confirmées par le client (prioritaires), suivi des demandes par programme et registre des programmes à statut calculé.",
+      "p6": "Rapports : PDF pour le conseil et classeur Excel, figés à chaque génération (version du moteur et empreinte des entrées en pied de page).",
+      "p7": "Suivi : réalisé vs prévu (remplacements marqués réalisés avec date, véhicule acquis et coût réel) et tâches liées aux véhicules, années et subventions."
     },
-    "tcoFormula": {
-      "title": "Formule TCO principale",
-      "residualValue": "Valeur résiduelle",
-      "capexDesc": "Coût d'acquisition des véhicules + Investissement infrastructure (bornes, stations H₂)",
-      "opexDesc": "Valeur Actuelle Nette des coûts opérationnels (carburant, énergie, maintenance, assurance) actualisés sur la période d'analyse",
-      "residual": "Valeur résiduelle",
-      "residualDesc": "Valeur estimée du véhicule en fin de période d'analyse (typiquement 20% du coût initial après 10 ans)"
+    "method": {
+      "title": "La méthode TCO",
+      "p1": "Référence (statu quo) : la même flotte remplacée aux mêmes années par des diesels neufs équivalents. Les économies sont toujours mesurées contre cette référence.",
+      "p2": "Année 0 = acquisition ; exploitation en fin d'années 1 à H (horizon du projet). Chaque véhicule entre dans le calcul à SON année de remplacement.",
+      "p3": "Flux nominaux (inflation par poste) actualisés au taux nominal du projet — le taux et l'horizon sont des paramètres du projet, modifiables.",
+      "p4": "Taxes : la part non récupérable de TPS/TVQ dépend du type d'organisme (municipalité, société de transport, entreprise) et s'applique de façon symétrique à tous les postes concernés, énergie comprise.",
+      "p5": "Valeur résiduelle : dépréciation géométrique par technologie, avec plancher ; l’infrastructure est payée à l’arrivée des véhicules qui l’utilisent.",
+      "p6": "Deux vues : économique (VAN, coût par tonne évitée) et budgétaire (décaissements par année, pour le PTI).",
+      "p7": "Reproductibilité : chaque résultat porte la version du moteur et l'empreinte des entrées ; la méthodologie complète est annexée aux rapports."
     },
-    "npv": {
-      "title": "Calcul VAN",
-      "desc": "Où r = taux d'actualisation (défaut 5%) et t = année (1 à horizon d'analyse)"
+    "uncertainty": {
+      "title": "Incertitude et stress test",
+      "p1": "Le stress test relance le moteur complet aux bornes de la plage SOURCÉE de chaque hypothèse — jamais un ± arbitraire.",
+      "p2": "Trois scénarios (prudent, central, favorable) et une tornade des paramètres les plus influents.",
+      "p3": "Le niveau de risque est calculé : la stratégie reste-t-elle gagnante au scénario prudent ?"
     },
-    "opex": {
-      "title": "Composantes OPEX",
-      "formula": "Carburant + Maintenance + Assurance + Temps d'arrêt",
-      "fuel": "Carburant/Énergie : basé sur taux de consommation × prix énergie × km annuels",
-      "maintenance": "Maintenance : coût par km spécifique à la technologie",
-      "insurance": "Assurance : prime annuelle basée sur la valeur du véhicule",
-      "downtime": "Temps d'arrêt : perte de productivité estimée pendant recharge/ravitaillement"
-    },
-    "maintenance": {
-      "dieselDesc": "Plus élevé en raison de la complexité du groupe motopropulseur, vidanges, entretien du système d'échappement",
-      "evDesc": "Coûts réduits : moins de pièces mobiles, freinage régénératif réduit l'usure des freins",
-      "h2Desc": "Maintenance de la pile à combustible, inspections du système hydrogène"
-    },
-    "consumption": {
-      "rate": "Taux de consommation",
-      "co2": "Facteur CO₂",
-      "evCo2": "Dépend du réseau (0,03-0,5 kg CO₂/kWh)",
-      "note": "Note : Les taux de consommation varient selon la classe du véhicule, la charge, le terrain et la température. Des multiplicateurs adaptatifs sont appliqués selon les conditions opérationnelles."
+    "data": {
+      "title": "D'où viennent les données",
+      "p1": "Priorité : vos données (prix payés, devis de raccordement, subventions confirmées avec la référence du document) remplacent le registre et sont signalées « donnée client » dans les rapports.",
+      "p2": "Registre : chaque hypothèse a une valeur, une plage, une source officielle, une date et un statut honnête — « vérifiée » seulement si la source a réellement été lue.",
+      "p3": "Prix du diesel : moyenne des 12 derniers mois publiés, mise à jour par une collecte hebdomadaire archivée ; une variation de plus de 20 % attend une validation humaine.",
+      "p4": "Consommations : réelles (saisie ou télématique) quand elles sont connues, sinon défaut de la catégorie marqué « estimation ».",
+      "p5": "Télématique : elle ne modifie jamais Ma flotte automatiquement ; les véhicules sont importés explicitement depuis la page Télématique, avec correspondance des unités existantes."
     },
     "infrastructure": {
-      "evChargers": "Calcul des bornes EV",
-      "evFormula": "Bornes = ceil(VE × Capacité batterie / (Vitesse de charge × Heures disponibles × Utilisation))",
-      "evDefaults": "Défaut : batterie 150 kWh, bornes 50 kW, 8h disponibilité, 80% utilisation",
-      "evCost": "Coût : 50 000 $ - 150 000 $ par borne DC rapide (installée)",
-      "h2Stations": "Calcul des stations H₂",
-      "h2Formula": "Stations = ceil(Demande H₂ journalière / Capacité station)",
-      "h2Demand": "Demande journalière = Véhicules × km/jour × 0,012 kg/km",
-      "h2Capacity": "Capacité station par défaut : 200 kg/jour",
-      "h2Cost": "Coût : 1 500 000 $ - 3 000 000 $ par station"
+      "title": "Infrastructure de recharge",
+      "p1": "Dimensionnement minimal par dépôt : une borne par véhicule zéro émission, du type adapté à sa catégorie.",
+      "p2": "Les bornes sont mises en service l'année de remplacement des véhicules qui les utilisent (phasage année par année).",
+      "p3": "Puissance appelée affichée en fourchette, tirée des hypothèses du registre.",
+      "p4": "Un devis de raccordement saisi dans le projet remplace l’estimation du registre dans le total."
     },
-    "referenceData": {
-      "vehiclePrices": "Prix des véhicules (Marché canadien)",
-      "dieselTruck": "Camion Diesel",
-      "evTruck": "Camion électrique",
-      "h2Truck": "Camion H₂",
-      "energyPrices": "Prix de l'énergie (Moyenne canadienne)",
-      "note": "Ce sont des moyennes indicatives. Pour des calculs précis, utilisez vos prix contractuels réels."
-    },
-    "sources": {
-      "fuelPrices": "Prix carburants et énergie",
-      "vehicles": "Véhicules et infrastructure",
-      "oem": "PDSF constructeur et spécifications",
-      "update": "Les données de référence sont mises à jour trimestriellement. Dernière mise à jour : Janvier 2026"
-    },
-    "residual": {
-      "formula": "Valeur résiduelle = Prix d'achat × Facteur de dépréciation",
-      "period": "Période d'analyse",
-      "factor": "Facteur de dépréciation",
-      "retained": "Valeur conservée"
+    "subsidies": {
+      "title": "Subventions",
+      "p1": "Le statut d'un programme est CALCULÉ à partir de ses dates (un programme échu avant l'année d'achat n'est jamais appliqué).",
+      "p2": "Plafonds, bonifications et limite de cumul des aides publiques sont appliqués par le résolveur ; une classe de poids inconnue prend le barème le plus bas, avec un avertissement.",
+      "p3": "Un montant confirmé par document (lettre d’octroi) remplace la subvention calculée du même programme.",
+      "p4": "Le suivi des demandes (à préparer, déposée, accordée, reçue) relie chaque échéance à la tâche du plan ou à la date de fin du programme."
     },
     "faq": {
-      "q1": "Pourquoi le taux d'actualisation par défaut est-il de 5% ?",
-      "a1": "Un taux de 5% représente un coût du capital typique pour les exploitants de flottes. Vous pouvez l'ajuster dans les Paramètres avancés selon vos coûts de financement.",
-      "q2": "Comment les impacts du froid sont-ils calculés ?",
-      "a2": "Le froid peut réduire l'autonomie des VE de 20-40%. Lorsqu'activé, ce multiplicateur est appliqué à la consommation d'énergie selon les données climatiques régionales.",
-      "q3": "Qu'est-ce que la tarification heures pleines/creuses (TOU) ?",
-      "a3": "La tarification TOU applique différents tarifs d'électricité selon l'heure de recharge. La recharge hors-pointe (nuits/fins de semaine) peut réduire les coûts de 30-50%.",
-      "q4": "Comment sont calculés les crédits carbone ?",
-      "a4": "Les crédits carbone sont basés sur les économies de CO₂ vs la référence diesel, valorisés au prix du carbone actuel (typiquement 65-170 $/tonne au Canada)."
+      "title": "Questions fréquentes",
+      "q1": "Pourquoi certaines hypothèses sont « à valider » ?",
+      "a1": "Parce que leur source officielle n'a pas encore été lue et archivée. L'URL à consulter est indiquée dans la Bibliothèque ; les rapports qui en dépendent le signalent.",
+      "q2": "Comment changer le taux d’actualisation ou l’horizon ?",
+      "a2": "Ce sont des paramètres du projet : ils sont repris dans toutes les étapes et affichés dans l'annexe des rapports.",
+      "q3": "Je ne connais pas la consommation de mes véhicules.",
+      "a3": "Le moteur utilise le défaut de la catégorie, marqué « estimation ». Saisissez la consommation réelle dans Ma flotte ou importez-la par télématique pour l'affiner.",
+      "q4": "Mes résultats ont changé depuis le dernier rapport.",
+      "a4": "Un rapport est figé à sa génération. Si les données ont changé depuis (prix collectés, flotte, subventions), l'étape Rapports l'indique avec l'écart de VAN avant/après.",
+      "q5": "J'ai un devis ou une lettre d'octroi.",
+      "a5": "Saisissez le devis de raccordement dans « Données client » (Organisation ou Faisabilité) et la subvention confirmée à l'étape Financement : ils remplacent les estimations."
     }
   },
   "roadmap": {
@@ -4334,15 +4314,15 @@
         "title": "Infrastructure nécessaire",
         "level2": {
           "title": "Bornes Niveau 2 (19.2 kW)",
-          "cost": "Coût : 5 000-8 000 $ par borne",
+          "cost": "Coût : voir les coûts types sourcés dans la Bibliothèque (à remplacer par des soumissions)",
           "time": "Temps de recharge : 6-8h (plein complet)",
           "ideal": "Idéal pour : Recharge nocturne au dépôt",
           "ratio": "Quantité : 1 borne pour 2-3 véhicules"
         },
         "dcFast": {
           "title": "Bornes rapides DC (50-150 kW)",
-          "cost": "Coût : 75 000-150 000 $ par borne",
-          "time": "Temps de recharge : 30-90 min (80%)",
+          "cost": "Coût : voir les coûts types sourcés dans la Bibliothèque (à remplacer par des soumissions)",
+          "time": "Temps de recharge : selon la puissance de la borne et la batterie du véhicule",
           "ideal": "Idéal pour : Flottes avec horaires serrés",
           "ratio": "Quantité : 1 borne pour 6-8 véhicules"
         },
@@ -4375,9 +4355,9 @@
         "description": "Les températures froides impactent significativement l'autonomie. Planifiez en conséquence.",
         "impact": {
           "title": "Impact sur l'autonomie par température",
-          "minus10": "-10°C : -15% d'autonomie",
-          "minus20": "-20°C : -30% d'autonomie",
-          "minus30": "-30°C : -40% d'autonomie"
+          "minus10": "Froid modéré : autonomie réduite",
+          "minus20": "Grand froid : réduction plus marquée",
+          "minus30": "Froid extrême : prévoir une marge d’autonomie"
         },
         "solutions": {
           "title": "Solutions pratiques",
@@ -4390,7 +4370,7 @@
         },
         "callout": {
           "title": "Étude de cas : Ville de Québec",
-          "description": "Flotte de 20 camionnettes électriques, 50 km/jour. TCO réduit de 35% vs diesel sur 10 ans."
+          "description": "Le moteur applique la majoration hivernale sourcée du registre à la consommation des véhicules électriques ; vérifiez l'autonomie sur vos trajets réels."
         }
       },
       "tco": {
@@ -4442,14 +4422,14 @@
         "private": {
           "title": "Option A : Station privée (flotte >20 véhicules)",
           "cost": "Coût : 5M-10M $",
-          "funding": "Financement ZEVIP : jusqu'à 50%",
+          "funding": "Financement : voir le statut calculé des programmes dans la Bibliothèque",
           "capacity": "Capacité : 500-1000 kg/jour",
           "timeline": "Installation : 18-24 mois"
         },
         "public": {
           "title": "Option B : Réseau public (flotte <20)",
           "description": "Stations HTEC en C.-B., expansion vers Alberta et Ontario",
-          "cost": "Coût ravitaillement : 12-15 $/kg actuellement"
+          "cost": "Coût du ravitaillement : hypothèse de prix H₂ du registre (source et date dans la Bibliothèque)"
         },
         "callout": {
           "title": "Calculateur de viabilité de station",
@@ -4460,15 +4440,15 @@
         "title": "Coût réel de l'hydrogène",
         "current": {
           "title": "Prix actuels (2026)",
-          "public": "Station publique : 12-15 $ CAD/kg",
-          "private": "Production privée : 8-12 $ CAD/kg",
-          "target": "Objectif 2030 : 6 $ CAD/kg"
+          "public": "Station publique : réseau encore embryonnaire au Québec",
+          "private": "Production ou livraison privée : prix sur contrat — saisissez votre prix dans « Données client »",
+          "target": "Évolution des prix : incertaine, couverte par le stress test"
         },
         "consumption": {
           "title": "Consommation typique",
           "class8": "Classe 8 lourd : 8-10 kg H₂/100km",
-          "fuelCost": "Coût carburant : 0,80-1,50 $/km",
-          "vsDiesel": "Vs diesel : 0,35-0,45 $/km"
+          "fuelCost": "Coût énergétique par km : calculé par le moteur pour chaque véhicule",
+          "vsDiesel": "Comparaison au diesel : voir l'étape Faisabilité"
         },
         "note": "L'hydrogène est encore plus cher aujourd'hui, mais l'écart se réduit"
       },
@@ -4501,7 +4481,7 @@
       },
       "what": {
         "title": "Qu'est-ce que le biométhane ?",
-        "description": "Gaz naturel renouvelable produit à partir de déchets organiques, offrant 70-90% de réduction des GES vs diesel et conformité aux mandats VZE au Canada.",
+        "description": "Gaz naturel renouvelable produit à partir de déchets organiques ; la réduction des GES dépend de la filière et doit être documentée par le fournisseur.",
         "benefits": [
           "Gaz naturel renouvelable (issu de déchets organiques)",
           "Compatible avec les moteurs diesel convertis",
@@ -4511,7 +4491,7 @@
       },
       "conversion": {
         "title": "Conversion de la flotte existante",
-        "cost": "Coût de conversion : 40 000-60 000 $ par véhicule",
+        "cost": "Coût de conversion : à obtenir par soumission",
         "subsidies": "Subventions disponibles (Écocamionnage au Québec)",
         "benefit": "Peut prolonger la vie des camions existants",
         "advantages": {
@@ -4558,7 +4538,7 @@
           "Zones urbaines"
         ]
       },
-      "recommendation": "Recommandation : 95% BEV",
+      "recommendation": "Recommandation : usage urbain souvent favorable à l’électrique — à confirmer par l’étape Faisabilité",
       "steps": {
         "title": "Étapes d'implémentation",
         "items": [
@@ -4571,7 +4551,7 @@
       },
       "caseStudy": {
         "title": "Étude de cas : Amazon Montréal",
-        "description": "100 fourgonnettes électriques, économies de 4 000 $/véhicule/an"
+        "description": "Les économies dépendent de votre flotte : l'étape Faisabilité les chiffre véhicule par véhicule."
       },
       "cta": {
         "startAnalysis": "Analyser ma flotte urbaine"
@@ -4722,8 +4702,8 @@
       },
       "federal": {
         "title": "Programmes fédéraux (2026)",
-        "ivmlze": "iVMLZE : jusqu'à 200 000 $ par véhicule moyen/lourd (Classe 3-8, BEV et FCEV). Via concessionnaire (automatique). Budget : 550 M$ (2020-2027). État : Fonds limités, agir vite.",
-        "zevip": "ZEVIP : 50% des coûts d'infrastructure admissibles. Max 200k$/borne DC, 5M$/station H₂. Décision en 30 jours. État : Fonds disponibles jusqu'en 2027."
+        "ivmlze": "iMHZEV (véhicules moyens et lourds) : voir son statut calculé et sa date de vérification dans la Bibliothèque avant de l'inclure au plan.",
+        "zevip": "PIVEZ (infrastructure) : voir son statut calculé et sa date de vérification dans la Bibliothèque."
       },
       "provincial": {
         "title": "Programmes provinciaux (Québec)",
@@ -4731,7 +4711,7 @@
       },
       "optimization": {
         "title": "Optimisation du financement",
-        "description": "Les programmes peuvent se cumuler jusqu'à 90% de couverture. Exemple : ZEVIP (50%) + Écocamionnage (30%) = 80% de couverture.",
+        "description": "Le cumul des aides publiques est plafonné par programme ; le résolveur applique ces limites. Un montant confirmé par lettre d'octroi remplace l'estimation.",
         "callout": {
           "title": "Calculateur de subventions",
           "description": "Calculez l'impact des subventions sur VOTRE projet : combien économiserez-vous ?",
@@ -4758,10 +4738,10 @@
       },
       "energy": {
         "title": "Gestion de l'énergie",
-        "description": "Les tarifs heures creuses d'Hydro-Québec (20h-7h) offrent 42% d'économies. Programmez la recharge intelligente pour maximiser les économies.",
+        "description": "Les tarifs et la prime de puissance d'Hydro-Québec rendent la recharge étalée (hors pointe) avantageuse ; saisissez votre tarif réel dans « Données client ».",
         "callout": {
           "title": "Astuce recharge heures creuses",
-          "description": "Recharger à 20h au lieu de 18h économise 1 500 $/véhicule/an"
+          "description": "Étaler la recharge limite la puissance appelée et donc la prime de puissance facturée."
         }
       },
       "monitoring": {
@@ -4850,122 +4830,119 @@
     "openAssistant": "Ouvrir l'assistant",
     "noResponse": "Désolé, je n'ai pas pu générer de réponse.",
     "error": "⚠️ Erreur temporaire. Veuillez réessayer.",
-    "actions": {
-      "example": "Exemple",
-      "h2Price": "Prix H2",
-      "elecPrice": "Prix élec",
-      "vehicles": "Véhicules",
-      "subsidies": "Subventions",
-      "tcoFormula": "Formule TCO",
-      "explain": "Expliquer",
-      "payback": "Payback",
-      "emissions": "Émissions",
-      "optimize": "Optimiser",
-      "compare": "Comparer",
-      "export": "Exporter",
-      "create": "Créer",
-      "analyze": "Analyser",
-      "tips": "Conseils",
-      "use": "Utiliser",
-      "sources": "Sources",
-      "update": "Mise à jour",
-      "customize": "Personnaliser",
-      "whatIs": "C'est quoi ?",
-      "import": "Importer",
-      "modify": "Modifier",
-      "apply": "Appliquer",
-      "start": "Démarrer",
-      "createProject": "Créer projet",
-      "h2Station": "Station H2",
-      "evChargers": "Bornes EV",
-      "sizing": "Dimensionner",
-      "power": "Puissance",
-      "ecocamionnage": "Écocamionnage",
-      "stack": "Cumuler",
-      "dates": "Dates",
-      "amounts": "Montants",
-      "keyKpis": "KPIs clés",
-      "sensitivity": "Sensibilité",
-      "scenarios": "Scénarios",
-      "connection": "Connexion",
-      "data": "Données",
-      "group": "Grouper",
-      "autoScenarios": "Auto-scénarios",
-      "configure": "Configurer",
-      "duplicate": "Dupliquer",
-      "organize": "Organiser",
-      "h2Manufacturers": "Fabricants H2",
-      "chargers": "Bornes",
-      "hydrogen": "Hydrogène",
-      "contact": "Contacter",
-      "pricing": "Tarifs",
-      "getStarted": "Commencer",
-      "tcoHelp": "Aide TCO",
-      "firstProject": "Premier projet",
-      "features": "Fonctionnalités"
+    "quick": {
+      "whatIsH2Fleet": {
+        "label": "C’est quoi ?",
+        "query": "Qu'est-ce que H2Fleet et comment ça fonctionne ?"
+      },
+      "getStarted": {
+        "label": "Démarrer",
+        "query": "Comment démarrer avec H2Fleet ?"
+      },
+      "journeySteps": {
+        "label": "Parcours",
+        "query": "Quelles sont les 7 étapes du parcours projet ?"
+      },
+      "whereNumbers": {
+        "label": "Sources",
+        "query": "D'où viennent les chiffres et comment sont-ils vérifiés ?"
+      },
+      "importFleet": {
+        "label": "Importer",
+        "query": "Comment importer ma flotte depuis un fichier CSV ou Excel ?"
+      },
+      "estimatedConsumption": {
+        "label": "Estimations",
+        "query": "Que signifie une consommation « estimation » ?"
+      },
+      "telematicsToFleet": {
+        "label": "Télématique",
+        "query": "Comment importer mes véhicules télématiques dans Ma flotte ?"
+      },
+      "createProject": {
+        "label": "Nouveau projet",
+        "query": "Comment créer un projet ?"
+      },
+      "projectParams": {
+        "label": "Paramètres",
+        "query": "Comment changer l'horizon d'analyse et le taux d'actualisation ?"
+      },
+      "selectVehicles": {
+        "label": "Choisir",
+        "query": "Comment choisir les véhicules, les années et les cibles du projet ?"
+      },
+      "suggestedTarget": {
+        "label": "Cible suggérée",
+        "query": "D'où vient la cible suggérée ?"
+      },
+      "readVerdict": {
+        "label": "Verdict",
+        "query": "Comment lire le verdict de faisabilité ?"
+      },
+      "clientData": {
+        "label": "Données client",
+        "query": "Comment saisir mes prix d'énergie, un devis ou une subvention confirmée ?"
+      },
+      "stressTest": {
+        "label": "Stress test",
+        "query": "Comment fonctionne le stress test ?"
+      },
+      "applyStrategy": {
+        "label": "Appliquer",
+        "query": "Que fait « Appliquer cette stratégie au plan » ?"
+      },
+      "readBudget": {
+        "label": "Budget",
+        "query": "Comment lire le budget annuel du plan ?"
+      },
+      "depotInfra": {
+        "label": "Bornes",
+        "query": "Comment l'infrastructure de recharge est-elle dimensionnée par dépôt ?"
+      },
+      "programStatus": {
+        "label": "Statuts",
+        "query": "Comment le statut des programmes de subvention est-il calculé ?"
+      },
+      "confirmedSubsidy": {
+        "label": "Confirmée",
+        "query": "Comment saisir une subvention confirmée par document ?"
+      },
+      "applicationTracking": {
+        "label": "Demandes",
+        "query": "Comment suivre mes demandes de subvention ?"
+      },
+      "reportSnapshot": {
+        "label": "Rapport",
+        "query": "Pourquoi mon rapport est-il figé et comment le mettre à jour ?"
+      },
+      "markCompleted": {
+        "label": "Réalisé",
+        "query": "Comment marquer un remplacement comme réalisé ?"
+      },
+      "generatedTasks": {
+        "label": "Tâches",
+        "query": "Comment fonctionnent les tâches générées du plan ?"
+      },
+      "assumptionStatus": {
+        "label": "Statuts",
+        "query": "Que signifient « vérifiée », « estimation » et « à valider » ?"
+      },
+      "connectTelematics": {
+        "label": "Connexion",
+        "query": "Comment connecter Geotab ou Samsara ?"
+      },
+      "inviteTeam": {
+        "label": "Équipe",
+        "query": "Comment inviter mon équipe dans mon organisation ?"
+      }
     },
-    "queries": {
-      "scenarioExample": "Montre-moi un exemple de scénario type pour une flotte de camions Classe 8",
-      "h2Price": "Quel prix hydrogène utiliser au Québec ?",
-      "elecPrice": "Quels sont les tarifs électricité pour flottes au Canada ?",
-      "availableVehicles": "Quels véhicules hydrogène et électriques sont disponibles au Canada ?",
-      "subsidiesForTco": "Quelles subventions puis-je inclure dans mon calcul TCO ?",
-      "tcoFormula": "Comment est calculé le TCO exactement ?",
-      "explainResults": "Explique-moi ces résultats TCO en termes simples",
-      "paybackPeriod": "Quel est le délai de récupération typique pour une flotte hydrogène ?",
-      "emissionsCalc": "Comment sont calculées les émissions CO2 ?",
-      "improveTco": "Comment puis-je améliorer mon TCO ?",
-      "compareScenarios": "Comment comparer ce scénario avec d'autres ?",
-      "exportResults": "Comment exporter et partager ces résultats ?",
-      "createScenario": "Comment créer un nouveau scénario TCO ?",
-      "compareMultiple": "Comment comparer plusieurs scénarios ?",
-      "interpretResults": "Comment interpréter les résultats de mes scénarios ?",
-      "techRecommendation": "Quelles technologies recommandez-vous pour ma flotte ?",
-      "exportScenarioResults": "Comment exporter mes résultats de scénario ?",
-      "useReferenceData": "Comment utiliser ces données de référence dans mes scénarios ?",
-      "dataSources": "D'où viennent ces données de référence ?",
-      "dataUpdateFreq": "À quelle fréquence les données sont-elles mises à jour ?",
-      "modifyReference": "Puis-je modifier les valeurs de référence ?",
-      "customDataPurpose": "À quoi servent les données personnalisées ?",
-      "importData": "Comment importer mes propres données de référence ?",
-      "modifyValue": "Comment modifier une valeur de référence ?",
-      "applyCustomData": "Comment appliquer mes données personnalisées à un scénario ?",
-      "exportCustomData": "Comment exporter mes données personnalisées ?",
-      "guideFirstProject": "Guide-moi pour créer mon premier projet et scénario TCO",
-      "createProject": "Comment créer un nouveau projet ?",
-      "supportedVehicles": "Quels types de véhicules sont supportés par H2Fleet ?",
-      "availableSubsidies": "Quelles subventions sont disponibles au Canada ?",
-      "completeExample": "Montrez-moi un exemple de scénario TCO complet",
-      "h2StationCost": "Combien coûte une station hydrogène ?",
-      "chargerCosts": "Quels sont les coûts des bornes de recharge ?",
-      "sizingInfra": "Comment dimensionner mon infrastructure de recharge ?",
-      "gridPower": "Quelle puissance électrique faut-il prévoir ?",
-      "applyInfraCosts": "Comment appliquer ces coûts infrastructure à un scénario ?",
-      "imhzevProgram": "Comment fonctionne le programme iMHZEV ?",
-      "ecocamionnage": "Comment fonctionne Écocamionnage Québec ?",
-      "stackSubsidies": "Peut-on cumuler les subventions fédérales et provinciales ?",
-      "subsidyDeadlines": "Quelles sont les dates limites pour postuler aux subventions ?",
-      "maxSubsidyAmounts": "Quels sont les montants maximums de subvention par véhicule ?",
-      "importantKpis": "Quels sont les KPIs les plus importants à suivre ?",
-      "sensitivityAnalysis": "Qu'est-ce que l'analyse de sensibilité ?",
-      "roiCalculation": "Comment est calculé le retour sur investissement ?",
-      "scenariosImpact": "Comment les différents scénarios impactent les projections ?",
-      "connectTelematics": "Comment connecter ma télématique Geotab ou Samsara ?",
-      "telematicsData": "Quelles données sont importées depuis la télématique ?",
-      "groupVehicles": "Comment grouper mes véhicules pour l'analyse ?",
-      "autoGenerateScenarios": "Comment générer des scénarios automatiquement depuis mes données ?",
-      "configureProject": "Comment configurer la durée d'analyse et le taux d'actualisation ?",
-      "duplicateProject": "Comment dupliquer un projet existant ?",
-      "organizeProjects": "Comment bien organiser mes projets ?",
-      "h2TruckManufacturers": "Quels sont les fabricants de camions hydrogène au Canada ?",
-      "chargerSuppliers": "Quels fournisseurs de bornes de recharge recommandez-vous ?",
-      "hydrogenSuppliers": "Qui fournit l'hydrogène au Québec ?",
-      "contactSuppliers": "Comment contacter ces fournisseurs ?",
-      "whatIsH2Fleet": "Qu'est-ce que H2Fleet et comment ça fonctionne ?",
-      "h2FleetPricing": "Quels sont les tarifs de H2Fleet ?",
-      "getStarted": "Comment commencer avec H2Fleet ?",
-      "tcoAnalysisHelp": "Expliquez-moi comment fonctionne l'analyse TCO dans H2Fleet",
-      "mainFeatures": "Quelles sont les fonctionnalités principales de H2Fleet ?"
+    "triggers": {
+      "welcomeNewUser": "👋 Première visite ? Commencez par **Ma flotte** (ajout ou import CSV/Excel), puis créez un projet : le parcours en 7 étapes fait le reste. Posez-moi vos questions !",
+      "noFleetYet": "💡 Ma flotte est encore vide. Ajoutez ou importez vos véhicules : tous les calculs partent de votre flotte réelle.",
+      "noProjectsYet": "💡 Votre flotte est prête. Créez un projet : l'étape 1 vous fait choisir les véhicules à planifier.",
+      "feasibilityIntro": "📝 Les verdicts sont chiffrés par le moteur pour chaque véhicule. Vos prix payés ou un devis de raccordement (« Données client ») remplacent les estimations.",
+      "strategiesApply": "✅ Une stratégie vous convient ? « Appliquer cette stratégie au plan » met à jour les cibles après vous avoir montré le détail.",
+      "financingConfirmed": "🧾 Vous avez une lettre d'octroi ? Saisissez la subvention confirmée avec sa référence : elle remplace l'estimation dans le plan et le rapport."
     }
   },
   "featureDoc": {

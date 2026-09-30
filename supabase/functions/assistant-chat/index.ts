@@ -52,7 +52,7 @@ const chatRequestSchema = z.object({
       page_type: z.string().max(60).optional(),
       time_on_page: z.number().min(0).max(86_400).optional(),
       has_projects: z.boolean().optional(),
-      has_scenarios: z.boolean().optional(),
+      has_fleet: z.boolean().optional(),
     })
     .optional(),
 });
@@ -72,7 +72,7 @@ H2Fleet aide les flottes (municipalités, sociétés de transport, transporteurs
 **Parcours projet en 7 étapes** : Flotte → Faisabilité → Stratégies → Plan → Financement → Rapports → Suivi, sous /dashboard/projects/:id/{flotte,faisabilite,strategies,plan,financement,rapports,suivi}.`,
 
     "démarrer h2fleet": `## Démarrer
-1. **Ma flotte** (/dashboard/fleet) : saisissez ou importez (CSV/Excel) vos véhicules réels ; la télématique (Geotab/Samsara) peut alimenter kilométrages et consommations.
+1. **Ma flotte** (/dashboard/fleet) : saisissez ou importez (CSV/Excel) vos véhicules réels ; la télématique (Geotab/Samsara) ne modifie JAMAIS Ma flotte automatiquement : les véhicules se rapprochent et s'importent explicitement depuis la page Télématique (bouton d'import vers Ma flotte).
 2. **Projets** : créez un projet (horizon d'analyse et taux d'actualisation modifiables).
 3. **Étape Flotte** : sélectionnez les véhicules du projet, l'année de remplacement et la technologie cible de chacun.
 4. Les étapes suivantes (Faisabilité, Stratégies, Plan, Financement, Rapports, Suivi) calculent tout avec le moteur TCO — rien à ressaisir.`,
@@ -118,6 +118,26 @@ Un programme qui se termine avant l'année d'achat prévue n'est PAS compté dan
 Pour tout montant exact : renvoyez à l'étape Financement — ne citez pas de montants de mémoire, ils changent et se vérifient à la source.`,
   },
 
+  outils: {
+    "appliquer stratégie": `## Appliquer une stratégie au plan
+À l'étape **Stratégies**, le bouton « Appliquer cette stratégie au plan » montre d'abord le détail des véhicules dont la technologie cible change (actuelle → nouvelle), puis met à jour le plan après confirmation. La stratégie retenue est enregistrée sur le projet et affichée avec sa date d'application. Les années de remplacement ne changent pas.`,
+
+    "données client": `## Données client prioritaires
+Les prix d'énergie payés et le devis de raccordement Hydro-Québec se saisissent dans « Données client » (page Organisation ou étape Faisabilité) ; les subventions confirmées par document, à l'étape Financement (référence du document obligatoire). Elles REMPLACENT les hypothèses du registre et sont signalées « donnée client » dans les rapports.`,
+
+    "suivi demandes": `## Suivi des demandes de subvention
+À l'étape **Financement**, chaque demande a un statut (à préparer, déposée, accordée, reçue), les montants demandé et accordé et ses dates. Son échéance vient de la tâche générée du plan pour ce programme, sinon de la date de fin du programme dans le registre.`,
+
+    "infrastructure dépôt": `## Infrastructure par dépôt
+L'étape **Plan** dimensionne la recharge par dépôt : une borne par véhicule zéro émission selon sa catégorie, mise en service l'année de son remplacement (phasage), puissance appelée en fourchette et coûts types du registre. Un devis de raccordement saisi remplace l'estimation. Le dépôt vient de la fiche du véhicule dans Ma flotte.`,
+
+    "suivi réalisé": `## Réalisé vs prévu
+À l'étape **Suivi**, « Marquer réalisé » enregistre la date, le véhicule acquis et le coût réel d'un remplacement ; l'état « réalisé » fait alors foi et le véhicule ne génère plus de tâches. Les tâches générées (remplacement, dépôt de demande) sont idempotentes.`,
+
+    "import télématique": `## Télématique → Ma flotte
+La télématique ne modifie jamais Ma flotte automatiquement. Depuis la page Télématique, l'import rapproche chaque véhicule télématique d'une unité existante (NIV puis numéro d'unité) : les correspondances proposent une mise à jour (kilométrage, consommation marquée « télématique »), les autres une création — toujours après confirmation.`,
+  },
+
   conseils: {
     "choisir technologie": `## Choisir une technologie — repères qualitatifs
 - **Électrique (BEV)** : souvent avantageux au Québec (électricité peu coûteuse et très peu carbonée — voir les hypothèses vérifiées de la Bibliothèque) ; vérifier l'autonomie pour la longue distance et l'usage hors route (réserves affichées à l'étape Faisabilité, non chiffrées en v1).
@@ -137,6 +157,12 @@ const KEYWORD_MAP: Record<string, string[]> = {
   "stress test": ["stress", "sensibilité", "risque", "prudent", "tornade", "incertitude", "scénario prudent"],
   "hypothèses registre": ["hypothèse", "source", "vérifié", "estimation", "à valider", "prix", "tarif", "énergie", "bibliothèque"],
   "subventions programmes": ["subvention", "programme", "aide", "incitatif", "pavé", "roulez vert", "écocamionnage", "fédéral", "provincial", "financement"],
+  "appliquer stratégie": ["appliquer", "stratégie retenue", "appliquer la stratégie", "retenue"],
+  "données client": ["devis", "donnée client", "données client", "prix payé", "raccordement", "lettre", "octroi"],
+  "suivi demandes": ["demande", "déposée", "accordée", "reçue", "échéance", "dépôt de demande"],
+  "infrastructure dépôt": ["borne", "recharge", "dépôt", "infrastructure", "puissance", "phasage"],
+  "suivi réalisé": ["réalisé", "marquer", "coût réel", "tâche", "prévu"],
+  "import télématique": ["importer la télématique", "télématique vers", "rapprocher", "correspondance", "ma flotte"],
   "choisir technologie": ["électrique", "bev", "hydrogène", "fcev", "diesel", "technologie", "choisir", "batterie", "pile"],
 };
 
@@ -260,7 +286,7 @@ Deno.serve(async (req) => {
 - **Page actuelle**: "${asPromptData(context.page_type ?? 'inconnue', 60)}" (URL: "${asPromptData(context.current_url ?? 'N/A', 300)}")
 - **Temps sur page**: ${Math.round(context.time_on_page ?? 0)} secondes
 - **A des projets**: ${context.has_projects ? 'Oui ✓' : 'Non - suggérer de créer un projet'}
-- **A des scénarios**: ${context.has_scenarios ? 'Oui ✓' : 'Non - suggérer de créer un scénario'}
+- **A une flotte (Ma flotte)**: ${context.has_fleet ? 'Oui ✓' : 'Non - suggérer d’ajouter ou d’importer ses véhicules dans Ma flotte'}
 ` : 'Aucun contexte spécifique fourni';
     
     const systemPrompt = SYSTEM_PROMPT

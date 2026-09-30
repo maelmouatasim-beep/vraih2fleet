@@ -4045,93 +4045,73 @@
     }
   },
   "helpTraining": {
-    "title": "Help & Training",
-    "subtitle": "Learn how to use H2Fleet Planner tools and understand our calculations",
+    "title": "Help and method",
+    "subtitle": "How H2Fleet turns your actual fleet into a costed replacement plan — and where the numbers come from.",
+    "openLibrary": "See the assumptions registry (Library)",
     "disclaimer": {
-      "title": "Important Notice",
-      "text": "TCO estimates are for planning purposes only. Actual costs may vary based on local conditions, market fluctuations, and operational factors. For critical financial decisions, consult with a qualified expert."
+      "title": "Read before presenting a result",
+      "text": "Results are planning estimates computed by the TCO engine from your fleet and a registry of sourced assumptions. Each value carries its source, verification date and a status (verified, estimate, to validate). Replace estimates with your own data (prices paid, quotes, confirmed subsidies) before any decision."
     },
-    "sections": {
-      "methodology": "TCO Methodology",
-      "maintenance": "Maintenance Costs",
-      "consumption": "Energy Consumption",
-      "infrastructure": "Infrastructure Sizing",
-      "referenceData": "Reference Data",
-      "sources": "Data Sources",
-      "residual": "Residual Value",
-      "faq": "Frequently Asked Questions"
+    "journey": {
+      "title": "The 7-step journey",
+      "p1": "Fleet: pick the project’s actual vehicles (from My fleet), their replacement year and target technology; sorting and bulk actions, target suggested by Feasibility.",
+      "p2": "Feasibility: electric and hydrogen verdict per vehicle, costed by the engine (discounted savings or extra cost, payback, CO₂ avoided, subsidies), with caveats (long-haul, off-road, H₂ refuelling).",
+      "p3": "Strategies: three strategies compared with the status quo, stress test, then “Apply this strategy to the plan” after a detailed confirmation; the retained strategy is recorded.",
+      "p4": "Plan: annual budget (investment, subsidies, remaining to finance, operations) and charging infrastructure per depot (chargers, power, phasing).",
+      "p5": "Financing: plan subsidies per vehicle, client-confirmed subsidies (priority), application tracking per program and the program registry with computed status.",
+      "p6": "Reports: council-ready PDF and Excel workbook, frozen at each generation (engine version and input fingerprint in the footer).",
+      "p7": "Tracking: actual vs planned (replacements marked completed with date, acquired vehicle and actual cost) and tasks tied to vehicles, years and subsidies."
     },
-    "tcoFormula": {
-      "title": "TCO Master Formula",
-      "residualValue": "Residual Value",
-      "capexDesc": "Vehicle acquisition cost + Infrastructure investment (chargers, H₂ stations)",
-      "opexDesc": "Net Present Value of operational costs (fuel, energy, maintenance, insurance) discounted over analysis period",
-      "residual": "Residual Value",
-      "residualDesc": "Estimated vehicle value at end of analysis period (typically 20% of initial cost after 10 years)"
+    "method": {
+      "title": "The TCO method",
+      "p1": "Reference (status quo): the same fleet replaced in the same years by equivalent new diesels. Savings are always measured against this reference.",
+      "p2": "Year 0 = acquisition; operations at the end of years 1 to H (project horizon). Each vehicle enters the calculation in ITS replacement year.",
+      "p3": "Nominal cash flows (inflation per item) discounted at the project’s nominal rate — rate and horizon are editable project parameters.",
+      "p4": "Taxes: the non-recoverable share of GST/QST depends on the organization type (municipality, transit agency, company) and applies symmetrically to all relevant items, energy included.",
+      "p5": "Residual value: geometric depreciation per technology, with a floor; infrastructure is paid when the vehicles using it arrive.",
+      "p6": "Two views: economic (NPV, cost per tonne avoided) and budget (cash out per year, for capital planning).",
+      "p7": "Reproducibility: each result carries the engine version and the input fingerprint; the full methodology is appended to reports."
     },
-    "npv": {
-      "title": "NPV Calculation",
-      "desc": "Where r = discount rate (default 5%) and t = year (1 to analysis horizon)"
+    "uncertainty": {
+      "title": "Uncertainty and stress test",
+      "p1": "The stress test reruns the full engine at the bounds of each assumption’s SOURCED range — never an arbitrary ±.",
+      "p2": "Three scenarios (conservative, central, favourable) and a tornado of the most influential parameters.",
+      "p3": "The risk level is computed: does the strategy still win in the conservative scenario?"
     },
-    "opex": {
-      "title": "OPEX Components",
-      "formula": "Fuel + Maintenance + Insurance + Downtime",
-      "fuel": "Fuel/Energy: based on consumption rate × energy price × annual km",
-      "maintenance": "Maintenance: technology-specific cost per km",
-      "insurance": "Insurance: annual premium based on vehicle value",
-      "downtime": "Downtime: estimated productivity loss during charging/refueling"
-    },
-    "maintenance": {
-      "dieselDesc": "Higher due to complex drivetrain, oil changes, exhaust system maintenance",
-      "evDesc": "Lower costs: fewer moving parts, regenerative braking reduces brake wear",
-      "h2Desc": "Fuel cell stack maintenance, hydrogen system inspections"
-    },
-    "consumption": {
-      "rate": "Consumption Rate",
-      "co2": "CO₂ Factor",
-      "evCo2": "Grid-dependent (0.03-0.5 kg CO₂/kWh)",
-      "note": "Note: Consumption rates vary based on vehicle class, load, terrain, and temperature. Adaptive multipliers are applied for operational conditions."
+    "data": {
+      "title": "Where the data comes from",
+      "p1": "Priority: your data (prices paid, grid-connection quote, subsidies confirmed with the document reference) replaces the registry and is flagged “client data” in reports.",
+      "p2": "Registry: each assumption has a value, a range, an official source, a date and an honest status — “verified” only if the source was actually read.",
+      "p3": "Diesel price: average of the last 12 published months, updated by an archived weekly collection; a change of more than 20% waits for human validation.",
+      "p4": "Consumption: actual (entered or telematics) when known, otherwise the category default flagged “estimate”.",
+      "p5": "Telematics never changes My fleet automatically; vehicles are imported explicitly from the Telematics page, matched against existing units."
     },
     "infrastructure": {
-      "evChargers": "EV Charger Calculation",
-      "evFormula": "Chargers = ceil(EVs × Battery Capacity / (Charging Speed × Hours Available × Utilization))",
-      "evDefaults": "Default: 150 kWh battery, 50 kW chargers, 8h availability, 80% utilization",
-      "evCost": "Cost: $50,000 - $150,000 per DC fast charger (installed)",
-      "h2Stations": "H₂ Station Calculation",
-      "h2Formula": "Stations = ceil(Daily H₂ Demand / Station Capacity)",
-      "h2Demand": "Daily demand = Vehicles × km/day × 0.012 kg/km",
-      "h2Capacity": "Default station capacity: 200 kg/day",
-      "h2Cost": "Cost: $1,500,000 - $3,000,000 per station"
+      "title": "Charging infrastructure",
+      "p1": "Minimal sizing per depot: one charger per zero-emission vehicle, of the type suited to its category.",
+      "p2": "Chargers are commissioned in the replacement year of the vehicles using them (year-by-year phasing).",
+      "p3": "Power demand shown as a range, taken from the registry assumptions.",
+      "p4": "A grid-connection quote entered in the project replaces the registry estimate in the total."
     },
-    "referenceData": {
-      "vehiclePrices": "Vehicle Prices (Canadian Market)",
-      "dieselTruck": "Diesel Truck",
-      "evTruck": "EV Truck",
-      "h2Truck": "H₂ Truck",
-      "energyPrices": "Energy Prices (Canadian Average)",
-      "note": "These are indicative averages. For accurate calculations, use your actual contract prices."
-    },
-    "sources": {
-      "fuelPrices": "Fuel & Energy Prices",
-      "vehicles": "Vehicle & Infrastructure",
-      "oem": "Manufacturer MSRP and specifications",
-      "update": "Reference data is updated quarterly. Last update: January 2026"
-    },
-    "residual": {
-      "formula": "Residual Value = Purchase Price × Depreciation Factor",
-      "period": "Analysis Period",
-      "factor": "Depreciation Factor",
-      "retained": "Value Retained"
+    "subsidies": {
+      "title": "Subsidies",
+      "p1": "A program’s status is COMPUTED from its dates (a program ending before the purchase year is never applied).",
+      "p2": "Caps, bonuses and the public-aid stacking limit are applied by the resolver; an unknown weight class gets the lowest scale, with a warning.",
+      "p3": "An amount confirmed by document (award letter) replaces the computed subsidy of the same program.",
+      "p4": "Application tracking (to prepare, submitted, awarded, received) links each deadline to the plan task or the program end date."
     },
     "faq": {
-      "q1": "Why is the default discount rate 5%?",
-      "a1": "A 5% discount rate represents a typical cost of capital for fleet operators. You can adjust this in Advanced Parameters to match your specific financing costs.",
-      "q2": "How are cold weather impacts calculated?",
-      "a2": "Cold weather can reduce EV range by 20-40%. When enabled, this multiplier is applied to energy consumption based on regional climate data.",
-      "q3": "What is Time-of-Use (TOU) pricing?",
-      "a3": "TOU pricing applies different electricity rates based on charging time. Off-peak charging (nights/weekends) can reduce costs by 30-50%.",
-      "q4": "How are carbon credits calculated?",
-      "a4": "Carbon credits are based on CO₂ savings vs diesel baseline, valued at the current carbon price (typically $65-170/tonne in Canada)."
+      "title": "Frequently asked questions",
+      "q1": "Why are some assumptions “to validate”?",
+      "a1": "Because their official source has not yet been read and archived. The URL to check is shown in the Library; reports that depend on them say so.",
+      "q2": "How do I change the discount rate or horizon?",
+      "a2": "They are project parameters: used by every step and shown in the report appendix.",
+      "q3": "I don’t know my vehicles’ consumption.",
+      "a3": "The engine uses the category default, flagged “estimate”. Enter actual consumption in My fleet or import it through telematics to refine it.",
+      "q4": "My results changed since the last report.",
+      "a4": "A report is frozen when generated. If data changed since (collected prices, fleet, subsidies), the Reports step says so with the before/after NPV difference.",
+      "q5": "I have a quote or an award letter.",
+      "a5": "Enter the grid-connection quote in “Client data” (Organization or Feasibility) and the confirmed subsidy in the Financing step: they replace the estimates."
     }
   },
   "roadmap": {
@@ -4334,15 +4314,15 @@
         "title": "Required Infrastructure",
         "level2": {
           "title": "Level 2 Chargers (19.2 kW)",
-          "cost": "Cost: $5,000-8,000 per charger",
+          "cost": "Cost: see the sourced typical costs in the Library (replace with quotes)",
           "time": "Charging time: 6-8h (full charge)",
           "ideal": "Ideal for: Overnight depot charging",
           "ratio": "Quantity: 1 charger for 2-3 vehicles"
         },
         "dcFast": {
           "title": "DC Fast Chargers (50-150 kW)",
-          "cost": "Cost: $75,000-150,000 per charger",
-          "time": "Charging time: 30-90 min (80%)",
+          "cost": "Cost: see the sourced typical costs in the Library (replace with quotes)",
+          "time": "Charging time: depends on charger power and vehicle battery",
           "ideal": "Ideal for: Fleets with tight schedules",
           "ratio": "Quantity: 1 charger for 6-8 vehicles"
         },
@@ -4375,9 +4355,9 @@
         "description": "Cold temperatures significantly impact battery range. Plan accordingly.",
         "impact": {
           "title": "Range impact by temperature",
-          "minus10": "-10°C: -15% range",
-          "minus20": "-20°C: -30% range",
-          "minus30": "-30°C: -40% range"
+          "minus10": "Moderate cold: reduced range",
+          "minus20": "Severe cold: larger reduction",
+          "minus30": "Extreme cold: plan a range margin"
         },
         "solutions": {
           "title": "Practical solutions",
@@ -4390,7 +4370,7 @@
         },
         "callout": {
           "title": "City of Quebec Case Study",
-          "description": "Fleet of 20 electric vans, 50 km/day. TCO reduced by 35% vs diesel over 10 years."
+          "description": "The engine applies the registry’s sourced winter surcharge to electric vehicles’ consumption; check range on your actual routes."
         }
       },
       "tco": {
@@ -4442,14 +4422,14 @@
         "private": {
           "title": "Option A: Private Station (fleet >20 vehicles)",
           "cost": "Cost: $5M-10M",
-          "funding": "ZEVIP funding: up to 50%",
+          "funding": "Funding: see the programs’ computed status in the Library",
           "capacity": "Capacity: 500-1000 kg/day",
           "timeline": "Installation: 18-24 months"
         },
         "public": {
           "title": "Option B: Public Network (fleet <20)",
           "description": "HTEC stations in B.C., expanding to Alberta and Ontario",
-          "cost": "Refueling cost: $12-15/kg currently"
+          "cost": "Refuelling cost: registry H₂ price assumption (source and date in the Library)"
         },
         "callout": {
           "title": "Station viability calculator",
@@ -4460,15 +4440,15 @@
         "title": "Real Cost of Hydrogen",
         "current": {
           "title": "Current prices (2026)",
-          "public": "Public station: $12-15 CAD/kg",
-          "private": "Private production: $8-12 CAD/kg",
-          "target": "2030 target: $6 CAD/kg"
+          "public": "Public station: network still embryonic in Québec",
+          "private": "Private production or delivery: contract price — enter your price in “Client data”",
+          "target": "Price trend: uncertain, covered by the stress test"
         },
         "consumption": {
           "title": "Typical consumption",
           "class8": "Class 8 heavy: 8-10 kg H₂/100km",
-          "fuelCost": "Fuel cost: $0.80-1.50/km",
-          "vsDiesel": "Vs diesel: $0.35-0.45/km"
+          "fuelCost": "Energy cost per km: computed by the engine for each vehicle",
+          "vsDiesel": "Comparison with diesel: see the Feasibility step"
         },
         "note": "Hydrogen is still more expensive today, but the gap is closing"
       },
@@ -4501,7 +4481,7 @@
       },
       "what": {
         "title": "What is Biomethane?",
-        "description": "Renewable natural gas produced from organic waste, offering 70-90% GHG reduction vs diesel and ZEV mandate compliance in Canada.",
+        "description": "Renewable natural gas produced from organic waste; the GHG reduction depends on the pathway and must be documented by the supplier.",
         "benefits": [
           "Renewable natural gas (from organic waste)",
           "Compatible with converted diesel engines",
@@ -4511,7 +4491,7 @@
       },
       "conversion": {
         "title": "Converting Existing Fleet",
-        "cost": "Conversion cost: $40,000-60,000 per vehicle",
+        "cost": "Conversion cost: obtain through a quote",
         "subsidies": "Subsidies available (Écocamionnage in Quebec)",
         "benefit": "Can extend life of existing trucks",
         "advantages": {
@@ -4558,7 +4538,7 @@
           "Urban areas"
         ]
       },
-      "recommendation": "Recommendation: 95% BEV",
+      "recommendation": "Recommendation: urban use is often favourable to electric — confirm with the Feasibility step",
       "steps": {
         "title": "Implementation Steps",
         "items": [
@@ -4571,7 +4551,7 @@
       },
       "caseStudy": {
         "title": "Amazon Montreal Case Study",
-        "description": "100 electric vans, savings of $4,000/vehicle/year"
+        "description": "Savings depend on your fleet: the Feasibility step costs them vehicle by vehicle."
       },
       "cta": {
         "startAnalysis": "Analyze my urban fleet"
@@ -4722,8 +4702,8 @@
       },
       "federal": {
         "title": "Federal Programs (2026)",
-        "ivmlze": "iVMLZE: up to $200,000 per medium/heavy vehicle (Class 3-8, BEV and FCEV). Via dealer (automatic). Budget: $550M (2020-2027). Status: Limited funds, act fast.",
-        "zevip": "ZEVIP: 50% of eligible infrastructure costs. Max $200k/DC charger, $5M/H₂ station. Decision in 30 days. Status: Funds available until 2027."
+        "ivmlze": "iMHZEV (medium and heavy vehicles): check its computed status and verification date in the Library before including it in the plan.",
+        "zevip": "ZEVIP (infrastructure): check its computed status and verification date in the Library."
       },
       "provincial": {
         "title": "Provincial Programs (Quebec)",
@@ -4731,7 +4711,7 @@
       },
       "optimization": {
         "title": "Funding Optimization",
-        "description": "Programs can be stacked up to 90% coverage. Example: ZEVIP (50%) + Écocamionnage (30%) = 80% coverage.",
+        "description": "Public-aid stacking is capped per program; the resolver applies these limits. An amount confirmed by an award letter replaces the estimate.",
         "callout": {
           "title": "Subsidies calculator",
           "description": "Calculate subsidy impact on YOUR project: How much will you save?",
@@ -4758,10 +4738,10 @@
       },
       "energy": {
         "title": "Energy Management",
-        "description": "Hydro-Quebec off-peak rates (8pm-7am) offer 42% savings. Program smart charging to maximize savings.",
+        "description": "Hydro-Québec rates and demand charge make spread-out (off-peak) charging worthwhile; enter your actual rate in “Client data”.",
         "callout": {
           "title": "Off-peak charging tip",
-          "description": "Charging at 8pm instead of 6pm saves $1,500/vehicle/year"
+          "description": "Spreading charging limits peak demand and therefore the billed demand charge."
         }
       },
       "monitoring": {
@@ -4850,122 +4830,119 @@
     "openAssistant": "Open assistant",
     "noResponse": "Sorry, I couldn't generate a response.",
     "error": "⚠️ Temporary error. Please try again.",
-    "actions": {
-      "example": "Example",
-      "h2Price": "H2 Price",
-      "elecPrice": "Elec Price",
-      "vehicles": "Vehicles",
-      "subsidies": "Subsidies",
-      "tcoFormula": "TCO Formula",
-      "explain": "Explain",
-      "payback": "Payback",
-      "emissions": "Emissions",
-      "optimize": "Optimize",
-      "compare": "Compare",
-      "export": "Export",
-      "create": "Create",
-      "analyze": "Analyze",
-      "tips": "Tips",
-      "use": "Use",
-      "sources": "Sources",
-      "update": "Update",
-      "customize": "Customize",
-      "whatIs": "What is it?",
-      "import": "Import",
-      "modify": "Modify",
-      "apply": "Apply",
-      "start": "Start",
-      "createProject": "Create project",
-      "h2Station": "H2 Station",
-      "evChargers": "EV Chargers",
-      "sizing": "Sizing",
-      "power": "Power",
-      "ecocamionnage": "Écocamionnage",
-      "stack": "Stack",
-      "dates": "Dates",
-      "amounts": "Amounts",
-      "keyKpis": "Key KPIs",
-      "sensitivity": "Sensitivity",
-      "scenarios": "Scenarios",
-      "connection": "Connection",
-      "data": "Data",
-      "group": "Group",
-      "autoScenarios": "Auto-scenarios",
-      "configure": "Configure",
-      "duplicate": "Duplicate",
-      "organize": "Organize",
-      "h2Manufacturers": "H2 Manufacturers",
-      "chargers": "Chargers",
-      "hydrogen": "Hydrogen",
-      "contact": "Contact",
-      "pricing": "Pricing",
-      "getStarted": "Get started",
-      "tcoHelp": "TCO Help",
-      "firstProject": "First project",
-      "features": "Features"
+    "quick": {
+      "whatIsH2Fleet": {
+        "label": "What is it?",
+        "query": "What is H2Fleet and how does it work?"
+      },
+      "getStarted": {
+        "label": "Get started",
+        "query": "How do I get started with H2Fleet?"
+      },
+      "journeySteps": {
+        "label": "Journey",
+        "query": "What are the 7 steps of the project journey?"
+      },
+      "whereNumbers": {
+        "label": "Sources",
+        "query": "Where do the numbers come from and how are they verified?"
+      },
+      "importFleet": {
+        "label": "Import",
+        "query": "How do I import my fleet from a CSV or Excel file?"
+      },
+      "estimatedConsumption": {
+        "label": "Estimates",
+        "query": "What does an “estimate” consumption mean?"
+      },
+      "telematicsToFleet": {
+        "label": "Telematics",
+        "query": "How do I import my telematics vehicles into My fleet?"
+      },
+      "createProject": {
+        "label": "New project",
+        "query": "How do I create a project?"
+      },
+      "projectParams": {
+        "label": "Parameters",
+        "query": "How do I change the analysis horizon and discount rate?"
+      },
+      "selectVehicles": {
+        "label": "Select",
+        "query": "How do I choose the project’s vehicles, years and targets?"
+      },
+      "suggestedTarget": {
+        "label": "Suggested target",
+        "query": "Where does the suggested target come from?"
+      },
+      "readVerdict": {
+        "label": "Verdict",
+        "query": "How do I read the feasibility verdict?"
+      },
+      "clientData": {
+        "label": "Client data",
+        "query": "How do I enter my energy prices, a quote or a confirmed subsidy?"
+      },
+      "stressTest": {
+        "label": "Stress test",
+        "query": "How does the stress test work?"
+      },
+      "applyStrategy": {
+        "label": "Apply",
+        "query": "What does “Apply this strategy to the plan” do?"
+      },
+      "readBudget": {
+        "label": "Budget",
+        "query": "How do I read the plan’s annual budget?"
+      },
+      "depotInfra": {
+        "label": "Chargers",
+        "query": "How is charging infrastructure sized per depot?"
+      },
+      "programStatus": {
+        "label": "Statuses",
+        "query": "How is the status of subsidy programs computed?"
+      },
+      "confirmedSubsidy": {
+        "label": "Confirmed",
+        "query": "How do I enter a subsidy confirmed by document?"
+      },
+      "applicationTracking": {
+        "label": "Applications",
+        "query": "How do I track my subsidy applications?"
+      },
+      "reportSnapshot": {
+        "label": "Report",
+        "query": "Why is my report frozen and how do I update it?"
+      },
+      "markCompleted": {
+        "label": "Completed",
+        "query": "How do I mark a replacement as completed?"
+      },
+      "generatedTasks": {
+        "label": "Tasks",
+        "query": "How do the plan’s generated tasks work?"
+      },
+      "assumptionStatus": {
+        "label": "Statuses",
+        "query": "What do “verified”, “estimate” and “to validate” mean?"
+      },
+      "connectTelematics": {
+        "label": "Connect",
+        "query": "How do I connect Geotab or Samsara?"
+      },
+      "inviteTeam": {
+        "label": "Team",
+        "query": "How do I invite my team into my organization?"
+      }
     },
-    "queries": {
-      "scenarioExample": "Show me a typical scenario example for a Class 8 truck fleet",
-      "h2Price": "What hydrogen price should I use?",
-      "elecPrice": "What are the electricity rates for fleets in Canada?",
-      "availableVehicles": "What hydrogen and electric vehicles are available in Canada?",
-      "subsidiesForTco": "What subsidies can I include in my TCO calculation?",
-      "tcoFormula": "How is the TCO calculated exactly?",
-      "explainResults": "Explain these TCO results in simple terms",
-      "paybackPeriod": "What is the typical payback period for a hydrogen fleet?",
-      "emissionsCalc": "How are CO2 emissions calculated?",
-      "improveTco": "How can I improve my TCO?",
-      "compareScenarios": "How can I compare this scenario with others?",
-      "exportResults": "How can I export and share these results?",
-      "createScenario": "How do I create a new TCO scenario?",
-      "compareMultiple": "How can I compare multiple scenarios?",
-      "interpretResults": "How do I interpret the results of my scenarios?",
-      "techRecommendation": "What technologies do you recommend for my fleet?",
-      "exportScenarioResults": "How can I export my scenario results?",
-      "useReferenceData": "How do I use this reference data in my scenarios?",
-      "dataSources": "Where does this reference data come from?",
-      "dataUpdateFreq": "How often is the data updated?",
-      "modifyReference": "Can I modify the reference values?",
-      "customDataPurpose": "What is custom data used for?",
-      "importData": "How do I import my own reference data?",
-      "modifyValue": "How do I modify a reference value?",
-      "applyCustomData": "How do I apply my custom data to a scenario?",
-      "exportCustomData": "How can I export my custom data?",
-      "guideFirstProject": "Guide me to create my first project and TCO scenario",
-      "createProject": "How do I create a new project?",
-      "supportedVehicles": "What types of vehicles are supported by H2Fleet?",
-      "availableSubsidies": "What subsidies are available in Canada?",
-      "completeExample": "Show me a complete TCO scenario example",
-      "h2StationCost": "How much does a hydrogen station cost?",
-      "chargerCosts": "What are the costs of charging stations?",
-      "sizingInfra": "How do I size my charging infrastructure?",
-      "gridPower": "What electrical power should I plan for?",
-      "applyInfraCosts": "How do I apply these infrastructure costs to a scenario?",
-      "imhzevProgram": "How does the iMHZEV program work?",
-      "ecocamionnage": "How does Écocamionnage Quebec work?",
-      "stackSubsidies": "Can I combine federal and provincial subsidies?",
-      "subsidyDeadlines": "What are the deadlines to apply for subsidies?",
-      "maxSubsidyAmounts": "What are the maximum subsidy amounts per vehicle?",
-      "importantKpis": "What are the most important KPIs to track?",
-      "sensitivityAnalysis": "What is sensitivity analysis?",
-      "roiCalculation": "How is the return on investment calculated?",
-      "scenariosImpact": "How do different scenarios impact projections?",
-      "connectTelematics": "How do I connect my Geotab or Samsara telematics?",
-      "telematicsData": "What data is imported from telematics?",
-      "groupVehicles": "How do I group my vehicles for analysis?",
-      "autoGenerateScenarios": "How do I automatically generate scenarios from my data?",
-      "configureProject": "How do I configure the analysis duration and discount rate?",
-      "duplicateProject": "How do I duplicate an existing project?",
-      "organizeProjects": "How do I organize my projects effectively?",
-      "h2TruckManufacturers": "What are the hydrogen truck manufacturers in Canada?",
-      "chargerSuppliers": "What charging station suppliers do you recommend?",
-      "hydrogenSuppliers": "Who supplies hydrogen?",
-      "contactSuppliers": "How can I contact these suppliers?",
-      "whatIsH2Fleet": "What is H2Fleet and how does it work?",
-      "h2FleetPricing": "What are the H2Fleet pricing plans?",
-      "getStarted": "How do I get started with H2Fleet?",
-      "tcoAnalysisHelp": "Explain how TCO analysis works in H2Fleet",
-      "mainFeatures": "What are the main features of H2Fleet?"
+    "triggers": {
+      "welcomeNewUser": "👋 First visit? Start with **My fleet** (add or import CSV/Excel), then create a project: the 7-step journey does the rest. Ask me anything!",
+      "noFleetYet": "💡 My fleet is still empty. Add or import your vehicles: every calculation starts from your actual fleet.",
+      "noProjectsYet": "💡 Your fleet is ready. Create a project: step 1 lets you pick the vehicles to plan.",
+      "feasibilityIntro": "📝 Verdicts are costed by the engine for each vehicle. Your prices paid or a grid-connection quote (“Client data”) replace the estimates.",
+      "strategiesApply": "✅ Happy with a strategy? “Apply this strategy to the plan” updates the targets after showing you the details.",
+      "financingConfirmed": "🧾 Have an award letter? Enter the confirmed subsidy with its reference: it replaces the estimate in the plan and the report."
     }
   },
   "featureDoc": {

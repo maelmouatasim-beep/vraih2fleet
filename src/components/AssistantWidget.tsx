@@ -12,6 +12,7 @@ import {
   getShownTriggersKey,
   type TriggerContext 
 } from '@/lib/proactive-triggers';
+import { actionsRapides, typePage, type TypePage } from '@/lib/assistant/context';
 
 interface Message {
   id: string;
@@ -38,121 +39,14 @@ function getWelcomeMessage(t: (key: string, fallback: string) => string): Messag
   };
 }
 
-// Helper to determine page type from pathname
-function getPageType(pathname: string): string {
-  if (pathname.includes('/scenarios/new') || pathname.includes('/flexible')) return 'scenario_form';
-  if (pathname.includes('/scenarios') && pathname.includes('/results')) return 'scenario_results';
-  if (pathname.includes('/scenarios')) return 'scenarios_list';
-  if (pathname.includes('/projects')) return 'projects';
-  if (pathname.includes('/infrastructure')) return 'infrastructure';
-  if (pathname.includes('/analytics')) return 'analytics';
-  if (pathname.includes('/telematics')) return 'telematics';
-  if (pathname.includes('/donnees-ref') || pathname.includes('/reference-data')) return 'reference_data';
-  if (pathname.includes('/custom-data')) return 'custom_data';
-  if (pathname.includes('/subsidies')) return 'subsidies';
-  if (pathname.includes('/suppliers')) return 'suppliers';
-  if (pathname === '/dashboard') return 'dashboard';
-  if (pathname === '/') return 'home';
-  return 'unknown';
-}
-
-// Get contextual quick actions based on current page - with i18n
-function getContextualActions(pageType: string, t: (key: string, fallback: string) => string): QuickAction[] {
-  const actionsMap: Record<string, QuickAction[]> = {
-    scenario_form: [
-      { id: 'example', icon: '📋', label: t('assistant.actions.example', 'Example'), query: t('assistant.queries.scenarioExample', 'Show me a typical scenario example for a Class 8 truck fleet') },
-      { id: 'h2-price', icon: '💰', label: t('assistant.actions.h2Price', 'H2 Price'), query: t('assistant.queries.h2Price', 'What hydrogen price should I use?') },
-      { id: 'elec-price', icon: '⚡', label: t('assistant.actions.elecPrice', 'Elec Price'), query: t('assistant.queries.elecPrice', 'What are the electricity rates for fleets in Canada?') },
-      { id: 'vehicles', icon: '🚛', label: t('assistant.actions.vehicles', 'Vehicles'), query: t('assistant.queries.availableVehicles', 'What hydrogen and electric vehicles are available in Canada?') },
-      { id: 'subsidies', icon: '🇨🇦', label: t('assistant.actions.subsidies', 'Subsidies'), query: t('assistant.queries.subsidiesForTco', 'What subsidies can I include in my TCO calculation?') },
-      { id: 'formula', icon: '📐', label: t('assistant.actions.tcoFormula', 'TCO Formula'), query: t('assistant.queries.tcoFormula', 'How is the TCO calculated exactly?') }
-    ],
-    scenario_results: [
-      { id: 'explain', icon: '📈', label: t('assistant.actions.explain', 'Explain'), query: t('assistant.queries.explainResults', 'Explain these TCO results in simple terms') },
-      { id: 'payback', icon: '📉', label: t('assistant.actions.payback', 'Payback'), query: t('assistant.queries.paybackPeriod', 'What is the typical payback period for a hydrogen fleet?') },
-      { id: 'emissions', icon: '🌱', label: t('assistant.actions.emissions', 'Emissions'), query: t('assistant.queries.emissionsCalc', 'How are CO2 emissions calculated?') },
-      { id: 'optimize', icon: '🔧', label: t('assistant.actions.optimize', 'Optimize'), query: t('assistant.queries.improveTco', 'How can I improve my TCO?') },
-      { id: 'compare', icon: '⚖️', label: t('assistant.actions.compare', 'Compare'), query: t('assistant.queries.compareScenarios', 'How can I compare this scenario with others?') },
-      { id: 'export', icon: '📄', label: t('assistant.actions.export', 'Export'), query: t('assistant.queries.exportResults', 'How can I export and share these results?') }
-    ],
-    scenarios_list: [
-      { id: 'create', icon: '➕', label: t('assistant.actions.create', 'Create'), query: t('assistant.queries.createScenario', 'How do I create a new TCO scenario?') },
-      { id: 'compare', icon: '⚖️', label: t('assistant.actions.compare', 'Compare'), query: t('assistant.queries.compareMultiple', 'How can I compare multiple scenarios?') },
-      { id: 'analyze', icon: '📊', label: t('assistant.actions.analyze', 'Analyze'), query: t('assistant.queries.interpretResults', 'How do I interpret the results of my scenarios?') },
-      { id: 'recommend', icon: '💡', label: t('assistant.actions.tips', 'Tips'), query: t('assistant.queries.techRecommendation', 'What technologies do you recommend for my fleet?') },
-      { id: 'export', icon: '📤', label: t('assistant.actions.export', 'Export'), query: t('assistant.queries.exportScenarioResults', 'How can I export my scenario results?') }
-    ],
-    reference_data: [
-      { id: 'how-to-use', icon: '❓', label: t('assistant.actions.use', 'Use'), query: t('assistant.queries.useReferenceData', 'How do I use this reference data in my scenarios?') },
-      { id: 'sources', icon: '📚', label: t('assistant.actions.sources', 'Sources'), query: t('assistant.queries.dataSources', 'Where does this reference data come from?') },
-      { id: 'update', icon: '🔄', label: t('assistant.actions.update', 'Update'), query: t('assistant.queries.dataUpdateFreq', 'How often is the data updated?') },
-      { id: 'customize', icon: '✏️', label: t('assistant.actions.customize', 'Customize'), query: t('assistant.queries.modifyReference', 'Can I modify the reference values?') }
-    ],
-    custom_data: [
-      { id: 'what-is', icon: '❓', label: t('assistant.actions.whatIs', 'What is it?'), query: t('assistant.queries.customDataPurpose', 'What is custom data used for?') },
-      { id: 'import', icon: '📥', label: t('assistant.actions.import', 'Import'), query: t('assistant.queries.importData', 'How do I import my own reference data?') },
-      { id: 'modify', icon: '✏️', label: t('assistant.actions.modify', 'Modify'), query: t('assistant.queries.modifyValue', 'How do I modify a reference value?') },
-      { id: 'apply', icon: '🔗', label: t('assistant.actions.apply', 'Apply'), query: t('assistant.queries.applyCustomData', 'How do I apply my custom data to a scenario?') },
-      { id: 'export', icon: '📤', label: t('assistant.actions.export', 'Export'), query: t('assistant.queries.exportCustomData', 'How can I export my custom data?') }
-    ],
-    dashboard: [
-      { id: 'start', icon: '🚀', label: t('assistant.actions.start', 'Start'), query: t('assistant.queries.guideFirstProject', 'Guide me to create my first project and TCO scenario') },
-      { id: 'create', icon: '➕', label: t('assistant.actions.createProject', 'Create project'), query: t('assistant.queries.createProject', 'How do I create a new project?') },
-      { id: 'vehicle-types', icon: '🚛', label: t('assistant.actions.vehicles', 'Vehicles'), query: t('assistant.queries.supportedVehicles', 'What types of vehicles are supported by H2Fleet?') },
-      { id: 'subsidies', icon: '💰', label: t('assistant.actions.subsidies', 'Subsidies'), query: t('assistant.queries.availableSubsidies', 'What subsidies are available in Canada?') },
-      { id: 'demo', icon: '📊', label: t('assistant.actions.example', 'Example'), query: t('assistant.queries.completeExample', 'Show me a complete TCO scenario example') }
-    ],
-    infrastructure: [
-      { id: 'h2-station', icon: '🔋', label: t('assistant.actions.h2Station', 'H2 Station'), query: t('assistant.queries.h2StationCost', 'How much does a hydrogen station cost?') },
-      { id: 'ev-chargers', icon: '⚡', label: t('assistant.actions.evChargers', 'EV Chargers'), query: t('assistant.queries.chargerCosts', 'What are the costs of charging stations?') },
-      { id: 'sizing', icon: '📍', label: t('assistant.actions.sizing', 'Sizing'), query: t('assistant.queries.sizingInfra', 'How do I size my charging infrastructure?') },
-      { id: 'grid', icon: '🔌', label: t('assistant.actions.power', 'Power'), query: t('assistant.queries.gridPower', 'What electrical power should I plan for?') },
-      { id: 'apply', icon: '🔗', label: t('assistant.actions.apply', 'Apply'), query: t('assistant.queries.applyInfraCosts', 'How do I apply these infrastructure costs to a scenario?') }
-    ],
-    subsidies: [
-      { id: 'imhzev', icon: '🇨🇦', label: 'iMHZEV', query: t('assistant.queries.imhzevProgram', 'How does the iMHZEV program work?') },
-      { id: 'ecocamionnage', icon: '🍁', label: t('assistant.actions.ecocamionnage', 'Écocamionnage'), query: t('assistant.queries.ecocamionnage', 'How does Écocamionnage Quebec work?') },
-      { id: 'cumul', icon: '📋', label: t('assistant.actions.stack', 'Stack'), query: t('assistant.queries.stackSubsidies', 'Can I combine federal and provincial subsidies?') },
-      { id: 'deadlines', icon: '📅', label: t('assistant.actions.dates', 'Dates'), query: t('assistant.queries.subsidyDeadlines', 'What are the deadlines to apply for subsidies?') },
-      { id: 'max-amounts', icon: '💵', label: t('assistant.actions.amounts', 'Amounts'), query: t('assistant.queries.maxSubsidyAmounts', 'What are the maximum subsidy amounts per vehicle?') }
-    ],
-    analytics: [
-      { id: 'kpis', icon: '📈', label: t('assistant.actions.keyKpis', 'Key KPIs'), query: t('assistant.queries.importantKpis', 'What are the most important KPIs to track?') },
-      { id: 'sensitivity', icon: '📊', label: t('assistant.actions.sensitivity', 'Sensitivity'), query: t('assistant.queries.sensitivityAnalysis', 'What is sensitivity analysis?') },
-      { id: 'roi', icon: '💰', label: 'ROI', query: t('assistant.queries.roiCalculation', 'How is the return on investment calculated?') },
-      { id: 'scenarios-impact', icon: '🔄', label: t('assistant.actions.scenarios', 'Scenarios'), query: t('assistant.queries.scenariosImpact', 'How do different scenarios impact projections?') }
-    ],
-    telematics: [
-      { id: 'connect', icon: '🔌', label: t('assistant.actions.connection', 'Connection'), query: t('assistant.queries.connectTelematics', 'How do I connect my Geotab or Samsara telematics?') },
-      { id: 'data', icon: '📊', label: t('assistant.actions.data', 'Data'), query: t('assistant.queries.telematicsData', 'What data is imported from telematics?') },
-      { id: 'groups', icon: '🚛', label: t('assistant.actions.group', 'Group'), query: t('assistant.queries.groupVehicles', 'How do I group my vehicles for analysis?') },
-      { id: 'auto-scenarios', icon: '🤖', label: t('assistant.actions.autoScenarios', 'Auto-scenarios'), query: t('assistant.queries.autoGenerateScenarios', 'How do I automatically generate scenarios from my data?') }
-    ],
-    projects: [
-      { id: 'create', icon: '➕', label: t('assistant.actions.create', 'Create'), query: t('assistant.queries.createProject', 'How do I create a new project?') },
-      { id: 'configure', icon: '⚙️', label: t('assistant.actions.configure', 'Configure'), query: t('assistant.queries.configureProject', 'How do I configure the analysis duration and discount rate?') },
-      { id: 'duplicate', icon: '📋', label: t('assistant.actions.duplicate', 'Duplicate'), query: t('assistant.queries.duplicateProject', 'How do I duplicate an existing project?') },
-      { id: 'organize', icon: '🗂️', label: t('assistant.actions.organize', 'Organize'), query: t('assistant.queries.organizeProjects', 'How do I organize my projects effectively?') }
-    ],
-    suppliers: [
-      { id: 'h2-manufacturers', icon: '🚛', label: t('assistant.actions.h2Manufacturers', 'H2 Manufacturers'), query: t('assistant.queries.h2TruckManufacturers', 'What are the hydrogen truck manufacturers in Canada?') },
-      { id: 'ev-chargers', icon: '⚡', label: t('assistant.actions.chargers', 'Chargers'), query: t('assistant.queries.chargerSuppliers', 'What charging station suppliers do you recommend?') },
-      { id: 'h2-suppliers', icon: '🔋', label: t('assistant.actions.hydrogen', 'Hydrogen'), query: t('assistant.queries.hydrogenSuppliers', 'Who supplies hydrogen?') },
-      { id: 'contact', icon: '📞', label: t('assistant.actions.contact', 'Contact'), query: t('assistant.queries.contactSuppliers', 'How can I contact these suppliers?') }
-    ],
-    home: [
-      { id: 'what-is', icon: '❓', label: t('assistant.actions.whatIs', 'What is it?'), query: t('assistant.queries.whatIsH2Fleet', 'What is H2Fleet and how does it work?') },
-      { id: 'pricing', icon: '💰', label: t('assistant.actions.pricing', 'Pricing'), query: t('assistant.queries.h2FleetPricing', 'What are the H2Fleet pricing plans?') },
-      { id: 'start', icon: '🚀', label: t('assistant.actions.getStarted', 'Get started'), query: t('assistant.queries.getStarted', 'How do I get started with H2Fleet?') }
-    ]
-  };
-  
-  // Fallback actions
-  return actionsMap[pageType] || [
-    { id: 'help-tco', icon: '📊', label: t('assistant.actions.tcoHelp', 'TCO Help'), query: t('assistant.queries.tcoAnalysisHelp', 'Explain how TCO analysis works in H2Fleet') },
-    { id: 'first-project', icon: '🚀', label: t('assistant.actions.firstProject', 'First project'), query: t('assistant.queries.guideFirstProject', 'Guide me to create my first TCO project') },
-    { id: 'features', icon: '✨', label: t('assistant.actions.features', 'Features'), query: t('assistant.queries.mainFeatures', 'What are the main features of H2Fleet?') }
-  ];
+// Type de page et actions rapides : module PUR src/lib/assistant/context.ts (D3)
+function getContextualActions(pageType: TypePage, t: (key: string) => string): QuickAction[] {
+  return actionsRapides(pageType).map((a) => ({
+    id: a.id,
+    icon: a.icon,
+    label: t(`assistant.quick.${a.cle}.label`),
+    query: t(`assistant.quick.${a.cle}.query`),
+  }));
 }
 
 // Simple Markdown renderer for assistant messages
@@ -267,7 +161,7 @@ export function AssistantWidget() {
   const [shownTriggerIds, setShownTriggerIds] = useState<Set<string>>(new Set());
   const [timeOnPage, setTimeOnPage] = useState(0);
   const [hasProjects, setHasProjects] = useState<boolean | undefined>(undefined);
-  const [hasScenarios, setHasScenarios] = useState<boolean | undefined>(undefined);
+  const [hasFleet, setHasFleet] = useState<boolean | undefined>(undefined);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -277,7 +171,7 @@ export function AssistantWidget() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const pageType = getPageType(location.pathname);
+  const pageType = typePage(location.pathname);
   const quickActions = getContextualActions(pageType, t);
 
   // Load messages and shown triggers from localStorage on mount
@@ -344,7 +238,7 @@ export function AssistantWidget() {
     return () => clearInterval(interval);
   }, []);
 
-  // Fetch user data to check if they have projects/scenarios
+  // Contexte : projets et flotte de l’utilisateur
   useEffect(() => {
     if (user?.id) {
       supabase
@@ -357,12 +251,11 @@ export function AssistantWidget() {
         });
       
       supabase
-        .from('scenarios')
-        .select('id, projects!inner(user_id)')
-        .eq('projects.user_id', user.id)
+        .from('vehicles')
+        .select('id')
         .limit(1)
         .then(({ data }) => {
-          setHasScenarios(data && data.length > 0);
+          setHasFleet(!!data && data.length > 0);
         });
     }
   }, [user?.id]);
@@ -378,21 +271,21 @@ export function AssistantWidget() {
       is_new_user: hasProjects === false,
       time_on_page: timeOnPage,
       has_projects: hasProjects,
-      has_scenarios: hasScenarios,
+      has_fleet: hasFleet,
     };
 
     const trigger = evaluateProactiveTriggers(context, shownTriggerIds);
     
     if (trigger) {
       const alreadyShown = messages.some(m => 
-        m.role === 'proactive' && m.content === trigger.message
+        m.role === 'proactive' && m.content === t(trigger.messageKey)
       );
       
       if (!alreadyShown) {
         const proactiveMessage: Message = {
           id: `proactive-${trigger.id}-${Date.now()}`,
           role: 'proactive',
-          content: trigger.message,
+          content: t(trigger.messageKey),
           timestamp: new Date(),
         };
         
@@ -400,7 +293,7 @@ export function AssistantWidget() {
         setShownTriggerIds(prev => new Set([...prev, trigger.id]));
       }
     }
-  }, [isOpen, location.pathname, user?.id, hasProjects, hasScenarios, timeOnPage, shownTriggerIds, messages, pageType]);
+  }, [isOpen, location.pathname, user?.id, hasProjects, hasFleet, timeOnPage, shownTriggerIds, messages, pageType]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -483,7 +376,7 @@ export function AssistantWidget() {
             page_type: pageType,
             time_on_page: timeOnPage,
             has_projects: hasProjects,
-            has_scenarios: hasScenarios,
+            has_fleet: hasFleet,
           },
         }),
       });
