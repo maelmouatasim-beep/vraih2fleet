@@ -39,6 +39,7 @@ import type { SubsidyApplicationRow } from "@/lib/supabase/subsidyApplications";
 import { PROGRAMMES } from "@/lib/tco";
 import { formateurCad } from "@/lib/format";
 import { CalendarClock, FileText, Loader2, Plus, Trash2 } from "lucide-react";
+import { nomCourtProgramme } from "@/lib/tco/translations-en";
 
 const selectCls =
   "flex h-9 w-full rounded-md border border-input bg-background px-2 py-1 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -76,6 +77,7 @@ const FORME_VIDE: FormulaireDemande = { programId: "", label: "", vehicleId: "",
 
 export default function SubsidyApplicationsCard({ projectId, vehicules }: SubsidyApplicationsCardProps) {
   const { t, i18n } = useTranslation();
+  const langue = i18n.language === "en" ? "en" : "fr";
   const { applications, tachesSubvention, isLoading, creer, modifier, supprimer } =
     useSubsidyApplications(projectId);
   const [forme, setForme] = useState<FormulaireDemande>({ ...FORME_VIDE });
@@ -208,7 +210,7 @@ export default function SubsidyApplicationsCard({ projectId, vehicules }: Subsid
             >
               <option value="">{t("journey.applications.form.chooseProgram")}</option>
               {PROGRAMMES.map((p) => (
-                <option key={p.id} value={p.id}>{p.nom.split("—")[0].trim()}</option>
+                <option key={p.id} value={p.id}>{nomCourtProgramme(p.id, langue)}</option>
               ))}
               <option value="autre">{t("journey.applications.form.other")}</option>
             </select>
@@ -283,7 +285,7 @@ export default function SubsidyApplicationsCard({ projectId, vehicules }: Subsid
                   return (
                     <TableRow key={a.id}>
                       <TableCell className="font-medium">
-                        {nomProgramme(a.program_id, a.label)}
+                        {nomProgramme(a.program_id, a.label, langue)}
                         {(a.submitted_date || a.decision_date || a.received_date) && (
                           <p className="text-xs text-muted-foreground font-normal">
                             {[

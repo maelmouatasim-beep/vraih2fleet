@@ -26,6 +26,7 @@ import { useConfirmedSubsidies } from "@/hooks/useConfirmedSubsidies";
 import { libelleCourtProgramme } from "@/lib/confirmedSubsidies";
 import { PROGRAMMES } from "@/lib/tco";
 import { BadgeCheck, Loader2, Trash2 } from "lucide-react";
+import { nomCourtProgramme } from "@/lib/tco/translations-en";
 
 const selectCls =
   "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -37,6 +38,7 @@ interface ConfirmedSubsidiesCardProps {
 
 export default function ConfirmedSubsidiesCard({ projectId, vehicules }: ConfirmedSubsidiesCardProps) {
   const { t, i18n } = useTranslation();
+  const langue = i18n.language === "en" ? "en" : "fr";
   const { lignes, ajouter, retirer } = useConfirmedSubsidies(projectId);
   const uniteParId = new Map(vehicules.map((v) => [v.vehicleId, v.unite]));
 
@@ -109,7 +111,9 @@ export default function ConfirmedSubsidiesCard({ projectId, vehicules }: Confirm
                 <TableRow key={l.id}>
                   <TableCell className="font-medium">{uniteParId.get(l.vehicle_id) ?? "—"}</TableCell>
                   <TableCell>
-                    {libelleCourtProgramme(l.program_id, l.label)}{" "}
+                    {l.program_id === "autre"
+                      ? libelleCourtProgramme(l.program_id, l.label)
+                      : nomCourtProgramme(l.program_id, langue)}{" "}
                     <Badge variant="secondary">{t("confirmedSubsidies.confirmed")}</Badge>
                   </TableCell>
                   <TableCell className="text-right">
@@ -164,7 +168,7 @@ export default function ConfirmedSubsidiesCard({ projectId, vehicules }: Confirm
             >
               {programmesVehicule.map((p) => (
                 <option key={p.id} value={p.id}>
-                  {p.nom.split("—")[0].trim()}
+                  {nomCourtProgramme(p.id, langue)}
                 </option>
               ))}
               <option value="autre">{t("confirmedSubsidies.form.other")}</option>

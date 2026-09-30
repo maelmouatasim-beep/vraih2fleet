@@ -34,6 +34,7 @@ import { setProjectStrategy, type ProjectDTO } from "@/lib/supabase/projects";
 import { cn } from "@/lib/utils";
 import { CheckCircle2, ClipboardCheck, Loader2 } from "lucide-react";
 import StressTestPanel from "./StressTestPanel";
+import { traduireAvertissement } from "@/lib/tco/translations-en";
 
 interface StrategiesStepProps {
   projectId: string;
@@ -42,6 +43,7 @@ interface StrategiesStepProps {
 
 export default function StrategiesStep({ projectId, project }: StrategiesStepProps) {
   const { t, i18n } = useTranslation();
+  const langue = i18n.language === "en" ? "en" : "fr";
   const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading, modifier } = useProjectVehicles(projectId);
   const { confirmeesParVehicule } = useConfirmedSubsidies(projectId);
@@ -270,7 +272,7 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
                 {[...selectionnee.avertissementsSubventions, ...selectionnee.resultat.avertissements]
                   .slice(0, 8)
                   .map((a, i) => (
-                    <li key={i}>{a}</li>
+                    <li key={i}>{traduireAvertissement(a, langue)}</li>
                   ))}
               </ul>
             )}

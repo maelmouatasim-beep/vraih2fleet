@@ -28,6 +28,7 @@ import type { ProjectDTO } from "@/lib/supabase/projects";
 import { ExternalLink, Loader2 } from "lucide-react";
 import ConfirmedSubsidiesCard from "./ConfirmedSubsidiesCard";
 import SubsidyApplicationsCard from "./SubsidyApplicationsCard";
+import { cumulProgramme, nomProgramme, traduireLibelleSubvention } from "@/lib/tco/translations-en";
 
 interface FinancingStepProps {
   projectId: string;
@@ -36,6 +37,7 @@ interface FinancingStepProps {
 
 export default function FinancingStep({ projectId, project }: FinancingStepProps) {
   const { t, i18n } = useTranslation();
+  const langue = i18n.language === "en" ? "en" : "fr";
   const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading } = useProjectVehicles(projectId);
   const { confirmeesParVehicule } = useConfirmedSubsidies(projectId);
@@ -190,7 +192,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
                         <div className="space-y-0.5 text-sm">
                           {l.subventions.map((s) => (
                             <p key={s.libelle}>
-                              {s.libelle} — {argent.format(s.montant)}{" "}
+                              {traduireLibelleSubvention(s.libelle, langue)} — {argent.format(s.montant)}{" "}
                               <span className="text-muted-foreground">
                                 ({t("journey.financing.paidIn", { year: donnees.anneeReference + s.annee })})
                               </span>
@@ -238,7 +240,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
             return (
               <div key={prog.id} className="rounded-lg border border-border p-4 space-y-2">
                 <div className="flex flex-wrap items-start justify-between gap-2">
-                  <p className="font-medium">{prog.nom}</p>
+                  <p className="font-medium">{nomProgramme(prog.id, langue)}</p>
                   <div className="flex flex-wrap gap-1.5">
                     <Badge variant="outline">{t(`journey.financing.level.${prog.palier}`)}</Badge>
                     <Badge variant="outline">{t(`journey.financing.target.${prog.cible}`)}</Badge>
@@ -256,7 +258,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
                       })}
                     </p>
                   )}
-                  <p>{prog.cumul}</p>
+                  <p>{cumulProgramme(prog.id, langue)}</p>
                   {prog.dateFin && statut === "actif" && (
                     <p>{t("journey.financing.until", { date: prog.dateFin })}</p>
                   )}

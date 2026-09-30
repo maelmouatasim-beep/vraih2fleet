@@ -33,6 +33,7 @@ import {
 } from "@/lib/library/registry";
 import { formateurCad } from "@/lib/format";
 import { ArrowRight, BookOpen, ExternalLink, Plug } from "lucide-react";
+import { cumulProgramme, descriptionHypothese, nomProgramme } from "@/lib/tco/translations-en";
 
 const selectCls =
   "flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2";
@@ -45,6 +46,7 @@ const VARIANTE_STATUT: Record<StatutHypothese, "secondary" | "outline" | "destru
 
 export default function Library() {
   const { t, i18n } = useTranslation();
+  const langue = i18n.language === "en" ? "en" : "fr";
   const [recherche, setRecherche] = useState("");
   const [statut, setStatut] = useState<StatutHypothese | "tous">("tous");
 
@@ -137,7 +139,7 @@ export default function Library() {
                     {hypotheses.map((h) => (
                       <TableRow key={h.id}>
                         <TableCell className="max-w-md">
-                          <p className="font-medium text-sm">{h.description}</p>
+                          <p className="font-medium text-sm">{descriptionHypothese(h.id, langue)}</p>
                           <p className="text-xs text-muted-foreground font-mono">{h.id}</p>
                         </TableCell>
                         <TableCell className="text-right whitespace-nowrap">
@@ -180,7 +182,7 @@ export default function Library() {
                 <Card key={prog.id}>
                   <CardContent className="py-4 space-y-2">
                     <div className="flex flex-wrap items-start justify-between gap-2">
-                      <p className="font-medium">{prog.nom}</p>
+                      <p className="font-medium">{nomProgramme(prog.id, langue)}</p>
                       <div className="flex flex-wrap gap-1.5">
                         <Badge variant={statutProg === "actif" ? "default" : "outline"}>
                           {t(`journey.financing.status.${statutProg}`, { date: prog.dateFin })}
@@ -192,7 +194,7 @@ export default function Library() {
                       {plafondMax > 0 && (
                         <p>{t("journey.financing.maxPerVehicle", { amount: argent.format(plafondMax) })}</p>
                       )}
-                      <p>{prog.cumul}</p>
+                      <p>{cumulProgramme(prog.id, langue)}</p>
                       {prog.dateFin && <p>{t("journey.financing.until", { date: prog.dateFin })}</p>}
                     </div>
                     <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">

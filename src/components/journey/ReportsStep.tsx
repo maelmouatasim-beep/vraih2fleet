@@ -139,7 +139,12 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
     if (!donnees) return;
     setEnCours("xlsx");
     try {
-      const feuilles = construireClasseurPlan(donnees.strategie, donnees.unites, donnees.meta);
+      const feuilles = construireClasseurPlan(
+        donnees.strategie,
+        donnees.unites,
+        donnees.meta,
+        i18n.language === "en" ? "en" : "fr",
+      );
       // exceljs (SheetJS retiré : CVE-2023-30533 / CVE-2024-22363)
       const ExcelJS = await import("exceljs");
       const classeur = new ExcelJS.Workbook();

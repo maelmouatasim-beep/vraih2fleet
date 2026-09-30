@@ -9,6 +9,12 @@ import { ENGINE_VERSION, LISTE_HYPOTHESES, type ResultatPlan } from "@/lib/tco";
 import type { ResultatSensibilite } from "@/lib/tco";
 import type { StrategieConstruite } from "@/lib/journey/strategies";
 import type { MetaRapport } from "@/lib/journey/report";
+import {
+  descriptionHypothese,
+  traduireAvertissement,
+  traduireDonneeClient,
+  traduireLibelleSubvention,
+} from "@/lib/tco/translations-en";
 
 const C = {
   primaire: "#0f766e",
@@ -219,7 +225,7 @@ export default function CouncilReportPDF({
             )}
             {[...strategie.avertissementsSubventions, ...resultat.avertissements].slice(0, 9).map((a, i) => (
               <Text key={i} style={s.note}>
-                • {a}
+                • {traduireAvertissement(a, langue)}
               </Text>
             ))}
           </>
@@ -273,7 +279,7 @@ export default function CouncilReportPDF({
               </Text>
               <Text style={[s.cel, { flex: 0.7 }]}>{meta.anneeReference + (v.anneeAcquisition ?? 0)}</Text>
               <Text style={[s.cel, { flex: 2.4 }]}>
-                {subventions.map((x) => `${x.libelle} (${cad(x.montant)})`).join(" ; ") || "—"}
+                {subventions.map((x) => `${traduireLibelleSubvention(x.libelle, langue)} (${cad(x.montant)})`).join(" ; ") || "—"}
               </Text>
               <Text style={[s.cel, s.droite, { flex: 0.9 }]}>
                 {cad(subventions.reduce((a, x) => a + x.montant, 0))}
@@ -306,7 +312,7 @@ export default function CouncilReportPDF({
             </Text>
             {meta.donneesClient!.map((d, i) => (
               <Text key={i} style={s.note}>
-                • {d}
+                • {traduireDonneeClient(d, langue)}
               </Text>
             ))}
           </>
@@ -321,7 +327,7 @@ export default function CouncilReportPDF({
         </View>
         {LISTE_HYPOTHESES.map((h) => (
           <View key={h.id} style={s.ligneTable} wrap={false}>
-            <Text style={[s.cel, { flex: 2.5 }]}>{h.description}</Text>
+            <Text style={[s.cel, { flex: 2.5 }]}>{descriptionHypothese(h.id, langue)}</Text>
             <Text style={[s.cel, s.droite, { flex: 0.8 }]}>
               {/* Taux d'actualisation : la valeur RÉELLEMENT utilisée
                   (paramètre du projet), pas le défaut du registre (A5). */}

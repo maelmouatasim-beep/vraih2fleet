@@ -22,6 +22,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { analyserSensibilite, type PlanTcoEntree } from "@/lib/tco";
 import { formateurCad, formateurCadCompact } from "@/lib/format";
 import { AlertTriangle } from "lucide-react";
+import { PARAMETRES_STRESS_EN } from "@/lib/tco/translations-en";
 
 interface StressTestPanelProps {
   plan: PlanTcoEntree;
@@ -37,7 +38,8 @@ export default function StressTestPanel({ plan }: StressTestPanelProps) {
   const donneesTornade = analyse.tornade.map((b) => {
     const min = Math.min(b.vanBasse, b.vanHaute);
     const max = Math.max(b.vanBasse, b.vanHaute);
-    return { libelle: b.libelle, plage: [min, max], amplitude: b.amplitude };
+    const libelle = i18n.language === "en" ? PARAMETRES_STRESS_EN[b.id] ?? b.libelle : b.libelle;
+    return { libelle, plage: [min, max], amplitude: b.amplitude };
   });
 
   const badgeRisque =

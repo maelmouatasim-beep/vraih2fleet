@@ -5,6 +5,7 @@
  * la date de fin du programme du registre.
  */
 import { PROGRAMMES } from "@/lib/tco";
+import { nomCourtProgramme, type Langue } from "@/lib/tco/translations-en";
 
 export const STATUTS_DEMANDE = ["a_preparer", "deposee", "accordee", "recue"] as const;
 export type StatutDemande = (typeof STATUTS_DEMANDE)[number];
@@ -29,10 +30,10 @@ export interface EcheanceDemande {
 }
 
 /** Nom court d'un programme du registre (avant le tiret), ou le libellé libre. */
-export function nomProgramme(programId: string, label: string | null): string {
-  if (programId === "autre") return label ?? "Autre";
+export function nomProgramme(programId: string, label: string | null, langue: Langue = "fr"): string {
+  if (programId === "autre") return label ?? (langue === "en" ? "Other" : "Autre");
   const prog = PROGRAMMES.find((p) => p.id === programId);
-  return prog ? prog.nom.split("—")[0].trim() : label ?? programId;
+  return prog ? nomCourtProgramme(prog.id, langue) : label ?? programId;
 }
 
 /**
