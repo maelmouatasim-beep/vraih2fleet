@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DEFAUTS_CATEGORIES } from "@/lib/tco";
-import { analyserDonneesVehicule, cibleSuggeree, evaluerFaisabiliteVehicule, type VehiculeFaisabilite } from "../feasibility";
+import { analyserDonneesVehicule, cibleSuggeree, evaluerFaisabiliteVehicule, recommandationCible, type VehiculeFaisabilite } from "../feasibility";
 
 const OPTIONS = {
   anneeReference: 2026,
@@ -203,5 +203,18 @@ describe("3.1 — consommation importée", () => {
     const d = analyserDonneesVehicule(vehicule({ consumption_source: "import", consumption_per_100km: 17 }));
     expect(d.consoReference).toBe(17);
     expect(d.donneesEstimees).not.toContain("consommation");
+  });
+});
+
+describe("3.3 — recommandation pour un véhicule sans technologie cible", () => {
+  it("cible suggérée si favorable, remplacement à l'identique sinon, diesel pour « à reporter », rien si non évaluable", () => {
+    const rentable = evaluerFaisabiliteVehicule(vehicule({ annual_km: 40000, replacement_year: 2026 }), OPTIONS);
+    expect(recommandationCible(rentable)).toBe(cibleSuggeree(rentable));
+    expect(recommandationCible(rentable)).toBe("bev");
+    const peuRoulant = evaluerFaisabiliteVehicule(vehicule({ annual_km: 2000, replacement_year: 2027 }), OPTIONS);
+    expect(cibleSuggeree(peuRoulant)).toBeNull();
+    expect(recommandationCible(peuRoulant)).toBe("diesel");
+    expect(recommandationCible(evaluerFaisabiliteVehicule(vehicule({ category: "deneigeuse" }), OPTIONS))).toBe("diesel");
+    expect(recommandationCible(evaluerFaisabiliteVehicule(vehicule({ category: "autre" }), OPTIONS))).toBeNull();
   });
 });

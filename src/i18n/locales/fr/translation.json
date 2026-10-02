@@ -5871,7 +5871,8 @@
       "columns": {
         "bev": "Électrique (BEV)",
         "fcev": "Hydrogène (FCEV)",
-        "notes": "Réserves"
+        "notes": "Réserves",
+        "target": "Technologie cible"
       },
       "verdicts": {
         "favorable": "Favorable",
@@ -5917,6 +5918,16 @@
         "ne_tient_pas": "Hiver : ne tient pas — {{km}} km/jour pour une autonomie hiver de {{autonomie}} km (nominale {{nominale}} km), même avec une recharge complète en journée.",
         "kmEstimated": "(km/jour estimé : saisissez le km journalier max dans Ma flotte)",
         "windowPresumed": "(fenêtre de recharge présumée : renseignez les heures du garage)"
+      },
+      "recommend": {
+        "label": "Recommandation",
+        "apply": "Appliquer",
+        "applyAll_one": "Appliquer la recommandation",
+        "applyAll_other": "Appliquer les {{count}} recommandations",
+        "banner_one": "{{count}} véhicule n'a pas de technologie cible : la recommandation (meilleure techno non défavorable, sinon remplacement à l'identique) est proposée dans le tableau.",
+        "banner_other": "{{count}} véhicules n'ont pas de technologie cible : la recommandation (meilleure techno non défavorable, sinon remplacement à l'identique) est proposée dans le tableau.",
+        "done_one": "{{count}} technologie cible appliquée au plan",
+        "done_other": "{{count}} technologies cibles appliquées au plan"
       }
     },
     "strategies": {

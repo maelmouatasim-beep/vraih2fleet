@@ -159,6 +159,19 @@ export function cibleSuggeree(f: FaisabiliteVehicule): "bev" | "fcev" | null {
   return meilleure.technologie === "BEV" ? "bev" : "fcev";
 }
 
+/**
+ * 3.3 — Recommandation pour un véhicule SANS technologie cible : la cible
+ * suggérée (meilleure techno non défavorable), sinon le remplacement à
+ * l'identique (« diesel », statu quo) — y compris pour une catégorie « à
+ * reporter ». null quand rien n'est évaluable (catégorie « autre »,
+ * remplacement après l'horizon).
+ */
+export function recommandationCible(f: FaisabiliteVehicule): "bev" | "fcev" | "diesel" | null {
+  if (f.aReporter) return "diesel";
+  if (!f.evaluations) return null;
+  return cibleSuggeree(f) ?? "diesel";
+}
+
 export function evaluerFaisabiliteVehicule(
   vehicule: VehiculeFaisabilite,
   options: OptionsParametres & { garages?: Map<string, CaracteristiquesGarage> },

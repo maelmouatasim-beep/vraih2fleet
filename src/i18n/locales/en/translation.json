@@ -5871,7 +5871,8 @@
       "columns": {
         "bev": "Electric (BEV)",
         "fcev": "Hydrogen (FCEV)",
-        "notes": "Caveats"
+        "notes": "Caveats",
+        "target": "Target technology"
       },
       "verdicts": {
         "favorable": "Favorable",
@@ -5917,6 +5918,16 @@
         "ne_tient_pas": "Winter: not feasible — {{km}} km/day for a winter range of {{autonomie}} km (rated {{nominale}} km), even with a full daytime charge.",
         "kmEstimated": "(km/day estimated: enter the maximum daily km in My fleet)",
         "windowPresumed": "(presumed charging window: enter the depot hours)"
+      },
+      "recommend": {
+        "label": "Recommendation",
+        "apply": "Apply",
+        "applyAll_one": "Apply the recommendation",
+        "applyAll_other": "Apply the {{count}} recommendations",
+        "banner_one": "{{count}} vehicle has no target technology: the recommendation (best non-unfavourable technology, otherwise like-for-like replacement) is shown in the table.",
+        "banner_other": "{{count}} vehicles have no target technology: the recommendation (best non-unfavourable technology, otherwise like-for-like replacement) is shown in the table.",
+        "done_one": "{{count}} target technology applied to the plan",
+        "done_other": "{{count}} target technologies applied to the plan"
       }
     },
     "strategies": {

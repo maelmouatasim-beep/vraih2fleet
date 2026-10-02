@@ -57,9 +57,11 @@ function manquantes(): string[] {
     for (const { cle, dynamique } of clesUtilisees(readFileSync(f, "utf8"))) {
       for (const [loc, dict] of Object.entries(LOCALES)) {
         const v = lire(dict, cle);
+        // Pluriels i18next (t(cle, { count })) : cle_one + cle_other suffisent.
+        const pluriel = typeof lire(dict, `${cle}_one`) === "string" && typeof lire(dict, `${cle}_other`) === "string";
         const ok = dynamique
           ? v !== null && typeof v === "object" && !Array.isArray(v)
-          : typeof v === "string" || Array.isArray(v);
+          : typeof v === "string" || Array.isArray(v) || pluriel;
         if (!ok) erreurs.add(`${loc}: ${cle}${dynamique ? ".*" : ""} (${f.replace(RACINE + "/", "")})`);
       }
     }
