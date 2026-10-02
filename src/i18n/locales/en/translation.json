@@ -150,220 +150,6 @@
     }
   },
   "pages_marketing": {
-    "privacy": {
-      "title": "Privacy Policy",
-      "backToHome": "Back to Home",
-      "effectiveDate": "Effective Date",
-      "lastUpdated": "Last Updated",
-      "dates": {
-        "effective": "December 25, 2025",
-        "lastUpdated": "December 25, 2025"
-      },
-      "badges": {
-        "pipeda": "PIPEDA Compliant",
-        "gdpr": "GDPR Considerations"
-      },
-      "intro": {
-        "paragraph1": "H2Fleet Technologies Inc. (\"H2Fleet,\" \"we,\" \"us,\" or \"our\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our H2Fleet Planner platform and services (the \"Service\").",
-        "paragraph2": "As a Canadian company, we comply with the Personal Information Protection and Electronic Documents Act (PIPEDA). For users in the European Economic Area, we also incorporate considerations aligned with the General Data Protection Regulation (GDPR).",
-        "controllerProcessor": "H2Fleet Technologies Inc. acts as the data controller for the personal data of your users; for telematics data, we act as a data processor on behalf of your organization."
-      },
-      "sections": {
-        "collect": {
-          "title": "1. Information We Collect",
-          "provided": {
-            "title": "1.1 Information You Provide",
-            "intro": "When you register for and use our Service, you may provide:",
-            "account": {
-              "label": "Account Information",
-              "value": "Name, email address, company name, job title"
-            },
-            "company": {
-              "label": "Company Information",
-              "value": "Fleet size, vehicle types, operational regions"
-            },
-            "payment": {
-              "label": "Payment Information",
-              "value": "Billing address (payment card details are processed by Stripe and not stored by us)"
-            },
-            "project": {
-              "label": "Project Data",
-              "value": "Fleet configurations, scenario parameters, analysis inputs"
-            },
-            "communications": {
-              "label": "Communications",
-              "value": "Support requests, feedback, and correspondence with us"
-            }
-          },
-          "automatic": {
-            "title": "1.2 Information Collected Automatically",
-            "intro": "When you access our Service, we automatically collect:",
-            "usage": {
-              "label": "Usage Data",
-              "value": "Features used, actions taken, time spent on pages"
-            },
-            "device": {
-              "label": "Device Information",
-              "value": "Browser type, operating system, device identifiers"
-            },
-            "log": {
-              "label": "Log Data",
-              "value": "IP address, access times, pages viewed, referring URLs"
-            },
-            "analytics": {
-              "label": "Analytics Data",
-              "value": "Aggregated usage patterns and performance metrics"
-            }
-          },
-          "thirdParty": {
-            "title": "1.3 Information from Third Parties",
-            "content": "We may receive information from third-party services you connect to your account, such as single sign-on providers. We only collect information necessary to provide the Service."
-          }
-        },
-        "use": {
-          "title": "2. How We Use Your Information",
-          "provision": {
-            "title": "2.1 Service Provision",
-            "item1": "Create and manage your account",
-            "item2": "Process your fleet analysis and generate reports",
-            "item3": "Provide customer support and respond to inquiries",
-            "item4": "Process payments and manage subscriptions"
-          },
-          "improvement": {
-            "title": "2.2 Service Improvement",
-            "item1": "Analyze usage patterns to improve features and user experience",
-            "item2": "Develop new features and services",
-            "item3": "Conduct research and analytics (using aggregated, anonymized data)",
-            "item4": "Monitor and enhance Service security and performance"
-          },
-          "communications": {
-            "title": "2.3 Communications",
-            "item1": "Send transactional emails (account verification, password resets, billing)",
-            "item2": "Provide service updates and important notices",
-            "item3": "Send marketing communications (with your consent, which you may withdraw)"
-          },
-          "legalBases": {
-            "title": "2.4 Legal Bases for Processing (GDPR)",
-            "content": "For users in the EEA, we process personal data based on: (a) contract performance, (b) legitimate interests, (c) consent, or (d) legal obligations."
-          }
-        },
-        "security": {
-          "title": "3. Data Storage and Security",
-          "storage": {
-            "title": "3.1 Data Storage",
-            "content": "Your data is stored using a secure cloud database platform. Our primary data centers are located in North America. Data may be transferred to and processed in jurisdictions outside your home country, subject to appropriate safeguards."
-          },
-          "measures": {
-            "title": "3.2 Security Measures",
-            "intro": "We implement industry-standard security measures including:",
-            "item1": "Encryption of data in transit (TLS/SSL) and at rest",
-            "item2": "Secure authentication with password hashing and optional multi-factor authentication",
-            "item3": "Regular security assessments and vulnerability testing",
-            "item4": "Access controls and role-based permissions",
-            "item5": "Automated backups and disaster recovery procedures"
-          },
-          "breach": {
-            "title": "3.3 Data Breach Notification",
-            "content": "In the event of a data breach that affects your personal information, we will notify you and relevant authorities as required by applicable law, typically within 72 hours of becoming aware of the breach."
-          }
-        },
-        "rights": {
-          "title": "4. Your Rights",
-          "access": {
-            "title": "4.1 Access and Portability",
-            "content": "You have the right to request a copy of the personal information we hold about you. You may export your project data and reports at any time through the Service interface."
-          },
-          "correction": {
-            "title": "4.2 Correction",
-            "content": "You may update or correct your personal information through your account settings or by contacting us."
-          },
-          "deletion": {
-            "title": "4.3 Deletion",
-            "content": "You may request deletion of your account and personal data by contacting us at contact@h2fleet.ca. We will process your request within 30 days, subject to any legal retention requirements."
-          },
-          "restriction": {
-            "title": "4.4 Restriction and Objection",
-            "content": "You may request restriction of processing or object to certain processing activities. You may also withdraw consent for marketing communications at any time."
-          },
-          "complaints": {
-            "title": "4.5 Complaints",
-            "content": "If you believe we have violated your privacy rights, you may file a complaint with us or with the Office of the Privacy Commissioner of Canada (for Canadian residents) or your local data protection authority (for EEA residents)."
-          }
-        },
-        "cookies": {
-          "title": "5. Cookies and Tracking Technologies",
-          "types": {
-            "title": "5.1 Types of Cookies We Use",
-            "essential": {
-              "label": "Essential Cookies",
-              "value": "Required for the Service to function (authentication, security)"
-            },
-            "functional": {
-              "label": "Functional Cookies",
-              "value": "Remember your preferences and settings"
-            },
-            "analytics": {
-              "label": "Analytics Cookies",
-              "value": "Help us understand how users interact with the Service"
-            }
-          },
-          "managing": {
-            "title": "5.2 Managing Cookies",
-            "content": "You can control cookies through your browser settings. Note that disabling essential cookies may affect the functionality of the Service. We do not use cookies for advertising purposes."
-          }
-        },
-        "thirdParty": {
-          "title": "6. Third-Party Services",
-          "payment": {
-            "title": "6.1 Payment Processing",
-            "content": "We use Stripe to process payments. When you make a payment, your payment card information is collected and processed directly by Stripe in accordance with their privacy policy. We do not store complete payment card numbers on our servers."
-          },
-          "infrastructure": {
-            "title": "6.2 Infrastructure Providers",
-            "content": "We use cloud infrastructure providers (including associated hosting services) to store and process your data. These providers maintain their own security and privacy practices."
-          },
-          "analytics": {
-            "title": "6.3 Analytics",
-            "content": "We may use analytics services to understand Service usage. These services collect aggregated, anonymized data."
-          }
-        },
-        "retention": {
-          "title": "7. Data Retention",
-          "active": {
-            "title": "7.1 Active Accounts",
-            "content": "We retain your personal information and project data for as long as your account is active and you maintain a subscription to the Service."
-          },
-          "closure": {
-            "title": "7.2 After Account Closure",
-            "content": "After you close your account, we retain certain information for up to 90 days to allow for data export requests. After this period, your data will be permanently deleted, except as required for legal, accounting, or compliance purposes."
-          },
-          "aggregated": {
-            "title": "7.3 Aggregated Data",
-            "content": "We may retain anonymized, aggregated data indefinitely for analytics and research purposes. This data cannot be used to identify you."
-          }
-        },
-        "children": {
-          "title": "8. Children's Privacy",
-          "content": "The Service is intended for business use and is not directed to individuals under the age of 18. We do not knowingly collect personal information from children. If we learn that we have collected information from a child, we will delete it promptly."
-        },
-        "changes": {
-          "title": "9. Changes to This Privacy Policy",
-          "content": "We may update this Privacy Policy from time to time. We will notify you of material changes by posting the updated policy on our website and updating the \"Last Updated\" date. We encourage you to review this policy periodically."
-        },
-        "contact": {
-          "title": "10. Contact Us",
-          "intro": "If you have questions about this Privacy Policy or our privacy practices, please contact us:",
-          "officer": "Data Protection Officer",
-          "emailLabel": "Email",
-          "addressLabel": "Address"
-        }
-      },
-      "relatedLinks": {
-        "terms": "Terms of Service",
-        "refund": "Refund Policy",
-        "contact": "Contact Us"
-      }
-    },
     "features": {
       "title": "Features",
       "badge": "Complete platform",
@@ -2531,112 +2317,6 @@
         "projectCommentsDesc": "When someone comments on one of your projects",
         "weeklyDigest": "Weekly digest",
         "weeklyDigestDesc": "A summary of your projects’ activity every Monday"
-      }
-    },
-    "privacy": {
-      "title": "Privacy Policy",
-      "backToHome": "Back to Home",
-      "effectiveDate": "Effective Date",
-      "lastUpdated": "Last Updated",
-      "sections": {
-        "introduction": {
-          "p1": "H2Fleet Technologies Inc. (\"H2Fleet,\" \"we,\" \"us,\" or \"our\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our H2Fleet Planner platform and services (the \"Service\").",
-          "p2": "As a Canadian company, we comply with the Personal Information Protection and Electronic Documents Act (PIPEDA). For users in the European Economic Area, we also incorporate considerations aligned with the General Data Protection Regulation (GDPR)."
-        },
-        "collect": {
-          "title": "1. Information We Collect",
-          "provided": {
-            "title": "1.1 Information You Provide",
-            "intro": "When you register for and use our Service, you may provide:",
-            "items": [
-              "Account Information: Name, email address, company name, job title",
-              "Company Information: Fleet size, vehicle types, operational regions",
-              "Payment Information: Billing address (payment card details are processed by Stripe and not stored by us)",
-              "Project Data: Fleet configurations, scenario parameters, analysis inputs",
-              "Communications: Support requests, feedback, and correspondence with us"
-            ]
-          },
-          "automatic": {
-            "title": "1.2 Information Collected Automatically",
-            "intro": "When you access our Service, we automatically collect:",
-            "items": [
-              "Usage Data: Features used, actions taken, time spent on pages",
-              "Device Information: Browser type, operating system, device identifiers",
-              "Log Data: IP address, access times, pages viewed, referring URLs",
-              "Analytics Data: Aggregated usage patterns and performance metrics"
-            ]
-          },
-          "thirdParty": {
-            "title": "1.3 Information from Third Parties",
-            "content": "We may receive information from third-party services you connect to your account, such as single sign-on providers. We only collect information necessary to provide the Service."
-          }
-        },
-        "use": {
-          "title": "2. How We Use Your Information"
-        },
-        "storage": {
-          "title": "3. Data Storage and Security"
-        },
-        "rights": {
-          "title": "4. Your Rights"
-        },
-        "cookies": {
-          "title": "5. Cookies and Tracking Technologies"
-        },
-        "thirdParty": {
-          "title": "6. Third-Party Services"
-        },
-        "retention": {
-          "title": "7. Data Retention"
-        },
-        "children": {
-          "title": "8. Children's Privacy"
-        },
-        "changes": {
-          "title": "9. Changes to This Privacy Policy"
-        },
-        "contact": {
-          "title": "10. Contact Us"
-        }
-      }
-    },
-    "terms": {
-      "title": "Terms of Service",
-      "backToHome": "Back to Home",
-      "effectiveDate": "Effective Date",
-      "lastUpdated": "Last Updated",
-      "sections": {
-        "introduction": {
-          "p1": "Welcome to H2Fleet Planner. These Terms of Service (\"Terms\") govern your access to and use of the H2Fleet Planner platform, software, and services (collectively, the \"Service\") provided by H2Fleet Technologies Inc. (\"H2Fleet,\" \"we,\" \"us,\" or \"our\"), a company incorporated under the laws of Canada.",
-          "p2": "By accessing or using the Service, you agree to be bound by these Terms. If you do not agree to these Terms, you may not access or use the Service."
-        },
-        "service": {
-          "title": "1. Service Description and Scope"
-        },
-        "subscription": {
-          "title": "2. Subscription Terms"
-        },
-        "user": {
-          "title": "3. User Responsibilities and Acceptable Use"
-        },
-        "ip": {
-          "title": "4. Intellectual Property"
-        },
-        "liability": {
-          "title": "5. Limitation of Liability"
-        },
-        "dispute": {
-          "title": "6. Dispute Resolution and Governing Law"
-        },
-        "termination": {
-          "title": "7. Termination"
-        },
-        "general": {
-          "title": "8. General Provisions"
-        },
-        "contact": {
-          "title": "9. Contact Us"
-        }
       }
     },
     "blog": {
@@ -6340,5 +6020,189 @@
     "invitationSansCourriel": "Invitation created. Emails are not enabled yet: please let the person know yourself.",
     "invitationCourrielEchec": "Invitation created, but the email could not be sent.",
     "demandeEnregistree": "Request saved"
+  },
+  "legal": {
+    "draftBanner": "Draft text — to be reviewed by a lawyer before any commercial use. Items in brackets remain to be confirmed by the operator.",
+    "updated": "Last updated: October 2, 2026 · Effective date: [to be confirmed]",
+    "back": "Back to home",
+    "seeAlso": "See also",
+    "terms": {
+      "title": "Terms of use",
+      "sections": [
+        {
+          "title": "1. Purpose and operator",
+          "paras": [
+            "These terms govern the use of H2Fleet (the \"Service\"), an online tool that helps plan the transition of vehicle fleets to electric and hydrogen, operated by [legal name of the operator — to be confirmed], [address — to be confirmed] (the \"Operator\").",
+            "By creating an account or using the Service, you accept these terms on behalf of the organization you represent and confirm that you are authorized to do so."
+          ]
+        },
+        {
+          "title": "2. Pilot phase",
+          "paras": [
+            "The Service is offered as a pilot. Its features may change, be modified or be withdrawn. No guaranteed service level (SLA) is offered during this phase."
+          ]
+        },
+        {
+          "title": "3. Account and security",
+          "paras": [
+            "You are responsible for the accuracy of the information you provide, the confidentiality of your password and the access you grant to members of your organization. Report any unauthorized use promptly to the address in section 12."
+          ]
+        },
+        {
+          "title": "4. Your data",
+          "paras": [
+            "The data you enter or import (fleet, depots, projects, documents) remains the property of your organization. You grant the Operator the right to host and process it solely to provide the Service.",
+            "The processing of personal information is described in the Privacy policy."
+          ]
+        },
+        {
+          "title": "5. Nature of the results",
+          "paras": [
+            "The Service's calculations (total cost of ownership, savings, subsidies, emissions, infrastructure, range) are ESTIMATES based on your data and on assumptions whose status (verified, estimate, to validate), source and date are published in the methodology.",
+            "They are not financial, legal, tax or engineering advice, nor a guarantee of eligibility for any subsidy program. Any purchase, financing or funding-application decision must be validated with suppliers, electricity utilities and the relevant agencies."
+          ]
+        },
+        {
+          "title": "6. Acceptable use",
+          "paras": [
+            "You agree not to: circumvent security measures; access another organization's data; use the Service unlawfully or in a way that compromises its operation; resell access to the Service without written permission."
+          ]
+        },
+        {
+          "title": "7. Third-party services",
+          "paras": [
+            "Some features rely on third-party services you choose to enable (for example the Geotab or Samsara telematics platforms). Their use is subject to their own terms."
+          ]
+        },
+        {
+          "title": "8. Intellectual property",
+          "paras": [
+            "The Service, its code, methodology and content belong to the Operator or its licensors. The reports you generate from your data may be freely used by your organization."
+          ]
+        },
+        {
+          "title": "9. Pricing",
+          "paras": [
+            "No payment is required during the pilot phase. Pricing terms will be published before any billing and will apply only after your acceptance."
+          ]
+        },
+        {
+          "title": "10. Liability",
+          "paras": [
+            "[Limitation of liability clause to be drafted by a lawyer, within the limits allowed by Québec law, including the Civil Code of Québec and, where applicable, the Consumer Protection Act.]"
+          ]
+        },
+        {
+          "title": "11. Termination",
+          "paras": [
+            "You may stop using the Service and request the deletion of your account at any time. The Operator may suspend an account for breach of these terms, with notice where circumstances allow."
+          ]
+        },
+        {
+          "title": "12. Governing law, language and contact",
+          "paras": [
+            "These terms are governed by the laws of Québec and the federal laws of Canada applicable therein. Any dispute falls under the courts of the judicial district of [to be confirmed].",
+            "The French version of these terms prevails over any translation.",
+            "Contact: [contact email — to be confirmed]."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "sections": [
+        {
+          "title": "1. Person in charge",
+          "paras": [
+            "The H2Fleet Service is operated by [legal name of the operator — to be confirmed]. Under Québec's Act respecting the protection of personal information in the private sector (as amended by Law 25), the person in charge of the protection of personal information is [name or title — to be confirmed], reachable at [email — to be confirmed]."
+          ]
+        },
+        {
+          "title": "2. Information collected",
+          "paras": [
+            "We collect only what the Service needs:"
+          ],
+          "items": [
+            "account: name, email address, organization, role in the organization;",
+            "team invitations: email address of the invited person;",
+            "fleet and project data entered or imported (vehicles, depots, plans) — essentially organizational data; a unit number or VIN does not normally identify a person;",
+            "if you connect a telematics platform: the access credentials you provide and the vehicle data sent by that platform;",
+            "technical data needed to sign in (authentication session kept in your browser, the host's technical logs)."
+          ]
+        },
+        {
+          "title": "3. Purposes",
+          "paras": [
+            "This information is used to create and secure your account, provide the calculations and reports you request, enable collaboration within your organization and answer your requests. It is neither sold nor used for advertising. The Service uses no audience-measurement tool and no advertising cookie."
+          ]
+        },
+        {
+          "title": "4. Consent",
+          "paras": [
+            "You consent to this processing by creating your account. You may withdraw your consent at any time by requesting the deletion of your account; some features will then no longer be available."
+          ]
+        },
+        {
+          "title": "5. Disclosure and hosting",
+          "paras": [
+            "Information is hosted by Supabase (database and authentication); the website is served by GitHub Pages. The following services receive data only if enabled: email delivery (SendGrid), artificial-intelligence assistant, maps (Mapbox), telematics platforms you connect.",
+            "Database hosting region: [to be confirmed]. When information is communicated outside Québec, the Operator first carries out the privacy impact assessment required by law [to be completed]."
+          ]
+        },
+        {
+          "title": "6. Retention",
+          "paras": [
+            "Information is kept while the account is active, then deleted or anonymized within [to be confirmed] after the account is closed, subject to legal retention obligations."
+          ]
+        },
+        {
+          "title": "7. Security",
+          "paras": [
+            "Exchanges are encrypted (HTTPS). Access to data is partitioned by organization at the database level (row-level security rules) and checked on every request. Stronger encryption of stored telematics credentials is being implemented."
+          ]
+        },
+        {
+          "title": "8. Your rights",
+          "paras": [
+            "You may request access to your information, its correction, its deletion, the portability of the information you provided in a structured technological format, and withdraw your consent. Write to the person in charge (section 1); you will receive an answer within 30 days. You may also contact Québec's Commission d'accès à l'information."
+          ]
+        },
+        {
+          "title": "9. Confidentiality incidents",
+          "paras": [
+            "Every confidentiality incident is recorded in a register. If it presents a risk of serious injury, the Commission d'accès à l'information and the persons concerned are notified promptly."
+          ]
+        },
+        {
+          "title": "10. Changes",
+          "paras": [
+            "Any significant change to this policy will be announced in the Service before it takes effect."
+          ]
+        }
+      ]
+    },
+    "refund": {
+      "title": "Refund policy",
+      "sections": [
+        {
+          "title": "1. Pilot phase",
+          "paras": [
+            "The Service is currently offered as a pilot, free of charge. Since no amount is collected, no refund applies."
+          ]
+        },
+        {
+          "title": "2. After the pilot phase",
+          "paras": [
+            "Pricing and refund terms will be published here before any billing. They will comply with the rules applicable in Québec and will apply only to subscriptions taken out after their publication."
+          ]
+        },
+        {
+          "title": "3. Contact",
+          "paras": [
+            "For any question: [legal name of the operator — to be confirmed], [contact email — to be confirmed]."
+          ]
+        }
+      ]
+    }
   }
 }

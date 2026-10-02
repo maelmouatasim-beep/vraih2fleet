@@ -150,220 +150,6 @@
     }
   },
   "pages_marketing": {
-    "privacy": {
-      "title": "Politique de confidentialité",
-      "backToHome": "Retour à l'accueil",
-      "effectiveDate": "Date d'effet",
-      "lastUpdated": "Dernière mise à jour",
-      "dates": {
-        "effective": "25 décembre 2025",
-        "lastUpdated": "25 décembre 2025"
-      },
-      "badges": {
-        "pipeda": "Conforme LPRPDE",
-        "gdpr": "Considérations RGPD"
-      },
-      "intro": {
-        "paragraph1": "H2Fleet Technologies Inc. (« H2Fleet », « nous » ou « notre ») s'engage à protéger votre vie privée. Cette politique de confidentialité explique comment nous collectons, utilisons, divulguons et protégeons vos informations lorsque vous utilisez notre plateforme H2Fleet Planner et nos services (le « Service »).",
-        "paragraph2": "En tant qu'entreprise canadienne, nous respectons la Loi sur la protection des renseignements personnels et les documents électroniques (LPRPDE). Pour les utilisateurs de l'Espace économique européen, nous intégrons également des considérations alignées sur le Règlement général sur la protection des données (RGPD).",
-        "controllerProcessor": "H2Fleet Technologies Inc. agit en tant que responsable du traitement (« controller ») pour les données personnelles de vos utilisateurs ; pour les données télématiques, nous agissons en tant que sous-traitant (« processor ») pour le compte de votre organisation."
-      },
-      "sections": {
-        "collect": {
-          "title": "1. Informations que nous collectons",
-          "provided": {
-            "title": "1.1 Informations que vous fournissez",
-            "intro": "Lorsque vous vous inscrivez et utilisez notre Service, vous pouvez fournir :",
-            "account": {
-              "label": "Informations de compte",
-              "value": "Nom, adresse courriel, nom de l'entreprise, titre du poste"
-            },
-            "company": {
-              "label": "Informations sur l'entreprise",
-              "value": "Taille de la flotte, types de véhicules, régions d'exploitation"
-            },
-            "payment": {
-              "label": "Informations de paiement",
-              "value": "Adresse de facturation (les données de carte sont traitées par Stripe et non stockées par nous)"
-            },
-            "project": {
-              "label": "Données de projet",
-              "value": "Configurations de flotte, paramètres de scénario, données d'analyse"
-            },
-            "communications": {
-              "label": "Communications",
-              "value": "Demandes de support, commentaires et correspondance avec nous"
-            }
-          },
-          "automatic": {
-            "title": "1.2 Informations collectées automatiquement",
-            "intro": "Lorsque vous accédez à notre Service, nous collectons automatiquement :",
-            "usage": {
-              "label": "Données d'utilisation",
-              "value": "Fonctionnalités utilisées, actions effectuées, temps passé sur les pages"
-            },
-            "device": {
-              "label": "Informations sur l'appareil",
-              "value": "Type de navigateur, système d'exploitation, identifiants d'appareil"
-            },
-            "log": {
-              "label": "Données de journal",
-              "value": "Adresse IP, heures d'accès, pages consultées, URLs de provenance"
-            },
-            "analytics": {
-              "label": "Données analytiques",
-              "value": "Tendances d'utilisation agrégées et métriques de performance"
-            }
-          },
-          "thirdParty": {
-            "title": "1.3 Informations provenant de tiers",
-            "content": "Nous pouvons recevoir des informations de services tiers que vous connectez à votre compte, tels que les fournisseurs d'authentification unique. Nous ne collectons que les informations nécessaires pour fournir le Service."
-          }
-        },
-        "use": {
-          "title": "2. Comment nous utilisons vos informations",
-          "provision": {
-            "title": "2.1 Fourniture du Service",
-            "item1": "Créer et gérer votre compte",
-            "item2": "Traiter vos analyses de flotte et générer des rapports",
-            "item3": "Fournir un support client et répondre aux demandes",
-            "item4": "Traiter les paiements et gérer les abonnements"
-          },
-          "improvement": {
-            "title": "2.2 Amélioration du Service",
-            "item1": "Analyser les tendances d'utilisation pour améliorer les fonctionnalités et l'expérience utilisateur",
-            "item2": "Développer de nouvelles fonctionnalités et services",
-            "item3": "Mener des recherches et analyses (avec des données agrégées et anonymisées)",
-            "item4": "Surveiller et améliorer la sécurité et les performances du Service"
-          },
-          "communications": {
-            "title": "2.3 Communications",
-            "item1": "Envoyer des courriels transactionnels (vérification de compte, réinitialisation de mot de passe, facturation)",
-            "item2": "Fournir des mises à jour de service et des avis importants",
-            "item3": "Envoyer des communications marketing (avec votre consentement, que vous pouvez retirer)"
-          },
-          "legalBases": {
-            "title": "2.4 Bases juridiques du traitement (RGPD)",
-            "content": "Pour les utilisateurs de l'EEE, nous traitons les données personnelles sur la base de : (a) l'exécution du contrat, (b) les intérêts légitimes, (c) le consentement, ou (d) les obligations légales."
-          }
-        },
-        "security": {
-          "title": "3. Stockage et sécurité des données",
-          "storage": {
-            "title": "3.1 Stockage des données",
-            "content": "Vos données sont stockées via une plateforme de base de données cloud sécurisée. Nos centres de données principaux sont situés en Amérique du Nord. Les données peuvent être transférées et traitées dans des juridictions en dehors de votre pays d'origine, sous réserve de garanties appropriées."
-          },
-          "measures": {
-            "title": "3.2 Mesures de sécurité",
-            "intro": "Nous mettons en œuvre des mesures de sécurité conformes aux normes de l'industrie, notamment :",
-            "item1": "Chiffrement des données en transit (TLS/SSL) et au repos",
-            "item2": "Authentification sécurisée avec hachage de mot de passe et authentification multifacteur optionnelle",
-            "item3": "Évaluations de sécurité régulières et tests de vulnérabilité",
-            "item4": "Contrôles d'accès et permissions basées sur les rôles",
-            "item5": "Sauvegardes automatisées et procédures de reprise après sinistre"
-          },
-          "breach": {
-            "title": "3.3 Notification de violation de données",
-            "content": "En cas de violation de données affectant vos informations personnelles, nous vous en informerons ainsi que les autorités compétentes comme l'exige la loi applicable, généralement dans les 72 heures suivant la découverte de la violation."
-          }
-        },
-        "rights": {
-          "title": "4. Vos droits",
-          "access": {
-            "title": "4.1 Accès et portabilité",
-            "content": "Vous avez le droit de demander une copie des informations personnelles que nous détenons à votre sujet. Vous pouvez exporter vos données de projet et rapports à tout moment via l'interface du Service."
-          },
-          "correction": {
-            "title": "4.2 Correction",
-            "content": "Vous pouvez mettre à jour ou corriger vos informations personnelles via les paramètres de votre compte ou en nous contactant."
-          },
-          "deletion": {
-            "title": "4.3 Suppression",
-            "content": "Vous pouvez demander la suppression de votre compte et de vos données personnelles en nous contactant à contact@h2fleet.ca. Nous traiterons votre demande dans les 30 jours, sous réserve de toute obligation légale de conservation."
-          },
-          "restriction": {
-            "title": "4.4 Restriction et opposition",
-            "content": "Vous pouvez demander la restriction du traitement ou vous opposer à certaines activités de traitement. Vous pouvez également retirer votre consentement aux communications marketing à tout moment."
-          },
-          "complaints": {
-            "title": "4.5 Plaintes",
-            "content": "Si vous estimez que nous avons violé vos droits à la vie privée, vous pouvez déposer une plainte auprès de nous ou auprès du Commissariat à la protection de la vie privée du Canada (pour les résidents canadiens) ou de votre autorité locale de protection des données (pour les résidents de l'EEE)."
-          }
-        },
-        "cookies": {
-          "title": "5. Cookies et technologies de suivi",
-          "types": {
-            "title": "5.1 Types de cookies que nous utilisons",
-            "essential": {
-              "label": "Cookies essentiels",
-              "value": "Nécessaires au fonctionnement du Service (authentification, sécurité)"
-            },
-            "functional": {
-              "label": "Cookies fonctionnels",
-              "value": "Mémorisent vos préférences et paramètres"
-            },
-            "analytics": {
-              "label": "Cookies analytiques",
-              "value": "Nous aident à comprendre comment les utilisateurs interagissent avec le Service"
-            }
-          },
-          "managing": {
-            "title": "5.2 Gestion des cookies",
-            "content": "Vous pouvez contrôler les cookies via les paramètres de votre navigateur. Notez que la désactivation des cookies essentiels peut affecter le fonctionnement du Service. Nous n'utilisons pas de cookies à des fins publicitaires."
-          }
-        },
-        "thirdParty": {
-          "title": "6. Services tiers",
-          "payment": {
-            "title": "6.1 Traitement des paiements",
-            "content": "Nous utilisons Stripe pour traiter les paiements. Lorsque vous effectuez un paiement, les informations de votre carte sont collectées et traitées directement par Stripe conformément à leur politique de confidentialité. Nous ne stockons pas les numéros de carte complets sur nos serveurs."
-          },
-          "infrastructure": {
-            "title": "6.2 Fournisseurs d'infrastructure",
-            "content": "Nous utilisons des fournisseurs d'infrastructure cloud (y compris les services d'hébergement associés) pour stocker et traiter vos données. Ces fournisseurs maintiennent leurs propres pratiques de sécurité et de confidentialité."
-          },
-          "analytics": {
-            "title": "6.3 Analytique",
-            "content": "Nous pouvons utiliser des services d'analyse pour comprendre l'utilisation du Service. Ces services collectent des données agrégées et anonymisées."
-          }
-        },
-        "retention": {
-          "title": "7. Conservation des données",
-          "active": {
-            "title": "7.1 Comptes actifs",
-            "content": "Nous conservons vos informations personnelles et données de projet tant que votre compte est actif et que vous maintenez un abonnement au Service."
-          },
-          "closure": {
-            "title": "7.2 Après la fermeture du compte",
-            "content": "Après la fermeture de votre compte, nous conservons certaines informations pendant 90 jours pour permettre les demandes d'exportation de données. Après cette période, vos données seront définitivement supprimées, sauf si la loi exige leur conservation à des fins juridiques, comptables ou de conformité."
-          },
-          "aggregated": {
-            "title": "7.3 Données agrégées",
-            "content": "Nous pouvons conserver indéfiniment des données anonymisées et agrégées à des fins d'analyse et de recherche. Ces données ne peuvent pas être utilisées pour vous identifier."
-          }
-        },
-        "children": {
-          "title": "8. Vie privée des enfants",
-          "content": "Le Service est destiné à un usage professionnel et n'est pas destiné aux personnes de moins de 18 ans. Nous ne collectons pas sciemment d'informations personnelles auprès d'enfants. Si nous apprenons que nous avons collecté des informations d'un enfant, nous les supprimerons rapidement."
-        },
-        "changes": {
-          "title": "9. Modifications de cette politique de confidentialité",
-          "content": "Nous pouvons mettre à jour cette politique de confidentialité de temps en temps. Nous vous informerons des modifications importantes en publiant la politique mise à jour sur notre site Web et en mettant à jour la date de « Dernière mise à jour ». Nous vous encourageons à consulter périodiquement cette politique."
-        },
-        "contact": {
-          "title": "10. Nous contacter",
-          "intro": "Si vous avez des questions concernant cette politique de confidentialité ou nos pratiques en matière de confidentialité, veuillez nous contacter :",
-          "officer": "Responsable de la protection des données",
-          "emailLabel": "Courriel",
-          "addressLabel": "Adresse"
-        }
-      },
-      "relatedLinks": {
-        "terms": "Conditions d'utilisation",
-        "refund": "Politique de remboursement",
-        "contact": "Nous contacter"
-      }
-    },
     "features": {
       "title": "Fonctionnalités",
       "badge": "Plateforme complète",
@@ -2531,112 +2317,6 @@
         "projectCommentsDesc": "Quand quelqu'un commente un de vos projets",
         "weeklyDigest": "Résumé hebdomadaire",
         "weeklyDigestDesc": "Un récapitulatif de l'activité de vos projets chaque lundi"
-      }
-    },
-    "privacy": {
-      "title": "Politique de Confidentialité",
-      "backToHome": "Retour à l'accueil",
-      "effectiveDate": "Date d'entrée en vigueur",
-      "lastUpdated": "Dernière mise à jour",
-      "sections": {
-        "collect": {
-          "title": "1. Renseignements que nous recueillons",
-          "provided": {
-            "title": "1.1 Renseignements que vous fournissez",
-            "intro": "Lorsque vous créez un compte et utilisez notre Service, vous pouvez fournir :",
-            "items": [
-              "Renseignements de compte : nom, adresse courriel, nom de l'organisation, fonction",
-              "Renseignements sur l'organisation : taille de la flotte, types de véhicules, régions d'exploitation",
-              "Renseignements de facturation : adresse de facturation (les données de carte de paiement sont traitées par Stripe et ne sont pas conservées par nous)",
-              "Données de projet : composition de la flotte, paramètres de scénarios, intrants d'analyse",
-              "Communications : demandes de soutien, commentaires et correspondance avec nous"
-            ]
-          },
-          "automatic": {
-            "title": "1.2 Renseignements recueillis automatiquement",
-            "intro": "Lorsque vous accédez à notre Service, nous recueillons automatiquement :",
-            "items": [
-              "Données d'utilisation : fonctionnalités utilisées, actions effectuées, temps passé sur les pages",
-              "Renseignements sur l'appareil : type de navigateur, système d'exploitation, identifiants de l'appareil",
-              "Données de journal : adresse IP, heures d'accès, pages consultées, URL de provenance",
-              "Données analytiques : tendances d'utilisation agrégées et mesures de performance"
-            ]
-          },
-          "thirdParty": {
-            "title": "1.3 Renseignements provenant de tiers",
-            "content": "Nous pouvons recevoir des renseignements de services tiers que vous connectez à votre compte, comme les fournisseurs d'authentification unique. Nous ne recueillons que les renseignements nécessaires à la prestation du Service."
-          }
-        },
-        "introduction": {
-          "p1": "H2Fleet Technologies Inc. (\"H2Fleet\", \"nous\", \"notre\") s'engage à protéger votre vie privée. Cette Politique de Confidentialité explique comment nous collectons, utilisons, divulguons et protégeons vos informations lorsque vous utilisez notre plateforme et services H2Fleet Planner (le \"Service\").",
-          "p2": "En tant qu'entreprise canadienne, nous respectons la Loi sur la protection des renseignements personnels et les documents électroniques (LPRPDE). Pour les utilisateurs de l'Espace économique européen, nous intégrons également des considérations conformes au Règlement général sur la protection des données (RGPD)."
-        },
-        "use": {
-          "title": "2. Comment Nous Utilisons Vos Informations"
-        },
-        "storage": {
-          "title": "3. Stockage et Sécurité des Données"
-        },
-        "rights": {
-          "title": "4. Vos Droits"
-        },
-        "cookies": {
-          "title": "5. Cookies et Technologies de Suivi"
-        },
-        "thirdParty": {
-          "title": "6. Services Tiers"
-        },
-        "retention": {
-          "title": "7. Conservation des Données"
-        },
-        "children": {
-          "title": "8. Vie Privée des Enfants"
-        },
-        "changes": {
-          "title": "9. Modifications de Cette Politique"
-        },
-        "contact": {
-          "title": "10. Nous Contacter"
-        }
-      }
-    },
-    "terms": {
-      "title": "Conditions d'Utilisation",
-      "backToHome": "Retour à l'accueil",
-      "effectiveDate": "Date d'entrée en vigueur",
-      "lastUpdated": "Dernière mise à jour",
-      "sections": {
-        "introduction": {
-          "p1": "Bienvenue sur H2Fleet Planner. Ces Conditions d'Utilisation (\"Conditions\") régissent votre accès et utilisation de la plateforme, du logiciel et des services H2Fleet Planner (collectivement, le \"Service\") fournis par H2Fleet Technologies Inc. (\"H2Fleet\", \"nous\", \"notre\"), une société constituée selon les lois du Canada.",
-          "p2": "En accédant ou en utilisant le Service, vous acceptez d'être lié par ces Conditions. Si vous n'acceptez pas ces Conditions, vous ne pouvez pas accéder ou utiliser le Service."
-        },
-        "service": {
-          "title": "1. Description et Portée du Service"
-        },
-        "subscription": {
-          "title": "2. Conditions d'Abonnement"
-        },
-        "user": {
-          "title": "3. Responsabilités de l'Utilisateur"
-        },
-        "ip": {
-          "title": "4. Propriété Intellectuelle"
-        },
-        "liability": {
-          "title": "5. Limitation de Responsabilité"
-        },
-        "dispute": {
-          "title": "6. Résolution des Litiges"
-        },
-        "termination": {
-          "title": "7. Résiliation"
-        },
-        "general": {
-          "title": "8. Dispositions Générales"
-        },
-        "contact": {
-          "title": "9. Nous Contacter"
-        }
       }
     },
     "blog": {
@@ -6340,5 +6020,189 @@
     "invitationSansCourriel": "Invitation créée. L'envoi de courriels n'est pas encore activé : prévenez la personne vous-même.",
     "invitationCourrielEchec": "Invitation créée, mais le courriel n'a pas pu être envoyé.",
     "demandeEnregistree": "Demande enregistrée"
+  },
+  "legal": {
+    "draftBanner": "Projet de texte — à faire valider par un juriste avant toute utilisation commerciale. Les éléments entre crochets restent à confirmer par l'exploitant.",
+    "updated": "Dernière mise à jour : 2 octobre 2026 · Entrée en vigueur : [à confirmer]",
+    "back": "Retour à l'accueil",
+    "seeAlso": "Voir aussi",
+    "terms": {
+      "title": "Conditions d'utilisation",
+      "sections": [
+        {
+          "title": "1. Objet et exploitant",
+          "paras": [
+            "Les présentes conditions encadrent l'utilisation de H2Fleet (le « Service »), un outil en ligne d'aide à la planification de la transition des flottes de véhicules vers l'électrique et l'hydrogène, exploité par [nom légal de l'exploitant — à confirmer], [adresse — à confirmer] (l'« Exploitant »).",
+            "En créant un compte ou en utilisant le Service, vous acceptez ces conditions au nom de l'organisation que vous représentez et déclarez être autorisé à le faire."
+          ]
+        },
+        {
+          "title": "2. Phase pilote",
+          "paras": [
+            "Le Service est offert en phase pilote. Ses fonctions peuvent évoluer, être modifiées ou retirées. Aucun niveau de disponibilité garanti (SLA) n'est offert pendant cette phase."
+          ]
+        },
+        {
+          "title": "3. Compte et sécurité",
+          "paras": [
+            "Vous êtes responsable de l'exactitude des renseignements fournis, de la confidentialité de votre mot de passe et des accès que vous accordez aux membres de votre organisation. Signalez sans délai tout usage non autorisé à l'adresse indiquée à l'article 12."
+          ]
+        },
+        {
+          "title": "4. Vos données",
+          "paras": [
+            "Les données que vous saisissez ou importez (flotte, garages, projets, documents) demeurent la propriété de votre organisation. Vous accordez à l'Exploitant le droit de les héberger et de les traiter uniquement pour fournir le Service.",
+            "Le traitement des renseignements personnels est décrit dans la Politique de confidentialité."
+          ]
+        },
+        {
+          "title": "5. Nature des résultats",
+          "paras": [
+            "Les calculs du Service (coût total de possession, économies, subventions, émissions, infrastructure, autonomie) sont des ESTIMATIONS fondées sur vos données et sur des hypothèses dont le statut (vérifiée, estimation, à valider), la source et la date sont publiés dans la méthodologie.",
+            "Ils ne constituent ni un avis financier, juridique, fiscal ou d'ingénierie, ni une garantie d'admissibilité à un programme de subvention. Toute décision d'achat, de financement ou de demande d'aide doit être validée auprès des fournisseurs, des distributeurs d'électricité et des organismes concernés."
+          ]
+        },
+        {
+          "title": "6. Utilisation acceptable",
+          "paras": [
+            "Vous vous engagez à ne pas : contourner les mesures de sécurité ; accéder aux données d'une autre organisation ; utiliser le Service de manière illégale ou de façon à en compromettre le fonctionnement ; revendre l'accès au Service sans autorisation écrite."
+          ]
+        },
+        {
+          "title": "7. Services tiers",
+          "paras": [
+            "Certaines fonctions s'appuient sur des services tiers que vous choisissez d'activer (par exemple les plateformes télématiques Geotab ou Samsara). Leur utilisation est soumise à leurs propres conditions."
+          ]
+        },
+        {
+          "title": "8. Propriété intellectuelle",
+          "paras": [
+            "Le Service, son code, sa méthodologie et ses contenus appartiennent à l'Exploitant ou à ses concédants. Les rapports que vous générez à partir de vos données peuvent être librement utilisés par votre organisation."
+          ]
+        },
+        {
+          "title": "9. Tarification",
+          "paras": [
+            "Aucun paiement n'est exigé pendant la phase pilote. Les conditions tarifaires seront publiées avant toute facturation et ne s'appliqueront qu'après votre acceptation."
+          ]
+        },
+        {
+          "title": "10. Responsabilité",
+          "paras": [
+            "[Clause de limitation de responsabilité à rédiger par un juriste, dans les limites permises par le droit du Québec, notamment le Code civil du Québec et, le cas échéant, la Loi sur la protection du consommateur.]"
+          ]
+        },
+        {
+          "title": "11. Résiliation",
+          "paras": [
+            "Vous pouvez cesser d'utiliser le Service et demander la suppression de votre compte à tout moment. L'Exploitant peut suspendre un compte en cas de manquement à ces conditions, après avis lorsque la situation le permet."
+          ]
+        },
+        {
+          "title": "12. Droit applicable, langue et contact",
+          "paras": [
+            "Ces conditions sont régies par les lois du Québec et les lois fédérales du Canada qui s'y appliquent. Tout litige relève des tribunaux du district judiciaire de [à confirmer].",
+            "La version française de ces conditions prévaut sur toute traduction.",
+            "Contact : [courriel de contact — à confirmer]."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Politique de confidentialité",
+      "sections": [
+        {
+          "title": "1. Responsable",
+          "paras": [
+            "Le Service H2Fleet est exploité par [nom légal de l'exploitant — à confirmer]. Conformément à la Loi sur la protection des renseignements personnels dans le secteur privé du Québec (modifiée par la Loi 25), la personne responsable de la protection des renseignements personnels est [nom ou titre — à confirmer], joignable à [courriel — à confirmer]."
+          ]
+        },
+        {
+          "title": "2. Renseignements recueillis",
+          "paras": [
+            "Nous recueillons uniquement ce qui est nécessaire au Service :"
+          ],
+          "items": [
+            "compte : nom, adresse courriel, organisation, rôle dans l'organisation ;",
+            "invitations d'équipe : adresse courriel de la personne invitée ;",
+            "données de flotte et de projet saisies ou importées (véhicules, garages, plans) — essentiellement des données d'organisation ; un numéro d'unité ou un NIV n'identifie normalement pas une personne ;",
+            "si vous connectez une plateforme télématique : les identifiants d'accès que vous fournissez et les données de véhicules transmises par cette plateforme ;",
+            "données techniques nécessaires à la connexion (session d'authentification conservée dans votre navigateur, journaux techniques de l'hébergeur)."
+          ]
+        },
+        {
+          "title": "3. Finalités",
+          "paras": [
+            "Ces renseignements servent à créer et sécuriser votre compte, fournir les calculs et rapports demandés, permettre la collaboration au sein de votre organisation et répondre à vos demandes. Ils ne sont ni vendus ni utilisés à des fins publicitaires. Le Service n'utilise aucun outil de mesure d'audience ni témoin publicitaire."
+          ]
+        },
+        {
+          "title": "4. Consentement",
+          "paras": [
+            "Vous consentez à ces traitements en créant votre compte. Vous pouvez retirer votre consentement en tout temps en demandant la suppression de votre compte ; certaines fonctions cesseront alors d'être disponibles."
+          ]
+        },
+        {
+          "title": "5. Communication et hébergement",
+          "paras": [
+            "Les renseignements sont hébergés chez Supabase (base de données et authentification) ; le site est servi par GitHub Pages. Les services suivants ne reçoivent des données que s'ils sont activés : envoi de courriels (SendGrid), assistant d'intelligence artificielle, cartes (Mapbox), plateformes télématiques que vous connectez.",
+            "Région d'hébergement de la base de données : [à confirmer]. Lorsque des renseignements sont communiqués à l'extérieur du Québec, l'Exploitant réalise au préalable l'évaluation des facteurs relatifs à la vie privée exigée par la loi [à réaliser]."
+          ]
+        },
+        {
+          "title": "6. Conservation",
+          "paras": [
+            "Les renseignements sont conservés tant que le compte est actif, puis supprimés ou anonymisés dans un délai de [à confirmer] après la fermeture du compte, sous réserve des obligations légales de conservation."
+          ]
+        },
+        {
+          "title": "7. Sécurité",
+          "paras": [
+            "Les échanges sont chiffrés (HTTPS). L'accès aux données est cloisonné par organisation au niveau de la base de données (règles de sécurité par ligne) et contrôlé à chaque requête. Le chiffrement renforcé des identifiants télématiques stockés est en cours de mise en place."
+          ]
+        },
+        {
+          "title": "8. Vos droits",
+          "paras": [
+            "Vous pouvez demander l'accès à vos renseignements, leur rectification, leur suppression, la portabilité de ceux que vous avez fournis dans un format technologique structuré, et retirer votre consentement. Écrivez à la personne responsable (article 1) ; une réponse vous sera donnée dans un délai de 30 jours. Vous pouvez aussi vous adresser à la Commission d'accès à l'information du Québec."
+          ]
+        },
+        {
+          "title": "9. Incidents de confidentialité",
+          "paras": [
+            "Tout incident de confidentialité est consigné dans un registre. S'il présente un risque de préjudice sérieux, la Commission d'accès à l'information et les personnes concernées en sont avisées avec diligence."
+          ]
+        },
+        {
+          "title": "10. Modifications",
+          "paras": [
+            "Toute modification importante de cette politique sera annoncée dans le Service avant son entrée en vigueur."
+          ]
+        }
+      ]
+    },
+    "refund": {
+      "title": "Politique de remboursement",
+      "sections": [
+        {
+          "title": "1. Phase pilote",
+          "paras": [
+            "Le Service est actuellement offert en phase pilote, sans paiement. Aucun montant n'étant perçu, aucun remboursement n'est applicable."
+          ]
+        },
+        {
+          "title": "2. Après la phase pilote",
+          "paras": [
+            "La tarification et les conditions de remboursement seront publiées ici avant toute facturation. Elles respecteront les règles applicables au Québec et ne s'appliqueront qu'aux abonnements souscrits après leur publication."
+          ]
+        },
+        {
+          "title": "3. Contact",
+          "paras": [
+            "Pour toute question : [nom légal de l'exploitant — à confirmer], [courriel de contact — à confirmer]."
+          ]
+        }
+      ]
+    }
   }
 }
