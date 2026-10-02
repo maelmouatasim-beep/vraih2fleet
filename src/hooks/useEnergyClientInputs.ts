@@ -18,7 +18,7 @@ import {
 } from "@/lib/supabase/energyInputs";
 import type { OptionsStrategie } from "@/lib/journey/strategies";
 import { useGarages } from "@/hooks/useGarages";
-import { caracteristiquesGarages } from "@/lib/fleet/garages";
+import { caracteristiquesGarages } from "@/lib/fleet/garagesModel";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 
 export function useEnergyClientInputs(projectId?: string) {

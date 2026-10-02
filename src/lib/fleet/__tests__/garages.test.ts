@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { caracteristiquesGarages, garagesACreer, heuresFenetre, type GarageRow } from "../garages";
+import { caracteristiquesGarages, garagesACreer, heuresFenetre, type GarageRow } from "../garagesModel";
 import { planifierInfrastructure } from "@/lib/journey/infrastructure";
 import { validerLignes } from "../importVehicles";
 

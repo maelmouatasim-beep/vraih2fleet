@@ -7,14 +7,13 @@
  * regroupement des véhicules par dépôt).
  */
 import { supabase } from "@/integrations/supabase/client";
-import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
-import { cleGarage, type CaracteristiquesGarage } from "@/lib/journey/infrastructure";
+import type { TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import { garagesACreer, type GarageRow } from "./garagesModel";
 
-export type GarageRow = Tables<"garages">;
+export { caracteristiquesGarages, garagesACreer, heuresFenetre, TARIFS_HQ, type GarageRow } from "./garagesModel";
 export type GarageInsert = TablesInsert<"garages">;
 export type GarageUpdate = TablesUpdate<"garages">;
 
-export const TARIFS_HQ = ["G", "M", "LG", "autre"] as const;
 
 export async function listGarages(organizationId: string): Promise<GarageRow[]> {
   const { data, error } = await supabase
@@ -55,22 +54,6 @@ export async function deleteGarage(id: string): Promise<void> {
   if (error) throw error;
 }
 
-/** Noms de dépôts (import) qui n'ont pas encore de garage — dédoublonnés
- *  par clé (casse et espaces ignorés), dans l'ordre d'apparition. */
-export function garagesACreer(depots: (string | null | undefined)[], existants: { name: string }[]): string[] {
-  const connus = new Set(existants.map((g) => cleGarage(g.name)));
-  const nouveaux: string[] = [];
-  for (const d of depots) {
-    const nom = d?.trim().replace(/\s+/g, " ");
-    if (!nom) continue;
-    const cle = cleGarage(nom);
-    if (connus.has(cle)) continue;
-    connus.add(cle);
-    nouveaux.push(nom);
-  }
-  return nouveaux;
-}
-
 /** Import : crée les garages manquants AVANT d'insérer les véhicules, pour
  *  que chaque véhicule soit rattaché à son garage. */
 export async function assurerGarages(organizationId: string, depots: (string | null | undefined)[]): Promise<number> {
@@ -84,29 +67,3 @@ export async function assurerGarages(organizationId: string, depots: (string | n
   return noms.length;
 }
 
-/** Caractéristiques connues des garages pour le dimensionnement. */
-export function caracteristiquesGarages(garages: GarageRow[]): Map<string, CaracteristiquesGarage> {
-  const m = new Map<string, CaracteristiquesGarage>();
-  for (const g of garages) {
-    m.set(cleGarage(g.name), {
-      puissanceDisponibleKw: g.available_power_kw ?? undefined,
-      devisRaccordement: g.grid_connection_quote ?? undefined,
-      fenetreRecharge:
-        g.return_time && g.departure_time ? { retour: g.return_time, depart: g.departure_time } : undefined,
-    });
-  }
-  return m;
-}
-
-/** Durée de la fenêtre de recharge (h) entre le retour et le départ,
- *  à cheval sur minuit le cas échéant ; null si incomplète. */
-export function heuresFenetre(retour: string | null | undefined, depart: string | null | undefined): number | null {
-  if (!retour || !depart) return null;
-  const min = (h: string) => {
-    const [hh, mm] = h.split(":").map(Number);
-    return hh * 60 + (mm || 0);
-  };
-  let d = min(depart) - min(retour);
-  if (d <= 0) d += 24 * 60;
-  return Math.round((d / 60) * 100) / 100;
-}
