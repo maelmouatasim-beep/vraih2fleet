@@ -57,6 +57,20 @@ export const EXPORT_DESORDONNE = [
   "GM 01,Pickup F-150,Gas,14000,17,,Garage municipal,2015",
 ].join("\n");
 
+// Phase 5.4 — facture de diesel (PDF avec couche texte, générée par
+// Chromium) ; le faux Claude y lit les montants et renvoie un TOTAL FAUX
+// que l'application doit signaler « introuvable dans le document ».
+export const FACTURE_TERRAIN = [
+  "Pétroles Laurentides inc. — Facture n° 4471 — 2026-09-15",
+  "Livraison diesel coloré au Garage municipal, 12 rue du Quai",
+  "Diesel                 4 512,0 L    à 1,4210 $/L",
+  "Sous-total avant taxes                 6 411,55 $",
+  "TPS (5 %)                                320,58 $",
+  "TVQ (9,975 %)                            639,55 $",
+  "Total                                  7 371,68 $",
+  "Merci de votre confiance. Conditions : net 30 jours.",
+].join("\n");
+
 const GARAGES = [
   { nom: "Hôtel de ville", kw: "20", retour: "18:00", depart: "08:00" },
   { nom: "Garage municipal", kw: "40", retour: "17:00", depart: "07:00" },
@@ -422,6 +436,52 @@ try {
   if (!(await page.getByTestId("row-1").innerText()).includes("Garage central")) throw new Error("PDF : colonne Garage mal alignée");
   await page.keyboard.press("Escape");
   etape(`Import intelligent : ${resume.split(".")[0]} ; 2 propositions hors données rejetées ; colonne personnelle jamais transmise ; journalisé ; PDF de 45 lignes lu`);
+
+  // Phase 5.4 — LECTURE DE FACTURES (fonction Edge réelle + faux Claude) :
+  // couche texte seule transmise, chaque nombre recherché dans le texte,
+  // total faux signalé puis corrigé, prix au litre dérivé par le code,
+  // aperçu avant → après, confirmation, pièce citée et journalisée.
+  await page.goto(url("/dashboard/organization"));
+  const interrupteurDocs = page.getByTestId("ai-settings").locator("#ai-documents");
+  await interrupteurDocs.click();
+  for (let i = 0; i < 20 && (await interrupteurDocs.getAttribute("data-state")) !== "checked"; i++) await page.waitForTimeout(250);
+  await page.waitForTimeout(1200);
+  const factureFichier = join(SORTIE, "facture-diesel.pdf");
+  const pageFacture = await contexte.newPage();
+  await pageFacture.setContent(`<pre style="font: 12px monospace">${FACTURE_TERRAIN}</pre>`);
+  await pageFacture.pdf({ path: factureFichier, format: "Letter" });
+  await pageFacture.close();
+  const carteDocs = page.getByTestId("org-documents");
+  await carteDocs.getByTestId("add-document").click();
+  const dialogueDoc = page.getByTestId("document-dialog");
+  await dialogueDoc.locator("#document-kind").selectOption("fuel_invoice");
+  const appelsDocAvant = (await fetch("http://127.0.0.1:35563/appels").then((r) => r.json()).catch(() => [])).length;
+  await page.setInputFiles('[data-testid="document-file"]', factureFichier);
+  await dialogueDoc.getByTestId("document-fields").waitFor({ timeout: 90000 });
+  const champTotal = dialogueDoc.getByTestId("field-montant_total");
+  if (!(await champTotal.innerText()).includes("introuvable")) throw new Error("facture : le total faux n'est pas signalé");
+  if (!(await dialogueDoc.getByTestId("field-montant_avant_taxes").innerText()).includes("retrouvée")) throw new Error("facture : sous-total non vérifié");
+  await dialogueDoc.getByTestId("document-not-found-warning").waitFor();
+  const derive = await dialogueDoc.getByTestId("document-derived").innerText();
+  if (!/1,421 \$\/L/.test(derive)) throw new Error(`facture : prix au litre inattendu « ${derive} »`);
+  await captureDialogue(page, dialogueDoc, "12a-facture-lecture");
+  await champTotal.locator("input").fill("7371.68");
+  if ((await dialogueDoc.getByTestId("document-not-found-warning").count()) !== 0) throw new Error("facture : avertissement non levé après correction");
+  const apercuDoc = await dialogueDoc.getByTestId("document-apply-preview").innerText();
+  if (!/organisation · prix du diesel : .* → 1,421 \$\/L/.test(apercuDoc)) throw new Error(`facture : aperçu inattendu « ${apercuDoc} »`);
+  await captureDialogue(page, dialogueDoc, "12b-facture-corrigee");
+  await dialogueDoc.getByTestId("document-confirm").click();
+  await dialogueDoc.waitFor({ state: "hidden", timeout: 20000 });
+  await carteDocs.getByTestId("documents-list").getByText("Confirmée").waitFor({ timeout: 10000 });
+  const appelsDoc = (await fetch("http://127.0.0.1:35563/appels").then((r) => r.json()).catch(() => [])).slice(appelsDocAvant);
+  const lecture = appelsDoc.find((a) => a.format === "json_schema");
+  if (!lecture) throw new Error("facture : aucun appel de lecture");
+  await page.goto(url("/dashboard/fleet"));
+  await page.getByTestId("fleet-change-log").getByText(/Facture de carburant confirmé\(e\) : 1 valeur/).waitFor({ timeout: 10000 });
+  await page.goto(url("/dashboard/organization"));
+  await page.getByTestId("org-documents").scrollIntoViewIfNeeded();
+  await capture(page, "12c-organisation-pieces");
+  etape("Factures : total faux signalé puis corrigé, prix au litre dérivé (1,421 $/L avant taxes), pièce confirmée, journalisée");
 
   writeFileSync(join(SORTIE, "resultat.json"), JSON.stringify({ infraStrategie, infraPlan, subvStrategie, vanPlan, sousTitre, statutOpt, nbDecisions, nbChangements }, null, 2));
   if (erreurs.length) throw new Error(`réponses locales en erreur :\n${erreurs.join("\n")}`);

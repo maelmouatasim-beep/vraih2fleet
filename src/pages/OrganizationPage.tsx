@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import EnergyClientDataCard from "@/components/organization/EnergyClientDataCard";
+import ClientDocumentsCard from "@/components/documents/ClientDocumentsCard";
 import AiSettingsCard from "@/components/organization/AiSettingsCard";
 import ReceivedInvitationsCard from "@/components/organization/ReceivedInvitationsCard";
 import TeamCard from "@/components/organization/TeamCard";
@@ -183,6 +184,8 @@ export default function OrganizationPage() {
         <ReceivedInvitationsCard />
 
         <EnergyClientDataCard />
+
+        {organization && <ClientDocumentsCard organizationId={organization.id} peutModifier={organization.myRole !== "reader"} />}
 
         {organization && <TeamCard organization={organization} />}
 

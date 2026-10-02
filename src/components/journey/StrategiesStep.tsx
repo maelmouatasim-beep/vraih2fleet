@@ -59,6 +59,7 @@ import { cn } from "@/lib/utils";
 import { CheckCircle2, ClipboardCheck, Loader2, SlidersHorizontal } from "lucide-react";
 import StressTestPanel from "./StressTestPanel";
 import { traduireAvertissement } from "@/lib/tco/translations-en";
+import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 
 interface StrategiesStepProps {
   projectId: string;
@@ -84,12 +85,7 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
 
   const vehiculesProjet = useMemo(
     (): VehiculeProjet[] =>
-      projectVehicles.map((pv) => ({
-        ...pv.vehicles,
-        replacement_year: pv.replacement_year,
-        target_technology: pv.target_technology,
-        subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
-      })),
+      projectVehicles.map((pv) => vehiculeProjetDepuis(pv, confirmeesParVehicule.get(pv.vehicle_id))),
     [projectVehicles, confirmeesParVehicule],
   );
 

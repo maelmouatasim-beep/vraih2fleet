@@ -2,6 +2,7 @@
   "tables": [
     "ai_usage_events [rls]",
     "api_keys [rls]",
+    "client_documents [rls]",
     "confirmed_subsidies [rls]",
     "copilot_messages [rls]",
     "custom_reference_data [rls]",
@@ -59,6 +60,9 @@
     "public.api_keys : Users can delete their own API keys",
     "public.api_keys : Users can rename or disable their own API keys",
     "public.api_keys : Users can view their own API keys",
+    "public.client_documents : client documents: members and project viewers read",
+    "public.client_documents : client documents: org writers add",
+    "public.client_documents : client documents: org writers confirm or reject",
     "public.confirmed_subsidies : confirmed subsidies: project editors can delete",
     "public.confirmed_subsidies : confirmed subsidies: project editors can insert",
     "public.confirmed_subsidies : confirmed subsidies: project editors can update",
@@ -227,7 +231,9 @@
     "public.webhooks : Users can delete own webhooks",
     "public.webhooks : Users can update own webhooks",
     "public.webhooks : Users can view own webhooks",
-    "storage.objects : Demo screenshots are publicly accessible"
+    "storage.objects : Demo screenshots are publicly accessible",
+    "storage.objects : client documents: members read their organization files",
+    "storage.objects : client documents: org writers upload"
   ],
   "fonctions": [
     "accept_organization_invitation",
@@ -240,6 +246,7 @@
     "can_view_project",
     "check_energy_input_project_org",
     "check_task_alerts",
+    "client_documents_guard",
     "demote_previous_tco_results",
     "enforce_api_keys_update_columns",
     "garage_name_key",
@@ -278,6 +285,8 @@
   ],
   "triggers": [
     "api_keys : enforce_api_keys_update_columns",
+    "client_documents : trg_client_documents_guard",
+    "client_documents : trg_client_documents_updated_at",
     "confirmed_subsidies : trg_confirmed_subsidies_updated_at",
     "custom_reference_data : update_custom_reference_data_updated_at",
     "energy_client_inputs : trg_energy_client_inputs_project_org",
@@ -331,6 +340,7 @@
     "webhooks : update_webhooks_updated_at"
   ],
   "buckets": [
+    "client-documents",
     "demo-screenshots"
   ]
 }

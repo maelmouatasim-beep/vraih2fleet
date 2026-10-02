@@ -272,7 +272,7 @@ export function entreeVehiculeMoteur(
       ? reference
       : {
           technologie: techno,
-          prixAvantTaxes: defauts.prixAchat[techno].valeur,
+          prixAvantTaxes: v.prixDevis?.technologie === techno ? v.prixDevis.prix : defauts.prixAchat[techno].valeur,
           consommationPar100km: defauts.consommation[techno].valeur,
           entretienParKm: defauts.entretien[techno].valeur,
           assuranceParAn: 0,

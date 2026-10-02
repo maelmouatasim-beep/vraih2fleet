@@ -21,6 +21,7 @@ import { HYPOTHESES } from "@/lib/tco";
 import { categorieMoteur } from "./categories";
 
 export type TypeBorne = "niveau2" | "rapide50" | "rapide150";
+export const TYPES_BORNE: readonly TypeBorne[] = ["niveau2", "rapide50", "rapide150"];
 
 /** Puissances tirées des descriptions du registre (mêmes hypothèses que le CAPEX). */
 export const BORNES: Record<
@@ -92,6 +93,9 @@ export interface DetailRaccordement {
 export interface CaracteristiquesGarage {
   puissanceDisponibleKw?: number | null;
   devisRaccordement?: number | null;
+  /** Coût unitaire INSTALLÉ d'une borne par type, selon un devis confirmé
+   *  ($ avant taxes) : remplace le coût du registre pour ce garage. */
+  coutBorneDevis?: Partial<Record<TypeBorne, number>> | null;
   /** Fenêtre de recharge : heure de retour (soir) → heure de départ (matin), « HH:MM[:SS] ». */
   fenetreRecharge?: { retour: string; depart: string };
 }
@@ -114,6 +118,8 @@ export interface InfraGarage {
   vehiculesFcev: string[];
   bornes: Partial<Record<TypeBorne, number>>;
   capexBornes: number;
+  /** registre = coûts du registre ; devis = au moins un type au coût devisé. */
+  bornesSource: "registre" | "devis";
   puissanceMinKw: number;
   puissanceMaxKw: number;
   raccordement: DetailRaccordement;
@@ -208,6 +214,8 @@ export function planifierInfrastructure(
     const categoriesInconnues = new Set<string>();
     const parAnnee = new Map<number, PhaseGarage>();
     let capexBornes = 0;
+    let bornesDevisees = false;
+    const devisBornes = options.garages?.get(cle)?.coutBorneDevis ?? null;
     let puissanceMinKw = 0;
     let puissanceMaxKw = 0;
 
@@ -219,7 +227,13 @@ export function planifierInfrastructure(
       }
       const borne = BORNES[type];
       bornes[type] = (bornes[type] ?? 0) + 1;
-      capexBornes += borne.capex;
+      const devis = devisBornes?.[type];
+      if (devis != null && devis > 0) {
+        capexBornes += devis;
+        bornesDevisees = true;
+      } else {
+        capexBornes += borne.capex;
+      }
       puissanceMinKw += borne.puissanceMinKw;
       puissanceMaxKw += borne.puissanceMaxKw;
 
@@ -250,6 +264,7 @@ export function planifierInfrastructure(
       vehiculesFcev: fcev.map((v) => v.id),
       bornes,
       capexBornes,
+      bornesSource: bornesDevisees ? "devis" : "registre",
       puissanceMinKw,
       puissanceMaxKw,
       raccordement,

@@ -49,9 +49,12 @@ appelant via `supabase/functions/_shared/auth.ts` :
 | `calculate-tco` | — | **RETIRÉE (Phase 1B refonte)** : moteur remplacé par `src/lib/tco` côté client ; `api-gateway` répond 410 sur `/scenarios/:id/calculate`. La fonction encore déployée chez Supabase doit être supprimée à la main (liste pré-pilote). |
 | `copilot` | utilisateur | `getUserOrThrow` + projet relu avec le client RLS + fonction activée pour l'organisation + quotas jour/mois par organisation + débit par utilisateur ; clé `ANTHROPIC_API_KEY` côté serveur seulement ; chaque nombre de la réponse vérifié contre les résultats d'outils |
 | `fleet-import` | utilisateur | `getUserOrThrow` + réglages lus avec le client RLS (membre de l'organisation) + « import intelligent » activé + quotas par organisation + débit par utilisateur ; reçoit seulement entêtes + ≤ 3 exemples par colonne (colonnes personnelles filtrées dans le navigateur) ; réponse filtrée : entêtes et libellés absents de la requête rejetés, valeurs hors listes vidées ; rien n'est stocké |
+| `document-reader` | utilisateur | `getUserOrThrow` + réglages et pièce relus avec le client RLS (même organisation, pièce encore « à vérifier ») + « lecture de factures et devis » activée + quotas + débit ; texte du PDF seul quand il existe, sinon fichier téléchargé avec le client RLS ; champs hors type et garages inconnus rejetés, nombres retrouvés dans le texte ; rien n'est écrit par la fonction (confirmation dans l'application) |
 | `authenticate-telematics`, `fetch-telematics-vehicles` | utilisateur | `getUserOrThrow` |
 | `get-mapbox-token` | utilisateur | verify_jwt (jeton public Mapbox uniquement) |
 | `api-gateway`, `mcp` | reportés | 404 sauf `FEATURE_PUBLIC_API=true` |
+
+Stockage `client-documents` (privé) : chemin `<organisation>/<uuid>`, lecture par les membres, dépôt par les rôles d'écriture, aucune modification ni suppression ; registre `client_documents` immuable une fois la pièce confirmée (trigger), confirmation signée par la base.
 
 CORS : jamais `*`. Les origines viennent d'`ALLOWED_ORIGINS`
 (`_shared/cors.ts`) ; sans configuration, seuls les localhost de dev.

@@ -53,6 +53,87 @@ export type Database = {
         }
         Relationships: []
       }
+      client_documents: {
+        Row: {
+          applied: Json
+          confirmed_at: string | null
+          confirmed_by: string | null
+          created_at: string
+          document_date: string | null
+          extraction: Json
+          file_name: string
+          id: string
+          kind: string
+          mime_type: string
+          organization_id: string
+          project_id: string | null
+          sha256: string
+          size_bytes: number
+          status: string
+          storage_path: string
+          supplier: string | null
+          updated_at: string
+          uploaded_by: string
+        }
+        Insert: {
+          applied?: Json
+          confirmed_at?: string | null
+          confirmed_by?: string | null
+          created_at?: string
+          document_date?: string | null
+          extraction?: Json
+          file_name: string
+          id?: string
+          kind: string
+          mime_type: string
+          organization_id: string
+          project_id?: string | null
+          sha256: string
+          size_bytes: number
+          status?: string
+          storage_path: string
+          supplier?: string | null
+          updated_at?: string
+          uploaded_by?: string
+        }
+        Update: {
+          applied?: Json
+          confirmed_at?: string | null
+          confirmed_by?: string | null
+          created_at?: string
+          document_date?: string | null
+          extraction?: Json
+          file_name?: string
+          id?: string
+          kind?: string
+          mime_type?: string
+          organization_id?: string
+          project_id?: string | null
+          sha256?: string
+          size_bytes?: number
+          status?: string
+          storage_path?: string
+          supplier?: string | null
+          updated_at?: string
+          uploaded_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_documents_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_documents_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       copilot_messages: {
         Row: {
           content: string
@@ -299,8 +380,10 @@ export type Database = {
       energy_client_inputs: {
         Row: {
           created_at: string
+          diesel_document_id: string | null
           diesel_price_per_l: number | null
           electricity_cost_per_kwh: number | null
+          electricity_document_id: string | null
           grid_connection_quote: number | null
           h2_price_per_kg: number | null
           id: string
@@ -312,8 +395,10 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          diesel_document_id?: string | null
           diesel_price_per_l?: number | null
           electricity_cost_per_kwh?: number | null
+          electricity_document_id?: string | null
           grid_connection_quote?: number | null
           h2_price_per_kg?: number | null
           id?: string
@@ -325,8 +410,10 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          diesel_document_id?: string | null
           diesel_price_per_l?: number | null
           electricity_cost_per_kwh?: number | null
+          electricity_document_id?: string | null
           grid_connection_quote?: number | null
           h2_price_per_kg?: number | null
           id?: string
@@ -357,9 +444,12 @@ export type Database = {
         Row: {
           address: string | null
           available_power_kw: number | null
+          charger_quote_document_id: string | null
+          charger_unit_quote: Json | null
           created_at: string
           departure_time: string | null
           grid_connection_quote: number | null
+          grid_quote_document_id: string | null
           hq_rate: string | null
           id: string
           name: string
@@ -372,9 +462,12 @@ export type Database = {
         Insert: {
           address?: string | null
           available_power_kw?: number | null
+          charger_quote_document_id?: string | null
+          charger_unit_quote?: Json | null
           created_at?: string
           departure_time?: string | null
           grid_connection_quote?: number | null
+          grid_quote_document_id?: string | null
           hq_rate?: string | null
           id?: string
           name: string
@@ -387,9 +480,12 @@ export type Database = {
         Update: {
           address?: string | null
           available_power_kw?: number | null
+          charger_quote_document_id?: string | null
+          charger_unit_quote?: Json | null
           created_at?: string
           departure_time?: string | null
           grid_connection_quote?: number | null
+          grid_quote_document_id?: string | null
           hq_rate?: string | null
           id?: string
           name?: string
@@ -1140,6 +1236,9 @@ export type Database = {
           created_at: string
           id: string
           project_id: string
+          quote_document_id: string | null
+          quote_price: number | null
+          quote_technology: string | null
           replacement_year: number | null
           target_technology: string | null
           updated_at: string
@@ -1152,6 +1251,9 @@ export type Database = {
           created_at?: string
           id?: string
           project_id: string
+          quote_document_id?: string | null
+          quote_price?: number | null
+          quote_technology?: string | null
           replacement_year?: number | null
           target_technology?: string | null
           updated_at?: string
@@ -1164,6 +1266,9 @@ export type Database = {
           created_at?: string
           id?: string
           project_id?: string
+          quote_document_id?: string | null
+          quote_price?: number | null
+          quote_technology?: string | null
           replacement_year?: number | null
           target_technology?: string | null
           updated_at?: string

@@ -842,3 +842,33 @@ moteur décrit ci-dessus chiffre chaque choix.
    même année, meilleure option zéro émission) : économie ou surcoût
    marginal (bornes du garage comprises), contrainte qui serait violée,
    programme de subvention perdu l'année suivante.
+
+## 12. Pièces justificatives (Phase 5.4) — devis et factures du client
+
+Les données client (§3.3, couche 3) peuvent provenir d'une **pièce
+confirmée** : facture de carburant, facture Hydro-Québec, devis de
+véhicule, de bornes ou de raccordement. La pièce est conservée sans
+modification (stockage privé, empreinte SHA-256) et citée dans l'annexe
+des rapports avec les valeurs qu'elle a modifiées.
+
+1. **Lecture.** Les montants imprimés sont transcrits (par l'IA si la
+   fonction est activée, sinon saisis) ; chaque nombre est recherché dans
+   le texte du document quand il en a un. Rien n'est enregistré avant la
+   confirmation de l'utilisateur, document affiché à côté.
+2. **Dérivation (code, formule affichée).** Prix du diesel avant
+   TPS/TVQ = sous-total avant taxes ÷ litres (à défaut : total − TPS −
+   TVQ, les trois imprimés) ; coût effectif de l'électricité = montant
+   avant taxes ÷ kWh facturés ; prix devisé d'un véhicule = prix unitaire
+   avant taxes (à défaut : sous-total ÷ quantité) ; coût installé d'une
+   borne = total avant taxes ÷ nombre de bornes, type selon la puissance
+   unitaire (≤ 19,2 kW : niveau 2 ; ≤ 100 kW : rapide 50 kW ; au-delà :
+   rapide 150 kW — modifiable) ; devis de raccordement = montant avant
+   taxes. Une valeur qui ne peut être dérivée sans deviner n'est pas
+   produite.
+3. **Priorité.** Prix devisé d'un véhicule : remplace le prix du registre
+   pour CE véhicule dans la technologie du devis seulement (Faisabilité,
+   Stratégies, Plan, optimiseur ; subventions recalculées sur ce prix).
+   Coût devisé d'une borne : remplace le coût du registre pour ce type de
+   borne dans CE garage. Devis de raccordement : déjà prioritaire
+   (§3.5, bloc 1.2). Prix du diesel et coût de l'électricité : couche 3
+   habituelle (organisation ou projet).

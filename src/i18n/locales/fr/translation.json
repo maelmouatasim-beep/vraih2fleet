@@ -4664,7 +4664,7 @@
         },
         "documents": {
           "title": "Lecture de factures et devis",
-          "description": "Extraction des prix et montants, confirmés avant enregistrement (à venir)."
+          "description": "Lit les factures de carburant et d'Hydro-Québec et les devis (véhicules, bornes, raccordement) ; chaque valeur est vérifiée dans le document puis confirmée par vous avant d'alimenter les calculs."
         },
         "councilNote": {
           "title": "Note au conseil",
@@ -5326,7 +5326,17 @@
       "more_other": "… et {{count}} autres changements",
       "fields": {
         "replacement_year": "année de remplacement",
-        "target_technology": "technologie cible"
+        "target_technology": "technologie cible",
+        "diesel_price_per_l": "prix du diesel ($/L avant taxes)",
+        "electricity_cost_per_kwh": "coût de l'électricité ($/kWh avant taxes)",
+        "hq_rate": "tarif Hydro-Québec",
+        "grid_connection_quote": "devis de raccordement ($ avant taxes)",
+        "quote_price": "prix d'achat devisé ($ avant taxes)",
+        "charger_unit_quote": {
+          "niveau2": "coût par borne niveau 2 ($ avant taxes)",
+          "rapide50": "coût par borne rapide 50 kW ($ avant taxes)",
+          "rapide150": "coût par borne rapide 150 kW ($ avant taxes)"
+        }
       },
       "sources": {
         "strategie": "Stratégie",
@@ -5538,7 +5548,7 @@
           "paras": [
             "Les renseignements sont hébergés chez Supabase (base de données et authentification) ; le site est servi par GitHub Pages. Les services suivants ne reçoivent des données que s'ils sont activés : envoi de courriels (SendGrid), assistant d'intelligence artificielle, cartes (Mapbox), plateformes télématiques que vous connectez.",
             "Région d'hébergement de la base de données : [à confirmer]. Lorsque des renseignements sont communiqués à l'extérieur du Québec, l'Exploitant réalise au préalable l'évaluation des facteurs relatifs à la vie privée exigée par la loi [à réaliser].",
-            "Fonctions d'intelligence artificielle (facultatives) : lorsqu'un administrateur de votre organisation les active, les questions posées au copilote et les données du projet nécessaires au calcul (unités, catégories, kilométrages, années, garages — jamais de données personnelles d'employés) sont transmises à Anthropic, PBC (États-Unis), fournisseur du modèle Claude, pour produire la réponse. Seul le nombre de jetons consommés est journalisé ; l'historique du copilote est conservé dans le projet et peut être effacé par son auteur ou un administrateur. Évaluation des facteurs relatifs à la vie privée de cette communication hors Québec : [à compléter — à faire valider par un juriste]."
+            "Fonctions d'intelligence artificielle (facultatives) : lorsqu'un administrateur de votre organisation les active, les questions posées au copilote et les données du projet nécessaires au calcul (unités, catégories, kilométrages, années, garages — jamais de données personnelles d'employés) sont transmises à Anthropic, PBC (États-Unis), fournisseur du modèle Claude, pour produire la réponse. Seul le nombre de jetons consommés est journalisé ; l'historique du copilote est conservé dans le projet et peut être effacé par son auteur ou un administrateur. Lecture de factures et de devis (si elle est activée) : seul le texte du document est transmis quand il en a un (sinon le fichier) ; les pièces peuvent contenir des renseignements de facturation (adresse de service, numéro de compte) : ceux-ci ne sont pas retenus dans les valeurs extraites, et la pièce reste dans le stockage privé de votre organisation. Import intelligent : seuls les entêtes et quelques valeurs d'exemple sont transmis, jamais les colonnes de données personnelles. Évaluation des facteurs relatifs à la vie privée de cette communication hors Québec : [à compléter — à faire valider par un juriste]."
           ]
         },
         {
@@ -5798,5 +5808,153 @@
     "journalSummary_other": "Import intelligent : {{count}} véhicules créés, {{updated}} mis à jour",
     "includeRow": "Importer la ligne {{line}}",
     "demoExport": "Essayer avec l'export fictif de la démo (Rivière-Claire)"
+  },
+  "documents": {
+    "title": "Factures et devis",
+    "subtitleOrg": "Pièces justificatives de l'organisation : factures de carburant et d'Hydro-Québec, devis de bornes et de raccordement. Les valeurs confirmées deviennent des « données client », prioritaires dans tous les calculs, et la pièce est citée dans les rapports.",
+    "subtitleProject": "Pièces de ce projet, dont les devis de véhicules (prix d'achat par technologie). Les valeurs confirmées alimentent le moteur et la pièce est citée dans les rapports.",
+    "add": "Ajouter une pièce",
+    "empty": "Aucune pièce pour l'instant.",
+    "privacy": "Les pièces sont conservées dans un stockage privé de votre organisation, avec leur empreinte SHA-256 ; elles ne sont jamais supprimées. Si la lecture par l'IA est activée, seul le texte du PDF est transmis à Anthropic quand il existe (sinon le fichier), sans numéro de compte ni nom de personne retenus.",
+    "addTitle": "Ajouter une facture ou un devis",
+    "addSubtitle": "Choisissez le type de pièce puis le fichier (PDF, PNG, JPEG ou WebP, 10 Mo au plus). Rien n'est enregistré dans vos données avant votre confirmation.",
+    "kindLabel": "Type de pièce",
+    "kinds": {
+      "fuel_invoice": "Facture de carburant",
+      "electricity_invoice": "Facture Hydro-Québec",
+      "vehicle_quote": "Devis de véhicule",
+      "charger_quote": "Devis de bornes",
+      "grid_quote": "Devis de raccordement"
+    },
+    "choose": "Choisir le fichier…",
+    "uploading": "Dépôt de la pièce…",
+    "reading": "Lecture de la pièce…",
+    "aiOn": "Lecture par l'IA activée : les valeurs seront proposées, puis vérifiées par vous.",
+    "aiOff": "Lecture par l'IA désactivée : vous saisirez les valeurs en regardant la pièce.",
+    "aiOffLink": "Activer dans Organisation",
+    "reviewTitle": "Vérifier : {{kind}}",
+    "reviewSubtitle": "Comparez chaque valeur au document, corrigez-la au besoin, puis confirmez. Les valeurs dérivées sont calculées par H2Fleet, formule affichée.",
+    "readText": "Valeurs lues dans le texte du document ; chacune a été recherchée dans ce texte.",
+    "readFile": "Document sans texte exploitable (numérisé) : valeurs lues sur l'image, à vérifier à l'œil.",
+    "rejected_one": "{{count}} proposition rejetée (champ hors type ou garage inconnu).",
+    "rejected_other": "{{count}} propositions rejetées (champ hors type ou garage inconnu).",
+    "typeMismatch": "Attention : le document ne semble pas être de ce type.",
+    "supplier": "Fournisseur",
+    "date": "Date du document",
+    "field": "Champ",
+    "value": "Valeur",
+    "check": "Vérification",
+    "fields": {
+      "carburant": "Carburant",
+      "litres": "Litres",
+      "prix_unitaire_par_l": "Prix unitaire au litre",
+      "montant_avant_taxes": "Montant avant taxes",
+      "montant_tps": "TPS",
+      "montant_tvq": "TVQ",
+      "montant_total": "Total taxes comprises",
+      "periode_debut": "Début de période",
+      "periode_fin": "Fin de période",
+      "tarif": "Tarif",
+      "kwh": "Énergie facturée",
+      "puissance_facturee_kw": "Puissance facturée",
+      "technologie": "Motorisation",
+      "marque": "Marque",
+      "modele": "Modèle",
+      "quantite": "Quantité",
+      "prix_unitaire_avant_taxes": "Prix unitaire avant taxes",
+      "nombre_bornes": "Nombre de bornes",
+      "puissance_kw_par_borne": "Puissance par borne",
+      "puissance_ajoutee_kw": "Puissance ajoutée"
+    },
+    "verify": {
+      "found": "retrouvée dans le document",
+      "notFound": "introuvable dans le document",
+      "visual": "à vérifier à l'œil",
+      "edited": "corrigée par vous",
+      "manual": "saisie"
+    },
+    "scope": "Appliquer à",
+    "scopes": {
+      "organisation": "Toute l'organisation",
+      "projet": "Ce projet seulement"
+    },
+    "garage": "Garage concerné",
+    "garageNone": "— Choisir —",
+    "chargerType": "Type de borne",
+    "chargers": {
+      "niveau2": "Niveau 2 (CA, ≤ 19,2 kW)",
+      "rapide50": "Rapide 50 kW",
+      "rapide150": "Rapide 150 kW"
+    },
+    "vehicles": "Véhicules du projet visés par ce devis",
+    "derivedTitle": "Valeurs retenues pour les calculs",
+    "targets": {
+      "diesel_price_per_l": "Prix du diesel payé (avant TPS/TVQ)",
+      "electricity_cost_per_kwh": "Coût effectif de l'électricité (avant taxes)",
+      "hq_rate": "Tarif Hydro-Québec du garage",
+      "vehicle_quote_price": "Prix d'achat devisé (avant taxes)",
+      "charger_unit_cost": "Coût installé par borne (avant taxes)",
+      "grid_connection_quote": "Devis de raccordement (avant taxes)"
+    },
+    "reasons": {
+      "montant_avant_taxes_absent": "non calculé — montant avant taxes (ou total, TPS et TVQ) absent",
+      "quantite_absente": "non calculé — quantité absente",
+      "carburant_non_diesel": "non appliqué — ce carburant n'est pas du diesel (seul le prix du diesel est une donnée client du moteur)",
+      "technologie_non_zero_emission": "non appliqué — motorisation ni électrique à batterie ni hydrogène",
+      "puissance_borne_absente": "non calculé — choisissez le type de borne",
+      "valeur_hors_bornes": "non appliqué — valeur invraisemblable, vérifiez la lecture"
+    },
+    "previewTitle": "Ce qui sera enregistré (avant → après)",
+    "previewEmpty": "Rien à enregistrer pour l'instant.",
+    "writeFields": {
+      "diesel_price_per_l": "prix du diesel",
+      "electricity_cost_per_kwh": "coût de l'électricité",
+      "hq_rate": "tarif Hydro-Québec",
+      "grid_connection_quote": "devis de raccordement",
+      "charger_unit_quote": "coût par borne",
+      "quote_price": "prix d'achat devisé"
+    },
+    "blocks": {
+      "garage_requis": "Choisissez le garage concerné.",
+      "vehicules_requis": "Choisissez au moins un véhicule visé par le devis."
+    },
+    "notFoundWarning": "Valeurs introuvables dans le document : {{fields}}. Vérifiez-les avant de confirmer.",
+    "reject": "Rejeter la pièce",
+    "confirm_one": "Confirmer ({{count}} changement)",
+    "confirm_other": "Confirmer ({{count}} changements)",
+    "confirmed_one": "Pièce confirmée : {{count}} valeur enregistrée",
+    "confirmed_other": "Pièce confirmée : {{count}} valeurs enregistrées",
+    "journalSummary_one": "{{kind}} confirmé(e) : {{count}} valeur",
+    "journalSummary_other": "{{kind}} confirmé(e) : {{count}} valeurs",
+    "appliedCount_one": "{{count}} valeur appliquée",
+    "appliedCount_other": "{{count}} valeurs appliquées",
+    "review": "Vérifier",
+    "status": {
+      "pending": "À vérifier",
+      "confirmed": "Confirmée",
+      "rejected": "Rejetée"
+    },
+    "errors": {
+      "fichier_trop_volumineux": "Fichier trop volumineux (10 Mo au plus).",
+      "format_non_pris_en_charge": "Format non pris en charge (PDF, PNG, JPEG ou WebP)."
+    },
+    "aiErrors": {
+      "service_non_configure": "La lecture par l'IA n'est pas encore branchée sur ce site (clé ANTHROPIC_API_KEY à ajouter). Saisissez les valeurs en regardant la pièce.",
+      "fonction_desactivee": "La lecture de factures et devis est désactivée pour votre organisation.",
+      "quota_journalier": "Limite quotidienne de requêtes IA atteinte.",
+      "quota_mensuel": "Limite mensuelle de jetons IA atteinte.",
+      "trop_de_requetes": "Trop de lectures en peu de temps. Patientez quelques minutes.",
+      "erreur_service": "Le service IA ne répond pas pour l'instant. Saisissez les valeurs en regardant la pièce.",
+      "refus": "Le modèle a refusé de lire ce document.",
+      "invalide": "Lecture inutilisable : saisissez les valeurs en regardant la pièce.",
+      "document_introuvable": "Pièce introuvable.",
+      "document_deja_traite": "Pièce déjà confirmée ou rejetée."
+    },
+    "demo": {
+      "fuel_invoice": "Essayer : facture de diesel fictive",
+      "vehicle_quote": "Essayer : devis de véhicules fictif"
+    },
+    "previewLoading": "Affichage du document…",
+    "previewError": "Aperçu indisponible : ouvrez la pièce depuis la liste pour la comparer."
   }
 }

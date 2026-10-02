@@ -37,6 +37,80 @@ export interface MetaRapport {
   donneesClient?: string[];
   /** 1.6 — stratégie réellement retenue (nommée en tête du PDF et de l'Excel). */
   strategieRetenue?: StrategieRetenue;
+  /** Phase 5.4 — pièces justificatives CONFIRMÉES (factures, devis) :
+   *  citées en annexe avec leur empreinte et ce qu'elles ont modifié. */
+  pieces?: PieceJustificative[];
+}
+
+export interface PieceJustificative {
+  type: "fuel_invoice" | "electricity_invoice" | "vehicle_quote" | "charger_quote" | "grid_quote";
+  fournisseur: string | null;
+  date: string | null;
+  fichier: string;
+  /** SHA-256 complet (le rapport en affiche les 12 premiers caractères). */
+  empreinte: string;
+  confirmeeLe: string | null;
+  /** Valeurs appliquées : « cible · champ : avant → après ». */
+  valeurs: { cible: string; champ: string; avant: string | number | null; apres: string | number | null }[];
+}
+
+const LIBELLES_PIECES = {
+  fr: {
+    fuel_invoice: "Facture de carburant",
+    electricity_invoice: "Facture Hydro-Québec",
+    vehicle_quote: "Devis de véhicule",
+    charger_quote: "Devis de bornes",
+    grid_quote: "Devis de raccordement",
+  },
+  en: {
+    fuel_invoice: "Fuel invoice",
+    electricity_invoice: "Hydro-Québec invoice",
+    vehicle_quote: "Vehicle quote",
+    charger_quote: "Charger quote",
+    grid_quote: "Grid-connection quote",
+  },
+} as const;
+
+const CHAMPS_PIECES = {
+  fr: {
+    diesel_price_per_l: "prix du diesel ($/L avant taxes)",
+    electricity_cost_per_kwh: "coût de l'électricité ($/kWh avant taxes)",
+    hq_rate: "tarif Hydro-Québec",
+    grid_connection_quote: "devis de raccordement ($ avant taxes)",
+    quote_price: "prix d'achat devisé ($ avant taxes)",
+    "charger_unit_quote.niveau2": "coût par borne niveau 2 ($ avant taxes)",
+    "charger_unit_quote.rapide50": "coût par borne rapide 50 kW ($ avant taxes)",
+    "charger_unit_quote.rapide150": "coût par borne rapide 150 kW ($ avant taxes)",
+  },
+  en: {
+    diesel_price_per_l: "diesel price ($/L before taxes)",
+    electricity_cost_per_kwh: "electricity cost ($/kWh before taxes)",
+    hq_rate: "Hydro-Québec rate",
+    grid_connection_quote: "grid-connection quote ($ before taxes)",
+    quote_price: "quoted purchase price ($ before taxes)",
+    "charger_unit_quote.niveau2": "cost per Level 2 charger ($ before taxes)",
+    "charger_unit_quote.rapide50": "cost per 50 kW fast charger ($ before taxes)",
+    "charger_unit_quote.rapide150": "cost per 150 kW fast charger ($ before taxes)",
+  },
+} as const;
+
+export function libelleChampPiece(champ: string, langue: Langue): string {
+  return (CHAMPS_PIECES[langue] as Record<string, string>)[champ] ?? champ;
+}
+
+/** « cible · champ : avant → après » pour chaque valeur appliquée par la pièce. */
+export function valeursPiece(p: PieceJustificative, langue: Langue): string {
+  return p.valeurs.map((v) => `${v.cible} · ${libelleChampPiece(v.champ, langue)} : ${v.avant ?? "—"} → ${v.apres ?? "—"}`).join(" ; ");
+}
+
+export function libellePiece(type: PieceJustificative["type"], langue: Langue): string {
+  return LIBELLES_PIECES[langue][type];
+}
+
+/** Ligne lisible d'une pièce : « Facture de carburant — Fournisseur, 2026-09-15 — fichier (SHA-256 abc…) ». */
+export function lignePiece(p: PieceJustificative, langue: Langue): string {
+  const qui = [p.fournisseur, p.date].filter(Boolean).join(", ");
+  return `${libellePiece(p.type, langue)}${qui ? ` — ${qui}` : ""} — ${p.fichier} (SHA-256 ${p.empreinte.slice(0, 12)}…)`;
 }
 
 const L = {
@@ -64,6 +138,8 @@ const L = {
     parametreProjet: "paramètre du projet",
     statuts: { verifie: "vérifié", estimation: "estimation", a_valider: "à valider" } as Record<string, string>,
     feuilles: ["Plan annuel", "Véhicules", "Hypothèses"],
+    pieces: "PIÈCES JUSTIFICATIVES (confirmées par l'organisation, conservées avec leur empreinte) :",
+    colonnesPieces: ["Pièce", "Valeurs appliquées"],
   },
   en: {
     titre: (p: string, o: string) => `Replacement plan — ${p} (${o})`,
@@ -89,6 +165,8 @@ const L = {
     parametreProjet: "project setting",
     statuts: { verifie: "verified", estimation: "estimate", a_valider: "to validate" } as Record<string, string>,
     feuilles: ["Annual plan", "Vehicles", "Assumptions"],
+    pieces: "SUPPORTING DOCUMENTS (confirmed by the organization, kept with their fingerprint):",
+    colonnesPieces: ["Document", "Values applied"],
   },
 };
 
@@ -177,6 +255,17 @@ export function construireClasseurPlan(
           [],
           [l.donneesClient],
           ...meta.donneesClient.map((d): Cellule[] => [traduireDonneeClient(d, langue)]),
+        ]
+      : []),
+    ...(meta.pieces && meta.pieces.length > 0
+      ? [
+          [],
+          [l.pieces],
+          l.colonnesPieces,
+          ...meta.pieces.map((p): Cellule[] => [
+            lignePiece(p, langue),
+            valeursPiece(p, langue) || "—",
+          ]),
         ]
       : []),
     [],

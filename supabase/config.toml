@@ -34,6 +34,10 @@ verify_jwt = true
 [functions.fleet-import]
 verify_jwt = true
 
+# Lecture de factures et devis (Phase 5.4) : JWT vérifié dans le code.
+[functions.document-reader]
+verify_jwt = true
+
 # Gabarits publics (rate limit + pot de miel) et internes (secrets) : la
 # fonction fait le tri elle-même.
 [functions.send-email]

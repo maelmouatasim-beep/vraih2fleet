@@ -32,6 +32,7 @@ import {
 import { formateurCad } from "@/lib/format";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 import { Loader2 } from "lucide-react";
+import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 
 interface FeasibilityStepProps {
   projectId: string;
@@ -51,7 +52,7 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
       // MÊME année d'acquisition que le Plan (revue A5).
       parVehicule.set(
         pv.vehicle_id,
-        evaluerFaisabiliteVehicule({ ...pv.vehicles, replacement_year: pv.replacement_year }, options),
+        evaluerFaisabiliteVehicule(vehiculeProjetDepuis(pv), options),
       );
     }
     return parVehicule;

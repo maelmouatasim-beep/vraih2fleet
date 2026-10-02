@@ -8,7 +8,7 @@ import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { ENGINE_VERSION, LISTE_HYPOTHESES, type ResultatPlan } from "@/lib/tco";
 import type { ResultatSensibilite } from "@/lib/tco";
 import { libelleStrategieRetenue, type StrategieConstruite } from "@/lib/journey/strategies";
-import type { MetaRapport } from "@/lib/journey/report";
+import { lignePiece, valeursPiece, type MetaRapport } from "@/lib/journey/report";
 import { texteRecuperation } from "@/lib/journey/payback";
 import {
   descriptionHypothese,
@@ -355,6 +355,22 @@ export default function CouncilReportPDF({
               <Text key={i} style={s.note}>
                 • {traduireDonneeClient(d, langue)}
               </Text>
+            ))}
+          </>
+        )}
+        {(meta.pieces?.length ?? 0) > 0 && (
+          <>
+            <Text style={[s.h2, { marginTop: 6 }]}>{en ? "Supporting documents" : "Pièces justificatives"}</Text>
+            <Text style={s.note}>
+              {en
+                ? "Invoices and quotes confirmed by the organization; each file is kept unaltered in private storage and identified by its SHA-256 fingerprint."
+                : "Factures et devis confirmés par l'organisation ; chaque fichier est conservé sans modification dans un stockage privé et identifié par son empreinte SHA-256."}
+            </Text>
+            {meta.pieces!.map((p, i) => (
+              <View key={i} wrap={false}>
+                <Text style={s.note}>• {lignePiece(p, langue)}</Text>
+                {p.valeurs.length > 0 && <Text style={[s.note, { marginLeft: 8 }]}>{valeursPiece(p, langue)}</Text>}
+              </View>
             ))}
           </>
         )}

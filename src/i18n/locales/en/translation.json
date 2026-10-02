@@ -4664,7 +4664,7 @@
         },
         "documents": {
           "title": "Invoice and quote reading",
-          "description": "Extraction of prices and amounts, confirmed before saving (coming)."
+          "description": "Reads fuel and Hydro-Québec invoices and quotes (vehicles, chargers, grid connection); each value is checked against the document, then confirmed by you before it feeds the calculations."
         },
         "councilNote": {
           "title": "Council memo",
@@ -5326,7 +5326,17 @@
       "more_other": "… and {{count}} other changes",
       "fields": {
         "replacement_year": "replacement year",
-        "target_technology": "target technology"
+        "target_technology": "target technology",
+        "diesel_price_per_l": "diesel price ($/L before taxes)",
+        "electricity_cost_per_kwh": "electricity cost ($/kWh before taxes)",
+        "hq_rate": "Hydro-Québec rate",
+        "grid_connection_quote": "grid-connection quote ($ before taxes)",
+        "quote_price": "quoted purchase price ($ before taxes)",
+        "charger_unit_quote": {
+          "niveau2": "cost per Level 2 charger ($ before taxes)",
+          "rapide50": "cost per 50 kW fast charger ($ before taxes)",
+          "rapide150": "cost per 150 kW fast charger ($ before taxes)"
+        }
       },
       "sources": {
         "strategie": "Strategy",
@@ -5538,7 +5548,7 @@
           "paras": [
             "Information is hosted by Supabase (database and authentication); the website is served by GitHub Pages. The following services receive data only if enabled: email delivery (SendGrid), artificial-intelligence assistant, maps (Mapbox), telematics platforms you connect.",
             "Database hosting region: [to be confirmed]. When information is communicated outside Québec, the Operator first carries out the privacy impact assessment required by law [to be completed].",
-            "Artificial intelligence features (optional): when an administrator of your organization enables them, questions asked to the copilot and the project data needed for the calculation (units, categories, mileage, years, garages — never employees' personal data) are sent to Anthropic, PBC (United States), provider of the Claude model, to produce the answer. Only the number of tokens used is logged; the copilot history is kept in the project and can be deleted by its author or an administrator. Privacy impact assessment of this communication outside Québec: [to be completed — to be validated by a lawyer]."
+            "Artificial intelligence features (optional): when an administrator of your organization enables them, questions asked to the copilot and the project data needed for the calculation (units, categories, mileage, years, garages — never employees' personal data) are sent to Anthropic, PBC (United States), provider of the Claude model, to produce the answer. Only the number of tokens used is logged; the copilot history is kept in the project and can be deleted by its author or an administrator. Invoice and quote reading (if enabled): only the document's text is sent when it has one (otherwise the file); documents may contain billing information (service address, account number), which is not kept in the extracted values, and the document stays in your organization's private storage. Smart import: only headers and a few sample values are sent, never personal-data columns. Privacy impact assessment of this communication outside Québec: [to be completed — to be validated by a lawyer]."
           ]
         },
         {
@@ -5798,5 +5808,153 @@
     "journalSummary_other": "Smart import: {{count}} vehicles created, {{updated}} updated",
     "includeRow": "Import row {{line}}",
     "demoExport": "Try the demo's fictional export (Rivière-Claire)"
+  },
+  "documents": {
+    "title": "Invoices and quotes",
+    "subtitleOrg": "Your organization's supporting documents: fuel and Hydro-Québec invoices, charger and grid-connection quotes. Confirmed values become “client data”, which take precedence in every calculation, and the document is cited in reports.",
+    "subtitleProject": "This project's documents, including vehicle quotes (purchase price per technology). Confirmed values feed the engine and the document is cited in reports.",
+    "add": "Add a document",
+    "empty": "No documents yet.",
+    "privacy": "Documents are kept in your organization's private storage with their SHA-256 fingerprint and are never deleted. If AI reading is enabled, only the PDF's text is sent to Anthropic when it has one (otherwise the file); no account number or personal name is kept.",
+    "addTitle": "Add an invoice or a quote",
+    "addSubtitle": "Choose the document type, then the file (PDF, PNG, JPEG or WebP, 10 MB max). Nothing is saved to your data before you confirm.",
+    "kindLabel": "Document type",
+    "kinds": {
+      "fuel_invoice": "Fuel invoice",
+      "electricity_invoice": "Hydro-Québec invoice",
+      "vehicle_quote": "Vehicle quote",
+      "charger_quote": "Charger quote",
+      "grid_quote": "Grid-connection quote"
+    },
+    "choose": "Choose the file…",
+    "uploading": "Uploading the document…",
+    "reading": "Reading the document…",
+    "aiOn": "AI reading enabled: values will be proposed, then checked by you.",
+    "aiOff": "AI reading disabled: you will enter the values while looking at the document.",
+    "aiOffLink": "Enable in Organization",
+    "reviewTitle": "Review: {{kind}}",
+    "reviewSubtitle": "Compare each value with the document, correct it if needed, then confirm. Derived values are computed by H2Fleet, formula shown.",
+    "readText": "Values read from the document's text; each one was searched for in that text.",
+    "readFile": "Document without usable text (scanned): values read from the image, check them by eye.",
+    "rejected_one": "{{count}} proposal rejected (field outside this type or unknown garage).",
+    "rejected_other": "{{count}} proposals rejected (field outside this type or unknown garage).",
+    "typeMismatch": "Warning: the document does not seem to be of this type.",
+    "supplier": "Supplier",
+    "date": "Document date",
+    "field": "Field",
+    "value": "Value",
+    "check": "Check",
+    "fields": {
+      "carburant": "Fuel",
+      "litres": "Litres",
+      "prix_unitaire_par_l": "Unit price per litre",
+      "montant_avant_taxes": "Amount before taxes",
+      "montant_tps": "GST",
+      "montant_tvq": "QST",
+      "montant_total": "Total incl. taxes",
+      "periode_debut": "Period start",
+      "periode_fin": "Period end",
+      "tarif": "Rate",
+      "kwh": "Energy billed",
+      "puissance_facturee_kw": "Billed demand",
+      "technologie": "Powertrain",
+      "marque": "Make",
+      "modele": "Model",
+      "quantite": "Quantity",
+      "prix_unitaire_avant_taxes": "Unit price before taxes",
+      "nombre_bornes": "Number of chargers",
+      "puissance_kw_par_borne": "Power per charger",
+      "puissance_ajoutee_kw": "Added capacity"
+    },
+    "verify": {
+      "found": "found in the document",
+      "notFound": "not found in the document",
+      "visual": "check by eye",
+      "edited": "corrected by you",
+      "manual": "entered"
+    },
+    "scope": "Apply to",
+    "scopes": {
+      "organisation": "The whole organization",
+      "projet": "This project only"
+    },
+    "garage": "Garage concerned",
+    "garageNone": "— Choose —",
+    "chargerType": "Charger type",
+    "chargers": {
+      "niveau2": "Level 2 (AC, ≤ 19.2 kW)",
+      "rapide50": "Fast 50 kW",
+      "rapide150": "Fast 150 kW"
+    },
+    "vehicles": "Project vehicles covered by this quote",
+    "derivedTitle": "Values used in calculations",
+    "targets": {
+      "diesel_price_per_l": "Diesel price paid (before GST/QST)",
+      "electricity_cost_per_kwh": "Effective electricity cost (before taxes)",
+      "hq_rate": "Garage's Hydro-Québec rate",
+      "vehicle_quote_price": "Quoted purchase price (before taxes)",
+      "charger_unit_cost": "Installed cost per charger (before taxes)",
+      "grid_connection_quote": "Grid-connection quote (before taxes)"
+    },
+    "reasons": {
+      "montant_avant_taxes_absent": "not computed — amount before taxes (or total, GST and QST) missing",
+      "quantite_absente": "not computed — quantity missing",
+      "carburant_non_diesel": "not applied — this fuel is not diesel (only the diesel price is a client input of the engine)",
+      "technologie_non_zero_emission": "not applied — powertrain is neither battery-electric nor hydrogen",
+      "puissance_borne_absente": "not computed — choose the charger type",
+      "valeur_hors_bornes": "not applied — implausible value, check the reading"
+    },
+    "previewTitle": "What will be saved (before → after)",
+    "previewEmpty": "Nothing to save yet.",
+    "writeFields": {
+      "diesel_price_per_l": "diesel price",
+      "electricity_cost_per_kwh": "electricity cost",
+      "hq_rate": "Hydro-Québec rate",
+      "grid_connection_quote": "grid-connection quote",
+      "charger_unit_quote": "cost per charger",
+      "quote_price": "quoted purchase price"
+    },
+    "blocks": {
+      "garage_requis": "Choose the garage concerned.",
+      "vehicules_requis": "Choose at least one vehicle covered by the quote."
+    },
+    "notFoundWarning": "Values not found in the document: {{fields}}. Check them before confirming.",
+    "reject": "Reject the document",
+    "confirm_one": "Confirm ({{count}} change)",
+    "confirm_other": "Confirm ({{count}} changes)",
+    "confirmed_one": "Document confirmed: {{count}} value saved",
+    "confirmed_other": "Document confirmed: {{count}} values saved",
+    "journalSummary_one": "{{kind}} confirmed: {{count}} value",
+    "journalSummary_other": "{{kind}} confirmed: {{count}} values",
+    "appliedCount_one": "{{count}} value applied",
+    "appliedCount_other": "{{count}} values applied",
+    "review": "Review",
+    "status": {
+      "pending": "To review",
+      "confirmed": "Confirmed",
+      "rejected": "Rejected"
+    },
+    "errors": {
+      "fichier_trop_volumineux": "File too large (10 MB max).",
+      "format_non_pris_en_charge": "Unsupported format (PDF, PNG, JPEG or WebP)."
+    },
+    "aiErrors": {
+      "service_non_configure": "AI reading is not connected on this site yet (ANTHROPIC_API_KEY to add). Enter the values while looking at the document.",
+      "fonction_desactivee": "Invoice and quote reading is disabled for your organization.",
+      "quota_journalier": "Daily AI request limit reached.",
+      "quota_mensuel": "Monthly AI token limit reached.",
+      "trop_de_requetes": "Too many readings in a short time. Please wait a few minutes.",
+      "erreur_service": "The AI service is not responding right now. Enter the values while looking at the document.",
+      "refus": "The model declined to read this document.",
+      "invalide": "Unusable reading: enter the values while looking at the document.",
+      "document_introuvable": "Document not found.",
+      "document_deja_traite": "Document already confirmed or rejected."
+    },
+    "demo": {
+      "fuel_invoice": "Try: fictional diesel invoice",
+      "vehicle_quote": "Try: fictional vehicle quote"
+    },
+    "previewLoading": "Displaying the document…",
+    "previewError": "Preview unavailable: open the document from the list to compare."
   }
 }

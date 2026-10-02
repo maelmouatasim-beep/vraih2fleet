@@ -44,6 +44,10 @@ export interface VehiculeFaisabilite {
   depot?: string | null;
   /** Kilométrage journalier MAXIMAL (bloc 2.4) ; absent = estimé. */
   max_daily_km?: number | null;
+  /** Prix d'achat DEVISÉ (pièce confirmée, $ avant taxes) pour UNE
+   *  technologie : remplace le prix du registre dans cette technologie
+   *  (subventions recalculées sur ce prix). */
+  prixDevis?: { technologie: "BEV" | "FCEV"; prix: number; documentId?: string | null } | null;
 }
 
 export type VerdictFaisabilite = "favorable" | "conditionnel" | "defavorable";
@@ -214,7 +218,8 @@ export function evaluerFaisabiliteVehicule(
   });
 
   const evaluations = (["BEV", "FCEV"] as const).map((technologie): EvaluationTechno => {
-    const prixAlternative = defauts.prixAchat[technologie].valeur;
+    const prixAlternative =
+      vehicule.prixDevis?.technologie === technologie ? vehicule.prixDevis.prix : defauts.prixAchat[technologie].valeur;
     const subventions = resoudreSubventionsVehicule({
       categorie: defauts.categorie,
       technologie,

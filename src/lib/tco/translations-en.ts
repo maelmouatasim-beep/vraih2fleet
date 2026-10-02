@@ -219,10 +219,10 @@ const DONNEES_CLIENT_EN: Record<string, string> = {
 /** « X : donnée client (projet, AAAA-MM-JJ) » dans la langue du rapport. */
 export function traduireDonneeClient(texte: string, langue: Langue): string {
   if (langue === "fr") return texte;
-  const m = texte.match(/^(.*) : donnée client \((projet|organisation)(?:, (\d{4}-\d{2}-\d{2}))?\)$/);
+  const m = texte.match(/^(.*) : donnée client \((projet|organisation)(?:, (\d{4}-\d{2}-\d{2}))?\)( — pièce justificative jointe)?$/);
   if (!m) return texte;
   const niveau = m[2] === "projet" ? "project" : "organization";
-  return `${DONNEES_CLIENT_EN[m[1]] ?? m[1]}: client data (${niveau}${m[3] ? `, ${m[3]}` : ""})`;
+  return `${DONNEES_CLIENT_EN[m[1]] ?? m[1]}: client data (${niveau}${m[3] ? `, ${m[3]}` : ""})${m[4] ? " — supporting document attached" : ""}`;
 }
 
 /** Nom court (avant « — ») d'un programme du registre, dans la langue voulue. */

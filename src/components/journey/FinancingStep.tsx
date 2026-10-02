@@ -30,6 +30,9 @@ import ConfirmedSubsidiesCard from "./ConfirmedSubsidiesCard";
 import SubsidyApplicationsCard from "./SubsidyApplicationsCard";
 import { cumulProgramme, nomProgramme, traduireLibelleSubvention } from "@/lib/tco/translations-en";
 import { texteExplication } from "@/lib/journey/subsidy-explain";
+import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
+import ClientDocumentsCard from "@/components/documents/ClientDocumentsCard";
+import { estVehiculeDemo } from "@/lib/demoData/villeDemo";
 
 interface FinancingStepProps {
   projectId: string;
@@ -50,12 +53,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
     if (!options || projectVehicles.length === 0) return null;
     const anneeReference = options.anneeReference;
     const strategie = construireStrategie(
-      projectVehicles.map((pv) => ({
-        ...pv.vehicles,
-        replacement_year: pv.replacement_year,
-        target_technology: pv.target_technology,
-        subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
-      })),
+      projectVehicles.map((pv) => vehiculeProjetDepuis(pv, confirmeesParVehicule.get(pv.vehicle_id))),
       "plan_actuel",
       options,
     );
@@ -227,6 +225,13 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
           vehicleId: pv.vehicle_id,
           unite: pv.vehicles.unit_number,
         }))}
+      />
+
+      <ClientDocumentsCard
+        organizationId={project?.organizationId}
+        projectId={projectId}
+        projectVehicles={projectVehicles}
+        demo={projectVehicles.some((pv) => estVehiculeDemo(pv.vehicles.notes))}
       />
 
       <ConfirmedSubsidiesCard

@@ -4,7 +4,7 @@
  * la fenêtre de recharge. Les accès base sont dans ./garages.ts.
  */
 import type { Tables } from "@/integrations/supabase/types";
-import { cleGarage, type CaracteristiquesGarage } from "@/lib/journey/infrastructure";
+import { cleGarage, TYPES_BORNE, type CaracteristiquesGarage, type TypeBorne } from "@/lib/journey/infrastructure";
 
 export type GarageRow = Tables<"garages">;
 
@@ -26,6 +26,18 @@ export function garagesACreer(depots: (string | null | undefined)[], existants: 
   return nouveaux;
 }
 
+/** Devis de bornes d'un garage (JSON { type: coût unitaire installé }),
+ *  filtré aux types connus et aux montants positifs. */
+export function lireDevisBornes(json: unknown): Partial<Record<TypeBorne, number>> | undefined {
+  if (!json || typeof json !== "object" || Array.isArray(json)) return undefined;
+  const out: Partial<Record<TypeBorne, number>> = {};
+  for (const type of TYPES_BORNE) {
+    const v = (json as Record<string, unknown>)[type];
+    if (typeof v === "number" && Number.isFinite(v) && v > 0) out[type] = v;
+  }
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
 /** Caractéristiques connues des garages pour le dimensionnement. */
 export function caracteristiquesGarages(garages: GarageRow[]): Map<string, CaracteristiquesGarage> {
   const m = new Map<string, CaracteristiquesGarage>();
@@ -33,6 +45,7 @@ export function caracteristiquesGarages(garages: GarageRow[]): Map<string, Carac
     m.set(cleGarage(g.name), {
       puissanceDisponibleKw: g.available_power_kw ?? undefined,
       devisRaccordement: g.grid_connection_quote ?? undefined,
+      coutBorneDevis: lireDevisBornes(g.charger_unit_quote),
       fenetreRecharge:
         g.return_time && g.departure_time ? { retour: g.return_time, depart: g.departure_time } : undefined,
     });

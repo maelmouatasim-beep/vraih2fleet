@@ -13,6 +13,9 @@ export interface LigneEnergieClient {
   h2_price_per_kg: number | null;
   grid_connection_quote: number | null;
   updated_at: string | null;
+  /** Phase 5.4 — pièce justificative confirmée à l'origine de la valeur. */
+  diesel_document_id?: string | null;
+  electricity_document_id?: string | null;
 }
 
 export interface SurchargesEnergieClient {
@@ -23,6 +26,11 @@ export interface SurchargesEnergieClient {
   /** Libellés « donnée client » (champ + provenance + date) pour les rapports. */
   provenances: string[];
 }
+
+const PIECE: Partial<Record<keyof typeof LIBELLES, "diesel_document_id" | "electricity_document_id">> = {
+  diesel_price_per_l: "diesel_document_id",
+  electricity_cost_per_kwh: "electricity_document_id",
+};
 
 const LIBELLES = {
   diesel_price_per_l: "prix du diesel payé ($/L avant TPS/TVQ)",
@@ -46,7 +54,10 @@ export function fusionnerSurcharges(
       const v = ligne?.[champ];
       if (typeof v === "number" && Number.isFinite(v)) {
         const date = (ligne!.updated_at ?? "").slice(0, 10);
-        provenances.push(`${LIBELLES[champ]} : donnée client (${niveau}${date ? `, ${date}` : ""})`);
+        const piece = PIECE[champ] ? ligne![PIECE[champ]!] : null;
+        provenances.push(
+          `${LIBELLES[champ]} : donnée client (${niveau}${date ? `, ${date}` : ""})${piece ? " — pièce justificative jointe" : ""}`,
+        );
         return v;
       }
     }

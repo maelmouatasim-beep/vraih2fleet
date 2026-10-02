@@ -30,6 +30,8 @@ import type { Json } from "@/integrations/supabase/types";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 import { FileSpreadsheet, FileText, Info, Loader2 } from "lucide-react";
 import CouncilReportPDF from "./CouncilReportPDF";
+import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
+import { listerDocuments, piecesDepuisDocuments } from "@/lib/supabase/clientDocuments";
 
 interface ReportsStepProps {
   projectId: string;
@@ -52,16 +54,18 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
   const { projectVehicles, isLoading } = useProjectVehicles(projectId);
   const { confirmeesParVehicule } = useConfirmedSubsidies(projectId);
   const [enCours, setEnCours] = useState<string | null>(null);
+  // Phase 5.4 — pièces justificatives confirmées (organisation + projet)
+  const { data: documents = [] } = useQuery({
+    queryKey: ["client-documents", project?.organizationId, projectId],
+    queryFn: () => listerDocuments(project!.organizationId!, projectId),
+    enabled: !!project?.organizationId,
+  });
+  const pieces = useMemo(() => piecesDepuisDocuments(documents), [documents]);
 
   const donnees = useMemo(() => {
     if (!options || !organization || projectVehicles.length === 0) return null;
     const anneeReference = options.anneeReference;
-    const vehicules = projectVehicles.map((pv) => ({
-      ...pv.vehicles,
-      replacement_year: pv.replacement_year,
-      target_technology: pv.target_technology,
-      subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
-    }));
+    const vehicules = projectVehicles.map((pv) => vehiculeProjetDepuis(pv, confirmeesParVehicule.get(pv.vehicle_id)));
     // Les chiffres viennent TOUJOURS des cibles réelles du plan ; le
     // libellé nomme la stratégie appliquée (1.6), écarts compris.
     const strategie = construireStrategie(vehicules, "plan_actuel", options);
@@ -76,10 +80,11 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
       tauxActualisationNominal: options.tauxActualisationNominal,
       donneesClient,
       strategieRetenue: retenue,
+      pieces,
     };
     const unites = new Map(projectVehicles.map((pv) => [pv.vehicle_id, pv.vehicles.unit_number]));
     return { strategie, meta, unites };
-  }, [options, donneesClient, organization, project, projectVehicles, confirmeesParVehicule]);
+  }, [options, donneesClient, organization, project, projectVehicles, confirmeesParVehicule, pieces]);
 
   // Règle A1 : chaque rapport généré FIGE le plan (snapshot immuable).
   // La bannière compare l'empreinte courante au dernier snapshot.

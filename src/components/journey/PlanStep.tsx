@@ -39,6 +39,7 @@ import { formateurCad, formateurCadCompact } from "@/lib/format";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 import { Loader2 } from "lucide-react";
 import DepotInfrastructureCard from "./DepotInfrastructureCard";
+import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 
 interface PlanStepProps {
   projectId: string;
@@ -57,12 +58,7 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
   const donnees = useMemo(() => {
     if (!options || projectVehicles.length === 0) return null;
     const anneeReference = options.anneeReference;
-    const vehicules = projectVehicles.map((pv) => ({
-      ...pv.vehicles,
-      replacement_year: pv.replacement_year,
-      target_technology: pv.target_technology,
-      subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
-    }));
+    const vehicules = projectVehicles.map((pv) => vehiculeProjetDepuis(pv, confirmeesParVehicule.get(pv.vehicle_id)));
     const strategie = construireStrategie(vehicules, "plan_actuel", options);
     if (!strategie.resultat || !strategie.plan) return null;
     const retenue = strategieRetenue(vehicules, project?.selectedStrategy, options, lireAssignation(project?.optimizedAssignment));

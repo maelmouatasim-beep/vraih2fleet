@@ -32,6 +32,13 @@ describe("fusionnerSurcharges", () => {
     expect(s.provenances.some((p) => p.includes("organisation"))).toBe(true);
   });
 
+  it("valeur issue d'une pièce confirmée : la provenance le dit (fr et en)", async () => {
+    const { traduireDonneeClient } = await import("@/lib/tco/translations-en");
+    const s = fusionnerSurcharges(ligne({ diesel_price_per_l: 1.421, diesel_document_id: "doc-1" }), null);
+    expect(s.provenances).toEqual(["prix du diesel payé ($/L avant TPS/TVQ) : donnée client (organisation, 2026-09-29) — pièce justificative jointe"]);
+    expect(traduireDonneeClient(s.provenances[0], "en")).toMatch(/: client data \(organization, 2026-09-29\) — supporting document attached$/);
+  });
+
   it("aucune donnée client : aucune surcharge, aucune provenance", () => {
     const s = fusionnerSurcharges(null, null);
     expect(s.dieselParL).toBeUndefined();

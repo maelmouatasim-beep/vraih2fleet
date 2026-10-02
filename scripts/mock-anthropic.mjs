@@ -75,7 +75,60 @@ function correspondanceImport(corps) {
   return { colonnes: sorties, valeurs };
 }
 
+/** Nombre écrit à la française (« 6 411,55 ») → 6411.55. */
+const nombreFr = (t) => Number(String(t).replace(/[\s\u00a0\u202f]/g, "").replace(",", "."));
+
+/** Lecture de facture : valeurs trouvées dans le texte transmis. */
+function extractionDocument(corps) {
+  const blocs = corps.messages?.[0]?.content ?? [];
+  const brut = (Array.isArray(blocs) ? blocs : []).map((b) => b.text ?? "").join("\n");
+  const doc = (brut.match(/<document>([\s\S]*)<\/document>/) ?? [])[1] ?? "";
+  const ligneGarages = String(corps.system ?? "").split("\n").find((l) => l.includes("parmi ces garages")) ?? "";
+  const garages = [...ligneGarages.matchAll(/« ([^»]+) »/g)].map((m) => m[1].trim());
+  const champs = [];
+  const ajout = (champ, re, extraitDe = (m) => m[0]) => {
+    const m = doc.match(re);
+    if (m) champs.push({ champ, valeur_nombre: nombreFr(m[1]), valeur_texte: "", extrait: extraitDe(m).trim().slice(0, 120), page: 1, certitude: "sure" });
+  };
+  const premiereLigne = doc.split("\n").map((l) => l.trim()).find((l) => l && !/^\[page \d+\]$/.test(l)) ?? "";
+  if (/Soumission/i.test(doc)) {
+    const vehicule = doc.match(/Véhicule\s+(.+?)\s+—\s+(100 % électrique|électrique|hydrogène)/i);
+    if (vehicule) {
+      champs.push({ champ: "technologie", valeur_nombre: null, valeur_texte: vehicule[2], extrait: vehicule[0].trim(), page: 1, certitude: "sure" });
+      const [marque, ...modele] = vehicule[1].trim().split(/\s+/);
+      champs.push({ champ: "marque", valeur_nombre: null, valeur_texte: marque, extrait: vehicule[1].trim(), page: 1, certitude: "sure" });
+      champs.push({ champ: "modele", valeur_nombre: null, valeur_texte: modele.join(" "), extrait: vehicule[1].trim(), page: 1, certitude: "probable" });
+    }
+    ajout("quantite", /Quantité\s+(\d+)/);
+    ajout("prix_unitaire_avant_taxes", /Prix unitaire avant taxes\s+([\d\s\u00a0]+,\d{2})/);
+    ajout("montant_avant_taxes", /Sous-total avant taxes\s+([\d\s\u00a0]+,\d{2})/);
+    return {
+      type_detecte: "vehicle_quote",
+      fournisseur: premiereLigne.split(" — ")[0].trim(),
+      date_document: (doc.match(/\d{4}-\d{2}-\d{2}/) ?? [""])[0],
+      garage_propose: "",
+      champs,
+    };
+  }
+  if (/diesel/i.test(doc)) champs.push({ champ: "carburant", valeur_nombre: null, valeur_texte: "diesel", extrait: "diesel", page: 1, certitude: "sure" });
+  ajout("litres", /([\d\s\u00a0]+(?:,\d+)?)\s*L\b/);
+  ajout("montant_avant_taxes", /Sous-total[^\d]*([\d\s\u00a0]+,\d{2})/);
+  ajout("montant_tps", /TPS[^\d]*\(5 %\)[^\d]*([\d\s\u00a0]+,\d{2})/);
+  ajout("montant_tvq", /TVQ[^\d]*\([\d,]+ %\)[^\d]*([\d\s\u00a0]+,\d{2})/);
+  const total = doc.match(/\n\s*Total[^\d]*([\d\s\u00a0]+,\d{2})/);
+  if (total) champs.push({ champ: "montant_total", valeur_nombre: nombreFr(total[1]) + 100, valeur_texte: "", extrait: total[0].trim(), page: 1, certitude: "probable" });
+  return {
+    type_detecte: "fuel_invoice",
+    fournisseur: premiereLigne.split(" — ")[0].trim(),
+    date_document: (doc.match(/\d{4}-\d{2}-\d{2}/) ?? [""])[0],
+    garage_propose: garages.find((g) => doc.includes(g)) ?? "",
+    champs,
+  };
+}
+
 function repondre(corps) {
+  const schema = corps.output_config?.format?.schema;
+  if (schema?.properties?.type_detecte) return texte(JSON.stringify(extractionDocument(corps)));
   if (corps.output_config?.format?.type === "json_schema") return texte(JSON.stringify(correspondanceImport(corps)));
   const messages = corps.messages ?? [];
   // Question du tour = DERNIER message utilisateur en texte simple (les

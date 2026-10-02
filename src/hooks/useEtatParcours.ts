@@ -8,6 +8,7 @@ import { dernierSnapshotRapport } from "@/lib/supabase/reportSnapshots";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 import { construireStrategie } from "@/lib/journey/strategies";
 import { etatDuParcours } from "@/lib/journey/progress";
+import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 
 /** État réel des 7 étapes (bloc 3.2), à partir des données du projet. */
 export function useEtatParcours(projectId: string | undefined, project: ProjectDTO | null | undefined) {
@@ -23,12 +24,7 @@ export function useEtatParcours(projectId: string | undefined, project: ProjectD
 
   return useMemo(() => {
     if (!project || isLoading) return null;
-    const vehicules = projectVehicles.map((pv) => ({
-      ...pv.vehicles,
-      replacement_year: pv.replacement_year,
-      target_technology: pv.target_technology,
-      subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
-    }));
+    const vehicules = projectVehicles.map((pv) => vehiculeProjetDepuis(pv, confirmeesParVehicule.get(pv.vehicle_id)));
     const strategie = options && vehicules.length > 0 ? construireStrategie(vehicules, "plan_actuel", options) : null;
     const programmesPrevus = strategie
       ? Object.values(strategie.explicationsSubventions)

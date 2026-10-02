@@ -30,6 +30,7 @@ import {
 } from "@/lib/supabase/ai";
 import { journaliser } from "@/lib/supabase/changeLog";
 import { saveOptimizerConstraints, setOptimizedStrategy, type ProjectDTO } from "@/lib/supabase/projects";
+import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 
 type Bloc = Record<string, unknown>;
 type MessageTour = { role: "user" | "assistant"; content: Bloc[] };
@@ -82,12 +83,7 @@ export function useCopilot(projectId: string, project: ProjectDTO | null | undef
 
   const snapshot = useMemo((): SnapshotProjet | null => {
     if (!options || !project) return null;
-    const vehicules: VehiculeProjet[] = projectVehicles.map((pv) => ({
-      ...pv.vehicles,
-      replacement_year: pv.replacement_year,
-      target_technology: pv.target_technology,
-      subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
-    }));
+    const vehicules: VehiculeProjet[] = projectVehicles.map((pv) => vehiculeProjetDepuis(pv, confirmeesParVehicule.get(pv.vehicle_id)));
     return {
       projet: {
         id: project.id,
