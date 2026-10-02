@@ -187,7 +187,7 @@ clair — les edge functions répondent `503 {"error":"service_non_configure"}`
 | Service manquant | Comportement |
 |---|---|
 | `SENDGRID_API_KEY` | Formulaires contact / démo : la demande est **enregistrée** (`email_leads`, message compris) et l'écran le dit (« Demande enregistrée — l'envoi automatique de courriels n'est pas encore activé »). Support : « votre demande n'a pas été transmise ». Invitation de collaborateur : créée, « prévenez la personne vous-même ». |
-| `ANTHROPIC_API_KEY` | Le copilote répond « pas encore branché sur ce site (clé ANTHROPIC_API_KEY à ajouter) » ; aucune erreur, rien n'est envoyé. |
+| `ANTHROPIC_API_KEY` | Le copilote et l'analyse IA de l'import intelligent répondent « pas encore branché sur ce site (clé ANTHROPIC_API_KEY à ajouter) » ; aucune erreur, rien n'est envoyé. L'import intelligent reste utilisable sans IA (synonymes connus + association manuelle). |
 | `MAPBOX_PUBLIC_TOKEN` | Aucune carte n'est affichée dans les écrans actuels ; la fonction répond 503. |
 | Tâches pg_cron | Pas de rappels d'échéances ni de synchro télématique planifiée ; à activer avec `supabase/snippets/taches-planifiees.sql` quand SendGrid sera branché. |
 
@@ -211,8 +211,8 @@ confirmés par l'API d'administration).
 
 ## Points ouverts
 
-- **IA** : fournisseur = API Claude d'Anthropic (fonction `copilot`,
-  Phase 5.2) ; l'ancienne fonction `assistant-chat` (passerelle Lovable)
+- **IA** : fournisseur = API Claude d'Anthropic (fonctions `copilot`,
+  Phase 5.2, et `fleet-import`, Phase 5.3) ; l'ancienne fonction `assistant-chat` (passerelle Lovable)
   est retirée du dépôt — si elle reste déployée sur la base hébergée,
   la supprimer : `supabase functions delete assistant-chat`.
 - **Courriels** : SMTP personnalisé nécessaire pour des testeurs externes

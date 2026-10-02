@@ -7,6 +7,9 @@
  * le vrai modèle). Une question contenant « invente » renvoie d'abord un
  * chiffre inventé, pour vérifier que la fonction `copilot` le rejette et
  * redemande une réponse.
+ * Import intelligent (sortie structurée json_schema) : correspondance
+ * scriptée par mots-clés d'entête, plus UNE entête inventée et UN libellé
+ * absent des données, que la fonction `fleet-import` doit rejeter.
  *
  *   node scripts/mock-anthropic.mjs [port]   (défaut 35563, écoute 0.0.0.0)
  *
@@ -35,7 +38,45 @@ const outil = (name, input) =>
   message([{ type: "tool_use", id: `toolu_mock_${appels.length}`, name, input }], "tool_use");
 const texte = (t) => message([{ type: "text", text: t }], "end_turn");
 
+/** Import intelligent : correspondance déterministe d'après les entêtes reçues. */
+function correspondanceImport(corps) {
+  const { colonnes = [] } = JSON.parse(String(corps.messages?.[0]?.content ?? "{}"));
+  const regles = [
+    [/asset|unit|[ée]quipement/i, "unit_number", "sure", ""],
+    [/descr|type/i, "category", "probable", ""],
+    [/[ée]nergie|energy|fuel/i, "fuel_type", "sure", ""],
+    [/odo|mi\)/i, "annual_km", "sure", "mi"],
+    [/mpg/i, "consumption_per_100km", "probable", "mpg_us"],
+    [/yard|site|emplacement/i, "depot", "sure", ""],
+    [/^yr$|year|ann[ée]e/i, "model_year", "sure", ""],
+    [/statut|status/i, "status", "sure", ""],
+  ];
+  const sorties = colonnes.map((c) => {
+    const r = regles.find(([re]) => re.test(c.entete));
+    return r ? { entete: c.entete, champ: r[1], certitude: r[2], unite: r[3] } : { entete: c.entete, champ: "ignorer", certitude: "incertaine", unite: "" };
+  });
+  sorties.push({ entete: "Colonne fantôme", champ: "vin", certitude: "sure", unite: "" });
+  const libelles = {
+    category: { "Pickup F-150": "camionnette", "Pickup 3/4 t": "camionnette", "Fourgon aménagé": "camionnette" },
+    fuel_type: { Gas: "essence" },
+    status: { "En service": "actif", "Hors service": "inactif" },
+  };
+  const valeurs = [];
+  for (const c of colonnes) {
+    const s = sorties.find((x) => x.entete === c.entete);
+    const table = libelles[s?.champ];
+    if (!table) continue;
+    for (const v of c.valeursDistinctes ?? []) {
+      if (table[v]) valeurs.push({ champ: s.champ, source: v, cible: table[v], certitude: "sure" });
+      else if (s.champ === "category" || s.champ === "fuel_type") valeurs.push({ champ: s.champ, source: v, cible: "", certitude: "incertaine" });
+    }
+  }
+  valeurs.push({ champ: "fuel_type", source: "Libellé inventé", cible: "diesel", certitude: "sure" });
+  return { colonnes: sorties, valeurs };
+}
+
 function repondre(corps) {
+  if (corps.output_config?.format?.type === "json_schema") return texte(JSON.stringify(correspondanceImport(corps)));
   const messages = corps.messages ?? [];
   // Question du tour = DERNIER message utilisateur en texte simple (les
   // précédents de l'historique viennent avant).
@@ -92,7 +133,16 @@ http
     req.on("end", () => {
       try {
         const corps = JSON.parse(brut || "{}");
-        appels.push({ url: req.url, model: corps.model, outils: (corps.tools ?? []).map((t) => t.name), thinking: corps.thinking, tool_choice: corps.tool_choice ?? null });
+        appels.push({
+          url: req.url,
+          model: corps.model,
+          outils: (corps.tools ?? []).map((t) => t.name),
+          thinking: corps.thinking,
+          tool_choice: corps.tool_choice ?? null,
+          format: corps.output_config?.format?.type ?? null,
+          // pour vérifier la minimisation (aucune colonne personnelle transmise)
+          contenuImport: corps.output_config?.format ? String(corps.messages?.[0]?.content ?? "") : null,
+        });
         const r = repondre(corps);
         res.writeHead(200, { "content-type": "application/json", "request-id": "req_mock" });
         res.end(JSON.stringify(r));

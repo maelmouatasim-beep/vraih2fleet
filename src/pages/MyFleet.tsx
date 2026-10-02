@@ -35,9 +35,11 @@ import {
 } from "@/lib/fleet/vehicles";
 import { lireFichier, validerLignes, type ResultatImport } from "@/lib/fleet/importVehicles";
 import { estVehiculeDemo } from "@/lib/demoData/villeDemo";
-import { Download, Loader2, Pencil, Plus, Trash2, Truck, Upload } from "lucide-react";
+import { Download, FileSearch, Loader2, Pencil, Plus, Trash2, Truck, Upload } from "lucide-react";
 import { telechargerModeleCsv, telechargerModeleExcel } from "@/lib/fleet/importTemplateFile";
 import GaragesCard from "@/components/fleet/GaragesCard";
+import SmartImportDialog from "@/components/fleet/SmartImportDialog";
+import ChangeLogCard from "@/components/journey/ChangeLogCard";
 import { useGarages } from "@/hooks/useGarages";
 import { assurerGarages } from "@/lib/fleet/garages";
 import { CLASSES_PNBV, proposerClasse } from "@/lib/fleet/gvwr";
@@ -71,6 +73,7 @@ export default function MyFleet() {
   const [edition, setEdition] = useState<VehicleRow | null>(null);
   const [suppression, setSuppression] = useState<{ vehicule: VehicleRow; projets: number | null } | null>(null);
   const [importOuvert, setImportOuvert] = useState(false);
+  const [importIntelligentOuvert, setImportIntelligentOuvert] = useState(false);
   const [apercu, setApercu] = useState<ResultatImport | null>(null);
   const [nomFichier, setNomFichier] = useState<string>("");
   const fichierRef = useRef<HTMLInputElement>(null);
@@ -224,7 +227,10 @@ export default function MyFleet() {
             </h1>
             <p className="text-muted-foreground">{t("fleet.subtitle")}</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={() => setImportIntelligentOuvert(true)} data-testid="smart-import-open">
+              <FileSearch className="w-4 h-4 mr-2" /> {t("smartImport.button")}
+            </Button>
             <Button variant="outline" onClick={() => setImportOuvert(true)}>
               <Upload className="w-4 h-4 mr-2" /> {t("fleet.import.button")}
             </Button>
@@ -335,6 +341,8 @@ export default function MyFleet() {
         </Card>
 
         <GaragesCard organizationId={organization?.id} depots={vehicles.map((v) => v.depot)} />
+
+        <ChangeLogCard organizationId={organization?.id} />
       </div>
 
       {/* Ajout / modification */}
@@ -481,6 +489,14 @@ export default function MyFleet() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <SmartImportDialog
+        open={importIntelligentOuvert}
+        onOpenChange={setImportIntelligentOuvert}
+        organizationId={organization?.id}
+        vehicles={vehicles}
+        demo={vehicles.some((v) => estVehiculeDemo(v.notes))}
+      />
 
       {/* Import CSV / Excel */}
       <Dialog

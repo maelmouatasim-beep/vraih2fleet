@@ -32,3 +32,16 @@ export async function listerJournalProjet(projectId: string, limite = 50): Promi
   if (error) throw error;
   return data ?? [];
 }
+
+/** Journal de la FLOTTE de l'organisation (imports, hors projet). */
+export async function listerJournalFlotte(organizationId: string, limite = 30): Promise<LigneJournal[]> {
+  const { data, error } = await supabase
+    .from("plan_change_log")
+    .select("*")
+    .eq("organization_id", organizationId)
+    .is("project_id", null)
+    .order("created_at", { ascending: false })
+    .limit(limite);
+  if (error) throw error;
+  return data ?? [];
+}

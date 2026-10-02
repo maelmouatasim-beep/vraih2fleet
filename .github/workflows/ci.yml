@@ -67,7 +67,8 @@ jobs:
             _shared/cors.ts _shared/auth.ts _shared/validation.ts \
             send-email/index.ts notify-subsidy-deadlines/index.ts \
             sync-telematics-data/index.ts \
-            copilot/index.ts _shared/ai.ts authenticate-telematics/index.ts \
+            copilot/index.ts _shared/ai.ts fleet-import/index.ts \
+            authenticate-telematics/index.ts \
             fetch-telematics-vehicles/index.ts api-gateway/index.ts \
             get-mapbox-token/index.ts
 

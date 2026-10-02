@@ -30,6 +30,10 @@ verify_jwt = true
 [functions.copilot]
 verify_jwt = true
 
+# Import intelligent de flotte (Phase 5.3) : JWT vérifié dans le code.
+[functions.fleet-import]
+verify_jwt = true
+
 # Gabarits publics (rate limit + pot de miel) et internes (secrets) : la
 # fonction fait le tri elle-même.
 [functions.send-email]

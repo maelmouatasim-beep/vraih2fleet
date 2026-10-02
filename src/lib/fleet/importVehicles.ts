@@ -30,6 +30,7 @@ const ENTETES: Record<string, string> = {
   unit: "unit_number",
   unitnumber: "unit_number",
   vin: "vin",
+  niv: "vin",
   marque: "make",
   make: "make",
   modele: "model",
@@ -54,6 +55,7 @@ const ENTETES: Record<string, string> = {
   consommation: "consumption_per_100km",
   conso: "consumption_per_100km",
   consumption: "consumption_per_100km",
+  consumptionper100km: "consumption_per_100km",
   sourceconsommation: "consumption_source",
   consumptionsource: "consumption_source",
   usage: "usage_profile",
@@ -82,6 +84,24 @@ const ENTETES: Record<string, string> = {
   status: "status",
   notes: "notes",
 };
+
+/** Champ du modèle d'import reconnu pour une entête (synonymes FR/EN), ou null. */
+export function champPourEntete(entete: string): string | null {
+  return ENTETES[normaliserCle(entete)] ?? null;
+}
+
+/** Une valeur de choix fermé est-elle reconnue par les synonymes ? */
+export function valeurReconnue(champ: "category" | "fuel_type" | "usage_profile" | "status", brut: string): string | null {
+  const table =
+    champ === "category"
+      ? SYNONYMES_CATEGORIE
+      : champ === "fuel_type"
+        ? SYNONYMES_CARBURANT
+        : champ === "usage_profile"
+          ? SYNONYMES_USAGE
+          : SYNONYMES_STATUT;
+  return table[normaliserValeur(brut)] ?? null;
+}
 
 function normaliserCle(s: string): string {
   return s
@@ -234,6 +254,8 @@ const SYNONYMES_SOURCE: Record<string, string> = {
  */
 type Nombre = { ok: true; valeur: number | null } | { ok: false; brut: string };
 
+const UNITES_CANONIQUES = /^(km|kms|km\/an|km\/j|l\/100km|l|kw|kwh|kwh\/100km|kg|%|\$)$/i;
+
 function nombre(v: unknown): Nombre {
   if (v === undefined || v === null || String(v).trim() === "") return { ok: true, valeur: null };
   if (typeof v === "number") {
@@ -245,8 +267,10 @@ function nombre(v: unknown): Nombre {
   const m = s.match(/^(-?\d+(?:\.\d+)?)(.*)$/);
   if (!m) return { ok: false, brut };
   const suffixe = m[2];
-  // suffixe vide, ou unité commençant par une lettre/%/$ (« km », « L/100km »)
-  if (suffixe !== "" && !/^[a-zA-Z%$]/.test(suffixe)) return { ok: false, brut };
+  // suffixe vide, ou unité CANONIQUE du modèle (« km », « L/100km »…) :
+  // « mi », « mpg » ou un texte (« 15000 Garage central ») = erreur, jamais
+  // lu comme des km (conversions : import intelligent).
+  if (suffixe !== "" && !UNITES_CANONIQUES.test(suffixe)) return { ok: false, brut };
   const n = Number(m[1]);
   return Number.isFinite(n) ? { ok: true, valeur: n } : { ok: false, brut };
 }

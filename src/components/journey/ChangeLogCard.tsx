@@ -6,21 +6,24 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { listerJournalProjet } from "@/lib/supabase/changeLog";
+import { listerJournalFlotte, listerJournalProjet } from "@/lib/supabase/changeLog";
 import { listMembersDetail } from "@/lib/supabase/organizations";
 import type { ChangementJournal } from "@/lib/journey/changeLog";
 import { History } from "lucide-react";
 
 interface ChangeLogCardProps {
-  projectId: string;
+  /** Absent : journal de la flotte de l'organisation (imports). */
+  projectId?: string;
   organizationId: string | null | undefined;
 }
 
 export default function ChangeLogCard({ projectId, organizationId }: ChangeLogCardProps) {
   const { t, i18n } = useTranslation();
+  const portee = projectId ? "project" : "fleet";
   const { data: lignes = [] } = useQuery({
-    queryKey: ["change-log", projectId],
-    queryFn: () => listerJournalProjet(projectId),
+    queryKey: projectId ? ["change-log", projectId] : ["change-log-fleet", organizationId],
+    queryFn: () => (projectId ? listerJournalProjet(projectId) : listerJournalFlotte(organizationId!)),
+    enabled: !!projectId || !!organizationId,
   });
   const { data: membres = [] } = useQuery({
     queryKey: ["org-members-detail", organizationId],
@@ -32,17 +35,18 @@ export default function ChangeLogCard({ projectId, organizationId }: ChangeLogCa
     return m?.fullName || m?.email || t("journey.changeLog.teamMember");
   };
   const valeur = (v: ChangementJournal["avant"]) => (v == null || v === "" ? "—" : String(v));
-  const champ = (c: string) => t(`journey.changeLog.fields.${c}`, { defaultValue: c });
+  const champ = (c: string) =>
+    t(`journey.changeLog.fields.${c}`, { defaultValue: t(`smartImport.fields.${c}`, { defaultValue: c }) });
   const locale = i18n.language === "en" ? "en-CA" : "fr-CA";
 
   return (
-    <Card data-testid="change-log">
+    <Card data-testid={portee === "project" ? "change-log" : "fleet-change-log"}>
       <CardHeader>
         <CardTitle className="text-base flex items-center gap-2">
           <History className="w-5 h-5 text-muted-foreground" />
-          {t("journey.changeLog.title")}
+          {portee === "project" ? t("journey.changeLog.title") : t("journey.changeLog.fleetTitle")}
         </CardTitle>
-        <CardDescription>{t("journey.changeLog.subtitle")}</CardDescription>
+        <CardDescription>{portee === "project" ? t("journey.changeLog.subtitle") : t("journey.changeLog.fleetSubtitle")}</CardDescription>
       </CardHeader>
       <CardContent className="text-sm">
         {lignes.length === 0 ? (

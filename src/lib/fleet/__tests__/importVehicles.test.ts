@@ -65,13 +65,17 @@ describe("validation de l'import de flotte", () => {
         { unite: "KM-1", categorie: "léger", carburant: "essence", "km/an": "12 000 km" },
         { unite: "KM-2", categorie: "léger", carburant: "essence", "km/an": "beaucoup" },
         { unite: "KM-3", categorie: "léger", carburant: "essence", consommation: "45 L/100km" },
+        // unité non canonique ou texte collé : jamais lus comme des km
+        { unite: "KM-4", categorie: "léger", carburant: "essence", "km/an": "12 000 mi" },
+        { unite: "KM-5", categorie: "léger", carburant: "essence", "km/an": "15000 Garage central" },
       ],
       ORG,
     );
     expect(r.valides.map((v) => v.unit_number)).toEqual(["KM-1", "KM-3"]);
     expect(r.valides[0].annual_km).toBe(12000);
     expect(r.valides[1].consumption_per_100km).toBe(45);
-    expect(r.erreurs).toHaveLength(1);
+    expect(r.erreurs.map((e) => e.ligne)).toEqual([2, 4, 5]);
+    expect(r.erreurs).toHaveLength(3);
     expect(r.erreurs[0].message).toContain("« beaucoup »");
     expect(r.erreurs[0].message).toContain("illisible");
   });

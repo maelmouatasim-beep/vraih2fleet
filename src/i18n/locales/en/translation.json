@@ -5336,7 +5336,9 @@
         "document": "Document",
         "veille": "Monitoring",
         "manuel": "Manual"
-      }
+      },
+      "fleetTitle": "Fleet history",
+      "fleetSubtitle": "Fleet imports and changes applied after confirmation: who, when, what. The log cannot be edited."
     }
   },
   "energyClient": {
@@ -5674,5 +5676,127 @@
       "optimisee_one": "Copilot — optimized solution applied: {{count}} vehicle",
       "optimisee_other": "Copilot — optimized solution applied: {{count}} vehicles"
     }
+  },
+  "smartImport": {
+    "button": "Smart import",
+    "title": "Smart fleet import",
+    "subtitle": "Drop any inventory (Excel, CSV, PDF, fleet management software export). Columns are matched to the import template, then every row is validated before import. No value is ever invented: an uncertain field stays empty and flagged.",
+    "choose": "Choose a file (CSV, XLSX or PDF)…",
+    "emptyFile": "No readable table in this file.",
+    "read": "{{rows}} row(s) and {{columns}} column(s) read ({{format}}).",
+    "unreadLines_one": "{{count}} line of the document could not be aligned with the columns: it is not imported.",
+    "unreadLines_other": "{{count}} lines of the document could not be aligned with the columns: they are not imported.",
+    "mappingTitle": "1. Column mapping",
+    "analyze": "Analyze with AI",
+    "aiOff": "AI analysis disabled: columns matched by known synonyms, complete by hand.",
+    "aiOffLink": "Enable in Organization",
+    "aiDone": "AI proposal applied to uncertain columns and labels — review it before importing.",
+    "aiRejected_one": "{{count}} proposal rejected (not in the file's data).",
+    "aiRejected_other": "{{count}} proposals rejected (not in the file's data).",
+    "errors": {
+      "service_non_configure": "AI analysis is not connected on this site yet (ANTHROPIC_API_KEY to add to the Supabase secrets). Manual mapping remains available.",
+      "fonction_desactivee": "Smart import is disabled for your organization.",
+      "quota_journalier": "The organization's daily AI request limit has been reached.",
+      "quota_mensuel": "The organization's monthly AI token limit has been reached.",
+      "trop_de_requetes": "Too many analyses in a short time. Please wait a few minutes.",
+      "erreur_service": "The AI service is not responding right now. Manual mapping remains available.",
+      "refus": "The model declined to analyze this file.",
+      "invalide": "Unusable AI response: nothing was applied. Manual mapping remains available."
+    },
+    "columns": {
+      "header": "File column",
+      "examples": "Examples",
+      "field": "H2Fleet field",
+      "unit": "Unit",
+      "certainty": "Certainty",
+      "status": "Status",
+      "notes": "Errors, flags, changes",
+      "include": "Import"
+    },
+    "hidden": "(not shown)",
+    "personal": "Personal data — excluded",
+    "ignore": "— Ignore —",
+    "unitDefault": "km · L/100 km",
+    "units": {
+      "km": "km",
+      "mi": "miles",
+      "L/100km": "L/100 km",
+      "mpg_us": "mpg (US)",
+      "mpg_imp": "mpg (imperial)",
+      "km/L": "km/L"
+    },
+    "certainty": {
+      "sure": "certain",
+      "probable": "probable",
+      "incertaine": "uncertain — not imported"
+    },
+    "origin": {
+      "synonyme": "known synonym",
+      "ia": "AI",
+      "utilisateur": "your choice"
+    },
+    "valuesTitle": "2. Labels to match",
+    "valuesHint": "File values that were not recognized automatically. Without a match, the field stays empty on the affected rows.",
+    "leaveEmpty": "— Leave empty —",
+    "gvwrValue": "Class {{value}}",
+    "usage": {
+      "urbain": "Urban",
+      "regional": "Regional",
+      "longue_distance": "Long haul",
+      "mixte": "Mixed",
+      "hors_route": "Off-road"
+    },
+    "flags": {
+      "colonne_incertaine": "Column “{{header}}” not matched: it will not be imported.",
+      "colonne_personnelle": "Column “{{header}}”: personal data, never sent or imported.",
+      "valeur_incertaine": "{{field}} “{{value}}” not recognized: field left empty.",
+      "unite_convertie": "{{field}} converted from {{unit}} (exact factors).",
+      "doublon_probable": "Probable duplicate of unit {{other}}.",
+      "niv_double": "Same VIN as unit {{other}}.",
+      "annee_future": "Model year {{year}} is in the future.",
+      "mise_en_service_avant_modele": "In service ({{year}}) before the model year ({{model}}).",
+      "km_incoherents": "Annual km ({{annual}}) exceeds 365 days at the max daily km ({{daily}}).",
+      "conso_a_verifier": "Consumption {{value}} L/100 km far from the category reference ({{reference}}).",
+      "garage_nouveau": "New garage “{{garage}}” (created on import)."
+    },
+    "validationTitle": "3. Row-by-row validation",
+    "onlyToCheck": "Only rows to review",
+    "summary": "{{created}} new vehicle(s), {{updated}} update(s), {{errors}} row(s) in error and {{excluded}} excluded (not imported), {{flagged}} flagged row(s). Probable duplicates are excluded by default.",
+    "newGarages": "Garages created on import: {{garages}}.",
+    "status": {
+      "nouveau": "New",
+      "mise_a_jour": "Update",
+      "inchange": "Unchanged",
+      "erreur": "Error",
+      "exclue": "Excluded"
+    },
+    "fields": {
+      "unit_number": "Unit",
+      "vin": "VIN",
+      "make": "Make",
+      "model": "Model",
+      "model_year": "Model year",
+      "in_service_date": "In-service date",
+      "category": "Category",
+      "fuel_type": "Fuel",
+      "annual_km": "Annual km",
+      "consumption_per_100km": "Consumption /100 km",
+      "usage_profile": "Usage profile",
+      "department": "Department",
+      "depot": "Garage",
+      "gvwr_class": "GVWR class",
+      "max_daily_km": "Max daily km",
+      "status": "Status",
+      "notes": "Notes",
+      "vehicule": "new vehicle",
+      "consumption_source": "consumption source"
+    },
+    "privacy": "Only headers and at most 3 examples per column (plus the distinct labels of categorical columns) are sent to the AI; never personal-data columns or the whole file. Every imported value comes from the file.",
+    "confirm_one": "Import {{count}} vehicle",
+    "confirm_other": "Import {{count}} vehicles",
+    "journalSummary_one": "Smart import: {{count}} vehicle created, {{updated}} updated",
+    "journalSummary_other": "Smart import: {{count}} vehicles created, {{updated}} updated",
+    "includeRow": "Import row {{line}}",
+    "demoExport": "Try the demo's fictional export (Rivière-Claire)"
   }
 }

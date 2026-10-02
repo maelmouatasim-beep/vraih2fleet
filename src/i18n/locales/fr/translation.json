@@ -5336,7 +5336,9 @@
         "document": "Document",
         "veille": "Veille",
         "manuel": "Manuel"
-      }
+      },
+      "fleetTitle": "Historique de la flotte",
+      "fleetSubtitle": "Imports et modifications de la flotte appliqués après confirmation : qui, quand, quoi. Le journal ne peut pas être modifié."
     }
   },
   "energyClient": {
@@ -5674,5 +5676,127 @@
       "optimisee_one": "Copilote — solution optimisée appliquée : {{count}} véhicule",
       "optimisee_other": "Copilote — solution optimisée appliquée : {{count}} véhicules"
     }
+  },
+  "smartImport": {
+    "button": "Import intelligent",
+    "title": "Import intelligent de flotte",
+    "subtitle": "Déposez n'importe quel inventaire (Excel, CSV, PDF, export d'un logiciel de gestion de flotte). Les colonnes sont associées au modèle d'import, puis chaque ligne est validée avant l'import. Aucune valeur n'est inventée : un champ incertain reste vide et signalé.",
+    "choose": "Choisir un fichier (CSV, XLSX ou PDF)…",
+    "emptyFile": "Aucun tableau lisible dans ce fichier.",
+    "read": "{{rows}} ligne(s) et {{columns}} colonne(s) lues ({{format}}).",
+    "unreadLines_one": "{{count}} ligne du document n'a pas pu être alignée sur les colonnes : elle n'est pas importée.",
+    "unreadLines_other": "{{count}} lignes du document n'ont pas pu être alignées sur les colonnes : elles ne sont pas importées.",
+    "mappingTitle": "1. Correspondance des colonnes",
+    "analyze": "Analyser avec l'IA",
+    "aiOff": "Analyse IA désactivée : colonnes associées par les synonymes connus, à compléter à la main.",
+    "aiOffLink": "Activer dans Organisation",
+    "aiDone": "Proposition de l'IA appliquée aux colonnes et libellés incertains — vérifiez-la avant d'importer.",
+    "aiRejected_one": "{{count}} proposition rejetée (hors des données du fichier).",
+    "aiRejected_other": "{{count}} propositions rejetées (hors des données du fichier).",
+    "errors": {
+      "service_non_configure": "L'analyse IA n'est pas encore branchée sur ce site (clé ANTHROPIC_API_KEY à ajouter dans les secrets Supabase). L'association manuelle reste disponible.",
+      "fonction_desactivee": "L'import intelligent est désactivé pour votre organisation.",
+      "quota_journalier": "Limite quotidienne de requêtes IA de l'organisation atteinte.",
+      "quota_mensuel": "Limite mensuelle de jetons IA de l'organisation atteinte.",
+      "trop_de_requetes": "Trop d'analyses en peu de temps. Patientez quelques minutes.",
+      "erreur_service": "Le service IA ne répond pas pour l'instant. L'association manuelle reste disponible.",
+      "refus": "Le modèle a refusé d'analyser ce fichier.",
+      "invalide": "Réponse de l'IA inutilisable : rien n'a été appliqué. L'association manuelle reste disponible."
+    },
+    "columns": {
+      "header": "Colonne du fichier",
+      "examples": "Exemples",
+      "field": "Champ H2Fleet",
+      "unit": "Unité",
+      "certainty": "Certitude",
+      "status": "Statut",
+      "notes": "Erreurs, signalements, changements",
+      "include": "Importer"
+    },
+    "hidden": "(non affiché)",
+    "personal": "Données personnelles — exclue",
+    "ignore": "— Ignorer —",
+    "unitDefault": "km · L/100 km",
+    "units": {
+      "km": "km",
+      "mi": "milles",
+      "L/100km": "L/100 km",
+      "mpg_us": "mpg (US)",
+      "mpg_imp": "mpg (impérial)",
+      "km/L": "km/L"
+    },
+    "certainty": {
+      "sure": "sûre",
+      "probable": "probable",
+      "incertaine": "incertaine — non importée"
+    },
+    "origin": {
+      "synonyme": "synonyme connu",
+      "ia": "IA",
+      "utilisateur": "votre choix"
+    },
+    "valuesTitle": "2. Libellés à associer",
+    "valuesHint": "Valeurs du fichier non reconnues automatiquement. Sans association, le champ reste vide sur les lignes concernées.",
+    "leaveEmpty": "— Laisser vide —",
+    "gvwrValue": "Classe {{value}}",
+    "usage": {
+      "urbain": "Urbain",
+      "regional": "Régional",
+      "longue_distance": "Longue distance",
+      "mixte": "Mixte",
+      "hors_route": "Hors route"
+    },
+    "flags": {
+      "colonne_incertaine": "Colonne « {{header}} » non associée : elle ne sera pas importée.",
+      "colonne_personnelle": "Colonne « {{header}} » : données personnelles, jamais transmises ni importées.",
+      "valeur_incertaine": "{{field}} « {{value}} » non reconnu(e) : champ laissé vide.",
+      "unite_convertie": "{{field}} converti(e) depuis {{unit}} (facteurs exacts).",
+      "doublon_probable": "Doublon probable de l'unité {{other}}.",
+      "niv_double": "Même NIV que l'unité {{other}}.",
+      "annee_future": "Année modèle {{year}} dans le futur.",
+      "mise_en_service_avant_modele": "Mise en service ({{year}}) avant l'année modèle ({{model}}).",
+      "km_incoherents": "Km annuel ({{annual}}) supérieur à 365 jours au km journalier max ({{daily}}).",
+      "conso_a_verifier": "Consommation {{value}} L/100 km très éloignée de la référence de la catégorie ({{reference}}).",
+      "garage_nouveau": "Nouveau garage « {{garage}} » (créé à l'import)."
+    },
+    "validationTitle": "3. Validation ligne par ligne",
+    "onlyToCheck": "Seulement les lignes à vérifier",
+    "summary": "{{created}} nouveau(x) véhicule(s), {{updated}} mise(s) à jour, {{errors}} ligne(s) en erreur et {{excluded}} exclue(s) (non importées), {{flagged}} ligne(s) signalée(s). Les doublons probables sont exclus par défaut.",
+    "newGarages": "Garages créés à l'import : {{garages}}.",
+    "status": {
+      "nouveau": "Nouveau",
+      "mise_a_jour": "Mise à jour",
+      "inchange": "Inchangé",
+      "erreur": "Erreur",
+      "exclue": "Exclue"
+    },
+    "fields": {
+      "unit_number": "Unité",
+      "vin": "NIV",
+      "make": "Marque",
+      "model": "Modèle",
+      "model_year": "Année modèle",
+      "in_service_date": "Mise en service",
+      "category": "Catégorie",
+      "fuel_type": "Carburant",
+      "annual_km": "Km annuel",
+      "consumption_per_100km": "Consommation /100 km",
+      "usage_profile": "Profil d'usage",
+      "department": "Service",
+      "depot": "Garage",
+      "gvwr_class": "Classe PNBV",
+      "max_daily_km": "Km journalier max",
+      "status": "Statut",
+      "notes": "Notes",
+      "vehicule": "nouveau véhicule",
+      "consumption_source": "source de consommation"
+    },
+    "privacy": "Seuls les entêtes et au plus 3 exemples par colonne (plus les libellés distincts des colonnes catégorielles) sont transmis à l'IA ; jamais les colonnes de données personnelles ni le fichier entier. Les valeurs importées viennent toutes du fichier.",
+    "confirm_one": "Importer {{count}} véhicule",
+    "confirm_other": "Importer {{count}} véhicules",
+    "journalSummary_one": "Import intelligent : {{count}} véhicule créé, {{updated}} mis à jour",
+    "journalSummary_other": "Import intelligent : {{count}} véhicules créés, {{updated}} mis à jour",
+    "includeRow": "Importer la ligne {{line}}",
+    "demoExport": "Essayer avec l'export fictif de la démo (Rivière-Claire)"
   }
 }

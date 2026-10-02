@@ -45,6 +45,18 @@ export const FLOTTE_TERRAIN = [
   "TP-06,Larue,D65,2010,souffleuse,diesel,2500,30,30,Travaux publics,8,2010-12-01",
 ].join("\n");
 
+// Phase 5.3 — export « logiciel de gestion de flotte » désordonné : titre
+// au-dessus de l'entête, entêtes non standard, milles et mpg, colonne
+// personnelle (conducteur), libellé inconnu, doublon probable, nouveau garage.
+export const EXPORT_DESORDONNE = [
+  "Rapport FleetPro — inventaire au 2026-09-30",
+  "Asset #,Description,Énergie,Odo annuel (mi),MPG,Chauffeur,Yard,Yr",
+  "GM-01,Pickup F-150,Gas,14000,17,Jean Tremblay,Garage municipal,2015",
+  "TP-07,Unité multifonction MX-3,Diesel,3100,,Marie Roy,travaux publics,2019",
+  "TP-08,Pickup 3/4 t,Gas,9000,15,,Garage Nord,2021",
+  "GM 01,Pickup F-150,Gas,14000,17,,Garage municipal,2015",
+].join("\n");
+
 const GARAGES = [
   { nom: "Hôtel de ville", kw: "20", retour: "18:00", depart: "08:00" },
   { nom: "Garage municipal", kw: "40", retour: "17:00", depart: "07:00" },
@@ -56,6 +68,14 @@ const etape = (m) => {
   journal.push(m);
   console.log(`✔ ${m}`);
 };
+/** Capture d'une boîte de dialogue entière (fenêtre agrandie le temps de la capture). */
+async function captureDialogue(page, locator, nom) {
+  const taille = page.viewportSize();
+  await page.setViewportSize({ width: taille.width, height: 2400 });
+  await page.waitForTimeout(700);
+  await locator.screenshot({ path: join(SORTIE, `${nom}.png`) });
+  await page.setViewportSize(taille);
+}
 async function capture(page, nom) {
   await page.waitForTimeout(700);
   await page.screenshot({ path: join(SORTIE, `${nom}.png`), fullPage: true });
@@ -103,6 +123,10 @@ try {
   const fichier = join(SORTIE, "flotte-terrain.csv");
   writeFileSync(fichier, FLOTTE_TERRAIN);
   await page.goto(url("/dashboard/fleet"));
+  // Questionnaire de profil (facultatif) : peut s'ouvrir quelques secondes
+  // après l'inscription — fermé avant d'importer.
+  const plusTard = page.getByRole("button", { name: "Plus tard" });
+  await plusTard.waitFor({ timeout: 6000 }).then(() => plusTard.click(), () => {});
   await page.getByRole("button", { name: /Importer CSV/ }).click();
   await page.setInputFiles('input[type="file"]', fichier);
   // Premier import : le serveur de dev compile à froid la lecture Excel/CSV.
@@ -343,6 +367,61 @@ try {
   await historique.scrollIntoViewIfNeeded();
   await capture(page, "10-suivi");
   etape("Suivi : historique des modifications (stratégie, optimiseur et copilote journalisés)");
+
+  // Phase 5.3 — IMPORT INTELLIGENT (fonction Edge réelle + faux Claude) :
+  // correspondance proposée sur les entêtes seulement, propositions hors
+  // données rejetées, colonne personnelle jamais transmise, libellé
+  // incertain laissé vide puis corrigé, doublon exclu, mise à jour avec
+  // aperçu avant → après, import journalisé.
+  await page.goto(url("/dashboard/organization"));
+  const interrupteur = page.getByTestId("ai-settings").locator("#ai-smartImport");
+  await interrupteur.click();
+  for (let i = 0; i < 20 && (await interrupteur.getAttribute("data-state")) !== "checked"; i++) await page.waitForTimeout(250);
+  await page.waitForTimeout(1500);
+  const exportFichier = join(SORTIE, "export-fleetpro.csv");
+  writeFileSync(exportFichier, EXPORT_DESORDONNE);
+  await page.goto(url("/dashboard/fleet"));
+  await page.getByTestId("smart-import-open").click();
+  const dialogue = page.getByTestId("smart-import");
+  await page.setInputFiles('[data-testid="smart-import-file"]', exportFichier);
+  await dialogue.getByTestId("smart-import-mapping").waitFor({ timeout: 60000 });
+  if (!(await dialogue.getByTestId("mapping-5").innerText()).includes("Données personnelles")) throw new Error("import intelligent : colonne Chauffeur non exclue");
+  const appelsImportAvant = (await fetch("http://127.0.0.1:35563/appels").then((r) => r.json()).catch(() => [])).filter((a) => a.format === "json_schema").length;
+  await dialogue.getByTestId("smart-import-ai").click();
+  await dialogue.getByTestId("smart-import-ai-done").waitFor({ timeout: 60000 });
+  const bilanIa = await dialogue.getByTestId("smart-import-ai-done").innerText();
+  if (!bilanIa.includes("2 propositions rejetées")) throw new Error(`import intelligent : rejets attendus, reçu « ${bilanIa} »`);
+  const statut = async (n) => (await dialogue.getByTestId(`row-${n}`).locator("td").nth(3).innerText()).trim();
+  if ((await statut(1)) !== "Mise à jour") throw new Error(`GM-01 : ${await statut(1)}`);
+  if ((await dialogue.getByTestId("row-1").getByTestId("smart-import-diff").count()) < 2) throw new Error("GM-01 : aperçu avant → après incomplet");
+  if ((await statut(2)) !== "Erreur") throw new Error(`TP-07 devrait être en erreur (catégorie incertaine laissée vide) : ${await statut(2)}`);
+  if (!(await dialogue.getByTestId("row-2").innerText()).includes("« Unité multifonction MX-3 » non reconnu")) throw new Error("TP-07 : libellé incertain non signalé");
+  if ((await statut(4)) !== "Exclue" || !(await dialogue.getByTestId("row-4").innerText()).includes("Doublon probable de l'unité GM-01")) throw new Error("GM 01 : doublon non exclu");
+  await captureDialogue(page, dialogue, "11a-import-intelligent");
+  await dialogue.getByTestId("fix-category-2").selectOption("vehicule_specialise");
+  if ((await statut(2)) !== "Nouveau") throw new Error(`TP-07 après correction : ${await statut(2)}`);
+  const resume = await dialogue.getByTestId("smart-import-summary").innerText();
+  if (!/^2 nouveau.*1 mise.*0 ligne\(s\) en erreur et 1 exclue/.test(resume)) throw new Error(`import intelligent : résumé inattendu « ${resume} »`);
+  await captureDialogue(page, dialogue, "11b-import-intelligent-corrige");
+  await dialogue.getByTestId("smart-import-confirm").click();
+  await dialogue.waitFor({ state: "hidden", timeout: 20000 });
+  await page.getByText("TP-08").first().waitFor({ timeout: 10000 });
+  const journalFlotte = page.getByTestId("fleet-change-log");
+  await journalFlotte.getByText(/Import intelligent : 2 véhicules créés, 1 mis à jour/).waitFor({ timeout: 10000 });
+  await journalFlotte.scrollIntoViewIfNeeded();
+  await capture(page, "11c-flotte-journal");
+  const appelsImport = (await fetch("http://127.0.0.1:35563/appels").then((r) => r.json()).catch(() => [])).filter((a) => a.format === "json_schema");
+  if (appelsImport.length - appelsImportAvant !== 1) throw new Error(`import intelligent : ${appelsImport.length - appelsImportAvant} appel(s) à l'API`);
+  if (/Chauffeur|Tremblay|Marie Roy/.test(appelsImport[appelsImport.length - 1].contenuImport)) throw new Error("import intelligent : donnée personnelle transmise à l'API");
+  // PDF (pdf.js dans le navigateur) : lecture seule, puis annulation.
+  await page.getByTestId("smart-import-open").click();
+  await page.setInputFiles('[data-testid="smart-import-file"]', resolve("src/lib/fleet/__tests__/fixtures/inventaire-centre.pdf"));
+  const lu = page.getByTestId("smart-import-read");
+  await lu.waitFor({ timeout: 60000 });
+  if (!/^45 ligne\(s\) et 6 colonne\(s\) lues \(PDF\)/.test(await lu.innerText())) throw new Error(`PDF : ${await lu.innerText()}`);
+  if (!(await page.getByTestId("row-1").innerText()).includes("Garage central")) throw new Error("PDF : colonne Garage mal alignée");
+  await page.keyboard.press("Escape");
+  etape(`Import intelligent : ${resume.split(".")[0]} ; 2 propositions hors données rejetées ; colonne personnelle jamais transmise ; journalisé ; PDF de 45 lignes lu`);
 
   writeFileSync(join(SORTIE, "resultat.json"), JSON.stringify({ infraStrategie, infraPlan, subvStrategie, vanPlan, sousTitre, statutOpt, nbDecisions, nbChangements }, null, 2));
   if (erreurs.length) throw new Error(`réponses locales en erreur :\n${erreurs.join("\n")}`);
