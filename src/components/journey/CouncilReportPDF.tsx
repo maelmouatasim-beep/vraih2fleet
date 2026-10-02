@@ -9,6 +9,7 @@ import { ENGINE_VERSION, LISTE_HYPOTHESES, type ResultatPlan } from "@/lib/tco";
 import type { ResultatSensibilite } from "@/lib/tco";
 import type { StrategieConstruite } from "@/lib/journey/strategies";
 import type { MetaRapport } from "@/lib/journey/report";
+import { texteRecuperation } from "@/lib/journey/payback";
 import {
   descriptionHypothese,
   traduireAvertissement,
@@ -136,9 +137,7 @@ export default function CouncilReportPDF({
           <View style={s.carte}>
             <Text style={s.carteTitre}>{en ? "Discounted payback" : "Récupération actualisée"}</Text>
             <Text style={s.carteValeur}>
-              {resultat.paybackActualise.annees != null
-                ? `${resultat.paybackActualise.annees} ${en ? "yrs" : "ans"}`
-                : "—"}
+              {texteRecuperation(resultat.paybackActualise, resultat.horizonAns, en)}
             </Text>
           </View>
           <View style={s.carte}>

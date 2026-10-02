@@ -46,6 +46,8 @@ export interface EvaluationTechno {
   /** vanDifferentielle du moteur : POSITIF = économie vs diesel neuf. */
   economieActualisee: number;
   paybackActualiseAns: number | null;
+  /** Raison quand la récupération n'arrive jamais sur l'horizon (null sinon). */
+  paybackJamaisCode: "economies_negatives" | "surcout_non_resorbe" | null;
   co2EviteWtwTonnes: number;
   coutParTonneWtw: number | null;
   subventions: SubventionAppliquee[];
@@ -210,6 +212,7 @@ export function evaluerFaisabiliteVehicule(
       verdict,
       economieActualisee: economie,
       paybackActualiseAns: resultat.paybackActualise.annees,
+      paybackJamaisCode: resultat.paybackActualise.code,
       co2EviteWtwTonnes: resultat.co2EviteWtwTonnes,
       coutParTonneWtw: resultat.coutParTonneWtw,
       subventions,

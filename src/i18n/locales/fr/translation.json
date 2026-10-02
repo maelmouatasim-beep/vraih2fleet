@@ -5829,7 +5829,11 @@
       "savings": "Économie de {{amount}}",
       "extraCost": "Surcoût de {{amount}}",
       "payback": "Retour en {{years}} ans",
-      "noPayback": "Pas de retour sur l'horizon",
+      "noPayback": "Récupération : jamais — {{reason}}",
+      "paybackNever": {
+        "economies_negatives": "les économies annuelles sont nulles ou négatives",
+        "surcout_non_resorbe": "le surcoût n'est pas résorbé sur l'horizon de {{horizon}} ans"
+      },
       "co2Avoided": "{{tonnes}} t CO2e évitées",
       "subsidies": "Subventions : {{amount}}",
       "reserves": {

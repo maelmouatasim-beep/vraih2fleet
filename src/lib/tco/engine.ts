@@ -277,21 +277,44 @@ function finaliserScenario(flux: FluxAnnuels, ttw: number, wtw: number, p: Param
   return { flux, tcoActualise: tco, emissionsTtwTonnes: ttw, emissionsWtwTonnes: wtw };
 }
 
+/**
+ * Délai de récupération (§6.1, revue 1.4). Le cumul des écarts
+ * (référence − alternative) est suivi sur tout l'horizon :
+ * - s'il est encore négatif à la fin de l'horizon, le surcoût n'est
+ *   jamais récupéré → `null` AVEC la raison (jamais « 0 an ») ;
+ * - sinon, le délai court de la PREMIÈRE année où le cumul devient
+ *   négatif (le premier investissement net, éventuellement après
+ *   l'année 0 quand l'achat est prévu plus tard) jusqu'à la DERNIÈRE
+ *   année où il redevient ≥ 0 pour de bon ;
+ * - 0 seulement si le cumul n'est jamais négatif (aucun surcoût).
+ */
 function calculerPayback(diffs: number[], actualise: boolean, p: ParametresProjet): Payback {
   const h = p.horizonAns;
+  const EPS = 1e-6;
   let cumul = 0;
   let economieMax = -Infinity;
+  let premierNegatif = -1;
+  let dernierNegatif = -1;
   for (let n = 0; n <= h; n++) {
     const d = actualise ? diffs[n] / Math.pow(1 + p.tauxActualisationNominal, n) : diffs[n];
     cumul += d;
     if (n >= 1) economieMax = Math.max(economieMax, d);
-    if (cumul >= -1e-6) return { annees: n, raison: null };
+    if (cumul < -EPS) {
+      if (premierNegatif < 0) premierNegatif = n;
+      dernierNegatif = n;
+    }
   }
-  const raison =
-    economieMax <= 0
-      ? 'les économies annuelles sont nulles ou négatives'
-      : `le surcoût n'est pas résorbé à l'horizon H=${h}`;
-  return { annees: null, raison };
+  if (cumul < -EPS) {
+    return economieMax <= 0
+      ? { annees: null, raison: 'les économies annuelles sont nulles ou négatives', code: 'economies_negatives' }
+      : {
+          annees: null,
+          raison: `le surcoût n'est pas résorbé à l'horizon H=${h}`,
+          code: 'surcout_non_resorbe',
+        };
+  }
+  if (premierNegatif < 0) return { annees: 0, raison: null, code: null };
+  return { annees: dernierNegatif + 1 - premierNegatif, raison: null, code: null };
 }
 
 /** Point d'entrée du moteur. L'entrée est validée (zod) ; toute entrée

@@ -194,7 +194,12 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
                     <p>
                       {r.paybackActualise.annees != null
                         ? t("journey.feasibility.payback", { years: r.paybackActualise.annees })
-                        : t("journey.feasibility.noPayback")}
+                        : t("journey.feasibility.noPayback", {
+                            reason: t(
+                              `journey.feasibility.paybackNever.${r.paybackActualise.code ?? "surcout_non_resorbe"}`,
+                              { horizon: r.horizonAns },
+                            ),
+                          })}
                     </p>
                     <p>{t("journey.strategies.metrics.infra", { amount: argent.format(s.infraCapex) })}</p>
                     <p>

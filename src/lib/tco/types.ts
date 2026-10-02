@@ -165,8 +165,11 @@ export interface ResultatScenario {
 }
 
 export interface Payback {
+  /** Années entières depuis le premier investissement net ; null = jamais récupéré sur l'horizon. */
   annees: number | null;
   raison: string | null;
+  /** Raison stable (traduite à l'affichage) quand `annees` est null. */
+  code: 'economies_negatives' | 'surcout_non_resorbe' | null;
 }
 
 export interface LigneBudgetaire {

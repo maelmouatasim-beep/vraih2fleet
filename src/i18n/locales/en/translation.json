@@ -5829,7 +5829,11 @@
       "savings": "Savings of {{amount}}",
       "extraCost": "Extra cost of {{amount}}",
       "payback": "Payback in {{years}} years",
-      "noPayback": "No payback within the horizon",
+      "noPayback": "Payback: never — {{reason}}",
+      "paybackNever": {
+        "economies_negatives": "annual savings are zero or negative",
+        "surcout_non_resorbe": "the extra cost is not recovered within the {{horizon}}-year horizon"
+      },
       "co2Avoided": "{{tonnes}} t CO2e avoided",
       "subsidies": "Subsidies: {{amount}}",
       "reserves": {

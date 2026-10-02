@@ -196,3 +196,49 @@ describe('propriétés du moteur', () => {
     expect(() => calculerPlan(plan)).toThrow(/double/);
   });
 });
+
+describe('délai de récupération (revue 1.4)', () => {
+  it('propriété : surcoût net actualisé sur l’horizon ⇒ récupération = jamais (null + raison), jamais 0', () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 2000, max: 80000 }),
+        fc.integer({ min: 60000, max: 400000 }),
+        fc.integer({ min: 0, max: 9 }),
+        fc.integer({ min: 0, max: 60000 }),
+        (km, prixAlt, annee, infraCapex) => {
+          const plan = planSimple({ km, prixAlt, infraCapex });
+          plan.vehicules = plan.vehicules.map((v) => ({ ...v, anneeAcquisition: annee }));
+          const r = calculerPlan(plan);
+          if (r.vanDifferentielle < -0.01) {
+            expect(r.paybackActualise.annees).toBeNull();
+            expect(r.paybackActualise.raison).toBeTruthy();
+            expect(r.paybackActualise.code).not.toBeNull();
+          } else if (r.paybackActualise.annees === 0) {
+            // 0 an seulement s'il n'y a jamais eu de surcoût cumulé
+            expect(r.vanDifferentielle).toBeGreaterThanOrEqual(-0.01);
+          }
+        },
+      ),
+      { numRuns: NB_ESSAIS },
+    );
+  });
+
+  it('achat prévu en année 3 avec surcoût récupéré : délai compté depuis l’achat, jamais « 0 an »', () => {
+    const a0 = planSimple({ km: 60000, prixAlt: 80000 });
+    const r0 = calculerPlan(a0);
+    expect(r0.paybackSimple.annees).toBeGreaterThan(0);
+    const a3 = planSimple({ km: 60000, prixAlt: 80000 });
+    a3.vehicules = a3.vehicules.map((v) => ({ ...v, anneeAcquisition: 3 }));
+    const r3 = calculerPlan(a3);
+    // Même véhicule, même délai simple (flux nominaux décalés de 3 ans)… à l'inflation près.
+    expect(r3.paybackSimple.annees).not.toBe(0);
+    expect(r3.paybackSimple.annees).not.toBeNull();
+    expect(Math.abs(r3.paybackSimple.annees! - r0.paybackSimple.annees!)).toBeLessThanOrEqual(1);
+  });
+
+  it('surcoût jamais résorbé : null avec le code « surcout_non_resorbe »', () => {
+    const r = calculerPlan(planSimple({ km: 5000, prixAlt: 300000 }));
+    expect(r.paybackActualise).toMatchObject({ annees: null, code: expect.any(String) });
+    expect(r.paybackSimple.annees).toBeNull();
+  });
+});

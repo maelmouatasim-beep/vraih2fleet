@@ -1,7 +1,7 @@
 # Méthodologie de calcul du coût total de possession (TCO)
 
 **H2Fleet — spécification du moteur de calcul `src/lib/tco/`**
-Version 2.2 (révision de la revue externe) — 2026-09-29 — statut : **en validation**
+Version 2.3 (test terrain) — 2026-10-02 — statut : **en validation**
 
 > Historique : v1.0 = spécification initiale (Phase 1A). v1.1 intègre les
 > précisions issues du contre-calcul indépendant des 6 cas de référence
@@ -29,6 +29,11 @@ Version 2.2 (révision de la revue externe) — 2026-09-29 — statut : **en val
 > (engineVersion 2.1.0)
 > implémente cette version ; les 7 cas de référence sont régénérés par
 > le contre-calculateur indépendant committé (scripts/reference-cases/).
+> v2.3 (test terrain, engineVersion 2.2.0) corrige le délai de
+> récupération (§6.1) : il n'est plus jamais « 0 an » quand l'achat est
+> prévu après l'année 0 ; un cumul encore négatif à l'horizon donne
+> « jamais » avec la raison. Les 7 cas de référence (achats à l'année 0)
+> sont inchangés.
 
 Ce document est la référence unique de la méthode de calcul. Il est écrit
 pour être lu par un directeur des finances municipal : chaque formule est
@@ -527,13 +532,16 @@ comme deux lignes distinctes, pas un chiffre fusionné.
   numérateur/dénominateur) ;
 - **VAN différentielle** : `VAN = TCO_référence − TCO_alternative`
   (positive = l'alternative coûte moins cher au total) ;
-- **Délai de récupération simple** : plus petite année n telle que les
-  économies d'exploitation nominales cumulées couvrent le surcoût
-  d'investissement net (subventions déduites). **Actualisé** : même
-  définition sur flux actualisés. Si jamais atteint sur l'horizon, le
-  résultat est `null` **avec la raison** (« les économies annuelles sont
-  négatives » / « le surcoût n'est pas résorbé à l'horizon H ») — jamais
-  un zéro ou un plafond silencieux ;
+- **Délai de récupération simple** : nombre d'années entre le premier
+  investissement net (première année où le cumul des écarts devient
+  négatif) et l'année où les économies d'exploitation nominales
+  cumulées couvrent DÉFINITIVEMENT le surcoût (subventions déduites).
+  **Actualisé** : même définition sur flux actualisés. Si le cumul est
+  encore négatif à la fin de l'horizon, le résultat est `null`
+  (« jamais ») **avec la raison** (« les économies annuelles sont
+  nulles ou négatives » / « le surcoût n'est pas résorbé à
+  l'horizon H ») — jamais un zéro ou un plafond silencieux ; 0
+  seulement si le cumul n'est jamais négatif (aucun surcoût) ;
 - **Coût par tonne de CO₂e évitée** (§ 5).
 
 ### 6.2 Vue budgétaire (préparer un budget)
@@ -726,11 +734,14 @@ désormais NORMATIVE et testée dans le moteur.
    équipement en fin d'horizon.
 7. **Délai de récupération (§6.1)** : cumul des écarts nominaux
    (référence − alternative) **depuis l'année 0 incluse**, subventions
-   et valeurs résiduelles comptées à leur année ; le résultat est la
-   première année entière où le cumul devient ≥ 0. Version actualisée :
-   mêmes flux actualisés. Raisons de `null` : « les économies annuelles
-   sont nulles ou négatives » ou « le surcoût n'est pas résorbé à
-   l'horizon H=… ».
+   et valeurs résiduelles comptées à leur année ; le résultat est
+   (dernière année où le cumul est < 0) + 1 − (première année où il est
+   < 0), soit le délai depuis le premier investissement net (v2.3 :
+   l'ancienne règle « première année où le cumul ≥ 0 » donnait 0 an pour
+   un achat prévu après l'année 0). Cumul négatif à l'horizon ⇒ `null`.
+   Version actualisée : mêmes flux actualisés. Raisons de `null` : « les
+   économies annuelles sont nulles ou négatives » ou « le surcoût n'est
+   pas résorbé à l'horizon H=… ».
 8. **TCO par km** : TCO actualisé ÷ kilomètres des années 1..H
    actualisés au même taux (cohérence numérateur/dénominateur).
 9. **Événements majeurs (§3.4) — RÉVISÉ v2.2** : montants saisis AVANT

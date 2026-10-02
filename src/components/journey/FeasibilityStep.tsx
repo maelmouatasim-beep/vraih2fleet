@@ -117,7 +117,11 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
         <p>
           {e.paybackActualiseAns != null
             ? t("journey.feasibility.payback", { years: e.paybackActualiseAns })
-            : t("journey.feasibility.noPayback")}
+            : t("journey.feasibility.noPayback", {
+                reason: t(`journey.feasibility.paybackNever.${e.paybackJamaisCode ?? "surcout_non_resorbe"}`, {
+                  horizon: options?.horizonAns,
+                }),
+              })}
           {" · "}
           {t("journey.feasibility.co2Avoided", { tonnes: e.co2EviteWtwTonnes.toFixed(0) })}
         </p>

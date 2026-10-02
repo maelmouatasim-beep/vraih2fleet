@@ -13,6 +13,7 @@ import {
   type Langue,
 } from "@/lib/tco/translations-en";
 import type { StrategieConstruite } from "./strategies";
+import { texteRecuperation } from "./payback";
 
 export type Cellule = string | number | null;
 
@@ -119,7 +120,7 @@ export function construireClasseurPlan(
     [l.co2, resultat.co2EviteWtwTonnes],
     [
       l.payback,
-      resultat.paybackActualise.annees ?? resultat.paybackActualise.raison,
+      resultat.paybackActualise.annees ?? texteRecuperation(resultat.paybackActualise, resultat.horizonAns, langue === "en"),
     ],
   ];
 
