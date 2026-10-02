@@ -45,7 +45,7 @@ describe("validation de l'import de flotte", () => {
       ORG,
     );
     expect(r.erreurs).toEqual([]);
-    expect(r.valides[0].consumption_source).toBe("saisie");
+    expect(r.valides[0].consumption_source).toBe("import");
     expect(r.valides[0].category).toBe("autobus_urbain_12m");
     expect(r.valides[1].consumption_source).toBe("estimation");
     expect(r.valides[1].consumption_per_100km).toBeNull();
@@ -161,6 +161,6 @@ describe("validation de l'import de flotte", () => {
     const existantes = new Map([["U-300", "veh-id-300"]]);
     const r = validerLignes([{ unite: "U-300", consommation: "22,5" }], ORG, existantes);
     expect(r.erreurs).toEqual([]);
-    expect(r.misesAJour[0].patch).toEqual({ consumption_per_100km: 22.5, consumption_source: "saisie" });
+    expect(r.misesAJour[0].patch).toEqual({ consumption_per_100km: 22.5, consumption_source: "import" });
   });
 });

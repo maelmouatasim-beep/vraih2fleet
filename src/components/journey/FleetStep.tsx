@@ -265,6 +265,7 @@ export default function FleetStep({ projectId, project }: FleetStepProps) {
   const sourceBadge = (source: string) => {
     if (source === "telematique") return <Badge variant="default">{t("fleet.source.telematique")}</Badge>;
     if (source === "saisie") return <Badge variant="secondary">{t("fleet.source.saisie")}</Badge>;
+    if (source === "import") return <Badge variant="secondary">{t("fleet.source.import")}</Badge>;
     return <Badge variant="outline">{t("fleet.source.estimation")}</Badge>;
   };
 

@@ -29,7 +29,8 @@
     "source": {
       "saisie": "Saisie",
       "telematique": "Télématique",
-      "estimation": "Estimation"
+      "estimation": "Estimation",
+      "import": "Import"
     },
     "categories": {
       "vehicule_leger": "Véhicule léger",

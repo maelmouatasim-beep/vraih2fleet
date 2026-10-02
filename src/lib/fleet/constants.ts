@@ -29,6 +29,6 @@ export const CARBURANTS = [
   "autre",
 ] as const;
 
-export const SOURCES_CONSOMMATION = ["saisie", "telematique", "estimation"] as const;
+export const SOURCES_CONSOMMATION = ["saisie", "import", "telematique", "estimation"] as const;
 export const STATUTS_VEHICULE = ["actif", "inactif", "reforme", "vendu"] as const;
 export const PROFILS_USAGE = ["urbain", "regional", "longue_distance", "mixte", "hors_route"] as const;

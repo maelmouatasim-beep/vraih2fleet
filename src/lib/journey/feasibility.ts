@@ -31,7 +31,7 @@ export interface VehiculeFaisabilite {
   fuel_type: string;
   annual_km: number | null;
   consumption_per_100km: number | null;
-  consumption_source: string; // saisie | telematique | estimation
+  consumption_source: string; // saisie | import | telematique | estimation
   usage_profile: string | null;
   /** Année CALENDAIRE de remplacement prévue au plan. La Faisabilité
    *  calcule avec la MÊME année d'acquisition que le Plan (revue A5) ;

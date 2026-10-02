@@ -29,7 +29,8 @@
     "source": {
       "saisie": "Entered",
       "telematique": "Telematics",
-      "estimation": "Estimate"
+      "estimation": "Estimate",
+      "import": "Import"
     },
     "categories": {
       "vehicule_leger": "Light vehicle",

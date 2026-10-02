@@ -197,3 +197,11 @@ describe("1.8 — CO2 de la Corolla du test terrain", () => {
     expect(bev.co2EviteWtwTonnes).toBeLessThan(18.785 * 1.25 + 0.01);
   });
 });
+
+describe("3.1 — consommation importée", () => {
+  it("source « import » : consommation réelle retenue (pas une estimation)", () => {
+    const d = analyserDonneesVehicule(vehicule({ consumption_source: "import", consumption_per_100km: 17 }));
+    expect(d.consoReference).toBe(17);
+    expect(d.donneesEstimees).not.toContain("consommation");
+  });
+});

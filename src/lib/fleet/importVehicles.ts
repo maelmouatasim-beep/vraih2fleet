@@ -217,6 +217,10 @@ const SYNONYMES_SOURCE: Record<string, string> = {
   saisie: "saisie",
   manuel: "saisie",
   manual: "saisie",
+  import: "import",
+  importe: "import",
+  imported: "import",
+  fichier: "import",
   telematique: "telematique",
   telematics: "telematique",
   estimation: "estimation",
@@ -475,7 +479,7 @@ export function validerLignes(
     // la source suit la réalité : consommation fournie → « saisie » par
     // défaut ; absente (nouveau véhicule) → « estimation » (défaut de
     // catégorie du moteur)
-    const source = sourceFournie ?? (conso != null ? "saisie" : idExistant ? undefined : "estimation");
+    const source = sourceFournie ?? (conso != null ? "import" : idExistant ? undefined : "estimation");
 
     const candidat = {
       unit_number: unitNumber,
@@ -524,7 +528,7 @@ export function validerLignes(
         if (k === "unit_number") continue;
         if (fourni(champs[k])) patch[k] = val;
       }
-      if (conso != null && !fourni(champs.consumption_source)) patch.consumption_source = "saisie";
+      if (conso != null && !fourni(champs.consumption_source)) patch.consumption_source = "import";
       misesAJour.push({ id: idExistant, unit_number: unitNumber, patch: patch as Partial<VehicleInsert> });
     } else {
       valides.push({ ...resultat.data, organization_id: organizationId } as VehicleInsert);
