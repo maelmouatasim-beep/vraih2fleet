@@ -18,6 +18,7 @@
  * Un DEVIS client est toujours prioritaire sur l'estimation.
  */
 import { HYPOTHESES } from "@/lib/tco";
+import { categorieMoteur } from "./categories";
 
 export type TypeBorne = "niveau2" | "rapide50" | "rapide150";
 
@@ -211,7 +212,7 @@ export function planifierInfrastructure(
     let puissanceMaxKw = 0;
 
     for (const v of bev) {
-      const type = TYPE_BORNE_PAR_CATEGORIE[v.category];
+      const type = TYPE_BORNE_PAR_CATEGORIE[categorieMoteur(v.category) ?? v.category];
       if (!type) {
         categoriesInconnues.add(v.category);
         continue;

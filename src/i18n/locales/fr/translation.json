@@ -37,7 +37,12 @@
       "camion_moyen": "Camion moyen (cl. 4-6)",
       "camion_lourd": "Camion lourd (cl. 7-8)",
       "autobus_urbain_12m": "Autobus urbain 12 m",
-      "autre": "Autre"
+      "autre": "Autre",
+      "deneigeuse": "Déneigeuse",
+      "souffleuse": "Souffleuse à neige",
+      "camion_benne": "Camion à benne",
+      "vehicule_specialise": "Véhicule spécialisé / outil",
+      "vehicule_urgence": "Véhicule d'urgence"
     },
     "fuels": {
       "diesel": "Diesel",
@@ -5893,7 +5898,14 @@
         "subtitle": "Sélectionnez d'abord les véhicules du projet à l'étape Flotte."
       },
       "disclaimer": "L'autonomie n'est pas modélisée dans cette version : les usages longue distance et hors route sont signalés comme réserves. Les montants reposent sur les hypothèses du registre (statuts et dates de vérification dans la Bibliothèque) et se raffinent aux étapes suivantes.",
-      "outOfHorizon": "Remplacement prévu en {{annee}}, après l'horizon d'analyse de {{horizon}} ans — véhicule exclu des calculs et des totaux. Rapprochez l'année de remplacement ou allongez l'horizon du projet pour l'évaluer."
+      "outOfHorizon": "Remplacement prévu en {{annee}}, après l'horizon d'analyse de {{horizon}} ans — véhicule exclu des calculs et des totaux. Rapprochez l'année de remplacement ou allongez l'horizon du projet pour l'évaluer.",
+      "postpone": {
+        "badge": "À reporter",
+        "pas_de_ve_credible": "Pas de modèle électrique crédible aujourd'hui pour cet usage : à réévaluer au prochain cycle de remplacement (remplacement à l'identique en attendant).",
+        "disponibilite_critique": "Disponibilité critique 24/7 : électrification à étudier au cas par cas avec le service concerné (non chiffrée automatiquement).",
+        "cas_par_cas": "Équipement spécialisé : l'offre électrique varie d'un outil à l'autre — à évaluer au cas par cas avec les fournisseurs (non chiffré automatiquement)."
+      },
+      "borrowedDefaults": "Défauts empruntés à une catégorie du moteur (estimation)"
     },
     "strategies": {
       "empty": {

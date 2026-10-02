@@ -13,6 +13,7 @@
  *   hors route sont signalés comme réserves, pas chiffrés.
  */
 import { classePourSubventions } from "@/lib/fleet/gvwr";
+import { categorieMoteur, estCategorieMunicipale, raisonAReporter } from "./categories";
 import {
   DEFAUTS_CATEGORIES,
   calculerPlan,
@@ -42,7 +43,7 @@ export interface VehiculeFaisabilite {
 export type VerdictFaisabilite = "favorable" | "conditionnel" | "defavorable";
 
 export type ReserveFaisabilite = "longue_distance" | "hors_route" | "ravitaillement_h2";
-export type DonneeEstimee = "km" | "consommation";
+export type DonneeEstimee = "km" | "consommation" | "categorie";
 
 export interface EvaluationTechno {
   technologie: "BEV" | "FCEV";
@@ -71,10 +72,14 @@ export interface FaisabiliteVehicule {
   /** Remplacement prévu après la fin de l'horizon d'analyse (revue A5) :
    *  véhicule exclu des calculs et des totaux, signalé en clair. */
   horsHorizon?: { anneeRemplacement: number; horizonAns: number };
+  /** Catégorie sans véhicule électrique crédible aujourd'hui (bloc 2.3) :
+   *  pas de verdict chiffré, jamais électrifiée automatiquement. */
+  aReporter?: "pas_de_ve_credible" | "disponibilite_critique" | "cas_par_cas";
 }
 
 export function classeEmission(category: string): "legers" | "lourds" {
-  return category === "vehicule_leger" || category === "camionnette" ? "legers" : "lourds";
+  const c = categorieMoteur(category) ?? category;
+  return c === "vehicule_leger" || c === "camionnette" ? "legers" : "lourds";
 }
 
 export interface DonneesVehicule {
@@ -93,10 +98,14 @@ export interface DonneesVehicule {
  *  catégorie, km retenus et consommation de référence, avec la liste de
  *  ce qui relève de l'estimation. Partagé par Faisabilité et Stratégies. */
 export function analyserDonneesVehicule(vehicule: VehiculeFaisabilite): DonneesVehicule {
-  const defauts = DEFAUTS_CATEGORIES[vehicule.category as keyof typeof DEFAUTS_CATEGORIES];
+  // Catégorie municipale (bloc 2.3) : défauts EMPRUNTÉS à une catégorie
+  // du moteur, signalés comme estimation.
+  const cleMoteur = categorieMoteur(vehicule.category);
+  const defauts = cleMoteur ? DEFAUTS_CATEGORIES[cleMoteur] : undefined;
   if (!defauts) return { defauts: null, kmParAn: 0, consoReference: 0, carburant: "diesel", donneesEstimees: [] };
 
   const donneesEstimees: DonneeEstimee[] = [];
+  if (estCategorieMunicipale(vehicule.category)) donneesEstimees.push("categorie");
   const kmParAn = vehicule.annual_km != null && vehicule.annual_km > 0
     ? vehicule.annual_km
     : defauts.kmParAnDefaut;
@@ -153,6 +162,10 @@ export function evaluerFaisabiliteVehicule(
     vehicule.replacement_year != null
       ? Math.max(vehicule.replacement_year - options.anneeReference, 0)
       : 0;
+  const reporter = raisonAReporter(vehicule.category);
+  if (reporter) {
+    return { vehiculeId: vehicule.id, evaluations: null, kmParAnRetenu: kmParAn, donneesEstimees, aReporter: reporter };
+  }
   if (k >= options.horizonAns) {
     return {
       vehiculeId: vehicule.id,

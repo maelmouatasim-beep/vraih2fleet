@@ -6,6 +6,7 @@
  * suggestion (null) — l'utilisateur choisit lui-même.
  */
 import { DEFAUTS_CATEGORIES } from "@/lib/tco";
+import { categorieMoteur } from "@/lib/journey/categories";
 
 export interface VehiculePourSuggestion {
   category: string;
@@ -15,7 +16,7 @@ export interface VehiculePourSuggestion {
 
 /** Durée de vie par défaut de la catégorie (moteur TCO), ou null si inconnue. */
 export function dureeVieCategorie(category: string): number | null {
-  const defauts = (DEFAUTS_CATEGORIES as Record<string, { dureeVieAns: number }>)[category];
+  const defauts = (DEFAUTS_CATEGORIES as Record<string, { dureeVieAns: number }>)[categorieMoteur(category) ?? category];
   return defauts ? defauts.dureeVieAns : null;
 }
 

@@ -8,6 +8,12 @@ export const CATEGORIES_VEHICULE = [
   "camion_moyen",
   "camion_lourd",
   "autobus_urbain_12m",
+  // catégories municipales (bloc 2.3) — défauts empruntés au moteur, cf. src/lib/journey/categories.ts
+  "deneigeuse",
+  "souffleuse",
+  "camion_benne",
+  "vehicule_specialise",
+  "vehicule_urgence",
   "autre",
 ] as const;
 

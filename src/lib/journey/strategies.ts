@@ -11,6 +11,7 @@
  * de recharge et/ou un site H2 par garage dans le moteur.
  */
 import { classePourSubventions } from "@/lib/fleet/gvwr";
+import { raisonAReporter } from "./categories";
 import {
   calculerPlan,
   parametresParDefaut,
@@ -115,12 +116,15 @@ function technoCible(
   vehicule: VehiculeProjet,
   selection: Set<string> | null,
 ): TechnoAlternative {
-  if (cle === "tout_electrique") return "BEV";
   if (cle === "plan_actuel") {
     if (vehicule.target_technology === "bev") return "BEV";
     if (vehicule.target_technology === "fcev") return "FCEV";
     return "diesel";
   }
+  // Catégorie « à reporter » (bloc 2.3) : jamais électrifiée par une
+  // stratégie automatique — seul un choix explicite du plan le fait.
+  if (raisonAReporter(vehicule.category)) return "diesel";
+  if (cle === "tout_electrique") return "BEV";
   return selection?.has(vehicule.id) ? "BEV" : "diesel";
 }
 

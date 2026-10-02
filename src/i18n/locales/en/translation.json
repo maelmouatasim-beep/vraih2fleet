@@ -37,7 +37,12 @@
       "camion_moyen": "Medium truck (cl. 4-6)",
       "camion_lourd": "Heavy truck (cl. 7-8)",
       "autobus_urbain_12m": "12 m transit bus",
-      "autre": "Other"
+      "autre": "Other",
+      "deneigeuse": "Snowplow truck",
+      "souffleuse": "Snow blower",
+      "camion_benne": "Dump truck",
+      "vehicule_specialise": "Specialty vehicle / equipment",
+      "vehicule_urgence": "Emergency vehicle"
     },
     "fuels": {
       "diesel": "Diesel",
@@ -5893,7 +5898,14 @@
         "subtitle": "First select the project vehicles in the Fleet step."
       },
       "disclaimer": "Range is not modelled in this version: long-distance and off-road uses are flagged as caveats. Amounts rely on the registry assumptions (statuses and verification dates in the Library) and are refined in the next steps.",
-      "outOfHorizon": "Replacement planned in {{annee}}, after the {{horizon}}-year analysis horizon — vehicle excluded from calculations and totals. Move the replacement year closer or extend the project horizon to assess it."
+      "outOfHorizon": "Replacement planned in {{annee}}, after the {{horizon}}-year analysis horizon — vehicle excluded from calculations and totals. Move the replacement year closer or extend the project horizon to assess it.",
+      "postpone": {
+        "badge": "Postpone",
+        "pas_de_ve_credible": "No credible electric model today for this use: reassess at the next replacement cycle (like-for-like replacement in the meantime).",
+        "disponibilite_critique": "Critical 24/7 availability: electrification to be studied case by case with the department (not computed automatically).",
+        "cas_par_cas": "Specialized equipment: electric offerings vary by tool — to be assessed case by case with suppliers (not computed automatically)."
+      },
+      "borrowedDefaults": "Defaults borrowed from an engine category (estimate)"
     },
     "strategies": {
       "empty": {

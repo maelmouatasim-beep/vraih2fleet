@@ -201,6 +201,22 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
                     </TableRow>
                   );
                 }
+                if (f?.aReporter) {
+                  return (
+                    <TableRow key={pv.id}>
+                      <TableCell className="font-medium">{pv.vehicles.unit_number}</TableCell>
+                      <TableCell>
+                        <p className="text-xs text-muted-foreground">{t(`fleet.categories.${pv.vehicles.category}`)}</p>
+                      </TableCell>
+                      <TableCell colSpan={4} className="text-sm">
+                        <Badge variant="outline" className="mr-2">
+                          {t("journey.feasibility.postpone.badge")}
+                        </Badge>
+                        <span className="text-muted-foreground">{t(`journey.feasibility.postpone.${f.aReporter}`)}</span>
+                      </TableCell>
+                    </TableRow>
+                  );
+                }
                 const [bev, fcev] = f?.evaluations ?? [undefined, undefined];
                 const reserves = new Set([...(bev?.reserves ?? []), ...(fcev?.reserves ?? [])]);
                 return (
@@ -237,6 +253,9 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
                             {t(`journey.feasibility.reserves.${r}`)}
                           </Badge>
                         ))}
+                        {f?.donneesEstimees.includes("categorie") && (
+                          <Badge variant="outline">{t("journey.feasibility.borrowedDefaults")}</Badge>
+                        )}
                         {f?.donneesEstimees.includes("consommation") && (
                           <Badge variant="outline">
                             {t("journey.feasibility.estimatedConsumption")}

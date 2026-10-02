@@ -113,8 +113,56 @@ const SYNONYMES_CATEGORIE: Record<string, string> = {
   autobus_urbain: "autobus_urbain_12m",
   autobus_urbain_12m: "autobus_urbain_12m",
   bus: "autobus_urbain_12m",
+  // catégories municipales (bloc 2.3), FR et EN
+  deneigeuse: "deneigeuse",
+  chasse_neige: "deneigeuse",
+  camion_de_deneigement: "deneigeuse",
+  snowplow: "deneigeuse",
+  snow_plow: "deneigeuse",
+  plow_truck: "deneigeuse",
+  souffleuse: "souffleuse",
+  souffleuse_a_neige: "souffleuse",
+  snowblower: "souffleuse",
+  snow_blower: "souffleuse",
+  camion_benne: "camion_benne",
+  camion_a_benne: "camion_benne",
+  benne: "camion_benne",
+  dump_truck: "camion_benne",
+  dumptruck: "camion_benne",
+  vehicule_specialise: "vehicule_specialise",
+  specialise: "vehicule_specialise",
+  outil: "vehicule_specialise",
+  equipement: "vehicule_specialise",
+  balai_mecanique: "vehicule_specialise",
+  nacelle: "vehicule_specialise",
+  specialty_vehicle: "vehicule_specialise",
+  specialized: "vehicule_specialise",
+  equipment: "vehicule_specialise",
+  sweeper: "vehicule_specialise",
+  vehicule_urgence: "vehicule_urgence",
+  urgence: "vehicule_urgence",
+  incendie: "vehicule_urgence",
+  ambulance: "vehicule_urgence",
+  police: "vehicule_urgence",
+  emergency: "vehicule_urgence",
+  emergency_vehicle: "vehicule_urgence",
+  fire_truck: "vehicule_urgence",
+  light_vehicle: "vehicule_leger",
+  car: "vehicule_leger",
+  van: "camionnette",
+  pickup_truck: "camionnette",
+  medium_truck: "camion_moyen",
+  heavy_truck: "camion_lourd",
   autre: "autre",
+  other: "autre",
 };
+
+/** Valeurs acceptées par catégorie (message d'erreur de l'import et modèle). */
+export function synonymesParCategorie(): Record<string, string[]> {
+  const parCat: Record<string, string[]> = {};
+  for (const [syn, cat] of Object.entries(SYNONYMES_CATEGORIE)) (parCat[cat] ??= []).push(syn);
+  return parCat;
+}
 
 const SYNONYMES_CARBURANT: Record<string, string> = {
   diesel: "diesel",
@@ -326,6 +374,15 @@ export function validerLignes(
       return v;
     };
     const cat = choix("category", SYNONYMES_CATEGORIE, "catégorie");
+    if (fourni(champs.category) && !cat) {
+      // message enrichi : la liste des catégories acceptées et leurs synonymes FR/EN
+      const derniere = erreursLigne[erreursLigne.length - 1];
+      derniere.message +=
+        " — catégories acceptées : " +
+        Object.entries(synonymesParCategorie())
+          .map(([c, syns]) => `${c} (${syns.filter((s) => s !== c).join(", ") || "—"})`)
+          .join(" ; ");
+    }
     const fuel = choix("fuel_type", SYNONYMES_CARBURANT, "carburant");
     const statut = choix("status", SYNONYMES_STATUT, "statut");
     const usage = choix("usage_profile", SYNONYMES_USAGE, "usage");
