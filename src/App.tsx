@@ -29,12 +29,10 @@ import MyFleet from "./pages/MyFleet";
 import Library from "./pages/Library";
 import OrganizationPage from "./pages/OrganizationPage";
 import ProjectJourney, { ETAPES_PARCOURS } from "./pages/project/ProjectJourney";
-import Support from "./pages/Support";
 import ApiDocumentation from "./pages/ApiDocumentation";
 
 import Settings from "./pages/Settings";
 import HelpTraining from "./pages/HelpTraining";
-import Ecosystem from "./pages/Ecosystem";
 import Telematics from "./pages/Telematics";
 import RoadmapBuilder from "./pages/RoadmapBuilder";
 import Notifications from "./pages/Notifications";
@@ -79,7 +77,8 @@ const App = () => (
             <Route path="/refund" element={<Refund />} />
             <Route path="/methodology" element={<Methodology />} />
             <Route path="/case-studies" element={<CaseStudies />} />
-            <Route path="/ecosystem" element={<Ecosystem />} />
+            {/* Écosystème retiré (Phase 4) : statistiques et corridors non sourcés, annuaire de fournisseurs retiré. */}
+            <Route path="/ecosystem" element={<Navigate to="/features" replace />} />
             <Route path="/calculator" element={<Navigate to="/features" replace />} />
             {/* Pages publiques vides retirées (refonte 2f) : redirections propres */}
             <Route path="/roadmap" element={<Navigate to="/" replace />} />
@@ -151,9 +150,8 @@ const App = () => (
               <ProtectedRoute><RoadmapBuilder /></ProtectedRoute>
             } />
             <Route path="/dashboard/wizard" element={<Navigate to="/dashboard/projects" replace />} />
-            <Route path="/dashboard/support" element={
-              <ProtectedRoute><Support /></ProtectedRoute>
-            } />
+            {/* Ancienne page Support (délais de réponse garantis, rappel téléphonique : non livrés) → Aide. */}
+            <Route path="/dashboard/support" element={<Navigate to="/dashboard/help" replace />} />
             <Route path="/dashboard/notifications" element={
               <ProtectedRoute><Notifications /></ProtectedRoute>
             } />

@@ -157,7 +157,7 @@
         "title": "All the tools to succeed in your transition",
         "subtitle": "H2Fleet Planner supports you from initial analysis to implementation of your energy transition strategy.",
         "cta": {
-          "start": "Start for free",
+          "start": "Request a demo",
           "demo": "Watch a demo"
         }
       },
@@ -178,10 +178,10 @@
           "title": "Scenario Management",
           "description": "Create and compare different transition scenarios to find the best strategy.",
           "details": [
-            "Side-by-side multi-scenario comparison",
-            "Customizable parameters per group",
-            "Pre-configured templates",
-            "Quick duplication and modification"
+            "Three strategies compared side by side",
+            "Technology chosen vehicle by vehicle",
+            "Stress test: 3 scenarios and tornado",
+            "Strategy applied to the plan in one click"
           ]
         },
         "infrastructure": {
@@ -218,10 +218,10 @@
           "title": "Professional Reports",
           "description": "Generate detailed reports for your presentations and decision-making.",
           "details": [
-            "High-quality PDF export",
-            "Excel export with raw data",
-            "Customizable charts and tables",
-            "Automatic executive summaries"
+            "Board-ready PDF report (fr/en)",
+            "3-sheet Excel workbook",
+            "Appendix of assumptions with their sources",
+            "Summary and stress test included"
           ]
         }
       },
@@ -230,7 +230,7 @@
         "subtitle": "A complete suite of tools to manage all aspects of your transition.",
         "telematics": {
           "title": "Telematics Integration",
-          "description": "Connect Geotab or Samsara to import real fleet data and auto-generate optimized scenarios."
+          "description": "Connect Geotab or Samsara to import your vehicles and their real consumption; your plan is never changed automatically."
         },
         "subsidies": {
           "title": "Subsidies & Financing",
@@ -272,120 +272,8 @@
       "cta": {
         "title": "Ready to transform your fleet?",
         "subtitle": "Start your analysis today and discover your transition potential.",
-        "start": "Create my free account",
+        "start": "Request a demo",
         "pricing": "View pricing"
-      }
-    },
-    "pricing": {
-      "title": "Pricing",
-      "comparison": {
-        "title": "Detailed comparison",
-        "subtitle": "All plans include the same core features. Pricing scales with your fleet size.",
-        "feature": "Feature",
-        "features": [
-          {
-            "name": "Price per vehicle",
-            "small": "$24/mo",
-            "medium": "$19/mo",
-            "large": "$14/mo"
-          },
-          {
-            "name": "Fleet size",
-            "small": "10-49",
-            "medium": "50-199",
-            "large": "200+"
-          },
-          {
-            "name": "Projects",
-            "small": "Unlimited",
-            "medium": "Unlimited",
-            "large": "Unlimited"
-          },
-          {
-            "name": "Scenarios",
-            "small": "Unlimited",
-            "medium": "Unlimited",
-            "large": "Unlimited"
-          },
-          {
-            "name": "TCO Analysis",
-            "small": "✓",
-            "medium": "✓",
-            "large": "✓"
-          },
-          {
-            "name": "CO₂ Tracking",
-            "small": "✓",
-            "medium": "✓",
-            "large": "✓"
-          },
-          {
-            "name": "PDF & Excel Export",
-            "small": "✓",
-            "medium": "✓",
-            "large": "✓"
-          },
-          {
-            "name": "API Access",
-            "small": "—",
-            "medium": "✓",
-            "large": "✓"
-          },
-          {
-            "name": "Priority Support",
-            "small": "—",
-            "medium": "✓",
-            "large": "✓"
-          },
-          {
-            "name": "SSO/SAML",
-            "small": "—",
-            "medium": "—",
-            "large": "✓"
-          },
-          {
-            "name": "Dedicated Manager",
-            "small": "—",
-            "medium": "—",
-            "large": "✓"
-          }
-        ]
-      },
-      "faq": {
-        "title": "Frequently asked questions",
-        "subtitle": "Everything you need to know about our pricing."
-      },
-      "faqs": [
-        {
-          "question": "Is there a free trial?",
-          "answer": "Yes! All plans include a 14-day free trial. No credit card required to start."
-        },
-        {
-          "question": "How is my fleet size calculated?",
-          "answer": "Fleet size is based on the number of active vehicles in your account. You can add or remove vehicles at any time."
-        },
-        {
-          "question": "Can I change plans as my fleet grows?",
-          "answer": "Absolutely. You can upgrade or downgrade at any time. Billing is adjusted automatically based on your current fleet size."
-        },
-        {
-          "question": "What payment methods do you accept?",
-          "answer": "We accept all major credit cards (Visa, Mastercard, American Express) and ACH bank transfers for annual plans."
-        },
-        {
-          "question": "Is annual billing available?",
-          "answer": "Yes, annual billing is available with 2 months free (pay for 10 months, get 12)."
-        },
-        {
-          "question": "What support is included?",
-          "answer": "All plans include email support. Medium and Large fleet plans include priority support with faster response times."
-        }
-      ],
-      "cta": {
-        "title": "Ready to get started?",
-        "subtitle": "Join companies that efficiently plan their fleet energy transition.",
-        "start": "Start free trial",
-        "contact": "Contact sales"
       }
     },
     "about": {
@@ -461,11 +349,12 @@
           "title": "Business hours",
           "weekdays": "Monday - Friday: 9:00 AM - 6:00 PM",
           "weekend": "Weekend: Closed"
-        }
+        },
+        "pending": "Public contact details (email, address) will be published soon. In the meantime, the form is the best way to reach us."
       },
       "form": {
         "title": "Send us a message",
-        "subtitle": "We'll get back to you within 24-48h.",
+        "subtitle": "We will get back to you as soon as possible.",
         "fields": {
           "name": "Full name",
           "email": "Professional email",
@@ -493,7 +382,7 @@
         "submitting": "Sending...",
         "success": {
           "title": "Message sent!",
-          "message": "Our team will contact you within 24-48h."
+          "message": "Thank you! Our team will get back to you."
         },
         "error": {
           "title": "Error",
@@ -560,11 +449,11 @@
       },
       "telematics": {
         "title": "Telematics integration",
-        "description": "Connect your Geotab or Samsara account to import real fleet data. Auto-generate scenarios based on actual usage patterns."
+        "description": "Connect your Geotab or Samsara account to import your vehicles and their real consumption into My fleet."
       },
       "subsidies": {
         "title": "Subsidies & financing",
-        "description": "Access Canadian federal and provincial programs. Calculate eligibility and prepare application packages with pre-filled data."
+        "description": "Federal and Québec programs applied vehicle by vehicle, with the rule and reason for every amount, and tracking of your applications."
       },
       "infrastructure": {
         "title": "Infrastructure planning",
@@ -572,7 +461,7 @@
       },
       "analytics": {
         "title": "Advanced analytics",
-        "description": "Track ROI, payback period and sensitivity analysis. Compare transition scenarios with detailed financial projections."
+        "description": "Discounted savings, payback, stress test on sourced assumptions and a board report (PDF and Excel)."
       }
     },
     "howItWorks": {
@@ -672,13 +561,13 @@
     },
     "cta": {
       "title": "Ready to accelerate your transition?",
-      "subtitle": "Join companies that efficiently plan their switch to clean vehicles. Start your first project in minutes.",
+      "subtitle": "Start from your real fleet to get a costed, fundable and defensible replacement plan. Start your first project in minutes.",
       "createAccount": "Request a demo",
       "requestDemo": "Request a demo",
       "trust": {
         "secure": "Secure data",
-        "trial": "14-day free trial",
-        "support": "Responsive support"
+        "trial": "Public methodology",
+        "support": "Sourced assumptions"
       }
     },
     "footer": {
@@ -712,7 +601,6 @@
     "navbar": {
       "product": "Product",
       "features": "Features",
-      "calculator": "Free Calculator",
       "demo": "Demo",
       "comparisons": "Comparisons",
       "solutions": "Solutions",
@@ -1686,7 +1574,7 @@
       },
       "branding": {
         "title": "Optimize your energy transition",
-        "subtitle": "Join fleet managers who use H2Fleet to plan their switch to electric and hydrogen.",
+        "subtitle": "Plan your fleet's switch to electric and hydrogen, vehicle by vehicle.",
         "feature1": "Precise, customized TCO calculation",
         "feature2": "Hydrogen vs electric comparison",
         "feature3": "Smart recommendations",
@@ -2363,98 +2251,11 @@
     "submitting": "Sending...",
     "success": {
       "title": "Request sent!",
-      "message": "Our team will contact you within 24-48h to schedule your demo."
+      "message": "Thank you! Our team will get back to you to schedule your demo."
     },
     "error": {
       "title": "Error",
       "message": "Your request could not be sent. Please try again."
-    }
-  },
-  "demo": {
-    "hero": {
-      "title": "See H2Fleet in action",
-      "subtitle": "Explore all the features of our fleet energy transition planning platform."
-    },
-    "tour": {
-      "title": "Guided feature tour",
-      "subtitle": "Discover step by step how H2Fleet helps you plan your transition."
-    },
-    "placeholder": {
-      "replace": "Replace with:"
-    },
-    "features": {
-      "dashboard": {
-        "title": "Centralized Dashboard",
-        "description": "Overview of your projects with real-time KPIs: number of vehicles analyzed, potential CO₂ savings, scenario status. Quick access to recent projects and important notifications."
-      },
-      "projects": {
-        "title": "Multi-project Management",
-        "description": "Organize your studies by client, region, or phase. Team collaboration with sharing, comments, and version history. One-click “Ville de Rivière-Claire” demo (fictional municipality, ~40 vehicles) to explore the journey."
-      },
-      "scenarios": {
-        "title": "Comparative TCO Scenarios",
-        "description": "Create diesel, 100% electric, or mixed BEV/FCEV scenarios. Compare vehicle and infrastructure CAPEX, 10-15 year OPEX, NPV, and payback period. Professional PDF export included."
-      },
-      "analytics": {
-        "title": "Analytics & ESG Tracking",
-        "description": "Track environmental objectives with ESG tracker. Analyze CO₂ reduction (2.8 kt avoided, 59% vs diesel), compare scenarios, and export to PDF or Excel. What-If dashboard for sensitivity analyses."
-      },
-      "infrastructure": {
-        "title": "Infrastructure Planning",
-        "description": "Size your charging stations (Level 2, DC fast, ultra-fast) and hydrogen stations. Automatic integration of installation costs, grid upgrades, and permits into the overall TCO."
-      },
-      "roadmap": {
-        "title": "Roadmap Builder",
-        "description": "Plan your transition over 5-10 years with interactive Gantt chart. Define phases, milestones, and critical path. Linked to scenarios for data consistency and real-time budget tracking."
-      },
-      "telematics": {
-        "title": "Telematics Import",
-        "description": "Connect Geotab or Samsara to import your real fleet. Annual mileage, fuel consumption, route type automatically detected. Per-vehicle transition recommendations generated."
-      },
-      "referenceData": {
-        "title": "Regional Reference Data",
-        "description": "Fuel, electricity, and hydrogen prices for each Canadian province. Verified sources with confidence indicators (Very High, High, Medium). CSV import/export and update history."
-      },
-      "suppliers": {
-        "title": "Supplier Directory",
-        "description": "82+ Canadian suppliers: EV infrastructure (ABB, FLO, ChargePoint), H₂ stations (Air Liquide, ATCO), vehicle manufacturers. Filter by type, region, certification, and favorites."
-      },
-      "subsidies": {
-        "title": "Subsidy Calculator",
-        "description": "13 active federal and provincial programs. Calculate eligibility: up to $500,000 iMHZEV + $150,000 provincial = $650,000 stackable per project. Deadline calendar and alerts."
-      },
-      "caseStudies": {
-        "title": "Documented Case Studies",
-        "description": "Real projects: STM Montreal (40 electric buses), AZETEC Alberta, Winnipeg Transit. Verified metrics, lessons learned, TCO results, and detailed deployment timeline."
-      },
-      "assistant": {
-        "title": "AI Expert Assistant",
-        "description": "Your technical guide powered by GPT-4. Questions on reference data, subsidies, TCO methodology, infrastructure. Bilingual answers with real-time web search and citations."
-      }
-    },
-    "quickStart": {
-      "title": "Get started in 3 steps",
-      "subtitle": "Create your first project in less than 5 minutes",
-      "steps": {
-        "step1": {
-          "title": "Create your account",
-          "description": "Free sign up, no credit card required."
-        },
-        "step2": {
-          "title": "Choose a template",
-          "description": "Select a model suited to your business."
-        },
-        "step3": {
-          "title": "Analyze your results",
-          "description": "Instantly visualize your TCO and emissions."
-        }
-      }
-    },
-    "cta": {
-      "title": "Ready to try?",
-      "subtitle": "Create your first project for free and discover your transition potential.",
-      "startFree": "Try for free",
-      "viewPricing": "View pricing"
     }
   },
   "apiKeys": {
@@ -2790,85 +2591,6 @@
     }
   },
   "pages_support": {
-    "support": {
-      "title": "Support",
-      "subtitle": "Get help from our support team.",
-      "prioritySubtitle": "Get priority assistance from our expert team.",
-      "priorityBadge": "Priority Support",
-      "form": {
-        "title": "Contact Support",
-        "priorityTitle": "Submit Priority Request",
-        "subtitle": "Fill out the form below and we'll get back to you.",
-        "prioritySubtitle": "Your request will be handled with priority.",
-        "yourName": "Your Name",
-        "email": "Email",
-        "subject": "Subject",
-        "subjectPlaceholder": "Brief description of your issue",
-        "category": "Category",
-        "categoryPlaceholder": "Select a category",
-        "priorityLevel": "Priority Level",
-        "phoneCallback": "Phone for Callback (optional)",
-        "phonePlaceholder": "+1 (555) 123-4567",
-        "message": "Message",
-        "messagePlaceholder": "Describe your issue or question in detail...",
-        "characters": "characters",
-        "submit": "Send Message",
-        "prioritySubmit": "Submit Priority Request",
-        "submitting": "Submitting..."
-      },
-      "categories": {
-        "technical": "Technical Issue",
-        "billing": "Billing Question",
-        "feature": "Feature Request",
-        "account": "Account Management",
-        "other": "Other"
-      },
-      "priority": {
-        "high": "High - Critical issue affecting operations",
-        "medium": "Medium - Important but not urgent",
-        "low": "Low - General question"
-      },
-      "responseTime": {
-        "title": "Response Time",
-        "priority": "Within 4 hours",
-        "priorityDesc": "Priority support ensures faster response times for your critical issues.",
-        "standard": "24-48 hours",
-        "standardDesc": "Our team will respond during business hours."
-      },
-      "benefits": {
-        "title": "Your Priority Benefits",
-        "standardTitle": "Support Includes",
-        "priority": {
-          "response": "4-hour response guarantee",
-          "callback": "Phone callback option",
-          "queue": "Priority ticket queue",
-          "agent": "Dedicated support agent"
-        },
-        "standard": {
-          "email": "Email support",
-          "kb": "Knowledge base access",
-          "forum": "Community forum"
-        }
-      },
-      "upgrade": {
-        "title": "Need faster support?",
-        "subtitle": "Upgrade to Medium or Large Fleet for priority support with 4-hour response times.",
-        "cta": "View Plans"
-      },
-      "contact": {
-        "title": "Other Ways to Reach Us",
-        "email": "support@h2fleet.com",
-        "phone": "+1 (800) H2-FLEET"
-      },
-      "toast": {
-        "missing": "Missing information",
-        "missingDesc": "Please fill in all required fields.",
-        "prioritySuccess": "Priority ticket submitted!",
-        "prioritySuccessDesc": "Our team will respond within 4 hours.",
-        "success": "Support request submitted!",
-        "successDesc": "Our team will respond within 24-48 hours."
-      }
-    },
     "admin": {
       "title": "Reference Data",
       "subtitle": "Manage default vehicle profiles, energy prices and emission factors",
@@ -2971,61 +2693,6 @@
       "badge": "Coming Soon",
       "description": "Our blog will feature insights on fleet electrification, hydrogen adoption, sustainability trends, and industry news. Stay informed about the latest developments in clean transportation.",
       "footer": "Expert analysis, case studies, and practical tips for fleet managers planning their energy transition."
-    },
-    "careers": {
-      "title": "Careers",
-      "badge": "Coming Soon",
-      "description": "Join our team and help shape the future of sustainable transportation. We're building tools that accelerate the transition to clean energy fleets across North America.",
-      "footer": "Open positions in engineering, product, sales, and customer success will be posted here soon."
-    },
-    "press": {
-      "title": "Press & Media",
-      "badge": "Coming Soon",
-      "description": "Find press releases, media kits, and brand assets for H2Fleet Planner. For media inquiries, please contact our communications team.",
-      "footer": "Logos, product screenshots, and company information will be available for download here."
-    },
-    "refund": {
-      "title": "Refund Policy",
-      "quickSummary": "Quick Summary",
-      "quickSummaryText": "We offer a 14-day free trial with no payment required. After subscribing, prorated refunds are available within 7 days of upgrading. Monthly subscriptions can be cancelled anytime but are not refunded for partial months.",
-      "cards": {
-        "freeTrial": "Free Trial",
-        "freeTrialDesc": "14 days free, no payment required",
-        "upgradeRefunds": "Upgrade Refunds",
-        "upgradeRefundsDesc": "Prorated within 7 days of upgrade",
-        "noPartialMonth": "No Partial Month",
-        "noPartialMonthDesc": "No refunds for partial months"
-      },
-      "sections": {
-        "freeTrial": {
-          "title": "1. 14-Day Free Trial",
-          "content": "All new users are eligible for a 14-day free trial of H2Fleet Planner."
-        },
-        "monthly": {
-          "title": "2. Monthly Subscription Billing"
-        },
-        "upgrade": {
-          "title": "3. Upgrade and Downgrade Policy"
-        },
-        "cancellation": {
-          "title": "4. Cancellation Process"
-        },
-        "exceptions": {
-          "title": "5. Refund Exceptions"
-        },
-        "disputes": {
-          "title": "6. Disputes and Contact Information"
-        },
-        "changes": {
-          "title": "7. Changes to This Policy"
-        }
-      },
-      "table": {
-        "title": "Quick Reference Summary",
-        "scenario": "Scenario",
-        "refundAvailable": "Refund Available?",
-        "details": "Details"
-      }
     }
   },
   "pages_telematics": {
@@ -3972,8 +3639,8 @@
     },
     "cta": {
       "mainTitle": "Ready to start your transition?",
-      "mainDescription": "Create your free account and use our TCO calculator to compare scenarios for your fleet",
-      "getStarted": "Get Started Free",
+      "mainDescription": "Create your account, import your fleet and get a vehicle-by-vehicle costed replacement plan.",
+      "getStarted": "Create an account",
       "seeDemo": "See Demo",
       "readGuide": "Read guide",
       "startCalculation": "Start calculation",
@@ -4069,12 +3736,6 @@
       "climate": {
         "title": "Canadian Cold Climate",
         "description": "Cold temperatures significantly impact battery range. Plan accordingly.",
-        "impact": {
-          "title": "Range impact by temperature",
-          "minus10": "Moderate cold: reduced range",
-          "minus20": "Severe cold: larger reduction",
-          "minus30": "Extreme cold: plan a range margin"
-        },
         "solutions": {
           "title": "Practical solutions",
           "items": [
@@ -4085,9 +3746,10 @@
           ]
         },
         "callout": {
-          "title": "City of Quebec Case Study",
+          "title": "Check it on your fleet",
           "description": "The engine applies the registry’s sourced winter surcharge to electric vehicles’ consumption; check range on your actual routes."
-        }
+        },
+        "registry": "No generic percentage here: the engine applies the winter increase from the assumptions registry (status and source shown in the Library) and the Feasibility step computes the winter range of each of your vehicles against its daily distance and its depot's charging window."
       },
       "tco": {
         "title": "TCO Comparison",
@@ -4222,11 +3884,6 @@
       "availability": {
         "title": "Availability in Quebec",
         "description": "RNG/CNG station network is growing but still limited in Canada",
-        "stations": {
-          "quebec": "Quebec: 10 stations",
-          "ontario": "Ontario: 15 stations",
-          "alberta": "Alberta: 20+ stations"
-        },
         "callout": {
           "title": "Check station coverage",
           "description": "Are there stations on your regular routes? Check coverage before committing"
@@ -4266,7 +3923,7 @@
         ]
       },
       "caseStudy": {
-        "title": "Amazon Montreal Case Study",
+        "title": "Cost it on your fleet",
         "description": "Savings depend on your fleet: the Feasibility step costs them vehicle by vehicle."
       },
       "cta": {
@@ -4423,7 +4080,7 @@
       },
       "provincial": {
         "title": "Provincial Programs (Quebec)",
-        "description": "Écocamionnage (2026-2028): $145.5M over 3 years. Covers new clean vehicles, used EVs, and logistics projects. Status: Reopened December 2025."
+        "description": "Écocamionnage (2025-2028): purchase assistance for clean vehicles. Caps, status and verification date: see the program registry in the Library."
       },
       "optimization": {
         "title": "Funding Optimization",
@@ -4450,7 +4107,7 @@
       },
       "routes": {
         "title": "Route Optimization",
-        "description": "Smart vehicle assignment based on range: Routes <80 km = any BEV, 80-150 km = BEV with >80% charge, 150-250 km = BEV + planned DC stop, >250 km = Diesel/H₂."
+        "description": "Compare each vehicle's maximum daily distance with its winter range (Feasibility step). Beyond it, plan a margin, a scheduled fast charge or another technology."
       },
       "energy": {
         "title": "Energy Management",
@@ -4676,225 +4333,6 @@
       "financingConfirmed": "🧾 Have an award letter? Enter the confirmed subsidy with its reference: it replaces the estimate in the plan and the report."
     },
     "notConfigured": "The AI assistant is not enabled yet on this test site."
-  },
-  "featureDoc": {
-    "title": "Platform Feature Documentation",
-    "subtitle": "Comprehensive guide to H2Fleet Planner modules",
-    "version": "Version",
-    "generatedOn": "Generated on",
-    "tableOfContents": "Table of Contents",
-    "keyFeatures": "Key Features",
-    "typicalUseCases": "Typical Use Cases",
-    "appendix": "Appendix",
-    "technicalStack": "Technical Stack",
-    "contactSupport": "Contact & Support",
-    "downloadButton": "Download Feature Documentation",
-    "generating": "Generating...",
-    "downloadSuccess": "Documentation downloaded",
-    "downloadSuccessDescription": "The PDF has been saved to your downloads folder.",
-    "downloadError": "Download failed",
-    "downloadErrorDescription": "An error occurred while generating the PDF.",
-    "projectPresentation": "Project Presentation",
-    "theChallenge": "The Challenge",
-    "challengeText": "The transition to zero-emission heavy-duty fleets is complex: fluctuating energy costs, evolving regulations, diverse technology options, and significant infrastructure investments. Fleet managers need reliable tools to make informed decisions based on solid financial and operational data.",
-    "ourSolution": "Our Solution",
-    "solutionText": "H2Fleet Planner is a B2B SaaS platform that enables fleet managers to simulate diesel-to-EV/H2 transitions, compare scenarios using Total Cost of Ownership (TCO) analysis, and plan phased deployment roadmaps over 10-15 year horizons. Our platform combines regional reference data, infrastructure planning tools, and subsidies databases to provide comprehensive decision support.",
-    "targetAudience": "Who Is H2Fleet For?",
-    "audienceList": [
-      "Fleet managers in transportation and logistics",
-      "Project developers and infrastructure planners",
-      "Energy transition consultants",
-      "Municipalities and government agencies"
-    ],
-    "valueProposition": "Key Benefits",
-    "valueList": [
-      "Data-driven decision making with TCO, CAPEX/OPEX analysis",
-      "Multi-scenario comparison (Diesel, BEV, FCEV, Hybrid)",
-      "Access to subsidies database and supplier directory",
-      "Phased deployment planning with Gantt roadmap",
-      "Bilingual platform (English/French) for Canadian market"
-    ],
-    "modules": {
-      "dashboard": {
-        "title": "Dashboard",
-        "description": "The Dashboard serves as your central command center, providing a real-time overview of your fleet transition progress. It displays key performance indicators, project summaries, and quick access to all major platform features. The dashboard is designed to give fleet managers an immediate understanding of their zero-emission transition status.",
-        "features": [
-          "Real-time fleet composition overview with vehicle counts by fuel type",
-          "TCO summary cards showing total cost of ownership across all scenarios",
-          "Recent projects list with quick navigation",
-          "Data quality indicators and reference data status",
-          "One-click CSV export for fleet data"
-        ],
-        "useCases": [
-          "Morning check on fleet transition progress",
-          "Executive reporting and status updates",
-          "Quick navigation to active projects"
-        ],
-        "screenshotCaption": "Figure 1: Dashboard overview showing KPIs and recent projects"
-      },
-      "scenarios": {
-        "title": "TCO Scenarios",
-        "description": "The Scenarios module is the core analytical engine of H2Fleet Planner. It enables you to create, compare, and analyze multiple fleet transition scenarios including diesel baseline, battery-electric (BEV), hydrogen fuel cell (FCEV), and mixed fleet configurations. Each scenario calculates comprehensive Total Cost of Ownership over your chosen analysis horizon.",
-        "features": [
-          "Multi-scenario comparison with side-by-side TCO analysis",
-          "Flexible fleet composition with multiple vehicle categories",
-          "Configurable analysis horizon (5-20 years) and discount rates",
-          "Automatic baseline diesel comparison",
-          "CO2 emissions calculation and reduction tracking",
-          "PDF export of detailed scenario results"
-        ],
-        "useCases": [
-          "Comparing BEV vs FCEV for long-haul trucking",
-          "Building a business case for fleet electrification",
-          "Sensitivity analysis on fuel price variations"
-        ],
-        "screenshotCaption": "Figure 2: Scenario creation form with fleet composition"
-      },
-      "analytics": {
-        "title": "Advanced Analytics",
-        "description": "The Analytics module provides deep insights into your fleet transition data through interactive visualizations, What-If analyses, and ESG tracking. It enables data-driven decision making by allowing you to explore different parameters and understand their impact on TCO and emissions.",
-        "features": [
-          "What-If analysis with real-time parameter adjustments",
-          "Sensitivity analysis charts for key cost drivers",
-          "ESG objectives tracker with target setting",
-          "Fleet comparison visualizations across scenarios",
-          "Cost projections and investment breakdown charts",
-          "ROI calculations and payback period analysis"
-        ],
-        "useCases": [
-          "Understanding impact of electricity price changes on BEV TCO",
-          "Tracking progress toward corporate sustainability goals",
-          "Presenting investment analysis to stakeholders"
-        ],
-        "screenshotCaption": "Figure 3: Analytics dashboard with What-If analysis"
-      },
-      "infrastructure": {
-        "title": "Infrastructure Planning",
-        "description": "The Infrastructure module helps you plan and size the charging and refueling infrastructure needed for your zero-emission fleet. It calculates station requirements based on fleet size, daily energy demand, and operational patterns, while providing cost estimates and feasibility alerts.",
-        "features": [
-          "Automatic charging station sizing based on fleet needs",
-          "Hydrogen station capacity planning",
-          "Grid capacity analysis and upgrade requirements",
-          "Interactive infrastructure map with depot locations",
-          "Feasibility alerts for power grid constraints",
-          "Infrastructure CAPEX and OPEX calculations"
-        ],
-        "useCases": [
-          "Planning charging infrastructure for a new BEV fleet",
-          "Evaluating hydrogen station investment for regional operations",
-          "Identifying grid upgrade requirements before fleet deployment"
-        ],
-        "screenshotCaption": "Figure 4: Infrastructure planning with station requirements"
-      },
-      "roadmap": {
-        "title": "Roadmap Builder",
-        "description": "The Roadmap Builder enables you to create detailed deployment timelines for your fleet transition. It breaks down your transition into phases and milestones, helping you visualize the implementation schedule, track progress, and manage dependencies between different workstreams.",
-        "features": [
-          "Gantt chart visualization of transition phases",
-          "Milestone tracking with due dates and assignments",
-          "Phase management with budget allocation",
-          "Progress tracking with completion percentages",
-          "Alert system for upcoming deadlines",
-          "Integration with scenario results"
-        ],
-        "useCases": [
-          "Planning a 5-year fleet electrification roadmap",
-          "Coordinating vehicle procurement with infrastructure deployment",
-          "Tracking progress against regulatory compliance deadlines"
-        ],
-        "screenshotCaption": "Figure 5: Roadmap builder with Gantt chart view"
-      },
-      "telematics": {
-        "title": "Telematics Integration",
-        "description": "The Telematics module enables you to import real operational data from your fleet management systems. By analyzing actual vehicle usage patterns, daily mileage, and fuel consumption, the platform can generate more accurate scenarios and recommendations tailored to your specific operations.",
-        "features": [
-          "Import fleet data via CSV or API integration",
-          "Vehicle grouping based on operational patterns",
-          "Automatic technology recommendations per vehicle group",
-          "Auto-generated scenarios based on real data",
-          "Fleet analytics dashboard with usage insights",
-          "Integration with major telematics providers"
-        ],
-        "useCases": [
-          "Importing Geotab data to identify electrification candidates",
-          "Analyzing daily mileage to determine range requirements",
-          "Creating data-driven scenarios from actual fleet operations"
-        ],
-        "screenshotCaption": "Figure 6: Telematics import and vehicle grouping"
-      },
-      "referenceData": {
-        "title": "Reference Data",
-        "description": "The Reference Data module provides access to curated market data including vehicle prices, energy costs, emission factors, and more. All data is region-specific and regularly updated. Users can view, filter, and in some cases customize these values to match their specific context.",
-        "features": [
-          "Regional energy prices (electricity, hydrogen, diesel)",
-          "Vehicle specifications and pricing by category",
-          "CO2 emission factors by energy source",
-          "Data freshness indicators and source citations",
-          "Import/export functionality for data management",
-          "Custom data creation for proprietary information"
-        ],
-        "useCases": [
-          "Checking current hydrogen prices in your region",
-          "Customizing vehicle prices based on negotiated quotes",
-          "Reviewing emission factors for carbon credit calculations"
-        ],
-        "screenshotCaption": "Figure 7: Reference data table with energy prices"
-      },
-      "suppliers": {
-        "title": "Suppliers Directory",
-        "description": "The Suppliers Directory is a curated database of vehicle manufacturers, infrastructure providers, fuel suppliers, and service providers in the zero-emission transportation ecosystem. It helps fleet managers identify and connect with potential partners for their transition projects.",
-        "features": [
-          "Searchable supplier database with filters",
-          "Interactive map showing supplier locations",
-          "Supplier profiles with products and services",
-          "Favorites system for shortlisting suppliers",
-          "Contact information and verification status",
-          "Filter by supplier type, region, and certifications"
-        ],
-        "useCases": [
-          "Finding hydrogen fuel cell truck manufacturers",
-          "Identifying charging infrastructure installers in your region",
-          "Building a shortlist of potential partners for RFP"
-        ],
-        "screenshotCaption": "Figure 8: Suppliers directory with map view"
-      },
-      "subsidies": {
-        "title": "Subsidies & Funding",
-        "description": "The Subsidies module provides a comprehensive database of government incentives, grants, and funding programs available for zero-emission fleet transition. It includes federal, provincial, and municipal programs with eligibility criteria, application deadlines, and direct links to program portals.",
-        "features": [
-          "Federal and provincial incentive programs database",
-          "Eligibility calculator based on fleet and vehicle type",
-          "Calendar view with application deadlines",
-          "AI-powered subsidies assistant for guidance",
-          "Direct links to application portals",
-          "Status tracking (active, expired, coming soon)"
-        ],
-        "useCases": [
-          "Finding available incentives for Class 8 electric trucks",
-          "Planning applications around upcoming program deadlines",
-          "Calculating total incentive value for a fleet purchase"
-        ],
-        "screenshotCaption": "Figure 9: Subsidies calculator with eligible programs"
-      },
-      "helpAssistant": {
-        "title": "Help & AI Assistant",
-        "description": "The Help & AI Assistant module provides comprehensive support resources including documentation, video tutorials, FAQ, and an AI-powered assistant. The AI assistant can answer questions about the platform, provide guidance on fleet transition best practices, and help interpret your analysis results.",
-        "features": [
-          "AI-powered assistant for contextual help",
-          "Platform documentation and user guides",
-          "Video tutorials for key workflows",
-          "Frequently asked questions database",
-          "Proactive suggestions based on user context",
-          "Multi-language support (EN/FR)"
-        ],
-        "useCases": [
-          "Getting quick answers about TCO calculation methodology",
-          "Learning how to create your first scenario",
-          "Understanding infrastructure sizing recommendations"
-        ],
-        "screenshotCaption": "Figure 10: AI Assistant providing contextual guidance"
-      }
-    }
   },
   "tasks": {
     "title": "Tasks",

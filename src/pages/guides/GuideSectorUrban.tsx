@@ -66,9 +66,6 @@ const GuideSectorUrban = () => {
               <Battery className="w-6 h-6 text-green-700 dark:text-green-400" />
             </div>
             <div>
-              <h3 className="font-bold text-green-800 dark:text-green-300 text-lg">
-                95% BEV
-              </h3>
               <p className="text-green-700 dark:text-green-400 text-sm">
                 {t("guides.sectorUrban.description")}
               </p>

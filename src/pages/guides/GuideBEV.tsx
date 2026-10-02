@@ -178,25 +178,7 @@ const GuideBEV = () => {
           {t("guides.bev.climate.description")}
         </p>
 
-        <div className="bg-muted/50 rounded-lg p-6 mb-6">
-          <h3 className="font-semibold text-foreground mb-4">
-            {t("guides.bev.climate.impact.title")}
-          </h3>
-          <div className="grid md:grid-cols-3 gap-4 text-center">
-            <div className="bg-background rounded-lg p-4">
-              <div className="text-2xl font-bold text-foreground">-15%</div>
-              <div className="text-sm text-muted-foreground">{t("guides.bev.climate.impact.minus10")}</div>
-            </div>
-            <div className="bg-background rounded-lg p-4">
-              <div className="text-2xl font-bold text-foreground">-30%</div>
-              <div className="text-sm text-muted-foreground">{t("guides.bev.climate.impact.minus20")}</div>
-            </div>
-            <div className="bg-background rounded-lg p-4">
-              <div className="text-2xl font-bold text-foreground">-40%</div>
-              <div className="text-sm text-muted-foreground">{t("guides.bev.climate.impact.minus30")}</div>
-            </div>
-          </div>
-        </div>
+        <p className="text-muted-foreground mb-6">{t("guides.bev.climate.registry")}</p>
 
         <h3 className="font-semibold text-foreground mb-4">
           {t("guides.bev.climate.solutions.title")}

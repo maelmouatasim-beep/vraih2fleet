@@ -103,20 +103,6 @@ const GuideBiomethane = () => {
           {t("guides.biomethane.availability.description")}
         </p>
 
-        <div className="grid md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-muted/50 rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-foreground">10</div>
-            <div className="text-sm text-muted-foreground">{t("guides.biomethane.availability.stations.quebec")}</div>
-          </div>
-          <div className="bg-muted/50 rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-foreground">15</div>
-            <div className="text-sm text-muted-foreground">{t("guides.biomethane.availability.stations.ontario")}</div>
-          </div>
-          <div className="bg-muted/50 rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-foreground">20+</div>
-            <div className="text-sm text-muted-foreground">{t("guides.biomethane.availability.stations.alberta")}</div>
-          </div>
-        </div>
 
         <GuideCallout
           type="info"

@@ -132,7 +132,6 @@ const Navbar = () => {
   ];
 
   const resourcesItems: DropdownItem[] = [
-    { href: "/docs", label: t('landing.navbar.documentation') },
     { href: "/guides", label: t('landing.navbar.guides') },
   ];
 

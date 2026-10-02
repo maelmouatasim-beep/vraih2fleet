@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
-import { 
-  Mail, 
-  MapPin, 
+import {
   Send,
   Building2,
   Users,
@@ -97,20 +95,7 @@ const Contact = () => {
     }
   };
 
-  const contactInfo = [
-    {
-      icon: Mail,
-      titleKey: "pages.contact.info.email.title",
-      value: "contact@h2fleet.ca",
-      color: "bg-primary/10 text-primary",
-    },
-    {
-      icon: MapPin,
-      titleKey: "pages.contact.info.address.title",
-      value: "Montreal, Quebec, Canada",
-      color: "bg-accent/10 text-accent",
-    },
-  ];
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -143,23 +128,7 @@ const Contact = () => {
                 {t('pages.contact.info.title')}
               </h2>
               
-              {contactInfo.map((info) => (
-                <Card key={info.titleKey} className="border-border/50">
-                  <CardContent className="p-4 flex items-start gap-4">
-                    <div className={`w-12 h-12 rounded-xl ${info.color} flex items-center justify-center shrink-0`}>
-                      <info.icon className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground mb-1">
-                        {t(info.titleKey)}
-                      </h3>
-                      <p className="text-muted-foreground text-sm">
-                        {info.value}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+              <p className="text-muted-foreground text-sm">{t('pages.contact.info.pending')}</p>
 
             </div>
 

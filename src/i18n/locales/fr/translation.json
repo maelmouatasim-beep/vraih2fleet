@@ -157,7 +157,7 @@
         "title": "Tous les outils pour réussir votre transition",
         "subtitle": "H2Fleet Planner vous accompagne de l'analyse initiale à la mise en œuvre de votre stratégie de transition énergétique.",
         "cta": {
-          "start": "Démarrer gratuitement",
+          "start": "Demander une démo",
           "demo": "Voir une démo"
         }
       },
@@ -178,10 +178,10 @@
           "title": "Gestion de scénarios",
           "description": "Créez et comparez différents scénarios de transition pour trouver la meilleure stratégie.",
           "details": [
-            "Comparaison multi-scénarios côte à côte",
-            "Paramètres personnalisables par groupe",
-            "Templates pré-configurés",
-            "Duplication et modification rapide"
+            "Trois stratégies comparées côte à côte",
+            "Technologie choisie véhicule par véhicule",
+            "Stress test : 3 scénarios et tornade",
+            "Stratégie appliquée au plan en un clic"
           ]
         },
         "infrastructure": {
@@ -218,10 +218,10 @@
           "title": "Rapports professionnels",
           "description": "Générez des rapports détaillés pour vos présentations et prises de décision.",
           "details": [
-            "Export PDF haute qualité",
-            "Export Excel avec données brutes",
-            "Graphiques et tableaux personnalisables",
-            "Résumés exécutifs automatiques"
+            "Rapport PDF pour le conseil (fr/en)",
+            "Classeur Excel en 3 feuilles",
+            "Annexe des hypothèses avec leurs sources",
+            "Résumé et stress test inclus"
           ]
         }
       },
@@ -230,7 +230,7 @@
         "subtitle": "Une suite complète d'outils pour gérer tous les aspects de votre transition.",
         "telematics": {
           "title": "Intégration Télématique",
-          "description": "Connectez Geotab ou Samsara pour importer vos données réelles et générer automatiquement des scénarios optimisés."
+          "description": "Connectez Geotab ou Samsara pour importer vos véhicules et leurs consommations réelles ; aucune modification automatique de votre plan."
         },
         "subsidies": {
           "title": "Subventions & Financement",
@@ -272,120 +272,8 @@
       "cta": {
         "title": "Prêt à transformer votre flotte ?",
         "subtitle": "Commencez votre analyse dès aujourd'hui et découvrez le potentiel de votre transition.",
-        "start": "Créer mon compte gratuit",
+        "start": "Demander une démo",
         "pricing": "Voir les tarifs"
-      }
-    },
-    "pricing": {
-      "title": "Tarifs",
-      "comparison": {
-        "title": "Comparaison détaillée",
-        "subtitle": "Tous les plans incluent les mêmes fonctionnalités de base. La tarification évolue avec la taille de votre flotte.",
-        "feature": "Fonctionnalité",
-        "features": [
-          {
-            "name": "Prix par véhicule",
-            "small": "24$/mois",
-            "medium": "19$/mois",
-            "large": "14$/mois"
-          },
-          {
-            "name": "Taille de flotte",
-            "small": "10-49",
-            "medium": "50-199",
-            "large": "200+"
-          },
-          {
-            "name": "Projets",
-            "small": "Illimité",
-            "medium": "Illimité",
-            "large": "Illimité"
-          },
-          {
-            "name": "Scénarios",
-            "small": "Illimité",
-            "medium": "Illimité",
-            "large": "Illimité"
-          },
-          {
-            "name": "Analyse TCO",
-            "small": "✓",
-            "medium": "✓",
-            "large": "✓"
-          },
-          {
-            "name": "Suivi CO₂",
-            "small": "✓",
-            "medium": "✓",
-            "large": "✓"
-          },
-          {
-            "name": "Export PDF & Excel",
-            "small": "✓",
-            "medium": "✓",
-            "large": "✓"
-          },
-          {
-            "name": "Accès API",
-            "small": "—",
-            "medium": "✓",
-            "large": "✓"
-          },
-          {
-            "name": "Support prioritaire",
-            "small": "—",
-            "medium": "✓",
-            "large": "✓"
-          },
-          {
-            "name": "SSO/SAML",
-            "small": "—",
-            "medium": "—",
-            "large": "✓"
-          },
-          {
-            "name": "Manager dédié",
-            "small": "—",
-            "medium": "—",
-            "large": "✓"
-          }
-        ]
-      },
-      "faq": {
-        "title": "Questions fréquentes",
-        "subtitle": "Tout ce que vous devez savoir sur nos tarifs."
-      },
-      "faqs": [
-        {
-          "question": "Y a-t-il un essai gratuit ?",
-          "answer": "Oui ! Tous les plans incluent un essai gratuit de 14 jours. Aucune carte de crédit requise pour commencer."
-        },
-        {
-          "question": "Comment ma taille de flotte est-elle calculée ?",
-          "answer": "La taille de flotte est basée sur le nombre de véhicules actifs dans votre compte. Vous pouvez ajouter ou retirer des véhicules à tout moment."
-        },
-        {
-          "question": "Puis-je changer de plan au fur et à mesure que ma flotte grandit ?",
-          "answer": "Absolument. Vous pouvez passer à un plan supérieur ou inférieur à tout moment. La facturation s'ajuste automatiquement en fonction de votre taille de flotte actuelle."
-        },
-        {
-          "question": "Quels moyens de paiement acceptez-vous ?",
-          "answer": "Nous acceptons toutes les principales cartes de crédit (Visa, Mastercard, American Express) et les virements bancaires ACH pour les plans annuels."
-        },
-        {
-          "question": "La facturation annuelle est-elle disponible ?",
-          "answer": "Oui, la facturation annuelle est disponible avec 2 mois offerts (payez 10 mois, obtenez 12)."
-        },
-        {
-          "question": "Quel support est inclus ?",
-          "answer": "Tous les plans incluent le support par email. Les plans Flotte Moyenne et Grande incluent un support prioritaire avec des temps de réponse plus rapides."
-        }
-      ],
-      "cta": {
-        "title": "Prêt à commencer ?",
-        "subtitle": "Rejoignez les entreprises qui planifient efficacement leur transition énergétique de flotte.",
-        "start": "Démarrer l'essai gratuit",
-        "contact": "Contacter les ventes"
       }
     },
     "about": {
@@ -461,11 +349,12 @@
           "title": "Horaires d'ouverture",
           "weekdays": "Lundi - Vendredi : 9h00 - 18h00",
           "weekend": "Weekend : Fermé"
-        }
+        },
+        "pending": "Les coordonnées publiques (courriel, adresse) seront publiées prochainement. En attendant, le formulaire ci-contre est le meilleur moyen de nous joindre."
       },
       "form": {
         "title": "Envoyez-nous un message",
-        "subtitle": "Nous vous répondrons dans les 24-48h.",
+        "subtitle": "Nous vous répondrons dès que possible.",
         "fields": {
           "name": "Nom complet",
           "email": "Email professionnel",
@@ -493,7 +382,7 @@
         "submitting": "Envoi en cours...",
         "success": {
           "title": "Message envoyé !",
-          "message": "Notre équipe vous contactera dans les 24-48h."
+          "message": "Merci ! Notre équipe vous recontactera."
         },
         "error": {
           "title": "Erreur",
@@ -560,11 +449,11 @@
       },
       "telematics": {
         "title": "Intégration télématique",
-        "description": "Connectez votre compte Geotab ou Samsara pour importer vos données réelles. Générez automatiquement des scénarios basés sur vos usages."
+        "description": "Connectez votre compte Geotab ou Samsara pour importer vos véhicules et leurs consommations réelles dans Ma flotte."
       },
       "subsidies": {
         "title": "Subventions & financement",
-        "description": "Accédez aux programmes fédéraux et provinciaux canadiens. Calculez votre éligibilité et préparez vos dossiers pré-remplis."
+        "description": "Programmes fédéraux et québécois appliqués véhicule par véhicule, avec la règle et la raison de chaque montant, et suivi de vos demandes."
       },
       "infrastructure": {
         "title": "Planification infrastructure",
@@ -572,7 +461,7 @@
       },
       "analytics": {
         "title": "Analytique avancée",
-        "description": "Suivez ROI, période de retour et analyses de sensibilité. Comparez les scénarios avec projections financières détaillées."
+        "description": "Économie actualisée, délai de récupération, stress test sur les hypothèses sourcées et rapport pour le conseil (PDF et Excel)."
       }
     },
     "howItWorks": {
@@ -672,13 +561,13 @@
     },
     "cta": {
       "title": "Prêt à accélérer votre transition ?",
-      "subtitle": "Rejoignez les entreprises qui planifient efficacement leur passage aux véhicules propres. Commencez votre premier projet en quelques minutes.",
+      "subtitle": "Partez de votre flotte réelle pour obtenir un plan de remplacement chiffré, finançable et défendable. Commencez votre premier projet en quelques minutes.",
       "createAccount": "Demander une démo",
       "requestDemo": "Demander une démo",
       "trust": {
         "secure": "Données sécurisées",
-        "trial": "Essai 14 jours gratuit",
-        "support": "Support réactif"
+        "trial": "Méthodologie publique",
+        "support": "Hypothèses sourcées"
       }
     },
     "footer": {
@@ -712,7 +601,6 @@
     "navbar": {
       "product": "Produit",
       "features": "Fonctionnalités",
-      "calculator": "Calculateur gratuit",
       "demo": "Démo",
       "comparisons": "Comparaisons",
       "solutions": "Solutions",
@@ -1686,7 +1574,7 @@
       },
       "branding": {
         "title": "Optimisez votre transition énergétique",
-        "subtitle": "Rejoignez les gestionnaires de flottes qui utilisent H2Fleet pour planifier leur passage à l'électrique et l'hydrogène.",
+        "subtitle": "Planifiez le passage de votre flotte à l'électrique et à l'hydrogène, véhicule par véhicule.",
         "feature1": "Calcul TCO précis et personnalisé",
         "feature2": "Comparaison hydrogène vs électrique",
         "feature3": "Recommandations intelligentes",
@@ -2363,98 +2251,11 @@
     "submitting": "Envoi en cours...",
     "success": {
       "title": "Demande envoyée !",
-      "message": "Notre équipe vous contactera dans les 24-48h pour planifier votre démo."
+      "message": "Merci ! Notre équipe vous recontactera pour planifier votre démo."
     },
     "error": {
       "title": "Erreur",
       "message": "La demande n'a pas pu être envoyée. Réessayez."
-    }
-  },
-  "demo": {
-    "hero": {
-      "title": "Découvrez H2Fleet en action",
-      "subtitle": "Explorez toutes les fonctionnalités de notre plateforme de planification pour la transition énergétique des flottes."
-    },
-    "tour": {
-      "title": "Tour guidé des fonctionnalités",
-      "subtitle": "Découvrez étape par étape comment H2Fleet vous aide à planifier votre transition."
-    },
-    "placeholder": {
-      "replace": "Remplacer par :"
-    },
-    "features": {
-      "dashboard": {
-        "title": "Tableau de bord centralisé",
-        "description": "Vue d'ensemble de vos projets avec KPIs temps réel : nombre de véhicules analysés, économies CO₂ potentielles, statut des scénarios. Accès rapide aux projets récents et notifications importantes."
-      },
-      "projects": {
-        "title": "Gestion multi-projets",
-        "description": "Organisez vos études par client, région ou phase. Collaboration en équipe avec partage, commentaires et historique des versions. Démo « Ville de Rivière-Claire » (municipalité fictive, ~40 véhicules) en un clic pour explorer le parcours."
-      },
-      "scenarios": {
-        "title": "Scénarios TCO comparatifs",
-        "description": "Créez des scénarios diesel, 100% électrique ou mixte BEV/FCEV. Comparez CAPEX véhicules et infrastructure, OPEX sur 10-15 ans, NPV et période de retour. Export PDF professionnel inclus."
-      },
-      "analytics": {
-        "title": "Analytics et suivi ESG",
-        "description": "Suivez vos objectifs environnementaux avec le tracker ESG. Analysez la réduction CO₂ (2.8 kt évitées, 59% vs diesel), comparez scénarios et exportez en PDF ou Excel. Dashboard What-If pour analyses de sensibilité."
-      },
-      "infrastructure": {
-        "title": "Planification infrastructure",
-        "description": "Dimensionnez vos bornes de recharge (niveau 2, DC rapide, ultra-rapide) et stations hydrogène. Intégration automatique des coûts d'installation, mise à niveau du réseau électrique et permis dans le TCO global."
-      },
-      "roadmap": {
-        "title": "Roadmap Builder",
-        "description": "Planifiez votre transition sur 5-10 ans avec Gantt chart interactif. Définissez phases, jalons et chemin critique. Lié aux scénarios pour cohérence des données et suivi budgétaire en temps réel."
-      },
-      "telematics": {
-        "title": "Import télématique",
-        "description": "Connectez Geotab ou Samsara pour importer votre flotte réelle. Kilométrage annuel, consommation carburant, type de route automatiquement détectés. Génération de recommandations de transition par véhicule."
-      },
-      "referenceData": {
-        "title": "Données de référence régionales",
-        "description": "Prix carburants, électricité et hydrogène pour chaque province canadienne. Sources vérifiées avec indicateurs de confiance (Very High, High, Medium). Import/export CSV et historique des mises à jour."
-      },
-      "suppliers": {
-        "title": "Répertoire de fournisseurs",
-        "description": "Plus de 82 fournisseurs canadiens : infrastructure EV (ABB, FLO, ChargePoint), stations H₂ (Air Liquide, ATCO), fabricants de véhicules. Filtrage par type, région, certification et favoris."
-      },
-      "subsidies": {
-        "title": "Calculateur de subventions",
-        "description": "13 programmes fédéraux et provinciaux actifs. Calculez votre éligibilité : jusqu'à 500 000$ iMHZEV + 150 000$ provincial = 650 000$ cumulables par projet. Calendrier des échéances et alertes."
-      },
-      "caseStudies": {
-        "title": "Études de cas documentées",
-        "description": "Projets réels : STM Montréal (40 bus électriques), AZETEC Alberta, Winnipeg Transit. Métriques vérifiées, leçons apprises, résultats TCO et timeline de déploiement détaillée."
-      },
-      "assistant": {
-        "title": "Assistant IA Expert",
-        "description": "Votre guide technique propulsé par GPT-4. Questions sur données de référence, subventions, méthodologie TCO, infrastructure. Réponses bilingues avec recherche web en temps réel et citations."
-      }
-    },
-    "quickStart": {
-      "title": "Démarrez en 3 étapes",
-      "subtitle": "Créez votre premier projet en moins de 5 minutes",
-      "steps": {
-        "step1": {
-          "title": "Créez votre compte",
-          "description": "Inscription gratuite, aucune carte bancaire requise."
-        },
-        "step2": {
-          "title": "Choisissez un template",
-          "description": "Sélectionnez un modèle adapté à votre activité."
-        },
-        "step3": {
-          "title": "Analysez vos résultats",
-          "description": "Visualisez instantanément votre TCO et émissions."
-        }
-      }
-    },
-    "cta": {
-      "title": "Prêt à essayer ?",
-      "subtitle": "Créez votre premier projet gratuitement et découvrez le potentiel de votre transition.",
-      "startFree": "Essayer gratuitement",
-      "viewPricing": "Voir les tarifs"
     }
   },
   "apiKeys": {
@@ -2790,85 +2591,6 @@
     }
   },
   "pages_support": {
-    "support": {
-      "title": "Support",
-      "subtitle": "Obtenez de l'aide de notre équipe support.",
-      "prioritySubtitle": "Obtenez une assistance prioritaire de notre équipe d'experts.",
-      "priorityBadge": "Support Prioritaire",
-      "form": {
-        "title": "Contacter le Support",
-        "priorityTitle": "Soumettre une Demande Prioritaire",
-        "subtitle": "Remplissez le formulaire ci-dessous et nous vous répondrons.",
-        "prioritySubtitle": "Votre demande sera traitée en priorité.",
-        "yourName": "Votre Nom",
-        "email": "Email",
-        "subject": "Sujet",
-        "subjectPlaceholder": "Brève description de votre problème",
-        "category": "Catégorie",
-        "categoryPlaceholder": "Sélectionnez une catégorie",
-        "priorityLevel": "Niveau de Priorité",
-        "phoneCallback": "Téléphone pour rappel (optionnel)",
-        "phonePlaceholder": "+1 (555) 123-4567",
-        "message": "Message",
-        "messagePlaceholder": "Décrivez votre problème ou question en détail...",
-        "characters": "caractères",
-        "submit": "Envoyer le Message",
-        "prioritySubmit": "Soumettre la Demande Prioritaire",
-        "submitting": "Envoi en cours..."
-      },
-      "categories": {
-        "technical": "Problème Technique",
-        "billing": "Question Facturation",
-        "feature": "Demande de Fonctionnalité",
-        "account": "Gestion du Compte",
-        "other": "Autre"
-      },
-      "priority": {
-        "high": "Haute - Problème critique affectant les opérations",
-        "medium": "Moyenne - Important mais pas urgent",
-        "low": "Basse - Question générale"
-      },
-      "responseTime": {
-        "title": "Temps de Réponse",
-        "priority": "Sous 4 heures",
-        "priorityDesc": "Le support prioritaire garantit des temps de réponse plus rapides pour vos problèmes critiques.",
-        "standard": "24-48 heures",
-        "standardDesc": "Notre équipe répondra pendant les heures ouvrables."
-      },
-      "benefits": {
-        "title": "Vos Avantages Prioritaires",
-        "standardTitle": "Le Support Inclut",
-        "priority": {
-          "response": "Garantie de réponse sous 4h",
-          "callback": "Option de rappel téléphonique",
-          "queue": "File d'attente prioritaire",
-          "agent": "Agent support dédié"
-        },
-        "standard": {
-          "email": "Support par email",
-          "kb": "Accès à la base de connaissances",
-          "forum": "Forum communautaire"
-        }
-      },
-      "upgrade": {
-        "title": "Besoin d'un support plus rapide ?",
-        "subtitle": "Passez à Flotte Moyenne ou Grande pour un support prioritaire avec réponse sous 4h.",
-        "cta": "Voir les Plans"
-      },
-      "contact": {
-        "title": "Autres Moyens de Nous Contacter",
-        "email": "support@h2fleet.com",
-        "phone": "+1 (800) H2-FLEET"
-      },
-      "toast": {
-        "missing": "Informations manquantes",
-        "missingDesc": "Veuillez remplir tous les champs obligatoires.",
-        "prioritySuccess": "Ticket prioritaire soumis !",
-        "prioritySuccessDesc": "Notre équipe répondra sous 4 heures.",
-        "success": "Demande de support soumise !",
-        "successDesc": "Notre équipe répondra sous 24-48 heures."
-      }
-    },
     "admin": {
       "title": "Données de Référence",
       "subtitle": "Gérez les profils de véhicules, prix de l'énergie et facteurs d'émission par défaut",
@@ -2971,61 +2693,6 @@
       "badge": "Bientôt Disponible",
       "description": "Notre blog présentera des analyses sur l'électrification des flottes, l'adoption de l'hydrogène, les tendances en durabilité et les actualités du secteur. Restez informé des derniers développements en transport propre.",
       "footer": "Analyses d'experts, études de cas et conseils pratiques pour les gestionnaires de flotte planifiant leur transition énergétique."
-    },
-    "careers": {
-      "title": "Carrières",
-      "badge": "Bientôt Disponible",
-      "description": "Rejoignez notre équipe et participez à façonner l'avenir du transport durable. Nous construisons des outils qui accélèrent la transition vers des flottes à énergie propre en Amérique du Nord.",
-      "footer": "Les postes ouverts en ingénierie, produit, ventes et succès client seront publiés ici prochainement."
-    },
-    "press": {
-      "title": "Presse & Médias",
-      "badge": "Bientôt Disponible",
-      "description": "Trouvez les communiqués de presse, kits média et ressources de marque pour H2Fleet Planner. Pour les demandes médias, veuillez contacter notre équipe communication.",
-      "footer": "Logos, captures d'écran produit et informations sur l'entreprise seront disponibles au téléchargement ici."
-    },
-    "refund": {
-      "title": "Politique de Remboursement",
-      "quickSummary": "Résumé Rapide",
-      "quickSummaryText": "Nous offrons un essai gratuit de 14 jours sans paiement requis. Après abonnement, des remboursements au prorata sont disponibles dans les 7 jours suivant une mise à niveau. Les abonnements mensuels peuvent être annulés à tout moment mais ne sont pas remboursés pour les mois partiels.",
-      "cards": {
-        "freeTrial": "Essai Gratuit",
-        "freeTrialDesc": "14 jours gratuits, sans paiement requis",
-        "upgradeRefunds": "Remboursement Mise à Niveau",
-        "upgradeRefundsDesc": "Au prorata sous 7 jours après mise à niveau",
-        "noPartialMonth": "Pas de Mois Partiel",
-        "noPartialMonthDesc": "Pas de remboursement pour les mois partiels"
-      },
-      "sections": {
-        "freeTrial": {
-          "title": "1. Essai Gratuit de 14 Jours",
-          "content": "Tous les nouveaux utilisateurs sont éligibles à un essai gratuit de 14 jours de H2Fleet Planner."
-        },
-        "monthly": {
-          "title": "2. Facturation Abonnement Mensuel"
-        },
-        "upgrade": {
-          "title": "3. Politique de Mise à Niveau et Rétrogradation"
-        },
-        "cancellation": {
-          "title": "4. Processus d'Annulation"
-        },
-        "exceptions": {
-          "title": "5. Exceptions de Remboursement"
-        },
-        "disputes": {
-          "title": "6. Litiges et Coordonnées"
-        },
-        "changes": {
-          "title": "7. Modifications de Cette Politique"
-        }
-      },
-      "table": {
-        "title": "Tableau Récapitulatif",
-        "scenario": "Scénario",
-        "refundAvailable": "Remboursement Disponible ?",
-        "details": "Détails"
-      }
     }
   },
   "pages_telematics": {
@@ -3972,8 +3639,8 @@
     },
     "cta": {
       "mainTitle": "Prêt à démarrer votre transition ?",
-      "mainDescription": "Créez votre compte gratuit et utilisez notre calculateur TCO pour comparer les scénarios pour votre flotte",
-      "getStarted": "Commencer gratuitement",
+      "mainDescription": "Créez votre compte, importez votre flotte et obtenez un plan de remplacement chiffré véhicule par véhicule.",
+      "getStarted": "Créer un compte",
       "seeDemo": "Voir la démo",
       "readGuide": "Lire le guide",
       "startCalculation": "Lancer le calcul",
@@ -4069,12 +3736,6 @@
       "climate": {
         "title": "Climat froid canadien",
         "description": "Les températures froides impactent significativement l'autonomie. Planifiez en conséquence.",
-        "impact": {
-          "title": "Impact sur l'autonomie par température",
-          "minus10": "Froid modéré : autonomie réduite",
-          "minus20": "Grand froid : réduction plus marquée",
-          "minus30": "Froid extrême : prévoir une marge d’autonomie"
-        },
         "solutions": {
           "title": "Solutions pratiques",
           "items": [
@@ -4085,9 +3746,10 @@
           ]
         },
         "callout": {
-          "title": "Étude de cas : Ville de Québec",
+          "title": "À vérifier sur votre flotte",
           "description": "Le moteur applique la majoration hivernale sourcée du registre à la consommation des véhicules électriques ; vérifiez l'autonomie sur vos trajets réels."
-        }
+        },
+        "registry": "Pas de pourcentage générique ici : le moteur applique la majoration hivernale du registre d'hypothèses (statut et source affichés dans la Bibliothèque) et l'étape Faisabilité chiffre l'autonomie hivernale de chacun de vos véhicules face à son kilométrage journalier et à la fenêtre de recharge de son garage."
       },
       "tco": {
         "title": "Comparaison TCO",
@@ -4222,11 +3884,6 @@
       "availability": {
         "title": "Disponibilité au Québec",
         "description": "Le réseau de stations GNR/GNC est en croissance mais encore limité au Canada",
-        "stations": {
-          "quebec": "Québec : 10 stations",
-          "ontario": "Ontario : 15 stations",
-          "alberta": "Alberta : 20+ stations"
-        },
         "callout": {
           "title": "Vérifiez la couverture",
           "description": "Y a-t-il des stations sur vos routes habituelles ? Vérifiez avant de vous engager"
@@ -4266,7 +3923,7 @@
         ]
       },
       "caseStudy": {
-        "title": "Étude de cas : Amazon Montréal",
+        "title": "À chiffrer sur votre flotte",
         "description": "Les économies dépendent de votre flotte : l'étape Faisabilité les chiffre véhicule par véhicule."
       },
       "cta": {
@@ -4423,7 +4080,7 @@
       },
       "provincial": {
         "title": "Programmes provinciaux (Québec)",
-        "description": "Écocamionnage (2026-2028) : 145,5 M$ sur 3 ans. Couvre nouveaux véhicules propres, VE usagés et projets logistiques. État : Réouvert décembre 2025."
+        "description": "Écocamionnage (2025-2028) : aide à l'achat de véhicules propres. Plafonds, statut et date de vérification : voir le registre des programmes dans la Bibliothèque."
       },
       "optimization": {
         "title": "Optimisation du financement",
@@ -4450,7 +4107,7 @@
       },
       "routes": {
         "title": "Optimisation des routes",
-        "description": "Assignation intelligente des véhicules selon l'autonomie : Routes <80 km = tout BEV, 80-150 km = BEV avec >80% charge, 150-250 km = BEV + arrêt DC planifié, >250 km = Diesel/H₂."
+        "description": "Comparez la distance journalière maximale de chaque véhicule à son autonomie hivernale (étape Faisabilité). Au-delà, prévoyez une marge, une recharge rapide planifiée ou une autre technologie."
       },
       "energy": {
         "title": "Gestion de l'énergie",
@@ -4676,225 +4333,6 @@
       "financingConfirmed": "🧾 Vous avez une lettre d'octroi ? Saisissez la subvention confirmée avec sa référence : elle remplace l'estimation dans le plan et le rapport."
     },
     "notConfigured": "L'assistant IA n'est pas encore activé sur ce site de test."
-  },
-  "featureDoc": {
-    "title": "Documentation des fonctionnalités",
-    "subtitle": "Guide complet des modules H2Fleet Planner",
-    "version": "Version",
-    "generatedOn": "Généré le",
-    "tableOfContents": "Table des matières",
-    "keyFeatures": "Fonctionnalités clés",
-    "typicalUseCases": "Cas d'utilisation typiques",
-    "appendix": "Annexe",
-    "technicalStack": "Stack technique",
-    "contactSupport": "Contact & Support",
-    "downloadButton": "Télécharger la documentation",
-    "generating": "Génération...",
-    "downloadSuccess": "Documentation téléchargée",
-    "downloadSuccessDescription": "Le PDF a été enregistré dans votre dossier de téléchargements.",
-    "downloadError": "Échec du téléchargement",
-    "downloadErrorDescription": "Une erreur s'est produite lors de la génération du PDF.",
-    "projectPresentation": "Présentation du projet",
-    "theChallenge": "Le défi",
-    "challengeText": "La transition vers des flottes de véhicules lourds zéro-émission est complexe : coûts énergétiques fluctuants, réglementation en évolution, options technologiques diverses et investissements d'infrastructure significatifs. Les gestionnaires de flotte ont besoin d'outils fiables pour prendre des décisions éclairées basées sur des données financières et opérationnelles solides.",
-    "ourSolution": "Notre solution",
-    "solutionText": "H2Fleet Planner est une plateforme SaaS B2B qui permet aux gestionnaires de flotte de simuler les transitions diesel vers EV/H2, de comparer des scénarios avec une analyse du Coût Total de Possession (TCO), et de planifier des feuilles de route de déploiement phasé sur des horizons de 10 à 15 ans. Notre plateforme combine des données de référence régionales, des outils de planification d'infrastructure et des bases de données de subventions pour fournir un support décisionnel complet.",
-    "targetAudience": "À qui s'adresse H2Fleet ?",
-    "audienceList": [
-      "Gestionnaires de flottes de transport et logistique",
-      "Développeurs de projets et planificateurs d'infrastructure",
-      "Consultants en transition énergétique",
-      "Municipalités et agences gouvernementales"
-    ],
-    "valueProposition": "Bénéfices clés",
-    "valueList": [
-      "Prise de décision basée sur les données avec analyse TCO, CAPEX/OPEX",
-      "Comparaison multi-scénarios (Diesel, BEV, FCEV, Hybride)",
-      "Accès à la base de données de subventions et au répertoire de fournisseurs",
-      "Planification de déploiement phasé avec feuille de route Gantt",
-      "Plateforme bilingue (Anglais/Français) pour le marché canadien"
-    ],
-    "modules": {
-      "dashboard": {
-        "title": "Tableau de bord",
-        "description": "Le tableau de bord sert de centre de commande central, offrant une vue d'ensemble en temps réel de l'avancement de votre transition de flotte. Il affiche les indicateurs de performance clés, les résumés de projets et un accès rapide à toutes les fonctionnalités principales de la plateforme.",
-        "features": [
-          "Vue d'ensemble de la composition de flotte avec nombre de véhicules par type de carburant",
-          "Cartes récapitulatives TCO montrant le coût total de possession pour tous les scénarios",
-          "Liste des projets récents avec navigation rapide",
-          "Indicateurs de qualité des données et statut des données de référence",
-          "Export CSV en un clic pour les données de flotte"
-        ],
-        "useCases": [
-          "Vérification matinale de l'avancement de la transition",
-          "Reporting exécutif et mises à jour de statut",
-          "Navigation rapide vers les projets actifs"
-        ],
-        "screenshotCaption": "Figure 1 : Aperçu du tableau de bord avec KPIs et projets récents"
-      },
-      "scenarios": {
-        "title": "Scénarios TCO",
-        "description": "Le module Scénarios est le moteur analytique principal de H2Fleet Planner. Il vous permet de créer, comparer et analyser plusieurs scénarios de transition de flotte incluant diesel de référence, batterie électrique (BEV), pile à combustible hydrogène (FCEV) et configurations de flotte mixte.",
-        "features": [
-          "Comparaison multi-scénarios avec analyse TCO côte à côte",
-          "Composition de flotte flexible avec plusieurs catégories de véhicules",
-          "Horizon d'analyse configurable (5-20 ans) et taux d'actualisation",
-          "Comparaison automatique avec le scénario diesel de référence",
-          "Calcul des émissions CO2 et suivi des réductions",
-          "Export PDF des résultats détaillés du scénario"
-        ],
-        "useCases": [
-          "Comparaison BEV vs FCEV pour le transport longue distance",
-          "Construction d'un business case pour l'électrification de flotte",
-          "Analyse de sensibilité sur les variations de prix des carburants"
-        ],
-        "screenshotCaption": "Figure 2 : Formulaire de création de scénario avec composition de flotte"
-      },
-      "analytics": {
-        "title": "Analytique avancée",
-        "description": "Le module Analytique fournit des insights approfondis sur vos données de transition de flotte grâce à des visualisations interactives, des analyses What-If et un suivi ESG. Il permet une prise de décision basée sur les données en explorant différents paramètres et leur impact sur le TCO et les émissions.",
-        "features": [
-          "Analyse What-If avec ajustements de paramètres en temps réel",
-          "Graphiques d'analyse de sensibilité pour les facteurs de coût clés",
-          "Suivi des objectifs ESG avec définition de cibles",
-          "Visualisations comparatives de flotte entre scénarios",
-          "Projections de coûts et graphiques de répartition des investissements",
-          "Calculs de ROI et analyse de période de retour"
-        ],
-        "useCases": [
-          "Comprendre l'impact des changements de prix de l'électricité sur le TCO BEV",
-          "Suivre les progrès vers les objectifs de durabilité de l'entreprise",
-          "Présenter l'analyse d'investissement aux parties prenantes"
-        ],
-        "screenshotCaption": "Figure 3 : Tableau de bord analytique avec analyse What-If"
-      },
-      "infrastructure": {
-        "title": "Planification d'infrastructure",
-        "description": "Le module Infrastructure vous aide à planifier et dimensionner l'infrastructure de recharge et de ravitaillement nécessaire pour votre flotte zéro-émission. Il calcule les besoins en stations basés sur la taille de flotte, la demande énergétique quotidienne et les patterns opérationnels.",
-        "features": [
-          "Dimensionnement automatique des stations de recharge selon les besoins de flotte",
-          "Planification de capacité des stations hydrogène",
-          "Analyse de capacité réseau et besoins de mise à niveau",
-          "Carte interactive de l'infrastructure avec emplacements de dépôts",
-          "Alertes de faisabilité pour les contraintes de réseau électrique",
-          "Calculs CAPEX et OPEX de l'infrastructure"
-        ],
-        "useCases": [
-          "Planification de l'infrastructure de recharge pour une nouvelle flotte BEV",
-          "Évaluation de l'investissement en station hydrogène pour les opérations régionales",
-          "Identification des besoins de mise à niveau réseau avant déploiement"
-        ],
-        "screenshotCaption": "Figure 4 : Planification d'infrastructure avec besoins en stations"
-      },
-      "roadmap": {
-        "title": "Constructeur de feuille de route",
-        "description": "Le constructeur de feuille de route vous permet de créer des calendriers de déploiement détaillés pour votre transition de flotte. Il décompose votre transition en phases et jalons, vous aidant à visualiser le calendrier d'implémentation et suivre les progrès.",
-        "features": [
-          "Visualisation Gantt des phases de transition",
-          "Suivi des jalons avec dates d'échéance et assignations",
-          "Gestion des phases avec allocation budgétaire",
-          "Suivi des progrès avec pourcentages de complétion",
-          "Système d'alertes pour les échéances à venir",
-          "Intégration avec les résultats de scénarios"
-        ],
-        "useCases": [
-          "Planification d'une feuille de route d'électrification sur 5 ans",
-          "Coordination de l'approvisionnement en véhicules avec le déploiement d'infrastructure",
-          "Suivi des progrès par rapport aux échéances réglementaires"
-        ],
-        "screenshotCaption": "Figure 5 : Constructeur de feuille de route avec vue Gantt"
-      },
-      "telematics": {
-        "title": "Intégration télématique",
-        "description": "Le module Télématique vous permet d'importer des données opérationnelles réelles depuis vos systèmes de gestion de flotte. En analysant les patterns d'utilisation réels des véhicules, le kilométrage quotidien et la consommation de carburant, la plateforme peut générer des scénarios plus précis.",
-        "features": [
-          "Import de données de flotte via CSV ou intégration API",
-          "Regroupement de véhicules basé sur les patterns opérationnels",
-          "Recommandations technologiques automatiques par groupe de véhicules",
-          "Scénarios auto-générés basés sur les données réelles",
-          "Tableau de bord analytique de flotte avec insights d'utilisation",
-          "Intégration avec les principaux fournisseurs de télématique"
-        ],
-        "useCases": [
-          "Import de données Geotab pour identifier les candidats à l'électrification",
-          "Analyse du kilométrage quotidien pour déterminer les besoins d'autonomie",
-          "Création de scénarios basés sur les données d'opérations réelles"
-        ],
-        "screenshotCaption": "Figure 6 : Import télématique et regroupement de véhicules"
-      },
-      "referenceData": {
-        "title": "Données de référence",
-        "description": "Le module Données de référence donne accès à des données de marché sélectionnées incluant prix des véhicules, coûts énergétiques, facteurs d'émission et plus. Toutes les données sont spécifiques à la région et régulièrement mises à jour.",
-        "features": [
-          "Prix régionaux de l'énergie (électricité, hydrogène, diesel)",
-          "Spécifications et prix des véhicules par catégorie",
-          "Facteurs d'émission CO2 par source d'énergie",
-          "Indicateurs de fraîcheur des données et citations de sources",
-          "Fonctionnalité import/export pour la gestion des données",
-          "Création de données personnalisées pour informations propriétaires"
-        ],
-        "useCases": [
-          "Vérification des prix actuels de l'hydrogène dans votre région",
-          "Personnalisation des prix véhicules basés sur des devis négociés",
-          "Révision des facteurs d'émission pour les calculs de crédits carbone"
-        ],
-        "screenshotCaption": "Figure 7 : Tableau de données de référence avec prix de l'énergie"
-      },
-      "suppliers": {
-        "title": "Répertoire des fournisseurs",
-        "description": "Le répertoire des fournisseurs est une base de données sélectionnée de fabricants de véhicules, fournisseurs d'infrastructure, fournisseurs de carburant et prestataires de services dans l'écosystème du transport zéro-émission.",
-        "features": [
-          "Base de données de fournisseurs avec filtres de recherche",
-          "Carte interactive montrant les emplacements des fournisseurs",
-          "Profils de fournisseurs avec produits et services",
-          "Système de favoris pour présélectionner les fournisseurs",
-          "Informations de contact et statut de vérification",
-          "Filtrage par type de fournisseur, région et certifications"
-        ],
-        "useCases": [
-          "Trouver des fabricants de camions à pile à combustible hydrogène",
-          "Identifier des installateurs d'infrastructure de recharge dans votre région",
-          "Construire une liste de partenaires potentiels pour appel d'offres"
-        ],
-        "screenshotCaption": "Figure 8 : Répertoire des fournisseurs avec vue carte"
-      },
-      "subsidies": {
-        "title": "Subventions & Financement",
-        "description": "Le module Subventions fournit une base de données complète des incitatifs gouvernementaux, subventions et programmes de financement disponibles pour la transition de flotte zéro-émission. Il inclut les programmes fédéraux, provinciaux et municipaux avec critères d'éligibilité.",
-        "features": [
-          "Base de données des programmes incitatifs fédéraux et provinciaux",
-          "Calculateur d'éligibilité basé sur la flotte et le type de véhicule",
-          "Vue calendrier avec dates limites de candidature",
-          "Assistant subventions alimenté par IA pour les conseils",
-          "Liens directs vers les portails de candidature",
-          "Suivi de statut (actif, expiré, à venir)"
-        ],
-        "useCases": [
-          "Trouver les incitatifs disponibles pour les camions électriques Classe 8",
-          "Planifier les candidatures autour des échéances de programmes",
-          "Calculer la valeur totale des incitatifs pour un achat de flotte"
-        ],
-        "screenshotCaption": "Figure 9 : Calculateur de subventions avec programmes éligibles"
-      },
-      "helpAssistant": {
-        "title": "Aide & Assistant IA",
-        "description": "Le module Aide & Assistant IA fournit des ressources de support complètes incluant documentation, tutoriels vidéo, FAQ et un assistant alimenté par IA. L'assistant IA peut répondre aux questions sur la plateforme et fournir des conseils sur les meilleures pratiques de transition.",
-        "features": [
-          "Assistant alimenté par IA pour l'aide contextuelle",
-          "Documentation de la plateforme et guides utilisateur",
-          "Tutoriels vidéo pour les workflows clés",
-          "Base de données de questions fréquentes",
-          "Suggestions proactives basées sur le contexte utilisateur",
-          "Support multilingue (EN/FR)"
-        ],
-        "useCases": [
-          "Obtenir des réponses rapides sur la méthodologie de calcul TCO",
-          "Apprendre à créer votre premier scénario",
-          "Comprendre les recommandations de dimensionnement d'infrastructure"
-        ],
-        "screenshotCaption": "Figure 10 : Assistant IA fournissant des conseils contextuels"
-      }
-    }
   },
   "tasks": {
     "title": "Tâches",

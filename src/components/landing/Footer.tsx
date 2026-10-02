@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from "react-router-dom";
-import { Leaf, Linkedin, Twitter, Github } from "lucide-react";
+import { Leaf} from "lucide-react";
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -42,32 +42,7 @@ const Footer = () => {
             <p className="text-muted-foreground text-sm mb-6">
               {t('landing.footer.description')}
             </p>
-            <div className="flex gap-4">
-              <a 
-                href="https://linkedin.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-              >
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a 
-                href="https://twitter.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-              >
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a 
-                href="https://github.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-              >
-                <Github className="w-4 h-4" />
-              </a>
-            </div>
+            {/* Liens vers des réseaux sociaux retirés : aucun compte H2Fleet officiel n'existe encore (Phase 4). */}
           </div>
 
           {/* Product links */}
