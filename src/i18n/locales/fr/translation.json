@@ -20,7 +20,7 @@
       "annualKm": "km/an",
       "consumption": "Conso /100 km",
       "source": "Source",
-      "depot": "Dépôt",
+      "depot": "Garage",
       "status": "Statut",
       "make": "Marque",
       "model": "Modèle",
@@ -5901,7 +5901,7 @@
         "title": "Aucun véhicule à évaluer",
         "subtitle": "Sélectionnez d'abord les véhicules du projet à l'étape Flotte."
       },
-      "disclaimer": "L'autonomie n'est pas modélisée dans cette version : les usages longue distance et hors route sont signalés comme réserves. Les montants reposent sur les hypothèses du registre (statuts et dates de vérification dans la Bibliothèque) et se raffinent aux étapes suivantes.",
+      "disclaimer": "Autonomie hivernale estimée à partir d'un modèle électrique type de la catégorie (batterie, majoration hiver, charge, réserve — hypothèses « estimation ») et de la fenêtre de recharge du garage ; les usages longue distance et hors route restent signalés comme réserves. Les montants reposent sur les hypothèses du registre (statuts et dates de vérification dans la Bibliothèque).",
       "outOfHorizon": "Remplacement prévu en {{annee}}, après l'horizon d'analyse de {{horizon}} ans — véhicule exclu des calculs et des totaux. Rapprochez l'année de remplacement ou allongez l'horizon du projet pour l'évaluer.",
       "postpone": {
         "badge": "À reporter",
@@ -6019,7 +6019,7 @@
         "operating": "Fonctionnement",
         "gap": "Écart vs statu quo"
       },
-      "note": "Montants en dollars courants (vue budgétaire). Un véhicule sans technologie cible reste au diesel (statu quo) ; ajustez-le à l'étape Flotte. L'infrastructure est comptée à l'année de référence."
+      "note": "Montants en dollars courants (vue budgétaire). Un véhicule sans technologie cible reste au diesel (statu quo) ; ajustez-le à l'étape Flotte. L'infrastructure de chaque garage est comptée l'année d'arrivée de ses premiers véhicules électriques."
     },
     "financing": {
       "stats": {

@@ -5901,7 +5901,7 @@
         "title": "No vehicles to assess",
         "subtitle": "First select the project vehicles in the Fleet step."
       },
-      "disclaimer": "Range is not modelled in this version: long-distance and off-road uses are flagged as caveats. Amounts rely on the registry assumptions (statuses and verification dates in the Library) and are refined in the next steps.",
+      "disclaimer": "Winter range estimated from a typical electric model of the category (battery, winter increase, payload, reserve — \"estimate\" assumptions) and the depot's charging window; long-distance and off-road uses remain flagged as caveats. Amounts rely on the registry assumptions (statuses and verification dates in the Library).",
       "outOfHorizon": "Replacement planned in {{annee}}, after the {{horizon}}-year analysis horizon — vehicle excluded from calculations and totals. Move the replacement year closer or extend the project horizon to assess it.",
       "postpone": {
         "badge": "Postpone",
@@ -6019,7 +6019,7 @@
         "operating": "Operating",
         "gap": "Gap vs status quo"
       },
-      "note": "Amounts in current dollars (budget view). A vehicle without a target technology stays diesel (status quo); adjust it in the Fleet step. Infrastructure is booked in the reference year."
+      "note": "Amounts in current dollars (budget view). A vehicle without a target technology stays diesel (status quo); adjust it in the Fleet step. Each depot's infrastructure is booked in the year its first electric vehicles arrive."
     },
     "financing": {
       "stats": {

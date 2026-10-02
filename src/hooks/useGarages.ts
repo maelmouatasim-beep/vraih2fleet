@@ -32,5 +32,5 @@ export function useGarages(organizationId: string | null | undefined) {
   });
   const supprimer = useMutation({ mutationFn: (id: string) => deleteGarage(id), onSuccess: invalider });
 
-  return { garages: query.data ?? [], isLoading: query.isLoading, creer, modifier, supprimer };
+  return { garages: query.data ?? [], isLoading: query.isLoading, creer, modifier, supprimer, rafraichir: invalider };
 }

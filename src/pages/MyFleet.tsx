@@ -65,7 +65,7 @@ export default function MyFleet() {
   const langue = i18n.language === "en" ? "en" : "fr";
   const { organization, isLoading: orgLoading } = useOrganization();
   const { vehicles, isLoading, creer, importer, modifier, supprimer } = useVehicles(organization?.id);
-  const { garages } = useGarages(organization?.id);
+  const { garages, rafraichir: rafraichirGarages } = useGarages(organization?.id);
 
   const [ajoutOuvert, setAjoutOuvert] = useState(false);
   const [edition, setEdition] = useState<VehicleRow | null>(null);
@@ -130,7 +130,7 @@ export default function MyFleet() {
       status: forme.status,
     };
     try {
-      if (commun.depot) await assurerGarages(organization.id, [commun.depot]);
+      if (commun.depot && (await assurerGarages(organization.id, [commun.depot])) > 0) rafraichirGarages();
       if (edition) {
         // la source « télématique » d'un véhicule existant n'est pas
         // écrasée si la consommation n'a pas changé
@@ -194,6 +194,7 @@ export default function MyFleet() {
         ]);
       }
       const n = apercu.valides.length > 0 ? await importer.mutateAsync(apercu.valides) : 0;
+      rafraichirGarages();
       for (const m of apercu.misesAJour) {
         await modifier.mutateAsync({ id: m.id, patch: m.patch });
       }

@@ -40,3 +40,5 @@ coverage/
 
 # Captures du parcours automatisé (npm run e2e:local)
 e2e-captures/
+# Captures du cas terrain (scripts/e2e-terrain.mjs)
+e2e-terrain/
