@@ -101,7 +101,7 @@ function parUnite(
 
 /** Technologie d'un devis de véhicule (texte transcrit) → cible du moteur. */
 export function technologieDevis(texte: string): "bev" | "fcev" | null {
-  const t = texte.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const t = texte.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   if (/hydrog|fuel cell|pile a combustible|fcev/.test(t)) return "fcev";
   if (/electri|batter|bev|\bev\b/.test(t) && !/hybride|hybrid|phev/.test(t)) return "bev";
   return null;

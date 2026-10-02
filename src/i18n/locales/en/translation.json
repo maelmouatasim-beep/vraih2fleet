@@ -4539,7 +4539,8 @@
       "hypotheses": "Assumptions",
       "programs": "Programs",
       "history": "Price history",
-      "overrides": "Client data"
+      "overrides": "Client data",
+      "watch": "Subsidy watch"
     },
     "search": "Search an assumption…",
     "filterStatus": "Filter by status",
@@ -4580,6 +4581,32 @@
         "description": "Actual mileage and consumption, to import into My fleet.",
         "action": "Telematics"
       }
+    },
+    "watch": {
+      "title": "Subsidy watch",
+      "subtitle": "Every week, H2Fleet re-reads the programs' official pages and PDFs and archives the text read. Any detected change (amount, date, status) is checked by the H2Fleet team before being published here; it is never applied automatically. Projects whose plan uses a changed program receive an alert.",
+      "noEvents": "No validated change yet.",
+      "validatedOn": "Validated on {{date}}",
+      "kinds": {
+        "montant": "Amount",
+        "date": "Date",
+        "statut": "Status"
+      },
+      "source": "Official source",
+      "archive": "Archived text",
+      "before": "Before",
+      "after": "Now",
+      "queueTitle_one": "Validation queue — {{count}} change to review",
+      "queueTitle_other": "Validation queue — {{count}} changes to review",
+      "queueSubtitle": "H2Fleet administrators only. Compare the excerpt with the official source, correct the summary projects will see, then validate or reject. Validating does not change the program registry: update it in the code after reading the source.",
+      "queueEmpty": "No pending change.",
+      "summaryFr": "Summary (French)",
+      "summaryEn": "Summary (English)",
+      "note": "Internal note (optional)",
+      "validate": "Validate",
+      "reject": "Reject",
+      "validated": "Change validated: affected projects are alerted",
+      "rejected": "Change rejected"
     }
   },
   "organization": {
@@ -4994,7 +5021,10 @@
       "verified": "Verified",
       "toValidate": "To validate",
       "verifiedOn": "verified on {{date}}",
-      "disclaimer": "Amounts estimated from the scales in force at the verification date: nothing is guaranteed before an application is accepted, and several programs close when funds run out. “To validate” programs have not yet been read at the source — check the link before budgeting."
+      "disclaimer": "Amounts estimated from the scales in force at the verification date: nothing is guaranteed before an application is accepted, and several programs close when funds run out. “To validate” programs have not yet been read at the source — check the link before budgeting.",
+      "programChanges_one": "{{count}} validated change affects a program considered for your plan",
+      "programChanges_other": "{{count}} validated changes affect programs considered for your plan",
+      "programChangesNote": "Changes found by the weekly watch and checked by the H2Fleet team. Plan amounts follow the program registry, updated after reading the source; confirm with the program before applying."
     },
     "reports": {
       "empty": {

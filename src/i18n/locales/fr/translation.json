@@ -4539,7 +4539,8 @@
       "hypotheses": "Hypothèses",
       "programs": "Programmes",
       "history": "Historique des prix",
-      "overrides": "Données client"
+      "overrides": "Données client",
+      "watch": "Veille des subventions"
     },
     "search": "Rechercher une hypothèse…",
     "filterStatus": "Filtrer par statut",
@@ -4580,6 +4581,32 @@
         "description": "Kilométrages et consommations réels, à importer dans Ma flotte.",
         "action": "Télématique"
       }
+    },
+    "watch": {
+      "title": "Veille des subventions",
+      "subtitle": "Chaque semaine, H2Fleet relit les pages et PDF officiels des programmes et archive le texte lu. Tout changement détecté (montant, date, statut) est vérifié par l'équipe H2Fleet avant d'être publié ici ; il n'est jamais appliqué automatiquement. Les projets dont le plan utilise un programme modifié reçoivent une alerte.",
+      "noEvents": "Aucun changement validé pour l’instant.",
+      "validatedOn": "Validé le {{date}}",
+      "kinds": {
+        "montant": "Montant",
+        "date": "Date",
+        "statut": "Statut"
+      },
+      "source": "Source officielle",
+      "archive": "Texte archivé",
+      "before": "Avant",
+      "after": "Maintenant",
+      "queueTitle_one": "File de validation — {{count}} changement à examiner",
+      "queueTitle_other": "File de validation — {{count}} changements à examiner",
+      "queueSubtitle": "Réservé aux administrateurs H2Fleet. Comparez l'extrait à la source officielle, corrigez le résumé que verront les projets, puis validez ou rejetez. Une validation ne modifie pas le registre des programmes : mettez-le à jour dans le code après lecture de la source.",
+      "queueEmpty": "Aucun changement en attente.",
+      "summaryFr": "Résumé (français)",
+      "summaryEn": "Résumé (anglais)",
+      "note": "Note interne (facultative)",
+      "validate": "Valider",
+      "reject": "Rejeter",
+      "validated": "Changement validé : les projets concernés sont alertés",
+      "rejected": "Changement rejeté"
     }
   },
   "organization": {
@@ -4994,7 +5021,10 @@
       "verified": "Vérifié",
       "toValidate": "À valider",
       "verifiedOn": "vérifié le {{date}}",
-      "disclaimer": "Montants estimés selon les barèmes en vigueur à la date de vérification : rien n'est garanti avant l'acceptation d'une demande, et plusieurs programmes ferment à l'épuisement des fonds. Les programmes « à valider » n'ont pas encore été lus à la source — consultez le lien avant de budgéter."
+      "disclaimer": "Montants estimés selon les barèmes en vigueur à la date de vérification : rien n'est garanti avant l'acceptation d'une demande, et plusieurs programmes ferment à l'épuisement des fonds. Les programmes « à valider » n'ont pas encore été lus à la source — consultez le lien avant de budgéter.",
+      "programChanges_one": "{{count}} changement validé touche un programme examiné pour votre plan",
+      "programChanges_other": "{{count}} changements validés touchent des programmes examinés pour votre plan",
+      "programChangesNote": "Changements relevés par la veille hebdomadaire et vérifiés par l'équipe H2Fleet. Les montants du plan suivent le registre des programmes, mis à jour après lecture de la source ; confirmez auprès du programme avant de déposer une demande."
     },
     "reports": {
       "empty": {

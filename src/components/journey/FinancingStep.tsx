@@ -32,6 +32,7 @@ import { cumulProgramme, nomProgramme, traduireLibelleSubvention } from "@/lib/t
 import { texteExplication } from "@/lib/journey/subsidy-explain";
 import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 import ClientDocumentsCard from "@/components/documents/ClientDocumentsCard";
+import ProgramChangesAlert from "./ProgramChangesAlert";
 import { estVehiculeDemo } from "@/lib/demoData/villeDemo";
 
 interface FinancingStepProps {
@@ -77,6 +78,20 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
     return { lignes, total: strategie.subventionsTotal, resteAFinancer, anneeReference, strategie };
   }, [options, projectVehicles, confirmeesParVehicule]);
 
+  // Phase 5.5 — programmes EXAMINÉS pour les véhicules du plan (alertes de
+  // veille) : retenus ou exclus (un changement de date ou de montant peut
+  // rendre applicable un programme aujourd'hui à 0 $).
+  const programmesDuPlan = useMemo(
+    () => [
+      ...new Set(
+        Object.values(donnees?.strategie.explicationsSubventions ?? {})
+          .flat()
+          .map((e) => e.programmeId),
+      ),
+    ],
+    [donnees],
+  );
+
   if (orgLoading || isLoading) {
     return (
       <Card>
@@ -114,6 +129,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
 
   return (
     <div className="space-y-4">
+      <ProgramChangesAlert programmes={programmesDuPlan} />
       {donnees && donnees.strategie.horsHorizon.length > 0 && (
         <p className="text-sm text-muted-foreground">
           {t("journey.strategies.outOfHorizon", {

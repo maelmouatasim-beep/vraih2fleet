@@ -11,6 +11,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import SubsidyWatchCard from "@/components/library/SubsidyWatchCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -101,6 +102,7 @@ export default function Library() {
             <TabsTrigger value="programmes">{t("library.tabs.programs")}</TabsTrigger>
             <TabsTrigger value="historique">{t("library.tabs.history")}</TabsTrigger>
             <TabsTrigger value="surcharges">{t("library.tabs.overrides")}</TabsTrigger>
+            <TabsTrigger value="veille" data-testid="tab-watch">{t("library.tabs.watch")}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="hypotheses" className="space-y-3">
@@ -212,6 +214,10 @@ export default function Library() {
                 </Card>
               );
             })}
+          </TabsContent>
+
+          <TabsContent value="veille">
+            <SubsidyWatchCard />
           </TabsContent>
 
           <TabsContent value="historique">

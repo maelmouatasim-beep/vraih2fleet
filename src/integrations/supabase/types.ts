@@ -2079,6 +2079,104 @@ export type Database = {
           },
         ]
       }
+      subsidy_program_events: {
+        Row: {
+          change_id: string
+          change_kind: string
+          id: string
+          program_id: string
+          source_url: string
+          summary_en: string
+          summary_fr: string
+          validated_at: string
+          validated_by: string | null
+        }
+        Insert: {
+          change_id: string
+          change_kind: string
+          id?: string
+          program_id: string
+          source_url: string
+          summary_en: string
+          summary_fr: string
+          validated_at?: string
+          validated_by?: string | null
+        }
+        Update: {
+          change_id?: string
+          change_kind?: string
+          id?: string
+          program_id?: string
+          source_url?: string
+          summary_en?: string
+          summary_fr?: string
+          validated_at?: string
+          validated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subsidy_program_events_change_id_fkey"
+            columns: ["change_id"]
+            isOneToOne: true
+            referencedRelation: "subsidy_watch_changes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subsidy_watch_changes: {
+        Row: {
+          archive_path: string | null
+          change_kind: string
+          dedupe_key: string
+          detected_at: string
+          excerpt_after: string
+          excerpt_before: string
+          facts_added: Json
+          facts_removed: Json
+          id: string
+          program_id: string
+          review_note: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          source_url: string
+          status: string
+        }
+        Insert: {
+          archive_path?: string | null
+          change_kind: string
+          dedupe_key: string
+          detected_at?: string
+          excerpt_after?: string
+          excerpt_before?: string
+          facts_added?: Json
+          facts_removed?: Json
+          id?: string
+          program_id: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_url: string
+          status?: string
+        }
+        Update: {
+          archive_path?: string | null
+          change_kind?: string
+          dedupe_key?: string
+          detected_at?: string
+          excerpt_after?: string
+          excerpt_before?: string
+          facts_added?: Json
+          facts_removed?: Json
+          id?: string
+          program_id?: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          source_url?: string
+          status?: string
+        }
+        Relationships: []
+      }
       task_attachments: {
         Row: {
           created_at: string | null
@@ -3055,6 +3153,14 @@ export type Database = {
           email: string | null
           full_name: string | null
         }[]
+      }
+      reject_subsidy_change: {
+        Args: { _change: string; _note?: string | null }
+        Returns: undefined
+      }
+      validate_subsidy_change: {
+        Args: { _change: string; _note?: string | null; _summary_en: string; _summary_fr: string }
+        Returns: string
       }
       has_role: {
         Args: {

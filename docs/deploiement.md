@@ -145,6 +145,20 @@ Le workflow *Deploy Pages* vérifie que l'URL correspond au ref.
   Sans les variables : pas de redéploiement (le site en ligne reste tel
   quel), avertissement.
 
+Chaque lundi (et à la demande) :
+
+- **Veille des subventions** (`.github/workflows/veille-subventions.yml`,
+  Phase 5.5) : relit les pages et PDF officiels des programmes du
+  registre, archive le texte lu dans `data/veille/<date>/` (commit sur la
+  branche), compare à la lecture précédente (`data/veille/etat.json`) et
+  dépose chaque changement de montant, date ou statut dans la file de
+  validation (`subsidy_watch_changes`) par l'API de gestion. Un
+  administrateur H2Fleet (`user_roles`) valide ou rejette dans
+  Bibliothèque › Veille des subventions ; rien n'est appliqué
+  automatiquement. La première lecture établit l'état initial (aucun
+  changement). Sans les secrets : détections archivées dans le dépôt
+  seulement.
+
 Premier déploiement : après les étapes 2 et 3, relancer les deux
 workflows (Actions → workflow → **Run workflow**) ou pousser un commit.
 

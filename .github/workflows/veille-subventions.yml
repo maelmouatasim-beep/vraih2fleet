@@ -1,0 +1,57 @@
+# Phase 5, point 5 — VEILLE DES SUBVENTIONS (hebdomadaire).
+# Relit les pages et PDF officiels de chaque programme du registre
+# (src/lib/tco/subsidy-programs.ts), ARCHIVE le texte lu dans
+# data/veille/<date>/ (commit sur la branche), détecte les changements de
+# montant, de date ou de statut (src/lib/veille/detection.ts, aucune IA)
+# et les dépose dans la FILE DE VALIDATION de la base hébergée
+# (subsidy_watch_changes) via l'API de gestion Supabase. Un administrateur
+# H2Fleet valide ou rejette chaque changement dans la Bibliothèque ; rien
+# n'est JAMAIS appliqué automatiquement. Sans secrets Supabase : les
+# détections restent archivées dans le dépôt seulement.
+name: Veille des subventions
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Lundi 10 h 41 UTC (minute décalée — règle CI).
+    - cron: '41 10 * * 1'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: veille-subventions
+  cancel-in-progress: false
+
+jobs:
+  veille:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Installer poppler (pdftotext)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+
+      - name: Lire, archiver, comparer et déposer les changements
+        run: |
+          echo "JOUR=$(date -u +%F)" >> "$GITHUB_ENV"
+          node --experimental-strip-types --no-warnings scripts/veille/veille-subventions.mjs | tee veille.log
+
+      - name: Committer l'archive et l'état de la veille
+        run: |
+          git config user.name "veille-subventions[bot]"
+          git config user.email "actions@github.com"
+          git add data/veille 2>/dev/null || true
+          git commit \
+            -m "data(veille): lecture du $JOUR — $(head -n 1 veille.log | head -c 160)" \
+            -m "Pages et PDF officiels des programmes relus et archivés par le workflow veille-subventions. Les changements détectés attendent la validation d'un administrateur H2Fleet ; aucun n'est appliqué automatiquement." \
+            || echo "rien à committer"
+          git pull --rebase origin "${GITHUB_REF_NAME}" || true
+          git push origin "HEAD:${GITHUB_REF_NAME}"

@@ -95,6 +95,19 @@ Le rôle admin s'attribue en base uniquement :
   l'annuaire passe par la vue `hydrogen_suppliers_directory`.
 - Migrations : additives et horodatées, jamais modifiées après coup ; toute
   nouvelle table reçoit sa RLS dans la migration de création.
+- Veille des subventions (Phase 5.5) : `subsidy_watch_changes` (file de
+  validation) lisible par les seuls administrateurs H2Fleet
+  (`has_role 'admin'`), sans aucune policy d'écriture ; le dépôt est fait
+  par le workflow `veille-subventions.yml` via l'API de gestion (secrets
+  GitHub existants `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_REF`), le
+  contenu des pages lues passant dans une chaîne « dollar-quoted » à
+  étiquette aléatoire (aucune injection SQL possible). Décision par les
+  fonctions SECURITY DEFINER `validate_subsidy_change` /
+  `reject_subsidy_change` (admin vérifié, changement encore en attente,
+  atomique). `subsidy_program_events` : lecture par tout utilisateur
+  connecté, écriture par la seule fonction de validation. Un changement
+  validé ne modifie JAMAIS le registre des programmes (mise à jour dans le
+  code après lecture de la source).
 
 ## Tests de sécurité
 

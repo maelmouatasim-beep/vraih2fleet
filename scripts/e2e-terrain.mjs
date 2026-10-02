@@ -483,6 +483,64 @@ try {
   await capture(page, "12c-organisation-pieces");
   etape("Factures : total faux signalé puis corrigé, prix au litre dérivé (1,421 $/L avant taxes), pièce confirmée, journalisée");
 
+  // Phase 5.5 — VEILLE DES SUBVENTIONS : deux lectures hebdomadaires de
+  // pages officielles FICTIVES (fixtures), changements détectés par le code
+  // et déposés dans la file de validation ; un administrateur H2Fleet en
+  // valide deux, en rejette un ; rien n'est appliqué automatiquement ; le
+  // projet reçoit l'alerte à l'étape Financement.
+  const dbUrl = process.env.SUPABASE_DB_URL ?? process.env.DB_URL ?? "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
+  const psql = (sql) => execFileSync("psql", [dbUrl, "-At", "-v", "ON_ERROR_STOP=1", "-c", sql], { encoding: "utf8" });
+  // Base LOCALE de test seulement : repart d'une file vide pour ces programmes.
+  psql("delete from public.subsidy_watch_changes where program_id in ('pave','roulez_vert','ecocamionnage_v1')");
+  const dossierVeille = join(SORTIE, "veille");
+  mkdirSync(dossierVeille, { recursive: true });
+  const scriptVeille = resolve("scripts/veille/veille-subventions.mjs");
+  const lignesVeille = [];
+  for (const [jour, semaine] of [["2026-09-28", "semaine1"], ["2026-10-05", "semaine2"]]) {
+    const sortieVeille = execFileSync(
+      process.execPath,
+      ["--experimental-strip-types", "--no-warnings", scriptVeille, "--date", jour, "--entrees", resolve("scripts/veille/fixtures", semaine), "--sql-local"],
+      { cwd: dossierVeille, encoding: "utf8", env: { ...process.env, SUPABASE_DB_URL: dbUrl } },
+    );
+    lignesVeille.push(sortieVeille.split("\n")[0]);
+  }
+  if (!/4 changement\(s\) détecté\(s\), 4 déposé\(s\)/.test(lignesVeille[1])) throw new Error(`veille : ${lignesVeille.join(" | ")}`);
+  psql(`insert into public.user_roles (user_id, role) select id, 'admin' from auth.users where email = '${COURRIEL}' on conflict do nothing`);
+  await page.goto(url("/dashboard/library"));
+  await page.getByTestId("tab-watch").click();
+  const fileVeille = page.getByTestId("watch-queue");
+  await fileVeille.getByTestId("watch-change").first().waitFor({ timeout: 15000 });
+  const nbFile = await fileVeille.getByTestId("watch-change").count();
+  if (nbFile < 4) throw new Error(`veille : ${nbFile} changement(s) en file au lieu de 4`);
+  const pave = fileVeille.getByTestId("watch-change").filter({ hasText: /4\s000/ }).first();
+  if (!/5\s000/.test(await pave.innerText())) throw new Error("veille : extrait avant → après du PAVÉ absent");
+  await capture(page, "13a-veille-file");
+  // PAVÉ, Écocamionnage (montants) et Roulez vert (date) validés ; le statut
+  // de Roulez vert rejeté.
+  await pave.getByTestId("watch-validate").click();
+  await page.getByTestId("watch-events").getByText(/4\s000/).first().waitFor({ timeout: 10000 });
+  for (const motif of [/25\s000/, /30 juin 2026/]) {
+    await fileVeille.getByTestId("watch-change").filter({ hasText: motif }).first().getByTestId("watch-validate").click();
+    await page.waitForTimeout(1200);
+  }
+  await fileVeille.getByTestId("watch-change").filter({ hasText: /suspendu/ }).first().getByTestId("watch-reject").click();
+  await page.waitForTimeout(1200);
+  if ((await fileVeille.getByTestId("watch-change").count()) !== nbFile - 4) throw new Error("veille : file non vidée après décision");
+  const valides = Number(psql("select count(*) from public.subsidy_program_events e join public.subsidy_watch_changes c on c.id = e.change_id where c.program_id in ('pave','roulez_vert','ecocamionnage_v1')").trim());
+  if (valides !== 3) throw new Error(`veille : ${valides} événement(s) validé(s) au lieu de 3`);
+  await capture(page, "13b-veille-validee");
+  await page.goto(`${base}/financement`);
+  await page.getByText("Subventions prévues au plan").waitFor({ timeout: 15000 });
+  const alerteVeille = page.getByTestId("program-changes-alert");
+  await alerteVeille.waitFor({ timeout: 10000 });
+  const texteAlerte = await alerteVeille.innerText();
+  // Programmes examinés pour le plan (HV-01 : PAVÉ, Roulez vert ; TP-05 :
+  // Écocamionnage) ; le changement REJETÉ (« suspendu ») n'apparaît pas.
+  if (!/Écocamionnage/.test(texteAlerte) || !/PAVÉ/.test(texteAlerte) || !/2026-06-30/.test(texteAlerte) || /suspendu/.test(texteAlerte)) throw new Error(`veille : alerte inattendue « ${texteAlerte} »`);
+  await alerteVeille.scrollIntoViewIfNeeded();
+  await capture(page, "13c-financement-alerte");
+  etape(`Veille : ${lignesVeille[1].split(" : ")[1]} ; 3 validés par un admin, 1 rejeté, aucun appliqué automatiquement ; alerte au Financement (programmes examinés pour le plan, rejet absent)`);
+
   writeFileSync(join(SORTIE, "resultat.json"), JSON.stringify({ infraStrategie, infraPlan, subvStrategie, vanPlan, sousTitre, statutOpt, nbDecisions, nbChangements }, null, 2));
   if (erreurs.length) throw new Error(`réponses locales en erreur :\n${erreurs.join("\n")}`);
   console.log(`\n${journal.length} étapes, 0 erreur. Captures : ${SORTIE}`);
