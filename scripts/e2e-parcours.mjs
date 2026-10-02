@@ -198,11 +198,11 @@ try {
   await capture(page, "07-strategies-retenue");
   etape("Stratégies : « Tout électrique » appliquée et retenue");
 
-  // 7. Plan + infrastructure par dépôt (C6)
+  // 7. Plan + infrastructure par garage (C6)
   await page.goto(`${base}/plan`);
-  await page.getByText("Infrastructure de recharge par dépôt").waitFor({ timeout: 15000 });
+  await page.getByText("Infrastructure de recharge par garage").waitFor({ timeout: 15000 });
   await capture(page, "08-plan-infra-depots");
-  etape("Plan : budget annuel + infrastructure par dépôt");
+  etape("Plan : budget annuel + infrastructure par garage");
 
   // 8. Financement : subvention confirmée + suivi de demande (B+, C5)
   await page.goto(`${base}/financement`);

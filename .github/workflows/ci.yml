@@ -104,3 +104,29 @@ jobs:
           export SUPABASE_DB_URL="$DB_URL"
           deno test --allow-net --allow-env --allow-read --node-modules-dir=none \
             supabase/tests/ supabase/functions/
+
+      # Cas du TEST TERRAIN (12 véhicules, 3 garages) de bout en bout contre
+      # ce Supabase local : totaux identiques Stratégies / Plan / Financement
+      # / PDF / Excel, libellé de la stratégie retenue, état des étapes.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Parcours e2e du cas terrain (12 véhicules, 3 garages)
+        run: |
+          npm ci
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
+          npx playwright install --with-deps chromium
+          eval "$(supabase status -o env | sed 's/^/export /')"
+          VITE_SUPABASE_URL=http://127.0.0.1:54321 VITE_SUPABASE_PUBLISHABLE_KEY="$ANON_KEY" VITE_SUPABASE_PROJECT_ID=local \
+            npx vite --port 8080 --host 127.0.0.1 &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8080/ >/dev/null && break; sleep 1; done
+          node scripts/e2e-terrain.mjs e2e-terrain
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-terrain
+          path: e2e-terrain/
+          retention-days: 7

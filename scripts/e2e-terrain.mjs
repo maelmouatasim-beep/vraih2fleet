@@ -3,15 +3,20 @@
  * Cas du TEST TERRAIN (petite ville, 12 véhicules, 3 garages) rejoué de
  * bout en bout contre Supabase LOCAL : import Excel/CSV → garages
  * (puissance, fenêtre de recharge) → projet → 7 étapes → rapports.
- * Vérifie que l'infrastructure affichée est IDENTIQUE au dollar près en
- * Stratégies (stratégie retenue), Plan, PDF et Excel, et que le libellé de
- * la stratégie retenue est le bon partout.
+ * Vérifie que l'infrastructure, les subventions et l'économie (VAN) sont
+ * IDENTIQUES au dollar près en Stratégies (stratégie retenue), Plan,
+ * Financement, PDF et Excel ; que le libellé de la stratégie retenue est
+ * le bon ; que la Faisabilité propose et applique une recommandation aux
+ * véhicules sans cible ; que la barre des étapes reflète l'état réel.
+ * Lancé en CI (job « Supabase local ») : test e2e PERMANENT du cas terrain.
+ * Requiert pdftotext (poppler-utils) pour lire le PDF.
  *
  *   VITE_SUPABASE_URL=http://127.0.0.1:54321 VITE_SUPABASE_PUBLISHABLE_KEY=<anon local> npx vite --port 8080
  *   node scripts/e2e-terrain.mjs <dossier_captures>
  */
 import { chromium } from "playwright";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const BASE = process.env.E2E_BASE ?? "http://127.0.0.1:8080";
@@ -53,7 +58,22 @@ async function capture(page, nom) {
   await page.waitForTimeout(700);
   await page.screenshot({ path: join(SORTIE, `${nom}.png`), fullPage: true });
 }
-const montant = (texte) => Number(texte.replace(/[^\d,-]/g, "").replace(",", "."));
+const montant = (texte) => Number(String(texte).replace(/[^\d,-]/g, "").replace(",", "."));
+const egaux = (nom, valeurs) => {
+  const ref = Object.values(valeurs)[0];
+  for (const [ou, v] of Object.entries(valeurs)) {
+    if (!Number.isFinite(v)) throw new Error(`${nom} illisible en ${ou} : ${JSON.stringify(valeurs)}`);
+    if (Math.abs(v - ref) > 0.5) throw new Error(`${nom} incohérent : ${JSON.stringify(valeurs)} (écart en ${ou})`);
+  }
+  return ref;
+};
+async function valeurCarte(page, titre) {
+  const carte = page.locator("div.rounded-lg, div.rounded-xl").filter({ has: page.getByText(titre, { exact: true }) }).last();
+  return montant(await carte.locator("p.text-xl").first().innerText());
+}
+async function etatEtape(page, cle) {
+  return page.locator(`a[href$="/${cle}"][data-etat]`).first().getAttribute("data-etat");
+}
 
 const CHROMIUM_LOCAL = "/opt/pw-browsers/chromium";
 const navigateur = await chromium.launch({ executablePath: process.env.CHROMIUM || (existsSync(CHROMIUM_LOCAL) ? CHROMIUM_LOCAL : undefined) });
@@ -126,7 +146,17 @@ try {
   await page.goto(`${base}/faisabilite`);
   await page.getByText("TP-06").first().waitFor({ timeout: 15000 });
   await capture(page, "04-faisabilite");
-  etape("Faisabilité : verdicts, hiver, à reporter");
+  // 3.3 : véhicules restés sans cible → recommandation appliquée
+  const bouton = page.getByRole("button", { name: /Appliquer (la recommandation|les \d+ recommandations)/ });
+  let appliquees = 0;
+  if (await bouton.isVisible().catch(() => false)) {
+    appliquees = Number((await bouton.innerText()).match(/\d+/)?.[0] ?? 1);
+    await bouton.click();
+    await bouton.waitFor({ state: "hidden", timeout: 15000 });
+  }
+  if ((await etatEtape(page, "faisabilite")) !== "termine") throw new Error("étape Faisabilité non terminée après les recommandations");
+  await capture(page, "04b-faisabilite-recommandations");
+  etape(`Faisabilité : verdicts, hiver, à reporter ; ${appliquees} recommandation(s) appliquée(s), étape terminée`);
 
   // Stratégies : appliquer « Économies d'abord »
   await page.goto(`${base}/strategies`);
@@ -134,13 +164,17 @@ try {
   await capture(page, "05-strategies");
   await page.getByText("Économies d'abord").first().click();
   const carteEco = page.locator("button", { hasText: "Économies d'abord" }).first();
+  if ((await etatEtape(page, "strategies")) !== "a_faire") throw new Error("Stratégies devrait être « à faire » avant application");
   const infraStrategieTxt = (await carteEco.getByText(/^Infrastructure :/).innerText().catch(() => "Infrastructure : 0 $"));
+  const subvStrategie = montant(await carteEco.getByText(/^Subventions :/).innerText());
+  const vanStrategie = montant(await carteEco.getByText(/^Économie de/).innerText());
   await page.getByRole("button", { name: /Appliquer cette stratégie au plan/ }).click();
   await page.getByRole("button", { name: /^Appliquer \(\d+ changement/ }).click();
   await page.getByText("Stratégie retenue").first().waitFor({ timeout: 15000 });
   await page.waitForTimeout(1500);
   await capture(page, "06-strategies-retenue");
-  etape(`Stratégies : « Économies d'abord » appliquée (${infraStrategieTxt})`);
+  if ((await etatEtape(page, "strategies")) !== "termine") throw new Error("Stratégies devrait être « terminée » après application");
+  etape(`Stratégies : « Économies d'abord » appliquée (${infraStrategieTxt}), étape terminée`);
 
   // Plan : même infrastructure, bon libellé
   await page.goto(`${base}/plan`);
@@ -151,13 +185,17 @@ try {
   await capture(page, "07-plan");
   const infraStrategie = montant(infraStrategieTxt);
   const infraPlan = montant(totalPlanTxt);
-  if (infraStrategie !== infraPlan) throw new Error(`infrastructure Stratégies ${infraStrategie} ≠ Plan ${infraPlan}`);
-  etape(`Plan : « ${sousTitre.slice(0, 60)}… », infrastructure ${infraPlan} $ = Stratégies`);
+  const subvPlan = await valeurCarte(page, "Subventions prévues");
+  const vanPlan = await valeurCarte(page, "Économie vs statu quo (VAN)");
+  egaux("infrastructure", { strategies: infraStrategie, plan: infraPlan });
+  egaux("VAN", { strategies: vanStrategie, plan: vanPlan });
+  etape(`Plan : « ${sousTitre.slice(0, 40)}… », infrastructure ${infraPlan} $, VAN ${vanPlan} $ = Stratégies`);
 
   await page.goto(`${base}/financement`);
   await page.getByText("Subventions prévues au plan").waitFor({ timeout: 15000 });
   await page.waitForTimeout(1500);
   await capture(page, "08-financement");
+  const subvFinancement = await valeurCarte(page, "Subventions du plan");
   etape("Financement : règle et raison de chaque subvention");
 
   await page.goto(`${base}/rapports`);
@@ -166,14 +204,50 @@ try {
     await dl.saveAs(join(SORTIE, nom));
   }
   await capture(page, "09-rapports");
-  etape("Rapports : PDF et Excel téléchargés");
+  // PDF : texte extrait (pdftotext)
+  const pdf = execFileSync("pdftotext", ["-layout", join(SORTIE, "rapport-fr.pdf"), "-"], { encoding: "utf8" });
+  if (!pdf.includes("Stratégie retenue : Économies d'abord")) throw new Error("PDF : stratégie retenue absente");
+  const infraPdf = montant(pdf.match(/Infrastructure totale \(avant taxes\)\s+([\d\s\u00a0\u202f]+) \$/)?.[1] ?? "NaN");
+  const lignesPdf = pdf.split("\n");
+  const iSub = lignesPdf.findIndex((l) => l.includes("Subventions prévues"));
+  const subvPdf = montant(lignesPdf.slice(iSub + 1).find((l) => l.trim()).trim().split(/\s{2,}/).pop());
+  // Excel : relu avec exceljs
+  const ExcelJS = (await import("exceljs")).default;
+  const classeur = new ExcelJS.Workbook();
+  await classeur.xlsx.readFile(join(SORTIE, "classeur-fr.xlsx"));
+  const lignes = (f) => {
+    const r = [];
+    f.eachRow((row) => r.push(row.values.slice(1)));
+    return r;
+  };
+  const budget = lignes(classeur.worksheets[0]);
+  if (!budget.some((l) => String(l[0]).includes("Stratégie retenue : Économies d'abord"))) throw new Error("Excel : stratégie retenue absente");
+  const iEntete = budget.findIndex((l) => l[0] === "Année");
+  let subvExcel = 0;
+  for (const l of budget.slice(iEntete + 1)) {
+    if (typeof l[0] !== "number") break;
+    subvExcel += Number(l[2] ?? 0);
+  }
+  const vanExcel = Number(budget.find((l) => l[0] === "Économie (VAN)")?.[1]);
+  const infraExcel = Number(lignes(classeur.worksheets[1]).find((l) => l[0] === "Infrastructure totale")?.at(-1));
+  const infra = egaux("infrastructure", { strategies: infraStrategie, plan: infraPlan, pdf: infraPdf, excel: infraExcel });
+  const subv = egaux("subventions", {
+    strategies: subvStrategie,
+    plan: subvPlan,
+    financement: subvFinancement,
+    pdf: subvPdf,
+    excel: subvExcel,
+  });
+  egaux("VAN", { strategies: vanStrategie, plan: vanPlan, excel: vanExcel });
+  if ((await etatEtape(page, "rapports")) !== "termine") throw new Error("Rapports devrait être « terminé » après génération");
+  etape(`Rapports : totaux identiques partout — infrastructure ${infra} $, subventions ${subv} $, VAN ${vanPlan} $`);
 
   await page.goto(`${base}/suivi`);
   await page.waitForTimeout(2000);
   await capture(page, "10-suivi");
   etape("Suivi");
 
-  writeFileSync(join(SORTIE, "resultat.json"), JSON.stringify({ infraStrategie, infraPlan, sousTitre }, null, 2));
+  writeFileSync(join(SORTIE, "resultat.json"), JSON.stringify({ infraStrategie, infraPlan, subvStrategie, vanPlan, sousTitre }, null, 2));
   if (erreurs.length) throw new Error(`réponses locales en erreur :\n${erreurs.join("\n")}`);
   console.log(`\n${journal.length} étapes, 0 erreur. Captures : ${SORTIE}`);
 } catch (e) {

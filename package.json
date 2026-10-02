@@ -18,7 +18,8 @@
     "check": "npm run typecheck && npm run lint:ci && npm run test",
     "docs:tco": "REGEN=1 vitest run src/lib/tco/__tests__/hypotheses-doc.test.ts",
     "test:tco": "vitest run src/lib/tco --coverage.enabled --coverage.include=src/lib/tco/** --coverage.exclude=src/lib/tco/assumption-types.ts --coverage.exclude=src/lib/tco/index.ts --coverage.exclude=src/lib/tco/__tests__/** --coverage.thresholds.lines=95 --coverage.thresholds.branches=95 --coverage.thresholds.functions=95 --coverage.thresholds.statements=95",
-    "e2e:local": "node scripts/e2e-parcours.mjs e2e-captures"
+    "e2e:local": "node scripts/e2e-parcours.mjs e2e-captures",
+    "e2e:terrain": "node scripts/e2e-terrain.mjs e2e-terrain"
   },
   "dependencies": {
     "@fontsource/plus-jakarta-sans": "^5.2.8",
