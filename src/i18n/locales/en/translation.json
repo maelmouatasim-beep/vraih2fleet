@@ -5862,7 +5862,7 @@
         },
         "economies_d_abord": {
           "title": "Savings first",
-          "description": "BEV only where the engine computes a saving; diesel otherwise."
+          "description": "BEV only where the engine computes a saving, garage chargers and grid connection included; diesel otherwise."
         }
       },
       "metrics": {
@@ -5871,6 +5871,8 @@
         "infra": "Infrastructure: {{amount}}",
         "subsidies": "Subsidies: {{amount}}"
       },
+      "noProfitable": "No profitable electrification under current assumptions (garage chargers and grid connection included).",
+      "selectionGarage": "{{garage}}: {{retenus}} kept out of {{candidats}} profitable on their own, garage infrastructure included",
       "bestSavings": "Best savings",
       "notComputable": "Not computable (no assessable vehicle).",
       "methodTitle": "What these numbers compare",

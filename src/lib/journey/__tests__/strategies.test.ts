@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { HYPOTHESES } from "@/lib/tco";
 import { changementsStrategie, construireStrategie, construireStrategies, type VehiculeProjet } from "../strategies";
+import { cleGarage } from "../infrastructure";
 
 const OPTIONS = {
   anneeReference: 2026,
@@ -85,6 +86,73 @@ describe("construireStrategie", () => {
     const parId = new Map(s.plan!.vehicules.map((v) => [v.id, v]));
     expect(parId.get("gagnant")!.alternative.technologie).toBe("BEV");
     expect(parId.get("perdant")!.alternative.technologie).toBe("diesel");
+  });
+
+  describe("1.3 — economies_d_abord compte l'infrastructure du garage AVANT de choisir", () => {
+    const petit = (id: string, depot: string, km: number) =>
+      vehicule({ id, depot, annual_km: km, target_technology: null });
+
+    it("rentable seul mais pas avec sa borne : reste au diesel, « aucune électrification rentable »", () => {
+      // Camionnette à 8 000 km/an : économie BEV ≈ 13 650 $ sans infrastructure,
+      // inférieure à une borne niveau 2 (15 000 $) → perte une fois la borne comptée.
+      const s = construireStrategie([petit("a", "Hôtel de ville", 8000)], "economies_d_abord", OPTIONS);
+      expect(s.nbZeroEmission).toBe(0);
+      expect(s.infraCapex).toBe(0);
+      expect(s.aucuneElectrificationRentable).toBe(true);
+      expect(s.selection).toEqual([{ depot: "Hôtel de ville", candidats: 1, retenus: 0, vanAvecInfra: 0 }]);
+    });
+
+    it("le palier de raccordement déclenché par le 2e véhicule est compté (choix optimal sur sous-ensembles)", () => {
+      // 3 camionnettes identiques au même garage : 1 borne tient dans la
+      // capacité présumée, 2 bornes déclenchent le palier 1.
+      const flotte = ["a", "b", "c"].map((id) => petit(id, "Garage municipal", 12000));
+      const s = construireStrategie(flotte, "economies_d_abord", OPTIONS);
+      // Brute force : aucune combinaison ne fait mieux que la sélection.
+      let meilleure = 0;
+      for (let masque = 1; masque < 8; masque++) {
+        const choisis = flotte.filter((_, i) => masque & (1 << i)).map((v) => ({ ...v, target_technology: "bev" }));
+        meilleure = Math.max(meilleure, construireStrategie(choisis, "plan_actuel", OPTIONS).resultat!.vanDifferentielle);
+      }
+      expect(s.resultat!.vanDifferentielle).toBeGreaterThanOrEqual(meilleure - 0.01);
+      expect(s.resultat!.vanDifferentielle).toBeGreaterThan(0);
+      expect(s.aucuneElectrificationRentable).toBe(false);
+      // L'infrastructure de la stratégie est bien celle de la source unique.
+      expect(s.infraCapex).toBe(s.infra.totalCapex);
+    });
+
+    it("un garage au raccordement prohibitif (devis) reste au diesel, l'autre garage est électrifié", () => {
+      const garages = new Map([[cleGarage("Travaux publics"), { devisRaccordement: 1_000_000 }]]);
+      const s = construireStrategie(
+        [petit("tp", "Travaux publics", 40000), petit("gm", "Garage municipal", 40000)],
+        "economies_d_abord",
+        { ...OPTIONS, garages },
+      );
+      const parId = new Map(s.plan!.vehicules.map((v) => [v.id, v.alternative.technologie]));
+      expect(parId.get("tp")).toBe("diesel");
+      expect(parId.get("gm")).toBe("BEV");
+      expect(s.selection!.map((g) => [g.depot, g.retenus])).toEqual([
+        ["Garage municipal", 1],
+        ["Travaux publics", 0],
+      ]);
+    });
+
+    it("propriété : la VAN d'« Économies d'abord » n'est jamais négative", () => {
+      for (const km of [5000, 8000, 12000, 20000, 40000]) {
+        const flotte = [petit("a", "A", km), petit("b", "A", km), petit("c", "B", km / 2)];
+        const s = construireStrategie(flotte, "economies_d_abord", OPTIONS);
+        expect(s.resultat!.vanDifferentielle).toBeGreaterThanOrEqual(-0.01);
+        expect(s.aucuneElectrificationRentable).toBe(s.nbZeroEmission === 0);
+      }
+    });
+
+    it("« Appliquer au plan » propose exactement la sélection chiffrée", () => {
+      const flotte = [petit("a", "A", 8000), petit("b", "B", 40000)];
+      const s = construireStrategie(flotte, "economies_d_abord", OPTIONS);
+      const bev = s.plan!.vehicules.filter((v) => v.alternative.technologie === "BEV").map((v) => v.id);
+      const ch = changementsStrategie(flotte, "economies_d_abord", OPTIONS);
+      expect(ch.filter((c) => c.cibleNouvelle === "bev").map((c) => c.vehiculeId)).toEqual(bev);
+      expect(bev).toEqual(["b"]);
+    });
   });
 
   it("catégorie « autre » exclue et signalée ; année manquante signalée (année 0)", () => {

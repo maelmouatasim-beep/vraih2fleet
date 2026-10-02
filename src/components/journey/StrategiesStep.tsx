@@ -203,6 +203,26 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
                       })}
                     </p>
                   </div>
+                  {s.aucuneElectrificationRentable && (
+                    <p className="text-xs font-medium text-amber-700 dark:text-amber-400">
+                      {t("journey.strategies.noProfitable")}
+                    </p>
+                  )}
+                  {s.selection && s.selection.some((g) => g.candidats > 0) && (
+                    <ul className="text-xs text-muted-foreground space-y-0.5">
+                      {s.selection
+                        .filter((g) => g.candidats > 0)
+                        .map((g) => (
+                          <li key={g.depot ?? ""}>
+                            {t("journey.strategies.selectionGarage", {
+                              garage: g.depot ?? t("journey.infra.noDepot"),
+                              retenus: g.retenus,
+                              candidats: g.candidats,
+                            })}
+                          </li>
+                        ))}
+                    </ul>
+                  )}
                   {van === meilleureVan && strategies.filter((x) => x.resultat).length > 1 && (
                     <Badge variant="secondary">{t("journey.strategies.bestSavings")}</Badge>
                   )}

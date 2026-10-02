@@ -5862,7 +5862,7 @@
         },
         "economies_d_abord": {
           "title": "Économies d'abord",
-          "description": "BEV seulement là où le moteur calcule une économie ; diesel sinon."
+          "description": "BEV seulement là où le moteur calcule une économie, bornes et raccordement du garage compris ; diesel sinon."
         }
       },
       "metrics": {
@@ -5871,6 +5871,8 @@
         "infra": "Infrastructure : {{amount}}",
         "subsidies": "Subventions : {{amount}}"
       },
+      "noProfitable": "Aucune électrification rentable avec les hypothèses actuelles (bornes et raccordement du garage compris).",
+      "selectionGarage": "{{garage}} : {{retenus}} retenu(s) sur {{candidats}} rentable(s) seul(s), infrastructure du garage comptée",
       "bestSavings": "Meilleure économie",
       "notComputable": "Non calculable (aucun véhicule évaluable).",
       "methodTitle": "Ce que comparent ces chiffres",

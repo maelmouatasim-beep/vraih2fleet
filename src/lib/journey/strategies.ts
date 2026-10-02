@@ -23,8 +23,10 @@ import {
   type SubventionConfirmee,
 } from "@/lib/confirmedSubsidies";
 import {
+  cleGarage,
   planifierInfrastructure,
   sitesInfraMoteur,
+  type CaracteristiquesGarage,
   type PlanInfrastructure,
   type VehiculeInfra,
 } from "./infrastructure";
@@ -45,6 +47,23 @@ export interface VehiculeProjet extends VehiculeFaisabilite {
    *  REMPLACENT la subvention résolue automatiquement du même
    *  programme et sont marquées « confirmée par le client (réf. …) ». */
   subventionsConfirmees?: SubventionConfirmee[];
+}
+
+/** Options du moteur + caractéristiques connues des garages (puissance
+ *  disponible, devis de raccordement), indexées par cleGarage(nom). */
+export type OptionsStrategie = OptionsParametres & {
+  garages?: Map<string, CaracteristiquesGarage>;
+};
+
+/** « Économies d'abord » : ce que la sélection a retenu, garage par garage. */
+export interface SelectionGarage {
+  depot: string | null;
+  /** Véhicules rentables SEULS (sans infrastructure). */
+  candidats: number;
+  /** Véhicules retenus une fois bornes + raccordement du garage comptés. */
+  retenus: number;
+  /** VAN différentielle du garage avec sa propre infrastructure (0 si rien retenu). */
+  vanAvecInfra: number;
 }
 
 export type CleStrategie = "plan_actuel" | "tout_electrique" | "economies_d_abord";
@@ -77,6 +96,11 @@ export interface StrategieConstruite {
   /** Conditions et prudences du résolveur de subventions (classe de
    *  poids inconnue, % à valider, limites par organisation…), dédupliquées. */
   avertissementsSubventions: string[];
+  /** « Économies d'abord » seulement : détail de la sélection par garage. */
+  selection?: SelectionGarage[];
+  /** « Économies d'abord » : aucun véhicule ne rapporte, infrastructure
+   *  comprise, avec les hypothèses actuelles. */
+  aucuneElectrificationRentable?: boolean;
 }
 
 type TechnoAlternative = "diesel" | "BEV" | "FCEV";
@@ -84,7 +108,7 @@ type TechnoAlternative = "diesel" | "BEV" | "FCEV";
 function technoCible(
   cle: CleStrategie,
   vehicule: VehiculeProjet,
-  options: OptionsParametres,
+  selection: Set<string> | null,
 ): TechnoAlternative {
   if (cle === "tout_electrique") return "BEV";
   if (cle === "plan_actuel") {
@@ -92,15 +116,98 @@ function technoCible(
     if (vehicule.target_technology === "fcev") return "FCEV";
     return "diesel";
   }
-  // economies_d_abord : BEV seulement là où le moteur trouve une économie
-  const bev = evaluerFaisabiliteVehicule(vehicule, options).evaluations?.[0];
-  return bev && bev.economieActualisee > 0 ? "BEV" : "diesel";
+  return selection?.has(vehicule.id) ? "BEV" : "diesel";
+}
+
+/** Le remplacement tombe-t-il dans l'horizon (ou sans année → année 0) ? */
+function dansHorizon(v: VehiculeProjet, options: OptionsParametres): boolean {
+  return (
+    v.replacement_year == null ||
+    Math.max(v.replacement_year - options.anneeReference, 0) < options.horizonAns
+  );
+}
+
+const cacheSelection = new WeakMap<VehiculeProjet[], WeakMap<object, ResultatSelection>>();
+interface ResultatSelection {
+  ids: Set<string>;
+  detail: SelectionGarage[];
+}
+
+/**
+ * 1.3 — « Économies d'abord » : sélection PAR GARAGE, infrastructure
+ * comprise AVANT de choisir. Pour chaque garage, les véhicules rentables
+ * seuls (économie BEV > 0 sans infrastructure, moteur) sont triés par
+ * économie décroissante ; on chiffre avec le moteur les k premiers AVEC
+ * les bornes et le raccordement que ce sous-ensemble exige au garage
+ * (planifierInfrastructure, source unique) et on retient le k de VAN
+ * maximale, 0 si aucune n'est positive : un garage dont l'infrastructure
+ * mange l'économie reste au diesel. Un devis de raccordement saisi au
+ * niveau du projet est compté en entier pour chaque garage (prudent).
+ */
+function selectionEconomiesDAbord(
+  vehicules: VehiculeProjet[],
+  options: OptionsStrategie,
+): ResultatSelection {
+  const enCache = cacheSelection.get(vehicules)?.get(options);
+  if (enCache) return enCache;
+
+  const parGarage = new Map<string, { depot: string | null; liste: { v: VehiculeProjet; eco: number }[] }>();
+  for (const v of vehicules) {
+    if (!analyserDonneesVehicule(v).defauts || !dansHorizon(v, options)) continue;
+    const bev = evaluerFaisabiliteVehicule(v, options).evaluations?.find((e) => e.technologie === "BEV");
+    const cle = cleGarage(v.depot ?? null);
+    const entree = parGarage.get(cle) ?? { depot: v.depot?.trim() || null, liste: [] };
+    if (bev && bev.economieActualisee > 0) entree.liste.push({ v, eco: bev.economieActualisee });
+    parGarage.set(cle, entree);
+  }
+
+  const ids = new Set<string>();
+  const detail: SelectionGarage[] = [];
+  for (const { depot, liste } of parGarage.values()) {
+    liste.sort((a, b) => b.eco - a.eco);
+    let meilleurK = 0;
+    let meilleureVan = 0;
+    for (let k = 1; k <= liste.length; k++) {
+      const sousEnsemble = liste.slice(0, k).map((x) => x.v);
+      const r = chiffrer(sousEnsemble, "economies_d_abord", options, new Set(sousEnsemble.map((v) => v.id)));
+      const van = r.resultat?.vanDifferentielle ?? 0;
+      if (van > meilleureVan + 1e-6) {
+        meilleureVan = van;
+        meilleurK = k;
+      }
+    }
+    for (const x of liste.slice(0, meilleurK)) ids.add(x.v.id);
+    detail.push({ depot, candidats: liste.length, retenus: meilleurK, vanAvecInfra: meilleureVan });
+  }
+  detail.sort((a, b) => (a.depot ?? "\uffff").localeCompare(b.depot ?? "\uffff", "fr"));
+
+  const resultat = { ids, detail };
+  const parOptions = cacheSelection.get(vehicules) ?? new WeakMap<object, ResultatSelection>();
+  parOptions.set(options, resultat);
+  cacheSelection.set(vehicules, parOptions);
+  return resultat;
 }
 
 export function construireStrategie(
   vehicules: VehiculeProjet[],
   cle: CleStrategie,
-  options: OptionsParametres,
+  options: OptionsStrategie,
+): StrategieConstruite {
+  if (cle !== "economies_d_abord") return chiffrer(vehicules, cle, options, null);
+  const selection = selectionEconomiesDAbord(vehicules, options);
+  const s = chiffrer(vehicules, cle, options, selection.ids);
+  return {
+    ...s,
+    selection: selection.detail,
+    aucuneElectrificationRentable: s.nbVehicules > 0 && selection.ids.size === 0,
+  };
+}
+
+function chiffrer(
+  vehicules: VehiculeProjet[],
+  cle: CleStrategie,
+  options: OptionsStrategie,
+  selection: Set<string> | null,
 ): StrategieConstruite {
   const parametres = parametresParDefaut(options);
   const exclusions: string[] = [];
@@ -130,7 +237,7 @@ export function construireStrategie(
       }
     }
 
-    const techno = technoCible(cle, v, options);
+    const techno = technoCible(cle, v, selection);
     const reference = {
       technologie: "diesel" as const,
       prixAvantTaxes: defauts.prixAchat.diesel.valeur,
@@ -201,6 +308,7 @@ export function construireStrategie(
   const infra = planifierInfrastructure(vehiculesInfra, {
     anneeReference: options.anneeReference,
     devisRaccordementProjet: options.surchargesEnergie?.devisRaccordement ?? null,
+    garages: options.garages,
   });
 
   if (plansVehicules.length === 0) {
@@ -263,19 +371,14 @@ export interface ChangementCible {
 export function changementsStrategie(
   vehicules: VehiculeProjet[],
   cle: CleStrategie,
-  options: OptionsParametres,
+  options: OptionsStrategie,
 ): ChangementCible[] {
+  const selection = cle === "economies_d_abord" ? selectionEconomiesDAbord(vehicules, options).ids : null;
   const changements: ChangementCible[] = [];
   for (const v of vehicules) {
     const { defauts } = analyserDonneesVehicule(v);
-    if (!defauts) continue;
-    if (
-      v.replacement_year != null &&
-      Math.max(v.replacement_year - options.anneeReference, 0) >= options.horizonAns
-    ) {
-      continue;
-    }
-    const techno = technoCible(cle, v, options);
+    if (!defauts || !dansHorizon(v, options)) continue;
+    const techno = technoCible(cle, v, selection);
     const nouvelle: CibleVehicule = techno === "BEV" ? "bev" : techno === "FCEV" ? "fcev" : "diesel";
     const actuelle = (v.target_technology ?? null) as CibleVehicule | null;
     if (actuelle !== nouvelle) {
@@ -287,7 +390,7 @@ export function changementsStrategie(
 
 export function construireStrategies(
   vehicules: VehiculeProjet[],
-  options: OptionsParametres,
+  options: OptionsStrategie,
 ): StrategieConstruite[] {
   return CLES_STRATEGIES.map((cle) => construireStrategie(vehicules, cle, options));
 }
