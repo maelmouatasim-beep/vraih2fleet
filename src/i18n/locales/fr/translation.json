@@ -94,7 +94,42 @@
       "noProject": "Ce véhicule n'est utilisé dans aucun projet.",
       "confirm": "Supprimer définitivement"
     },
-    "demoBadge": "démo"
+    "demoBadge": "démo",
+    "garages": {
+      "title": "Garages",
+      "subtitle": "Puissance électrique disponible, tarif Hydro-Québec et fenêtre de recharge : ils dimensionnent les bornes et le raccordement de chaque garage.",
+      "add": "Ajouter un garage",
+      "edit": "Modifier le garage",
+      "dialogSubtitle": "Seul le nom est obligatoire. Sans puissance disponible, le calcul retient une valeur présumée (estimation).",
+      "empty": "Aucun garage. Ils sont créés automatiquement à l'import (colonne « garage ») ou ajoutés ici.",
+      "saved": "Garage enregistré",
+      "deleted": "Garage supprimé (les véhicules restent, sans garage)",
+      "deleteTitle": "Supprimer le garage « {{name}} » ?",
+      "deleteSubtitle": "Les véhicules rattachés sont conservés ; leur garage devient « non précisé ».",
+      "unknownPower": "à renseigner",
+      "windowValue": "{{retour}} → {{depart}} ({{heures}} h)",
+      "powerHelp": "Puissance disponible : capacité résiduelle de l'entrée électrique du garage, selon votre électricien ou Hydro-Québec. Un devis de raccordement saisi ici est toujours prioritaire.",
+      "columns": {
+        "vehicles": "Véhicules",
+        "window": "Fenêtre de recharge"
+      },
+      "fields": {
+        "name": "Nom",
+        "address": "Adresse",
+        "available_power_kw": "Puissance disponible (kW)",
+        "hq_rate": "Tarif Hydro-Québec",
+        "return_time": "Retour des véhicules",
+        "departure_time": "Départ des véhicules",
+        "parking_spots": "Places",
+        "grid_connection_quote": "Devis de raccordement ($)"
+      },
+      "rates": {
+        "G": "G (petite puissance)",
+        "M": "M (moyenne puissance)",
+        "LG": "LG (grande puissance)",
+        "autre": "Autre"
+      }
+    }
   },
   "pages_marketing": {
     "privacy": {
@@ -6150,7 +6185,7 @@
       },
       "garageTotal": "Total du garage : {{amount}}",
       "connectionDetail": "Raccordement : {{demandes}} kW demandés (bornes à pleine puissance) · {{disponibles}} kW disponibles · {{supplementaires}} kW supplémentaires.",
-      "presumedCapacity": "Puissance disponible PRÉSUMÉE (registre) : renseignez la puissance réelle du garage.",
+      "presumedCapacity": "Puissance disponible PRÉSUMÉE (registre) : renseignez la puissance réelle du garage dans Ma flotte › Garages.",
       "tier": "Palier {{palier}} de mise à niveau retenu.",
       "noUpgrade": "Les bornes tiennent dans la capacité existante : aucune mise à niveau."
     },

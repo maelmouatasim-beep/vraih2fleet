@@ -36,6 +36,9 @@ import {
 import { lireFichier, validerLignes, type ResultatImport } from "@/lib/fleet/importVehicles";
 import { estVehiculeDemo } from "@/lib/demoData/villeDemo";
 import { Loader2, Pencil, Plus, Trash2, Truck, Upload } from "lucide-react";
+import GaragesCard from "@/components/fleet/GaragesCard";
+import { useGarages } from "@/hooks/useGarages";
+import { assurerGarages } from "@/lib/fleet/garages";
 
 const selectCls =
   "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -57,6 +60,7 @@ export default function MyFleet() {
   const { t } = useTranslation();
   const { organization, isLoading: orgLoading } = useOrganization();
   const { vehicles, isLoading, creer, importer, modifier, supprimer } = useVehicles(organization?.id);
+  const { garages } = useGarages(organization?.id);
 
   const [ajoutOuvert, setAjoutOuvert] = useState(false);
   const [edition, setEdition] = useState<VehicleRow | null>(null);
@@ -116,6 +120,7 @@ export default function MyFleet() {
       status: forme.status,
     };
     try {
+      if (commun.depot) await assurerGarages(organization.id, [commun.depot]);
       if (edition) {
         // la source « télématique » d'un véhicule existant n'est pas
         // écrasée si la consommation n'a pas changé
@@ -170,6 +175,14 @@ export default function MyFleet() {
   const confirmerImport = async () => {
     if (!apercu || (apercu.valides.length === 0 && apercu.misesAJour.length === 0)) return;
     try {
+      // Colonne « garage » : les garages manquants sont créés AVANT les
+      // véhicules, qui y sont rattachés par le trigger de synchronisation.
+      if (organization) {
+        await assurerGarages(organization.id, [
+          ...apercu.valides.map((v) => v.depot),
+          ...apercu.misesAJour.map((m) => m.patch.depot),
+        ]);
+      }
       const n = apercu.valides.length > 0 ? await importer.mutateAsync(apercu.valides) : 0;
       for (const m of apercu.misesAJour) {
         await modifier.mutateAsync({ id: m.id, patch: m.patch });
@@ -308,6 +321,8 @@ export default function MyFleet() {
             )}
           </CardContent>
         </Card>
+
+        <GaragesCard organizationId={organization?.id} depots={vehicles.map((v) => v.depot)} />
       </div>
 
       {/* Ajout / modification */}
@@ -360,7 +375,17 @@ export default function MyFleet() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="fl-depot">{t("fleet.columns.depot")}</Label>
-              <Input id="fl-depot" value={forme.depot} onChange={(e) => setForme({ ...forme, depot: e.target.value })} />
+              <Input
+                id="fl-depot"
+                list="fl-garages"
+                value={forme.depot}
+                onChange={(e) => setForme({ ...forme, depot: e.target.value })}
+              />
+              <datalist id="fl-garages">
+                {garages.map((g) => (
+                  <option key={g.id} value={g.name} />
+                ))}
+              </datalist>
             </div>
             <div className="space-y-2">
               <Label htmlFor="fl-statut">{t("fleet.columns.status")}</Label>

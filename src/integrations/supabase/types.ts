@@ -242,6 +242,62 @@ export type Database = {
           },
         ]
       }
+      garages: {
+        Row: {
+          address: string | null
+          available_power_kw: number | null
+          created_at: string
+          departure_time: string | null
+          grid_connection_quote: number | null
+          hq_rate: string | null
+          id: string
+          name: string
+          notes: string | null
+          organization_id: string
+          parking_spots: number | null
+          return_time: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          available_power_kw?: number | null
+          created_at?: string
+          departure_time?: string | null
+          grid_connection_quote?: number | null
+          hq_rate?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          organization_id: string
+          parking_spots?: number | null
+          return_time?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          available_power_kw?: number | null
+          created_at?: string
+          departure_time?: string | null
+          grid_connection_quote?: number | null
+          hq_rate?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          organization_id?: string
+          parking_spots?: number | null
+          return_time?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "garages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hydrogen_suppliers: {
         Row: {
           certifications: string[] | null
@@ -2445,6 +2501,7 @@ export type Database = {
           created_at: string
           department: string | null
           depot: string | null
+          garage_id: string | null
           fuel_type: string
           id: string
           in_service_date: string | null
@@ -2468,6 +2525,7 @@ export type Database = {
           created_at?: string
           department?: string | null
           depot?: string | null
+          garage_id?: string | null
           fuel_type?: string
           id?: string
           in_service_date?: string | null
@@ -2491,6 +2549,7 @@ export type Database = {
           created_at?: string
           department?: string | null
           depot?: string | null
+          garage_id?: string | null
           fuel_type?: string
           id?: string
           in_service_date?: string | null
@@ -2507,6 +2566,13 @@ export type Database = {
           vin?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "vehicles_garage_id_fkey"
+            columns: ["garage_id"]
+            isOneToOne: false
+            referencedRelation: "garages"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "vehicles_organization_id_fkey"
             columns: ["organization_id"]

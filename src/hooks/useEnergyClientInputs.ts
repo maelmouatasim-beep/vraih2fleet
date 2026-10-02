@@ -16,7 +16,9 @@ import {
   upsertEnergyInputs,
   type EnergyClientInputs,
 } from "@/lib/supabase/energyInputs";
-import type { OptionsParametres } from "@/lib/tco";
+import type { OptionsStrategie } from "@/lib/journey/strategies";
+import { useGarages } from "@/hooks/useGarages";
+import { caracteristiquesGarages } from "@/lib/fleet/garages";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 
 export function useEnergyClientInputs(projectId?: string) {
@@ -71,7 +73,12 @@ export function useOptionsProjet(project: ProjectDTO | null | undefined, project
     staleTime: 5 * 60 * 1000,
   });
 
-  const options = useMemo((): OptionsParametres | null => {
+  // Garages de l'organisation du PROJET : puissance disponible, devis de
+  // raccordement et fenêtre de recharge (bloc 2.1).
+  const { garages, isLoading: garagesLoading } = useGarages(project?.organizationId ?? organization?.id);
+  const caracteristiques = useMemo(() => caracteristiquesGarages(garages), [garages]);
+
+  const options = useMemo((): OptionsStrategie | null => {
     if (!project || !organization) return null;
     if (project.organizationId && typeProjet.isLoading) return null;
     const typeOrganisme =
@@ -92,13 +99,15 @@ export function useOptionsProjet(project: ProjectDTO | null | undefined, project
         h2LivreParKg: surcharges.h2LivreParKg,
         devisRaccordement: surcharges.devisRaccordement,
       },
+      garages: caracteristiques,
     };
-  }, [project, organization, surcharges, typeProjet.data, typeProjet.isLoading]);
+  }, [project, organization, surcharges, typeProjet.data, typeProjet.isLoading, caracteristiques]);
 
   return {
     options,
     donneesClient: surcharges.provenances,
-    isLoading: orgLoading || energieLoading || (!!project?.organizationId && typeProjet.isLoading),
+    isLoading:
+      orgLoading || energieLoading || garagesLoading || (!!project?.organizationId && typeProjet.isLoading),
     organization,
   };
 }

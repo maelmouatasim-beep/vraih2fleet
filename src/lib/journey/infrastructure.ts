@@ -91,6 +91,8 @@ export interface DetailRaccordement {
 export interface CaracteristiquesGarage {
   puissanceDisponibleKw?: number | null;
   devisRaccordement?: number | null;
+  /** Fenêtre de recharge : heure de retour (soir) → heure de départ (matin), « HH:MM[:SS] ». */
+  fenetreRecharge?: { retour: string; depart: string };
 }
 
 export interface PhaseGarage {

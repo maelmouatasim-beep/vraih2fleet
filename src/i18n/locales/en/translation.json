@@ -94,7 +94,42 @@
       "noProject": "This vehicle is not used in any project.",
       "confirm": "Delete permanently"
     },
-    "demoBadge": "demo"
+    "demoBadge": "demo",
+    "garages": {
+      "title": "Depots",
+      "subtitle": "Available electrical capacity, Hydro-Québec rate and charging window: they size the chargers and grid connection of each depot.",
+      "add": "Add a depot",
+      "edit": "Edit depot",
+      "dialogSubtitle": "Only the name is required. Without available capacity, the calculation uses a presumed value (estimate).",
+      "empty": "No depots yet. They are created automatically on import (\"garage\" column) or added here.",
+      "saved": "Depot saved",
+      "deleted": "Depot deleted (vehicles are kept, without a depot)",
+      "deleteTitle": "Delete depot \"{{name}}\"?",
+      "deleteSubtitle": "Linked vehicles are kept; their depot becomes \"not specified\".",
+      "unknownPower": "to be entered",
+      "windowValue": "{{retour}} → {{depart}} ({{heures}} h)",
+      "powerHelp": "Available capacity: remaining capacity of the depot's electrical service, per your electrician or Hydro-Québec. A grid connection quote entered here always takes priority.",
+      "columns": {
+        "vehicles": "Vehicles",
+        "window": "Charging window"
+      },
+      "fields": {
+        "name": "Name",
+        "address": "Address",
+        "available_power_kw": "Available capacity (kW)",
+        "hq_rate": "Hydro-Québec rate",
+        "return_time": "Vehicles return",
+        "departure_time": "Vehicles leave",
+        "parking_spots": "Parking spots",
+        "grid_connection_quote": "Grid connection quote ($)"
+      },
+      "rates": {
+        "G": "G (small power)",
+        "M": "M (medium power)",
+        "LG": "LG (large power)",
+        "autre": "Other"
+      }
+    }
   },
   "pages_marketing": {
     "privacy": {
@@ -6150,7 +6185,7 @@
       },
       "garageTotal": "Depot total: {{amount}}",
       "connectionDetail": "Grid connection: {{demandes}} kW requested (chargers at full power) · {{disponibles}} kW available · {{supplementaires}} kW extra.",
-      "presumedCapacity": "Available power PRESUMED (registry): enter the depot’s actual power.",
+      "presumedCapacity": "PRESUMED available capacity (registry): enter the depot's real capacity in My fleet › Depots.",
       "tier": "Upgrade tier {{palier}} applied.",
       "noUpgrade": "The chargers fit within the existing capacity: no upgrade."
     },
