@@ -278,15 +278,15 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   d'accueil obsolète de Projets, libellés tronqués, kanban coupé.
   Migrations de la revue : 20260929010000 → 20260930050000 (toutes
   additives) — à appliquer sur la base hébergée via docs/deploiement.md.
-- **Migration vers le projet Supabase propre : code PRÊT, en attente des
-  étapes manuelles de l'utilisateur** (création du projet, secrets et
-  variables GitHub, liste à cocher Supabase — `docs/deploiement.md`).
-  Livré : workflows deploy-supabase / e2e-heberge, deploy-pages sur
-  variables de dépôt, contrôle de santé du schéma (manifeste vérifié en
-  CI), tâches pg_cron via Vault, page /reset-password (elle n'existait
-  pas) + liens de courriel compatibles GitHub Pages, ref MCP dérivée de
-  SUPABASE_URL. Point ouvert : fournisseur de l'assistant IA (passerelle
-  Lovable indisponible hors Lovable).
+- **Migration vers le projet Supabase propre : BASCULÉE le 2026-10-02.**
+  Site de test sur `rjyvcogtvcgzwxeprgsm` (63 migrations, 9 fonctions,
+  contrôle de santé conforme) ; l'ancienne base Lovable n'est plus
+  utilisée par le site de test. Livré : workflows deploy-supabase /
+  e2e-heberge, deploy-pages sur variables de dépôt, contrôle de santé du
+  schéma (manifeste vérifié en CI), tâches pg_cron via Vault (non encore
+  planifiées), page /reset-password + liens de courriel compatibles
+  GitHub Pages, services non branchés → 503 `service_non_configure` +
+  message clair (SendGrid, IA, Mapbox reportés par l'utilisateur).
 - Phase 4 — site public et conformité (études de cas re-étiquetées,
   tarification unique — prix demandés à l'utilisateur, promesses non
   livrées retirées, légal fr/en Loi 25 — nom légal demandé, admin
@@ -312,8 +312,11 @@ sinon « à_valider » avec l'URL à consulter.
 - Revue juridique des pages légales (Loi 25, CGU, confidentialité).
 - Hypothèses et programmes « à_valider » : vérification par
   l'utilisateur (sources listées dans la Bibliothèque).
-- Bascule sur le projet Supabase propre (docs/deploiement.md), puis
-  « E2E base hébergée » vert et test manuel sur GitHub Pages.
+- Services reportés sur le site de test : SendGrid (+ réactiver
+  « Confirm email »), Mapbox, clé IA, tâches pg_cron
+  (`supabase/snippets/taches-planifiees.sql`).
+- `get-mapbox-token` : CORS `*` et pas de vérification explicite de
+  l'appelant (jeton public, risque faible) — à aligner sur `_shared/`.
 - Invitations d'équipe : aucun courriel envoyé automatiquement (la
   personne voit l'invitation en se connectant) — brancher send-email.
 - Récapitulatif hebdomadaire (préférence courriel) non implémenté.

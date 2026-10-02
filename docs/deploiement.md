@@ -14,6 +14,21 @@ Supabase, jamais ailleurs.
 
 ---
 
+## Statut (2026-10-02)
+
+**Bascule faite.** Le site de test (GitHub Pages) utilise le projet
+`rjyvcogtvcgzwxeprgsm` ; l'ancienne base Lovable (`fihklznbfufhowopwwuc`)
+n'est plus utilisée par le site de test (rien n'y a été supprimé).
+Premier déploiement : 63 migrations appliquées, 9 edge functions
+déployées, contrôle de santé « Base conforme au dépôt » ; les tables
+`vehicles`, `organizations`, `project_vehicles`, `energy_client_inputs`,
+`report_snapshots` répondent (HTTP 200, `[]` en anonyme grâce à la RLS).
+
+Fait : étapes 1, 2, 3 ; étape 4 : URLs d'auth + secrets `ALLOWED_ORIGINS`,
+`CRON_SECRET`, `INTERNAL_FUNCTION_SECRET`, `APP_BASE_URL`,
+`CONTACT_INBOX_EMAIL`. **Reportés** : SendGrid, Mapbox, clé IA de
+l'assistant, tâches pg_cron (voir « Services non branchés »).
+
 ## Projet retenu (valeurs publiques)
 
 - Ref : `rjyvcogtvcgzwxeprgsm`
@@ -49,7 +64,7 @@ Supabase, jamais ailleurs.
 **À me transmettre dans le chat** : le *Project ref*, l'URL et la clé
 publishable/anon. Rien d'autre.
 
-## Étape 2 — Secrets GitHub (toi)
+## Étape 2 — Secrets GitHub (toi) — FAIT
 
 https://github.com/maelmouatasim-beep/vraih2fleet/settings/secrets/actions
 (Settings → Secrets and variables → Actions → onglet **Secrets** →
@@ -61,7 +76,7 @@ https://github.com/maelmouatasim-beep/vraih2fleet/settings/secrets/actions
 | `SUPABASE_DB_PASSWORD` | le mot de passe de la base (étape 1.3) |
 | `SUPABASE_PROJECT_REF` | le Project ref (étape 1.4) |
 
-## Étape 3 — Variables GitHub (toi, ou moi si tu me donnes les valeurs publiques)
+## Étape 3 — Variables GitHub (toi) — FAIT
 
 Même page, onglet **Variables** → **New repository variable** :
 
@@ -158,6 +173,38 @@ NOUVELLE migration.
    inscription avec ta vraie adresse, courriel de confirmation reçu,
    lien → tableau de bord ; « Mot de passe oublié » → courriel → lien →
    nouveau mot de passe.
+
+## Services non branchés (site de test)
+
+Tant qu'une clé manque, le contrôle de santé n'émet qu'un
+**avertissement** (jamais un échec) et l'application affiche un message
+clair — les edge functions répondent `503 {"error":"service_non_configure"}`
+(`src/lib/serviceNonConfigure.ts`) :
+
+| Service manquant | Comportement |
+|---|---|
+| `SENDGRID_API_KEY` | Formulaires contact / démo : la demande est **enregistrée** (`email_leads`, message compris) et l'écran le dit (« Demande enregistrée — l'envoi automatique de courriels n'est pas encore activé »). Support : « votre demande n'a pas été transmise ». Invitation de collaborateur : créée, « prévenez la personne vous-même ». |
+| Clé IA (`LOVABLE_API_KEY` aujourd'hui) | L'assistant répond « L'assistant IA n'est pas encore activé sur ce site de test ». |
+| `MAPBOX_PUBLIC_TOKEN` | Aucune carte n'est affichée dans les écrans actuels ; la fonction répond 503. |
+| Tâches pg_cron | Pas de rappels d'échéances ni de synchro télématique planifiée ; à activer avec `supabase/snippets/taches-planifiees.sql` quand SendGrid sera branché. |
+
+### Courriels d'authentification sans SendGrid
+
+Le service d'envoi intégré de Supabase n'envoie qu'aux adresses des
+membres de l'équipe du projet, à très faible débit. Pour tes tests :
+
+- **avec ta propre adresse** (membre du projet) : « Confirm email » peut
+  rester activé, le courriel arrive (lentement) ;
+- **avec d'autres adresses** (comptes de test, testeurs) : désactiver
+  temporairement — Authentication → Sign In / Providers → **Email** →
+  décocher **Confirm email** → Save. Les inscriptions ouvrent alors une
+  session directement. « Mot de passe oublié » ne fonctionnera que pour
+  les adresses de l'équipe tant qu'un SMTP n'est pas configuré.
+- **À réactiver avant tout pilote**, une fois le SMTP (SendGrid)
+  configuré dans Authentication → Emails → SMTP Settings.
+
+Le workflow « E2E base hébergée » n'en dépend pas (comptes créés
+confirmés par l'API d'administration).
 
 ## Points ouverts
 
