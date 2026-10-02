@@ -170,6 +170,39 @@ export default function CouncilReportPDF({
           </View>
         </View>
 
+        {/* Infrastructure : MÊME plan par garage que Stratégies, Plan, Financement et Excel */}
+        <Text style={s.h2}>{en ? "Charging infrastructure by depot" : "Infrastructure de recharge par garage"}</Text>
+        {strategie.infra.garages.length === 0 ? (
+          <Text style={s.note}>
+            {en ? "No infrastructure: no zero-emission vehicle in this plan." : "Aucune infrastructure : aucun véhicule zéro émission dans ce plan."}
+          </Text>
+        ) : (
+          <>
+            <View style={s.enTeteTable}>
+              <Text style={[s.cel, { flex: 2 }]}>{en ? "Depot" : "Garage"}</Text>
+              <Text style={[s.cel, s.droite, { flex: 1 }]}>{en ? "Chargers" : "Bornes"}</Text>
+              <Text style={[s.cel, s.droite, { flex: 1 }]}>{en ? "Grid connection" : "Raccordement"}</Text>
+              <Text style={[s.cel, s.droite, { flex: 1 }]}>{en ? "H2 station" : "Station H2"}</Text>
+              <Text style={[s.cel, s.droite, { flex: 1 }]}>Total</Text>
+            </View>
+            {strategie.infra.garages.map((g) => (
+              <View key={g.cle} style={s.ligneTable}>
+                <Text style={[s.cel, { flex: 2 }]}>{g.depot ?? (en ? "Depot not specified" : "Garage non précisé")}</Text>
+                <Text style={[s.cel, s.droite, { flex: 1 }]}>{cad(g.capexBornes)}</Text>
+                <Text style={[s.cel, s.droite, { flex: 1 }]}>{cad(g.raccordement.cout)}</Text>
+                <Text style={[s.cel, s.droite, { flex: 1 }]}>{cad(g.capexStationH2)}</Text>
+                <Text style={[s.cel, s.droite, { flex: 1 }]}>{cad(g.capexTotal)}</Text>
+              </View>
+            ))}
+            <View style={s.ligneTable}>
+              <Text style={[s.cel, { flex: 5, fontFamily: "Helvetica-Bold" }]}>
+                {en ? "Total infrastructure (before taxes)" : "Infrastructure totale (avant taxes)"}
+              </Text>
+              <Text style={[s.cel, s.droite, { flex: 1, fontFamily: "Helvetica-Bold" }]}>{cad(strategie.infra.totalCapex)}</Text>
+            </View>
+          </>
+        )}
+
         <Text style={s.h2}>{en ? "Stress test (methodology §7)" : "Stress test (méthodologie §7)"}</Text>
         <View style={s.enTeteTable}>
           <Text style={[s.cel, { flex: 2 }]}>{en ? "Scenario" : "Scénario"}</Text>

@@ -48,7 +48,9 @@ const L = {
     payback: "Délai de récupération actualisé (ans)",
     colonnesVehicules: ["Unité", "Technologie cible", "Année d'achat", "km/an retenus", "Durée de vie (ans)", "Prix avant taxes (réf. diesel)", "Prix avant taxes (cible)", "Subventions retenues", "Total subventions"],
     an: "an",
-    sites: ["Sites d'infrastructure", "Capex avant taxes"],
+    sites: ["Infrastructure par garage (avant taxes)", "Bornes", "Raccordement", "Station H2", "Total"],
+    sansGarage: "Garage non précisé",
+    totalInfra: "Infrastructure totale",
     titreHyp: "Hypothèses du registre (docs/tco-methodologie.md §8 — statuts honnêtes)",
     donneesClient: "DONNÉES CLIENT (elles priment sur les défauts du registre ci-dessous) :",
     colonnesHyp: ["Identifiant", "Description", "Valeur", "Unité", "Statut", "Source", "Année", "Vérifiée le"],
@@ -68,7 +70,9 @@ const L = {
     payback: "Discounted payback (years)",
     colonnesVehicules: ["Unit", "Target technology", "Purchase year", "km/yr used", "Lifetime (years)", "Price before taxes (diesel ref.)", "Price before taxes (target)", "Subsidies used", "Total subsidies"],
     an: "year",
-    sites: ["Infrastructure sites", "Capex before taxes"],
+    sites: ["Infrastructure by depot (before taxes)", "Chargers", "Grid connection", "H2 station", "Total"],
+    sansGarage: "Depot not specified",
+    totalInfra: "Total infrastructure",
     titreHyp: "Registry assumptions (docs/tco-methodologie.md §8 — honest statuses)",
     donneesClient: "CLIENT DATA (takes priority over the registry defaults below):",
     colonnesHyp: ["Identifier", "Description", "Value", "Unit", "Status", "Source", "Year", "Checked on"],
@@ -137,7 +141,15 @@ export function construireClasseurPlan(
     }),
     [],
     l.sites,
-    ...(plan.sitesInfra ?? []).map((s) => [s.id, s.capexAvantTaxes]),
+    // MÊME plan par garage que Stratégies, Plan, Financement et PDF.
+    ...strategie.infra.garages.map((g): Cellule[] => [
+      g.depot ?? l.sansGarage,
+      g.capexBornes,
+      g.raccordement.cout,
+      g.capexStationH2,
+      g.capexTotal,
+    ]),
+    [l.totalInfra, null, null, null, strategie.infra.totalCapex],
   ];
 
   const hypotheses: Cellule[][] = [

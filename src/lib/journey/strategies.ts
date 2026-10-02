@@ -6,12 +6,11 @@
  * registre d'hypothèses ; les subventions du registre des programmes
  * (un programme échu avant l'année d'achat prévue n'est pas compté).
  *
- * Infrastructure v1 : un site de recharge (bornes par catégorie +
- * raccordement du dépôt) et, s'il y a des FCEV, un site H2 distinct —
- * sites homogènes pour une répartition au prorata de l'énergie.
+ * Infrastructure : plan PAR GARAGE de ./infrastructure.ts (source
+ * unique, aussi lue par Plan, Financement, Rapports et Excel) — un site
+ * de recharge et/ou un site H2 par garage dans le moteur.
  */
 import {
-  HYPOTHESES,
   calculerPlan,
   parametresParDefaut,
   resoudreSubventions,
@@ -24,6 +23,12 @@ import {
   type SubventionConfirmee,
 } from "@/lib/confirmedSubsidies";
 import {
+  planifierInfrastructure,
+  sitesInfraMoteur,
+  type PlanInfrastructure,
+  type VehiculeInfra,
+} from "./infrastructure";
+import {
   analyserDonneesVehicule,
   classeEmission,
   evaluerFaisabiliteVehicule,
@@ -31,6 +36,9 @@ import {
 } from "./feasibility";
 
 export interface VehiculeProjet extends VehiculeFaisabilite {
+  unit_number?: string;
+  /** Garage (dépôt) du véhicule — regroupe bornes et raccordement. */
+  depot?: string | null;
   replacement_year: number | null;
   target_technology: string | null; // 'diesel' | 'bev' | 'fcev' | null
   /** Subventions CONFIRMÉES par le client (lettre d'octroi…) : elles
@@ -53,7 +61,10 @@ export interface StrategieConstruite {
   resultat: ResultatPlan | null;
   nbVehicules: number;
   nbZeroEmission: number;
+  /** = infra.totalCapex (le total affiché partout). */
   infraCapex: number;
+  /** Plan d'infrastructure par garage (source unique). */
+  infra: PlanInfrastructure;
   subventionsTotal: number;
   /** Véhicules de catégorie « autre », hors moteur. */
   exclusions: string[];
@@ -67,15 +78,6 @@ export interface StrategieConstruite {
    *  poids inconnue, % à valider, limites par organisation…), dédupliquées. */
   avertissementsSubventions: string[];
 }
-
-/** Borne de recharge par catégorie (hypothèses du registre). */
-const BORNE_PAR_CATEGORIE: Record<string, number> = {
-  vehicule_leger: HYPOTHESES.borne_niveau2_installee.valeur,
-  camionnette: HYPOTHESES.borne_niveau2_installee.valeur,
-  camion_moyen: HYPOTHESES.borne_rapide_50kw_installee.valeur,
-  camion_lourd: HYPOTHESES.borne_rapide_150kw_installee.valeur,
-  autobus_urbain_12m: HYPOTHESES.borne_rapide_150kw_installee.valeur,
-};
 
 type TechnoAlternative = "diesel" | "BEV" | "FCEV";
 
@@ -106,9 +108,7 @@ export function construireStrategie(
   const horsHorizon: { id: string; anneeRemplacement: number }[] = [];
   const avertissementsSubventions = new Set<string>();
   const plansVehicules: NonNullable<PlanTcoEntree["vehicules"]> = [];
-  const bevIds: string[] = [];
-  const fcevIds: string[] = [];
-  let infraRecharge = 0;
+  const vehiculesInfra: VehiculeInfra[] = [];
 
   for (const v of vehicules) {
     const { defauts, kmParAn, consoReference } = analyserDonneesVehicule(v);
@@ -186,13 +186,22 @@ export function construireStrategie(
       anneeAcquisition: k,
     });
 
-    if (techno === "BEV") {
-      bevIds.push(v.id);
-      infraRecharge += BORNE_PAR_CATEGORIE[v.category] ?? 0;
-    } else if (techno === "FCEV") {
-      fcevIds.push(v.id);
+    if (techno !== "diesel") {
+      vehiculesInfra.push({
+        id: v.id,
+        unit_number: v.unit_number,
+        category: v.category,
+        depot: v.depot ?? null,
+        technologie: techno,
+        anneeAcquisition: k,
+      });
     }
   }
+
+  const infra = planifierInfrastructure(vehiculesInfra, {
+    anneeReference: options.anneeReference,
+    devisRaccordementProjet: options.surchargesEnergie?.devisRaccordement ?? null,
+  });
 
   if (plansVehicules.length === 0) {
     return {
@@ -202,6 +211,7 @@ export function construireStrategie(
       nbVehicules: 0,
       nbZeroEmission: 0,
       infraCapex: 0,
+      infra,
       subventionsTotal: 0,
       exclusions,
       sansAnnee,
@@ -210,34 +220,12 @@ export function construireStrategie(
     };
   }
 
-  // L'infrastructure est payée l'année d'ARRIVÉE des premiers véhicules
-  // qui l'utilisent (§3.5) — pas à l'année 0 du plan.
-  const anneeArrivee = (ids: string[]) =>
-    Math.min(...plansVehicules.filter((v) => ids.includes(v.id)).map((v) => v.anneeAcquisition ?? 0));
-  const sitesInfra: NonNullable<PlanTcoEntree["sitesInfra"]> = [];
-  if (bevIds.length > 0) {
-    // Devis client de raccordement (donnée client, §3.3 couche 3)
-    // prioritaire sur l'hypothèse du registre.
-    infraRecharge += options.surchargesEnergie?.devisRaccordement ?? HYPOTHESES.raccordement_depot.valeur;
-    sitesInfra.push({
-      id: "depot-recharge",
-      capexAvantTaxes: infraRecharge,
-      vehiculeIds: bevIds,
-      anneeMiseEnService: anneeArrivee(bevIds),
-    });
-  }
-  if (fcevIds.length > 0) {
-    sitesInfra.push({
-      id: "depot-h2",
-      capexAvantTaxes: HYPOTHESES.station_h2_depot.valeur,
-      vehiculeIds: fcevIds,
-      anneeMiseEnService: anneeArrivee(fcevIds),
-    });
-  }
+  // Sites du moteur = plan d'infrastructure par garage (payé l'année
+  // d'ARRIVÉE des premiers véhicules de chaque garage, §3.5).
+  const sitesInfra = sitesInfraMoteur(infra);
 
   const plan: PlanTcoEntree = { parametres, vehicules: plansVehicules, sitesInfra };
   const resultat = calculerPlan(plan);
-  const infraCapex = sitesInfra.reduce((a, s) => a + s.capexAvantTaxes, 0);
   const subventionsTotal = resultat.alternative.flux.subventions.reduce((a, b) => a + b, 0);
 
   return {
@@ -245,8 +233,9 @@ export function construireStrategie(
     plan,
     resultat,
     nbVehicules: plansVehicules.length,
-    nbZeroEmission: bevIds.length + fcevIds.length,
-    infraCapex,
+    nbZeroEmission: vehiculesInfra.length,
+    infraCapex: infra.totalCapex,
+    infra,
     subventionsTotal,
     exclusions,
     sansAnnee,

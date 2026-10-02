@@ -264,18 +264,7 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
       </Card>
 
       {options && (
-        <DepotInfrastructureCard
-          vehicules={projectVehicles.map((pv) => ({
-            id: pv.vehicle_id,
-            unit_number: pv.vehicles.unit_number,
-            category: pv.vehicles.category,
-            depot: pv.vehicles.depot,
-            replacement_year: pv.replacement_year,
-            target_technology: pv.target_technology,
-          }))}
-          anneeReference={options.anneeReference}
-          devisRaccordement={options.surchargesEnergie?.devisRaccordement ?? null}
-        />
+        <DepotInfrastructureCard infra={donnees.strategie.infra} anneeReference={options.anneeReference} />
       )}
 
       <p className="text-xs text-muted-foreground">{t("journey.plan.note")}</p>

@@ -38,7 +38,7 @@ describe("construireStrategie", () => {
     // année 3 (l'infra suit l'arrivée des véhicules, §3.5 v2.0)
     expect(s.resultat!.reference.flux.investissement[0]).toBe(0);
     expect(s.resultat!.alternative.flux.investissement[0]).toBe(0);
-    const site = s.plan!.sitesInfra!.find((x) => x.id === "depot-recharge")!;
+    const site = s.plan!.sitesInfra!.find((x) => x.id === "recharge:__sans_garage__")!;
     expect(site.anneeMiseEnService).toBe(3);
     // le versement des subventions est décalé à l'année d'acquisition
     for (const sub of s.plan!.vehicules[0].subventionsAlternative ?? []) {
@@ -139,7 +139,7 @@ describe("construireStrategie", () => {
       "plan_actuel",
       OPTIONS,
     );
-    const site = s.plan!.sitesInfra!.find((x) => x.id === "depot-recharge")!;
+    const site = s.plan!.sitesInfra!.find((x) => x.id === "recharge:__sans_garage__")!;
     expect(site.anneeMiseEnService).toBe(3); // 2029 − 2026
     // aucun investissement d'infrastructure à l'année 0
     expect(s.resultat!.alternative.flux.investissement[0]).toBe(0);
@@ -156,7 +156,7 @@ describe("construireStrategie", () => {
       OPTIONS,
     );
     const sites = s.plan!.sitesInfra!;
-    expect(sites.map((x) => x.id).sort()).toEqual(["depot-h2", "depot-recharge"]);
+    expect(sites.map((x) => x.id).sort()).toEqual(["h2:__sans_garage__", "recharge:__sans_garage__"]);
     expect(s.resultat!.avertissements.some((a) => a.includes("technologies mixtes"))).toBe(false);
   });
 

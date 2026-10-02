@@ -1,13 +1,16 @@
 /**
- * C6 — Dimensionnement MINIMAL de la recharge PAR DÉPÔT (logique pure).
- * Modèle assumé (le même que les stratégies, §3.5) : une borne par
- * véhicule zéro émission, du type correspondant à sa catégorie, mise en
- * service l'année de remplacement du véhicule. Les coûts viennent du
- * registre des hypothèses (PIVEZ/RNCan, statut « estimation ») et un
- * DEVIS DE RACCORDEMENT saisi dans le projet est prioritaire sur
- * l'estimation. Les puissances par type de borne sont celles des
- * hypothèses du registre (niveau 2 : 7-19 kW ; rapide ~50 kW ; ~150 kW),
- * affichées en fourchette — jamais un chiffre inventé.
+ * Plan d'infrastructure PAR GARAGE — SOURCE UNIQUE (logique pure).
+ *
+ * Utilisé par Stratégies (sites du moteur), Plan (carte par garage),
+ * Financement, Rapports et Excel : le même projet affiche donc le même
+ * total d'infrastructure partout, au dollar près.
+ *
+ * Modèle (§3.5) : une borne par véhicule électrique (BEV), du type
+ * correspondant à sa catégorie ; un raccordement par garage ; une
+ * station H2 par garage qui accueille des FCEV. Le capex d'un garage est
+ * engagé l'année d'arrivée de ses premiers véhicules. Coûts du registre
+ * des hypothèses (statut « estimation ») ; un DEVIS de raccordement saisi
+ * dans le projet est prioritaire sur l'estimation.
  */
 import { HYPOTHESES } from "@/lib/tco";
 
@@ -38,7 +41,7 @@ export const BORNES: Record<
   },
 };
 
-/** Type de borne par catégorie (même correspondance que les stratégies). */
+/** Type de borne par catégorie de véhicule. */
 export const TYPE_BORNE_PAR_CATEGORIE: Record<string, TypeBorne> = {
   vehicule_leger: "niveau2",
   camionnette: "niveau2",
@@ -47,16 +50,27 @@ export const TYPE_BORNE_PAR_CATEGORIE: Record<string, TypeBorne> = {
   autobus_urbain_12m: "rapide150",
 };
 
-export interface VehiculeDepot {
+/** Véhicule zéro émission retenu par une stratégie, avec son garage. */
+export interface VehiculeInfra {
   id: string;
-  unit_number: string;
+  unit_number?: string;
   category: string;
+  /** Garage (dépôt) du véhicule ; null = non renseigné (regroupés, signalés). */
   depot: string | null;
-  replacement_year: number | null;
-  target_technology: string | null; // 'diesel' | 'bev' | 'fcev' | null
+  technologie: "BEV" | "FCEV";
+  /** Année du PLAN (0 = année de référence) d'arrivée du véhicule. */
+  anneeAcquisition: number;
 }
 
-export interface PhaseDepot {
+export type SourceRaccordement = "aucun" | "estimation" | "devis_projet";
+
+export interface DetailRaccordement {
+  cout: number;
+  source: SourceRaccordement;
+}
+
+export interface PhaseGarage {
+  /** Année CALENDAIRE. */
   annee: number;
   bornes: Partial<Record<TypeBorne, number>>;
   puissanceAjouteeMinKw: number;
@@ -64,51 +78,81 @@ export interface PhaseDepot {
   unites: string[];
 }
 
-export interface DepotDimensionne {
-  /** null = véhicules sans dépôt renseigné (regroupés, signalés). */
+export interface InfraGarage {
+  /** Clé stable du garage (nom normalisé, ou « sans garage »). */
+  cle: string;
+  /** Nom affiché ; null = véhicules sans garage renseigné. */
   depot: string | null;
-  nbBev: number;
-  nbFcev: number;
+  vehiculesBev: string[];
+  vehiculesFcev: string[];
   bornes: Partial<Record<TypeBorne, number>>;
   capexBornes: number;
-  raccordementEstime: number;
-  capexStationH2: number;
   puissanceMinKw: number;
   puissanceMaxKw: number;
-  anneeMiseEnService: number;
-  phasage: PhaseDepot[];
+  raccordement: DetailRaccordement;
+  capexStationH2: number;
+  /** Années du PLAN de mise en service (null = rien de ce type). */
+  anneeMiseEnServiceRecharge: number | null;
+  anneeMiseEnServiceH2: number | null;
+  phasage: PhaseGarage[];
   /** Catégories sans correspondance de borne (« autre ») — signalées. */
   categoriesInconnues: string[];
+  /** Bornes + raccordement + station H2 du garage. */
+  capexTotal: number;
 }
 
-export interface DimensionnementDepots {
-  depots: DepotDimensionne[];
-  /** Devis client saisi dans le projet : PRIORITAIRE sur les estimations
-   *  de raccordement (il les remplace pour l'ensemble du projet). */
-  devisRaccordement: number | null;
+export interface PlanInfrastructure {
+  garages: InfraGarage[];
+  capexBornes: number;
+  raccordement: number;
+  capexStationsH2: number;
+  /** Total du projet — LE chiffre affiché partout. */
   totalCapex: number;
+  /** Devis client de raccordement du projet (prioritaire), s'il y en a un. */
+  devisRaccordementProjet: number | null;
 }
 
-export function dimensionnerDepots(
-  vehicules: VehiculeDepot[],
-  options: { anneeReference: number; devisRaccordement?: number | null },
-): DimensionnementDepots {
-  const parDepot = new Map<string | null, VehiculeDepot[]>();
+export interface OptionsInfrastructure {
+  anneeReference: number;
+  devisRaccordementProjet?: number | null;
+}
+
+const SANS_GARAGE = "__sans_garage__";
+
+/** Clé de regroupement d'un garage saisi en texte libre (casse et espaces ignorés). */
+export function cleGarage(depot: string | null | undefined): string {
+  const nom = depot?.trim().replace(/\s+/g, " ");
+  return nom ? nom.toLocaleLowerCase("fr") : SANS_GARAGE;
+}
+
+/** Raccordement estimé d'un garage qui accueille des BEV. */
+function raccordementEstime(nbBev: number): DetailRaccordement {
+  if (nbBev === 0) return { cout: 0, source: "aucun" };
+  return { cout: HYPOTHESES.raccordement_depot.valeur, source: "estimation" };
+}
+
+export function planifierInfrastructure(
+  vehicules: VehiculeInfra[],
+  options: OptionsInfrastructure,
+): PlanInfrastructure {
+  const parGarage = new Map<string, { depot: string | null; liste: VehiculeInfra[] }>();
   for (const v of vehicules) {
-    if (v.target_technology !== "bev" && v.target_technology !== "fcev") continue;
-    const cle = v.depot?.trim() || null;
-    const liste = parDepot.get(cle) ?? [];
-    liste.push(v);
-    parDepot.set(cle, liste);
+    const cle = cleGarage(v.depot);
+    const entree = parGarage.get(cle) ?? {
+      depot: v.depot?.trim().replace(/\s+/g, " ") || null,
+      liste: [],
+    };
+    entree.liste.push(v);
+    parGarage.set(cle, entree);
   }
 
-  const depots: DepotDimensionne[] = [];
-  for (const [depot, liste] of parDepot) {
-    const bev = liste.filter((v) => v.target_technology === "bev");
-    const fcev = liste.filter((v) => v.target_technology === "fcev");
+  const garages: InfraGarage[] = [];
+  for (const [cle, { depot, liste }] of parGarage) {
+    const bev = liste.filter((v) => v.technologie === "BEV");
+    const fcev = liste.filter((v) => v.technologie === "FCEV");
     const bornes: Partial<Record<TypeBorne, number>> = {};
     const categoriesInconnues = new Set<string>();
-    const parAnnee = new Map<number, PhaseDepot>();
+    const parAnnee = new Map<number, PhaseGarage>();
     let capexBornes = 0;
     let puissanceMinKw = 0;
     let puissanceMaxKw = 0;
@@ -125,7 +169,7 @@ export function dimensionnerDepots(
       puissanceMinKw += borne.puissanceMinKw;
       puissanceMaxKw += borne.puissanceMaxKw;
 
-      const annee = v.replacement_year ?? options.anneeReference;
+      const annee = options.anneeReference + v.anneeAcquisition;
       const phase = parAnnee.get(annee) ?? {
         annee,
         bornes: {},
@@ -136,41 +180,90 @@ export function dimensionnerDepots(
       phase.bornes[type] = (phase.bornes[type] ?? 0) + 1;
       phase.puissanceAjouteeMinKw += borne.puissanceMinKw;
       phase.puissanceAjouteeMaxKw += borne.puissanceMaxKw;
-      phase.unites.push(v.unit_number);
+      phase.unites.push(v.unit_number ?? v.id);
       parAnnee.set(annee, phase);
     }
 
-    const phasage = [...parAnnee.values()].sort((a, b) => a.annee - b.annee);
-    const anneesFcev = fcev.map((v) => v.replacement_year ?? options.anneeReference);
-    const anneeMiseEnService = Math.min(
-      ...(phasage.length > 0 ? [phasage[0].annee] : []),
-      ...(anneesFcev.length > 0 ? [Math.min(...anneesFcev)] : []),
-      ...(phasage.length === 0 && anneesFcev.length === 0 ? [options.anneeReference] : []),
-    );
+    const premiere = (l: VehiculeInfra[]) =>
+      l.length > 0 ? Math.min(...l.map((v) => v.anneeAcquisition)) : null;
+    const raccordement = raccordementEstime(bev.length);
+    const capexStationH2 = fcev.length > 0 ? HYPOTHESES.station_h2_depot.valeur : 0;
 
-    depots.push({
+    garages.push({
+      cle,
       depot,
-      nbBev: bev.length,
-      nbFcev: fcev.length,
+      vehiculesBev: bev.map((v) => v.id),
+      vehiculesFcev: fcev.map((v) => v.id),
       bornes,
       capexBornes,
-      raccordementEstime: bev.length > 0 ? HYPOTHESES.raccordement_depot.valeur : 0,
-      capexStationH2: fcev.length > 0 ? HYPOTHESES.station_h2_depot.valeur : 0,
       puissanceMinKw,
       puissanceMaxKw,
-      anneeMiseEnService,
-      phasage,
+      raccordement,
+      capexStationH2,
+      anneeMiseEnServiceRecharge: premiere(bev),
+      anneeMiseEnServiceH2: premiere(fcev),
+      phasage: [...parAnnee.values()].sort((a, b) => a.annee - b.annee),
       categoriesInconnues: [...categoriesInconnues],
+      capexTotal: 0,
     });
   }
 
-  depots.sort((a, b) => (a.depot ?? "￿").localeCompare(b.depot ?? "￿", "fr"));
+  // Devis client du PROJET : il remplace la somme des estimations de
+  // raccordement, réparti entre les garages au prorata des estimations
+  // (le total affiché est exactement le devis).
+  const devis = options.devisRaccordementProjet ?? null;
+  const avecRecharge = garages.filter((g) => g.vehiculesBev.length > 0);
+  if (devis != null && avecRecharge.length > 0) {
+    const base = avecRecharge.reduce((s, g) => s + g.raccordement.cout, 0);
+    for (const g of avecRecharge) {
+      const part = base > 0 ? g.raccordement.cout / base : 1 / avecRecharge.length;
+      g.raccordement = { cout: devis * part, source: "devis_projet" };
+    }
+  }
 
-  const devis = options.devisRaccordement ?? null;
-  const raccordements = depots.reduce((s, d) => s + d.raccordementEstime, 0);
-  const totalCapex =
-    depots.reduce((s, d) => s + d.capexBornes + d.capexStationH2, 0) +
-    (devis != null ? devis : raccordements);
+  for (const g of garages) g.capexTotal = g.capexBornes + g.raccordement.cout + g.capexStationH2;
+  garages.sort((a, b) => (a.depot ?? "￿").localeCompare(b.depot ?? "￿", "fr"));
 
-  return { depots, devisRaccordement: devis, totalCapex };
+  const capexBornes = garages.reduce((s, g) => s + g.capexBornes, 0);
+  const raccordement = garages.reduce((s, g) => s + g.raccordement.cout, 0);
+  const capexStationsH2 = garages.reduce((s, g) => s + g.capexStationH2, 0);
+  return {
+    garages,
+    capexBornes,
+    raccordement,
+    capexStationsH2,
+    totalCapex: capexBornes + raccordement + capexStationsH2,
+    devisRaccordementProjet: devis,
+  };
+}
+
+/** Sites du moteur TCO dérivés du plan d'infrastructure : un site de
+ *  recharge et/ou un site H2 par garage (sites homogènes : répartition au
+ *  prorata de l'énergie). Σ capex des sites = totalCapex, par construction. */
+export function sitesInfraMoteur(plan: PlanInfrastructure): {
+  id: string;
+  capexAvantTaxes: number;
+  vehiculeIds: string[];
+  anneeMiseEnService: number;
+}[] {
+  const sites = [];
+  for (const g of plan.garages) {
+    if (g.vehiculesBev.length > 0) {
+      sites.push({
+        id: `recharge:${g.cle}`,
+        capexAvantTaxes: g.capexBornes + g.raccordement.cout,
+        vehiculeIds: g.vehiculesBev,
+        anneeMiseEnService: g.anneeMiseEnServiceRecharge ?? 0,
+      });
+    }
+    if (g.vehiculesFcev.length > 0) {
+      sites.push({
+        id: `h2:${g.cle}`,
+        capexAvantTaxes: g.capexStationH2,
+        vehiculeIds: g.vehiculesFcev,
+        anneeMiseEnService: g.anneeMiseEnServiceH2 ?? 0,
+      });
+    }
+  }
+  return sites;
 }
