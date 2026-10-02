@@ -6234,6 +6234,29 @@
       "note": "A report already generated stays frozen; the Reports step will flag the difference with the new values.",
       "invalid": "Invalid settings: name required, whole horizon from 1 to 30, rate between 0 and 100%.",
       "saved": "Project settings saved"
+    },
+    "progress": {
+      "state": {
+        "termine": "Step complete",
+        "en_cours": "Step in progress",
+        "a_faire": "Step to do"
+      },
+      "missingLabel": "what's missing:",
+      "missing": {
+        "aucunVehicule": "add vehicles to the project",
+        "sansAnnee_one": "{{count}} vehicle without a replacement year",
+        "sansAnnee_other": "{{count}} vehicles without a replacement year",
+        "sansCible_one": "{{count}} vehicle without a target technology",
+        "sansCible_other": "{{count}} vehicles without a target technology",
+        "aucuneStrategie": "apply a strategy to the plan",
+        "planVide": "choose a zero-emission technology for at least one vehicle",
+        "demandesManquantes_one": "{{count}} planned subsidy program without a tracked application",
+        "demandesManquantes_other": "{{count}} planned subsidy programs without a tracked application",
+        "aucunRapport": "generate the report (PDF or Excel)",
+        "rapportPerime": "the plan changed since the last report: regenerate it",
+        "remplacementsRestants_one": "{{count}} replacement to mark as completed",
+        "remplacementsRestants_other": "{{count}} replacements to mark as completed"
+      }
     }
   },
   "energyClient": {

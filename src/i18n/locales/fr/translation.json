@@ -6234,6 +6234,29 @@
       "note": "Un rapport déjà généré reste figé ; l'étape Rapports signalera l'écart avec les nouvelles valeurs.",
       "invalid": "Paramètres invalides : nom requis, horizon entier de 1 à 30, taux entre 0 et 100 %.",
       "saved": "Paramètres du projet enregistrés"
+    },
+    "progress": {
+      "state": {
+        "termine": "Étape terminée",
+        "en_cours": "Étape en cours",
+        "a_faire": "Étape à faire"
+      },
+      "missingLabel": "ce qui manque :",
+      "missing": {
+        "aucunVehicule": "ajouter des véhicules au projet",
+        "sansAnnee_one": "{{count}} véhicule sans année de remplacement",
+        "sansAnnee_other": "{{count}} véhicules sans année de remplacement",
+        "sansCible_one": "{{count}} véhicule sans technologie cible",
+        "sansCible_other": "{{count}} véhicules sans technologie cible",
+        "aucuneStrategie": "appliquer une stratégie au plan",
+        "planVide": "choisir une technologie zéro émission pour au moins un véhicule",
+        "demandesManquantes_one": "{{count}} programme de subvention prévu sans demande suivie",
+        "demandesManquantes_other": "{{count}} programmes de subvention prévus sans demande suivie",
+        "aucunRapport": "générer le rapport (PDF ou Excel)",
+        "rapportPerime": "le plan a changé depuis le dernier rapport : le régénérer",
+        "remplacementsRestants_one": "{{count}} remplacement à marquer réalisé",
+        "remplacementsRestants_other": "{{count}} remplacements à marquer réalisés"
+      }
     }
   },
   "energyClient": {
