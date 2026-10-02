@@ -67,7 +67,8 @@
       "subtitle": "Les champs marqués * sont requis ; le reste peut être complété plus tard.",
       "consumption": "Consommation réelle /100 km",
       "consumptionHint": "vide = estimation par catégorie",
-      "confirm": "Ajouter"
+      "confirm": "Ajouter",
+      "maxDailyKm": "Km journalier max"
     },
     "toast": {
       "added": "Véhicule ajouté",
@@ -5889,7 +5890,9 @@
       "reserves": {
         "longue_distance": "Autonomie à vérifier (longue distance)",
         "hors_route": "Usage hors route à vérifier",
-        "ravitaillement_h2": "Ravitaillement H2 limité au Québec"
+        "ravitaillement_h2": "Ravitaillement H2 limité au Québec",
+        "recharge_journee": "Recharge en journée nécessaire l'hiver",
+        "autonomie_hiver": "Autonomie hiver insuffisante"
       },
       "estimatedConsumption": "Consommation estimée",
       "unknownCategory": "Catégorie « autre » : à évaluer manuellement",
@@ -5905,7 +5908,14 @@
         "disponibilite_critique": "Disponibilité critique 24/7 : électrification à étudier au cas par cas avec le service concerné (non chiffrée automatiquement).",
         "cas_par_cas": "Équipement spécialisé : l'offre électrique varie d'un outil à l'autre — à évaluer au cas par cas avec les fournisseurs (non chiffré automatiquement)."
       },
-      "borrowedDefaults": "Défauts empruntés à une catégorie du moteur (estimation)"
+      "borrowedDefaults": "Défauts empruntés à une catégorie du moteur (estimation)",
+      "winter": {
+        "tient": "Hiver : tient — autonomie hiver {{autonomie}} km (nominale {{nominale}} km) pour {{km}} km/jour ; la nuit recharge {{nuit}} kWh pour {{jour}} kWh consommés ({{fenetre}} h à {{kw}} kW).",
+        "recharge_journee": "Hiver : tient avec recharge en journée — autonomie hiver {{autonomie}} km pour {{km}} km/jour ; {{journee}} kWh à reprendre en cours de journée (nuit : {{nuit}} kWh sur {{fenetre}} h à {{kw}} kW).",
+        "ne_tient_pas": "Hiver : ne tient pas — {{km}} km/jour pour une autonomie hiver de {{autonomie}} km (nominale {{nominale}} km), même avec une recharge complète en journée.",
+        "kmEstimated": "(km/jour estimé : saisissez le km journalier max dans Ma flotte)",
+        "windowPresumed": "(fenêtre de recharge présumée : renseignez les heures du garage)"
+      }
     },
     "strategies": {
       "empty": {

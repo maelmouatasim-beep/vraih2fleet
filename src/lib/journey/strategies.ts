@@ -163,10 +163,14 @@ function selectionEconomiesDAbord(
   const parGarage = new Map<string, { depot: string | null; liste: { v: VehiculeProjet; eco: number }[] }>();
   for (const v of vehicules) {
     if (!analyserDonneesVehicule(v).defauts || !dansHorizon(v, options)) continue;
-    const bev = evaluerFaisabiliteVehicule(v, options).evaluations?.find((e) => e.technologie === "BEV");
+    const f = evaluerFaisabiliteVehicule(v, options);
+    const bev = f.evaluations?.find((e) => e.technologie === "BEV");
     const cle = cleGarage(v.depot ?? null);
     const entree = parGarage.get(cle) ?? { depot: v.depot?.trim() || null, liste: [] };
-    if (bev && bev.economieActualisee > 0) entree.liste.push({ v, eco: bev.economieActualisee });
+    // Autonomie hivernale insuffisante (bloc 2.4) : jamais candidat.
+    if (bev && bev.economieActualisee > 0 && f.hiver?.verdict !== "ne_tient_pas") {
+      entree.liste.push({ v, eco: bev.economieActualisee });
+    }
     parGarage.set(cle, entree);
   }
 

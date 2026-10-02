@@ -55,6 +55,7 @@ const FORME_VIDE = {
   consumption_per_100km: "",
   depot: "",
   gvwr_class: "",
+  max_daily_km: "",
   status: "actif",
 };
 
@@ -96,6 +97,7 @@ export default function MyFleet() {
       consumption_per_100km: v.consumption_per_100km != null ? String(v.consumption_per_100km) : "",
       depot: v.depot ?? "",
       gvwr_class: v.gvwr_class ?? "",
+      max_daily_km: v.max_daily_km != null ? String(v.max_daily_km) : "",
       status: v.status,
     });
     setEdition(v);
@@ -122,6 +124,7 @@ export default function MyFleet() {
       consumption_source: conso != null ? "saisie" : "estimation",
       depot: forme.depot.trim() || null,
       gvwr_class: forme.gvwr_class || null,
+      max_daily_km: forme.max_daily_km ? Number(forme.max_daily_km.replace(/\s/g, "").replace(",", ".")) : null,
       status: forme.status,
     };
     try {
@@ -391,6 +394,10 @@ export default function MyFleet() {
                   <option key={g.id} value={g.name} />
                 ))}
               </datalist>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="fl-kmj">{t("fleet.add.maxDailyKm")}</Label>
+              <Input id="fl-kmj" inputMode="numeric" value={forme.max_daily_km} onChange={(e) => setForme({ ...forme, max_daily_km: e.target.value })} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="fl-pnbv">{t("fleet.gvwr.label")}</Label>

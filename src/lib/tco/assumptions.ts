@@ -233,6 +233,70 @@ export const HYPOTHESES = {
     statut: 'a_valider',
     notes: 'S’applique aussi aux FCEV (chauffage cabine), plage identique par défaut.',
   },
+  majoration_charge_utile: {
+    id: 'majoration_charge_utile',
+    description: 'Majoration de la consommation d’un véhicule chargé (benne pleine, outillage, remorque légère) pour le diagnostic d’autonomie',
+    valeur: 0.1,
+    unite: 'ratio',
+    plage: { basse: 0, haute: 0.25 },
+    region: 'QC',
+    source: {
+      organisme: 'H2Fleet',
+      document: 'Convention du diagnostic hiver/autonomie (méthodologie §3.3) — à remplacer par la télématique du véhicule',
+      annee: 2026,
+      url: 'https://github.com/maelmouatasim-beep/vraih2fleet/blob/main/docs/tco-methodologie.md',
+    },
+    dateVerification: '2026-10-02',
+    statut: 'estimation',
+  },
+  reserve_batterie: {
+    id: 'reserve_batterie',
+    description: 'Réserve d’énergie non utilisée (état de charge minimal, vieillissement de la batterie) dans le diagnostic d’autonomie',
+    valeur: 0.2,
+    unite: 'ratio',
+    plage: { basse: 0.1, haute: 0.3 },
+    region: 'QC',
+    source: {
+      organisme: 'H2Fleet',
+      document: 'Convention du diagnostic hiver/autonomie (méthodologie §3.3)',
+      annee: 2026,
+      url: 'https://github.com/maelmouatasim-beep/vraih2fleet/blob/main/docs/tco-methodologie.md',
+    },
+    dateVerification: '2026-10-02',
+    statut: 'estimation',
+  },
+  jours_utilisation_an: {
+    id: 'jours_utilisation_an',
+    description: 'Jours d’utilisation par an pour estimer le kilométrage journalier quand le maximum n’est pas renseigné',
+    valeur: 250,
+    unite: 'jours',
+    plage: { basse: 200, haute: 365 },
+    region: 'QC',
+    source: {
+      organisme: 'H2Fleet',
+      document: 'Convention : jours ouvrables d’une flotte municipale — km/jour = km/an ÷ jours (estimation, le MAXIMUM réel est à saisir)',
+      annee: 2026,
+      url: 'https://github.com/maelmouatasim-beep/vraih2fleet/blob/main/docs/tco-methodologie.md',
+    },
+    dateVerification: '2026-10-02',
+    statut: 'estimation',
+  },
+  fenetre_recharge_presumee: {
+    id: 'fenetre_recharge_presumee',
+    description: 'Fenêtre de recharge de nuit présumée quand les heures de retour et de départ du garage ne sont pas renseignées',
+    valeur: 10,
+    unite: 'h',
+    plage: { basse: 6, haute: 14 },
+    region: 'QC',
+    source: {
+      organisme: 'H2Fleet',
+      document: 'Convention du diagnostic hiver/autonomie — à remplacer par les heures du garage (Ma flotte › Garages)',
+      annee: 2026,
+      url: 'https://github.com/maelmouatasim-beep/vraih2fleet/blob/main/docs/tco-methodologie.md',
+    },
+    dateVerification: '2026-10-02',
+    statut: 'estimation',
+  },
   part_km_hiver: {
     id: 'part_km_hiver',
     description: 'Part du kilométrage annuel parcourue en conditions hivernales',
@@ -921,6 +985,10 @@ export interface DefautsCategorie {
   /** Durée de vie utile en années (même valeur pour toutes les technologies en v1). */
   dureeVieAns: number;
   kmParAnDefaut: number;
+  /** Capacité UTILE de batterie d'un modèle électrique type de la
+   *  catégorie (kWh) — ordre de grandeur pour le diagnostic hiver ; à
+   *  remplacer par la fiche du modèle retenu. */
+  batterieUtileKwh: { valeur: number; plage: { basse: number; haute: number } };
   statut: 'estimation';
   sources: string[];
 }
@@ -946,6 +1014,7 @@ export const DEFAUTS_CATEGORIES: Record<CategorieVehicule, DefautsCategorie> = {
     },
     dureeVieAns: 10,
     kmParAnDefaut: 25000,
+    batterieUtileKwh: { valeur: 60, plage: { basse: 45, haute: 80 } },
     statut: 'estimation',
     sources: ['RNCan — Guide de consommation de carburant (à_valider : https://ressources-naturelles.canada.ca/efficacite-energetique/efficacite-energetique-transports/guide-consommation-carburant)'],
   },
@@ -969,6 +1038,7 @@ export const DEFAUTS_CATEGORIES: Record<CategorieVehicule, DefautsCategorie> = {
     },
     dureeVieAns: 10,
     kmParAnDefaut: 30000,
+    batterieUtileKwh: { valeur: 90, plage: { basse: 60, haute: 130 } },
     statut: 'estimation',
     sources: ['NREL Fleet DNA / RNCan (à_valider : https://www.nrel.gov/transportation/fleettest.html)'],
   },
@@ -992,6 +1062,7 @@ export const DEFAUTS_CATEGORIES: Record<CategorieVehicule, DefautsCategorie> = {
     },
     dureeVieAns: 12,
     kmParAnDefaut: 35000,
+    batterieUtileKwh: { valeur: 200, plage: { basse: 120, haute: 300 } },
     statut: 'estimation',
     sources: ['NREL / NACFE (à_valider : https://nacfe.org/)'],
   },
@@ -1015,6 +1086,7 @@ export const DEFAUTS_CATEGORIES: Record<CategorieVehicule, DefautsCategorie> = {
     },
     dureeVieAns: 12,
     kmParAnDefaut: 60000,
+    batterieUtileKwh: { valeur: 400, plage: { basse: 250, haute: 565 } },
     statut: 'estimation',
     sources: ['NACFE Run on Less Electric / constructeurs (à_valider)'],
   },
@@ -1042,6 +1114,7 @@ export const DEFAUTS_CATEGORIES: Record<CategorieVehicule, DefautsCategorie> = {
     },
     dureeVieAns: 16,
     kmParAnDefaut: 60000,
+    batterieUtileKwh: { valeur: 450, plage: { basse: 350, haute: 565 } },
     statut: 'estimation',
     sources: [
       'BEV kWh/km : Université Concordia/STM, 1,4 été-1,7 hiver kWh/km (à_valider : https://techxplore.com/news/2025-11-montreal-electric-buses-energy-winter.html)',

@@ -2507,6 +2507,7 @@ export type Database = {
           id: string
           in_service_date: string | null
           make: string | null
+          max_daily_km: number | null
           model: string | null
           model_year: number | null
           notes: string | null
@@ -2532,6 +2533,7 @@ export type Database = {
           id?: string
           in_service_date?: string | null
           make?: string | null
+          max_daily_km?: number | null
           model?: string | null
           model_year?: number | null
           notes?: string | null
@@ -2557,6 +2559,7 @@ export type Database = {
           id?: string
           in_service_date?: string | null
           make?: string | null
+          max_daily_km?: number | null
           model?: string | null
           model_year?: number | null
           notes?: string | null

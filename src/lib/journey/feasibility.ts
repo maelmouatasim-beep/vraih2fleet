@@ -14,6 +14,8 @@
  */
 import { classePourSubventions } from "@/lib/fleet/gvwr";
 import { categorieMoteur, estCategorieMunicipale, raisonAReporter } from "./categories";
+import { cleGarage, type CaracteristiquesGarage } from "./infrastructure";
+import { diagnostiquerHiver, type DiagnosticHiver } from "./winter";
 import {
   DEFAUTS_CATEGORIES,
   calculerPlan,
@@ -38,11 +40,20 @@ export interface VehiculeFaisabilite {
   /** Classe de poids PNBV confirmée (1, 2a, 2b, 3-8) — barème exact des
    *  subventions par classe (bloc 2.2) ; absente = barème le plus bas. */
   gvwr_class?: string | null;
+  /** Garage (dépôt) : fenêtre de recharge du diagnostic hiver (bloc 2.4). */
+  depot?: string | null;
+  /** Kilométrage journalier MAXIMAL (bloc 2.4) ; absent = estimé. */
+  max_daily_km?: number | null;
 }
 
 export type VerdictFaisabilite = "favorable" | "conditionnel" | "defavorable";
 
-export type ReserveFaisabilite = "longue_distance" | "hors_route" | "ravitaillement_h2";
+export type ReserveFaisabilite =
+  | "longue_distance"
+  | "hors_route"
+  | "ravitaillement_h2"
+  | "recharge_journee"
+  | "autonomie_hiver";
 export type DonneeEstimee = "km" | "consommation" | "categorie";
 
 export interface EvaluationTechno {
@@ -75,6 +86,8 @@ export interface FaisabiliteVehicule {
   /** Catégorie sans véhicule électrique crédible aujourd'hui (bloc 2.3) :
    *  pas de verdict chiffré, jamais électrifiée automatiquement. */
   aReporter?: "pas_de_ve_credible" | "disponibilite_critique" | "cas_par_cas";
+  /** Diagnostic hiver / autonomie d'un modèle électrique à batterie (bloc 2.4). */
+  hiver?: DiagnosticHiver | null;
 }
 
 export function classeEmission(category: string): "legers" | "lourds" {
@@ -148,7 +161,7 @@ export function cibleSuggeree(f: FaisabiliteVehicule): "bev" | "fcev" | null {
 
 export function evaluerFaisabiliteVehicule(
   vehicule: VehiculeFaisabilite,
-  options: OptionsParametres,
+  options: OptionsParametres & { garages?: Map<string, CaracteristiquesGarage> },
 ): FaisabiliteVehicule {
   const { defauts, kmParAn, consoReference, carburant, donneesEstimees } = analyserDonneesVehicule(vehicule);
   if (!defauts) {
@@ -180,6 +193,12 @@ export function evaluerFaisabiliteVehicule(
   }
 
   const parametres = parametresParDefaut(options);
+  const hiver = diagnostiquerHiver({
+    category: vehicule.category,
+    annual_km: vehicule.annual_km,
+    max_daily_km: vehicule.max_daily_km,
+    fenetre: options.garages?.get(cleGarage(vehicule.depot ?? null))?.fenetreRecharge,
+  });
 
   const evaluations = (["BEV", "FCEV"] as const).map((technologie): EvaluationTechno => {
     const prixAlternative = defauts.prixAchat[technologie].valeur;
@@ -224,6 +243,8 @@ export function evaluerFaisabiliteVehicule(
     if (technologie === "BEV") {
       if (vehicule.usage_profile === "longue_distance") reserves.push("longue_distance");
       if (vehicule.usage_profile === "hors_route") reserves.push("hors_route");
+      if (hiver?.verdict === "recharge_journee") reserves.push("recharge_journee");
+      if (hiver?.verdict === "ne_tient_pas") reserves.push("autonomie_hiver");
     } else {
       // Réseau public de ravitaillement H2 embryonnaire au Québec
       // (note de l'hypothèse prix_h2_livre) : toujours signalé.
@@ -232,8 +253,14 @@ export function evaluerFaisabiliteVehicule(
     }
 
     const economie = resultat.vanDifferentielle;
+    // Autonomie hivernale insuffisante même avec une recharge en journée :
+    // l'économie ne suffit pas, le BEV n'est pas faisable en l'état.
     const verdict: VerdictFaisabilite =
-      economie > 0 ? (reserves.length > 0 ? "conditionnel" : "favorable") : "defavorable";
+      economie > 0 && !reserves.includes("autonomie_hiver")
+        ? reserves.length > 0
+          ? "conditionnel"
+          : "favorable"
+        : "defavorable";
 
     return {
       technologie,
@@ -249,5 +276,5 @@ export function evaluerFaisabiliteVehicule(
     };
   });
 
-  return { vehiculeId: vehicule.id, evaluations, kmParAnRetenu: kmParAn, donneesEstimees };
+  return { vehiculeId: vehicule.id, evaluations, kmParAnRetenu: kmParAn, donneesEstimees, hiver };
 }

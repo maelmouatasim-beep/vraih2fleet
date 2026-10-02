@@ -38,7 +38,15 @@ Version 2.3 (test terrain) — 2026-10-02 — statut : **en validation**
 > véhicule neuf à essence (prix StatCan 12 mois et facteur réservoir-à-
 > roue du guide québécois, niveau 3 : 2,312 kg éq. CO2/L), au lieu d'un
 > diesel ; les CO2e réservoir-à-roue et puits-à-roue sont affichés côte à
-> côte, le puits-à-roue restant celui des totaux.
+> côte, le puits-à-roue restant celui des totaux. Diagnostic hiver /
+> autonomie (hors moteur, src/lib/journey/winter.ts) : autonomie hiver =
+> batterie utile de la catégorie × (1 − réserve) ÷ [conso BEV × (1 +
+> majoration hivernale) × (1 + charge utile)] ; comparée au km journalier
+> MAXIMAL (ou km/an ÷ jours d'utilisation, signalé) et à l'énergie
+> rechargeable dans la fenêtre du garage (heures × puissance de la borne
+> × rendement) → « tient l'hiver », « tient avec recharge en journée »
+> (au plus une recharge complète le jour) ou « ne tient pas » (BEV
+> défavorable, jamais retenu automatiquement).
 
 Ce document est la référence unique de la méthode de calcul. Il est écrit
 pour être lu par un directeur des finances municipal : chaque formule est

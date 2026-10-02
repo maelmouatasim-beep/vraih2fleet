@@ -63,6 +63,12 @@ const ENTETES: Record<string, string> = {
   department: "department",
   depot: "depot",
   garage: "depot",
+  kmjournaliermax: "max_daily_km",
+  kmjourmax: "max_daily_km",
+  kmmaxparjour: "max_daily_km",
+  kmparjourmax: "max_daily_km",
+  maxdailykm: "max_daily_km",
+  maxkmperday: "max_daily_km",
   classepnbv: "gvwr_class",
   pnbv: "gvwr_class",
   classepoids: "gvwr_class",
@@ -294,6 +300,11 @@ const zLigne = z.object({
   department: z.string().trim().nullish(),
   depot: z.string().trim().nullish(),
   gvwr_class: z.enum(CLASSES_PNBV).nullish(),
+  max_daily_km: z
+    .number({ invalid_type_error: "km journalier max : nombre attendu" })
+    .min(0, "km journalier max négatif")
+    .max(5000, "km journalier max hors plage (max 5000)")
+    .nullish(),
   status: z.enum(STATUTS_VEHICULE).nullish(),
   notes: z.string().trim().max(2000, "notes trop longues (2000 caractères max)").nullish(),
 });
@@ -416,6 +427,7 @@ export function validerLignes(
     const anneeModele = num("model_year", "année modèle");
     const kmAnnuel = num("annual_km", "kilométrage annuel");
     const conso = num("consumption_per_100km", "consommation");
+    const kmJourMax = num("max_daily_km", "km journalier max");
 
     const classePnbv = fourni(champs.gvwr_class) ? lireClassePnbv(champs.gvwr_class) : null;
     if (fourni(champs.gvwr_class) && !classePnbv) {
@@ -461,6 +473,7 @@ export function validerLignes(
       department: fourni(champs.department) ? String(champs.department).trim() : null,
       depot: fourni(champs.depot) ? String(champs.depot).trim() : null,
       gvwr_class: classePnbv,
+      max_daily_km: kmJourMax,
       status: (statut ?? (idExistant ? undefined : "actif")) as (typeof STATUTS_VEHICULE)[number] | undefined,
       notes: fourni(champs.notes) ? String(champs.notes).trim() : null,
     };

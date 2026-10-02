@@ -67,7 +67,8 @@
       "subtitle": "Fields marked * are required; the rest can be completed later.",
       "consumption": "Actual consumption /100 km",
       "consumptionHint": "empty = category estimate",
-      "confirm": "Add"
+      "confirm": "Add",
+      "maxDailyKm": "Max daily km"
     },
     "toast": {
       "added": "Vehicle added",
@@ -5889,7 +5890,9 @@
       "reserves": {
         "longue_distance": "Range to verify (long distance)",
         "hors_route": "Off-road use to verify",
-        "ravitaillement_h2": "Limited H2 refuelling in Québec"
+        "ravitaillement_h2": "Limited H2 refuelling in Québec",
+        "recharge_journee": "Daytime charging needed in winter",
+        "autonomie_hiver": "Insufficient winter range"
       },
       "estimatedConsumption": "Estimated consumption",
       "unknownCategory": "Category “other”: assess manually",
@@ -5905,7 +5908,14 @@
         "disponibilite_critique": "Critical 24/7 availability: electrification to be studied case by case with the department (not computed automatically).",
         "cas_par_cas": "Specialized equipment: electric offerings vary by tool — to be assessed case by case with suppliers (not computed automatically)."
       },
-      "borrowedDefaults": "Defaults borrowed from an engine category (estimate)"
+      "borrowedDefaults": "Defaults borrowed from an engine category (estimate)",
+      "winter": {
+        "tient": "Winter: OK — winter range {{autonomie}} km (rated {{nominale}} km) for {{km}} km/day; overnight charging restores {{nuit}} kWh for {{jour}} kWh used ({{fenetre}} h at {{kw}} kW).",
+        "recharge_journee": "Winter: OK with daytime charging — winter range {{autonomie}} km for {{km}} km/day; {{journee}} kWh to recover during the day (overnight: {{nuit}} kWh over {{fenetre}} h at {{kw}} kW).",
+        "ne_tient_pas": "Winter: not feasible — {{km}} km/day for a winter range of {{autonomie}} km (rated {{nominale}} km), even with a full daytime charge.",
+        "kmEstimated": "(km/day estimated: enter the maximum daily km in My fleet)",
+        "windowPresumed": "(presumed charging window: enter the depot hours)"
+      }
     },
     "strategies": {
       "empty": {

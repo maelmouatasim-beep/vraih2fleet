@@ -36,6 +36,8 @@ export type Unite =
   | 'ratio' // taux, rendements, majorations… stockés en décimal (0.05 = 5 %)
   | 'annees'
   | 'kW'
+  | 'jours'
+  | 'h'
   | 'CAD/USD';
 
 export interface SourceHypothese {

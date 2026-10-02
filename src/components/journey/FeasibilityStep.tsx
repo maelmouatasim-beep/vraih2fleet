@@ -7,6 +7,7 @@
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -241,6 +242,31 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
                     <TableCell className="align-top">
                       {verdictBadge(bev)}
                       {detailTechno(bev)}
+                      {f?.hiver && (
+                        <p
+                          className={cn(
+                            "text-xs mt-1",
+                            f.hiver.verdict === "tient"
+                              ? "text-primary"
+                              : f.hiver.verdict === "recharge_journee"
+                                ? "text-amber-700 dark:text-amber-400"
+                                : "text-destructive",
+                          )}
+                        >
+                          {t(`journey.feasibility.winter.${f.hiver.verdict}`, {
+                            autonomie: f.hiver.autonomieHiverKm,
+                            nominale: f.hiver.autonomieNominaleKm,
+                            km: f.hiver.kmJour,
+                            nuit: f.hiver.energieNuitKwh,
+                            jour: f.hiver.energieJourKwh,
+                            journee: f.hiver.energieJourneeKwh,
+                            fenetre: f.hiver.fenetreH,
+                            kw: f.hiver.puissanceBorneKw,
+                          })}
+                          {f.hiver.kmJourSource === "estime" && ` ${t("journey.feasibility.winter.kmEstimated")}`}
+                          {f.hiver.fenetreSource === "presumee" && ` ${t("journey.feasibility.winter.windowPresumed")}`}
+                        </p>
+                      )}
                     </TableCell>
                     <TableCell className="align-top">
                       {verdictBadge(fcev)}

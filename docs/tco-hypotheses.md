@@ -8,7 +8,7 @@ Statuts : ✅ vérifié = source réellement lue à la date indiquée ;
 ≈ estimation = ordre de grandeur professionnel à affiner ;
 ⚠️ à valider = source non consultable depuis l’environnement — consulter l’URL.
 
-Bilan : 12 vérifiées, 24 estimations, 12 à valider (hors défauts par catégorie, tous « estimation »).
+Bilan : 12 vérifiées, 28 estimations, 12 à valider (hors défauts par catégorie, tous « estimation »).
 
 ## Hypothèses générales
 
@@ -23,6 +23,10 @@ Bilan : 12 vérifiées, 24 estimations, 12 à valider (hors défauts par catégo
 | Prix de l’hydrogène livré à la pompe/au dépôt | 16.5 (CAD 2025) | $/kg | 12 – 20 | CA | ⚠️ à valider | [HTEC (réseau C.-B.) / Propulsion Québec — FAQ HTEC (prix à la pompe C.-B.) ; étude « Potentiel d’adoption de l’hydrogène vert », 2023](https://www.htec.ca/faqs/) | 2026-09-28 |
 | Rendement de la recharge (kWh batterie ÷ kWh compteur) | 0.9 | ratio | 0.85 – 0.95 | CA | ≈ estimation | [RNCan — Documentation efficacité énergétique des VE (pertes chargeur + batterie + conditionnement)](https://ressources-naturelles.canada.ca/efficacite-energetique/efficacite-energetique-transports) | 2026-09-28 |
 | Majoration de la consommation électrique en conditions hivernales (pendant les mois d’hiver) | 0.25 | ratio | 0.1 – 0.4 | QC | ⚠️ à valider | [Université Concordia (données STM) — Étude consommation autobus électriques Montréal : 1,4 kWh/km été → 1,7 kWh/km hiver (+26 %)](https://techxplore.com/news/2025-11-montreal-electric-buses-energy-winter.html) | 2026-09-28 |
+| Majoration de la consommation d’un véhicule chargé (benne pleine, outillage, remorque légère) pour le diagnostic d’autonomie | 0.1 | ratio | 0 – 0.25 | QC | ≈ estimation | [H2Fleet — Convention du diagnostic hiver/autonomie (méthodologie §3.3) — à remplacer par la télématique du véhicule](https://github.com/maelmouatasim-beep/vraih2fleet/blob/main/docs/tco-methodologie.md) | 2026-10-02 |
+| Réserve d’énergie non utilisée (état de charge minimal, vieillissement de la batterie) dans le diagnostic d’autonomie | 0.2 | ratio | 0.1 – 0.3 | QC | ≈ estimation | [H2Fleet — Convention du diagnostic hiver/autonomie (méthodologie §3.3)](https://github.com/maelmouatasim-beep/vraih2fleet/blob/main/docs/tco-methodologie.md) | 2026-10-02 |
+| Jours d’utilisation par an pour estimer le kilométrage journalier quand le maximum n’est pas renseigné | 250 | jours | 200 – 365 | QC | ≈ estimation | [H2Fleet — Convention : jours ouvrables d’une flotte municipale — km/jour = km/an ÷ jours (estimation, le MAXIMUM réel est à saisir)](https://github.com/maelmouatasim-beep/vraih2fleet/blob/main/docs/tco-methodologie.md) | 2026-10-02 |
+| Fenêtre de recharge de nuit présumée quand les heures de retour et de départ du garage ne sont pas renseignées | 10 | h | 6 – 14 | QC | ≈ estimation | [H2Fleet — Convention du diagnostic hiver/autonomie — à remplacer par les heures du garage (Ma flotte › Garages)](https://github.com/maelmouatasim-beep/vraih2fleet/blob/main/docs/tco-methodologie.md) | 2026-10-02 |
 | Part du kilométrage annuel parcourue en conditions hivernales | 0.33 | ratio | 0.25 – 0.42 | QC | ≈ estimation | [H2Fleet — ≈ 4 mois d’hiver sur 12, kilométrage uniforme](https://github.com/maelmouatasim-beep/vraih2fleet/blob/main/docs/tco-methodologie.md) | 2026-09-28 |
 | Inflation générale (IPC) — indexation entretien, assurance, prix d’achat futurs | 0.021 | ratio | 0.01 – 0.03 | CA | ⚠️ à valider | [Banque du Canada — Cible de maîtrise de l’inflation (fourchette 1-3 %, cible 2 %)](https://www.banqueducanada.ca/grandes-fonctions/politique-monetaire/inflation/) | 2026-09-28 |
 | Inflation propre au prix du diesel | 0.03 | ratio | 0 – 0.06 | QC | ≈ estimation | [H2Fleet — Hypothèse : IPC + tarification carbone/SPEDE croissante ; à étalonner sur la série de la Régie](https://www.regie-energie.qc.ca/fr/prix-produits-petroliers) | 2026-09-28 |
