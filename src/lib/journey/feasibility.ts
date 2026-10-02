@@ -12,6 +12,7 @@
  * - l'autonomie n'est pas modélisée : les usages longue distance et
  *   hors route sont signalés comme réserves, pas chiffrés.
  */
+import { classePourSubventions } from "@/lib/fleet/gvwr";
 import {
   DEFAUTS_CATEGORIES,
   calculerPlan,
@@ -33,6 +34,9 @@ export interface VehiculeFaisabilite {
    *  calcule avec la MÊME année d'acquisition que le Plan (revue A5) ;
    *  absente = remplacement immédiat (année de référence). */
   replacement_year?: number | null;
+  /** Classe de poids PNBV confirmée (1, 2a, 2b, 3-8) — barème exact des
+   *  subventions par classe (bloc 2.2) ; absente = barème le plus bas. */
+  gvwr_class?: string | null;
 }
 
 export type VerdictFaisabilite = "favorable" | "conditionnel" | "defavorable";
@@ -172,6 +176,7 @@ export function evaluerFaisabiliteVehicule(
       prixAvantTaxes: prixAlternative,
       typeOrganisme: options.typeOrganisme,
       anneeAchatCalendaire: options.anneeReference + k,
+      classePoids: classePourSubventions(vehicule.gvwr_class),
     }).map((s) => ({ ...s, annee: s.annee + k }));
 
     const resultat = calculerPlan({

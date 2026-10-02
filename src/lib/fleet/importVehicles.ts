@@ -17,6 +17,7 @@ import {
 // import type seulement : effacé à la compilation, le client Supabase
 // n'est jamais chargé par ce module (testable sans environnement)
 import type { VehicleInsert } from "./vehicles";
+import { CLASSES_PNBV, lireClassePnbv } from "./gvwr";
 
 // ---------------------------------------------------------------------------
 // Correspondance des entêtes (fr/en, accents et espaces ignorés)
@@ -62,6 +63,13 @@ const ENTETES: Record<string, string> = {
   department: "department",
   depot: "depot",
   garage: "depot",
+  classepnbv: "gvwr_class",
+  pnbv: "gvwr_class",
+  classepoids: "gvwr_class",
+  classedepoids: "gvwr_class",
+  gvwr: "gvwr_class",
+  gvwrclass: "gvwr_class",
+  weightclass: "gvwr_class",
   site: "depot",
   yard: "depot",
   statut: "status",
@@ -237,6 +245,7 @@ const zLigne = z.object({
   usage_profile: z.enum(PROFILS_USAGE).nullish(),
   department: z.string().trim().nullish(),
   depot: z.string().trim().nullish(),
+  gvwr_class: z.enum(CLASSES_PNBV).nullish(),
   status: z.enum(STATUTS_VEHICULE).nullish(),
   notes: z.string().trim().max(2000, "notes trop longues (2000 caractères max)").nullish(),
 });
@@ -351,6 +360,15 @@ export function validerLignes(
     const kmAnnuel = num("annual_km", "kilométrage annuel");
     const conso = num("consumption_per_100km", "consommation");
 
+    const classePnbv = fourni(champs.gvwr_class) ? lireClassePnbv(champs.gvwr_class) : null;
+    if (fourni(champs.gvwr_class) && !classePnbv) {
+      erreursLigne.push({
+        ligne,
+        champ: "classe PNBV",
+        message: `classe de poids PNBV illisible : « ${String(champs.gvwr_class).trim()} » (valeurs acceptées : ${CLASSES_PNBV.join(", ")}, ou le PNBV en kg / lb)`,
+      });
+    }
+
     const dt = dateISO(champs.in_service_date);
     if (dt.ok === false) {
       erreursLigne.push({
@@ -385,6 +403,7 @@ export function validerLignes(
       usage_profile: (usage ?? null) as (typeof PROFILS_USAGE)[number] | null,
       department: fourni(champs.department) ? String(champs.department).trim() : null,
       depot: fourni(champs.depot) ? String(champs.depot).trim() : null,
+      gvwr_class: classePnbv,
       status: (statut ?? (idExistant ? undefined : "actif")) as (typeof STATUTS_VEHICULE)[number] | undefined,
       notes: fourni(champs.notes) ? String(champs.notes).trim() : null,
     };

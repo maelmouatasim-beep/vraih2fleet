@@ -129,6 +129,16 @@
         "LG": "LG (large power)",
         "autre": "Other"
       }
+    },
+    "gvwr": {
+      "label": "Weight class (GVWR)",
+      "unknown": "Unknown (lowest scale)",
+      "option": "Class {{classe}}",
+      "use": "Use",
+      "proposal": {
+        "modele": "Suggested from the model: class {{classe}} — to confirm (manufacturer's plate).",
+        "categorie": "Suggested from the category: class {{classe}} — to confirm (manufacturer's plate)."
+      }
     }
   },
   "pages_marketing": {

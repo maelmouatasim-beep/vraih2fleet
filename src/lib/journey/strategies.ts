@@ -10,6 +10,7 @@
  * unique, aussi lue par Plan, Financement, Rapports et Excel) — un site
  * de recharge et/ou un site H2 par garage dans le moteur.
  */
+import { classePourSubventions } from "@/lib/fleet/gvwr";
 import {
   calculerPlan,
   parametresParDefaut,
@@ -270,6 +271,7 @@ function chiffrer(
         prixAvantTaxes: alternative.prixAvantTaxes,
         typeOrganisme: options.typeOrganisme,
         anneeAchatCalendaire: options.anneeReference + k,
+        classePoids: classePourSubventions(v.gvwr_class),
       });
       subventions = resolution.subventions.map((s) => ({
         libelle: s.libelle,

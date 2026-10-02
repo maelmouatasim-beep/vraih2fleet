@@ -2502,6 +2502,7 @@ export type Database = {
           department: string | null
           depot: string | null
           garage_id: string | null
+          gvwr_class: string | null
           fuel_type: string
           id: string
           in_service_date: string | null
@@ -2526,6 +2527,7 @@ export type Database = {
           department?: string | null
           depot?: string | null
           garage_id?: string | null
+          gvwr_class?: string | null
           fuel_type?: string
           id?: string
           in_service_date?: string | null
@@ -2550,6 +2552,7 @@ export type Database = {
           department?: string | null
           depot?: string | null
           garage_id?: string | null
+          gvwr_class?: string | null
           fuel_type?: string
           id?: string
           in_service_date?: string | null

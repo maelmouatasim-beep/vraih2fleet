@@ -39,6 +39,7 @@ import { Loader2, Pencil, Plus, Trash2, Truck, Upload } from "lucide-react";
 import GaragesCard from "@/components/fleet/GaragesCard";
 import { useGarages } from "@/hooks/useGarages";
 import { assurerGarages } from "@/lib/fleet/garages";
+import { CLASSES_PNBV, proposerClasse } from "@/lib/fleet/gvwr";
 
 const selectCls =
   "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -53,6 +54,7 @@ const FORME_VIDE = {
   annual_km: "",
   consumption_per_100km: "",
   depot: "",
+  gvwr_class: "",
   status: "actif",
 };
 
@@ -80,6 +82,7 @@ export default function MyFleet() {
   }, [vehicles]);
 
   const dialogueFormulaireOuvert = ajoutOuvert || edition !== null;
+  const proposition = proposerClasse({ category: forme.category, model: forme.model });
 
   const ouvrirEdition = (v: VehicleRow) => {
     setForme({
@@ -92,6 +95,7 @@ export default function MyFleet() {
       annual_km: v.annual_km != null ? String(v.annual_km) : "",
       consumption_per_100km: v.consumption_per_100km != null ? String(v.consumption_per_100km) : "",
       depot: v.depot ?? "",
+      gvwr_class: v.gvwr_class ?? "",
       status: v.status,
     });
     setEdition(v);
@@ -117,6 +121,7 @@ export default function MyFleet() {
       consumption_per_100km: conso,
       consumption_source: conso != null ? "saisie" : "estimation",
       depot: forme.depot.trim() || null,
+      gvwr_class: forme.gvwr_class || null,
       status: forme.status,
     };
     try {
@@ -386,6 +391,27 @@ export default function MyFleet() {
                   <option key={g.id} value={g.name} />
                 ))}
               </datalist>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="fl-pnbv">{t("fleet.gvwr.label")}</Label>
+              <select id="fl-pnbv" className={selectCls} value={forme.gvwr_class} onChange={(e) => setForme({ ...forme, gvwr_class: e.target.value })}>
+                <option value="">{t("fleet.gvwr.unknown")}</option>
+                {CLASSES_PNBV.map((c) => (
+                  <option key={c} value={c}>{t("fleet.gvwr.option", { classe: c })}</option>
+                ))}
+              </select>
+              {!forme.gvwr_class && proposition && (
+                <p className="text-xs text-muted-foreground">
+                  {t(`fleet.gvwr.proposal.${proposition.motif}`, { classe: proposition.classe })}{" "}
+                  <button
+                    type="button"
+                    className="underline text-primary"
+                    onClick={() => setForme({ ...forme, gvwr_class: proposition.classe })}
+                  >
+                    {t("fleet.gvwr.use")}
+                  </button>
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="fl-statut">{t("fleet.columns.status")}</Label>

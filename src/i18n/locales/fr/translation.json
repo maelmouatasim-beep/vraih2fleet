@@ -129,6 +129,16 @@
         "LG": "LG (grande puissance)",
         "autre": "Autre"
       }
+    },
+    "gvwr": {
+      "label": "Classe de poids (PNBV)",
+      "unknown": "Inconnue (barème le plus bas)",
+      "option": "Classe {{classe}}",
+      "use": "Utiliser",
+      "proposal": {
+        "modele": "Proposition d'après le modèle : classe {{classe}} — à confirmer (plaque du constructeur).",
+        "categorie": "Proposition d'après la catégorie : classe {{classe}} — à confirmer (plaque du constructeur)."
+      }
     }
   },
   "pages_marketing": {

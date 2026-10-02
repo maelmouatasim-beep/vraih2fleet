@@ -21,8 +21,9 @@ export type TypeOrganisme = 'municipalite' | 'societe_transport' | 'entreprise';
 
 /** Classe de poids réglementaire (PNBV) — les barèmes Écocamionnage sont
  *  définis PAR CLASSE, pas par catégorie produit (tableau 2 des
- *  modalités). '2b' = fourgonnette 3 856-4 535 kg. */
-export type ClassePoids = '2b' | '3' | '4' | '5' | '6' | '7' | '8';
+ *  modalités). '2b' = fourgonnette 3 856-4 535 kg ; '1' et '2a' (≤ 3 855 kg)
+ *  ne relèvent d'aucun barème Écocamionnage. */
+export type ClassePoids = '1' | '2a' | '2b' | '3' | '4' | '5' | '6' | '7' | '8';
 
 export interface BaremeSubvention {
   /** Catégories de véhicules admissibles à ce barème. */
