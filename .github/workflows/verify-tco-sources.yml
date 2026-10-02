@@ -152,6 +152,51 @@ jobs:
           PY
 
       # ----------------------------------------------------------------
+      # Essence (revue 1.8) : prix StatCan + facteur d'émission du guide
+      # québécois de quantification des GES (tableaux 5-6)
+      # ----------------------------------------------------------------
+      - name: Essence — StatCan 14 mois + guide GES Québec (tableaux 5-6)
+        continue-on-error: true
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request
+          req = urllib.request.Request(
+              "https://www150.statcan.gc.ca/t1/wds/rest/getCubeMetadata",
+              data=json.dumps([{"productId": 18100001}]).encode(),
+              headers={"Content-Type": "application/json"})
+          meta = json.load(urllib.request.urlopen(req, timeout=60))
+          dims = meta[0]["object"]["dimension"]
+          geo = {m["memberNameFr"]: m["memberId"] for m in dims[0]["member"]}
+          prod = {m["memberNameFr"]: m["memberId"] for m in dims[1]["member"]}
+          essence = {k: v for k, v in prod.items() if "ssence" in k and "ordinaire" in k}
+          print("PRODUITS ESSENCE:", essence)
+          villes = [(k, v) for k, v in geo.items() if ("Montréal" in k or k.startswith("Québec"))]
+          series = []
+          for nomv, gid in villes[:3]:
+              for nomp, pid in essence.items():
+                  coord = f"{gid}.{pid}.0.0.0.0.0.0.0.0"
+                  req2 = urllib.request.Request(
+                      "https://www150.statcan.gc.ca/t1/wds/rest/getDataFromCubePidCoordAndLatestNPeriods",
+                      data=json.dumps([{"productId": 18100001, "coordinate": coord, "latestN": 14}]).encode(),
+                      headers={"Content-Type": "application/json"})
+                  d = json.load(urllib.request.urlopen(req2, timeout=60))
+                  series.append({"ville": nomv, "produit": nomp, "coordinate": coord, "reponse": d})
+                  pts = d[0]["object"]["vectorDataPoint"] if d[0]["status"] == "SUCCESS" else []
+                  print(f"=== STATCAN ESSENCE {nomv} — {nomp} (cents/L, 14 derniers mois) ===")
+                  for p in pts:
+                      print(p["refPer"], p["value"])
+          open("archive/statcan-essence-12mois.json", "w").write(json.dumps(series, ensure_ascii=False, indent=1))
+          PY
+          curl -sL --max-time 120 -o guide-ges-temporaire.pdf "https://www.environnement.gouv.qc.ca/changements/ges/guide-quantification/guide-quantification-ges.pdf"
+          pdftotext -layout guide-ges-temporaire.pdf guide-ges.txt || true
+          # Extrait des tableaux de combustion mobile (texte archivé ; le PDF est volumineux)
+          grep -n -i -B3 -A40 "Tableau 5\b\|Tableau 6\b" guide-ges.txt | head -260 > archive/guide-ges-tableaux-5-6.txt || true
+          echo "=== GUIDE GES QC — TABLEAUX 5-6 (extraits) ==="
+          cat archive/guide-ges-tableaux-5-6.txt | head -260
+          echo "=== GUIDE GES QC — lignes « essence » ==="
+          grep -n -i "essence" guide-ges.txt | head -60
+
+      # ----------------------------------------------------------------
       # Hydro-Québec — grille tarifaire (PDF archivé)
       # ----------------------------------------------------------------
       - name: Hydro-Québec — tarifs (archive + extraits M et G)
