@@ -105,7 +105,8 @@ try {
   await page.goto(url("/dashboard/fleet"));
   await page.getByRole("button", { name: /Importer CSV/ }).click();
   await page.setInputFiles('input[type="file"]', fichier);
-  await page.getByText(/nouveau\(x\) véhicule\(s\)/).waitFor({ timeout: 10000 });
+  // Premier import : le serveur de dev compile à froid la lecture Excel/CSV.
+  await page.getByText(/nouveau\(x\) véhicule\(s\)/).waitFor({ timeout: 60000 });
   const apercu = await page.getByText(/nouveau\(x\) véhicule\(s\)/).innerText();
   if (!apercu.includes("12 nouveau") || !apercu.includes("0 erreur")) throw new Error(`aperçu inattendu : ${apercu}`);
   await capture(page, "01-import-apercu");
