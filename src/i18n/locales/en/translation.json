@@ -6320,6 +6320,12 @@
     "cta": {
       "title": "Apply the method to your fleet?",
       "desc": "Create an account, import your fleet and follow the 7-step journey."
+    },
+    "reference": {
+      "title": "Reference document",
+      "subtitle": "The full specification of the calculation engine (version {{version}}) and its assumptions registry, published as-is from the product repository — every formula, convention and cited source. Document written in French.",
+      "specTab": "Engine specification",
+      "hypTab": "Assumptions registry"
     }
   },
   "notFound": {

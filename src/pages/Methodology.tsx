@@ -1,9 +1,8 @@
 /**
- * Page publique « Méthodologie » (E1) : même texte que l'Aide, décrivant
- * le moteur ACTUEL — l'ancienne page décrivait l'ancien moteur (formule
- * CAPEX + NPV(OPEX), coûts de bornes/stations et valeur résiduelle
- * figés, « mise à jour trimestrielle »). Aucun chiffre figé : renvoi au
- * registre sourcé, consultable dans l'application.
+ * Page publique « Méthodologie » : résumé (même texte que l'Aide) puis le
+ * DOCUMENT DE RÉFÉRENCE lui-même, docs/tco-methodologie.md, rendu tel quel
+ * (Phase 4) — et le registre des hypothèses généré (docs/tco-hypotheses.md).
+ * Aucune copie réécrite : la page change quand la spécification change.
  */
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -15,6 +14,11 @@ import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import DemoRequestModal from "@/components/landing/DemoRequestModal";
 import MethodSections from "@/components/help/MethodSections";
+import MarkdownDoc from "@/components/help/MarkdownDoc";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ENGINE_VERSION } from "@/lib/tco";
+import methodologie from "../../docs/tco-methodologie.md?raw";
+import hypotheses from "../../docs/tco-hypotheses.md?raw";
 
 const Methodology = () => {
   const { t } = useTranslation();
@@ -48,6 +52,27 @@ const Methodology = () => {
         </Card>
 
         <MethodSections sections={["method", "uncertainty", "data", "infrastructure", "subsidies"]} avecFaq={false} ouvertes={["method"]} />
+
+        <Card>
+          <CardContent className="pt-6 space-y-3">
+            <h2 className="text-2xl font-bold">{t("methodology.reference.title")}</h2>
+            <p className="text-sm text-muted-foreground">
+              {t("methodology.reference.subtitle", { version: ENGINE_VERSION })}
+            </p>
+            <Tabs defaultValue="spec">
+              <TabsList>
+                <TabsTrigger value="spec">{t("methodology.reference.specTab")}</TabsTrigger>
+                <TabsTrigger value="hyp">{t("methodology.reference.hypTab")}</TabsTrigger>
+              </TabsList>
+              <TabsContent value="spec">
+                <MarkdownDoc source={methodologie} />
+              </TabsContent>
+              <TabsContent value="hyp">
+                <MarkdownDoc source={hypotheses} />
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
 
         <Card className="bg-primary/5 border-primary/20">
           <CardContent className="pt-6 text-center">

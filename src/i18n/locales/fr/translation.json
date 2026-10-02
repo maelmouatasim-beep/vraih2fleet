@@ -6320,6 +6320,12 @@
     "cta": {
       "title": "Appliquer la méthode à votre flotte ?",
       "desc": "Créez un compte, importez votre flotte et suivez le parcours en 7 étapes."
+    },
+    "reference": {
+      "title": "Document de référence",
+      "subtitle": "La spécification complète du moteur de calcul (version {{version}}) et le registre de ses hypothèses, publiés tels quels depuis le dépôt du produit — chaque formule, convention et source citée. Document rédigé en français.",
+      "specTab": "Spécification du moteur",
+      "hypTab": "Registre des hypothèses"
     }
   },
   "notFound": {
