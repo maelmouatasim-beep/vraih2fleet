@@ -40,7 +40,7 @@ export function lireClassePnbv(brut: unknown): ClassePnbv | null {
   if (brut == null) return null;
   const s = String(brut).trim().toLowerCase().replace(/^(classe|class|cl\.?)\s*/, "");
   if ((CLASSES_PNBV as readonly string[]).includes(s)) return s as ClassePnbv;
-  const m = s.replace(/[\s  ]/g, "").replace(",", ".").match(/^(\d+(?:\.\d+)?)(kg|lb|lbs)?$/);
+  const m = s.replace(/[\s\u00a0\u202f]/g, "").replace(",", ".").match(/^(\d+(?:\.\d+)?)(kg|lb|lbs)?$/);
   if (!m) return null;
   const v = Number(m[1]);
   if (m[2]?.startsWith("lb")) return classeDepuisKg(v * 0.45359237);

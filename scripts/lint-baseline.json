@@ -1,8 +1,8 @@
 {
-  "@typescript-eslint/no-explicit-any": 73,
+  "@typescript-eslint/no-explicit-any": 61,
   "no-var": 7,
   "prefer-const": 3,
-  "no-case-declarations": 2,
   "@typescript-eslint/no-empty-object-type": 2,
+  "no-case-declarations": 1,
   "@typescript-eslint/no-require-imports": 1
 }
