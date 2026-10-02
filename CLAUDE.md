@@ -322,10 +322,26 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   recommandation + « Appliquer » pour les véhicules sans cible ; cas
   terrain en e2e permanent (CI). Migrations 20261002010000 →
   20261002050000 (additives), appliquées par Deploy Supabase.
-- Phase 4 — site public et conformité (études de cas re-étiquetées,
-  tarification unique — prix demandés à l'utilisateur, promesses non
-  livrées retirées, légal fr/en Loi 25 — nom légal demandé, admin
-  protégé par has_role) : à venir, obligatoire avant toute démo prospect.
+- **Phase 4 — site public et conformité : LIVRÉE SAUF TARIFS (« on
+  arrangera les tarifs à la fin »), en attente du « ok ».** Un commit et
+  un test par point (`src/pages/__tests__/`) :
+  4.1 études de cas → « Exemples illustratifs » FICTIFS, calculés en
+  direct par le moteur depuis `docs/tco-cas-de-reference.json`
+  (`src/lib/caseStudies.ts` supprimé) ; 4.2 promesses non livrées
+  retirées (essai gratuit, délais de réponse, faux liens sociaux,
+  « Rejoignez… », chiffres de guides non sourcés, page Support →
+  /dashboard/help, index.html sans @H2Fleet ni image Lovable) — test
+  `promises.test.ts` (exclut `landing.pricing`, à refaire) ; 4.3
+  /methodology = rendu de `docs/tco-methodologie.md` + registre généré
+  (`MarkdownDoc`, remark-gfm) ; 4.4 pages légales fr/en
+  (`LegalPage`, clés `legal.*`) : droit du Québec, Loi 25 (responsable,
+  CAI, EFVP, portabilité), version française prévaut, pilote sans
+  paiement — **nom légal, adresse et responsable en placeholders
+  « [… à confirmer] »** (pas encore d'entreprise) + mention « à faire
+  valider par un juriste » ; 4.5 admin = `user_roles`/`has_role` seul
+  (VITE_ADMIN_EMAILS retiré), README à jour.
+  Reste pour la fin : tarification (Pricing.tsx démonté, clés
+  `landing.pricing` et badges d'abonnement, DEMO_MODE).
 
 Rappels de méthode : chaque phase finit par `npm run check` vert → push →
 résumé court → **attendre le « ok » de l'utilisateur** ; kanban intégré à
@@ -362,7 +378,9 @@ sinon « à_valider » avec l'URL à consulter.
 - Récapitulatif hebdomadaire (préférence courriel) non implémenté.
 - /dashboard/roadmap encore accessible hors menu (à retirer ou
   intégrer au Suivi).
-- Pages publiques (études de cas, Ecosystem) encore chiffrées :
-  Phase 4.
+- Tarifs à définir (fin de projet) : `landing.pricing`, Pricing.tsx,
+  badges d'abonnement.
+- Pages légales : remplacer les placeholders (nom légal, adresse,
+  responsable Loi 25) une fois l'entreprise créée + revue par un juriste.
 - npm audit : avis sur le serveur de dev Vite (correctif = Vite 8,
   montée de version majeure à planifier).
