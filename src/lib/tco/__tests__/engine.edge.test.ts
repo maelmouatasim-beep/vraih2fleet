@@ -196,3 +196,26 @@ describe('barrel et registre', () => {
     expect(actifs.length).toBeLessThan(PROGRAMMES.length);
   });
 });
+
+describe('référence essence (revue 1.8)', () => {
+  it('prix et facteur d’émission de l’essence ; paramètres manquants refusés', async () => {
+    const { calculerPlan } = await import('../engine');
+    const { cas1 } = await import('./cas-de-reference');
+    const base = cas1();
+    const plan = {
+      ...base,
+      parametres: {
+        ...base.parametres,
+        prixAnnee0: { ...base.parametres.prixAnnee0, essenceParL: 1.5 },
+        facteursEmission: { ...base.parametres.facteursEmission, essenceTtwKgParL: 2.312, ratioWtwEssence: 1.25 },
+      },
+      vehicules: base.vehicules.map((v) => ({ ...v, carburantReference: 'essence' as const })),
+    };
+    const r = calculerPlan(plan);
+    const v = base.vehicules[0];
+    const litres = (v.kmParAn * v.reference.consommationPar100km) / 100;
+    expect(r.reference.emissionsTtwTonnes).toBeCloseTo((litres * 2.312 * base.parametres.horizonAns) / 1000 * base.vehicules.length, 6);
+    expect(r.reference.emissionsWtwTonnes).toBeCloseTo(r.reference.emissionsTtwTonnes * 1.25, 6);
+    expect(() => calculerPlan({ ...base, vehicules: plan.vehicules })).toThrow(/essence/);
+  });
+});

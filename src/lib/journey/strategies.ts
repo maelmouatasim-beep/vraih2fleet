@@ -223,7 +223,7 @@ function chiffrer(
   const vehiculesInfra: VehiculeInfra[] = [];
 
   for (const v of vehicules) {
-    const { defauts, kmParAn, consoReference } = analyserDonneesVehicule(v);
+    const { defauts, kmParAn, consoReference, carburant } = analyserDonneesVehicule(v);
     if (!defauts) {
       exclusions.push(v.id);
       continue;
@@ -292,6 +292,7 @@ function chiffrer(
       id: v.id,
       kmParAn,
       classeEmissionDiesel: classeEmission(v.category),
+      ...(carburant === "essence" ? { carburantReference: "essence" as const } : {}),
       reference,
       alternative,
       subventionsAlternative: subventions,

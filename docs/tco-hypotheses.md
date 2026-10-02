@@ -8,13 +8,14 @@ Statuts : ✅ vérifié = source réellement lue à la date indiquée ;
 ≈ estimation = ordre de grandeur professionnel à affiner ;
 ⚠️ à valider = source non consultable depuis l’environnement — consulter l’URL.
 
-Bilan : 10 vérifiées, 24 estimations, 12 à valider (hors défauts par catégorie, tous « estimation »).
+Bilan : 12 vérifiées, 24 estimations, 12 à valider (hors défauts par catégorie, tous « estimation »).
 
 ## Hypothèses générales
 
 | Hypothèse | Valeur | Unité | Plage | Région | Statut | Source | Vérifiée le |
 |---|---|---|---|---|---|---|---|
 | Prix du diesel HORS TPS/TVQ (accises et SPEDE compris) — MOYENNE MOBILE 12 MOIS StatCan, Montréal/Québec | 1.8179 (CAD 2026) | $/L | 1.4751 – 2.5658 | QC | ✅ vérifié | [Statistique Canada — Tableau 18-10-0001-01 — diesel libre-service, moyenne 12 mois (2025-09 à 2026-08) des villes de Montréal et de Québec, série archivée (data/sources/2026-09-29/statcan-diesel-12mois.json)](https://www150.statcan.gc.ca/t1/tbl1/fr/tv.action?pid=1810000101) | 2026-09-29 |
+| Prix de l’essence ordinaire HORS TPS/TVQ (taxes sur les carburants et SPEDE compris) — moyenne 12 mois StatCan, Montréal/Québec | 1.4549 (CAD 2026) | $/L | 1.2503 – 1.6999 | QC | ✅ vérifié | [Statistique Canada — Tableau 18-10-0001-01 — essence ordinaire sans plomb libre-service, moyenne 12 mois (2025-09 à 2026-08) des villes de Montréal et de Québec, série archivée (data/sources/2026-10-02/statcan-essence-12mois.json)](https://www150.statcan.gc.ca/t1/tbl1/fr/tv.action?pid=1810000101) | 2026-10-02 |
 | Hydro-Québec tarif M — prix de l’énergie (première tranche, ≤ 210 000 kWh/mois) | 0.06292 (CAD 2026) | $/kWh | 0.06292 – 0.08 | QC | ✅ vérifié | [Hydro-Québec — Grille des tarifs d’électricité, en vigueur le 1er avril 2026, Articles 3.2 (tarif G) et 4.2 (tarif M)](https://www.hydroquebec.com/data/documents-donnees/pdf/grille-tarifaire.pdf) | 2026-09-28 |
 | Hydro-Québec tarif M — prime de puissance mensuelle | 18.242 (CAD 2026) | $/kW/mois | 18.242 – 22 | QC | ✅ vérifié | [Hydro-Québec — Grille des tarifs d’électricité, en vigueur le 1er avril 2026, Articles 3.2 (tarif G) et 4.2 (tarif M)](https://www.hydroquebec.com/data/documents-donnees/pdf/grille-tarifaire.pdf) | 2026-09-28 |
 | Hydro-Québec tarif G — prix de l’énergie (première tranche, ≤ 15 090 kWh/mois) | 0.12388 (CAD 2026) | $/kWh | 0.09534 – 0.12388 | QC | ✅ vérifié | [Hydro-Québec — Grille des tarifs d’électricité, en vigueur le 1er avril 2026, Articles 3.2 (tarif G) et 4.2 (tarif M)](https://www.hydroquebec.com/data/documents-donnees/pdf/grille-tarifaire.pdf) | 2026-09-28 |
@@ -31,6 +32,7 @@ Bilan : 10 vérifiées, 24 estimations, 12 à valider (hors défauts par catégo
 | Taux d’actualisation NOMINAL par défaut (coût d’emprunt municipal long terme) | 0.05 | ratio | 0.03 – 0.07 | QC | ≈ estimation | [H2Fleet — À remplacer par le taux d’emprunt réel de l’organisme (obligations municipales 10-20 ans)](https://github.com/maelmouatasim-beep/vraih2fleet/blob/main/docs/tco-methodologie.md) | 2026-09-28 |
 | Facteur d’émission réservoir-à-roue, diesel, véhicules lourds (CO2+CH4+N2O) | 2.724 | kgCO2e/L | 2.705 – 2.741 | CA | ✅ vérifié | [MELCCFP (Québec) — Guide de quantification des émissions de gaz à effet de serre, février 2025, Tableaux 5-6 (reprend RIN 1990-2022, partie II, tableau A6.1-15)](https://www.environnement.gouv.qc.ca/changements/ges/guide-quantification/guide-quantification-ges.pdf) | 2026-09-28 |
 | Facteur d’émission réservoir-à-roue, diesel, véhicules légers et camions légers | 2.741 | kgCO2e/L | 2.726 – 2.741 | CA | ✅ vérifié | [MELCCFP (Québec) — Guide de quantification des émissions de gaz à effet de serre, février 2025, Tableaux 5-6 (reprend RIN 1990-2022, partie II, tableau A6.1-15)](https://www.environnement.gouv.qc.ca/changements/ges/guide-quantification/guide-quantification-ges.pdf) | 2026-09-28 |
+| Facteur d’émission réservoir-à-roue, essence, véhicules et camions légers neufs (niveau 3) | 2.312 | kgCO2e/L | 2.312 – 2.491 | CA | ✅ vérifié | [MELCCFP (Québec) — Guide de quantification des émissions de gaz à effet de serre, février 2025, Tableaux 5-6 (reprend RIN 1990-2022, partie II, tableau A6.1-15)](https://www.environnement.gouv.qc.ca/changements/ges/guide-quantification/guide-quantification-ges.pdf) | 2026-10-02 |
 | Majoration puits-au-réservoir du diesel (extraction, raffinage, transport), en part du TTW | 0.25 | ratio | 0.15 – 0.35 | CA | ⚠️ à valider | [ECCC / GHGenius — Modèle d’analyse du cycle de vie des carburants (GHGenius) — intensité amont du diesel](https://ghgenius.ca/) | 2026-09-28 |
 | Intensité GES du réseau électrique du Québec (consommation) | 1.2 | gCO2e/kWh | 0.6 – 35 | QC | ⚠️ à valider | [ECCC — Québec : aperçu sur l’électricité propre (données RIN 2022), Section « Émissions et production d’électricité »](https://www.canada.ca/fr/services/environnement/meteo/changementsclimatiques/plan-climatique/electricite-propre/apercu-quebec.html) | 2026-09-28 |
 | Facteur d’émission puits-à-roue, H2 par électrolyse au Québec | 1 | kgCO2e/kgH2 | 0.4 – 2.5 | QC | ⚠️ à valider | [Propulsion Québec / ECCC — Étude hydrogène vert 2023 (électrolyse alimentée par le réseau QC) ](https://propulsionquebec.com/wp-content/uploads/2023/11/PropulsionQc_Hydrogene-vert_VF1.pdf) | 2026-09-28 |
@@ -64,6 +66,7 @@ Bilan : 10 vérifiées, 24 estimations, 12 à valider (hors défauts par catégo
 ### Notes
 
 - **prix_diesel** : Valeur et plage lues depuis src/lib/tco/energy-data.json, mis à jour par le workflow hebdomadaire update-energy-data.yml (variation > 20 % = mise en attente, jamais appliquée automatiquement). Moyenne 12 mois 2,0902 $ TTC ÷ 1,14975 = 1,8179 $ AVANT TPS/TVQ — le moteur ajoute la part non récupérable selon l’organisme (§3.1 v2.2). Le taux de TVQ de la conversion est à_valider (taux_tvq). Borne basse = mois le plus bas des 12 derniers ; borne haute = SPOT DE CRISE du bulletin de la Régie du 2026-09-21 (2,95 $ TTC → 2,5658 $), utilisé UNIQUEMENT comme borne du scénario Favorable.
+- **prix_essence** : Moyenne TTC 1,6728 $/L ÷ 1,14975 (TPS + TVQ). Plage = mois le plus bas et le plus haut des 12 (avant TPS/TVQ). Inflation : celle des carburants (inflation_diesel). Saisie manuelle dans le registre : la collecte hebdomadaire automatisée ne couvre que le diesel.
 - **hq_tarif_m_energie** : 6,292 ¢/kWh au 2026-04-01 (2e tranche : 4,666 ¢/kWh). Hausse générale 3,8 % en 2026.
 - **hq_tarif_m_puissance** : Puissance à facturer minimale : 65 % de la puissance maximale appelée en hiver (mécanisme de « ratchet », Tarifs d’électricité 2026, art. 2.17 et équivalents).
 - **hq_tarif_g_energie** : 12,388 ¢/kWh ; reste 9,534 ¢/kWh ; prime 22,071 $/kW au-delà de 50 kW ; accès 15,426 $/mois.
@@ -74,6 +77,7 @@ Bilan : 10 vérifiées, 24 estimations, 12 à valider (hors défauts par catégo
 - **inflation_electricite** : Point de donnée vérifié : hausse 2026 de 3,8 % aux tarifs généraux (grille 2026).
 - **taux_actualisation_nominal** : Stocké en décimal ; cohérent avec des flux NOMINAUX (méthodologie §2.2-2.3).
 - **fe_diesel_ttw_lourds** : Lu au Tableau 6 : véhicules lourds diesel, dispositif perfectionné = 2 681 g CO2 + 0,11 g CH4 + 0,151 g N2O = 2 724 g éq. CO2/L. Sans dispositif : 2 705 ; véhicules légers diesel : 2 741.
+- **fe_essence_ttw_legers** : Lu au Tableau 6 (archive data/sources/2026-10-02/guide-ges-tableaux-5-6.txt) : véhicules légers à essence, niveau 3 = 2 307 g CO2 + 0,11 g CH4 + 0,007 g N2O = 2 312 g éq. CO2/L (référence = véhicule NEUF). Plage jusqu’au niveau 0 (2 491). Sert aux véhicules actuels à essence ou hybrides (revue 1.8).
 - **fe_diesel_amont** : WTW diesel = TTW × (1 + majoration).
 - **fe_reseau_qc** : Page consultée via le workflow mais la valeur chiffrée n’a pas pu être extraite du HTML ; 1,2 g éq. CO2/kWh (2022) d’après le résumé de recherche. Borne haute 35 g : approche marginale (importations/pointe) pour le stress test.
 - **fe_h2_electrolyse_qc** : Inclut compression/distribution ; dépend du transport (camion vs pipeline).

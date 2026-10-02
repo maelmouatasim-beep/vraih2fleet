@@ -123,7 +123,10 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
                 }),
               })}
           {" · "}
-          {t("journey.feasibility.co2Avoided", { tonnes: e.co2EviteWtwTonnes.toFixed(0) })}
+          {t("journey.feasibility.co2Avoided", {
+            ttw: e.co2EviteTtwTonnes.toFixed(1),
+            wtw: e.co2EviteWtwTonnes.toFixed(1),
+          })}
         </p>
         {e.subventions.length > 0 && (
           <p>

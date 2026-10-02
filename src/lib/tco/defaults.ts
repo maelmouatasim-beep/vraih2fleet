@@ -55,6 +55,7 @@ export function parametresParDefaut(options: OptionsParametres): ParametresProje
     },
     prixAnnee0: {
       dieselParL: options.surchargesEnergie?.dieselParL ?? HYPOTHESES.prix_diesel.valeur,
+      essenceParL: HYPOTHESES.prix_essence.valeur,
       electriciteEffectiveParKwh:
         options.surchargesEnergie?.electriciteEffectiveParKwh ??
         HYPOTHESES.cout_effectif_elec_depot.valeur,
@@ -78,6 +79,10 @@ export function parametresParDefaut(options: OptionsParametres): ParametresProje
       dieselTtwLegersKgParL: HYPOTHESES.fe_diesel_ttw_legers.valeur,
       dieselTtwLourdsKgParL: HYPOTHESES.fe_diesel_ttw_lourds.valeur,
       ratioWtwDiesel: 1 + HYPOTHESES.fe_diesel_amont.valeur,
+      essenceTtwKgParL: HYPOTHESES.fe_essence_ttw_legers.valeur,
+      // Même majoration amont que le diesel (carburants pétroliers raffinés) :
+      // aucune source distincte lue pour l'essence — hypothèse à valider.
+      ratioWtwEssence: 1 + HYPOTHESES.fe_diesel_amont.valeur,
       electriciteGParKwh: HYPOTHESES.fe_reseau_qc.valeur,
       h2KgParKg: HYPOTHESES.fe_h2_electrolyse_qc.valeur,
     },

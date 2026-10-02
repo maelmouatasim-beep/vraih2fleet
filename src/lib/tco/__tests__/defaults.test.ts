@@ -12,7 +12,14 @@ describe('parametresParDefaut', () => {
       tauxActualisationNominal: 0.05,
       typeOrganisme: 'municipalite',
     });
-    expect(p).toEqual(PARAMETRES_CAS);
+    // Les cas de référence sont tous diesel : les paramètres essence (1.8)
+    // s'ajoutent sans rien changer au reste.
+    const { essenceParL, ...prix } = p.prixAnnee0;
+    const { essenceTtwKgParL, ratioWtwEssence, ...fe } = p.facteursEmission;
+    expect({ ...p, prixAnnee0: prix, facteursEmission: fe }).toEqual(PARAMETRES_CAS);
+    expect(essenceParL).toBe(HYPOTHESES.prix_essence.valeur);
+    expect(essenceTtwKgParL).toBe(HYPOTHESES.fe_essence_ttw_legers.valeur);
+    expect(ratioWtwEssence).toBe(p.facteursEmission.ratioWtwDiesel);
   });
 
   it('produit une entrée valide pour le moteur (zod)', () => {

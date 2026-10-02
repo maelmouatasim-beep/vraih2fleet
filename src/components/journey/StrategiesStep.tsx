@@ -192,7 +192,12 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
                         total: s.nbVehicules,
                       })}
                     </p>
-                    <p>{t("journey.strategies.metrics.co2", { tonnes: r.co2EviteWtwTonnes.toFixed(0) })}</p>
+                    <p>
+                      {t("journey.strategies.metrics.co2", {
+                        ttw: r.co2EviteTtwTonnes.toFixed(0),
+                        wtw: r.co2EviteWtwTonnes.toFixed(0),
+                      })}
+                    </p>
                     <p>
                       {r.paybackActualise.annees != null
                         ? t("journey.feasibility.payback", { years: r.paybackActualise.annees })

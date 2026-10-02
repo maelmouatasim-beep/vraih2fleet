@@ -45,6 +45,8 @@ export const HYPOTHESES_EN: Record<string, string> = {
   borne_niveau2_installee: "Level 2 charger (7-19 kW) installed at the depot (hardware + installation)",
   borne_rapide_50kw_installee: "~50 kW DC fast charger installed (hardware + installation)",
   borne_rapide_150kw_installee: "~150 kW DC fast charger installed (hardware + installation)",
+  prix_essence: "Regular gasoline price EXCLUDING GST/QST (fuel taxes and cap-and-trade included) — 12-month StatCan average, Montréal/Québec",
+  fe_essence_ttw_legers: "Tank-to-wheel emission factor, gasoline, new light-duty vehicles and trucks (tier 3)",
   raccordement_depot: "Depot grid connection and electrical upgrade (service entrance, transformer, distribution)",
   puissance_disponible_garage_presumee: "Presumed spare electrical capacity of an existing depot, when the depot's actual available power is not entered",
   raccordement_seuil_palier1_kw: "Grid connection — upper limit of tier 1 (power needed beyond the depot's available capacity)",

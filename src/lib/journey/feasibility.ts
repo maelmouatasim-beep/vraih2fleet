@@ -48,6 +48,9 @@ export interface EvaluationTechno {
   paybackActualiseAns: number | null;
   /** Raison quand la récupération n'arrive jamais sur l'horizon (null sinon). */
   paybackJamaisCode: "economies_negatives" | "surcout_non_resorbe" | null;
+  /** CO2e évité au pot d'échappement (réservoir-à-roue). */
+  co2EviteTtwTonnes: number;
+  /** CO2e évité sur le cycle complet (puits-à-roue) — celui des totaux. */
   co2EviteWtwTonnes: number;
   coutParTonneWtw: number | null;
   subventions: SubventionAppliquee[];
@@ -74,8 +77,11 @@ export interface DonneesVehicule {
   /** null quand la catégorie n'est pas connue du moteur (« autre »). */
   defauts: (typeof DEFAUTS_CATEGORIES)[keyof typeof DEFAUTS_CATEGORIES] | null;
   kmParAn: number;
-  /** Consommation du diesel neuf de référence (réelle si utilisable). */
+  /** Consommation du véhicule thermique neuf de référence (réelle si utilisable). */
   consoReference: number;
+  /** Carburant de la référence : essence pour un véhicule actuel à
+   *  essence ou hybride non rechargeable (1.8), diesel sinon. */
+  carburant: "diesel" | "essence";
   donneesEstimees: DonneeEstimee[];
 }
 
@@ -84,7 +90,7 @@ export interface DonneesVehicule {
  *  ce qui relève de l'estimation. Partagé par Faisabilité et Stratégies. */
 export function analyserDonneesVehicule(vehicule: VehiculeFaisabilite): DonneesVehicule {
   const defauts = DEFAUTS_CATEGORIES[vehicule.category as keyof typeof DEFAUTS_CATEGORIES];
-  if (!defauts) return { defauts: null, kmParAn: 0, consoReference: 0, donneesEstimees: [] };
+  if (!defauts) return { defauts: null, kmParAn: 0, consoReference: 0, carburant: "diesel", donneesEstimees: [] };
 
   const donneesEstimees: DonneeEstimee[] = [];
   const kmParAn = vehicule.annual_km != null && vehicule.annual_km > 0
@@ -92,11 +98,14 @@ export function analyserDonneesVehicule(vehicule: VehiculeFaisabilite): DonneesV
     : defauts.kmParAnDefaut;
   if (vehicule.annual_km == null || vehicule.annual_km <= 0) donneesEstimees.push("km");
 
-  // Référence = diesel NEUF équivalent. La consommation réelle du
-  // véhicule (saisie/télématique) sert de meilleur proxy quand le
-  // véhicule actuel est diesel ; sinon, défaut de catégorie (estimation).
+  // Référence = véhicule thermique NEUF équivalent, du MÊME carburant que
+  // le véhicule actuel (1.8 : une Corolla à essence n'est plus comptée
+  // comme un diesel). La consommation réelle (saisie/télématique) sert de
+  // meilleur proxy ; sinon, défaut diesel de la catégorie (estimation).
+  const carburant: "diesel" | "essence" =
+    vehicule.fuel_type === "essence" || vehicule.fuel_type === "hybride" ? "essence" : "diesel";
   const consoReelleUtilisable =
-    vehicule.fuel_type === "diesel" &&
+    (vehicule.fuel_type === "diesel" || carburant === "essence") &&
     vehicule.consumption_per_100km != null &&
     vehicule.consumption_per_100km > 0 &&
     vehicule.consumption_source !== "estimation";
@@ -105,7 +114,7 @@ export function analyserDonneesVehicule(vehicule: VehiculeFaisabilite): DonneesV
     : defauts.consommation.diesel.valeur;
   if (!consoReelleUtilisable) donneesEstimees.push("consommation");
 
-  return { defauts, kmParAn, consoReference, donneesEstimees };
+  return { defauts, kmParAn, consoReference, carburant, donneesEstimees };
 }
 
 /**
@@ -128,7 +137,7 @@ export function evaluerFaisabiliteVehicule(
   vehicule: VehiculeFaisabilite,
   options: OptionsParametres,
 ): FaisabiliteVehicule {
-  const { defauts, kmParAn, consoReference, donneesEstimees } = analyserDonneesVehicule(vehicule);
+  const { defauts, kmParAn, consoReference, carburant, donneesEstimees } = analyserDonneesVehicule(vehicule);
   if (!defauts) {
     return { vehiculeId: vehicule.id, evaluations: null, kmParAnRetenu: null, donneesEstimees: [] };
   }
@@ -172,6 +181,7 @@ export function evaluerFaisabiliteVehicule(
           id: vehicule.id,
           kmParAn,
           classeEmissionDiesel: classeEmission(vehicule.category),
+          ...(carburant === "essence" ? { carburantReference: "essence" as const } : {}),
           reference: {
             technologie: "diesel",
             prixAvantTaxes: defauts.prixAchat.diesel.valeur,
@@ -213,6 +223,7 @@ export function evaluerFaisabiliteVehicule(
       economieActualisee: economie,
       paybackActualiseAns: resultat.paybackActualise.annees,
       paybackJamaisCode: resultat.paybackActualise.code,
+      co2EviteTtwTonnes: resultat.co2EviteTtwTonnes,
       co2EviteWtwTonnes: resultat.co2EviteWtwTonnes,
       coutParTonneWtw: resultat.coutParTonneWtw,
       subventions,

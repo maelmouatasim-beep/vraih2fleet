@@ -5834,7 +5834,7 @@
         "economies_negatives": "les économies annuelles sont nulles ou négatives",
         "surcout_non_resorbe": "le surcoût n'est pas résorbé sur l'horizon de {{horizon}} ans"
       },
-      "co2Avoided": "{{tonnes}} t CO2e évitées",
+      "co2Avoided": "{{ttw}} t CO2e évitées au pot d'échappement · {{wtw}} t cycle complet (totaux)",
       "subsidies": "Subventions : {{amount}}",
       "reserves": {
         "longue_distance": "Autonomie à vérifier (longue distance)",
@@ -5871,7 +5871,7 @@
       },
       "metrics": {
         "vehicles": "{{ze}} zéro émission sur {{total}} véhicules",
-        "co2": "{{tonnes}} t CO2e évitées (puits à la roue)",
+        "co2": "{{ttw}} t CO2e évitées au pot d'échappement · {{wtw}} t sur le cycle complet (retenu dans les totaux)",
         "infra": "Infrastructure : {{amount}}",
         "subsidies": "Subventions : {{amount}}"
       },

@@ -66,10 +66,23 @@ export function energieAnnuelleFacturee(spec: SpecVehicule, kmParAn: number, p: 
   return spec.technologie === 'BEV' ? majoree / p.rendementRecharge : majoree;
 }
 
-function prixEnergieAnnee(spec: SpecVehicule, p: ParametresProjet, annee: number): number {
+/** Carburant d'un véhicule thermique : diesel par défaut, essence pour un
+ *  véhicule à essence (§3.3 v2.3) — prix et facteur d'émission propres,
+ *  inflation commune des carburants (inflations.diesel). */
+function exigerEssence<T>(valeur: T | undefined, quoi: string): T {
+  if (valeur === undefined) throw new Error(`véhicule à essence : ${quoi} manquant dans les paramètres`);
+  return valeur;
+}
+
+function prixEnergieAnnee(spec: SpecVehicule, vehicule: VehiculePlan, p: ParametresProjet, annee: number): number {
   switch (spec.technologie) {
-    case 'diesel':
-      return p.prixAnnee0.dieselParL * Math.pow(1 + p.inflations.diesel, annee);
+    case 'diesel': {
+      const prix =
+        vehicule.carburantReference === 'essence'
+          ? exigerEssence(p.prixAnnee0.essenceParL, 'prixAnnee0.essenceParL')
+          : p.prixAnnee0.dieselParL;
+      return prix * Math.pow(1 + p.inflations.diesel, annee);
+    }
     case 'BEV':
       return p.prixAnnee0.electriciteEffectiveParKwh * Math.pow(1 + p.inflations.electricite, annee);
     case 'FCEV':
@@ -86,6 +99,12 @@ function emissionsAnnuelles(
   const energie = energieAnnuelleFacturee(spec, vehicule.kmParAn, p);
   switch (spec.technologie) {
     case 'diesel': {
+      if (vehicule.carburantReference === 'essence') {
+        const fe = exigerEssence(p.facteursEmission.essenceTtwKgParL, 'facteursEmission.essenceTtwKgParL');
+        const ratio = exigerEssence(p.facteursEmission.ratioWtwEssence, 'facteursEmission.ratioWtwEssence');
+        const ttw = (energie * fe) / 1000;
+        return [ttw, ttw * ratio];
+      }
       const fe =
         vehicule.classeEmissionDiesel === 'legers'
           ? p.facteursEmission.dieselTtwLegersKgParL
@@ -169,7 +188,7 @@ function ajouterVehiculeAuScenario(
   // primes ne sont pas assujetties à la TPS/TVQ, on saisit la prime payée.
   const energieAnnuelle = energieAnnuelleFacturee(spec, vehicule.kmParAn, p);
   for (let n = debut + 1; n <= h; n++) {
-    flux.energie[n] += energieAnnuelle * prixEnergieAnnee(spec, p, n) * taxes;
+    flux.energie[n] += energieAnnuelle * prixEnergieAnnee(spec, vehicule, p, n) * taxes;
     flux.entretien[n] += vehicule.kmParAn * spec.entretienParKm * Math.pow(1 + p.inflations.entretien, n) * taxes;
     // Assurance/immatriculation (§3.6) : $/an fournis, indexés à
     // l'inflation générale ; 0 si non fournis.

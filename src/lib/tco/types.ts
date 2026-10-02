@@ -32,6 +32,9 @@ export const zParametresProjet = z.object({
    *  comprend les accises et le SPEDE (non récupérables). */
   prixAnnee0: z.object({
     dieselParL: zMontantPositif,
+    /** Essence ordinaire avant TPS/TVQ — requis seulement si un véhicule
+     *  a `carburantReference: 'essence'`. */
+    essenceParL: zMontantPositif.optional(),
     /** Coût EFFECTIF au compteur du dépôt (énergie + prime de puissance amortie). */
     electriciteEffectiveParKwh: zMontantPositif,
     h2LivreParKg: zMontantPositif,
@@ -56,6 +59,9 @@ export const zParametresProjet = z.object({
     dieselTtwLourdsKgParL: zMontantPositif,
     /** WTW diesel = TTW × ratio (≥ 1). */
     ratioWtwDiesel: z.number().finite().min(1).max(2),
+    /** Essence (véhicules à essence) : TTW en kg CO2e/L et ratio WTW/TTW. */
+    essenceTtwKgParL: zMontantPositif.optional(),
+    ratioWtwEssence: z.number().finite().min(1).max(2).optional(),
     electriciteGParKwh: zMontantNonNegatif,
     h2KgParKg: zMontantNonNegatif,
   }),
@@ -102,6 +108,11 @@ export const zVehiculePlan = z.object({
   kmParAn: zMontantPositif,
   /** Classe pour le facteur d'émission diesel de la référence. */
   classeEmissionDiesel: z.enum(['legers', 'lourds']),
+  /** Carburant du véhicule thermique (référence ET statu quo) : diesel par
+   *  défaut (absent) ; « essence » pour un véhicule à essence (prix et facteur
+   *  d'émission de l'essence, §3.3 v2.3). La technologie reste « diesel »
+   *  au sens « thermique » dans le reste du moteur. */
+  carburantReference: z.enum(['diesel', 'essence']).optional(),
   /** Diesel neuf équivalent (référence statu quo). */
   reference: zSpecVehicule.refine((s) => s.technologie === 'diesel', {
     message: 'la référence est toujours un diesel neuf équivalent',

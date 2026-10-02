@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DEFAUTS_CATEGORIES } from "@/lib/tco";
-import { cibleSuggeree, evaluerFaisabiliteVehicule, type VehiculeFaisabilite } from "../feasibility";
+import { analyserDonneesVehicule, cibleSuggeree, evaluerFaisabiliteVehicule, type VehiculeFaisabilite } from "../feasibility";
 
 const OPTIONS = {
   anneeReference: 2026,
@@ -71,14 +71,23 @@ describe("evaluerFaisabiliteVehicule", () => {
     expect(r.donneesEstimees).toContain("km");
   });
 
-  it("consommation « estimation » ou véhicule non diesel → défaut de catégorie marqué estimé", () => {
+  it("consommation « estimation » ou véhicule ni diesel ni essence → défaut de catégorie marqué estimé", () => {
     const estime = evaluerFaisabiliteVehicule(
       vehicule({ consumption_source: "estimation" }),
       OPTIONS,
     );
     expect(estime.donneesEstimees).toContain("consommation");
-    const essence = evaluerFaisabiliteVehicule(vehicule({ fuel_type: "essence" }), OPTIONS);
-    expect(essence.donneesEstimees).toContain("consommation");
+    const phev = evaluerFaisabiliteVehicule(vehicule({ fuel_type: "phev" }), OPTIONS);
+    expect(phev.donneesEstimees).toContain("consommation");
+  });
+
+  it("1.8 — véhicule à essence : référence ESSENCE (sa consommation réelle, facteur essence), plus un diesel", () => {
+    const d = analyserDonneesVehicule(vehicule({ fuel_type: "essence", consumption_per_100km: 6.5 }));
+    expect(d.carburant).toBe("essence");
+    expect(d.consoReference).toBe(6.5);
+    expect(d.donneesEstimees).not.toContain("consommation");
+    expect(analyserDonneesVehicule(vehicule({ fuel_type: "hybride" })).carburant).toBe("essence");
+    expect(analyserDonneesVehicule(vehicule({ fuel_type: "diesel" })).carburant).toBe("diesel");
   });
 
   it("usage longue distance → réserve BEV ; réserve H2 systématique côté FCEV", () => {
@@ -144,6 +153,7 @@ describe("cibleSuggeree (C2 — cible pré-suggérée à l'étape Flotte)", () =
             economieActualisee: -1000,
             paybackActualiseAns: null,
           paybackJamaisCode: "surcout_non_resorbe",
+            co2EviteTtwTonnes: 0,
             co2EviteWtwTonnes: 0,
             coutParTonneWtw: null,
             subventions: [],
@@ -155,6 +165,7 @@ describe("cibleSuggeree (C2 — cible pré-suggérée à l'étape Flotte)", () =
             economieActualisee: -5000,
             paybackActualiseAns: null,
           paybackJamaisCode: "surcout_non_resorbe",
+            co2EviteTtwTonnes: 0,
             co2EviteWtwTonnes: 0,
             coutParTonneWtw: null,
             subventions: [],
@@ -163,5 +174,26 @@ describe("cibleSuggeree (C2 — cible pré-suggérée à l'étape Flotte)", () =
         ],
       }),
     ).toBeNull();
+  });
+});
+
+describe("1.8 — CO2 de la Corolla du test terrain", () => {
+  it("Corolla essence 12 500 km/an à 6,5 L/100 km : ≈ 18,8 t évitées au pot sur 10 ans (et non 30 t)", () => {
+    const r = evaluerFaisabiliteVehicule(
+      vehicule({
+        category: "vehicule_leger",
+        fuel_type: "essence",
+        annual_km: 12500,
+        consumption_per_100km: 6.5,
+        replacement_year: 2026,
+      }),
+      OPTIONS,
+    );
+    const bev = r.evaluations!.find((e) => e.technologie === "BEV")!;
+    // 12 500 × 6,5 / 100 = 812,5 L/an × 2,312 kg/L = 1,8785 t/an × 10 ans
+    expect(bev.co2EviteTtwTonnes).toBeCloseTo(18.785, 2);
+    // Cycle complet : TTW essence × (1 + amont) − électricité du réseau QC (faible)
+    expect(bev.co2EviteWtwTonnes).toBeGreaterThan(bev.co2EviteTtwTonnes);
+    expect(bev.co2EviteWtwTonnes).toBeLessThan(18.785 * 1.25 + 0.01);
   });
 });

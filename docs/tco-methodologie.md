@@ -33,7 +33,12 @@ Version 2.3 (test terrain) — 2026-10-02 — statut : **en validation**
 > récupération (§6.1) : il n'est plus jamais « 0 an » quand l'achat est
 > prévu après l'année 0 ; un cumul encore négatif à l'horizon donne
 > « jamais » avec la raison. Les 7 cas de référence (achats à l'année 0)
-> sont inchangés.
+> sont inchangés. engineVersion 2.3.0 ajoute la référence ESSENCE
+> (§3.3, §5) : un véhicule actuel à essence ou hybride est comparé à un
+> véhicule neuf à essence (prix StatCan 12 mois et facteur réservoir-à-
+> roue du guide québécois, niveau 3 : 2,312 kg éq. CO2/L), au lieu d'un
+> diesel ; les CO2e réservoir-à-roue et puits-à-roue sont affichés côte à
+> côte, le puits-à-roue restant celui des totaux.
 
 Ce document est la référence unique de la méthode de calcul. Il est écrit
 pour être lu par un directeur des finances municipal : chaque formule est

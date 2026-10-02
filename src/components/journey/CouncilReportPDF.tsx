@@ -135,8 +135,13 @@ export default function CouncilReportPDF({
             </Text>
           </View>
           <View style={s.carte}>
-            <Text style={s.carteTitre}>{en ? "CO2e avoided (WTW)" : "CO2e évité (puits à la roue)"}</Text>
+            <Text style={s.carteTitre}>{en ? "CO2e avoided (full cycle)" : "CO2e évité (cycle complet)"}</Text>
             <Text style={s.carteValeur}>{resultat.co2EviteWtwTonnes.toFixed(0)} t</Text>
+            <Text style={s.carteTitre}>
+              {en
+                ? `tailpipe: ${resultat.co2EviteTtwTonnes.toFixed(0)} t`
+                : `au pot d'échappement : ${resultat.co2EviteTtwTonnes.toFixed(0)} t`}
+            </Text>
           </View>
           <View style={s.carte}>
             <Text style={s.carteTitre}>{en ? "Discounted payback" : "Récupération actualisée"}</Text>
@@ -333,8 +338,8 @@ export default function CouncilReportPDF({
         </Text>
         <Text style={s.note}>
           {en
-            ? "Method (docs/tco-methodologie.md): year 0 = acquisition (undiscounted); operating flows are nominal (per-item inflation) and discounted at the nominal rate; the reference is the same fleet replaced on the same schedule by equivalent new diesels; subsidies are counted in their payment year and capped by stacking rules; residual values are geometric with a floor. Every assumption below carries an honest status: an amount is only “verified” if the official source was actually read on the indicated date."
-            : "Méthode (docs/tco-methodologie.md) : année 0 = acquisition (non actualisée) ; flux d'exploitation nominaux (inflation par poste) actualisés au taux nominal ; la référence est la même flotte remplacée au même calendrier par des diesels neufs équivalents ; les subventions sont comptées à leur année de versement et plafonnées par les règles de cumul ; valeurs résiduelles géométriques avec plancher. Chaque hypothèse ci-dessous porte un statut honnête : un montant n'est « vérifié » que si la source officielle a réellement été lue à la date indiquée."}
+            ? "Method (docs/tco-methodologie.md): year 0 = acquisition (undiscounted); operating flows are nominal (per-item inflation) and discounted at the nominal rate; the reference is the same fleet replaced on the same schedule by equivalent new diesels; subsidies are counted in their payment year and capped by stacking rules; residual values are geometric with a floor. CO2e: two scopes are shown side by side — tailpipe (tank-to-wheel, what leaves the exhaust; zero for electric and hydrogen) and full cycle (well-to-wheel: fuel extraction and refining, electricity grid, hydrogen production); the FULL CYCLE is used in every total and in the cost per tonne. A gasoline vehicle is compared with a new gasoline vehicle (gasoline price and emission factor). Every assumption below carries an honest status: an amount is only “verified” if the official source was actually read on the indicated date."
+            : "Méthode (docs/tco-methodologie.md) : année 0 = acquisition (non actualisée) ; flux d'exploitation nominaux (inflation par poste) actualisés au taux nominal ; la référence est la même flotte remplacée au même calendrier par des diesels neufs équivalents ; les subventions sont comptées à leur année de versement et plafonnées par les règles de cumul ; valeurs résiduelles géométriques avec plancher. CO2e : deux périmètres côte à côte — au pot d'échappement (réservoir à la roue, ce qui sort de l'échappement ; nul pour l'électrique et l'hydrogène) et cycle complet (puits à la roue : extraction et raffinage du carburant, réseau électrique, production d'hydrogène) ; le CYCLE COMPLET est retenu dans tous les totaux et dans le coût par tonne. Un véhicule à essence est comparé à un véhicule neuf à essence (prix et facteur d'émission de l'essence). Chaque hypothèse ci-dessous porte un statut honnête : un montant n'est « vérifié » que si la source officielle a réellement été lue à la date indiquée."}
         </Text>
         {(meta.donneesClient?.length ?? 0) > 0 && (
           <>

@@ -94,7 +94,31 @@ export const HYPOTHESES = {
       'récupérable selon l’organisme (§3.1 v2.2). Le taux de TVQ de la conversion est à_valider (taux_tvq). ' +
       'Borne basse = mois le plus bas des 12 derniers ; borne haute = SPOT DE CRISE du bulletin de la Régie ' +
       'du 2026-09-21 (2,95 $ TTC → 2,5658 $), utilisé UNIQUEMENT comme borne du scénario Favorable.',
+  },  prix_essence: {
+    id: 'prix_essence',
+    description:
+      'Prix de l’essence ordinaire HORS TPS/TVQ (taxes sur les carburants et SPEDE compris) — moyenne 12 mois StatCan, Montréal/Québec',
+    valeur: 1.4549,
+    unite: '$/L',
+    plage: { basse: 1.2503, haute: 1.6999 },
+    region: 'QC',
+    anneeDollars: 2026,
+    source: {
+      organisme: 'Statistique Canada',
+      document:
+        'Tableau 18-10-0001-01 — essence ordinaire sans plomb libre-service, moyenne 12 mois (2025-09 à 2026-08) ' +
+        'des villes de Montréal et de Québec, série archivée (data/sources/2026-10-02/statcan-essence-12mois.json)',
+      annee: 2026,
+      url: 'https://www150.statcan.gc.ca/t1/tbl1/fr/tv.action?pid=1810000101',
+    },
+    dateVerification: '2026-10-02',
+    statut: 'verifie',
+    notes:
+      'Moyenne TTC 1,6728 $/L ÷ 1,14975 (TPS + TVQ). Plage = mois le plus bas et le plus haut des 12 (avant ' +
+      'TPS/TVQ). Inflation : celle des carburants (inflation_diesel). Saisie manuelle dans le registre : la ' +
+      'collecte hebdomadaire automatisée ne couvre que le diesel.',
   },
+
   hq_tarif_m_energie: {
     id: 'hq_tarif_m_energie',
     description: 'Hydro-Québec tarif M — prix de l’énergie (première tranche, ≤ 210 000 kWh/mois)',
@@ -346,6 +370,21 @@ export const HYPOTHESES = {
     source: SRC_GUIDE_QC_GES,
     dateVerification: V,
     statut: 'verifie',
+  },
+  fe_essence_ttw_legers: {
+    id: 'fe_essence_ttw_legers',
+    description: 'Facteur d’émission réservoir-à-roue, essence, véhicules et camions légers neufs (niveau 3)',
+    valeur: 2.312,
+    unite: 'kgCO2e/L',
+    plage: { basse: 2.312, haute: 2.491 },
+    region: 'CA',
+    source: SRC_GUIDE_QC_GES,
+    dateVerification: '2026-10-02',
+    statut: 'verifie',
+    notes:
+      'Lu au Tableau 6 (archive data/sources/2026-10-02/guide-ges-tableaux-5-6.txt) : véhicules légers à ' +
+      'essence, niveau 3 = 2 307 g CO2 + 0,11 g CH4 + 0,007 g N2O = 2 312 g éq. CO2/L (référence = véhicule ' +
+      'NEUF). Plage jusqu’au niveau 0 (2 491). Sert aux véhicules actuels à essence ou hybrides (revue 1.8).',
   },
   fe_diesel_amont: {
     id: 'fe_diesel_amont',

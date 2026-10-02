@@ -5834,7 +5834,7 @@
         "economies_negatives": "annual savings are zero or negative",
         "surcout_non_resorbe": "the extra cost is not recovered within the {{horizon}}-year horizon"
       },
-      "co2Avoided": "{{tonnes}} t CO2e avoided",
+      "co2Avoided": "{{ttw}} t CO2e avoided at the tailpipe · {{wtw}} t full cycle (totals)",
       "subsidies": "Subsidies: {{amount}}",
       "reserves": {
         "longue_distance": "Range to verify (long distance)",
@@ -5871,7 +5871,7 @@
       },
       "metrics": {
         "vehicles": "{{ze}} zero-emission out of {{total}} vehicles",
-        "co2": "{{tonnes}} t CO2e avoided (well-to-wheel)",
+        "co2": "{{ttw}} t CO2e avoided at the tailpipe · {{wtw}} t full cycle (used in totals)",
         "infra": "Infrastructure: {{amount}}",
         "subsidies": "Subsidies: {{amount}}"
       },
