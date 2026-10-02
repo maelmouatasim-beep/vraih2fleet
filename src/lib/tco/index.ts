@@ -14,7 +14,13 @@ export type {
   BaremeSubvention,
 } from './subsidy-programs';
 export { resoudreSubventions, resoudreSubventionsVehicule } from './subsidy-resolver';
-export type { DemandeSubventions, ResolutionSubventions } from './subsidy-resolver';
+export type {
+  DemandeSubventions,
+  ExplicationSubvention,
+  RaisonSubvention,
+  RegleSubvention,
+  ResolutionSubventions,
+} from './subsidy-resolver';
 export { calculerPlan, energieAnnuelleFacturee } from './engine';
 export { parametresParDefaut, tauxTaxesNonRecuperables } from './defaults';
 export type { OptionsParametres } from './defaults';

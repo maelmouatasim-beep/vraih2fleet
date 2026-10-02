@@ -55,8 +55,13 @@ describe("tachesDuPlan", () => {
     expect(remplacement.title).toBe("Remplacer U-101 (BEV)");
     expect(remplacement.due_date).toBe("2028-03-31");
     expect(remplacement.plan_year).toBe(2028);
-    // camionnette BEV 2028 : Écocamionnage actif → tâche de dépôt
-    const subvention = taches.find((t) => t.auto_key.startsWith("subvention:v1:"));
+    // Camionnette BEV de classe inconnue en 2028 : barème le plus bas
+    // d'Écocamionnage (classe 2b, 0 $ dès 2027) → aucune tâche de dépôt.
+    expect(taches.some((t) => t.auto_key.startsWith("subvention:"))).toBe(false);
+    // Achat en 2026 : Écocamionnage 2b verse 2 500 $ → tâche de dépôt.
+    const subvention = tachesDuPlan([vehicule({ replacement_year: 2026 })], OPTIONS).find((t) =>
+      t.auto_key.startsWith("subvention:v1:"),
+    );
     expect(subvention).toBeDefined();
     expect(subvention!.subsidy_program).toBeTruthy();
     expect(subvention!.due_date >= "2026-01-01").toBe(true);

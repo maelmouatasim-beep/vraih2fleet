@@ -29,6 +29,7 @@ import { ExternalLink, Loader2 } from "lucide-react";
 import ConfirmedSubsidiesCard from "./ConfirmedSubsidiesCard";
 import SubsidyApplicationsCard from "./SubsidyApplicationsCard";
 import { cumulProgramme, nomProgramme, traduireLibelleSubvention } from "@/lib/tco/translations-en";
+import { texteExplication } from "@/lib/journey/subsidy-explain";
 
 interface FinancingStepProps {
   projectId: string;
@@ -67,6 +68,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
         techno: v.alternative.technologie,
         anneeAchat: anneeReference + (v.anneeAcquisition ?? 0),
         subventions: v.subventionsAlternative ?? [],
+        explications: strategie.explicationsSubventions[v.id] ?? [],
         total: (v.subventionsAlternative ?? []).reduce((a, s) => a + s.montant, 0),
       }))
       .sort((a, b) => a.anneeAchat - b.anneeAchat || a.unite.localeCompare(b.unite, "fr"));
@@ -183,7 +185,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
                       {t(`journey.fleet.targets.${l.techno === "BEV" ? "bev" : "fcev"}`)}
                     </TableCell>
                     <TableCell>{l.anneeAchat}</TableCell>
-                    <TableCell>
+                    <TableCell className="max-w-[520px]">
                       {l.subventions.length === 0 ? (
                         <span className="text-muted-foreground text-sm">
                           {t("journey.financing.noProgram")}
@@ -199,6 +201,13 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
                             </p>
                           ))}
                         </div>
+                      )}
+                      {l.explications.length > 0 && (
+                        <ul className="mt-1 space-y-0.5 text-xs text-muted-foreground">
+                          {l.explications.map((e) => (
+                            <li key={e.programmeId}>{texteExplication(e, langue)}</li>
+                          ))}
+                        </ul>
                       )}
                     </TableCell>
                     <TableCell className="text-right font-medium">

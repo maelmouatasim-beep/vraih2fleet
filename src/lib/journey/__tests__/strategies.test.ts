@@ -103,9 +103,10 @@ describe("construireStrategie", () => {
       vehicule({ id, depot, annual_km: km, target_technology: null });
 
     it("rentable seul mais pas avec sa borne : reste au diesel, « aucune électrification rentable »", () => {
-      // Camionnette à 8 000 km/an : économie BEV ≈ 13 650 $ sans infrastructure,
-      // inférieure à une borne niveau 2 (15 000 $) → perte une fois la borne comptée.
-      const s = construireStrategie([petit("a", "Hôtel de ville", 8000)], "economies_d_abord", OPTIONS);
+      // Camionnette à 15 000 km/an achetée en 2027 : économie BEV ≈ 9 200 $ sans
+      // infrastructure, inférieure à une borne niveau 2 (15 000 $) → perte une
+      // fois la borne comptée.
+      const s = construireStrategie([petit("a", "Hôtel de ville", 15000)], "economies_d_abord", OPTIONS);
       expect(s.nbZeroEmission).toBe(0);
       expect(s.infraCapex).toBe(0);
       expect(s.aucuneElectrificationRentable).toBe(true);
@@ -115,7 +116,7 @@ describe("construireStrategie", () => {
     it("le palier de raccordement déclenché par le 2e véhicule est compté (choix optimal sur sous-ensembles)", () => {
       // 3 camionnettes identiques au même garage : 1 borne tient dans la
       // capacité présumée, 2 bornes déclenchent le palier 1.
-      const flotte = ["a", "b", "c"].map((id) => petit(id, "Garage municipal", 12000));
+      const flotte = ["a", "b", "c"].map((id) => petit(id, "Garage municipal", 20000));
       const s = construireStrategie(flotte, "economies_d_abord", OPTIONS);
       // Brute force : aucune combinaison ne fait mieux que la sélection.
       let meilleure = 0;

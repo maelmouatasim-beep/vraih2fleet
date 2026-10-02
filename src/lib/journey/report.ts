@@ -14,6 +14,7 @@ import {
 } from "@/lib/tco/translations-en";
 import { libelleStrategieRetenue, type StrategieConstruite, type StrategieRetenue } from "./strategies";
 import { texteRecuperation } from "./payback";
+import { texteExplication } from "./subsidy-explain";
 
 export type Cellule = string | number | null;
 
@@ -50,7 +51,7 @@ const L = {
     van: "Économie (VAN)",
     co2: "CO2e évité (puits à la roue, t)",
     payback: "Délai de récupération actualisé (ans)",
-    colonnesVehicules: ["Unité", "Technologie cible", "Année d'achat", "km/an retenus", "Durée de vie (ans)", "Prix avant taxes (réf. diesel)", "Prix avant taxes (cible)", "Subventions retenues", "Total subventions"],
+    colonnesVehicules: ["Unité", "Technologie cible", "Année d'achat", "km/an retenus", "Durée de vie (ans)", "Prix avant taxes (réf. diesel)", "Prix avant taxes (cible)", "Subventions retenues", "Total subventions", "Règle appliquée et raison (programme par programme)"],
     an: "an",
     sites: ["Infrastructure par garage (avant taxes)", "Bornes", "kW demandés", "kW disponibles", "Palier", "Raccordement", "Station H2", "Total"],
     presume: "présumés",
@@ -74,7 +75,7 @@ const L = {
     van: "Savings (NPV)",
     co2: "CO2e avoided (well-to-wheel, t)",
     payback: "Discounted payback (years)",
-    colonnesVehicules: ["Unit", "Target technology", "Purchase year", "km/yr used", "Lifetime (years)", "Price before taxes (diesel ref.)", "Price before taxes (target)", "Subsidies used", "Total subsidies"],
+    colonnesVehicules: ["Unit", "Target technology", "Purchase year", "km/yr used", "Lifetime (years)", "Price before taxes (diesel ref.)", "Price before taxes (target)", "Subsidies used", "Total subsidies", "Rule applied and reason (program by program)"],
     an: "year",
     sites: ["Infrastructure by depot (before taxes)", "Chargers", "kW requested", "kW available", "Tier", "Grid connection", "H2 station", "Total"],
     presume: "presumed",
@@ -145,6 +146,7 @@ export function construireClasseurPlan(
           .map((s) => `${traduireLibelleSubvention(s.libelle, langue)} : ${s.montant} $ (${l.an} ${s.annee})`)
           .join(" ; ") || "—",
         subventions.reduce((a, s) => a + s.montant, 0),
+        (strategie.explicationsSubventions[v.id] ?? []).map((e) => texteExplication(e, langue)).join(" ; ") || "—",
       ];
     }),
     [],

@@ -305,3 +305,200 @@ describe('résolveur de subventions', () => {
     }
   });
 });
+
+describe('subventions explicables (revue 1.7, test terrain)', () => {
+  const camionnette = (anneeAchatCalendaire: number, classePoids?: '2b' | '3') =>
+    resoudreSubventions({
+      categorie: 'camionnette',
+      technologie: 'BEV',
+      prixAvantTaxes: 95000,
+      typeOrganisme: 'municipalite',
+      anneeAchatCalendaire,
+      classePoids,
+    });
+
+  it('BUG F-150 (classe inconnue) : 2 500 $ en 2026, 0 $ en 2027 avec la raison — plus jamais 23 750 $ par défaut', () => {
+    expect(camionnette(2026).subventions).toEqual([
+      expect.objectContaining({ montant: 2500 }),
+    ]);
+    const r2027 = camionnette(2027);
+    expect(r2027.subventions).toEqual([]);
+    const eco = r2027.explications.find((e) => e.programmeId === 'ecocamionnage_v1')!;
+    expect(eco.statut).toBe('exclue');
+    expect(eco.raisons.map((x) => x.code)).toEqual(['bareme_nul_annee', 'classe_inconnue']);
+    expect(eco.regle).toMatchObject({ type: 'forfait', classes: ['2b'], anneeAchat: 2027, montant: 0 });
+    // Classe 3 RENSEIGNÉE : 25 % du prix, plafonné — la règle est exposée.
+    const c3 = camionnette(2027, '3').explications.find((e) => e.programmeId === 'ecocamionnage_v1')!;
+    expect(c3).toMatchObject({ statut: 'retenue', montant: 23750 });
+    expect(c3.regle).toMatchObject({ type: 'pourcentage', pourcentage: 0.25, base: 95000, plafond: 30000, classes: ['3'] });
+  });
+
+  it('propriété : deux véhicules identiques achetés la même année = même subvention', () => {
+    fc.assert(
+      fc.property(
+        fc.constantFrom('camionnette', 'vehicule_leger', 'camion_moyen', 'camion_lourd', 'autobus_urbain_12m'),
+        fc.constantFrom('BEV', 'FCEV'),
+        fc.integer({ min: 2025, max: 2032 }),
+        fc.integer({ min: 20000, max: 900000 }),
+        (categorie, technologie, annee, prix) => {
+          const d = {
+            categorie: categorie as never,
+            technologie: technologie as 'BEV' | 'FCEV',
+            prixAvantTaxes: prix,
+            typeOrganisme: 'municipalite' as const,
+            anneeAchatCalendaire: annee,
+          };
+          const a = resoudreSubventions(d);
+          const b = resoudreSubventions({ ...d });
+          expect(b.subventions).toEqual(a.subventions);
+          expect(b.explications).toEqual(a.explications);
+          // Classe inconnue : jamais plus que le barème le plus bas des classes possibles.
+          const eco = a.subventions.find((s) => s.libelle.startsWith('Écocamionnage'))?.montant ?? 0;
+          for (const classe of ['2b', '3', '4', '5', '8'] as const) {
+            const avec = resoudreSubventions({ ...d, classePoids: classe }).subventions.find((s) =>
+              s.libelle.startsWith('Écocamionnage'),
+            );
+            if (avec) expect(eco).toBeLessThanOrEqual(avec.montant + 1e-6);
+          }
+        },
+      ),
+      { numRuns: 80 },
+    );
+  });
+
+  it('Corolla électrique (véhicule léger, prix par défaut 55 000 $) en 2027 : 0 $ avec les raisons', () => {
+    const r = resoudreSubventions({
+      categorie: 'vehicule_leger',
+      technologie: 'BEV',
+      prixAvantTaxes: 55000,
+      typeOrganisme: 'municipalite',
+      anneeAchatCalendaire: 2027,
+    });
+    expect(r.subventions).toEqual([]);
+    const pave = r.explications.find((e) => e.programmeId === 'pave')!;
+    expect(pave.raisons).toEqual([{ code: 'prix_plafond', plafond: 50000, prix: 55000, inclusif: true }]);
+    const rv = r.explications.find((e) => e.programmeId === 'roulez_vert')!;
+    expect(rv.raisons).toEqual([{ code: 'programme_echu', dateFin: '2026-12-31', anneeAchat: 2027 }]);
+    // Prix ≤ 50 000 $ : le PAVÉ (actif jusqu'en 2031) verse son barème 2027.
+    const moinsCher = resoudreSubventions({
+      categorie: 'vehicule_leger',
+      technologie: 'BEV',
+      prixAvantTaxes: 45000,
+      typeOrganisme: 'municipalite',
+      anneeAchatCalendaire: 2027,
+    });
+    expect(moinsCher.explications.find((e) => e.programmeId === 'pave')).toMatchObject({
+      statut: 'retenue',
+      montant: 4000,
+      regle: { type: 'forfait', anneeAchat: 2027 },
+    });
+  });
+
+  it('programme fermé, montant par projet et cumul réduit : statut et raison exposés', () => {
+    const lourd = resoudreSubventions({
+      categorie: 'camion_lourd',
+      technologie: 'BEV',
+      prixAvantTaxes: 400000,
+      typeOrganisme: 'municipalite',
+      anneeAchatCalendaire: 2026,
+    });
+    expect(lourd.explications.find((e) => e.programmeId === 'imhzev')).toMatchObject({
+      statut: 'exclue',
+      raisons: [{ code: 'programme_ferme', statut: 'ferme' }],
+    });
+    const bus = resoudreSubventions({
+      categorie: 'autobus_urbain_12m',
+      technologie: 'BEV',
+      prixAvantTaxes: 1_200_000,
+      typeOrganisme: 'societe_transport',
+      anneeAchatCalendaire: 2026,
+    });
+    expect(bus.explications.find((e) => e.programmeId === 'pagtcp')!.raisons).toEqual([{ code: 'montant_par_projet' }]);
+  });
+});
+
+describe('résolveur — cas limites des explications (registres synthétiques)', () => {
+  const base = {
+    palier: 'provincial' as const,
+    cible: 'vehicule' as const,
+    statut: 'actif' as const,
+    organismesAdmissibles: ['municipalite' as const],
+    cumul: '',
+    anneeVersementDefaut: 0 as const,
+    source: { organisme: 'T', document: 'T', annee: 2026, url: 'https://example.org' },
+    dateVerification: '2026-10-02',
+    statutVerification: 'estimation' as const,
+  };
+  const demande = {
+    categorie: 'camion_moyen' as const,
+    technologie: 'BEV' as const,
+    prixAvantTaxes: 100000,
+    typeOrganisme: 'municipalite' as const,
+    anneeAchatCalendaire: 2026,
+  };
+
+  it('organisme non admissible, classe non couverte, année absente du barème dégressif', () => {
+    const progs: ProgrammeSubvention[] = [
+      { ...base, id: 'a', nom: 'A', organismesAdmissibles: ['entreprise'], baremes: [{ categories: ['camion_moyen'], technologies: ['BEV'], plafondParVehicule: 1000 }] },
+      { ...base, id: 'b', nom: 'B', baremes: [{ categories: ['camion_moyen'], technologies: ['BEV'], classesPoids: ['4'], plafondParVehicule: 1000 }] },
+      { ...base, id: 'c', nom: 'C', baremes: [{ categories: ['camion_moyen'], technologies: ['BEV'], plafondParVehicule: 1000, montantParAnneeAchat: { 2025: 1000 } }] },
+    ];
+    const r = resoudreSubventions({ ...demande, classePoids: '6' }, progs);
+    expect(r.explications.map((e) => [e.programmeId, e.raisons[0].code])).toEqual([
+      ['a', 'organisme_non_admissible'],
+      ['b', 'classe_non_couverte'],
+      ['c', 'bareme_nul_annee'],
+    ]);
+    expect(r.explications[2].raisons[0]).toEqual({ code: 'bareme_nul_annee', classes: null, anneeAchat: 2026 });
+  });
+
+  it('classe connue : le meilleur barème de la classe ; % dégressif = forfait ; bonification exposée', () => {
+    const progs: ProgrammeSubvention[] = [
+      {
+        ...base,
+        id: 'd',
+        nom: 'D',
+        bonificationAchatLocal: 0.1,
+        baremes: [
+          { categories: ['camion_moyen'], technologies: ['BEV'], classesPoids: ['4'], plafondParVehicule: 1000 },
+          { categories: ['camion_moyen'], technologies: ['BEV'], classesPoids: ['4'], pourcentage: 0.1, plafondParVehicule: 9000, montantParAnneeAchat: { 2026: 3000 } },
+        ],
+      },
+    ];
+    const r = resoudreSubventions({ ...demande, classePoids: '4', fabriqueAuQuebec: true }, progs);
+    expect(r.explications[0].montant).toBeCloseTo(3300, 6);
+    expect(r.explications[0].regle).toMatchObject({ type: 'forfait', anneeAchat: 2026, bonificationPct: 0.1 });
+  });
+
+  it('classe inconnue mais un seul barème par classe : pas de raison « classe inconnue » ; % à valider exposé', () => {
+    const progs: ProgrammeSubvention[] = [
+      {
+        ...base,
+        id: 'e',
+        nom: 'E',
+        baremes: [
+          { categories: ['camion_moyen'], technologies: ['BEV'], classesPoids: ['4'], pourcentage: 0.2, pourcentageAValider: true, plafondParVehicule: 50000 },
+          { categories: ['camion_moyen'], technologies: ['BEV'], plafondParVehicule: 30000 },
+        ],
+      },
+    ];
+    const r = resoudreSubventions(demande, progs);
+    expect(r.explications[0].raisons.map((x) => x.code)).toEqual(['pourcentage_a_valider']);
+    expect(r.explications[0].montant).toBe(20000);
+  });
+
+  it('total plafonné au coût : la plus petite aide est réduite, la principale reste intacte', () => {
+    const forfait = (id: string, m: number): ProgrammeSubvention => ({
+      ...base,
+      id,
+      nom: id,
+      baremes: [{ categories: ['camion_moyen'], technologies: ['BEV'], plafondParVehicule: m }],
+    });
+    const r = resoudreSubventions({ ...demande, prixAvantTaxes: 10000 }, [forfait('gros', 8000), forfait('petit', 5000)]);
+    const parId = Object.fromEntries(r.explications.map((e) => [e.programmeId, e]));
+    expect(parId.gros).toMatchObject({ statut: 'retenue', montant: 8000, raisons: [] });
+    expect(parId.petit).toMatchObject({ statut: 'reduite', montant: 2000, raisons: [{ code: 'plafond_cout', reduction: 3000 }] });
+    const zero = resoudreSubventions({ ...demande, prixAvantTaxes: 8000 }, [forfait('gros', 8000), forfait('petit', 5000)]);
+    expect(zero.explications.find((e) => e.programmeId === 'petit')!.statut).toBe('exclue');
+  });
+});

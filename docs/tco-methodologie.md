@@ -239,7 +239,18 @@ Règles, dans l'ordre :
    la classe (PNBV) du véhicule. Classe inconnue : le barème **le plus
    bas** des classes possibles de la catégorie est retenu par prudence —
    jamais le plus élevé — et un avertissement invite à renseigner la
-   classe.
+   classe. Un barème dégressif qui ne verse plus rien l'année d'achat
+   (ex. Écocamionnage 2b : 0 $ dès 2027) compte comme un barème à 0 $ :
+   il n'est JAMAIS remplacé silencieusement par le barème d'une autre
+   classe (v2.3 — un F-150 de classe inconnue acheté en 2027 recevait à
+   tort le barème classe 3, 23 750 $). Deux véhicules identiques achetés
+   la même année reçoivent toujours le même montant.
+   **Explication** : le résolveur renvoie, pour chaque programme
+   pertinent, la règle appliquée (classe, forfait ou %, plafond, année
+   d'achat, bonification) et la raison d'un 0 $ ou d'une réduction
+   (programme fermé ou échu avant l'année d'achat, plafond de prix,
+   barème nul, classe inconnue, cumul 75 %, montant par projet),
+   affichées à l'étape Financement et dans l'Excel.
 3. **Montant** : fixe ($), fixe **dégressif selon l'année d'achat**
    (PAVÉ ; Écocamionnage 2b, bascule d'année financière au 1er avril :
    convention prudente, l'année calendaire N reçoit le montant de l'année

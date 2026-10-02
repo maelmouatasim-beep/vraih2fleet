@@ -14,6 +14,7 @@ import {
   calculerPlan,
   parametresParDefaut,
   resoudreSubventions,
+  type ExplicationSubvention,
   type OptionsParametres,
   type PlanTcoEntree,
   type ResultatPlan,
@@ -96,6 +97,9 @@ export interface StrategieConstruite {
   /** Conditions et prudences du résolveur de subventions (classe de
    *  poids inconnue, % à valider, limites par organisation…), dédupliquées. */
   avertissementsSubventions: string[];
+  /** Règle appliquée et raison (0 $ / réduit), programme par programme,
+   *  pour chaque véhicule zéro émission (revue 1.7). */
+  explicationsSubventions: Record<string, ExplicationSubvention[]>;
   /** « Économies d'abord » seulement : détail de la sélection par garage. */
   selection?: SelectionGarage[];
   /** « Économies d'abord » : aucun véhicule ne rapporte, infrastructure
@@ -214,6 +218,7 @@ function chiffrer(
   const sansAnnee: string[] = [];
   const horsHorizon: { id: string; anneeRemplacement: number }[] = [];
   const avertissementsSubventions = new Set<string>();
+  const explicationsSubventions: Record<string, ExplicationSubvention[]> = {};
   const plansVehicules: NonNullable<PlanTcoEntree["vehicules"]> = [];
   const vehiculesInfra: VehiculeInfra[] = [];
 
@@ -272,6 +277,7 @@ function chiffrer(
         annee: s.annee + k,
       }));
       for (const a of resolution.avertissements) avertissementsSubventions.add(a);
+      explicationsSubventions[v.id] = resolution.explications;
       // PRIORITÉ AU CLIENT : un montant confirmé par document remplace
       // la subvention résolue du même programme ; les autres s'ajoutent.
       subventions = appliquerSubventionsConfirmees(
@@ -325,6 +331,7 @@ function chiffrer(
       sansAnnee,
       horsHorizon,
       avertissementsSubventions: [...avertissementsSubventions],
+      explicationsSubventions,
     };
   }
 
@@ -349,6 +356,7 @@ function chiffrer(
     sansAnnee,
     horsHorizon,
     avertissementsSubventions: [...avertissementsSubventions],
+    explicationsSubventions,
   };
 }
 
