@@ -540,12 +540,16 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
                           {c.anneeActuelle ?? t("journey.strategies.apply.none")}
                           {" → "}
                           <span className="text-foreground font-medium">{c.anneeNouvelle}</span>
-                          {" · "}
+                          {c.cibleActuelle !== c.cibleNouvelle && " · "}
                         </>
                       )}
-                      {c.cibleActuelle ? t(`journey.fleet.targets.${c.cibleActuelle}`) : t("journey.strategies.apply.none")}
-                      {" → "}
-                      <span className="text-foreground font-medium">{t(`journey.fleet.targets.${c.cibleNouvelle}`)}</span>
+                      {c.cibleActuelle !== c.cibleNouvelle && (
+                        <>
+                          {c.cibleActuelle ? t(`journey.fleet.targets.${c.cibleActuelle}`) : t("journey.strategies.apply.none")}
+                          {" → "}
+                          <span className="text-foreground font-medium">{t(`journey.fleet.targets.${c.cibleNouvelle}`)}</span>
+                        </>
+                      )}
                     </span>
                   </div>
                 ))}

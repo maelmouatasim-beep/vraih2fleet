@@ -4209,131 +4209,6 @@
     "exportPDF": "Exporter PDF",
     "minScenarios": "Sélectionnez au moins 2 scénarios pour exporter"
   },
-  "assistant": {
-    "title": "Assistant TCO Expert",
-    "subtitle": "Votre guide technique et stratégique",
-    "welcomeMessage": "👋 Bonjour ! Je suis votre assistant TCO expert. Posez-moi vos questions sur l'électrification de flotte, les subventions, ou l'utilisation de H2Fleet.",
-    "placeholder": "Posez votre question...",
-    "clearHistory": "Effacer l'historique",
-    "openAssistant": "Ouvrir l'assistant",
-    "noResponse": "Désolé, je n'ai pas pu générer de réponse.",
-    "error": "⚠️ Erreur temporaire. Veuillez réessayer.",
-    "quick": {
-      "whatIsH2Fleet": {
-        "label": "C’est quoi ?",
-        "query": "Qu'est-ce que H2Fleet et comment ça fonctionne ?"
-      },
-      "getStarted": {
-        "label": "Démarrer",
-        "query": "Comment démarrer avec H2Fleet ?"
-      },
-      "journeySteps": {
-        "label": "Parcours",
-        "query": "Quelles sont les 7 étapes du parcours projet ?"
-      },
-      "whereNumbers": {
-        "label": "Sources",
-        "query": "D'où viennent les chiffres et comment sont-ils vérifiés ?"
-      },
-      "importFleet": {
-        "label": "Importer",
-        "query": "Comment importer ma flotte depuis un fichier CSV ou Excel ?"
-      },
-      "estimatedConsumption": {
-        "label": "Estimations",
-        "query": "Que signifie une consommation « estimation » ?"
-      },
-      "telematicsToFleet": {
-        "label": "Télématique",
-        "query": "Comment importer mes véhicules télématiques dans Ma flotte ?"
-      },
-      "createProject": {
-        "label": "Nouveau projet",
-        "query": "Comment créer un projet ?"
-      },
-      "projectParams": {
-        "label": "Paramètres",
-        "query": "Comment changer l'horizon d'analyse et le taux d'actualisation ?"
-      },
-      "selectVehicles": {
-        "label": "Choisir",
-        "query": "Comment choisir les véhicules, les années et les cibles du projet ?"
-      },
-      "suggestedTarget": {
-        "label": "Cible suggérée",
-        "query": "D'où vient la cible suggérée ?"
-      },
-      "readVerdict": {
-        "label": "Verdict",
-        "query": "Comment lire le verdict de faisabilité ?"
-      },
-      "clientData": {
-        "label": "Données client",
-        "query": "Comment saisir mes prix d'énergie, un devis ou une subvention confirmée ?"
-      },
-      "stressTest": {
-        "label": "Stress test",
-        "query": "Comment fonctionne le stress test ?"
-      },
-      "applyStrategy": {
-        "label": "Appliquer",
-        "query": "Que fait « Appliquer cette stratégie au plan » ?"
-      },
-      "readBudget": {
-        "label": "Budget",
-        "query": "Comment lire le budget annuel du plan ?"
-      },
-      "depotInfra": {
-        "label": "Bornes",
-        "query": "Comment l'infrastructure de recharge est-elle dimensionnée par dépôt ?"
-      },
-      "programStatus": {
-        "label": "Statuts",
-        "query": "Comment le statut des programmes de subvention est-il calculé ?"
-      },
-      "confirmedSubsidy": {
-        "label": "Confirmée",
-        "query": "Comment saisir une subvention confirmée par document ?"
-      },
-      "applicationTracking": {
-        "label": "Demandes",
-        "query": "Comment suivre mes demandes de subvention ?"
-      },
-      "reportSnapshot": {
-        "label": "Rapport",
-        "query": "Pourquoi mon rapport est-il figé et comment le mettre à jour ?"
-      },
-      "markCompleted": {
-        "label": "Réalisé",
-        "query": "Comment marquer un remplacement comme réalisé ?"
-      },
-      "generatedTasks": {
-        "label": "Tâches",
-        "query": "Comment fonctionnent les tâches générées du plan ?"
-      },
-      "assumptionStatus": {
-        "label": "Statuts",
-        "query": "Que signifient « vérifiée », « estimation » et « à valider » ?"
-      },
-      "connectTelematics": {
-        "label": "Connexion",
-        "query": "Comment connecter Geotab ou Samsara ?"
-      },
-      "inviteTeam": {
-        "label": "Équipe",
-        "query": "Comment inviter mon équipe dans mon organisation ?"
-      }
-    },
-    "triggers": {
-      "welcomeNewUser": "👋 Première visite ? Commencez par **Ma flotte** (ajout ou import CSV/Excel), puis créez un projet : le parcours en 7 étapes fait le reste. Posez-moi vos questions !",
-      "noFleetYet": "💡 Ma flotte est encore vide. Ajoutez ou importez vos véhicules : tous les calculs partent de votre flotte réelle.",
-      "noProjectsYet": "💡 Votre flotte est prête. Créez un projet : l'étape 1 vous fait choisir les véhicules à planifier.",
-      "feasibilityIntro": "📝 Les verdicts sont chiffrés par le moteur pour chaque véhicule. Vos prix payés ou un devis de raccordement (« Données client ») remplacent les estimations.",
-      "strategiesApply": "✅ Une stratégie vous convient ? « Appliquer cette stratégie au plan » met à jour les cibles après vous avoir montré le détail.",
-      "financingConfirmed": "🧾 Vous avez une lettre d'octroi ? Saisissez la subvention confirmée avec sa référence : elle remplace l'estimation dans le plan et le rapport."
-    },
-    "notConfigured": "L'assistant IA n'est pas encore activé sur ce site de test."
-  },
   "tasks": {
     "title": "Tâches",
     "newTask": "Nouvelle tâche",
@@ -4773,6 +4648,36 @@
       "received": "Invitation à rejoindre « {{org}} » (rôle : {{role}})",
       "accept": "Accepter",
       "accepted": "Vous avez rejoint l’organisation"
+    },
+    "ai": {
+      "title": "Intelligence artificielle",
+      "subtitle": "Fonctions IA de H2Fleet (API Claude d'Anthropic). Chacune est désactivée par défaut et s'active ici par un administrateur.",
+      "privacy": "Quand une fonction est activée, les questions et les données nécessaires (flotte, garages, plan — jamais de données personnelles d'employés) sont transmises à Anthropic, aux États-Unis, pour produire la réponse. L'IA ne produit aucun chiffre : tous viennent du moteur TCO et sont vérifiés. Chaque appel est compté (jetons) ; aucun contenu n'est conservé dans les journaux techniques.",
+      "features": {
+        "copilot": {
+          "title": "Copilote de projet",
+          "description": "Questions sur le projet et simulations « et si » chiffrées par le moteur."
+        },
+        "smartImport": {
+          "title": "Import intelligent de flotte",
+          "description": "Associe les colonnes de n'importe quel inventaire au modèle d'import, avec validation ligne par ligne."
+        },
+        "documents": {
+          "title": "Lecture de factures et devis",
+          "description": "Extraction des prix et montants, confirmés avant enregistrement (à venir)."
+        },
+        "councilNote": {
+          "title": "Note au conseil",
+          "description": "Sommaire décisionnel rédigé, chiffres injectés et vérifiés (à venir)."
+        }
+      },
+      "monthlyTokens": "Jetons maximum par mois",
+      "dailyRequests": "Requêtes maximum par jour",
+      "usageTitle": "Consommation",
+      "usage": "Ce mois-ci : {{tokens}} jetons, {{requests}} requêtes (aujourd'hui : {{today}}).",
+      "cost": "Coût estimé du mois : {{amount}} (tarif de l'API Anthropic du {{date}}, en dollars américains ; la facture fait foi).",
+      "saved": "Réglages IA enregistrés",
+      "adminOnly": "Seul un administrateur de l'organisation peut modifier ces réglages."
     }
   },
   "journey": {
@@ -5630,7 +5535,8 @@
           "title": "5. Communication et hébergement",
           "paras": [
             "Les renseignements sont hébergés chez Supabase (base de données et authentification) ; le site est servi par GitHub Pages. Les services suivants ne reçoivent des données que s'ils sont activés : envoi de courriels (SendGrid), assistant d'intelligence artificielle, cartes (Mapbox), plateformes télématiques que vous connectez.",
-            "Région d'hébergement de la base de données : [à confirmer]. Lorsque des renseignements sont communiqués à l'extérieur du Québec, l'Exploitant réalise au préalable l'évaluation des facteurs relatifs à la vie privée exigée par la loi [à réaliser]."
+            "Région d'hébergement de la base de données : [à confirmer]. Lorsque des renseignements sont communiqués à l'extérieur du Québec, l'Exploitant réalise au préalable l'évaluation des facteurs relatifs à la vie privée exigée par la loi [à réaliser].",
+            "Fonctions d'intelligence artificielle (facultatives) : lorsqu'un administrateur de votre organisation les active, les questions posées au copilote et les données du projet nécessaires au calcul (unités, catégories, kilométrages, années, garages — jamais de données personnelles d'employés) sont transmises à Anthropic, PBC (États-Unis), fournisseur du modèle Claude, pour produire la réponse. Seul le nombre de jetons consommés est journalisé ; l'historique du copilote est conservé dans le projet et peut être effacé par son auteur ou un administrateur. Évaluation des facteurs relatifs à la vie privée de cette communication hors Québec : [à compléter — à faire valider par un juriste]."
           ]
         },
         {
@@ -5707,6 +5613,66 @@
       "c5": "Camion lourd à hydrogène (électrolyse)",
       "c6": "Mini-plan de 5 véhicules (12 ans, infrastructure partagée, re-remplacement)",
       "c7": "Autobus urbain électrique — vie complète de 16 ans (avant aides au transport collectif)"
+    }
+  },
+  "copilot": {
+    "open": "Copilote",
+    "title": "Copilote du projet",
+    "subtitle": "Il répond avec les vrais chiffres du projet, calculés par le moteur TCO, et cite leurs sources. Chaque nombre est vérifié avant affichage ; rien n'est appliqué sans votre confirmation.",
+    "empty": "Posez une question sur le projet, ou essayez une simulation ci-dessous. L'historique est visible par l'équipe du projet.",
+    "verified_one": "{{count}} nombre vérifié",
+    "verified_other": "{{count}} nombres vérifiés",
+    "sources_one": "{{count}} source",
+    "sources_other": "{{count}} sources",
+    "proposal_one": "Proposition : {{count}} véhicule modifié (année et/ou technologie).",
+    "proposal_other": "Proposition : {{count}} véhicules modifiés (année et/ou technologie).",
+    "proposalExpired": "Une proposition accompagnait cette réponse ; relancez la simulation pour l'appliquer.",
+    "applyButton": "Appliquer au plan…",
+    "confirmTitle": "Appliquer la proposition du copilote ?",
+    "confirm_one": "Appliquer ({{count}} changement)",
+    "confirm_other": "Appliquer ({{count}} changements)",
+    "applied_one": "Proposition appliquée — {{count}} véhicule mis à jour",
+    "applied_other": "Proposition appliquée — {{count}} véhicules mis à jour",
+    "running": "Le copilote réfléchit…",
+    "runningTools": "Calcul en cours avec le moteur : {{tools}}…",
+    "tools": {
+      "lire_projet": "lecture du projet",
+      "simuler": "simulation",
+      "optimiser": "optimiseur",
+      "consulter_hypotheses": "registre d'hypothèses",
+      "consulter_programmes": "registre des programmes"
+    },
+    "placeholder": "Votre question (Entrée pour envoyer)",
+    "send": "Envoyer",
+    "privacy": "Les questions et les données du projet nécessaires au calcul (unités, catégories, kilométrages, années, garages) sont transmises à Anthropic (États-Unis) ; aucune donnée personnelle. Fonction activée par un administrateur de l'organisation.",
+    "suggestions": {
+      "diesel": "Et si le diesel baisse de 20 % ?",
+      "buses": "Et si on repousse les autobus de 2 ans ?",
+      "budget": "Que se passe-t-il avec un budget de 500 000 $ par an ?",
+      "subsidies": "Quelles subventions financent notre plan, et jusqu'à quand ?"
+    },
+    "disabled": {
+      "title": "Copilote non activé pour votre organisation",
+      "body": "Un administrateur peut l'activer dans Organisation › Intelligence artificielle, après avoir pris connaissance des données transmises.",
+      "link": "Ouvrir Organisation"
+    },
+    "errors": {
+      "service_non_configure": "Le copilote n'est pas encore branché sur ce site (clé ANTHROPIC_API_KEY à ajouter dans les secrets Supabase).",
+      "fonction_desactivee": "Le copilote est désactivé pour votre organisation.",
+      "quota_journalier": "Limite quotidienne de requêtes IA de l'organisation atteinte. Réessayez demain ou demandez à un administrateur de l'augmenter.",
+      "quota_mensuel": "Limite mensuelle de jetons IA de l'organisation atteinte.",
+      "trop_de_requetes": "Trop de questions en peu de temps. Patientez quelques minutes.",
+      "projet_introuvable": "Projet introuvable ou inaccessible.",
+      "erreur_service": "Le service IA ne répond pas pour l'instant. Réessayez dans un moment.",
+      "non_verifie": "Réponse non affichée : elle contenait des chiffres qui ne viennent pas du moteur, même après correction. Reformulez la question ou consultez directement l'étape concernée.",
+      "refus": "Le modèle a refusé de répondre à cette demande.",
+      "trop_d_etapes": "La question demandait trop d'étapes de calcul. Découpez-la en questions plus simples."
+    },
+    "kinds": {
+      "plan_one": "Copilote — simulation appliquée : {{count}} véhicule (année et/ou technologie)",
+      "plan_other": "Copilote — simulation appliquée : {{count}} véhicules (année et/ou technologie)",
+      "optimisee_one": "Copilote — solution optimisée appliquée : {{count}} véhicule",
+      "optimisee_other": "Copilote — solution optimisée appliquée : {{count}} véhicules"
     }
   }
 }

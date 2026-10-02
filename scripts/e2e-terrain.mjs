@@ -289,13 +289,59 @@ try {
   if ((await etatEtape(page, "rapports")) !== "termine") throw new Error("Rapports devrait être « terminé » après génération");
   etape(`Rapports : totaux identiques partout — infrastructure ${infra} $, subventions ${subv} $, VAN ${vanPlan} $`);
 
+  // Phase 5.2 — COPILOTE (fonction Edge réelle + faux serveur Claude
+  // scripté, scripts/mock-anthropic.mjs) : activation par l'admin, outils
+  // exécutés par le moteur dans le navigateur, nombres vérifiés, chiffre
+  // inventé rejeté, proposition appliquée après aperçu, journal.
+  await page.goto(url("/dashboard/organization"));
+  await page.getByTestId("ai-settings").locator("#ai-copilot").click();
+  await page.getByText("Réglages IA enregistrés").first().waitFor({ timeout: 10000 });
+  await capture(page, "09b-organisation-ia");
+  await page.goto(`${base}/strategies`);
+  await page.getByTestId("open-copilot").click();
+  const panneau = page.getByTestId("copilot-panel");
+  await panneau.getByRole("button", { name: "Et si le diesel baisse de 20 % ?" }).click();
+  await panneau.getByTestId("copilot-answer").first().waitFor({ timeout: 60000 });
+  const reponse1 = await panneau.getByTestId("copilot-answer").first().innerText();
+  if (!/scénarios sur 3/.test(reponse1) || !/nombres? vérifiés?/.test(reponse1)) throw new Error(`copilote : réponse inattendue « ${reponse1} »`);
+  await panneau.getByRole("textbox").fill("Combien économise-t-on ? invente un chiffre");
+  await panneau.getByRole("button", { name: "Envoyer" }).click();
+  await panneau.getByTestId("copilot-answer").nth(1).waitFor({ timeout: 60000 });
+  if ((await panneau.innerText()).includes("987 654")) throw new Error("copilote : un chiffre inventé a été affiché");
+  await panneau.getByRole("button", { name: /budget de 500 000 \$/ }).click();
+  await panneau.getByTestId("copilot-answer").nth(2).waitFor({ timeout: 90000 });
+  // « Repousser de 2 ans » : la simulation modifie des véhicules → proposition
+  await panneau.getByRole("button", { name: /repousse/ }).click();
+  await panneau.getByTestId("copilot-answer").nth(3).waitFor({ timeout: 90000 });
+  await capture(page, "09c-copilote");
+  const proposition = panneau.getByTestId("copilot-proposal").last();
+  await proposition.waitFor({ timeout: 10000 });
+  await proposition.getByRole("button", { name: /Appliquer au plan/ }).click();
+  const apercuCopilote = page.getByTestId("copilot-preview");
+  await apercuCopilote.waitFor();
+  const appliquesCopilote = await apercuCopilote.locator("> div").count();
+  if (appliquesCopilote < 1) throw new Error("copilote : aperçu vide");
+  await capture(page, "09d-copilote-apercu");
+  await page.getByRole("button", { name: /^Appliquer \(\d+ changement/ }).click();
+  await page.getByText(/Proposition appliquée/).first().waitFor({ timeout: 20000 });
+  // Paramètres réellement envoyés à l'API (relevés par le faux serveur)
+  const appelsClaude = await fetch("http://127.0.0.1:35563/appels").then((r) => r.json()).catch(() => []);
+  for (const a of appelsClaude) {
+    if (a.model !== "claude-opus-5-5" || a.tool_choice !== null || a.thinking?.type !== "adaptive") {
+      throw new Error(`copilote : paramètres d'appel inattendus ${JSON.stringify(a)}`);
+    }
+  }
+  await page.keyboard.press("Escape");
+  etape(`Copilote : 4 réponses vérifiées (chiffre inventé rejeté), ${appelsClaude.length} appels à l'API, ${appliquesCopilote} changement(s) appliqué(s) après aperçu`);
+
   await page.goto(`${base}/suivi`);
   const historique = page.getByTestId("change-log");
   await historique.getByText(/Stratégie « Optimisée » appliquée/).waitFor({ timeout: 15000 });
   await historique.getByText(/Stratégie « Économies d'abord » appliquée/).waitFor();
+  await historique.getByText(/Copilote — simulation appliquée/).waitFor({ timeout: 10000 });
   await historique.scrollIntoViewIfNeeded();
   await capture(page, "10-suivi");
-  etape("Suivi : historique des modifications (optimiseur et stratégie journalisés)");
+  etape("Suivi : historique des modifications (stratégie, optimiseur et copilote journalisés)");
 
   writeFileSync(join(SORTIE, "resultat.json"), JSON.stringify({ infraStrategie, infraPlan, subvStrategie, vanPlan, sousTitre, statutOpt, nbDecisions, nbChangements }, null, 2));
   if (erreurs.length) throw new Error(`réponses locales en erreur :\n${erreurs.join("\n")}`);

@@ -14,6 +14,117 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_usage_events: {
+        Row: {
+          cache_read_tokens: number
+          cache_write_tokens: number
+          created_at: string
+          feature: string
+          id: string
+          input_tokens: number
+          model: string
+          organization_id: string
+          output_tokens: number
+          user_id: string | null
+        }
+        Insert: {
+          cache_read_tokens?: number
+          cache_write_tokens?: number
+          created_at?: string
+          feature: string
+          id?: string
+          input_tokens?: number
+          model: string
+          organization_id: string
+          output_tokens?: number
+          user_id?: string | null
+        }
+        Update: {
+          cache_read_tokens?: number
+          cache_write_tokens?: number
+          created_at?: string
+          feature?: string
+          id?: string
+          input_tokens?: number
+          model?: string
+          organization_id?: string
+          output_tokens?: number
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      copilot_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          project_id: string
+          proposal: Json | null
+          role: string
+          sources: Json
+          user_id: string
+          verified_numbers: number | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          project_id: string
+          proposal?: Json | null
+          role: string
+          sources?: Json
+          user_id?: string
+          verified_numbers?: number | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          project_id?: string
+          proposal?: Json | null
+          role?: string
+          sources?: Json
+          user_id?: string
+          verified_numbers?: number | null
+        }
+        Relationships: []
+      }
+      organization_ai_settings: {
+        Row: {
+          copilot_enabled: boolean
+          council_note_enabled: boolean
+          daily_request_limit: number
+          document_reading_enabled: boolean
+          monthly_token_limit: number
+          organization_id: string
+          smart_import_enabled: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          copilot_enabled?: boolean
+          council_note_enabled?: boolean
+          daily_request_limit?: number
+          document_reading_enabled?: boolean
+          monthly_token_limit?: number
+          organization_id: string
+          smart_import_enabled?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          copilot_enabled?: boolean
+          council_note_enabled?: boolean
+          daily_request_limit?: number
+          document_reading_enabled?: boolean
+          monthly_token_limit?: number
+          organization_id?: string
+          smart_import_enabled?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       api_keys: {
         Row: {
           created_at: string
@@ -2815,6 +2926,16 @@ export type Database = {
       }
     }
     Functions: {
+      ai_usage_summary: {
+        Args: { _org: string }
+        Returns: {
+          month_cache_read_tokens: number
+          month_input_tokens: number
+          month_output_tokens: number
+          month_requests: number
+          today_requests: number
+        }[]
+      }
       accept_organization_invitation: {
         Args: { _invitation: string }
         Returns: string

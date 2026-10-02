@@ -47,7 +47,7 @@ appelant via `supabase/functions/_shared/auth.ts` :
 | `notify-subsidy-deadlines` | pg_cron | `requireCronSecret` (x-cron-secret) |
 | `sync-telematics-data` | pg_cron ou utilisateur | secret cron, OU JWT + propriété de la connexion |
 | `calculate-tco` | — | **RETIRÉE (Phase 1B refonte)** : moteur remplacé par `src/lib/tco` côté client ; `api-gateway` répond 410 sur `/scenarios/:id/calculate`. La fonction encore déployée chez Supabase doit être supprimée à la main (liste pré-pilote). |
-| `assistant-chat` | utilisateur | `getUserOrThrow` + rate limit par utilisateur |
+| `copilot` | utilisateur | `getUserOrThrow` + projet relu avec le client RLS + fonction activée pour l'organisation + quotas jour/mois par organisation + débit par utilisateur ; clé `ANTHROPIC_API_KEY` côté serveur seulement ; chaque nombre de la réponse vérifié contre les résultats d'outils |
 | `authenticate-telematics`, `fetch-telematics-vehicles` | utilisateur | `getUserOrThrow` |
 | `get-mapbox-token` | utilisateur | verify_jwt (jeton public Mapbox uniquement) |
 | `api-gateway`, `mcp` | reportés | 404 sauf `FEATURE_PUBLIC_API=true` |
@@ -74,7 +74,7 @@ corrigées malgré la désactivation (clé cherchée par hash, webhooks limités
   les jobs pg_cron ;
 - `INTERNAL_FUNCTION_SECRET` — aléatoire fort, appels internes
   notify-subsidy-deadlines → send-email ;
-- `SENDGRID_API_KEY`, `LOVABLE_API_KEY`, `MAPBOX_PUBLIC_TOKEN` ;
+- `SENDGRID_API_KEY`, `ANTHROPIC_API_KEY`, `MAPBOX_PUBLIC_TOKEN` ;
 - `CONTACT_INBOX_EMAIL`, `APP_BASE_URL` (facultatifs, valeurs par défaut) ;
 - `GEOTAB_API_URL`, `SAMSARA_API_URL` (facultatifs).
 

@@ -23,7 +23,7 @@ import { api, exigerEnv, sqlHeberge } from "./lib/gestion-supabase.mjs";
 const MANIFESTE = "supabase/schema-attendu.json";
 const URL_PAGES = "https://maelmouatasim-beep.github.io/vraih2fleet/";
 const SECRETS_REQUIS = ["ALLOWED_ORIGINS", "CRON_SECRET", "INTERNAL_FUNCTION_SECRET"];
-const SECRETS_OPTIONNELS = ["SENDGRID_API_KEY", "CONTACT_INBOX_EMAIL", "APP_BASE_URL", "MAPBOX_PUBLIC_TOKEN", "LOVABLE_API_KEY"];
+const SECRETS_OPTIONNELS = ["SENDGRID_API_KEY", "CONTACT_INBOX_EMAIL", "APP_BASE_URL", "MAPBOX_PUBLIC_TOKEN", "ANTHROPIC_API_KEY"];
 // Créées par la plateforme Supabase elle-même sur les nouveaux projets
 // (option « RLS automatique ») : ni attendues ni signalées.
 const OBJETS_PLATEFORME = { fonctions: ["rls_auto_enable"] };

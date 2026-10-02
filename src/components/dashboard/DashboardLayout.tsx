@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { AssistantWidget } from "@/components/AssistantWidget";
 import { ProfileOnboardingDialog } from "@/components/onboarding/ProfileOnboardingDialog";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -291,7 +290,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       </div>
 
       {/* AI Assistant Widget */}
-      <AssistantWidget />
       <ProfileOnboardingDialog />
     </div>
   );

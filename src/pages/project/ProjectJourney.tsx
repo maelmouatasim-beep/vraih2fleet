@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -13,6 +14,7 @@ import PlanStep from "@/components/journey/PlanStep";
 import FinancingStep from "@/components/journey/FinancingStep";
 import ReportsStep from "@/components/journey/ReportsStep";
 import TrackingStep from "@/components/journey/TrackingStep";
+import CopilotPanel from "@/components/copilot/CopilotPanel";
 import { cn } from "@/lib/utils";
 import { ETAPES_PARCOURS, type EtapeParcoursCle } from "@/lib/journey/steps";
 import type { EtatParcours } from "@/lib/journey/progress";
@@ -28,6 +30,7 @@ import {
   ClipboardList,
   FileText,
   ListChecks,
+  Sparkles,
   Truck,
 } from "lucide-react";
 
@@ -66,6 +69,7 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
   const indexEtape = ETAPES_PARCOURS.indexOf(etape);
   const base = `/dashboard/projects/${projectId}`;
   const etats = useEtatParcours(projectId, project);
+  const [copiloteOuvert, setCopiloteOuvert] = useState(false);
   const texteManques = (e: EtatParcours | undefined) =>
     (e?.manques ?? []).map((m) => t(`journey.progress.missing.${m.cle}`, { count: m.count ?? 0 })).join(" · ");
 
@@ -88,6 +92,10 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
           </div>
           {project && (
             <div className="flex flex-wrap gap-2">
+              <Button variant="outline" onClick={() => setCopiloteOuvert(true)} data-testid="open-copilot">
+                <Sparkles className="w-4 h-4 mr-2" />
+                {t("copilot.open")}
+              </Button>
               <ShareProjectButton projectId={project.id} />
               <ProjectSettingsDialog project={project} />
             </div>
@@ -185,6 +193,10 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
         ) : etape === "suivi" && projectId ? (
           <TrackingStep projectId={projectId} project={project} />
         ) : null}
+
+        {projectId && (
+          <CopilotPanel projectId={projectId} project={project} open={copiloteOuvert} onOpenChange={setCopiloteOuvert} />
+        )}
 
         {/* Navigation vers l'étape suivante */}
         {indexEtape < ETAPES_PARCOURS.length - 1 && (

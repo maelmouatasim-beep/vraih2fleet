@@ -4,7 +4,8 @@
     "jsr:@std/assert@1": "1.0.19",
     "jsr:@std/internal@^1.0.12": "1.0.14",
     "npm:@supabase/supabase-js@2.49.4": "2.49.4",
-    "npm:postgres@3.4.5": "3.4.5"
+    "npm:postgres@3.4.5": "3.4.5",
+    "npm:zod@3.23.8": "3.23.8"
   },
   "jsr": {
     "@std/assert@1.0.19": {
@@ -104,6 +105,9 @@
     },
     "ws@8.21.3": {
       "integrity": "sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw=="
+    },
+    "zod@3.23.8": {
+      "integrity": "sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g=="
     }
   },
   "workspace": {

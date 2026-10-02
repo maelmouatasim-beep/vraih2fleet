@@ -111,9 +111,12 @@ Le workflow *Deploy Pages* vérifie que l'URL correspond au ref.
 - [ ] `SENDGRID_API_KEY` (envoi des courriels applicatifs) et
       `CONTACT_INBOX_EMAIL` (boîte qui reçoit le formulaire de contact)
 - [ ] `MAPBOX_PUBLIC_TOKEN` (cartes), si utilisé
-- [ ] Assistant IA : **à décider** — la fonction `assistant-chat` passe
-      aujourd'hui par la passerelle IA de Lovable (`LOVABLE_API_KEY`),
-      qui n'existe pas hors Lovable. Voir « Points ouverts ».
+- [ ] `ANTHROPIC_API_KEY` : clé de l'API Claude (console Anthropic →
+      API Keys), saisie PAR TOI dans Supabase → Edge Functions → Secrets
+      (jamais dans le dépôt ni le chat). Facultatifs : `ANTHROPIC_MODEL`
+      (défaut `claude-opus-5-5`), `AI_FEATURES_DISABLED=true` pour tout
+      couper. Ensuite, un administrateur active chaque fonction IA dans
+      Organisation › Intelligence artificielle (désactivées par défaut).
 - [ ] (facultatif) `GEOTAB_API_URL`, `SAMSARA_API_URL` : seulement pour
       remplacer les URLs par défaut des fournisseurs.
 - [ ] Ne PAS définir `FEATURE_PUBLIC_API` (API publique et MCP restent en 404).
@@ -184,7 +187,7 @@ clair — les edge functions répondent `503 {"error":"service_non_configure"}`
 | Service manquant | Comportement |
 |---|---|
 | `SENDGRID_API_KEY` | Formulaires contact / démo : la demande est **enregistrée** (`email_leads`, message compris) et l'écran le dit (« Demande enregistrée — l'envoi automatique de courriels n'est pas encore activé »). Support : « votre demande n'a pas été transmise ». Invitation de collaborateur : créée, « prévenez la personne vous-même ». |
-| Clé IA (`LOVABLE_API_KEY` aujourd'hui) | L'assistant répond « L'assistant IA n'est pas encore activé sur ce site de test ». |
+| `ANTHROPIC_API_KEY` | Le copilote répond « pas encore branché sur ce site (clé ANTHROPIC_API_KEY à ajouter) » ; aucune erreur, rien n'est envoyé. |
 | `MAPBOX_PUBLIC_TOKEN` | Aucune carte n'est affichée dans les écrans actuels ; la fonction répond 503. |
 | Tâches pg_cron | Pas de rappels d'échéances ni de synchro télématique planifiée ; à activer avec `supabase/snippets/taches-planifiees.sql` quand SendGrid sera branché. |
 
@@ -208,11 +211,10 @@ confirmés par l'API d'administration).
 
 ## Points ouverts
 
-- **Assistant IA** : `assistant-chat` appelle la passerelle Lovable
-  (modèle Gemini via `LOVABLE_API_KEY`), indisponible hors Lovable.
-  Choix à faire : brancher un fournisseur dont tu as une clé (par ex.
-  l'API Anthropic avec `ANTHROPIC_API_KEY`, adaptation de la fonction à
-  prévoir) ou laisser l'assistant désactivé sur le site de test.
+- **IA** : fournisseur = API Claude d'Anthropic (fonction `copilot`,
+  Phase 5.2) ; l'ancienne fonction `assistant-chat` (passerelle Lovable)
+  est retirée du dépôt — si elle reste déployée sur la base hébergée,
+  la supprimer : `supabase functions delete assistant-chat`.
 - **Courriels** : SMTP personnalisé nécessaire pour des testeurs externes
   (voir étape 4).
 

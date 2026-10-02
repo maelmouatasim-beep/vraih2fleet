@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import EnergyClientDataCard from "@/components/organization/EnergyClientDataCard";
+import AiSettingsCard from "@/components/organization/AiSettingsCard";
 import ReceivedInvitationsCard from "@/components/organization/ReceivedInvitationsCard";
 import TeamCard from "@/components/organization/TeamCard";
 import { toast } from "@/hooks/use-toast";
@@ -184,6 +185,8 @@ export default function OrganizationPage() {
         <EnergyClientDataCard />
 
         {organization && <TeamCard organization={organization} />}
+
+        {organization && <AiSettingsCard organizationId={organization.id} estAdmin={estAdmin} />}
 
         {estAdmin && organization && (
           <Card className="border-destructive/50">

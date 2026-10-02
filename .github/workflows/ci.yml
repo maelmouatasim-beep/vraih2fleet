@@ -67,7 +67,7 @@ jobs:
             _shared/cors.ts _shared/auth.ts _shared/validation.ts \
             send-email/index.ts notify-subsidy-deadlines/index.ts \
             sync-telematics-data/index.ts \
-            assistant-chat/index.ts authenticate-telematics/index.ts \
+            copilot/index.ts _shared/ai.ts authenticate-telematics/index.ts \
             fetch-telematics-vehicles/index.ts api-gateway/index.ts \
             get-mapbox-token/index.ts
 
@@ -119,6 +119,15 @@ jobs:
           sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
           npx playwright install --with-deps chromium
           eval "$(supabase status -o env | sed 's/^/export /')"
+          # Copilote : fonctions relancées avec un FAUX serveur Claude scripté
+          # (aucune vraie clé en CI).
+          pkill -f "supabase functions serve" || true
+          node scripts/mock-anthropic.mjs 35563 &
+          supabase functions serve --env-file supabase/tests/functions-e2e.env &
+          for i in $(seq 1 60); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:54321/functions/v1/copilot || echo 000)
+            case "$code" in 000|502|503) sleep 2 ;; *) break ;; esac
+          done
           VITE_SUPABASE_URL=http://127.0.0.1:54321 VITE_SUPABASE_PUBLISHABLE_KEY="$ANON_KEY" VITE_SUPABASE_PROJECT_ID=local \
             npx vite --port 8080 --host 127.0.0.1 &
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:8080/ >/dev/null && break; sleep 1; done

@@ -4209,131 +4209,6 @@
     "exportPDF": "Export PDF",
     "minScenarios": "Select at least 2 scenarios to export"
   },
-  "assistant": {
-    "title": "Expert TCO Assistant",
-    "subtitle": "Your technical and strategic guide",
-    "welcomeMessage": "👋 Hello! I am your expert TCO assistant. Ask me your questions about fleet electrification, subsidies, or how to use H2Fleet.",
-    "placeholder": "Ask your question...",
-    "clearHistory": "Clear history",
-    "openAssistant": "Open assistant",
-    "noResponse": "Sorry, I couldn't generate a response.",
-    "error": "⚠️ Temporary error. Please try again.",
-    "quick": {
-      "whatIsH2Fleet": {
-        "label": "What is it?",
-        "query": "What is H2Fleet and how does it work?"
-      },
-      "getStarted": {
-        "label": "Get started",
-        "query": "How do I get started with H2Fleet?"
-      },
-      "journeySteps": {
-        "label": "Journey",
-        "query": "What are the 7 steps of the project journey?"
-      },
-      "whereNumbers": {
-        "label": "Sources",
-        "query": "Where do the numbers come from and how are they verified?"
-      },
-      "importFleet": {
-        "label": "Import",
-        "query": "How do I import my fleet from a CSV or Excel file?"
-      },
-      "estimatedConsumption": {
-        "label": "Estimates",
-        "query": "What does an “estimate” consumption mean?"
-      },
-      "telematicsToFleet": {
-        "label": "Telematics",
-        "query": "How do I import my telematics vehicles into My fleet?"
-      },
-      "createProject": {
-        "label": "New project",
-        "query": "How do I create a project?"
-      },
-      "projectParams": {
-        "label": "Parameters",
-        "query": "How do I change the analysis horizon and discount rate?"
-      },
-      "selectVehicles": {
-        "label": "Select",
-        "query": "How do I choose the project’s vehicles, years and targets?"
-      },
-      "suggestedTarget": {
-        "label": "Suggested target",
-        "query": "Where does the suggested target come from?"
-      },
-      "readVerdict": {
-        "label": "Verdict",
-        "query": "How do I read the feasibility verdict?"
-      },
-      "clientData": {
-        "label": "Client data",
-        "query": "How do I enter my energy prices, a quote or a confirmed subsidy?"
-      },
-      "stressTest": {
-        "label": "Stress test",
-        "query": "How does the stress test work?"
-      },
-      "applyStrategy": {
-        "label": "Apply",
-        "query": "What does “Apply this strategy to the plan” do?"
-      },
-      "readBudget": {
-        "label": "Budget",
-        "query": "How do I read the plan’s annual budget?"
-      },
-      "depotInfra": {
-        "label": "Chargers",
-        "query": "How is charging infrastructure sized per depot?"
-      },
-      "programStatus": {
-        "label": "Statuses",
-        "query": "How is the status of subsidy programs computed?"
-      },
-      "confirmedSubsidy": {
-        "label": "Confirmed",
-        "query": "How do I enter a subsidy confirmed by document?"
-      },
-      "applicationTracking": {
-        "label": "Applications",
-        "query": "How do I track my subsidy applications?"
-      },
-      "reportSnapshot": {
-        "label": "Report",
-        "query": "Why is my report frozen and how do I update it?"
-      },
-      "markCompleted": {
-        "label": "Completed",
-        "query": "How do I mark a replacement as completed?"
-      },
-      "generatedTasks": {
-        "label": "Tasks",
-        "query": "How do the plan’s generated tasks work?"
-      },
-      "assumptionStatus": {
-        "label": "Statuses",
-        "query": "What do “verified”, “estimate” and “to validate” mean?"
-      },
-      "connectTelematics": {
-        "label": "Connect",
-        "query": "How do I connect Geotab or Samsara?"
-      },
-      "inviteTeam": {
-        "label": "Team",
-        "query": "How do I invite my team into my organization?"
-      }
-    },
-    "triggers": {
-      "welcomeNewUser": "👋 First visit? Start with **My fleet** (add or import CSV/Excel), then create a project: the 7-step journey does the rest. Ask me anything!",
-      "noFleetYet": "💡 My fleet is still empty. Add or import your vehicles: every calculation starts from your actual fleet.",
-      "noProjectsYet": "💡 Your fleet is ready. Create a project: step 1 lets you pick the vehicles to plan.",
-      "feasibilityIntro": "📝 Verdicts are costed by the engine for each vehicle. Your prices paid or a grid-connection quote (“Client data”) replace the estimates.",
-      "strategiesApply": "✅ Happy with a strategy? “Apply this strategy to the plan” updates the targets after showing you the details.",
-      "financingConfirmed": "🧾 Have an award letter? Enter the confirmed subsidy with its reference: it replaces the estimate in the plan and the report."
-    },
-    "notConfigured": "The AI assistant is not enabled yet on this test site."
-  },
   "tasks": {
     "title": "Tasks",
     "newTask": "New task",
@@ -4773,6 +4648,36 @@
       "received": "Invitation to join “{{org}}” (role: {{role}})",
       "accept": "Accept",
       "accepted": "You joined the organization"
+    },
+    "ai": {
+      "title": "Artificial intelligence",
+      "subtitle": "H2Fleet AI features (Anthropic's Claude API). Each is disabled by default and enabled here by an administrator.",
+      "privacy": "When a feature is enabled, questions and the data needed (fleet, garages, plan — never employees' personal data) are sent to Anthropic, in the United States, to produce the answer. The AI produces no figures: all of them come from the TCO engine and are checked. Every call is counted (tokens); no content is kept in technical logs.",
+      "features": {
+        "copilot": {
+          "title": "Project copilot",
+          "description": "Questions about the project and what-if simulations computed by the engine."
+        },
+        "smartImport": {
+          "title": "Smart fleet import",
+          "description": "Maps the columns of any inventory to the import template, with row-by-row validation."
+        },
+        "documents": {
+          "title": "Invoice and quote reading",
+          "description": "Extraction of prices and amounts, confirmed before saving (coming)."
+        },
+        "councilNote": {
+          "title": "Council memo",
+          "description": "Drafted decision summary, figures injected and checked (coming)."
+        }
+      },
+      "monthlyTokens": "Maximum tokens per month",
+      "dailyRequests": "Maximum requests per day",
+      "usageTitle": "Usage",
+      "usage": "This month: {{tokens}} tokens, {{requests}} requests (today: {{today}}).",
+      "cost": "Estimated cost this month: {{amount}} (Anthropic API price as of {{date}}, in US dollars; the invoice prevails).",
+      "saved": "AI settings saved",
+      "adminOnly": "Only an organization administrator can change these settings."
     }
   },
   "journey": {
@@ -5630,7 +5535,8 @@
           "title": "5. Disclosure and hosting",
           "paras": [
             "Information is hosted by Supabase (database and authentication); the website is served by GitHub Pages. The following services receive data only if enabled: email delivery (SendGrid), artificial-intelligence assistant, maps (Mapbox), telematics platforms you connect.",
-            "Database hosting region: [to be confirmed]. When information is communicated outside Québec, the Operator first carries out the privacy impact assessment required by law [to be completed]."
+            "Database hosting region: [to be confirmed]. When information is communicated outside Québec, the Operator first carries out the privacy impact assessment required by law [to be completed].",
+            "Artificial intelligence features (optional): when an administrator of your organization enables them, questions asked to the copilot and the project data needed for the calculation (units, categories, mileage, years, garages — never employees' personal data) are sent to Anthropic, PBC (United States), provider of the Claude model, to produce the answer. Only the number of tokens used is logged; the copilot history is kept in the project and can be deleted by its author or an administrator. Privacy impact assessment of this communication outside Québec: [to be completed — to be validated by a lawyer]."
           ]
         },
         {
@@ -5707,6 +5613,66 @@
       "c5": "Hydrogen heavy truck (electrolysis)",
       "c6": "5-vehicle mini-plan (12 years, shared infrastructure, re-replacement)",
       "c7": "Electric city bus — full 16-year life (before transit funding)"
+    }
+  },
+  "copilot": {
+    "open": "Copilot",
+    "title": "Project copilot",
+    "subtitle": "It answers with the project's real figures, computed by the TCO engine, and cites their sources. Every number is checked before display; nothing is applied without your confirmation.",
+    "empty": "Ask a question about the project, or try a simulation below. The history is visible to the project team.",
+    "verified_one": "{{count}} number verified",
+    "verified_other": "{{count}} numbers verified",
+    "sources_one": "{{count}} source",
+    "sources_other": "{{count}} sources",
+    "proposal_one": "Proposal: {{count}} vehicle changed (year and/or technology).",
+    "proposal_other": "Proposal: {{count}} vehicles changed (year and/or technology).",
+    "proposalExpired": "A proposal came with this answer; re-run the simulation to apply it.",
+    "applyButton": "Apply to plan…",
+    "confirmTitle": "Apply the copilot's proposal?",
+    "confirm_one": "Apply ({{count}} change)",
+    "confirm_other": "Apply ({{count}} changes)",
+    "applied_one": "Proposal applied — {{count}} vehicle updated",
+    "applied_other": "Proposal applied — {{count}} vehicles updated",
+    "running": "The copilot is thinking…",
+    "runningTools": "Computing with the engine: {{tools}}…",
+    "tools": {
+      "lire_projet": "reading the project",
+      "simuler": "simulation",
+      "optimiser": "optimizer",
+      "consulter_hypotheses": "assumption registry",
+      "consulter_programmes": "program registry"
+    },
+    "placeholder": "Your question (Enter to send)",
+    "send": "Send",
+    "privacy": "Questions and the project data needed for the calculation (units, categories, mileage, years, garages) are sent to Anthropic (United States); no personal data. Feature enabled by an organization administrator.",
+    "suggestions": {
+      "diesel": "What if diesel drops by 20%?",
+      "buses": "What if we push the buses back 2 years?",
+      "budget": "What happens with a budget of $500,000 per year?",
+      "subsidies": "Which subsidies fund our plan, and until when?"
+    },
+    "disabled": {
+      "title": "Copilot not enabled for your organization",
+      "body": "An administrator can enable it in Organization › Artificial intelligence, after reviewing the data sent.",
+      "link": "Open Organization"
+    },
+    "errors": {
+      "service_non_configure": "The copilot is not connected on this site yet (ANTHROPIC_API_KEY to add to the Supabase secrets).",
+      "fonction_desactivee": "The copilot is disabled for your organization.",
+      "quota_journalier": "The organization's daily AI request limit is reached. Try again tomorrow or ask an administrator to raise it.",
+      "quota_mensuel": "The organization's monthly AI token limit is reached.",
+      "trop_de_requetes": "Too many questions in a short time. Please wait a few minutes.",
+      "projet_introuvable": "Project not found or not accessible.",
+      "erreur_service": "The AI service is not responding right now. Try again shortly.",
+      "non_verifie": "Answer not shown: it contained figures that do not come from the engine, even after correction. Rephrase the question or open the relevant step directly.",
+      "refus": "The model declined this request.",
+      "trop_d_etapes": "The question required too many calculation steps. Split it into simpler questions."
+    },
+    "kinds": {
+      "plan_one": "Copilot — simulation applied: {{count}} vehicle (year and/or technology)",
+      "plan_other": "Copilot — simulation applied: {{count}} vehicles (year and/or technology)",
+      "optimisee_one": "Copilot — optimized solution applied: {{count}} vehicle",
+      "optimisee_other": "Copilot — optimized solution applied: {{count}} vehicles"
     }
   }
 }

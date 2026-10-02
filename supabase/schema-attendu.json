@@ -1,7 +1,9 @@
 {
   "tables": [
+    "ai_usage_events [rls]",
     "api_keys [rls]",
     "confirmed_subsidies [rls]",
+    "copilot_messages [rls]",
     "custom_reference_data [rls]",
     "email_leads [rls]",
     "energy_client_inputs [rls]",
@@ -10,6 +12,7 @@
     "incentives_programs [rls]",
     "infrastructure_plans [rls]",
     "notifications [rls]",
+    "organization_ai_settings [rls]",
     "organization_invitations [rls]",
     "organization_members [rls]",
     "organizations [rls]",
@@ -51,6 +54,7 @@
     "webhooks [rls]"
   ],
   "policies": [
+    "public.ai_usage_events : Admins read AI usage",
     "public.api_keys : Users can create their own API keys",
     "public.api_keys : Users can delete their own API keys",
     "public.api_keys : Users can rename or disable their own API keys",
@@ -59,6 +63,9 @@
     "public.confirmed_subsidies : confirmed subsidies: project editors can insert",
     "public.confirmed_subsidies : confirmed subsidies: project editors can update",
     "public.confirmed_subsidies : confirmed subsidies: project viewers can read",
+    "public.copilot_messages : Authors or org admins delete copilot messages",
+    "public.copilot_messages : Project viewers add to the copilot history",
+    "public.copilot_messages : Project viewers read the copilot history",
     "public.custom_reference_data : Users can create their own custom reference data",
     "public.custom_reference_data : Users can delete their own custom reference data",
     "public.custom_reference_data : Users can update their own custom reference data",
@@ -87,6 +94,9 @@
     "public.infrastructure_plans : Users can view their own infrastructure plans",
     "public.notifications : Users can update own notifications",
     "public.notifications : Users can view own notifications",
+    "public.organization_ai_settings : Admins create AI settings",
+    "public.organization_ai_settings : Admins update AI settings",
+    "public.organization_ai_settings : Members read AI settings",
     "public.organization_invitations : org invitations: admins and invitee can read",
     "public.organization_invitations : org invitations: admins can invite",
     "public.organization_invitations : org invitations: admins can revoke",
@@ -222,6 +232,8 @@
   "fonctions": [
     "accept_organization_invitation",
     "accept_pending_invitations",
+    "ai_settings_touch",
+    "ai_usage_summary",
     "can_edit_phase",
     "can_edit_project",
     "can_edit_roadmap",
@@ -277,6 +289,7 @@
     "hydrogen_suppliers : update_hydrogen_suppliers_updated_at",
     "incentives_programs : update_incentives_programs_updated_at",
     "infrastructure_plans : update_infrastructure_plans_updated_at",
+    "organization_ai_settings : ai_settings_touch",
     "organization_members : trg_org_members_dernier_admin",
     "organizations : on_organization_created",
     "plan_change_log : plan_change_log_set_org",
