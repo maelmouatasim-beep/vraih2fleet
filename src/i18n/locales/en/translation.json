@@ -78,14 +78,15 @@
     "import": {
       "button": "Import CSV/Excel",
       "title": "Import fleet",
-      "subtitle": "CSV or Excel with headers (unit, make, model, year, category, fuel, km/yr, consumption, depot…). No invalid row is imported.",
+      "subtitle": "CSV or Excel with headers (unit, category, fuel, annual km, consumption, depot, GVWR class, max daily km…). No invalid row is imported.",
       "choose": "Choose a file…",
       "preview": "{{valid}} new vehicle(s), {{updates}} update(s), {{errors}} error(s)",
       "errorLine": "Row {{line}}, field {{field}}",
       "confirm": "Import {{count}} vehicle(s)",
       "done": "{{count}} vehicle(s) imported, {{updated}} updated",
       "readError": "Unreadable file",
-      "updatesTitle": "Units already in the fleet — their provided fields will be updated:"
+      "updatesTitle": "Units already in the fleet — their provided fields will be updated:",
+      "template": "Import template (columns, examples, accepted values, \"Read me\" tab):"
     },
     "edit": {
       "title": "Edit vehicle {{unit}}",

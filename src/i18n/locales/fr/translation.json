@@ -78,14 +78,15 @@
     "import": {
       "button": "Importer CSV/Excel",
       "title": "Importer la flotte",
-      "subtitle": "CSV ou Excel avec entêtes (unité, marque, modèle, année, catégorie, carburant, km/an, consommation, dépôt…). Aucune ligne invalide n'est importée.",
+      "subtitle": "CSV ou Excel avec entêtes (unité, catégorie, carburant, km annuel, consommation, garage, classe PNBV, km journalier max…). Aucune ligne invalide n'est importée.",
       "choose": "Choisir un fichier…",
       "preview": "{{valid}} nouveau(x) véhicule(s), {{updates}} mise(s) à jour, {{errors}} erreur(s)",
       "errorLine": "Ligne {{line}}, champ {{field}}",
       "confirm": "Importer {{count}} véhicule(s)",
       "done": "{{count}} véhicule(s) importé(s), {{updated}} mis à jour",
       "readError": "Fichier illisible",
-      "updatesTitle": "Unités déjà présentes — leurs champs fournis seront mis à jour :"
+      "updatesTitle": "Unités déjà présentes — leurs champs fournis seront mis à jour :",
+      "template": "Modèle d'import (colonnes, exemples, valeurs acceptées, onglet « Lisez-moi ») :"
     },
     "edit": {
       "title": "Modifier le véhicule {{unit}}",

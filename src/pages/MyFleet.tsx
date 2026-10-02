@@ -35,7 +35,8 @@ import {
 } from "@/lib/fleet/vehicles";
 import { lireFichier, validerLignes, type ResultatImport } from "@/lib/fleet/importVehicles";
 import { estVehiculeDemo } from "@/lib/demoData/villeDemo";
-import { Loader2, Pencil, Plus, Trash2, Truck, Upload } from "lucide-react";
+import { Download, Loader2, Pencil, Plus, Trash2, Truck, Upload } from "lucide-react";
+import { telechargerModeleCsv, telechargerModeleExcel } from "@/lib/fleet/importTemplateFile";
 import GaragesCard from "@/components/fleet/GaragesCard";
 import { useGarages } from "@/hooks/useGarages";
 import { assurerGarages } from "@/lib/fleet/garages";
@@ -60,7 +61,8 @@ const FORME_VIDE = {
 };
 
 export default function MyFleet() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const langue = i18n.language === "en" ? "en" : "fr";
   const { organization, isLoading: orgLoading } = useOrganization();
   const { vehicles, isLoading, creer, importer, modifier, supprimer } = useVehicles(organization?.id);
   const { garages } = useGarages(organization?.id);
@@ -494,6 +496,15 @@ export default function MyFleet() {
             <DialogTitle>{t("fleet.import.title")}</DialogTitle>
             <DialogDescription>{t("fleet.import.subtitle")}</DialogDescription>
           </DialogHeader>
+          <div className="flex flex-wrap items-center gap-2 rounded-md border border-dashed border-border p-3 text-sm">
+            <span className="text-muted-foreground">{t("fleet.import.template")}</span>
+            <Button variant="outline" size="sm" onClick={() => void telechargerModeleExcel(langue)}>
+              <Download className="w-4 h-4 mr-1" /> Excel
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => telechargerModeleCsv(langue)}>
+              <Download className="w-4 h-4 mr-1" /> CSV
+            </Button>
+          </div>
           <div className="space-y-4 py-2">
             <input
               ref={fichierRef}

@@ -330,6 +330,26 @@ export interface ResultatImport {
 
 const fourni = (v: unknown): boolean => v !== undefined && v !== null && String(v).trim() !== "";
 
+/** Valeurs canoniques acceptées par champ à choix fermé, avec leurs
+ *  synonymes (modèle d'import « Lisez-moi », messages d'erreur). */
+export function valeursAcceptees(): Record<
+  "category" | "fuel_type" | "usage_profile" | "status" | "consumption_source",
+  Record<string, string[]>
+> {
+  const grouper = (table: Record<string, string>) => {
+    const r: Record<string, string[]> = {};
+    for (const [syn, canon] of Object.entries(table)) (r[canon] ??= []).push(syn);
+    return r;
+  };
+  return {
+    category: grouper(SYNONYMES_CATEGORIE),
+    fuel_type: grouper(SYNONYMES_CARBURANT),
+    usage_profile: grouper(SYNONYMES_USAGE),
+    status: grouper(SYNONYMES_STATUT),
+    consumption_source: grouper(SYNONYMES_SOURCE),
+  };
+}
+
 /**
  * Normalise et valide des lignes déjà lues (entête → valeur). PURE.
  * - Toute valeur illisible = ERREUR explicite (jamais de valeur inventée).
