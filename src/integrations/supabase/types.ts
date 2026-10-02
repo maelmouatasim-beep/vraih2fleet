@@ -1002,6 +1002,68 @@ export type Database = {
           },
         ]
       }
+      plan_alerts: {
+        Row: {
+          alert_key: string
+          dismissed_at: string | null
+          dismissed_by: string | null
+          emailed_at: string | null
+          first_seen_at: string
+          id: string
+          kind: string
+          last_seen_at: string
+          message_en: string
+          message_fr: string
+          project_id: string
+          resolved_at: string | null
+          severity: string
+          title_en: string
+          title_fr: string
+        }
+        Insert: {
+          alert_key: string
+          dismissed_at?: string | null
+          dismissed_by?: string | null
+          emailed_at?: string | null
+          first_seen_at?: string
+          id?: string
+          kind: string
+          last_seen_at?: string
+          message_en: string
+          message_fr: string
+          project_id: string
+          resolved_at?: string | null
+          severity: string
+          title_en: string
+          title_fr: string
+        }
+        Update: {
+          alert_key?: string
+          dismissed_at?: string | null
+          dismissed_by?: string | null
+          emailed_at?: string | null
+          first_seen_at?: string
+          id?: string
+          kind?: string
+          last_seen_at?: string
+          message_en?: string
+          message_fr?: string
+          project_id?: string
+          resolved_at?: string | null
+          severity?: string
+          title_en?: string
+          title_fr?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_alerts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       plan_change_log: {
         Row: {
           action: string
@@ -3156,6 +3218,14 @@ export type Database = {
       }
       reject_subsidy_change: {
         Args: { _change: string; _note?: string | null }
+        Returns: undefined
+      }
+      sync_plan_alerts: {
+        Args: { _alerts: Json; _project: string }
+        Returns: boolean
+      }
+      dismiss_plan_alert: {
+        Args: { _alert: string }
         Returns: undefined
       }
       validate_subsidy_change: {

@@ -47,6 +47,10 @@ verify_jwt = false
 [functions.notify-subsidy-deadlines]
 verify_jwt = false
 
+# Phase 5.6 — résumé des alertes de surveillance (x-cron-secret vérifié dans le code).
+[functions.plan-alerts-digest]
+verify_jwt = false
+
 # Mode cron (x-cron-secret) ou mode utilisateur (JWT vérifié dans le code).
 [functions.sync-telematics-data]
 verify_jwt = false

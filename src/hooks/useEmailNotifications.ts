@@ -9,6 +9,8 @@ export interface EmailNotificationPreferences {
   collaboration_invites: boolean;
   project_comments: boolean;
   weekly_digest: boolean;
+  /** Phase 5.6 — résumé des alertes de surveillance du plan. */
+  plan_alerts: boolean;
 }
 
 const DEFAULT_PREFERENCES: EmailNotificationPreferences = {
@@ -16,6 +18,7 @@ const DEFAULT_PREFERENCES: EmailNotificationPreferences = {
   collaboration_invites: true,
   project_comments: false,
   weekly_digest: false,
+  plan_alerts: true,
 };
 
 export function useEmailNotifications() {
@@ -44,6 +47,7 @@ export function useEmailNotifications() {
           collaboration_invites: typeof prefs.collaboration_invites === 'boolean' ? prefs.collaboration_invites : DEFAULT_PREFERENCES.collaboration_invites,
           project_comments: typeof prefs.project_comments === 'boolean' ? prefs.project_comments : DEFAULT_PREFERENCES.project_comments,
           weekly_digest: typeof prefs.weekly_digest === 'boolean' ? prefs.weekly_digest : DEFAULT_PREFERENCES.weekly_digest,
+          plan_alerts: typeof prefs.plan_alerts === 'boolean' ? prefs.plan_alerts : DEFAULT_PREFERENCES.plan_alerts,
         });
       }
     } catch (error) {

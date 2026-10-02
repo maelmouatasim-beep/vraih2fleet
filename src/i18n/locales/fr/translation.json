@@ -2084,7 +2084,18 @@
       },
       "subtitleOrg": "Votre flotte et vos projets — {{org}}",
       "openFleet": "Ma flotte",
-      "newProject": "Nouveau projet"
+      "newProject": "Nouveau projet",
+      "health": {
+        "title": "Santé du plan",
+        "subtitle": "Par projet : alertes de la surveillance (énergie, subventions, retards, garages), calculées par le moteur.",
+        "empty": "Aucun projet à surveiller pour l'instant.",
+        "alerts_one": "{{count}} alerte active",
+        "alerts_other": "{{count}} alertes actives",
+        "allGood": "Aucune alerte active",
+        "open": "Voir le suivi",
+        "more_one": "+ {{count}} autre alerte",
+        "more_other": "+ {{count}} autres alertes"
+      }
     },
     "projects": {
       "title": "Projets",
@@ -2204,7 +2215,9 @@
         "projectComments": "Commentaires sur mes projets",
         "projectCommentsDesc": "Quand quelqu'un commente un de vos projets",
         "weeklyDigest": "Résumé hebdomadaire",
-        "weeklyDigestDesc": "Un récapitulatif de l'activité de vos projets chaque lundi"
+        "weeklyDigestDesc": "Un récapitulatif de l'activité de vos projets chaque lundi",
+        "planAlerts": "Alertes de surveillance du plan",
+        "planAlertsDesc": "Résumé des nouvelles alertes de vos projets (énergie, subventions, retards, garages) — envoyé dès que le service de courriel sera branché"
       }
     },
     "blog": {
@@ -5379,6 +5392,63 @@
       },
       "fleetTitle": "Historique de la flotte",
       "fleetSubtitle": "Imports et modifications de la flotte appliqués après confirmation : qui, quand, quoi. Le journal ne peut pas être modifié."
+    },
+    "monitoring": {
+      "title": "Surveillance du plan",
+      "subtitle": "Alertes calculées par le moteur à partir des données du projet, du dernier rapport et de la veille des subventions. Rien n'est modifié automatiquement.",
+      "health": {
+        "bon": "Bon",
+        "a_surveiller": "À surveiller",
+        "a_risque": "À risque"
+      },
+      "severity": {
+        "critique": "Critique",
+        "attention": "Attention",
+        "info": "Information"
+      },
+      "energyTitle": "Prix de l'énergie modifié depuis le rapport du {{date}}",
+      "energyNames": {
+        "diesel": "le prix du diesel",
+        "electricite": "le coût de l'électricité",
+        "hydrogene": "le prix de l'hydrogène"
+      },
+      "energyChange_down": "{{energie}} a baissé de {{pct}} % ({{avant}} → {{apres}})",
+      "energyChange_up": "{{energie}} a augmenté de {{pct}} % ({{avant}} → {{apres}})",
+      "and": " et ",
+      "colon": " : ",
+      "verdict_one": "votre plan reste gagnant dans {{count}} scénario sur 3",
+      "verdict_other": "votre plan reste gagnant dans {{count}} scénarios sur 3",
+      "verdictNone": "votre plan n'est gagnant dans aucun des 3 scénarios du stress test",
+      "energyVan": "À plan égal, ce changement fait passer la VAN centrale de {{avant}} à {{apres}} (scénario prudent : {{prudent}}).",
+      "deadlineTitle": "Échéance : {{programme}} se termine le {{date}}",
+      "deadlineMessage_one": "Dans {{count}} jour. {{montant}} prévus au plan ({{vehicules}} véhicule(s)) et aucune demande déposée : déposez-la avant la fin du programme.",
+      "deadlineMessage_other": "Dans {{count}} jours. {{montant}} prévus au plan ({{vehicules}} véhicule(s)) et aucune demande déposée : déposez-la avant la fin du programme.",
+      "lateTitle_one": "{{count}} remplacement en retard",
+      "lateTitle_other": "{{count}} remplacements en retard",
+      "lateMessage": "Prévus avant cette année et non marqués réalisés : {{liste}}. Marquez-les réalisés ci-dessous ou replanifiez-les à l'étape Flotte.",
+      "andMore": " et {{count}} autre(s)",
+      "programTitle": "Programme modifié : {{programme}}",
+      "programMessage": "{{resume}} (validé le {{date}} par l'équipe H2Fleet). Les montants du plan suivent le registre des programmes, mis à jour après lecture de la source.",
+      "garageTitle": "Capacité électrique dépassée : {{garage}}",
+      "garageMessage": "Les bornes prévues demandent {{demandes}} kW pour {{disponibles}} kW disponibles (+{{supp}} kW) ; raccordement chiffré {{cout}} ({{source}}).",
+      "garagePresumed": "La puissance disponible est présumée : renseignez-la dans Ma flotte › Garages.",
+      "noGarage": "véhicules sans garage",
+      "sources": {
+        "estimation": "estimation du registre",
+        "devis_projet": "devis du projet",
+        "devis_garage": "devis du garage",
+        "capacite_existante": "capacité existante",
+        "aucun": "aucun"
+      },
+      "dismiss": "Marquer comme vue",
+      "dismissed": "Alerte marquée comme vue",
+      "showDismissed": "Alertes vues ({{count}})",
+      "none": "Aucune alerte : le plan est cohérent avec le dernier rapport et ses données.",
+      "open": "Ouvrir l'étape",
+      "since": "Relevée le {{date}}",
+      "emailNote": "Résumé par courriel aux membres du projet (préférence dans Paramètres) dès que le service de courriel sera branché.",
+      "energyPlanChanged": "Le plan a aussi changé depuis le rapport (VAN présentée alors : {{van}}).",
+      "energyRegenerate": "Régénérez le rapport avant de le présenter."
     }
   },
   "energyClient": {

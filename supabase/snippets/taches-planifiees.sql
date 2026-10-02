@@ -53,7 +53,27 @@ select cron.schedule(
   $$ delete from public.rate_limit_events where created_at < now() - interval '1 day' $$
 );
 
--- Contrôle : les trois tâches, et les derniers passages.
+-- Phase 5.6 — résumé des nouvelles alertes de surveillance du plan :
+-- chaque jour à 7 h 52 (heure de l'Est). Sans SendGrid, la fonction
+-- répond 503 « service_non_configure » et ne marque rien.
+select cron.schedule(
+  'h2fleet-plan-alerts-digest',
+  '52 11 * * *',
+  $$
+  select net.http_post(
+    url := (select decrypted_secret from vault.decrypted_secrets where name = 'h2fleet_project_url')
+           || '/functions/v1/plan-alerts-digest',
+    headers := jsonb_build_object(
+      'Content-Type', 'application/json',
+      'x-cron-secret', (select decrypted_secret from vault.decrypted_secrets where name = 'h2fleet_cron_secret')
+    ),
+    body := '{}'::jsonb,
+    timeout_milliseconds := 30000
+  );
+  $$
+);
+
+-- Contrôle : les quatre tâches, et les derniers passages.
 select jobname, schedule, active from cron.job where jobname like 'h2fleet-%' order by jobname;
 -- select j.jobname, d.status, d.return_message, d.start_time
 --   from cron.job_run_details d join cron.job j using (jobid)

@@ -9,7 +9,8 @@
 // - Gabarits authentifiés (support_request, collaboration_invite,
 //   task_mention) : JWT vérifié via getUserOrThrow, destinataire résolu en
 //   base (jamais fourni par le client).
-// - Gabarit interne (subsidy_reminder) : secret partagé x-internal-secret.
+// - Gabarits internes (subsidy_reminder, plan_alerts_digest) : secret
+//   partagé x-internal-secret.
 
 import { corsHeaders, handleOptions, jsonResponse } from "../_shared/cors.ts";
 import {
@@ -127,6 +128,28 @@ const subsidyReminderSchema = z.object({
   }),
 });
 
+// Phase 5.6 — résumé des alertes de surveillance d'un projet (fonction
+// plan-alerts-digest) ; le lien est construit ici à partir de l'UUID.
+const planAlertsDigestSchema = z.object({
+  templateType: z.literal("plan_alerts_digest"),
+  data: z.object({
+    to: z.string().trim().email().max(254),
+    projectId: z.string().uuid(),
+    projectName: nonEmpty(200),
+    lang: z.enum(["fr", "en"]),
+    alerts: z
+      .array(
+        z.object({
+          severity: z.enum(["critique", "attention", "info"]),
+          title: nonEmpty(300),
+          message: z.string().trim().max(1500),
+        }),
+      )
+      .min(1)
+      .max(20),
+  }),
+});
+
 const requestSchema = z.discriminatedUnion("templateType", [
   demoRequestSchema,
   contactSchema,
@@ -134,6 +157,7 @@ const requestSchema = z.discriminatedUnion("templateType", [
   collaborationInviteSchema,
   taskMentionSchema,
   subsidyReminderSchema,
+  planAlertsDigestSchema,
 ]);
 
 // ── Gabarits HTML (toutes les valeurs passent par escapeHtml) ───────────────
@@ -477,6 +501,40 @@ Deno.serve(async (req: Request): Promise<Response> => {
             : `⏰ ${isEnglish ? "Reminder" : "Rappel"}: 7 ${isEnglish ? "days left for" : "jours pour"} ${d.programName}`,
           html,
           `${d.programName} — ${d.amount} — ${d.daysRemaining} ${isEnglish ? "days remaining" : "jours restants"} (${d.deadline})\n${applyUrl}`,
+        );
+        return jsonResponse(req, { success: true });
+      }
+
+      case "plan_alerts_digest": {
+        requireInternalSecret(req);
+        const d = body.data;
+        const en = d.lang === "en";
+        const projectUrl = `${APP_BASE_URL}/dashboard/projects/${d.projectId}/suivi`;
+        const couleurs: Record<string, string> = { critique: "#b91c1c", attention: "#b45309", info: "#475569" };
+        const libelles: Record<string, string> = en
+          ? { critique: "Critical", attention: "Warning", info: "Information" }
+          : { critique: "Critique", attention: "Attention", info: "Information" };
+        const items = d.alerts
+          .map(
+            (a) => `<div style="border-left:4px solid ${couleurs[a.severity]};padding:10px 14px;margin-bottom:12px;background:#f9fafb;">
+<p style="margin:0;font-size:12px;color:${couleurs[a.severity]};font-weight:600;text-transform:uppercase;">${libelles[a.severity]}</p>
+<p style="margin:4px 0 0 0;font-weight:600;">${escapeHtml(a.title)}</p>
+<p style="margin:6px 0 0 0;font-size:14px;color:#374151;">${escapeHtml(a.message)}</p></div>`,
+          )
+          .join("");
+        const html = layout(
+          en ? "Plan monitoring" : "Surveillance du plan",
+          `<h2 style="margin:0 0 16px 0;">${escapeHtml(d.projectName)}</h2>${items}
+<p style="text-align:center;margin-top:24px;"><a href="${escapeHtml(projectUrl)}" style="display:inline-block;background:#0f766e;color:white;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600;">${en ? "Open project tracking" : "Ouvrir le suivi du projet"}</a></p>`,
+          en
+            ? "Alerts computed by the H2Fleet engine. You received this email because plan monitoring alerts are enabled in your settings."
+            : "Alertes calculées par le moteur H2Fleet. Vous recevez ce courriel car les alertes de surveillance du plan sont activées dans vos paramètres.",
+        );
+        await sendEmail(
+          d.to,
+          `${en ? "Plan monitoring" : "Surveillance du plan"} — ${d.projectName} (${d.alerts.length})`,
+          html,
+          `${d.projectName}\n\n${d.alerts.map((a) => `[${libelles[a.severity]}] ${a.title}\n${a.message}`).join("\n\n")}\n\n${projectUrl}`,
         );
         return jsonResponse(req, { success: true });
       }

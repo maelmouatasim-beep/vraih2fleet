@@ -16,6 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { SubscriptionBadge } from "@/components/dashboard/SubscriptionBadge";
 import RecommendedActionsCard from "@/components/dashboard/RecommendedActionsCard";
+import PlanHealthCard from "@/components/dashboard/PlanHealthCard";
 import ReceivedInvitationsCard from "@/components/organization/ReceivedInvitationsCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -207,6 +208,8 @@ const Dashboard = () => {
         </div>
 
         <ReceivedInvitationsCard />
+
+        {projects.length > 0 && <PlanHealthCard projects={projects} />}
 
         <RecommendedActionsCard />
 

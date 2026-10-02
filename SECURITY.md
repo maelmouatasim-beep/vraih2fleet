@@ -43,8 +43,9 @@ appelant via `supabase/functions/_shared/auth.ts` :
 | --- | --- | --- |
 | `send-email` (demo_request, contact) | public | rate limit IP + pot de miel, destinataire fixé côté serveur |
 | `send-email` (support_request, collaboration_invite, task_mention) | utilisateur | `getUserOrThrow` (JWT réel), destinataire résolu en base |
-| `send-email` (subsidy_reminder) | interne | `requireInternalSecret` (x-internal-secret) |
+| `send-email` (subsidy_reminder, plan_alerts_digest) | interne | `requireInternalSecret` (x-internal-secret) ; lien du résumé construit côté serveur à partir de l'UUID du projet, textes échappés |
 | `notify-subsidy-deadlines` | pg_cron | `requireCronSecret` (x-cron-secret) |
+| `plan-alerts-digest` | pg_cron | `requireCronSecret` ; sans `SENDGRID_API_KEY` → 503 `service_non_configure` sans rien marquer ; destinataires résolus en base (propriétaire + admins/membres de l'organisation, préférence `plan_alerts`) ; aucune adresse dans les journaux |
 | `sync-telematics-data` | pg_cron ou utilisateur | secret cron, OU JWT + propriété de la connexion |
 | `calculate-tco` | — | **RETIRÉE (Phase 1B refonte)** : moteur remplacé par `src/lib/tco` côté client ; `api-gateway` répond 410 sur `/scenarios/:id/calculate`. La fonction encore déployée chez Supabase doit être supprimée à la main (liste pré-pilote). |
 | `copilot` | utilisateur | `getUserOrThrow` + projet relu avec le client RLS + fonction activée pour l'organisation + quotas jour/mois par organisation + débit par utilisateur ; clé `ANTHROPIC_API_KEY` côté serveur seulement ; chaque nombre de la réponse vérifié contre les résultats d'outils |
@@ -95,6 +96,14 @@ Le rôle admin s'attribue en base uniquement :
   l'annuaire passe par la vue `hydrogen_suppliers_directory`.
 - Migrations : additives et horodatées, jamais modifiées après coup ; toute
   nouvelle table reçoit sa RLS dans la migration de création.
+- Surveillance du plan (Phase 5.6) : `plan_alerts` lisible par les
+  membres du projet (`can_view_project`), sans policy d'écriture ; état
+  synchronisé et « vue » par les fonctions SECURITY DEFINER
+  `sync_plan_alerts` / `dismiss_plan_alert`, réservées aux éditeurs
+  (`can_edit_project` ; un lecteur reçoit `false`, rien n'est écrit).
+  Les textes enregistrés sont rendus par l'application à partir des
+  sorties du moteur ; un éditeur pourrait techniquement y écrire un autre
+  texte, que le courriel échappe (pas de HTML, lien fixé côté serveur).
 - Veille des subventions (Phase 5.5) : `subsidy_watch_changes` (file de
   validation) lisible par les seuls administrateurs H2Fleet
   (`has_role 'admin'`), sans aucune policy d'écriture ; le dépôt est fait

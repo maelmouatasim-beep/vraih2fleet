@@ -5,6 +5,7 @@
  * échéances du plan).
  */
 import ChangeLogCard from "./ChangeLogCard";
+import PlanAlertsPanel from "./PlanAlertsPanel";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -215,6 +216,7 @@ export default function TrackingStep({ projectId, project }: TrackingStepProps) 
 
   return (
     <div className="space-y-4">
+      <PlanAlertsPanel projectId={projectId} project={project} />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {(
           [

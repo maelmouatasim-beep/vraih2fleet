@@ -159,6 +159,13 @@ Chaque lundi (et à la demande) :
   changement). Sans les secrets : détections archivées dans le dépôt
   seulement.
 
+Tâches pg_cron (`supabase/snippets/taches-planifiees.sql`, à exécuter
+une fois) : rappels d'échéances, synchronisation télématique, purge du
+journal de débit et, depuis la Phase 5.6, `h2fleet-plan-alerts-digest`
+(résumé quotidien des nouvelles alertes de surveillance ; 503
+`service_non_configure` tant que SendGrid n'est pas branché, rien n'est
+perdu : les alertes partent au premier passage après branchement).
+
 Premier déploiement : après les étapes 2 et 3, relancer les deux
 workflows (Actions → workflow → **Run workflow**) ou pousser un commit.
 

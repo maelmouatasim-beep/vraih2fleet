@@ -65,7 +65,7 @@ jobs:
         run: |
           deno check --node-modules-dir=none \
             _shared/cors.ts _shared/auth.ts _shared/validation.ts \
-            send-email/index.ts notify-subsidy-deadlines/index.ts \
+            send-email/index.ts notify-subsidy-deadlines/index.ts plan-alerts-digest/index.ts \
             sync-telematics-data/index.ts \
             copilot/index.ts _shared/ai.ts fleet-import/index.ts document-reader/index.ts \
             authenticate-telematics/index.ts \

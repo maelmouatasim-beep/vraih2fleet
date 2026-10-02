@@ -541,6 +541,46 @@ try {
   await capture(page, "13c-financement-alerte");
   etape(`Veille : ${lignesVeille[1].split(" : ")[1]} ; 3 validés par un admin, 1 rejeté, aucun appliqué automatiquement ; alerte au Financement (programmes examinés pour le plan, rejet absent)`);
 
+  // Phase 5.6 — SURVEILLANCE DU PLAN : depuis le rapport, le prix du
+  // diesel utilisé a changé (facture confirmée) et la veille a validé des
+  // changements de programmes ; on crée en plus un remplacement en retard
+  // (GM-01 prévu en 2025) et une échéance proche (HV-01 électrique acheté
+  // cette année : Roulez vert se termine le 2026-12-31).
+  const projetId = base.split("/").pop();
+  psql(`update public.project_vehicles pv set replacement_year = 2025 from public.vehicles v where v.id = pv.vehicle_id and pv.project_id = '${projetId}' and v.unit_number = 'GM-01'`);
+  psql(`update public.project_vehicles pv set replacement_year = 2026, target_technology = 'bev' from public.vehicles v where v.id = pv.vehicle_id and pv.project_id = '${projetId}' and v.unit_number = 'HV-01'`);
+  await page.goto(`${base}/suivi`);
+  const panneauAlertes = page.getByTestId("plan-alerts-panel");
+  await panneauAlertes.getByTestId("plan-alert").first().waitFor({ timeout: 20000 });
+  await page.waitForTimeout(1500);
+  const types = await panneauAlertes.getByTestId("plan-alert").evaluateAll((els) => els.map((e) => e.getAttribute("data-kind")));
+  for (const attendu of ["donnees_energie", "echeance_subvention", "remplacement_retard", "programme_modifie"]) {
+    if (!types.includes(attendu)) throw new Error(`surveillance : alerte « ${attendu} » absente (${types.join(", ")})`);
+  }
+  const texteEnergie = await panneauAlertes.locator('[data-kind="donnees_energie"]').innerText();
+  if (!/le prix du diesel a (baissé|augmenté) de \d+ %/i.test(texteEnergie) || !/(scénarios? sur 3|aucun des 3 scénarios)/.test(texteEnergie)) {
+    throw new Error(`surveillance : alerte énergie inattendue « ${texteEnergie} »`);
+  }
+  const niveau = await page.getByTestId("plan-health-badge").getAttribute("data-level");
+  if (niveau === "bon") throw new Error("surveillance : santé « bon » malgré des alertes");
+  await panneauAlertes.scrollIntoViewIfNeeded();
+  await captureDialogue(page, panneauAlertes, "14a-suivi-surveillance");
+  const nbAvant = types.length;
+  await panneauAlertes.locator('[data-kind="remplacement_retard"]').getByTestId("plan-alert-dismiss").click();
+  for (let i = 0; i < 20 && (await panneauAlertes.getByTestId("plan-alert").count()) !== nbAvant - 1; i++) await page.waitForTimeout(250);
+  if ((await panneauAlertes.getByTestId("plan-alert").count()) !== nbAvant - 1) throw new Error("surveillance : alerte non masquée après « vue »");
+  const tracee = psql(`select count(*) from public.plan_alerts where project_id = '${projetId}' and kind = 'remplacement_retard' and dismissed_by is not null and dismissed_at is not null`).trim();
+  if (tracee !== "1") throw new Error("surveillance : « vue » non tracée en base");
+  const enregistrees = Number(psql(`select count(*) from public.plan_alerts where project_id = '${projetId}' and resolved_at is null`).trim());
+  if (enregistrees !== nbAvant) throw new Error(`surveillance : ${enregistrees} alerte(s) enregistrée(s) au lieu de ${nbAvant}`);
+  await page.goto(url("/dashboard"));
+  const carteSante = page.getByTestId("plan-health-card");
+  await carteSante.getByTestId("plan-health-project").first().waitFor({ timeout: 20000 });
+  await page.waitForTimeout(1500);
+  await carteSante.scrollIntoViewIfNeeded();
+  await captureDialogue(page, carteSante, "14b-accueil-sante");
+  etape(`Surveillance : ${nbAvant} alertes (${[...new Set(types)].join(", ")}), santé « ${niveau} », une alerte marquée vue (tracée), carte « Santé du plan » sur l'Accueil`);
+
   writeFileSync(join(SORTIE, "resultat.json"), JSON.stringify({ infraStrategie, infraPlan, subvStrategie, vanPlan, sousTitre, statutOpt, nbDecisions, nbChangements }, null, 2));
   if (erreurs.length) throw new Error(`réponses locales en erreur :\n${erreurs.join("\n")}`);
   console.log(`\n${journal.length} étapes, 0 erreur. Captures : ${SORTIE}`);

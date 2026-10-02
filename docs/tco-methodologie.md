@@ -872,3 +872,46 @@ des rapports avec les valeurs qu'elle a modifiées.
    borne dans CE garage. Devis de raccordement : déjà prioritaire
    (§3.5, bloc 1.2). Prix du diesel et coût de l'électricité : couche 3
    habituelle (organisation ou projet).
+
+## 13. Surveillance du plan (Phase 5.6) — alertes calculées, jamais d'action automatique
+
+Module pur `src/lib/journey/surveillance.ts` (aucune IA). Il compare le
+plan COURANT (« plan_actuel », cibles réelles, options courantes) au
+dernier rapport produit (snapshot : prix utilisés, VAN présentée,
+empreinte des entrées) et à son environnement. Chaque alerte porte une
+clé construite à partir des données : quand la situation évolue, la clé
+change et l'alerte redevient active, même si l'ancienne a été « vue ».
+
+1. **Données de l'énergie.** Un prix utilisé par le moteur (diesel ;
+   électricité si le plan compte un BEV ; hydrogène s'il compte un FCEV)
+   a varié d'au moins 5 % depuis le rapport. Le stress test (§7) est
+   relancé sur le plan courant : nombre de scénarios (prudent, central,
+   favorable) où la VAN reste positive. L'effet du prix est ISOLÉ : la VAN
+   du même plan recalculée avec les prix du rapport est comparée à la VAN
+   actuelle. Si le plan lui-même a changé (empreinte du plan courant avec
+   les paramètres du rapport ≠ empreinte du rapport), l'alerte le dit et
+   rappelle la VAN présentée alors, sans lui attribuer l'écart. Gravité :
+   critique si le prix fait passer la VAN centrale de positive à négative ;
+   attention si le plan n'est plus gagnant dans les 3 scénarios ;
+   information sinon.
+2. **Échéance de subvention.** Programme retenu par le plan (montant
+   > 0) dont la date de fin tombe dans les 180 jours, sans demande déposée,
+   accordée ou reçue (étape Financement). Critique sous 30 jours.
+3. **Remplacement en retard.** Année de remplacement antérieure à l'année
+   en cours, remplacement non marqué réalisé (une alerte groupée).
+4. **Programme modifié.** Changement VALIDÉ par la veille (§ veille des
+   subventions, Phase 5.5) sur un programme examiné pour un véhicule du
+   plan, depuis le dernier rapport (sans rapport : 90 derniers jours).
+   Attention si le programme est retenu, information sinon. Les montants
+   du plan suivent le registre, mis à jour dans le code après lecture de
+   la source.
+5. **Capacité de garage.** Puissance demandée par les bornes prévues
+   supérieure à la puissance disponible (§3.5, bloc 1.2) ; la source de la
+   puissance (renseignée ou présumée) est indiquée.
+
+Santé du plan : à risque dès une alerte critique, à surveiller dès une
+alerte « attention », bonne sinon ; les alertes marquées vues ne comptent
+plus. L'état (première détection, vue par qui et quand, résolution,
+courriel) est enregistré dans `plan_alerts` par les éditeurs du projet ;
+le résumé par courriel (`plan-alerts-digest`, quotidien) part dès que le
+service de courriel est branché.

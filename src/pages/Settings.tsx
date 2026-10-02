@@ -443,6 +443,18 @@ const Settings = () => {
             <Separator />
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
+                <Label>{t('pages.settings.emailNotifications.planAlerts')}</Label>
+                <p className="text-sm text-muted-foreground">{t('pages.settings.emailNotifications.planAlertsDesc')}</p>
+              </div>
+              <Switch
+                checked={emailPreferences.plan_alerts}
+                onCheckedChange={() => togglePreference('plan_alerts')}
+                disabled={isSavingEmail}
+              />
+            </div>
+            <Separator />
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
                 <Label>{t('pages.settings.emailNotifications.collaborationInvites', 'Invitations à collaborer')}</Label>
                 <p className="text-sm text-muted-foreground">
                   {t('pages.settings.emailNotifications.collaborationInvitesDesc', 'Quand quelqu\'un vous ajoute à un projet')}

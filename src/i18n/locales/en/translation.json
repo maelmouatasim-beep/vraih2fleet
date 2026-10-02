@@ -2084,7 +2084,18 @@
       },
       "subtitleOrg": "Your fleet and projects — {{org}}",
       "openFleet": "My fleet",
-      "newProject": "New project"
+      "newProject": "New project",
+      "health": {
+        "title": "Plan health",
+        "subtitle": "By project: monitoring alerts (energy, subsidies, delays, garages), computed by the engine.",
+        "empty": "No project to monitor yet.",
+        "alerts_one": "{{count}} active alert",
+        "alerts_other": "{{count}} active alerts",
+        "allGood": "No active alerts",
+        "open": "See tracking",
+        "more_one": "+ {{count}} more alert",
+        "more_other": "+ {{count}} more alerts"
+      }
     },
     "projects": {
       "title": "Projects",
@@ -2204,7 +2215,9 @@
         "projectComments": "Comments on my projects",
         "projectCommentsDesc": "When someone comments on one of your projects",
         "weeklyDigest": "Weekly digest",
-        "weeklyDigestDesc": "A summary of your projects’ activity every Monday"
+        "weeklyDigestDesc": "A summary of your projects’ activity every Monday",
+        "planAlerts": "Plan monitoring alerts",
+        "planAlertsDesc": "Summary of new alerts on your projects (energy, subsidies, delays, garages) — sent once the email service is connected"
       }
     },
     "blog": {
@@ -5379,6 +5392,63 @@
       },
       "fleetTitle": "Fleet history",
       "fleetSubtitle": "Fleet imports and changes applied after confirmation: who, when, what. The log cannot be edited."
+    },
+    "monitoring": {
+      "title": "Plan monitoring",
+      "subtitle": "Alerts computed by the engine from the project data, the latest report and the subsidy watch. Nothing is changed automatically.",
+      "health": {
+        "bon": "Good",
+        "a_surveiller": "Watch",
+        "a_risque": "At risk"
+      },
+      "severity": {
+        "critique": "Critical",
+        "attention": "Warning",
+        "info": "Information"
+      },
+      "energyTitle": "Energy price changed since the report of {{date}}",
+      "energyNames": {
+        "diesel": "the diesel price",
+        "electricite": "the electricity cost",
+        "hydrogene": "the hydrogen price"
+      },
+      "energyChange_down": "{{energie}} fell {{pct}}% ({{avant}} → {{apres}})",
+      "energyChange_up": "{{energie}} rose {{pct}}% ({{avant}} → {{apres}})",
+      "and": " and ",
+      "colon": ": ",
+      "verdict_one": "your plan still comes out ahead in {{count}} of 3 scenarios",
+      "verdict_other": "your plan still comes out ahead in {{count}} of 3 scenarios",
+      "verdictNone": "your plan no longer comes out ahead in any of the 3 stress-test scenarios",
+      "energyVan": "With the plan unchanged, this moves the central NPV from {{avant}} to {{apres}} (cautious scenario: {{prudent}}).",
+      "deadlineTitle": "Deadline: {{programme}} ends on {{date}}",
+      "deadlineMessage_one": "In {{count}} day. {{montant}} planned ({{vehicules}} vehicle(s)) and no application submitted: submit it before the program ends.",
+      "deadlineMessage_other": "In {{count}} days. {{montant}} planned ({{vehicules}} vehicle(s)) and no application submitted: submit it before the program ends.",
+      "lateTitle_one": "{{count}} late replacement",
+      "lateTitle_other": "{{count}} late replacements",
+      "lateMessage": "Planned before this year and not marked completed: {{liste}}. Mark them completed below or reschedule them in the Fleet step.",
+      "andMore": " and {{count}} more",
+      "programTitle": "Program changed: {{programme}}",
+      "programMessage": "{{resume}} (validated on {{date}} by the H2Fleet team). Plan amounts follow the program registry, updated after reading the source.",
+      "garageTitle": "Electrical capacity exceeded: {{garage}}",
+      "garageMessage": "Planned chargers need {{demandes}} kW for {{disponibles}} kW available (+{{supp}} kW); grid connection costed at {{cout}} ({{source}}).",
+      "garagePresumed": "Available power is presumed: enter it in My fleet › Garages.",
+      "noGarage": "vehicles without a garage",
+      "sources": {
+        "estimation": "registry estimate",
+        "devis_projet": "project quote",
+        "devis_garage": "garage quote",
+        "capacite_existante": "existing capacity",
+        "aucun": "none"
+      },
+      "dismiss": "Mark as seen",
+      "dismissed": "Alert marked as seen",
+      "showDismissed": "Seen alerts ({{count}})",
+      "none": "No alerts: the plan is consistent with the latest report and its data.",
+      "open": "Open step",
+      "since": "Raised on {{date}}",
+      "emailNote": "Email summary to project members (preference in Settings) once the email service is connected.",
+      "energyPlanChanged": "The plan itself has also changed since the report (NPV presented then: {{van}}).",
+      "energyRegenerate": "Regenerate the report before presenting it."
     }
   },
   "energyClient": {
