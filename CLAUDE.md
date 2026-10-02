@@ -31,8 +31,18 @@ hydrogène : TCO, infrastructure, subventions canadiennes, télématique
   `src/lib/legacy/scenario-types.ts` = types hérités SANS calcul, pour
   lire les tables existantes (scenarios, tco_results, reference_data)
   jusqu'à la refonte des rapports.
-- `src/lib/journey/` — logique PURE des étapes du parcours
-  (faisabilité, stratégies), branchée sur `src/lib/tco`.
+- `src/lib/journey/` — logique PURE des étapes du parcours, branchée sur
+  `src/lib/tco` : `infrastructure.ts` = SOURCE UNIQUE bornes + raccordement
+  par garage (lue par Stratégies, Plan, Financement, PDF, Excel) ;
+  `strategies.ts` (dont `strategieRetenue`, `strategieMeilleureEconomie`) ;
+  `feasibility.ts` ; `winter.ts` (diagnostic hiver/autonomie) ;
+  `categories.ts` (catégories municipales → catégorie du moteur, « à
+  reporter ») ; `subsidy-explain.ts` (règle + raison de chaque
+  subvention) ; `progress.ts` (état réel des 7 étapes).
+- `src/lib/fleet/` — flotte : import (synonymes FR/EN, modèle
+  téléchargeable `importTemplate.ts`), garages (`garagesModel.ts` pur,
+  `garages.ts` accès base), classe PNBV (`gvwr.ts`). Un module testé ne
+  doit pas importer le client Supabase (la CI n'a pas de `.env`).
 - `src/i18n/locales/{fr,en}/translation.json` — tous les textes UI.
 - `src/integrations/supabase/` — client et types générés (ne pas éditer
   à la main sauf nécessité ; fichiers marqués « automatically generated »).
@@ -61,6 +71,7 @@ npm run build:preview  # build de l'APERÇU hébergé (hash routing, base ./)
 npm run test:tco       # tests du moteur TCO avec seuils de couverture 95 %
 npm run docs:tco       # régénère docs/tco-hypotheses.md depuis assumptions.ts
 npm run e2e:local      # parcours complet Playwright contre Supabase LOCAL (voir scripts/e2e-parcours.mjs)
+npm run e2e:terrain    # cas terrain 12 véhicules / 3 garages : totaux identiques Stratégies/Plan/Financement/PDF/Excel (aussi en CI)
 ```
 
 Supabase local (Docker) : `npx supabase start` puis `npx supabase db reset
@@ -287,6 +298,30 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   planifiées), page /reset-password + liens de courriel compatibles
   GitHub Pages, services non branchés → 503 `service_non_configure` +
   message clair (SendGrid, IA, Mapbox reportés par l'utilisateur).
+- **Test terrain (petite ville, 12 véhicules, 3 garages) — blocs 1 à 3 :
+  LIVRÉS, en attente du « ok » avant la Phase 4.**
+  Bloc 1 (cohérence des chiffres, moteur 2.3.0, méthodologie v2.3) :
+  infrastructure = une seule source par garage ; raccordement selon kW
+  demandés vs disponibles (paliers « estimation », devis prioritaire) ;
+  « Économies d'abord » compte bornes + raccordement par garage avant de
+  choisir ; récupération « jamais » + raison (plus de « 0 an ») ; badge
+  « Meilleure économie » seulement si VAN > 0 et électrification ; Plan,
+  PDF, Excel et snapshot nomment la stratégie RÉELLEMENT retenue ;
+  subventions explicables (règle + raison ; bug corrigé : un barème
+  dégressif échu ne bascule plus sur la classe 3) ; CO2 au pot / cycle
+  complet côte à côte, référence ESSENCE pour les véhicules à essence
+  (prix StatCan et facteur du guide GES QC lus et archivés le 2026-10-02).
+  Bloc 2 : table `garages` (puissance, tarif HQ, fenêtre de recharge,
+  devis ; `vehicles.garage_id` synchronisé avec `depot` par trigger) ;
+  classe PNBV `vehicles.gvwr_class` (proposition à confirmer) ;
+  catégories municipales (déneigeuse, souffleuse, camion à benne,
+  spécialisé, urgence) ; diagnostic hiver avec `vehicles.max_daily_km` ;
+  modèle d'import Excel/CSV avec « Lisez-moi ».
+  Bloc 3 : source de consommation « import » ; barre des 7 étapes à
+  l'état réel (terminé / en cours / à faire + ce qui manque) ;
+  recommandation + « Appliquer » pour les véhicules sans cible ; cas
+  terrain en e2e permanent (CI). Migrations 20261002010000 →
+  20261002050000 (additives), appliquées par Deploy Supabase.
 - Phase 4 — site public et conformité (études de cas re-étiquetées,
   tarification unique — prix demandés à l'utilisateur, promesses non
   livrées retirées, légal fr/en Loi 25 — nom légal demandé, admin
@@ -311,7 +346,12 @@ sinon « à_valider » avec l'URL à consulter.
 - Facturation réelle (DEMO_MODE donne le plan le plus élevé à tous).
 - Revue juridique des pages légales (Loi 25, CGU, confidentialité).
 - Hypothèses et programmes « à_valider » : vérification par
-  l'utilisateur (sources listées dans la Bibliothèque).
+  l'utilisateur (sources listées dans la Bibliothèque). Nouvelles
+  estimations du test terrain à confirmer : paliers de raccordement,
+  puissance présumée d'un garage, batterie utile par catégorie, charge
+  utile, réserve, jours d'utilisation, fenêtre présumée, majoration amont
+  de l'essence (reprise du diesel) ; prix de l'essence saisi au registre
+  (la collecte hebdomadaire ne couvre que le diesel).
 - Services reportés sur le site de test : SendGrid (+ réactiver
   « Confirm email »), Mapbox, clé IA, tâches pg_cron
   (`supabase/snippets/taches-planifiees.sql`).
