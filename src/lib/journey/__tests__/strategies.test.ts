@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { HYPOTHESES } from "@/lib/tco";
-import { changementsStrategie, construireStrategie, construireStrategies, type VehiculeProjet } from "../strategies";
+import {
+  changementsStrategie,
+  construireStrategie,
+  construireStrategies,
+  estPlanVide,
+  strategieMeilleureEconomie,
+  type VehiculeProjet,
+} from "../strategies";
 import { cleGarage } from "../infrastructure";
 
 const OPTIONS = {
@@ -314,6 +321,41 @@ describe("changementsStrategie (C3 — appliquer la stratégie au plan)", () => 
       expect(changements).toEqual([{ vehiculeId: "eco", cibleActuelle: null, cibleNouvelle: "diesel" }]);
     } else {
       expect(changements[0]?.cibleNouvelle).toBe(attendue);
+    }
+  });
+});
+
+describe("1.5 — badge « Meilleure économie »", () => {
+  it("jamais sur un plan vide ni sur 0 $ ; plan vide détecté", () => {
+    const flotte = [vehicule({ id: "a", target_technology: null, annual_km: 5000 })];
+    const strategies = construireStrategies(flotte, OPTIONS);
+    const planActuel = strategies.find((s) => s.cle === "plan_actuel")!;
+    expect(planActuel.resultat!.vanDifferentielle).toBe(0);
+    expect(estPlanVide(planActuel)).toBe(true);
+    // Économies d'abord vide aussi, mais pour une autre raison (rien de rentable) : pas « plan vide ».
+    const eco = strategies.find((s) => s.cle === "economies_d_abord")!;
+    expect(eco.aucuneElectrificationRentable).toBe(true);
+    expect(estPlanVide(eco)).toBe(false);
+    // Tout électrique à 5 000 km/an = surcoût → aucun badge du tout.
+    expect(strategies.find((s) => s.cle === "tout_electrique")!.resultat!.vanDifferentielle).toBeLessThan(0);
+    expect(strategieMeilleureEconomie(strategies)).toBeNull();
+  });
+
+  it("sur la stratégie de VAN maximale, seulement si elle est positive et électrifie", () => {
+    const flotte = [
+      vehicule({ id: "a", target_technology: null, annual_km: 40000, depot: "A" }),
+      vehicule({ id: "b", target_technology: null, annual_km: 3000, depot: "A" }),
+    ];
+    const strategies = construireStrategies(flotte, OPTIONS);
+    const meilleure = strategieMeilleureEconomie(strategies);
+    expect(meilleure).not.toBeNull();
+    const s = strategies.find((x) => x.cle === meilleure)!;
+    expect(s.resultat!.vanDifferentielle).toBeGreaterThan(0);
+    expect(s.nbZeroEmission).toBeGreaterThan(0);
+    for (const x of strategies) {
+      if (x.nbZeroEmission > 0) {
+        expect(s.resultat!.vanDifferentielle).toBeGreaterThanOrEqual(x.resultat!.vanDifferentielle);
+      }
     }
   });
 });

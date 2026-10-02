@@ -26,6 +26,8 @@ import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import {
   changementsStrategie,
   construireStrategies,
+  estPlanVide,
+  strategieMeilleureEconomie,
   type CleStrategie,
   type VehiculeProjet,
 } from "@/lib/journey/strategies";
@@ -126,9 +128,7 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
     );
   }
 
-  const meilleureVan = Math.max(
-    ...strategies.map((s) => s.resultat?.vanDifferentielle ?? Number.NEGATIVE_INFINITY),
-  );
+  const meilleure = strategieMeilleureEconomie(strategies);
   const selectionnee = strategies.find((s) => s.cle === selection) ?? strategies[0];
   const exclusions = strategies[0].exclusions;
   const sansAnnee = strategies[0].sansAnnee;
@@ -176,7 +176,9 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
                 </div>
                 {active && <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />}
               </div>
-              {r ? (
+              {r && estPlanVide(s) ? (
+                <p className="text-sm text-muted-foreground">{t("journey.strategies.emptyPlan")}</p>
+              ) : r ? (
                 <>
                   <p className={cn("text-xl font-bold", van >= 0 ? "text-primary" : "text-destructive")}>
                     {van >= 0
@@ -228,7 +230,7 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
                         ))}
                     </ul>
                   )}
-                  {van === meilleureVan && strategies.filter((x) => x.resultat).length > 1 && (
+                  {s.cle === meilleure && (
                     <Badge variant="secondary">{t("journey.strategies.bestSavings")}</Badge>
                   )}
                 </>

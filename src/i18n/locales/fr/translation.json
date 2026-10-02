@@ -5877,6 +5877,7 @@
       },
       "noProfitable": "Aucune électrification rentable avec les hypothèses actuelles (bornes et raccordement du garage compris).",
       "selectionGarage": "{{garage}} : {{retenus}} retenu(s) sur {{candidats}} rentable(s) seul(s), infrastructure du garage comptée",
+      "emptyPlan": "Choisissez une technologie cible pour au moins un véhicule (étape Flotte ou Faisabilité).",
       "bestSavings": "Meilleure économie",
       "notComputable": "Non calculable (aucun véhicule évaluable).",
       "methodTitle": "Ce que comparent ces chiffres",

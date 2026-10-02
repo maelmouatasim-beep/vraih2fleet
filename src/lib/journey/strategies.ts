@@ -394,3 +394,25 @@ export function construireStrategies(
 ): StrategieConstruite[] {
   return CLES_STRATEGIES.map((cle) => construireStrategie(vehicules, cle, options));
 }
+
+/**
+ * 1.5 — Badge « Meilleure économie » : la stratégie de VAN la plus
+ * élevée, à condition qu'elle électrifie au moins un véhicule et que sa
+ * VAN centrale (= scénario central du stress test, même moteur) soit
+ * STRICTEMENT positive. Jamais sur un plan vide, sur 0 $ ou sur un
+ * surcoût ; null si aucune ne remplit ces conditions.
+ */
+export function strategieMeilleureEconomie(strategies: StrategieConstruite[]): CleStrategie | null {
+  let meilleure: StrategieConstruite | null = null;
+  for (const s of strategies) {
+    const van = s.resultat?.vanDifferentielle;
+    if (van == null || s.nbZeroEmission === 0 || van < 0.5) continue;
+    if (!meilleure || van > meilleure.resultat!.vanDifferentielle) meilleure = s;
+  }
+  return meilleure?.cle ?? null;
+}
+
+/** 1.5 — Plan sans aucune technologie cible zéro émission (rien à chiffrer). */
+export function estPlanVide(s: StrategieConstruite): boolean {
+  return s.nbVehicules > 0 && s.nbZeroEmission === 0 && !s.aucuneElectrificationRentable;
+}

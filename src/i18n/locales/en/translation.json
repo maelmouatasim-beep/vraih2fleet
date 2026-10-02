@@ -5877,6 +5877,7 @@
       },
       "noProfitable": "No profitable electrification under current assumptions (garage chargers and grid connection included).",
       "selectionGarage": "{{garage}}: {{retenus}} kept out of {{candidats}} profitable on their own, garage infrastructure included",
+      "emptyPlan": "Choose a target technology for at least one vehicle (Fleet or Feasibility step).",
       "bestSavings": "Best savings",
       "notComputable": "Not computable (no assessable vehicle).",
       "methodTitle": "What these numbers compare",

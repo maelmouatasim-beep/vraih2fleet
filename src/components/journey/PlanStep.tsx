@@ -32,7 +32,7 @@ import {
 import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useConfirmedSubsidies } from "@/hooks/useConfirmedSubsidies";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
-import { construireStrategie } from "@/lib/journey/strategies";
+import { construireStrategie, estPlanVide } from "@/lib/journey/strategies";
 import { formateurCad, formateurCadCompact } from "@/lib/format";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 import { Loader2 } from "lucide-react";
@@ -134,6 +134,11 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
 
   return (
     <div className="space-y-4">
+      {estPlanVide(donnees.strategie) && (
+        <div className="rounded-lg border border-amber-300/60 bg-amber-50 dark:bg-amber-950/30 p-3 text-sm">
+          {t("journey.strategies.emptyPlan")}
+        </div>
+      )}
       {donnees && donnees.strategie.horsHorizon.length > 0 && (
         <p className="text-sm text-muted-foreground">
           {t("journey.strategies.outOfHorizon", {
