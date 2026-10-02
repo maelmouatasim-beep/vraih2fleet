@@ -62,7 +62,9 @@ if (action === "creer") {
   }
 } else if (action === "supprimer") {
   const [{ n: orgs }] = await sqlHeberge(SQL_NETTOYAGE_ORGANISATIONS);
-  const [{ n: comptes }] = await sqlHeberge(SQL_NETTOYAGE_COMPTES);
+  let resultat = [];
+  for (const sql of SQL_NETTOYAGE_COMPTES) resultat = await sqlHeberge(sql);
+  const [{ n: comptes }] = resultat;
   console.log(`nettoyage e2e : ${orgs} organisation(s), ${comptes} compte(s) supprimés`);
 } else {
   console.error("usage : node scripts/comptes-e2e.mjs creer | supprimer");

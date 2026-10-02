@@ -271,7 +271,9 @@ try {
   await page.goto(url("/dashboard/organization"));
   await page.fill("#team-email", COURRIEL_B);
   await page.getByRole("button", { name: "Inviter", exact: true }).click();
-  await page.getByText(COURRIEL_B).waitFor({ timeout: 10000 });
+  // La ligne de l'invitation en attente (« courriel · rôle expire le … »),
+  // pas le toast de confirmation qui contient aussi l'adresse.
+  await page.getByText(`${COURRIEL_B} · `).waitFor({ timeout: 10000 });
   await capture(page, "13-organisation-invitation");
   const contexte2 = await navigateur.newContext({ locale: "fr-CA" });
   await bloquerHeberge(contexte2);

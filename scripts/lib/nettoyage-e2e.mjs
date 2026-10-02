@@ -17,7 +17,22 @@ cibles as (
 sup as (delete from public.organizations o using cibles c where o.id = c.id returning 1)
 select count(*)::int as n from sup`;
 
-/** Comptes e2e (cascade projets, tâches, profils, rôles). */
-export const SQL_NETTOYAGE_COMPTES = `
-with sup as (delete from auth.users where email like '${MOTIF}' returning 1)
-select count(*)::int as n from sup`;
+const E2E = `(select id from auth.users where email like '${MOTIF}')`;
+
+/**
+ * Comptes e2e, en PLUSIEURS requêtes dans cet ordre : supprimer
+ * directement les comptes échoue — Postgres vérifie tasks.created_by
+ * (NO ACTION) avant que la cascade comptes → projets → tâches ait fini.
+ * 1. projets des comptes e2e (cascade tâches, véhicules du projet…) ;
+ * 2. traces restantes créées par ces comptes (tâches, commentaires,
+ *    pièces jointes) ; 3. les comptes (cascade profils, rôles).
+ * La dernière requête renvoie le nombre de comptes supprimés.
+ */
+export const SQL_NETTOYAGE_COMPTES = [
+  `delete from public.projects where user_id in ${E2E}`,
+  `delete from public.task_comments where user_id in ${E2E}`,
+  `delete from public.task_attachments where uploaded_by in ${E2E}`,
+  `delete from public.tasks where created_by in ${E2E}`,
+  `with sup as (delete from auth.users where email like '${MOTIF}' returning 1)
+select count(*)::int as n from sup`,
+];

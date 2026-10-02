@@ -24,6 +24,9 @@ const MANIFESTE = "supabase/schema-attendu.json";
 const URL_PAGES = "https://maelmouatasim-beep.github.io/vraih2fleet/";
 const SECRETS_REQUIS = ["ALLOWED_ORIGINS", "CRON_SECRET", "INTERNAL_FUNCTION_SECRET"];
 const SECRETS_OPTIONNELS = ["SENDGRID_API_KEY", "CONTACT_INBOX_EMAIL", "APP_BASE_URL", "MAPBOX_PUBLIC_TOKEN", "LOVABLE_API_KEY"];
+// Créées par la plateforme Supabase elle-même sur les nouveaux projets
+// (option « RLS automatique ») : ni attendues ni signalées.
+const OBJETS_PLATEFORME = { fonctions: ["rls_auto_enable"] };
 const TACHES_CRON = ["h2fleet-notify-subsidy-deadlines", "h2fleet-sync-telematics", "h2fleet-purge-rate-limit"];
 
 const INVENTAIRE_SQL = `
@@ -102,6 +105,7 @@ if (mode === "--generer") {
   const attendu = JSON.parse(readFileSync(MANIFESTE, "utf8"));
   const brut = mode === "--local" ? JSON.parse(sqlLocal(INVENTAIRE_SQL)) : (await sqlHeberge(INVENTAIRE_SQL))[0].inventaire;
   const reel = trier(typeof brut === "string" ? JSON.parse(brut) : brut);
+  for (const [cle, noms] of Object.entries(OBJETS_PLATEFORME)) reel[cle] = (reel[cle] ?? []).filter((x) => !noms.includes(x));
   const { manquants, enTrop } = difference(attendu, reel);
 
   if (Object.keys(manquants).length) {
