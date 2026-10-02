@@ -33,13 +33,16 @@ Copier `.env.example` vers `.env` et remplir. Les principales :
 | `VITE_SUPABASE_PROJECT_ID` | Identifiant du projet Supabase |
 | `VITE_SUPABASE_URL` | URL du projet, `https://<id>.supabase.co` |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | Clé publique « anon » (Settings → API) |
-| `VITE_ADMIN_EMAILS` | Emails admin, séparés par des virgules |
 
 Les variables `VITE_*` sont inlinées dans le bundle : n'y mettre que des
-valeurs publiques. Les secrets des edge functions (SendGrid, Lovable AI,
-Mapbox, télématique…) se configurent côté Supabase :
-`supabase secrets set NOM=valeur` — la liste complète des noms est dans
-`.env.example`.
+valeurs publiques. Les secrets des edge functions (ALLOWED_ORIGINS, CRON_SECRET,
+INTERNAL_FUNCTION_SECRET, SendGrid, clé IA, Mapbox…) se configurent côté
+Supabase : `supabase secrets set NOM=valeur` — la liste complète des noms
+est dans `.env.example`. Le rôle administrateur vient de la table
+`user_roles` (RPC `has_role`), jamais d'une liste d'adresses.
+
+Le site de test (GitHub Pages) et le projet Supabase hébergé sont décrits
+dans [docs/deploiement.md](./docs/deploiement.md).
 
 ## Supabase en local
 
@@ -74,19 +77,34 @@ enregistrée dans `scripts/lint-baseline.json` et seule une **nouvelle**
 erreur fait échouer `lint:ci` (et la CI). Après avoir résorbé de la dette,
 verrouiller le progrès avec `npm run lint:baseline`.
 
-Les tests d'intégration des edge functions (`supabase/functions/*/index.test.ts`)
-s'exécutent avec Deno contre les fonctions déployées :
+Tests d'intégration (Deno) contre Supabase **local** — jamais la
+production : RLS de chaque table, edge functions, triggers.
 
 ```sh
-deno test --allow-net --allow-env --allow-read supabase/functions
+npx supabase start && npx supabase db reset --local
+eval "$(npx supabase status -o env | sed 's/^/export /')"
+export SUPABASE_URL="$API_URL" SUPABASE_ANON_KEY="$ANON_KEY" \
+  SUPABASE_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" SUPABASE_DB_URL="$DB_URL"
+deno test --allow-net --allow-env --allow-read --node-modules-dir=none supabase/tests/ supabase/functions/
 ```
 
-Ils lisent `VITE_SUPABASE_URL` et `VITE_SUPABASE_PUBLISHABLE_KEY` dans
-l'environnement (ou `.env`). En CI, ils ne tournent que si ces secrets
-sont configurés dans le dépôt GitHub.
+Parcours de bout en bout (Playwright) contre Supabase local, le serveur
+de dev pointé dessus :
+
+```sh
+npm run e2e:local      # parcours complet (13 étapes, deux comptes)
+npm run e2e:terrain    # cas terrain 12 véhicules / 3 garages : totaux identiques partout
+```
+
+Moteur TCO : `npm run test:tco` (couverture ≥ 95 %), `npm run docs:tco`
+(régénère docs/tco-hypotheses.md) ; spécification dans
+[docs/tco-methodologie.md](./docs/tco-methodologie.md).
 
 ## Intégration continue
 
-`.github/workflows/ci.yml` exécute sur chaque push / PR :
-`npm ci` → typecheck → lint (baseline) → tests → build, plus les tests
-Deno des edge functions quand les secrets sont présents.
+`.github/workflows/ci.yml` exécute sur chaque push / PR : `npm ci` →
+typecheck → lint (baseline) → tests → couverture du moteur → build ; puis,
+contre un Supabase local démarré dans la CI : manifeste du schéma, tests
+Deno (fonctions + audit RLS) et parcours e2e du cas terrain. Les autres
+workflows (déploiement Supabase, GitHub Pages, e2e hébergé, sources TCO,
+prix de l'énergie) sont décrits dans docs/deploiement.md.
