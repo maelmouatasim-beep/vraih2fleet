@@ -38,10 +38,18 @@ hydrogène : TCO, infrastructure, subventions canadiennes, télématique
   `feasibility.ts` ; `winter.ts` (diagnostic hiver/autonomie) ;
   `categories.ts` (catégories municipales → catégorie du moteur, « à
   reporter ») ; `subsidy-explain.ts` (règle + raison de chaque
-  subvention) ; `progress.ts` (état réel des 7 étapes).
+  subvention) ; `progress.ts` (état réel des 7 étapes) ;
+  `optimizer.ts` (optimiseur de calendrier DÉTERMINISTE, 4e stratégie
+  « Optimisée », décisions expliquées) ; `changeLog.ts` (journal des
+  actions, aperçu avant → après).
+- `src/lib/copilot/outils.ts` — outils du copilote exécutés dans le
+  navigateur par le moteur (lire_projet, simuler, optimiser, registres) ;
+  aucun chiffre ne vient de l'IA.
 - `src/lib/fleet/` — flotte : import (synonymes FR/EN, modèle
   téléchargeable `importTemplate.ts`), garages (`garagesModel.ts` pur,
-  `garages.ts` accès base), classe PNBV (`gvwr.ts`). Un module testé ne
+  `garages.ts` accès base), classe PNBV (`gvwr.ts`), import intelligent
+  (`smartImport.ts` pur : correspondance, conversions, validation ligne
+  par ligne ; `smartImportFile.ts` : lecture CSV/XLSX/PDF). Un module testé ne
   doit pas importer le client Supabase (la CI n'a pas de `.env`).
 - `src/i18n/locales/{fr,en}/translation.json` — tous les textes UI.
 - `src/integrations/supabase/` — client et types générés (ne pas éditer
@@ -51,7 +59,14 @@ hydrogène : TCO, infrastructure, subventions canadiennes, télématique
 - `supabase/functions/_shared/` — modules communs des fonctions :
   `cors.ts` (origines depuis ALLOWED_ORIGINS, jamais `*`), `auth.ts`
   (getUserOrThrow, requireCronSecret, requireInternalSecret,
-  serviceRoleClient), `validation.ts` (zod, escapeHtml, anti-SSRF).
+  serviceRoleClient), `validation.ts` (zod, escapeHtml, anti-SSRF),
+  `ai.ts` (client Anthropic, réglages par organisation, quotas, débit,
+  usage en jetons), `numberCheck.ts` (chaque nombre d'un texte généré
+  vérifié contre les sorties du moteur), `copilotTools.ts`,
+  `importSchema.ts` (identique à `src/lib/fleet`, testé). Fonctions IA :
+  `copilot`, `fleet-import`.
+- `scripts/mock-anthropic.mjs` — FAUX serveur de l'API Claude (réponses
+  scriptées) pour l'e2e ; aucune vraie clé en CI.
 - `supabase/tests/` — tests d'intégration contre Supabase local
   (helpers + audit RLS) ; exécutés en CI, jamais contre la production.
 
@@ -60,7 +75,7 @@ hydrogène : TCO, infrastructure, subventions canadiennes, télématique
 ```bash
 npm ci                 # installation reproductible
 npm run dev            # serveur de dev (port 8080)
-npm run check          # typecheck + lint (baseline) + tests — À LANCER AVANT TOUT COMMIT
+npm run check          # typecheck + lint (baseline) + garde des constantes + tests — À LANCER AVANT TOUT COMMIT
 npm run test           # vitest seul (test:watch pour le mode watch)
 npm run typecheck      # tsc --noEmit
 npm run lint           # eslint complet (dette existante incluse)
@@ -342,6 +357,34 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   (VITE_ADMIN_EMAILS retiré), README à jour.
   Reste pour la fin : tarification (Pricing.tsx démonté, clés
   `landing.pricing` et badges d'abonnement, DEMO_MODE).
+- **Phase 5 — H2Fleet intelligent : points 1 à 3 LIVRÉS, en attente du
+  « ok » avant les points 4 à 7.** Règles : l'IA ne produit JAMAIS un
+  chiffre (moteur via outils, nombres vérifiés, sinon réponse rejetée) ;
+  toute action = aperçu avant → après + confirmation + journal
+  (`plan_change_log`, immuable) ; API Claude d'Anthropic par fonction
+  Edge (secret `ANTHROPIC_API_KEY`, côté serveur ; sans clé → 503
+  `service_non_configure`, message propre) ; chaque fonction IA
+  désactivée par défaut et activable par organisation
+  (`organization_ai_settings`), quotas jour/mois par organisation, débit
+  par utilisateur, usage journalisé en jetons seulement
+  (`ai_usage_events`).
+  5.1 optimiseur de calendrier (`optimizer.ts`, déterministe, aucune
+  IA) : budgets, cibles ZE/GES, kW et places par garage, échéances de
+  subventions, technologies par catégorie ; jamais moins bien qu'une
+  stratégie existante réalisable ; infaisabilité chiffrée + leviers ;
+  méthodologie §11. 5.2 copilote de projet (`copilot`, panneau du
+  parcours, historique d'équipe `copilot_messages`, remplace
+  assistant-chat / LOVABLE_API_KEY). 5.3 import intelligent (« Ma
+  flotte › Import intelligent », `fleet-import`) : CSV/XLSX/PDF de
+  n'importe quelle structure ; l'IA ne voit qu'entêtes + ≤ 3 exemples et
+  ne propose qu'une correspondance ; colonnes personnelles exclues ;
+  libellé incertain = champ vide signalé ; doublons exclus par défaut ;
+  « Historique de la flotte ». Import strict resserré : « 12 000 mi » ou
+  un texte collé à un nombre = erreur. Démo : export fictif
+  « GestFlotte » ; e2e terrain : 13 étapes dont copilote et import
+  (faux serveur Claude). Migrations 20261003010000, 20261003020000.
+  À venir après le « ok » : 4 factures/devis, 5 veille des subventions,
+  6 surveillance du plan, 7 note au conseil, puis démonstration finale.
 
 Rappels de méthode : chaque phase finit par `npm run check` vert → push →
 résumé court → **attendre le « ok » de l'utilisateur** ; kanban intégré à
@@ -356,8 +399,11 @@ sinon « à_valider » avec l'URL à consulter.
 - Chiffrement des identifiants télématiques (aujourd'hui simple base64).
 - Secrets à régénérer / créer (audit sécurité : CRON_SECRET,
   INTERNAL_FUNCTION_SECRET, ALLOWED_ORIGINS…).
-- Assistant IA : choisir un fournisseur hors passerelle Lovable
-  (`assistant-chat` dépend de `LOVABLE_API_KEY`).
+- IA (Phase 5) : ajouter `ANTHROPIC_API_KEY` dans les secrets Supabase ;
+  compléter l'EFVP (communication de renseignements hors Québec vers
+  Anthropic, États-Unis) avant d'activer une fonction IA pour un client ;
+  supprimer `assistant-chat` encore déployée (`supabase functions delete
+  assistant-chat`) ; coût estimé à confirmer sur la facture réelle.
 - SMTP personnalisé (courriels d'auth vers des testeurs externes).
 - Facturation réelle (DEMO_MODE donne le plan le plus élevé à tous).
 - Revue juridique des pages légales (Loi 25, CGU, confidentialité).
@@ -382,5 +428,6 @@ sinon « à_valider » avec l'URL à consulter.
   badges d'abonnement.
 - Pages légales : remplacer les placeholders (nom légal, adresse,
   responsable Loi 25) une fois l'entreprise créée + revue par un juriste.
-- npm audit : avis sur le serveur de dev Vite (correctif = Vite 8,
-  montée de version majeure à planifier).
+- npm audit : avis sur le serveur de dev Vite/esbuild (correctif =
+  Vite 8, montée de version majeure à planifier) ; avis modérés
+  react-router 6 et uuid (correctifs = versions majeures, à planifier).
