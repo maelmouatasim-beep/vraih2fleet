@@ -48,7 +48,8 @@ const L = {
     payback: "Délai de récupération actualisé (ans)",
     colonnesVehicules: ["Unité", "Technologie cible", "Année d'achat", "km/an retenus", "Durée de vie (ans)", "Prix avant taxes (réf. diesel)", "Prix avant taxes (cible)", "Subventions retenues", "Total subventions"],
     an: "an",
-    sites: ["Infrastructure par garage (avant taxes)", "Bornes", "Raccordement", "Station H2", "Total"],
+    sites: ["Infrastructure par garage (avant taxes)", "Bornes", "kW demandés", "kW disponibles", "Palier", "Raccordement", "Station H2", "Total"],
+    presume: "présumés",
     sansGarage: "Garage non précisé",
     totalInfra: "Infrastructure totale",
     titreHyp: "Hypothèses du registre (docs/tco-methodologie.md §8 — statuts honnêtes)",
@@ -70,7 +71,8 @@ const L = {
     payback: "Discounted payback (years)",
     colonnesVehicules: ["Unit", "Target technology", "Purchase year", "km/yr used", "Lifetime (years)", "Price before taxes (diesel ref.)", "Price before taxes (target)", "Subsidies used", "Total subsidies"],
     an: "year",
-    sites: ["Infrastructure by depot (before taxes)", "Chargers", "Grid connection", "H2 station", "Total"],
+    sites: ["Infrastructure by depot (before taxes)", "Chargers", "kW requested", "kW available", "Tier", "Grid connection", "H2 station", "Total"],
+    presume: "presumed",
     sansGarage: "Depot not specified",
     totalInfra: "Total infrastructure",
     titreHyp: "Registry assumptions (docs/tco-methodologie.md §8 — honest statuses)",
@@ -145,11 +147,16 @@ export function construireClasseurPlan(
     ...strategie.infra.garages.map((g): Cellule[] => [
       g.depot ?? l.sansGarage,
       g.capexBornes,
+      g.raccordement.kwDemandes,
+      g.raccordement.kwDisponiblesSource === "presumee"
+        ? `${g.raccordement.kwDisponibles} (${l.presume})`
+        : g.raccordement.kwDisponibles,
+      g.raccordement.palier,
       g.raccordement.cout,
       g.capexStationH2,
       g.capexTotal,
     ]),
-    [l.totalInfra, null, null, null, strategie.infra.totalCapex],
+    [l.totalInfra, null, null, null, null, null, null, strategie.infra.totalCapex],
   ];
 
   const hypotheses: Cellule[][] = [

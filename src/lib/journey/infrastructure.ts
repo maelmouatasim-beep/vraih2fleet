@@ -6,11 +6,16 @@
  * total d'infrastructure partout, au dollar près.
  *
  * Modèle (§3.5) : une borne par véhicule électrique (BEV), du type
- * correspondant à sa catégorie ; un raccordement par garage ; une
- * station H2 par garage qui accueille des FCEV. Le capex d'un garage est
- * engagé l'année d'arrivée de ses premiers véhicules. Coûts du registre
- * des hypothèses (statut « estimation ») ; un DEVIS de raccordement saisi
- * dans le projet est prioritaire sur l'estimation.
+ * correspondant à sa catégorie ; une station H2 par garage qui accueille
+ * des FCEV. Le capex d'un garage est engagé l'année d'arrivée de ses
+ * premiers véhicules.
+ *
+ * Raccordement (1.2) : il dépend de la puissance DEMANDÉE (somme des
+ * puissances maximales des bornes, sans gestion de charge) comparée à la
+ * puissance DISPONIBLE du garage. Aucune mise à niveau si les bornes
+ * tiennent dans la capacité existante ; sinon un palier de coût selon les
+ * kW supplémentaires (hypothèses du registre, statut « estimation »).
+ * Un DEVIS client est toujours prioritaire sur l'estimation.
  */
 import { HYPOTHESES } from "@/lib/tco";
 
@@ -62,11 +67,30 @@ export interface VehiculeInfra {
   anneeAcquisition: number;
 }
 
-export type SourceRaccordement = "aucun" | "estimation" | "devis_projet";
+/** aucun = pas de borne ; capacite_existante = les bornes tiennent dans
+ *  la puissance disponible ; estimation = palier du registre ;
+ *  devis_projet = devis client saisi dans le projet (prioritaire). */
+export type SourceRaccordement = "aucun" | "capacite_existante" | "estimation" | "devis_projet" | "devis_garage";
 
 export interface DetailRaccordement {
   cout: number;
   source: SourceRaccordement;
+  /** Puissance demandée par les bornes du garage (kW, valeurs maximales). */
+  kwDemandes: number;
+  /** Puissance disponible du garage (kW). */
+  kwDisponibles: number;
+  /** garage = valeur renseignée ; presumee = hypothèse du registre. */
+  kwDisponiblesSource: "garage" | "presumee";
+  /** max(0, demandés − disponibles). */
+  kwSupplementaires: number;
+  /** Palier de mise à niveau retenu (0 = aucun travaux). */
+  palier: 0 | 1 | 2 | 3;
+}
+
+/** Caractéristiques d'un garage connues de l'organisation (bloc 2). */
+export interface CaracteristiquesGarage {
+  puissanceDisponibleKw?: number | null;
+  devisRaccordement?: number | null;
 }
 
 export interface PhaseGarage {
@@ -115,7 +139,16 @@ export interface PlanInfrastructure {
 export interface OptionsInfrastructure {
   anneeReference: number;
   devisRaccordementProjet?: number | null;
+  /** Garages de l'organisation, par clé (cleGarage). */
+  garages?: Map<string, CaracteristiquesGarage>;
 }
+
+/** Paliers de mise à niveau (registre des hypothèses). */
+export const PALIERS_RACCORDEMENT = [
+  { palier: 1 as const, kwMax: HYPOTHESES.raccordement_seuil_palier1_kw.valeur, hypotheseId: "raccordement_palier1", cout: HYPOTHESES.raccordement_palier1.valeur },
+  { palier: 2 as const, kwMax: HYPOTHESES.raccordement_seuil_palier2_kw.valeur, hypotheseId: "raccordement_palier2", cout: HYPOTHESES.raccordement_palier2.valeur },
+  { palier: 3 as const, kwMax: Infinity, hypotheseId: "raccordement_palier3", cout: HYPOTHESES.raccordement_palier3.valeur },
+];
 
 const SANS_GARAGE = "__sans_garage__";
 
@@ -125,10 +158,28 @@ export function cleGarage(depot: string | null | undefined): string {
   return nom ? nom.toLocaleLowerCase("fr") : SANS_GARAGE;
 }
 
-/** Raccordement estimé d'un garage qui accueille des BEV. */
-function raccordementEstime(nbBev: number): DetailRaccordement {
-  if (nbBev === 0) return { cout: 0, source: "aucun" };
-  return { cout: HYPOTHESES.raccordement_depot.valeur, source: "estimation" };
+/** Raccordement d'un garage : puissance demandée vs disponible → palier. */
+export function calculerRaccordement(
+  kwDemandes: number,
+  garage: CaracteristiquesGarage | undefined,
+): DetailRaccordement {
+  const renseignee = garage?.puissanceDisponibleKw;
+  const kwDisponibles =
+    renseignee != null && renseignee >= 0 ? renseignee : HYPOTHESES.puissance_disponible_garage_presumee.valeur;
+  const base = {
+    kwDemandes,
+    kwDisponibles,
+    kwDisponiblesSource: renseignee != null && renseignee >= 0 ? ("garage" as const) : ("presumee" as const),
+    kwSupplementaires: Math.max(0, kwDemandes - kwDisponibles),
+  };
+  if (kwDemandes <= 0) return { ...base, cout: 0, source: "aucun", palier: 0 };
+  if (garage?.devisRaccordement != null) {
+    const palier = base.kwSupplementaires <= 0 ? 0 : PALIERS_RACCORDEMENT.find((p) => base.kwSupplementaires <= p.kwMax)!.palier;
+    return { ...base, cout: garage.devisRaccordement, source: "devis_garage", palier };
+  }
+  if (base.kwSupplementaires <= 0) return { ...base, cout: 0, source: "capacite_existante", palier: 0 };
+  const p = PALIERS_RACCORDEMENT.find((x) => base.kwSupplementaires <= x.kwMax)!;
+  return { ...base, cout: p.cout, source: "estimation", palier: p.palier };
 }
 
 export function planifierInfrastructure(
@@ -186,7 +237,7 @@ export function planifierInfrastructure(
 
     const premiere = (l: VehiculeInfra[]) =>
       l.length > 0 ? Math.min(...l.map((v) => v.anneeAcquisition)) : null;
-    const raccordement = raccordementEstime(bev.length);
+    const raccordement = calculerRaccordement(puissanceMaxKw, options.garages?.get(cle));
     const capexStationH2 = fcev.length > 0 ? HYPOTHESES.station_h2_depot.valeur : 0;
 
     garages.push({
@@ -208,16 +259,18 @@ export function planifierInfrastructure(
     });
   }
 
-  // Devis client du PROJET : il remplace la somme des estimations de
-  // raccordement, réparti entre les garages au prorata des estimations
-  // (le total affiché est exactement le devis).
+  // Devis client du PROJET : il remplace les estimations des garages sans
+  // devis propre, réparti au prorata des estimations (sinon des kW
+  // demandés) — le total de ces garages est exactement le devis.
   const devis = options.devisRaccordementProjet ?? null;
-  const avecRecharge = garages.filter((g) => g.vehiculesBev.length > 0);
-  if (devis != null && avecRecharge.length > 0) {
-    const base = avecRecharge.reduce((s, g) => s + g.raccordement.cout, 0);
-    for (const g of avecRecharge) {
-      const part = base > 0 ? g.raccordement.cout / base : 1 / avecRecharge.length;
-      g.raccordement = { cout: devis * part, source: "devis_projet" };
+  const garagesVises = garages.filter((g) => g.vehiculesBev.length > 0 && g.raccordement.source !== "devis_garage");
+  if (devis != null && garagesVises.length > 0) {
+    const base = garagesVises.reduce((s, g) => s + g.raccordement.cout, 0);
+    const kw = garagesVises.reduce((s, g) => s + g.raccordement.kwDemandes, 0);
+    for (const g of garagesVises) {
+      const part =
+        base > 0 ? g.raccordement.cout / base : kw > 0 ? g.raccordement.kwDemandes / kw : 1 / garagesVises.length;
+      g.raccordement = { ...g.raccordement, cout: devis * part, source: "devis_projet" };
     }
   }
 

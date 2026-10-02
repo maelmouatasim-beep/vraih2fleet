@@ -88,6 +88,19 @@ export default function DepotInfrastructureCard({ infra, anneeReference }: Depot
                 )}
               </div>
             </div>
+            {d.raccordement.source !== "aucun" && (
+              <p className="text-xs text-muted-foreground">
+                {t("journey.infra.connectionDetail", {
+                  demandes: Math.round(d.raccordement.kwDemandes),
+                  disponibles: Math.round(d.raccordement.kwDisponibles),
+                  supplementaires: Math.round(d.raccordement.kwSupplementaires),
+                })}{" "}
+                {d.raccordement.kwDisponiblesSource === "presumee" && t("journey.infra.presumedCapacity")}{" "}
+                {d.raccordement.palier > 0
+                  ? t("journey.infra.tier", { palier: d.raccordement.palier })
+                  : t("journey.infra.noUpgrade")}
+              </p>
+            )}
             {d.vehiculesFcev.length > 0 && (
               <p className="text-sm text-muted-foreground">
                 {t("journey.infra.h2", { count: d.vehiculesFcev.length, amount: argent.format(d.capexStationH2) })}

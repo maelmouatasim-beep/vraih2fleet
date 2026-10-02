@@ -6005,7 +6005,7 @@
         "subtitle": "Un vrai classeur (plus un CSV renommé) pour vos propres analyses.",
         "item1": "Feuille « Plan annuel » : la vue budgétaire complète, ligne à ligne",
         "item2": "Feuille « Véhicules » : unités, cibles, années, prix, subventions",
-        "item3": "Feuille « Hypothèses » : les 40 hypothèses avec statut, source et date de vérification",
+        "item3": "Feuille « Hypothèses » : les {{count}} hypothèses avec statut, source et date de vérification",
         "download": "Télécharger le .xlsx"
       },
       "note": "Le rapport porte l'empreinte des entrées et la version du moteur : la même empreinte reproduit exactement les mêmes chiffres. Les hypothèses « à valider » sont affichées comme telles — vérifiez-les avant une présentation officielle.",
@@ -6134,10 +6134,16 @@
         "rapide150": "borne rapide 150 kW"
       },
       "connectionSource": {
-        "estimation": "estimation du registre",
-        "devis_projet": "devis client du projet (réparti entre les garages)"
+        "capacite_existante": "aucune mise à niveau",
+        "estimation": "estimation du registre (palier)",
+        "devis_projet": "devis client du projet (réparti entre les garages)",
+        "devis_garage": "devis client du garage"
       },
-      "garageTotal": "Total du garage : {{amount}}"
+      "garageTotal": "Total du garage : {{amount}}",
+      "connectionDetail": "Raccordement : {{demandes}} kW demandés (bornes à pleine puissance) · {{disponibles}} kW disponibles · {{supplementaires}} kW supplémentaires.",
+      "presumedCapacity": "Puissance disponible PRÉSUMÉE (registre) : renseignez la puissance réelle du garage.",
+      "tier": "Palier {{palier}} de mise à niveau retenu.",
+      "noUpgrade": "Les bornes tiennent dans la capacité existante : aucune mise à niveau."
     },
     "settings": {
       "button": "Paramètres du projet",

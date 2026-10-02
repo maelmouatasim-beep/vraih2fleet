@@ -70,7 +70,8 @@ describe("construireStrategie", () => {
     expect(s.infraCapex).toBe(
       HYPOTHESES.borne_niveau2_installee.valeur +
         HYPOTHESES.borne_rapide_150kw_installee.valeur +
-        HYPOTHESES.raccordement_depot.valeur,
+        // 19 + 150 kW demandés − 20 kW présumés = 149 kW supplémentaires → palier 2
+        HYPOTHESES.raccordement_palier2.valeur,
     );
   });
 
@@ -166,9 +167,9 @@ describe("construireStrategie", () => {
       surchargesEnergie: { devisRaccordement: 123456 },
     });
     const sansDevis = construireStrategie([vehicule()], "plan_actuel", OPTIONS);
-    expect(avecDevis.infraCapex - sansDevis.infraCapex).toBe(
-      123456 - HYPOTHESES.raccordement_depot.valeur,
-    );
+    // Une seule borne niveau 2 tient dans la capacité présumée : 0 $ sans devis.
+    expect(sansDevis.infra.raccordement).toBe(0);
+    expect(avecDevis.infraCapex - sansDevis.infraCapex).toBe(123456);
   });
 
   it("prix client du diesel : il change le TCO de la référence (donnée client prioritaire)", () => {

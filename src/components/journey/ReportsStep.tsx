@@ -18,7 +18,7 @@ import { useConfirmedSubsidies } from "@/hooks/useConfirmedSubsidies";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { construireClasseurPlan, type MetaRapport } from "@/lib/journey/report";
 import { construireStrategie } from "@/lib/journey/strategies";
-import { analyserSensibilite, ENGINE_VERSION } from "@/lib/tco";
+import { analyserSensibilite, ENGINE_VERSION, LISTE_HYPOTHESES } from "@/lib/tco";
 import {
   dernierSnapshotRapport,
   insererSnapshotRapport,
@@ -264,7 +264,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
             <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
               <li>{t("journey.reports.xlsx.item1")}</li>
               <li>{t("journey.reports.xlsx.item2")}</li>
-              <li>{t("journey.reports.xlsx.item3")}</li>
+              <li>{t("journey.reports.xlsx.item3", { count: LISTE_HYPOTHESES.length })}</li>
             </ul>
             <Button onClick={genererXlsx} disabled={enCours !== null} variant="outline">
               {enCours === "xlsx" ? (

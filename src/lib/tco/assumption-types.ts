@@ -35,6 +35,7 @@ export type Unite =
   | 'kgCO2e/kgH2'
   | 'ratio' // taux, rendements, majorations… stockés en décimal (0.05 = 5 %)
   | 'annees'
+  | 'kW'
   | 'CAD/USD';
 
 export interface SourceHypothese {

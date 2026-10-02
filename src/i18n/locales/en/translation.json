@@ -6005,7 +6005,7 @@
         "subtitle": "A real workbook (not a renamed CSV) for your own analyses.",
         "item1": "“Plan annuel” sheet: the full budget view, line by line",
         "item2": "“Véhicules” sheet: units, targets, years, prices, subsidies",
-        "item3": "“Hypothèses” sheet: all 40 assumptions with status, source and verification date",
+        "item3": "“Hypothèses” sheet: all {{count}} assumptions with status, source and verification date",
         "download": "Download the .xlsx"
       },
       "note": "The report carries the input fingerprint and engine version: the same fingerprint reproduces exactly the same figures. “To validate” assumptions are shown as such — check them before an official presentation.",
@@ -6134,10 +6134,16 @@
         "rapide150": "150 kW fast charger"
       },
       "connectionSource": {
-        "estimation": "registry estimate",
-        "devis_projet": "project client quote (split between depots)"
+        "capacite_existante": "no upgrade",
+        "estimation": "registry estimate (tier)",
+        "devis_projet": "project client quote (split between depots)",
+        "devis_garage": "depot client quote"
       },
-      "garageTotal": "Depot total: {{amount}}"
+      "garageTotal": "Depot total: {{amount}}",
+      "connectionDetail": "Grid connection: {{demandes}} kW requested (chargers at full power) · {{disponibles}} kW available · {{supplementaires}} kW extra.",
+      "presumedCapacity": "Available power PRESUMED (registry): enter the depot’s actual power.",
+      "tier": "Upgrade tier {{palier}} applied.",
+      "noUpgrade": "The chargers fit within the existing capacity: no upgrade."
     },
     "settings": {
       "button": "Project settings",
