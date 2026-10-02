@@ -154,6 +154,12 @@ try {
     await bouton.click();
     await bouton.waitFor({ state: "hidden", timeout: 15000 });
   }
+  // chaque ligne affiche sa technologie cible (colonne « Technologie cible »)
+  for (const unite of ["GM-01", "HV-01", "TP-01"]) {
+    const ligne = page.getByRole("row").filter({ has: page.getByRole("cell", { name: unite, exact: true }) });
+    const derniere = (await ligne.getByRole("cell").last().innerText()).trim();
+    if (!/Électrique|Hydrogène|Diesel/.test(derniere)) throw new Error(`Faisabilité : cible absente pour ${unite} (« ${derniere} »)`);
+  }
   if ((await etatEtape(page, "faisabilite")) !== "termine") throw new Error("étape Faisabilité non terminée après les recommandations");
   await capture(page, "04b-faisabilite-recommandations");
   etape(`Faisabilité : verdicts, hiver, à reporter ; ${appliquees} recommandation(s) appliquée(s), étape terminée`);

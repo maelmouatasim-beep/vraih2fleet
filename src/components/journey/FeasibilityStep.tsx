@@ -350,6 +350,7 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
                         )}
                       </div>
                     </TableCell>
+                    {celluleCible(pv)}
                   </TableRow>
                 );
               })}
