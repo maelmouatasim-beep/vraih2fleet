@@ -1,0 +1,260 @@
+184-TABLEAU 2. ÉTAPES DE LA DÉMARCHE DE QUANTIFICATION DES ÉMISSIONS DE GES .......................................................................12
+185-TABLEAU 3. POTENTIEL DE RÉCHAUFFEMENT PLANÉTAIRE DES DIFFÉRENTS GES (5E RAPPORT DU GIEC)............................................16
+186-TABLEAU 4. EXEMPLES D’UNITÉS D’INTENSITÉ DES ÉMISSIONS DE GES PAR TYPE DE PROJET .............................................................17
+187:TABLEAU 5. FACTEURS D’ÉMISSION DE GES DES COMBUSTIBLES ................................................................................................18
+188:TABLEAU 6. FACTEURS D’ÉMISSION ASSOCIÉS AUX ÉQUIPEMENTS MOBILES DE COMBUSTION ...........................................................19
+189-TABLEAU 7. FACTEURS D’ÉMISSION ASSOCIÉS AUX BIOCARBURANTS ............................................................................................20
+190-TABLEAU 8. PROTOCOLES DE QUANTIFICATION DES ÉMISSIONS DE GES POUR CERTAINS SECTEURS INDUSTRIELS VISÉS PAR LE RDOCECA.21
+191-TABLEAU 9. COEFFICIENTS D’ÉMISSION DE GES DE CERTAINS PRODUITS MINÉRAUX .......................................................................26
+192-TABLEAU 10. COEFFICIENTS D’ÉMISSION DU CO2 POUR L’INDUSTRIE DE LA SIDÉRURGIE ..................................................................26
+193-TABLEAU 11. TENEURS EN CARBONE DE CERTAINS ACIERS ET FONTES ..........................................................................................26
+194-TABLEAU 12. COEFFICIENTS D’ÉMISSION DE NIVEAU 1 POUR LA PRODUCTION D’ALUMINIUM ...........................................................27
+195-TABLEAU 13. FACTEURS D’ÉMISSION DE GES PAR TYPE DE PROCÉDÉ ...........................................................................................28
+196-TABLEAU 14. COEFFICIENTS D’ÉMISSION DE GES POUR LA PRODUCTION DE CERTAINS PRODUITS CHIMIQUES ......................................29
+197-TABLEAU 15. FACTEURS D’ÉMISSION DE CO2 POUR CERTAINS EXPLOSIFS .....................................................................................30
+198-TABLEAU 16. CHARGE ET FACTEURS D’ÉMISSION DES SYSTÈMES DE RÉFRIGÉRATION ET DE CLIMATISATION ..........................................33
+199-TABLEAU 17. PARAMÈTRES DE L’ÉQUATION 10 POUR DÉTERMINER LES ÉMISSIONS DE CO2 ATTRIBUABLES AUX ACTIVITÉS DE DÉBOISEMENT
+200-      ...........................................................................................................................................................................35
+201-TABLEAU 18. PARAMÈTRES DE L’ÉQUATION 11 POUR DÉTERMINER LES ÉMISSIONS DE CO2 ATTRIBUABLES AUX ACTIVITÉS DE DÉBOISEMENT
+202-      ...........................................................................................................................................................................36
+203-TABLEAU 19 – STOCK MOYEN DE CARBONE PAR TYPE DE MILIEU HUMIDE DANS L’EST DU CANADA ....................................................40
+204-TABLEAU 20. VALEURS DE RÉFÉRENCE PAR DÉFAUT ASSOCIÉES AUX STOCKS DE CARBONE ORGANIQUE DES SOLS (COSREF) SOUS VÉGÉTATION
+205-      NATURELLE ............................................................................................................................................................44
+206-TABLEAU 21. COEFFICIENTS D’ÉMISSION MOYENS DE CH4 DES RÉSERVOIRS ..................................................................................45
+207-TABLEAU 22. COEFFICIENTS D'ÉMISSION MOYENS DE N2O DES RÉSERVOIRS .................................................................................46
+208-TABLEAU 23. FACTEURS D’ÉMISSION DE CH4 ASSOCIÉS À LA FERMENTATION ENTÉRIQUE ................................................................48
+209-TABLEAU 24. FACTEURS D’ÉMISSION DE CH4 ASSOCIÉS AU STOCKAGE ET AU TRAITEMENT DU FUMIER ...............................................49
+210-TABLEAU 25. TAUX D’EXCRÉTION ANNUEL D’AZOTE PROVENANT DU FUMIER ................................................................................50
+211-TABLEAU 26. FACTEURS D’ÉMISSION DE N2O SELON LE MODE DE GESTION DU FUMIER...................................................................51
+212-TABLEAU 27. TENEUR EN AZOTE DES DIFFÉRENTS TYPES DE FUMIERS ET LISIERS .............................................................................52
+213-TABLEAU 28. FACTEUR D’ÉMISSION ANNUEL DE N2O PAR TONNE D’AZOTE ISSUE DE L’ÉPANDAGE D’ENGRAIS ET DES RÉSIDUS DE CULTURE53
+214-TABLEAU 29. PARAMÈTRES DU MODÈLE DE DÉCOMPOSITION DE PREMIER ORDRE DES MATIÈRES RÉSIDUELLES ENFOUIES DANS DES SITES
+215-      D’ENFOUISSEMENT ..................................................................................................................................................56
+216-TABLEAU 30. PARAMÈTRES COD, CODF ET K EN FONCTION DES TYPES DE MATIÈRES RÉSIDUELLES ...................................................57
+217-TABLEAU 31. PARAMÈTRES COD X CODF EN FONCTION DES SECTEURS ET DES BOUES ...................................................................57
+218-TABLEAU 32. PARAMÈTRE K EN FONCTION DES SECTEURS ET DES BOUES ......................................................................................57
+219-TABLEAU 33. EFFICACITÉ DE DESTRUCTION DU BIOGAZ .............................................................................................................59
+220-
+221-
+222-
+223-GUIDE DE QUANTIFICATION DES ÉMISSIONS DE GAZ À EFFET DE SERRE                                                                                                                  vii
+224-TABLEAU 34. FACTEURS D’ÉMISSION DE CH4 ET DE N2O ASSOCIÉS AU COMPOSTAGE DE MRO ........................................................61
+225-TABLEAU 35. FACTEURS PAR DÉFAUT POUR LE CALCUL DES ÉMISSIONS DE CO2 .............................................................................63
+226-TABLEAU 36. FACTEURS D’ÉMISSION DE CH4 ET DE N2O PAR DÉFAUT POUR LES INSTALLATIONS D’INCINÉRATION ................................64
+227-TABLEAU 37. FACTEURS D’ÉMISSION DE MÉTHANE ASSOCIÉS AUX DIFFÉRENTS TYPES DE TRAITEMENT DES EAUX USÉES ..........................67
+228-TABLEAU 38. FACTEURS D’ÉMISSION DE N2O ASSOCIÉS AUX DIFFÉRENTS TYPES DE TRAITEMENT DES EAUX USÉES RÉSIDENTIELLES ET
+--
+1016-Cette équation peut être utilisée pour tous les types de combustibles, y compris les combustibles dont la
+1017-source est la biomasse.
+1018-
+1019:Le tableau 5 présente les facteurs d’émission de GES des combustibles les plus utilisés.
+1020-
+1021:                        Tableau 5. Facteurs d’émission de GES des combustibles
+1022- Combustible                    CO2               CH4                 N2O               Éq. CO2           PCS                   Éq. CO2
+1023-                                                                                                                                (tonnes/GJ)
+1024- Gaz naturel                     1926 g/m3          0,037 g/m3         0,033 g/m3        1930 g/m3        0,03986 GJ/m3            0,048
+1025- Gaz naturel                     1805 g/m3          0,033 g/m3         0,033 g/m3                          0,0364 GJ/m3
+1026-                                                                                           10 g/m3                                 0,0002
+1027- renouvelable                     (*Biog.)
+1028- Éthane                            986 g/l           0,024 g/l          0,108 g/l         1015 g/l          0,01722 GJ/l           0,059
+1029- Propane                          1515 g/l           0,024 g/l          0,108 g/l         1544 g/l          0,02534 GJ/l           0,061
+1030- Butane                           1747 g/l           0,024 g/l          0,108 g/l         1776 g/l          0,02534 GJ/l           0,070
+1031- Mazout léger                     2753 g/l           0,006 g/l          0,031 g/l         2761 g/l          0,03835 GJ/l           0,072
+1032- Mazout lourd                     3156 g/l           0,120 g/l          0,064 g/l         3176 g/l          0,04259 GJ/l           0,075
+1033- Diesel                           2681 g/l           0,078 g/l          0,022 g/l         2689 g/l          0,03830 GJ/l           0,070
+1034- Essence                          2307 g/l           0,100 g/l            0,02            2315 g/l          0,03345 GJ/l           0,069
+1035- Charbon anthraciteux            2382 g/kg          0,030 g/kg          0,02 g/kg        2388 g/kg         0,02770 GJ/kg           0,086
+1036- Charbon bitumineux              2222 g/kg          0,030 g/kg          0,02 g/kg        2228 g/kg         0,02837 GJ/kg           0,079
+1037- Charbon                                                                                                   0,01848 GJ/kg
+1038-                                 1763 g/kg          0,030 g/kg          0,02 g/kg        1769 g/kg                                 0,096
+1039- subbitumineux
+1040- Lignite                         1462 g/kg          0,030 g/kg          0,02 g/kg        1468 g/kg         0,01629 GJ/kg           0,090
+1041- Coke de pétrole                                                                                            0,04635 GJ/l
+1042-                                  3776 g/l           0,120 g/l          0,027 g/l          3837 g/l                                0,083
+1043- (raffinage)
+1044- Coke de pétrole (de                                                                                        0,04057 GJ/l
+1045-                                  3494 g/l           0,120 g/l          0,023 g/l          3503 g/l                                0,086
+1046- valorisation)
+1047- Coke de charbon                 3 173 g/kg         0,030 g/kg         0,020 g/kg        2486 g/kg         0,02883 GJ/kg           0,086
+1048- Bois et déchets de              1715 g/kg                                                                  0,018 GJ/kg
+1049-                                                    0,100 g/kg          0,07 g/kg          21 g/kg                                 0,0011
+1050- bois (industriel)                (*Biog.)
+1051- Bois et déchets de              1539 g/kg                                                                  0,018 GJ/kg
+1052-                                                    12,90 g/kg          0,12 g/kg         393 g/kg                                 0,022
+1053- bois (résidentiel)               (*Biog.)
+1054- Source : Coefficients d’émission adaptés de l’annexe 6 du Rapport d’inventaire national (RIN) 1990-2022. Partie 2 du Canada.
+1055-
+1056-
+1057-3.2 Émissions attribuables aux systèmes de combustion mobiles
+1058-Les sources visées, y compris leur utilisation par des sous-traitants, sont :
+1059-    a. Tout équipement mobile généralement utilisé sur le site d'une installation ou d'un établissement pour
+1060-       le transport ou le déplacement de substances, de matériaux ou de produits;
+1061-    b. Tout équipement mobile (ex. : tracteur, grue, niveleuse, chargeuse-pelleteuse ou bouteur) utilisé
+--
+1081-  É𝑚𝑖𝑠𝑠𝑖𝑜𝑛𝑠 𝑑𝑒 𝑔𝑎𝑧 à 𝑒𝑓𝑓𝑒𝑡 𝑑𝑒 𝑠𝑒𝑟𝑟𝑒 = ∑ 𝑄𝑢𝑎𝑛𝑡𝑖𝑡é 𝑑𝑒 𝑐𝑎𝑟𝑏𝑢𝑟𝑎𝑛𝑡 𝑖 𝑐𝑜𝑛𝑠𝑜𝑚𝑚é𝑒 × 𝐹𝑎𝑐𝑡𝑒𝑢𝑟 𝑑 ′ é𝑚𝑖𝑠𝑠𝑖𝑜𝑛𝑖
+1082-                                              𝑖=1
+1083-
+1084:Pour connaître les facteurs d’émission de GES associés aux carburants, se référer aux tableau 6 et tableau
+1085-7.
+1086:  Tableau 6. Facteurs d’émission associés aux équipements mobiles de combustion
+1087- Équipements mobiles                                  g CO2/litre   g CH4/litre   g N2O/litre g éq.CO2/litre
+1088- Véhicules légers à essence
+1089-  Niveau 3                                            2307          0,11          0,007       2312
+1090-  Niveau 2                                            2307          0,14          0,022       2317
+1091-  Niveau 1                                            2307          0,23          0,47        2438
+1092-  Niveau 0                                            2307          0,32          0,66        2491
+1093-  Convertisseur catalytique d’oxydation               2307          0,52          0,20        2375
+1094-  Système sans catalyseur                             2307          0,46          0,028       2327
+1095- Camions légers à essence
+1096-  Niveau 3                                            2307          0,11          0,007       2312
+1097-  Niveau 2                                            2307          0,14          0,022       2317
+1098-  Niveau 1                                            2307          0,24          0,58        2467
+1099-  Niveau 0                                            2307          0,21          0,66        2488
+1100-  Convertisseur catalytique d’oxydation               2307          0,43          0,20        2372
+1101-  Système sans catalyseur                             2307          0,56          0,028       2330
+1102- Véhicules lourds à essence
+1103-  Catalyseur à trois voies                            2307          0,068         0,20        2362
+1104-  Système sans catalyseur                             2307          0,29          0,047       2328
+1105-  Sans dispositif                                     2307          0,49          0,084       2343
+1106- Motocyclettes
+1107-  Système sans catalyseur                             2307          0,77          0,041       2339
+1108-  Sans dispositif                                     2307          2,3           0,048       2384
+1109- Véhicules légers à moteur diesel
+1110-  Dispositif perfectionné                             2681          0,051         0,22        2741
+1111-  Dispositif à efficacité modérée                     2681          0,068         0,21        2739
+1112-  Sans dispositif                                     2681          0,10          0,16        2726
+1113- Camions légers à moteur diesel
+1114-  Dispositif perfectionné                             2681          0,068         0,22        2741
+1115-  Dispositif à efficacité modérée                     2681          0,068         0,21        2739
+1116-GUIDE DE QUANTIFICATION DES ÉMISSIONS DE GAZ À EFFET DE SERRE                                              19
+1117:    Tableau 6. Facteurs d’émission associés aux équipements mobiles de combustion
+1118-    Équipements mobiles                                              g CO2/litre          g CH4/litre         g N2O/litre g éq.CO2/litre
+1119-      Sans dispositif                                                2681                 0,085               0,16               2726
+1120-    Véhicules lourds à moteur diesel
+1121-      Dispositif perfectionné                                        2681                 0,11                0,151              2724
+1122-      Dispositif à efficacité modérée                                2681                 0,14                0,082              2707
+1123-      Sans dispositif                                                2681                 0,15                0,075              2705
+1124-    Véhicules au gaz naturel                                         1,9                  0,0088              0,00006            2
+1125-    Véhicules au propane                                             1515                 0,64                0,028              1540
+1126-    Véhicules hors route
+1127-      Véhicules hors route à essence 2 temps                         2307                 10,56               0,013              2606
+1128-      Véhicules hors route à essence 4 temps                         2307                 5,08                0,064              2466
+1129-      Véhicules hors route diesel <19kW                              2681                 0,073               0,022              2689
+1130-      Véhicules hors route diesel ≥19kW, niveau 1-3                  2681                 0,073               0,022              2689
+1131-      Véhicules hors route diesel ≥19kW, niveau 4                    2681                 0,073               0,227              2743
+1132-      Véhicules au gaz naturel                                       1,9                  0,0088              0,00006            2
+1133-    Transport ferroviaire
+1134-      Trains alimentés au diesel                                     2681                 0,15                1,029              2958
+1135-    Transport aérien
+1136-    Essence d’aviation                                               2325                 2,19                0,23               2447
+1137-    Carburéacteur                                                    2560                 0,018               0,071              2579
+1138-    Transport maritime
+1139-      Bateaux à essence                                              2307                 0,219               0,063              2339
+1140-      Navires à moteur diesel                                        2681                 0,252               0,072              2707
+1141-      Navires au mazout léger                                        2753                 0,255               0,073              2779
+1142-      Navires au mazout lourd                                        3156                 0,2856              0,0816             3186
+1143-      Kérosène                                                       2560                 0,2471              0,0706             2586
+1144-    Source : Rapport d’inventaire national (RIN) 1990-2022. Partie II. Tableau A6.1-15 – Coefficients d’émissions pour les sources de combustion
+1145-    mobiles.
+1146-
+1147-
+1148-                         Tableau 7. Facteurs d’émission associés aux biocarburants
+1149-    Biocarburants                 Émissions biogéniques                               Émissions non biogéniques
+1150-    liquides                       Facteur d’émission                         Facteur d’émission      Facteur d’émission
+1151-                                           (g CO2/litre)                             (g CH4/litre)                          (g N2O/litre)
+1152-    Éthanol (100 %)                            1508                                      0,14                                  0,022
+1153-    Biodiesel (100 %)                          2472                                      0,11                                  0,151
+1154-    Biocarburants                 Émissions biogéniques                               Émissions non biogéniques
+1155-    gazeux                         Facteur d’émission                         Facteur d’émission      Facteur d’émission
+1156-                                            (g CO2/m3)                               (g CH4/m3)                              (g N2O/m3)
+1157-    Biogaz                                     1887                                     0,037                                   0,033
+--
+1595-                                         chimiques
+1596-     Produit chimique                      Coefficient d’émission                                          Commentaires
+1597-     Ammoniac                             671 m3 de gaz naturel par               Les coefficients d’émission du gaz naturel sont
+1598:                                          tonne d’ammoniac                        présentés au tableau 5
+1599-     Acide nitrique                       0,554 kg N2O / t                        Moyenne pondérée du secteur en 2022
+1600-     Acide adipique                       300 kg N2O / t                          Réaction d’oxydation du mélange de cyclohexanone et
+1601-                                                                                  de cyclohexanol sans assainissement de N2O
+1602-     Carbure de silicium                  11,6 kg CH4 / t                         Valeur par défaut GIEC
+1603-     Carbure de silicium                  4,8 kg CH4 / t                          Obtenu à partir des coefficients d’émission du CH4
+1604-                                                                                  pour le carbure de silicium et le ratio des coefficients
+1605-                                                                                  d’émission par défaut du GIEC du CO2 pour le carbure
+1606-                                                                                  de calcium et le carbure de silicium
+1607-     Carbone noir                         1,29 kg CH4 / t                         Moyenne pondérée à l’échelle du secteur
+1608-                                          0,032 kg N2O / t
+1609-     Éthylène                             0,411 t CO2 / t                         Moyenne pondérée à l’échelle du secteur
+1610-                                          0,039 kg CH4 / t
+1611-                                          0,0055 kg N2O / t
+1612-     Bichloroéthane                       0,0142 kg CH4 / t                       Moyenne pondérée à l’échelle du secteur
+1613-     Oxyde d’éthylène                     0,5202 t CO2 / t                        Moyenne pondérée à l’échelle du secteur
+1614-                                          1,79 kg CH4 / t
+1615-     Styrène                              4 kg CH4 / t                            Moyenne pondérée à l’échelle du secteur
+1616-
+1617-
+1618-20  Warwick N. et coll., April 2022. Atmospheric implications of increased Hydrogen use. Atmospheric implications of increased hydrogen use
+1619-   (publishing.service.gov.uk).
+1620-21 US Environmental Defense Fund, 2022. Propre ou sale : l’hydrogène est-il la solution énergétique respectueuse du climat dont nous avons besoin ? | Fonds
+1621-
+1622-   de défense de l’environnement (edf.org)
+1623-22 US Environmental Defense Fund, 2022. https://www.edf.org/article/we-need-talk-about-hydrogen
+1624-23 European Geosciences Union, Cimie et physique de l’atmosphère, 2022. ACP - Conséquences climatiques des émissions d’hydrogène (copernicus.org)
+1625-24 L'hydrogène est-il la solution à nos problèmes énergétiques ? (futura-sciences.com)
+1626-25 École des Hautes Études commerciales (HEC), 2022. État de l’énergie au Québec. EEQ2022_web.pdf (hec.ca)
+1627-
+1628-
+1629-GUIDE DE QUANTIFICATION DES ÉMISSIONS DE GAZ À EFFET DE SERRE                                                                                            29
+1630-     Méthanol                               0,790 t CO2 / t            Moyenne pondérée à l’échelle du secteur
+1631-                                            0,031 kg CH4 / t
+1632-                                            0,010 kg N2O / t
+1633-     Production de HCFC-22                  0,04 t HFC-23 rejetées par GIEC (2006)
+1634-                                            t HCFC-22 produite
+1635-     Urée                                   0,733 t CO2 / t            Valeur par défaut du GIEC
+1636-     Source : Adapté du Rapport d’inventaire national (RIN) 1990-2022. Partie II. Tableau A6.2 – 2, A2.2-3 et A6.2-4
+1637-
+1638-
+--
+3148- - Industrie alimentaire                                                       44                                     0                             3
+3149- - Industrie papetière (boues de procédé)                                      28                                     0                             3
+3150- - Industrie papetière (boues d’épuration)                                     31                                     0                             3
+3151:1. 2019 Refinement to the 2006 IPCC Guidelines for National Greenhouse Gas Inventories. Volume 5 : Déchets, Chapitre 5, Tableau 5.2.
+3152:2. Lignes directrices 2006 du GIEC. Volume 5 : Déchets. Chapitre 5. Tableau 5.6.
+3153-3. 2019 Refinement to the 2006 IPCC Guidelines for National Greenhouse Gas Inventories. Volume 5 : Déchets, Chapitre 2, Tableau 2.4A
+3154-
+3155-
+3156-
+3157-
+3158-Les émissions de CH4 attribuables à l’incinération ou au traitement thermique résultent principalement d’une
+3159-combustion incomplète des matières résiduelles. Elles sont influencées par les paramètres suivants : la
+3160-technologie utilisée, le mode opératoire, la température, le temps de séjour et l’indice d’air. L’équation 35
+3161-permet de quantifier ces émissions60.
+3162-
+3163-Équation 35. Émissions de CH4 attribuables à l’incinération ou au traitement thermique des matières
+3164-résiduelles
+3165-
+3166-                                             𝐸𝑀𝑅 𝐶𝐻4 = ∑(𝑀𝑅𝑖 × 𝐹𝐸𝑖 𝐶𝐻4 ) × 0,001
+3167-                                                                  𝑖
+3168-Où :
+3169-         EMR CH4 = Émissions annuelles de CH4, exprimées en tonnes de CH4 par année;
+3170-         MRi = Quantité de matières résiduelles de type i incinérée, ou traitée thermiquement annuellement,
+3171-         exprimée en tonnes par année;
+3172-         FEi CH4 = Facteur d’émission de CH4 associé aux matières résiduelles de type i, exprimé en
+3173-         kilogrammes de CH4 par tonne de matières résiduelles, Tableau 35;
+3174-         10-6= Coefficient de conversion de grammes à tonnes;
+3175-         i = Catégorie ou type de matières résiduelles incinérées ou traitées thermiquement, précisées comme
+3176-         suit :
+3177-         MRM : matières résiduelles municipales; MRI : matières résiduelles industrielles; MDR : matières
+3178-         dangereuses résiduelles; DB : déchets biomédicaux; et BE : boues d'épuration.
+3179-
+3180-Le tableau 36 présente les facteurs d’émission de CH4 et N2O correspondant à l’incinération des différents
+3181-types de déchets en fonction du type d’installation. Ces facteurs peuvent être employés dans l’équation 35
+3182-et l’équation 36.
+3183-
+3184-
+3185-
+3186-
+3187-60 2019 Refinement to the 2006 IPCC Guidelines for National Greenhouse Gas Inventories https://www.ipcc-nggip.iges.or.jp/public/2019rf/index.html
+3188-
+3189-GUIDE DE QUANTIFICATION DES ÉMISSIONS DE GAZ À EFFET DE SERRE                                                                                           63
+3190-  Tableau 36. Facteurs d’émission de CH4 et de N2O par défaut pour les installations
+3191-                                   d’incinération
