@@ -786,3 +786,59 @@ désormais NORMATIVE et testée dans le moteur.
     re-remplacements partent de k (k, k+durée, …). Les années de
     versement des subventions restent ABSOLUES dans le plan (point de
     vente = k). Une acquisition à k ≥ H est signalée et sans effet.
+
+## 11. Optimiseur de calendrier (Phase 5.1) — hors moteur, sur le moteur
+
+L'optimiseur (`src/lib/journey/optimizer.ts`) ne calcule AUCUN chiffre
+lui-même : il choisit, pour chaque véhicule, une année de remplacement et
+une technologie (diesel = remplacement à l'identique, BEV, FCEV), et le
+moteur décrit ci-dessus chiffre chaque choix.
+
+1. **Additivité exacte.** Le moteur est additif par véhicule (§3) et par
+   site d'infrastructure (§3.5). Chaque option véhicule × année ×
+   technologie est chiffrée une fois par le moteur (plan d'un seul
+   véhicule, sans infrastructure) ; chaque site d'infrastructure d'un
+   garage aussi (même bornes, même raccordement, même année de mise en
+   service que les stratégies). La somme reproduit le plan complet au
+   cent près (contrôle d'intégrité testé) ; la solution retenue est
+   ensuite RE-CHIFFRÉE en entier par le moteur, et ce sont ces chiffres
+   qui s'affichent, s'appliquent au plan et vont aux rapports.
+2. **Contraintes.** Investissement annuel et/ou reste à financer annuel
+   (vue budgétaire §6, toutes les acquisitions de l'année, diesel
+   compris, + infrastructure) ; part minimale de véhicules zéro émission
+   livrés au plus tard une année donnée (dénominateur : tous les véhicules
+   du projet) ; réduction minimale des GES cycle complet d'une année vs
+   flotte diesel (convention du moteur : un véhicule acheté l'année k
+   roule à partir de k+1) ; véhicules gardés (année et technologie du
+   plan) ; puissance maximale des bornes et nombre de places par garage,
+   avec augmentation possible à partir d'une année ; date limite saisie
+   par programme (la plus restrictive entre le registre et la saisie,
+   appliquée par le résolveur §3.2) ; technologies autorisées par
+   catégorie (défaut : diesel + BEV) ; catégories « à reporter » et
+   autonomie hivernale insuffisante jamais électrifiées.
+3. **Fenêtre de calendrier.** Report maximal (défaut 2 ans) et avance
+   maximale (défaut 0) autour de l'année prévue. Convention §10.11 : la
+   VAN compare chaque véhicule à un diesel neuf acheté LA MÊME ANNÉE ;
+   avancer un remplacement retire le véhicule actuel avant sa fin de vie,
+   ce que le moteur ne chiffre pas (valeur résiduelle de l'ancien
+   véhicule) — d'où l'avance désactivée par défaut.
+4. **Recherche déterministe.** Ordre lexicographique : contraintes dures
+   (budgets, garages), puis cibles (ZE, GES), puis objectif (VAN, ou CO2e
+   évité cycle complet), puis VAN, puis le moins d'écart au calendrier
+   prévu (on ne déplace jamais un remplacement sans gain chiffré).
+   Amorces : statu quo diesel, plan actuel, et les trois stratégies de
+   l'étape Stratégies ; recherche locale à meilleure amélioration (un
+   véhicule à la fois, et ajout groupé par garage pour franchir le coût
+   fixe des bornes et du raccordement). L'optimiseur ne fait donc jamais
+   moins bien qu'une stratégie existante qui respecte les contraintes ;
+   ce n'est pas une preuve d'optimalité globale.
+5. **Infaisabilité.** Si une contrainte reste non respectée, chaque
+   violation est chiffrée (dépassement en $, kW, places, véhicules ou
+   tonnes manquants) et l'optimiseur est relancé avec chaque famille de
+   contraintes levée tour à tour (budgets, garages, technologies,
+   calendrier, véhicules gardés) pour dire laquelle suffit à débloquer.
+6. **Explications.** Chaque décision est justifiée par une comparaison
+   chiffrée avec l'alternative la plus proche (année prévue, diesel la
+   même année, meilleure option zéro émission) : économie ou surcoût
+   marginal (bornes du garage comprises), contrainte qui serait violée,
+   programme de subvention perdu l'année suivante.

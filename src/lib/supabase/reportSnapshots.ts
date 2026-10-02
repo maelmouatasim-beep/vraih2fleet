@@ -12,7 +12,7 @@ export type ReportSnapshot = Tables<"report_snapshots">;
 
 export interface NouveauSnapshot {
   projectId: string;
-  strategyKey: "plan_actuel" | "tout_electrique" | "economies_d_abord";
+  strategyKey: "plan_actuel" | "tout_electrique" | "economies_d_abord" | "optimisee";
   reportKind: "pdf_fr" | "pdf_en" | "xlsx";
   engineVersion: string;
   fingerprint: string;

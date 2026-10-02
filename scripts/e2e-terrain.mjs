@@ -6,7 +6,9 @@
  * Vérifie que l'infrastructure, les subventions et l'économie (VAN) sont
  * IDENTIQUES au dollar près en Stratégies (stratégie retenue), Plan,
  * Financement, PDF et Excel ; que le libellé de la stratégie retenue est
- * le bon ; que la Faisabilité propose et applique une recommandation aux
+ * le bon ; que l'optimiseur (Phase 5.1) explique chaque décision et que
+ * sa stratégie « Optimisée », appliquée après aperçu, se retrouve partout
+ * et dans le journal ; que la Faisabilité propose et applique une recommandation aux
  * véhicules sans cible ; que la barre des étapes reflète l'état réel.
  * Lancé en CI (job « Supabase local ») : test e2e PERMANENT du cas terrain.
  * Requiert pdftotext (poppler-utils) pour lire le PDF.
@@ -169,24 +171,63 @@ try {
   await page.getByRole("button", { name: /Appliquer cette stratégie au plan/ }).waitFor({ timeout: 15000 });
   await capture(page, "05-strategies");
   await page.getByText("Économies d'abord").first().click();
-  const carteEco = page.locator("button", { hasText: "Économies d'abord" }).first();
   if ((await etatEtape(page, "strategies")) !== "a_faire") throw new Error("Stratégies devrait être « à faire » avant application");
-  const infraStrategieTxt = (await carteEco.getByText(/^Infrastructure :/).innerText().catch(() => "Infrastructure : 0 $"));
-  const subvStrategie = montant(await carteEco.getByText(/^Subventions :/).innerText());
-  const vanStrategie = montant(await carteEco.getByText(/^Économie de/).innerText());
   await page.getByRole("button", { name: /Appliquer cette stratégie au plan/ }).click();
   await page.getByRole("button", { name: /^Appliquer \(\d+ changement/ }).click();
   await page.getByText("Stratégie retenue").first().waitFor({ timeout: 15000 });
   await page.waitForTimeout(1500);
   await capture(page, "06-strategies-retenue");
   if ((await etatEtape(page, "strategies")) !== "termine") throw new Error("Stratégies devrait être « terminée » après application");
-  etape(`Stratégies : « Économies d'abord » appliquée (${infraStrategieTxt}), étape terminée`);
+  etape("Stratégies : « Économies d'abord » appliquée, étape terminée");
+
+  // Phase 5.1 — OPTIMISEUR : contraintes → 4e stratégie « Optimisée »
+  // expliquée → appliquée après confirmation (années ET technologies),
+  // journalisée.
+  const carteOpt = page.getByTestId("strategy-optimisee");
+  await carteOpt.getByRole("button", { name: /Définir les contraintes et optimiser/ }).click();
+  const formulaire = page.getByRole("dialog");
+  await formulaire.getByText("Contraintes de l'optimiseur").waitFor();
+  await formulaire.locator("#opt-budget-inv").fill("400000");
+  // cible : 25 % de la flotte zéro émission en 2030
+  await formulaire.getByRole("button", { name: "Ajouter" }).first().click();
+  await formulaire.getByLabel("% de la flotte zéro émission au plus tard cette année").fill("25");
+  // Garage municipal : 2 places de recharge
+  const ligneGarage = formulaire.locator("div.grid").filter({ has: page.getByText("Garage municipal", { exact: true }) }).first();
+  await ligneGarage.getByPlaceholder("Places").first().fill("2");
+  await capture(page, "06b-optimiseur-contraintes");
+  await formulaire.getByRole("button", { name: "Optimiser" }).click();
+  await page.getByTestId("optimizer-detail").waitFor({ timeout: 60000 });
+  await page.waitForTimeout(800);
+  const statutOpt = await carteOpt.locator("p.text-xs.font-medium").last().innerText();
+  // chaque décision est expliquée
+  const voirTout = page.getByRole("button", { name: /Afficher les \d+ décisions/ });
+  if (await voirTout.isVisible().catch(() => false)) await voirTout.click();
+  const lignesDecisions = page.getByTestId("optimizer-decisions").locator("tbody tr");
+  const nbDecisions = await lignesDecisions.count();
+  if (nbDecisions < 10) throw new Error(`optimiseur : ${nbDecisions} décisions affichées`);
+  for (let i = 0; i < nbDecisions; i++) {
+    const pourquoi = (await lignesDecisions.nth(i).locator("td").last().innerText()).trim();
+    if (pourquoi.length < 10) throw new Error(`optimiseur : décision sans explication (ligne ${i + 1})`);
+  }
+  await capture(page, "06c-optimiseur-resultat");
+  const infraStrategieTxt = await carteOpt.getByText(/^Infrastructure :/).innerText().catch(() => "Infrastructure : 0 $");
+  const subvStrategie = montant(await carteOpt.getByText(/^Subventions :/).innerText());
+  const vanTexte = await carteOpt.locator("p.text-xl").first().innerText();
+  const vanStrategie = (vanTexte.includes("Surcoût") ? -1 : 1) * montant(vanTexte);
+  await page.getByRole("button", { name: /Appliquer cette stratégie au plan/ }).click();
+  const apercuOpt = page.getByTestId("apply-preview");
+  const nbChangements = (await apercuOpt.isVisible().catch(() => false)) ? await apercuOpt.locator("> div").count() : 0;
+  await capture(page, "06d-optimiseur-apercu");
+  await page.getByRole("button", { name: /^Appliquer \(\d+ changement/ }).click();
+  await carteOpt.getByText("Stratégie retenue").waitFor({ timeout: 20000 });
+  await page.waitForTimeout(1500);
+  etape(`Optimiseur : ${nbDecisions} décisions expliquées, « ${statutOpt} », ${nbChangements} changement(s) appliqué(s) après aperçu`);
 
   // Plan : même infrastructure, bon libellé
   await page.goto(`${base}/plan`);
   await page.getByText("Infrastructure de recharge par garage").waitFor({ timeout: 15000 });
   const sousTitre = await page.getByText(/^Stratégie retenue :/).first().innerText();
-  if (!sousTitre.includes("Économies d'abord")) throw new Error(`libellé du Plan : ${sousTitre}`);
+  if (!sousTitre.includes("Optimisée")) throw new Error(`libellé du Plan : ${sousTitre}`);
   const totalPlanTxt = await page.getByText(/^CAPEX infrastructure total :/).innerText().catch(() => "CAPEX infrastructure total : 0 $");
   await capture(page, "07-plan");
   const infraStrategie = montant(infraStrategieTxt);
@@ -212,7 +253,7 @@ try {
   await capture(page, "09-rapports");
   // PDF : texte extrait (pdftotext)
   const pdf = execFileSync("pdftotext", ["-layout", join(SORTIE, "rapport-fr.pdf"), "-"], { encoding: "utf8" });
-  if (!pdf.includes("Stratégie retenue : Économies d'abord")) throw new Error("PDF : stratégie retenue absente");
+  if (!pdf.includes("Stratégie retenue : Optimisée")) throw new Error("PDF : stratégie retenue absente");
   const infraPdf = montant(pdf.match(/Infrastructure totale \(avant taxes\)\s+([\d\s\u00a0\u202f]+) \$/)?.[1] ?? "NaN");
   const lignesPdf = pdf.split("\n");
   const iSub = lignesPdf.findIndex((l) => l.includes("Subventions prévues"));
@@ -227,7 +268,7 @@ try {
     return r;
   };
   const budget = lignes(classeur.worksheets[0]);
-  if (!budget.some((l) => String(l[0]).includes("Stratégie retenue : Économies d'abord"))) throw new Error("Excel : stratégie retenue absente");
+  if (!budget.some((l) => String(l[0]).includes("Stratégie retenue : Optimisée"))) throw new Error("Excel : stratégie retenue absente");
   const iEntete = budget.findIndex((l) => l[0] === "Année");
   let subvExcel = 0;
   for (const l of budget.slice(iEntete + 1)) {
@@ -249,11 +290,14 @@ try {
   etape(`Rapports : totaux identiques partout — infrastructure ${infra} $, subventions ${subv} $, VAN ${vanPlan} $`);
 
   await page.goto(`${base}/suivi`);
-  await page.waitForTimeout(2000);
+  const historique = page.getByTestId("change-log");
+  await historique.getByText(/Stratégie « Optimisée » appliquée/).waitFor({ timeout: 15000 });
+  await historique.getByText(/Stratégie « Économies d'abord » appliquée/).waitFor();
+  await historique.scrollIntoViewIfNeeded();
   await capture(page, "10-suivi");
-  etape("Suivi");
+  etape("Suivi : historique des modifications (optimiseur et stratégie journalisés)");
 
-  writeFileSync(join(SORTIE, "resultat.json"), JSON.stringify({ infraStrategie, infraPlan, subvStrategie, vanPlan, sousTitre }, null, 2));
+  writeFileSync(join(SORTIE, "resultat.json"), JSON.stringify({ infraStrategie, infraPlan, subvStrategie, vanPlan, sousTitre, statutOpt, nbDecisions, nbChangements }, null, 2));
   if (erreurs.length) throw new Error(`réponses locales en erreur :\n${erreurs.join("\n")}`);
   console.log(`\n${journal.length} étapes, 0 erreur. Captures : ${SORTIE}`);
 } catch (e) {

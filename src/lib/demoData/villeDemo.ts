@@ -144,3 +144,24 @@ export function planDemo(vehicules: VehiculeDemo[], anneeCourante: number): Plan
     return { unit_number: v.unit_number, replacement_year, target_technology: target };
   });
 }
+
+/**
+ * Contraintes de démonstration de l'optimiseur (Phase 5.1) — des SAISIES
+ * fictives d'utilisateur, pas des hypothèses : budget d'investissement
+ * annuel, cible de part zéro émission, places de recharge du Dépôt Nord
+ * avec agrandissement prévu. Elles montrent reports, maintiens au diesel
+ * et électrifications expliqués. Années relatives à l'année courante.
+ */
+export function contraintesDemo(anneeCourante: number) {
+  return {
+    objectif: "economies" as const,
+    budgetInvestissementAnnuel: 1_500_000,
+    ciblesZe: [{ annee: anneeCourante + 4, part: 0.4 }],
+    garages: {
+      // clé = nom du garage normalisé (cleGarage)
+      "dépôt nord": { places: 6, augmentation: { annee: anneeCourante + 5, places: 12 } },
+    },
+    reportMaxAns: 2,
+    avanceMaxAns: 0,
+  };
+}

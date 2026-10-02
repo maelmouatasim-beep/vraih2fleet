@@ -795,6 +795,57 @@ export type Database = {
           },
         ]
       }
+      plan_change_log: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json
+          id: string
+          organization_id: string
+          project_id: string | null
+          source: string
+          summary: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json
+          id?: string
+          organization_id: string
+          project_id?: string | null
+          source: string
+          summary?: string | null
+          user_id?: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json
+          id?: string
+          organization_id?: string
+          project_id?: string | null
+          source?: string
+          summary?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_change_log_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "plan_change_log_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           current_organization_id: string | null
@@ -1035,6 +1086,8 @@ export type Database = {
           id: string
           name: string
           organization_id: string | null
+          optimized_assignment: Json | null
+          optimizer_constraints: Json | null
           selected_strategy: string | null
           strategy_applied_at: string | null
           updated_at: string
@@ -1050,6 +1103,8 @@ export type Database = {
           id?: string
           name: string
           organization_id?: string | null
+          optimized_assignment?: Json | null
+          optimizer_constraints?: Json | null
           selected_strategy?: string | null
           strategy_applied_at?: string | null
           updated_at?: string
@@ -1065,6 +1120,8 @@ export type Database = {
           id?: string
           name?: string
           organization_id?: string | null
+          optimized_assignment?: Json | null
+          optimizer_constraints?: Json | null
           selected_strategy?: string | null
           strategy_applied_at?: string | null
           updated_at?: string

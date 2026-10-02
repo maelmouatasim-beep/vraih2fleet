@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   MARQUEUR_DEMO,
   NOM_PROJET_DEMO,
+  contraintesDemo,
   genererFlotteDemo,
   planDemo,
 } from "./villeDemo";
@@ -80,6 +81,8 @@ export async function seedDemoProject(userId: string): Promise<{ projectId: stri
       default_discount_rate: 0.05,
       user_id: userId,
       organization_id: organizationId,
+      // Phase 5.1 : la 4e stratégie « Optimisée » est calculée dès l'ouverture.
+      optimizer_constraints: contraintesDemo(new Date().getFullYear()),
     })
     .select("id")
     .single();
@@ -114,7 +117,7 @@ export function getDemoProjectInfo() {
     name: NOM_PROJET_DEMO,
     description: "Municipalité québécoise fictive, ~40 véhicules — parcours complet calculé en direct.",
     vehicleCount: genererFlotteDemo().length,
-    scenarioCount: 3, // les trois stratégies de l'étape Stratégies
+    scenarioCount: 4, // les quatre stratégies de l'étape Stratégies (dont « Optimisée »)
     region: "Québec, Canada",
     source: "Données fictives (démonstration)",
   };

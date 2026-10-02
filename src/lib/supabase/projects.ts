@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { Tables } from "@/integrations/supabase/types";
+import type { Json, Tables } from "@/integrations/supabase/types";
 import { NOM_PROJET_DEMO } from "@/lib/demoData/villeDemo";
 
 export type ProjectRow = Tables<"projects">;
@@ -19,6 +19,10 @@ export interface ProjectDTO {
   /** Stratégie retenue à l'étape 3 (C3), null tant qu'aucune n'est appliquée. */
   selectedStrategy: string | null;
   strategyAppliedAt: string | null;
+  /** Contraintes saisies pour l'optimiseur (Phase 5.1), JSON validé à la lecture. */
+  optimizerConstraints: unknown;
+  /** Assignation appliquée quand la stratégie retenue est « optimisee ». */
+  optimizedAssignment: unknown;
 }
 
 export interface CreateProjectInput {
@@ -45,6 +49,8 @@ function rowToProject(row: ProjectRow): ProjectDTO {
     organizationId: row.organization_id,
     selectedStrategy: row.selected_strategy,
     strategyAppliedAt: row.strategy_applied_at,
+    optimizerConstraints: row.optimizer_constraints ?? null,
+    optimizedAssignment: row.optimized_assignment ?? null,
   };
 }
 
@@ -53,6 +59,26 @@ export async function setProjectStrategy(projectId: string, strategy: string): P
   const { error } = await supabase
     .from("projects")
     .update({ selected_strategy: strategy, strategy_applied_at: new Date().toISOString() })
+    .eq("id", projectId);
+  if (error) throw error;
+}
+
+/** Enregistre les contraintes de l'optimiseur (Phase 5.1). */
+export async function saveOptimizerConstraints(projectId: string, contraintes: Json): Promise<void> {
+  const { error } = await supabase.from("projects").update({ optimizer_constraints: contraintes }).eq("id", projectId);
+  if (error) throw error;
+}
+
+/** Stratégie « optimisee » retenue : l'assignation appliquée est gardée
+ *  (écarts depuis l'application, fenêtre de calendrier d'origine). */
+export async function setOptimizedStrategy(projectId: string, assignation: Json): Promise<void> {
+  const { error } = await supabase
+    .from("projects")
+    .update({
+      selected_strategy: "optimisee",
+      strategy_applied_at: new Date().toISOString(),
+      optimized_assignment: assignation,
+    })
     .eq("id", projectId);
   if (error) throw error;
 }

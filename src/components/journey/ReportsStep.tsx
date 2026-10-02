@@ -4,6 +4,7 @@
  * annexe méthodologie/hypothèses) et VRAI classeur Excel (.xlsx,
  * 3 feuilles) — tout depuis le résultat du moteur.
  */
+import { lireAssignation } from "@/lib/journey/optimizer";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -64,7 +65,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
     // Les chiffres viennent TOUJOURS des cibles réelles du plan ; le
     // libellé nomme la stratégie appliquée (1.6), écarts compris.
     const strategie = construireStrategie(vehicules, "plan_actuel", options);
-    const retenue = strategieRetenue(vehicules, project.selectedStrategy, options);
+    const retenue = strategieRetenue(vehicules, project.selectedStrategy, options, lireAssignation(project.optimizedAssignment));
     if (!strategie.plan || !strategie.resultat) return null;
     const meta: MetaRapport = {
       organisation: organization.name,

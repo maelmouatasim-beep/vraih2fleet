@@ -5,6 +5,7 @@
  * technos cibles et années du plan (étape Flotte ou stratégie appliquée),
  * avec le nom de la stratégie réellement retenue (1.6).
  */
+import { lireAssignation } from "@/lib/journey/optimizer";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -64,7 +65,7 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
     }));
     const strategie = construireStrategie(vehicules, "plan_actuel", options);
     if (!strategie.resultat || !strategie.plan) return null;
-    const retenue = strategieRetenue(vehicules, project?.selectedStrategy, options);
+    const retenue = strategieRetenue(vehicules, project?.selectedStrategy, options, lireAssignation(project?.optimizedAssignment));
 
     // Remplacements par année calendaire (unités + techno cible)
     const uniteParId = new Map(projectVehicles.map((pv) => [pv.vehicle_id, pv.vehicles.unit_number]));
@@ -86,7 +87,7 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
     );
 
     return { strategie, retenue, resultat: strategie.resultat, remplacements, totaux };
-  }, [options, projectVehicles, confirmeesParVehicule, project?.selectedStrategy]);
+  }, [options, projectVehicles, confirmeesParVehicule, project?.selectedStrategy, project?.optimizedAssignment]);
 
   if (orgLoading || isLoading) {
     return (

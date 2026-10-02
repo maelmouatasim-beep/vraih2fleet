@@ -4,6 +4,7 @@
  * liées au véhicule/année/subvention, génération idempotente depuis les
  * échéances du plan).
  */
+import ChangeLogCard from "./ChangeLogCard";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -400,6 +401,8 @@ export default function TrackingStep({ projectId, project }: TrackingStepProps) 
           <TaskBoard key={cleTableau} projectId={projectId} />
         </CardContent>
       </Card>
+
+      <ChangeLogCard projectId={projectId} organizationId={project?.organizationId} />
     </div>
   );
 }

@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { MARQUEUR_DEMO, estVehiculeDemo, genererFlotteDemo, planDemo } from "../villeDemo";
+import { contraintesDemo } from "../villeDemo";
+import { optimiserCalendrier, zContraintesOptimiseur } from "@/lib/journey/optimizer";
+import { cleGarage } from "@/lib/journey/infrastructure";
 
 describe("flotte de démonstration (Ville de Rivière-Claire)", () => {
   const flotte = genererFlotteDemo();
@@ -52,4 +55,28 @@ describe("C7 — démo propre", () => {
       expect(v.consumption_source).toBe("estimation");
     }
   });
+});
+
+describe("démo : contraintes de l'optimiseur (Phase 5.1)", () => {
+  it("valides, clé de garage normalisée, et toutes les décisions expliquées", () => {
+    const c = zContraintesOptimiseur.parse(contraintesDemo(2026));
+    expect(Object.keys(c.garages)).toEqual([cleGarage("Dépôt Nord")]);
+    const flotte = genererFlotteDemo();
+    const plan = planDemo(flotte, 2026);
+    const vehicules = flotte.map((v, i) => {
+      const p = plan.find((x) => x.unit_number === v.unit_number)!;
+      return { ...v, id: `d${i}`, replacement_year: p.replacement_year, target_technology: p.target_technology };
+    });
+    const r = optimiserCalendrier({
+      vehicules,
+      options: { anneeReference: 2026, horizonAns: 10, tauxActualisationNominal: 0.05, typeOrganisme: "municipalite" },
+      contraintes: c,
+    });
+    expect(r.realisable).toBe(true);
+    expect(r.decisions).toHaveLength(flotte.length);
+    for (const d of r.decisions) expect(d.raisons.length).toBeGreaterThan(0);
+    const codes = new Set(r.decisions.flatMap((d) => d.raisons.map((x) => x.code)));
+    // la démo montre chaque famille d'explication
+    for (const code of ["electrifie_rentable", "report_budget", "diesel_capacite"]) expect(codes.has(code as never)).toBe(true);
+  }, 30000);
 });

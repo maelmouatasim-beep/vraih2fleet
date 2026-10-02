@@ -20,7 +20,9 @@ import {
   type OptionsParametres,
   type PlanTcoEntree,
   type ResultatPlan,
+  type VehiculePlan,
 } from "@/lib/tco";
+import type { ProgrammeSubvention } from "@/lib/tco/subsidy-programs";
 import {
   appliquerSubventionsConfirmees,
   type SubventionConfirmee,
@@ -56,6 +58,9 @@ export interface VehiculeProjet extends VehiculeFaisabilite {
  *  disponible, devis de raccordement), indexées par cleGarage(nom). */
 export type OptionsStrategie = OptionsParametres & {
   garages?: Map<string, CaracteristiquesGarage>;
+  /** Registre des programmes à utiliser (défaut : registre officiel).
+   *  L'optimiseur y reporte les dates limites saisies par l'utilisateur. */
+  programmes?: ProgrammeSubvention[];
 };
 
 /** « Économies d'abord » : ce que la sélection a retenu, garage par garage. */
@@ -69,8 +74,12 @@ export interface SelectionGarage {
   vanAvecInfra: number;
 }
 
-export type CleStrategie = "plan_actuel" | "tout_electrique" | "economies_d_abord";
-export const CLES_STRATEGIES: CleStrategie[] = [
+/** Les trois stratégies construites automatiquement. */
+export type CleStrategieAuto = "plan_actuel" | "tout_electrique" | "economies_d_abord";
+/** + « optimisee » : calendrier et technologies proposés par l'optimiseur
+ *  (./optimizer.ts) sous les contraintes saisies par l'utilisateur. */
+export type CleStrategie = CleStrategieAuto | "optimisee";
+export const CLES_STRATEGIES: CleStrategieAuto[] = [
   "plan_actuel",
   "tout_electrique",
   "economies_d_abord",
@@ -109,10 +118,10 @@ export interface StrategieConstruite {
   aucuneElectrificationRentable?: boolean;
 }
 
-type TechnoAlternative = "diesel" | "BEV" | "FCEV";
+export type TechnoAlternative = "diesel" | "BEV" | "FCEV";
 
 function technoCible(
-  cle: CleStrategie,
+  cle: CleStrategieAuto,
   vehicule: VehiculeProjet,
   selection: Set<string> | null,
 ): TechnoAlternative {
@@ -203,7 +212,7 @@ function selectionEconomiesDAbord(
 
 export function construireStrategie(
   vehicules: VehiculeProjet[],
-  cle: CleStrategie,
+  cle: CleStrategieAuto,
   options: OptionsStrategie,
 ): StrategieConstruite {
   if (cle !== "economies_d_abord") return chiffrer(vehicules, cle, options, null);
@@ -216,11 +225,114 @@ export function construireStrategie(
   };
 }
 
+/** Choix d'un véhicule : technologie et année CALENDAIRE de remplacement
+ *  (null = sans année, traité à l'année de référence). */
+export interface ChoixVehicule {
+  techno: TechnoAlternative;
+  annee: number | null;
+}
+
 function chiffrer(
+  vehicules: VehiculeProjet[],
+  cle: CleStrategieAuto,
+  options: OptionsStrategie,
+  selection: Set<string> | null,
+): StrategieConstruite {
+  return chiffrerChoix(vehicules, cle, options, (v) => ({
+    techno: technoCible(cle, v, selection),
+    annee: v.replacement_year,
+  }));
+}
+
+/** Entrée du moteur pour UN véhicule évaluable (catégorie connue), pour
+ *  une technologie et une année du plan données : spécifications du
+ *  registre, subventions résolues (avec explications) puis subventions
+ *  confirmées par le client. Partagée par les stratégies et l'optimiseur. */
+export function entreeVehiculeMoteur(
+  v: VehiculeProjet,
+  techno: TechnoAlternative,
+  k: number,
+  options: OptionsStrategie,
+): { vehicule: VehiculePlan; avertissements: string[]; explications: ExplicationSubvention[] | null } | null {
+  const { defauts, kmParAn, consoReference, carburant } = analyserDonneesVehicule(v);
+  if (!defauts) return null;
+  const reference = {
+    technologie: "diesel" as const,
+    prixAvantTaxes: defauts.prixAchat.diesel.valeur,
+    consommationPar100km: consoReference,
+    entretienParKm: defauts.entretien.diesel.valeur,
+    assuranceParAn: 0,
+    evenements: [],
+  };
+  // Techno « diesel » = statu quo pour ce véhicule : alternative
+  // identique à la référence, différentiel nul, mais le véhicule reste
+  // dans les totaux (budget, émissions) des deux scénarios.
+  const alternative =
+    techno === "diesel"
+      ? reference
+      : {
+          technologie: techno,
+          prixAvantTaxes: defauts.prixAchat[techno].valeur,
+          consommationPar100km: defauts.consommation[techno].valeur,
+          entretienParKm: defauts.entretien[techno].valeur,
+          assuranceParAn: 0,
+          evenements: [],
+        };
+
+  let subventions: { libelle: string; montant: number; annee: number }[] = [];
+  let avertissements: string[] = [];
+  let explications: ExplicationSubvention[] | null = null;
+  if (techno !== "diesel") {
+    const resolution = resoudreSubventions(
+      {
+        categorie: defauts.categorie,
+        technologie: techno,
+        prixAvantTaxes: alternative.prixAvantTaxes,
+        typeOrganisme: options.typeOrganisme,
+        anneeAchatCalendaire: options.anneeReference + k,
+        classePoids: classePourSubventions(v.gvwr_class),
+      },
+      options.programmes,
+    );
+    subventions = resolution.subventions.map((s) => ({
+      libelle: s.libelle,
+      montant: s.montant,
+      annee: s.annee + k,
+    }));
+    avertissements = resolution.avertissements;
+    explications = resolution.explications;
+    // PRIORITÉ AU CLIENT : un montant confirmé par document remplace
+    // la subvention résolue du même programme ; les autres s'ajoutent.
+    subventions = appliquerSubventionsConfirmees(subventions, v.subventionsConfirmees, k, options.anneeReference);
+  }
+
+  return {
+    vehicule: {
+      id: v.id,
+      kmParAn,
+      classeEmissionDiesel: classeEmission(v.category),
+      ...(carburant === "essence" ? { carburantReference: "essence" as const } : {}),
+      reference,
+      alternative,
+      subventionsAlternative: subventions,
+      dureeVieAns: defauts.dureeVieAns,
+      anneeAcquisition: k,
+    },
+    avertissements,
+    explications,
+  };
+}
+
+/**
+ * Chiffre une assignation complète (technologie + année par véhicule)
+ * avec LE moteur : véhicules hors catégorie ou hors horizon signalés,
+ * infrastructure par garage (source unique), subventions résolues.
+ */
+export function chiffrerChoix(
   vehicules: VehiculeProjet[],
   cle: CleStrategie,
   options: OptionsStrategie,
-  selection: Set<string> | null,
+  choisir: (v: VehiculeProjet) => ChoixVehicule,
 ): StrategieConstruite {
   const parametres = parametresParDefaut(options);
   const exclusions: string[] = [];
@@ -232,16 +344,16 @@ function chiffrer(
   const vehiculesInfra: VehiculeInfra[] = [];
 
   for (const v of vehicules) {
-    const { defauts, kmParAn, consoReference, carburant } = analyserDonneesVehicule(v);
-    if (!defauts) {
+    if (!analyserDonneesVehicule(v).defauts) {
       exclusions.push(v.id);
       continue;
     }
+    const choix = choisir(v);
     let k = 0;
-    if (v.replacement_year == null) {
+    if (choix.annee == null) {
       sansAnnee.push(v.id);
     } else {
-      k = Math.max(v.replacement_year - options.anneeReference, 0);
+      k = Math.max(choix.annee - options.anneeReference, 0);
       // Remplacement APRÈS l'horizon d'analyse (revue A5) : le véhicule
       // n'a aucun effet dans la fenêtre — exclu des totaux et signalé
       // en clair (jamais un identifiant technique à l'écran).
@@ -251,72 +363,18 @@ function chiffrer(
       }
     }
 
-    const techno = technoCible(cle, v, selection);
-    const reference = {
-      technologie: "diesel" as const,
-      prixAvantTaxes: defauts.prixAchat.diesel.valeur,
-      consommationPar100km: consoReference,
-      entretienParKm: defauts.entretien.diesel.valeur,
-    };
-    // Techno « diesel » = statu quo pour ce véhicule : alternative
-    // identique à la référence, différentiel nul, mais le véhicule reste
-    // dans les totaux (budget, émissions) des deux scénarios.
-    const alternative =
-      techno === "diesel"
-        ? reference
-        : {
-            technologie: techno,
-            prixAvantTaxes: defauts.prixAchat[techno].valeur,
-            consommationPar100km: defauts.consommation[techno].valeur,
-            entretienParKm: defauts.entretien[techno].valeur,
-          };
+    const entree = entreeVehiculeMoteur(v, choix.techno, k, options)!;
+    for (const a of entree.avertissements) avertissementsSubventions.add(a);
+    if (entree.explications) explicationsSubventions[v.id] = entree.explications;
+    plansVehicules.push(entree.vehicule);
 
-    let subventions: { libelle: string; montant: number; annee: number }[] = [];
-    if (techno !== "diesel") {
-      const resolution = resoudreSubventions({
-        categorie: defauts.categorie,
-        technologie: techno,
-        prixAvantTaxes: alternative.prixAvantTaxes,
-        typeOrganisme: options.typeOrganisme,
-        anneeAchatCalendaire: options.anneeReference + k,
-        classePoids: classePourSubventions(v.gvwr_class),
-      });
-      subventions = resolution.subventions.map((s) => ({
-        libelle: s.libelle,
-        montant: s.montant,
-        annee: s.annee + k,
-      }));
-      for (const a of resolution.avertissements) avertissementsSubventions.add(a);
-      explicationsSubventions[v.id] = resolution.explications;
-      // PRIORITÉ AU CLIENT : un montant confirmé par document remplace
-      // la subvention résolue du même programme ; les autres s'ajoutent.
-      subventions = appliquerSubventionsConfirmees(
-        subventions,
-        v.subventionsConfirmees,
-        k,
-        options.anneeReference,
-      );
-    }
-
-    plansVehicules.push({
-      id: v.id,
-      kmParAn,
-      classeEmissionDiesel: classeEmission(v.category),
-      ...(carburant === "essence" ? { carburantReference: "essence" as const } : {}),
-      reference,
-      alternative,
-      subventionsAlternative: subventions,
-      dureeVieAns: defauts.dureeVieAns,
-      anneeAcquisition: k,
-    });
-
-    if (techno !== "diesel") {
+    if (choix.techno !== "diesel") {
       vehiculesInfra.push({
         id: v.id,
         unit_number: v.unit_number,
         category: v.category,
         depot: v.depot ?? null,
-        technologie: techno,
+        technologie: choix.techno,
         anneeAcquisition: k,
       });
     }
@@ -389,7 +447,7 @@ export interface ChangementCible {
  */
 export function changementsStrategie(
   vehicules: VehiculeProjet[],
-  cle: CleStrategie,
+  cle: CleStrategieAuto,
   options: OptionsStrategie,
 ): ChangementCible[] {
   const selection = cle === "economies_d_abord" ? selectionEconomiesDAbord(vehicules, options).ids : null;
@@ -448,15 +506,26 @@ export function strategieRetenue(
   vehicules: VehiculeProjet[],
   selectionnee: string | null | undefined,
   options: OptionsStrategie,
+  /** Assignation enregistrée quand la stratégie « optimisee » a été appliquée. */
+  assignationOptimisee?: { vehicules: Record<string, { annee: number; techno: TechnoAlternative }> } | null,
 ): StrategieRetenue {
+  if (selectionnee === "optimisee") {
+    // Écarts = véhicules dont l'année OU la cible diffère de l'assignation appliquée.
+    const VERS: Record<TechnoAlternative, string> = { diesel: "diesel", BEV: "bev", FCEV: "fcev" };
+    const ecarts = vehicules.filter((v) => {
+      const c = assignationOptimisee?.vehicules[v.id];
+      return c && (v.replacement_year !== c.annee || (v.target_technology ?? null) !== VERS[c.techno]);
+    }).length;
+    return { cle: "optimisee", ecarts };
+  }
   const cle = CLES_STRATEGIES.find((c) => c === selectionnee);
   if (!cle) return { cle: null, ecarts: 0 };
   return { cle, ecarts: changementsStrategie(vehicules, cle, options).length };
 }
 
 const NOMS_STRATEGIES: Record<"fr" | "en", Record<CleStrategie, string>> = {
-  fr: { plan_actuel: "Plan actuel", tout_electrique: "Tout électrique", economies_d_abord: "Économies d'abord" },
-  en: { plan_actuel: "Current plan", tout_electrique: "All electric", economies_d_abord: "Savings first" },
+  fr: { plan_actuel: "Plan actuel", tout_electrique: "Tout électrique", economies_d_abord: "Économies d'abord", optimisee: "Optimisée" },
+  en: { plan_actuel: "Current plan", tout_electrique: "All electric", economies_d_abord: "Savings first", optimisee: "Optimized" },
 };
 
 /** Libellé du rapport (PDF, Excel) ; l'écran utilise les clés i18n équivalentes. */

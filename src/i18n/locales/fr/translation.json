@@ -4958,6 +4958,10 @@
         "economies_d_abord": {
           "title": "Économies d'abord",
           "description": "BEV seulement là où le moteur calcule une économie, bornes et raccordement du garage compris ; diesel sinon."
+        },
+        "optimisee": {
+          "title": "Optimisée",
+          "description": "Année et technologie de chaque véhicule calculées sous VOS contraintes (budget, cibles, garages, échéances) par un algorithme déterministe."
         }
       },
       "metrics": {
@@ -5008,7 +5012,9 @@
         "none": "aucune",
         "confirm": "Appliquer ({{count}} changement(s))",
         "done": "Stratégie appliquée au plan — {{count}} cible(s) mise(s) à jour",
-        "retained": "Stratégie retenue"
+        "retained": "Stratégie retenue",
+        "logSummary": "Stratégie « {{strategy}} » appliquée — {{count}} véhicule(s) modifié(s)",
+        "logged": "L'application est journalisée (qui, quand, quoi) et visible par l'équipe."
       }
     },
     "plan": {
@@ -5278,6 +5284,153 @@
         "rapportPerime": "le plan a changé depuis le dernier rapport : le régénérer",
         "remplacementsRestants_one": "{{count}} remplacement à marquer réalisé",
         "remplacementsRestants_other": "{{count}} remplacements à marquer réalisés"
+      }
+    },
+    "optimizer": {
+      "running": "Calcul en cours…",
+      "cardFeasible_one": "Toutes les contraintes respectées · {{count}} véhicule change d'année ou de technologie",
+      "cardFeasible_other": "Toutes les contraintes respectées · {{count}} véhicules changent d'année ou de technologie",
+      "cardInfeasible_one": "{{count}} contrainte non respectée — voir ce qui bloque",
+      "cardInfeasible_other": "{{count}} contraintes non respectées — voir ce qui bloque",
+      "cardEmpty": "Saisissez vos contraintes (budget, cibles, garages, échéances) : l'optimiseur propose l'année et la technologie de chaque véhicule.",
+      "editConstraints": "Modifier les contraintes",
+      "defineConstraints": "Définir les contraintes et optimiser",
+      "applyPending_one": "{{count}} véhicule changerait d'année et/ou de technologie cible.",
+      "applyPending_other": "{{count}} véhicules changeraient d'année et/ou de technologie cible.",
+      "applySubtitle": "Les années de remplacement ET les technologies cibles ci-dessous seront mises à jour dans l'étape Flotte et le Plan.",
+      "feasible": "Toutes les contraintes sont respectées",
+      "infeasible": "Contraintes impossibles à respecter toutes ensemble",
+      "objectiveNote": {
+        "economies": "Objectif : économies maximales (VAN), sous vos contraintes. Chaque chiffre est recalculé par le moteur TCO.",
+        "co2": "Objectif : CO2e évité maximal (cycle complet), sous vos contraintes ; à égalité, la meilleure VAN."
+      },
+      "blocking": "Ce qui bloque (meilleure solution trouvée) :",
+      "levers": "Ce qui débloquerait :",
+      "leverEnough": "Lever « {{family}} » suffit — toutes les autres contraintes sont alors respectées (VAN {{amount}}).",
+      "leverNotEnough_one": "Lever « {{family}} » ne suffit pas ({{count}} contrainte resterait non respectée).",
+      "leverNotEnough_other": "Lever « {{family}} » ne suffit pas ({{count}} contraintes resteraient non respectées).",
+      "families": {
+        "budget": "budgets annuels",
+        "capacite": "capacité des garages",
+        "technologies": "technologies autorisées",
+        "calendrier": "fenêtre de calendrier (avance / report)",
+        "vehicules_gardes": "véhicules gardés"
+      },
+      "table": {
+        "year": "Année",
+        "investment": "Investissement",
+        "remaining": "Reste à financer",
+        "zeShare": "Part zéro émission",
+        "ghg": "Réduction GES",
+        "unit": "Unité",
+        "garage": "Garage",
+        "planned": "Prévu",
+        "optimized": "Optimisé",
+        "why": "Pourquoi"
+      },
+      "decisionsTitle": "Décisions véhicule par véhicule",
+      "changed": "modifié",
+      "showLess": "Afficher moins",
+      "showAll_one": "Afficher la décision",
+      "showAll_other": "Afficher les {{count}} décisions",
+      "methodNote": "Méthode : algorithme déterministe (aucune IA, aucun hasard). Chaque option véhicule × année × technologie est chiffrée par le moteur TCO, l'infrastructure par garage aussi ; la solution retenue est recalculée en entier par le moteur. Les économies comparent chaque véhicule à un diesel neuf acheté la même année. L'optimiseur ne fait jamais moins bien qu'une des trois autres stratégies qui respecte vos contraintes.",
+      "technos": {
+        "diesel": "Diesel",
+        "BEV": "Électrique (BEV)",
+        "FCEV": "Hydrogène (FCEV)"
+      },
+      "objectives": {
+        "economies": "Maximiser les économies",
+        "co2": "Maximiser le CO2 évité"
+      },
+      "budgetKinds": {
+        "investissement": "d'investissement",
+        "reste": "de reste à financer"
+      },
+      "reasons": {
+        "garde": "Gardé tel quel (votre choix).",
+        "electrifie_rentable": "Électrifié : rapporte {{amount}} (VAN, bornes du garage comprises).",
+        "electrifie_co2": "Électrifié pour le CO2 : {{tonnes}} t évitées pour un surcoût de {{amount}}.",
+        "electrifie_cible": "Électrifié pour atteindre votre cible, malgré un surcoût de {{amount}}.",
+        "techno_imposee": "Technologie imposée : le diesel n'est pas autorisé pour cette catégorie.",
+        "subvention_avant_fin": "Acheté avant la fin de « {{programme}} » ({{date}}).",
+        "avance_subvention": "Avancé pour profiter de « {{programme}} » avant sa fin ({{date}}).",
+        "avance_avantageuse": "Avancé : rapporte {{amount}} de plus.",
+        "report_budget": "Reporté : le budget annuel {{budget}} serait dépassé à l'année prévue.",
+        "report_capacite": "Reporté : capacité du garage {{garage}} atteinte à l'année prévue.",
+        "report_avantageux": "Reporté : rapporte {{amount}} de plus que l'année prévue.",
+        "diesel_non_rentable": "Reste au diesel : l'électrique coûterait {{amount}} de plus (VAN, bornes comprises).",
+        "diesel_budget": "Reste au diesel : le budget annuel {{budget}} serait dépassé.",
+        "diesel_capacite": "Reste au diesel : capacité du garage {{garage}} atteinte.",
+        "diesel_techno_non_autorisee": "Reste au diesel : aucune technologie zéro émission autorisée pour cette catégorie.",
+        "diesel_hiver": "Reste au diesel : autonomie hivernale insuffisante pour son usage (étape Faisabilité).",
+        "diesel_a_reporter": "Reste au diesel : catégorie sans véhicule électrique crédible aujourd'hui (à reporter)."
+      },
+      "violations": {
+        "budget_investissement": "Investissement {{year}} : {{amount}} pour un budget de {{budget}} (dépassement de {{over}}).",
+        "budget_reste": "Reste à financer {{year}} : {{amount}} pour un budget de {{budget}} (dépassement de {{over}}).",
+        "capacite_kw": "Garage {{garage}}, {{year}} : {{demand}} kW de bornes pour {{capacity}} kW disponibles (+{{over}} kW).",
+        "capacite_places": "Garage {{garage}}, {{year}} : {{demand}} bornes pour {{places}} places (+{{over}}).",
+        "cible_ze_one": "Cible {{year}} : {{target}} de zéro émission demandés, {{reached}} atteints — il manque {{count}} véhicule.",
+        "cible_ze_other": "Cible {{year}} : {{target}} de zéro émission demandés, {{reached}} atteints — il manque {{count}} véhicules.",
+        "cible_ges": "Cible {{year}} : réduction des GES de {{target}} demandée, {{reached}} atteinte — il manque {{tonnes}} t CO2e par an.",
+        "aucune_techno": "{{unit}} : aucune technologie autorisée pour sa catégorie (le diesel est conservé)."
+      },
+      "form": {
+        "title": "Contraintes de l'optimiseur",
+        "subtitle": "Laissez vide ce qui ne vous contraint pas. Les contraintes sont enregistrées sur le projet et visibles par l'équipe.",
+        "objective": "Objectif",
+        "budgetInvestment": "Investissement annuel maximal ($)",
+        "budgetRemaining": "Reste à financer annuel maximal ($)",
+        "none": "Aucune limite",
+        "budgetHelp": "Investissement = achats de l'année (tous les véhicules remplacés, y compris au diesel) + bornes et raccordement, en dollars courants, taxes non récupérables comprises. Reste à financer = investissement − subventions de l'année.",
+        "ciblesZe": "Cibles de part zéro émission",
+        "ciblesGes": "Cibles de réduction des GES (cycle complet, vs flotte diesel)",
+        "addTarget": "Ajouter",
+        "year": "Année",
+        "ciblesZePct": "% de la flotte zéro émission au plus tard cette année",
+        "ciblesGesPct": "% de réduction des GES cette année",
+        "maxDelay": "Report maximal après l'année prévue (ans)",
+        "maxAdvance": "Avance maximale avant l'année prévue (ans)",
+        "advanceHelp": "Avancer un remplacement retire le véhicule actuel avant sa fin de vie ; sa valeur résiduelle n'est pas chiffrée par le moteur — d'où 0 par défaut.",
+        "technologies": "Technologies autorisées par catégorie",
+        "garages": "Capacité des garages",
+        "garagesHelp": "Puissance maximale des bornes (kW, à pleine puissance) et nombre de places de recharge. Vide = pas de limite (la mise à niveau du raccordement est alors chiffrée). Une augmentation peut être prévue à partir d'une année (travaux).",
+        "garageKnown": "Connu au garage : {{places}} places · {{kw}} kW disponibles",
+        "capacityKw": "kW max",
+        "places": "Places",
+        "upgrade": "Augmentation prévue à partir de",
+        "upgradeYear": "Année",
+        "useGaragePlaces": "Reprendre les places du garage",
+        "deadlines": "Dates limites des subventions",
+        "deadlinesHelp": "Si votre date limite (dépôt de la demande, livraison exigée) est plus tôt que la fin du programme au registre, saisissez-la : un achat après cette année ne compte plus la subvention.",
+        "deadlineFor": "Date limite pour {{programme}}",
+        "registryDeadline": "Fin au registre : {{date}}",
+        "kept": "Véhicules à garder tels quels",
+        "keptHelp": "Leur année et leur technologie du plan actuel ne changent pas.",
+        "run": "Optimiser"
+      }
+    },
+    "changeLog": {
+      "title": "Historique des modifications du plan",
+      "subtitle": "Chaque modification appliquée après confirmation (stratégie, optimiseur, copilote, import…) est journalisée : qui, quand, quoi. Le journal ne peut pas être modifié.",
+      "empty": "Aucune modification journalisée pour l'instant.",
+      "teamMember": "un membre de l'équipe",
+      "byOn": "Par {{who}}, le {{when}}",
+      "more_one": "… et {{count}} autre changement",
+      "more_other": "… et {{count}} autres changements",
+      "fields": {
+        "replacement_year": "année de remplacement",
+        "target_technology": "technologie cible"
+      },
+      "sources": {
+        "strategie": "Stratégie",
+        "optimiseur": "Optimiseur",
+        "copilote": "Copilote",
+        "import": "Import",
+        "document": "Document",
+        "veille": "Veille",
+        "manuel": "Manuel"
       }
     }
   },

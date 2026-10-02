@@ -4958,6 +4958,10 @@
         "economies_d_abord": {
           "title": "Savings first",
           "description": "BEV only where the engine computes a saving, garage chargers and grid connection included; diesel otherwise."
+        },
+        "optimisee": {
+          "title": "Optimized",
+          "description": "Year and technology of each vehicle computed under YOUR constraints (budget, targets, garages, deadlines) by a deterministic algorithm."
         }
       },
       "metrics": {
@@ -5008,7 +5012,9 @@
         "none": "none",
         "confirm": "Apply ({{count}} change(s))",
         "done": "Strategy applied to the plan — {{count}} target(s) updated",
-        "retained": "Retained strategy"
+        "retained": "Retained strategy",
+        "logSummary": "Strategy \"{{strategy}}\" applied — {{count}} vehicle(s) changed",
+        "logged": "The change is logged (who, when, what) and visible to the team."
       }
     },
     "plan": {
@@ -5278,6 +5284,153 @@
         "rapportPerime": "the plan changed since the last report: regenerate it",
         "remplacementsRestants_one": "{{count}} replacement to mark as completed",
         "remplacementsRestants_other": "{{count}} replacements to mark as completed"
+      }
+    },
+    "optimizer": {
+      "running": "Computing…",
+      "cardFeasible_one": "All constraints met · {{count}} vehicle changes year or technology",
+      "cardFeasible_other": "All constraints met · {{count}} vehicles change year or technology",
+      "cardInfeasible_one": "{{count}} constraint not met — see what blocks",
+      "cardInfeasible_other": "{{count}} constraints not met — see what blocks",
+      "cardEmpty": "Enter your constraints (budget, targets, garages, deadlines): the optimizer proposes the year and technology of each vehicle.",
+      "editConstraints": "Edit constraints",
+      "defineConstraints": "Set constraints and optimize",
+      "applyPending_one": "{{count}} vehicle would change year and/or target technology.",
+      "applyPending_other": "{{count}} vehicles would change year and/or target technology.",
+      "applySubtitle": "The replacement years AND target technologies below will be updated in the Fleet step and the Plan.",
+      "feasible": "All constraints are met",
+      "infeasible": "The constraints cannot all be met together",
+      "objectiveNote": {
+        "economies": "Objective: maximum savings (NPV) under your constraints. Every figure is recomputed by the TCO engine.",
+        "co2": "Objective: maximum CO2e avoided (full cycle) under your constraints; ties broken by the best NPV."
+      },
+      "blocking": "What blocks (best solution found):",
+      "levers": "What would unblock it:",
+      "leverEnough": "Lifting \"{{family}}\" is enough — all other constraints are then met (NPV {{amount}}).",
+      "leverNotEnough_one": "Lifting \"{{family}}\" is not enough ({{count}} constraint would remain unmet).",
+      "leverNotEnough_other": "Lifting \"{{family}}\" is not enough ({{count}} constraints would remain unmet).",
+      "families": {
+        "budget": "annual budgets",
+        "capacite": "garage capacity",
+        "technologies": "allowed technologies",
+        "calendrier": "calendar window (advance / delay)",
+        "vehicules_gardes": "vehicles kept"
+      },
+      "table": {
+        "year": "Year",
+        "investment": "Investment",
+        "remaining": "Remaining to finance",
+        "zeShare": "Zero-emission share",
+        "ghg": "GHG reduction",
+        "unit": "Unit",
+        "garage": "Garage",
+        "planned": "Planned",
+        "optimized": "Optimized",
+        "why": "Why"
+      },
+      "decisionsTitle": "Vehicle-by-vehicle decisions",
+      "changed": "changed",
+      "showLess": "Show less",
+      "showAll_one": "Show the decision",
+      "showAll_other": "Show all {{count}} decisions",
+      "methodNote": "Method: deterministic algorithm (no AI, no randomness). Each vehicle × year × technology option is priced by the TCO engine, as is the infrastructure of each garage; the selected solution is fully recomputed by the engine. Savings compare each vehicle with a new diesel bought the same year. The optimizer never does worse than any of the three other strategies that meets your constraints.",
+      "technos": {
+        "diesel": "Diesel",
+        "BEV": "Electric (BEV)",
+        "FCEV": "Hydrogen (FCEV)"
+      },
+      "objectives": {
+        "economies": "Maximize savings",
+        "co2": "Maximize CO2 avoided"
+      },
+      "budgetKinds": {
+        "investissement": "investment",
+        "reste": "remaining-to-finance"
+      },
+      "reasons": {
+        "garde": "Kept as is (your choice).",
+        "electrifie_rentable": "Electrified: saves {{amount}} (NPV, garage chargers included).",
+        "electrifie_co2": "Electrified for CO2: {{tonnes}} t avoided for an extra cost of {{amount}}.",
+        "electrifie_cible": "Electrified to reach your target, despite an extra cost of {{amount}}.",
+        "techno_imposee": "Technology imposed: diesel is not allowed for this category.",
+        "subvention_avant_fin": "Bought before \"{{programme}}\" ends ({{date}}).",
+        "avance_subvention": "Brought forward to benefit from \"{{programme}}\" before it ends ({{date}}).",
+        "avance_avantageuse": "Brought forward: saves {{amount}} more.",
+        "report_budget": "Delayed: the annual {{budget}} budget would be exceeded in the planned year.",
+        "report_capacite": "Delayed: capacity of garage {{garage}} reached in the planned year.",
+        "report_avantageux": "Delayed: saves {{amount}} more than the planned year.",
+        "diesel_non_rentable": "Stays diesel: electric would cost {{amount}} more (NPV, chargers included).",
+        "diesel_budget": "Stays diesel: the annual {{budget}} budget would be exceeded.",
+        "diesel_capacite": "Stays diesel: capacity of garage {{garage}} reached.",
+        "diesel_techno_non_autorisee": "Stays diesel: no zero-emission technology allowed for this category.",
+        "diesel_hiver": "Stays diesel: insufficient winter range for its use (Feasibility step).",
+        "diesel_a_reporter": "Stays diesel: no credible electric vehicle for this category today (deferred)."
+      },
+      "violations": {
+        "budget_investissement": "Investment {{year}}: {{amount}} for a budget of {{budget}} (over by {{over}}).",
+        "budget_reste": "Remaining to finance {{year}}: {{amount}} for a budget of {{budget}} (over by {{over}}).",
+        "capacite_kw": "Garage {{garage}}, {{year}}: {{demand}} kW of chargers for {{capacity}} kW available (+{{over}} kW).",
+        "capacite_places": "Garage {{garage}}, {{year}}: {{demand}} chargers for {{places}} spots (+{{over}}).",
+        "cible_ze_one": "Target {{year}}: {{target}} zero-emission requested, {{reached}} reached — {{count}} vehicle short.",
+        "cible_ze_other": "Target {{year}}: {{target}} zero-emission requested, {{reached}} reached — {{count}} vehicles short.",
+        "cible_ges": "Target {{year}}: {{target}} GHG reduction requested, {{reached}} reached — {{tonnes}} t CO2e per year short.",
+        "aucune_techno": "{{unit}}: no technology allowed for its category (diesel kept)."
+      },
+      "form": {
+        "title": "Optimizer constraints",
+        "subtitle": "Leave blank what does not constrain you. Constraints are saved on the project and visible to the team.",
+        "objective": "Objective",
+        "budgetInvestment": "Maximum annual investment ($)",
+        "budgetRemaining": "Maximum annual remaining to finance ($)",
+        "none": "No limit",
+        "budgetHelp": "Investment = purchases of the year (all replaced vehicles, diesel included) + chargers and grid connection, in current dollars, non-recoverable taxes included. Remaining to finance = investment − subsidies of the year.",
+        "ciblesZe": "Zero-emission share targets",
+        "ciblesGes": "GHG reduction targets (full cycle, vs diesel fleet)",
+        "addTarget": "Add",
+        "year": "Year",
+        "ciblesZePct": "% of the fleet zero-emission by this year",
+        "ciblesGesPct": "% GHG reduction in this year",
+        "maxDelay": "Maximum delay after the planned year (years)",
+        "maxAdvance": "Maximum advance before the planned year (years)",
+        "advanceHelp": "Bringing a replacement forward retires the current vehicle before end of life; its residual value is not priced by the engine — hence 0 by default.",
+        "technologies": "Allowed technologies by category",
+        "garages": "Garage capacity",
+        "garagesHelp": "Maximum charger power (kW, at full power) and number of charging spots. Blank = no limit (the grid connection upgrade is then priced). An increase can be planned from a given year (works).",
+        "garageKnown": "Known at the garage: {{places}} spots · {{kw}} kW available",
+        "capacityKw": "Max kW",
+        "places": "Spots",
+        "upgrade": "Increase planned from",
+        "upgradeYear": "Year",
+        "useGaragePlaces": "Use the garage's spots",
+        "deadlines": "Subsidy deadlines",
+        "deadlinesHelp": "If your deadline (application filing, required delivery) is earlier than the program end in the registry, enter it: a purchase after that year no longer counts the subsidy.",
+        "deadlineFor": "Deadline for {{programme}}",
+        "registryDeadline": "Registry end: {{date}}",
+        "kept": "Vehicles to keep as is",
+        "keptHelp": "Their year and technology from the current plan do not change.",
+        "run": "Optimize"
+      }
+    },
+    "changeLog": {
+      "title": "Plan change history",
+      "subtitle": "Every change applied after confirmation (strategy, optimizer, copilot, import…) is logged: who, when, what. The log cannot be edited.",
+      "empty": "No change logged yet.",
+      "teamMember": "a team member",
+      "byOn": "By {{who}}, on {{when}}",
+      "more_one": "… and {{count}} other change",
+      "more_other": "… and {{count}} other changes",
+      "fields": {
+        "replacement_year": "replacement year",
+        "target_technology": "target technology"
+      },
+      "sources": {
+        "strategie": "Strategy",
+        "optimiseur": "Optimizer",
+        "copilote": "Copilot",
+        "import": "Import",
+        "document": "Document",
+        "veille": "Monitoring",
+        "manuel": "Manual"
       }
     }
   },
