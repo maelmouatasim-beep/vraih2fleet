@@ -178,6 +178,7 @@
         "npm:next-themes@0.3",
         "npm:pako@^2.2.0",
         "npm:papaparse@^5.7.0",
+        "npm:pdfjs-dist@^4.10.38",
         "npm:playwright@1.49",
         "npm:postcss@^8.5.6",
         "npm:react-day-picker@^8.10.1",

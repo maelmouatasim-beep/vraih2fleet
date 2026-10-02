@@ -377,6 +377,11 @@ export interface ResultatImportIntelligent {
   garagesNouveaux: string[];
 }
 
+/** Borne PHYSIQUE (jours d'une année civile), pas une hypothèse
+ *  d'exploitation : un km annuel au-delà de 365 × km journalier max est
+ *  impossible. */
+const JOURS_CALENDAIRES = 365;
+
 const cleUnite = (u: string) => u.toLowerCase().replace(/[^a-z0-9]/g, "").replace(/^([a-z]*)0+(\d)/, "$1$2");
 
 /** Applique la correspondance, valide (règles strictes de l'import) et
@@ -499,7 +504,7 @@ export function appliquerCorrespondance(
     }
     const kmAn = nombreStrict(String(l.annual_km ?? ""));
     const kmJour = nombreStrict(String(l.max_daily_km ?? ""));
-    if (kmAn != null && kmJour != null && kmJour > 0 && kmJour * 365 < kmAn) sign.push({ code: "km_incoherents", kmAn, kmJourMax: kmJour });
+    if (kmAn != null && kmJour != null && kmJour > 0 && kmJour * JOURS_CALENDAIRES < kmAn) sign.push({ code: "km_incoherents", kmAn, kmJourMax: kmJour });
     const conso = nombreStrict(String(l.consumption_per_100km ?? ""));
     const brutCat = String(l.category ?? "");
     const cat = categorieMoteur(valeurReconnue("category", brutCat) ?? brutCat);

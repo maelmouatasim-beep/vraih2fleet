@@ -1,7 +1,8 @@
 // Phase 5.2 — IA : réglages par organisation (désactivés par défaut,
 // modifiables par un admin seulement), usage écrit par le serveur seul,
 // historique du copilote visible par l'équipe du projet, fonction
-// `copilot` : 403 si désactivée, 503 propre sans clé Anthropic.
+// `copilot` et `fleet-import` : 403 si désactivées, 503 propre sans clé
+// Anthropic.
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import { adminClient, callFunction, createTestUser, type TestUser } from "./helpers.ts";
 
@@ -100,4 +101,36 @@ Deno.test("fonction copilot : 401 sans jeton, 403 si désactivée, 503 propre sa
   const intrus = await callFunction("copilot", corps(org, autre), { Authorization: `Bearer ${a.token}` });
   assertEquals(intrus.status, 404);
   await intrus.body?.cancel();
+});
+
+Deno.test("fonction fleet-import : 401 sans jeton, 403 si désactivée ou autre organisation, 503 propre sans clé", async () => {
+  const a = await createTestUser("ia-5");
+  const org = await orgDe(a);
+  const corpsImport = (o: string) => ({
+    organizationId: o,
+    colonnes: [{ entete: "Asset #", exemples: ["T-12"], valeursDistinctes: null, nbValeurs: 1 }],
+  });
+  const sansJeton = await callFunction("fleet-import", corpsImport(org));
+  assertEquals(sansJeton.status, 401);
+  await sansJeton.body?.cancel();
+  const desactivee = await callFunction("fleet-import", corpsImport(org), { Authorization: `Bearer ${a.token}` });
+  assertEquals(desactivee.status, 403);
+  assertEquals((await desactivee.json()).error, "fonction_desactivee");
+  // copilote activé seul : l'import intelligent reste désactivé (fonction par fonction)
+  await a.client.from("organization_ai_settings").insert({ organization_id: org, copilot_enabled: true });
+  const autreFonction = await callFunction("fleet-import", corpsImport(org), { Authorization: `Bearer ${a.token}` });
+  assertEquals(autreFonction.status, 403);
+  await autreFonction.body?.cancel();
+  await a.client.from("organization_ai_settings").update({ smart_import_enabled: true }).eq("organization_id", org);
+  const sansCle = await callFunction("fleet-import", corpsImport(org), { Authorization: `Bearer ${a.token}` });
+  assertEquals(sansCle.status, 503);
+  assertEquals((await sansCle.json()).error, "service_non_configure");
+  // organisation d'autrui : réglages illisibles (RLS) ⇒ refusé
+  const b = await createTestUser("ia-5b");
+  const intrus = await callFunction("fleet-import", corpsImport(await orgDe(b)), { Authorization: `Bearer ${b.token}` });
+  assertEquals(intrus.status, 403);
+  await intrus.body?.cancel();
+  const croise = await callFunction("fleet-import", corpsImport(org), { Authorization: `Bearer ${b.token}` });
+  assertEquals(croise.status, 403);
+  await croise.body?.cancel();
 });

@@ -38,7 +38,7 @@ export function clientAnthropic(): Anthropic | null {
   if (!apiKey) return null;
   // ANTHROPIC_BASE_URL (facultatif) : réservé aux tests locaux.
   const baseURL = Deno.env.get("ANTHROPIC_BASE_URL") || undefined;
-  return new Anthropic({ apiKey, baseURL, maxRetries: 2, timeout: 120_000 });
+  return new Anthropic({ apiKey, baseURL, maxRetries: 2, timeout: 2 * 60_000 });
 }
 
 export interface ReglagesIa {
