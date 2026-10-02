@@ -5,9 +5,12 @@ import {
   construireStrategie,
   construireStrategies,
   estPlanVide,
+  libelleStrategieRetenue,
   strategieMeilleureEconomie,
+  strategieRetenue,
   type VehiculeProjet,
 } from "../strategies";
+import { construireClasseurPlan } from "../report";
 import { cleGarage } from "../infrastructure";
 
 const OPTIONS = {
@@ -357,5 +360,51 @@ describe("1.5 — badge « Meilleure économie »", () => {
         expect(s.resultat!.vanDifferentielle).toBeGreaterThanOrEqual(x.resultat!.vanDifferentielle);
       }
     }
+  });
+});
+
+describe("1.6 — stratégie réellement retenue (Plan, PDF, Excel)", () => {
+  const flotte = [
+    vehicule({ id: "a", target_technology: null, annual_km: 40000, depot: "A" }),
+    vehicule({ id: "b", target_technology: null, annual_km: 3000, depot: "A" }),
+  ];
+  const appliquer = (vs: VehiculeProjet[], cle: "economies_d_abord") => {
+    const ch = new Map(changementsStrategie(vs, cle, OPTIONS).map((c) => [c.vehiculeId, c.cibleNouvelle]));
+    return vs.map((v) => ({ ...v, target_technology: ch.get(v.id) ?? v.target_technology }));
+  };
+
+  it("« Économies d'abord » appliquée : nommée telle quelle (et non « Plan actuel »), Excel compris", () => {
+    const plan = appliquer(flotte, "economies_d_abord");
+    const r = strategieRetenue(plan, "economies_d_abord", OPTIONS);
+    expect(r).toEqual({ cle: "economies_d_abord", ecarts: 0 });
+    expect(libelleStrategieRetenue(r, "fr")).toBe("Économies d'abord");
+    const s = construireStrategie(plan, "plan_actuel", OPTIONS);
+    const [budget] = construireClasseurPlan(s, new Map(), {
+      organisation: "Ville",
+      projet: "P",
+      dateIso: "2026-10-02",
+      anneeReference: 2026,
+      horizonAns: 10,
+      tauxActualisationNominal: 0.05,
+      strategieRetenue: r,
+    });
+    expect(budget.lignes.flat()).toContain("Stratégie retenue : Économies d'abord");
+    // Mêmes chiffres que la stratégie chiffrée à l'étape Stratégies.
+    expect(s.resultat!.vanDifferentielle).toBeCloseTo(
+      construireStrategie(flotte, "economies_d_abord", OPTIONS).resultat!.vanDifferentielle,
+      6,
+    );
+  });
+
+  it("cible modifiée après application : « modifiée depuis son application » ; sans stratégie : choix manuels", () => {
+    const plan = appliquer(flotte, "economies_d_abord").map((v) =>
+      v.id === "b" ? { ...v, target_technology: "bev" } : v,
+    );
+    const r = strategieRetenue(plan, "economies_d_abord", OPTIONS);
+    expect(r.ecarts).toBe(1);
+    expect(libelleStrategieRetenue(r, "fr")).toContain("modifiée depuis son application (1 véhicule(s)");
+    expect(strategieRetenue(plan, null, OPTIONS).cle).toBeNull();
+    expect(strategieRetenue(plan, "inconnue", OPTIONS).cle).toBeNull();
+    expect(libelleStrategieRetenue({ cle: null, ecarts: 0 }, "en")).toContain("vehicle by vehicle");
   });
 });

@@ -1,8 +1,9 @@
 /**
  * Étape 4 du parcours — Plan : le plan de remplacement véhicule par
  * véhicule, année par année, avec le budget annuel (PTI = investissement,
- * fonctionnement) tiré de la vueBudgetaire du moteur pour la stratégie
- * « Plan actuel » (technos cibles et années choisies à l'étape Flotte).
+ * fonctionnement) tiré de la vueBudgetaire du moteur pour les
+ * technos cibles et années du plan (étape Flotte ou stratégie appliquée),
+ * avec le nom de la stratégie réellement retenue (1.6).
  */
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
@@ -32,7 +33,7 @@ import {
 import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useConfirmedSubsidies } from "@/hooks/useConfirmedSubsidies";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
-import { construireStrategie, estPlanVide } from "@/lib/journey/strategies";
+import { construireStrategie, estPlanVide, strategieRetenue } from "@/lib/journey/strategies";
 import { formateurCad, formateurCadCompact } from "@/lib/format";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 import { Loader2 } from "lucide-react";
@@ -55,17 +56,15 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
   const donnees = useMemo(() => {
     if (!options || projectVehicles.length === 0) return null;
     const anneeReference = options.anneeReference;
-    const strategie = construireStrategie(
-      projectVehicles.map((pv) => ({
-        ...pv.vehicles,
-        replacement_year: pv.replacement_year,
-        target_technology: pv.target_technology,
-        subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
-      })),
-      "plan_actuel",
-      options,
-    );
+    const vehicules = projectVehicles.map((pv) => ({
+      ...pv.vehicles,
+      replacement_year: pv.replacement_year,
+      target_technology: pv.target_technology,
+      subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
+    }));
+    const strategie = construireStrategie(vehicules, "plan_actuel", options);
     if (!strategie.resultat || !strategie.plan) return null;
+    const retenue = strategieRetenue(vehicules, project?.selectedStrategy, options);
 
     // Remplacements par année calendaire (unités + techno cible)
     const uniteParId = new Map(projectVehicles.map((pv) => [pv.vehicle_id, pv.vehicles.unit_number]));
@@ -86,8 +85,8 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
       { investissement: 0, subventions: 0, resteAFinancer: 0 },
     );
 
-    return { strategie, resultat: strategie.resultat, remplacements, totaux };
-  }, [options, projectVehicles, confirmeesParVehicule]);
+    return { strategie, retenue, resultat: strategie.resultat, remplacements, totaux };
+  }, [options, projectVehicles, confirmeesParVehicule, project?.selectedStrategy]);
 
   if (orgLoading || isLoading) {
     return (
@@ -208,7 +207,16 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
       <Card>
         <CardHeader>
           <CardTitle className="text-lg">{t("journey.plan.tableTitle")}</CardTitle>
-          <p className="text-sm text-muted-foreground">{t("journey.plan.tableSubtitle")}</p>
+          <p className="text-sm text-muted-foreground">
+            {t("journey.plan.tableSubtitle", {
+              strategy: donnees.retenue.cle
+                ? t(`journey.strategies.options.${donnees.retenue.cle}.title`) +
+                  (donnees.retenue.ecarts > 0
+                    ? t("journey.plan.modifiedSince", { count: donnees.retenue.ecarts })
+                    : "")
+                : t("journey.plan.manualChoices"),
+            })}
+          </p>
         </CardHeader>
         <CardContent className="p-0 overflow-x-auto">
           <Table>

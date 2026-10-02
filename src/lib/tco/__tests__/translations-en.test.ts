@@ -92,7 +92,8 @@ describe("traductions anglaises du registre (E2)", () => {
       "en",
     );
     expect(feuilles.map((f) => f.nom)).toEqual(["Annual plan", "Vehicles", "Assumptions"]);
-    expect(feuilles[0].lignes[4][0]).toBe("Year");
+    expect(feuilles[0].lignes[5][0]).toBe("Year");
+    expect(feuilles[0].lignes[2][0]).toBe("Selected strategy: Choices made vehicle by vehicle (Fleet step)");
     const hyp = feuilles[2].lignes.find((l) => l[0] === "prix_diesel")!;
     expect(hyp[1]).toBe(HYPOTHESES_EN.prix_diesel);
   });

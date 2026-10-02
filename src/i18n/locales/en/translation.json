@@ -5939,7 +5939,9 @@
         "ecart": "Gap vs status quo"
       },
       "tableTitle": "Replacement plan, year by year",
-      "tableSubtitle": "“Current plan” strategy: the choices made in the Fleet step, computed by the engine (budget view, current dollars).",
+      "tableSubtitle": "Selected strategy: {{strategy}} — computed by the engine on the plan's target technologies (budget view, current dollars).",
+      "modifiedSince": ", modified since it was applied ({{count}} vehicle(s) changed)",
+      "manualChoices": "choices made vehicle by vehicle (Fleet step)",
       "columns": {
         "year": "Year",
         "replacements": "Replacements",

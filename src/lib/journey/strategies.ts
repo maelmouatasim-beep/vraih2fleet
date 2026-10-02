@@ -416,3 +416,37 @@ export function strategieMeilleureEconomie(strategies: StrategieConstruite[]): C
 export function estPlanVide(s: StrategieConstruite): boolean {
   return s.nbVehicules > 0 && s.nbZeroEmission === 0 && !s.aucuneElectrificationRentable;
 }
+
+/** 1.6 — Stratégie RÉELLEMENT retenue pour le plan (Plan, PDF, Excel, snapshot). */
+export interface StrategieRetenue {
+  /** null = aucune stratégie appliquée : choix faits véhicule par véhicule. */
+  cle: CleStrategie | null;
+  /** Nombre de véhicules dont la cible diffère aujourd'hui de la stratégie appliquée. */
+  ecarts: number;
+}
+
+export function strategieRetenue(
+  vehicules: VehiculeProjet[],
+  selectionnee: string | null | undefined,
+  options: OptionsStrategie,
+): StrategieRetenue {
+  const cle = CLES_STRATEGIES.find((c) => c === selectionnee);
+  if (!cle) return { cle: null, ecarts: 0 };
+  return { cle, ecarts: changementsStrategie(vehicules, cle, options).length };
+}
+
+const NOMS_STRATEGIES: Record<"fr" | "en", Record<CleStrategie, string>> = {
+  fr: { plan_actuel: "Plan actuel", tout_electrique: "Tout électrique", economies_d_abord: "Économies d'abord" },
+  en: { plan_actuel: "Current plan", tout_electrique: "All electric", economies_d_abord: "Savings first" },
+};
+
+/** Libellé du rapport (PDF, Excel) ; l'écran utilise les clés i18n équivalentes. */
+export function libelleStrategieRetenue(r: StrategieRetenue, langue: "fr" | "en"): string {
+  const en = langue === "en";
+  if (!r.cle) return en ? "Choices made vehicle by vehicle (Fleet step)" : "Choix faits véhicule par véhicule (étape Flotte)";
+  const nom = NOMS_STRATEGIES[langue][r.cle];
+  if (r.ecarts === 0) return nom;
+  return en
+    ? `${nom}, modified since it was applied (${r.ecarts} vehicle(s) changed)`
+    : `${nom}, modifiée depuis son application (${r.ecarts} véhicule(s) changé(s))`;
+}

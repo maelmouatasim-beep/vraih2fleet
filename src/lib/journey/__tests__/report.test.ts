@@ -48,12 +48,12 @@ describe("construireClasseurPlan", () => {
 
   it("le plan annuel reprend la vueBudgetaire du moteur, ligne à ligne", () => {
     const budget = feuilles[0].lignes;
-    const entete = budget[4];
+    const entete = budget[5];
     expect(entete[0]).toBe("Année");
-    const premiere = budget[5];
+    const premiere = budget[6];
     expect(premiere[0]).toBe(2026);
     const vue = strategie.resultat!.vueBudgetaire;
-    expect(budget.slice(5, 5 + vue.length).map((l) => l[8])).toEqual(vue.map((l) => l.ecart));
+    expect(budget.slice(6, 6 + vue.length).map((l) => l[8])).toEqual(vue.map((l) => l.ecart));
     // traçabilité : version du moteur et empreinte dans l'en-tête
     expect(String(budget[1][0])).toContain(ENGINE_VERSION);
     expect(String(budget[1][0])).toContain(strategie.resultat!.empreinteEntree);

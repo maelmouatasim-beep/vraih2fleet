@@ -7,7 +7,7 @@
 import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { ENGINE_VERSION, LISTE_HYPOTHESES, type ResultatPlan } from "@/lib/tco";
 import type { ResultatSensibilite } from "@/lib/tco";
-import type { StrategieConstruite } from "@/lib/journey/strategies";
+import { libelleStrategieRetenue, type StrategieConstruite } from "@/lib/journey/strategies";
 import type { MetaRapport } from "@/lib/journey/report";
 import { texteRecuperation } from "@/lib/journey/payback";
 import {
@@ -114,6 +114,10 @@ export default function CouncilReportPDF({
         </Text>
         <Text style={s.meta}>
           {meta.organisation} — {meta.projet}
+        </Text>
+        <Text style={s.meta}>
+          {(en ? "Selected strategy: " : "Stratégie retenue : ") +
+            libelleStrategieRetenue(meta.strategieRetenue ?? { cle: null, ecarts: 0 }, langue)}
         </Text>
         <Text style={s.meta}>
           {en

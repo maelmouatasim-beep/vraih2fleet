@@ -12,7 +12,7 @@ import {
   traduireLibelleSubvention,
   type Langue,
 } from "@/lib/tco/translations-en";
-import type { StrategieConstruite } from "./strategies";
+import { libelleStrategieRetenue, type StrategieConstruite, type StrategieRetenue } from "./strategies";
 import { texteRecuperation } from "./payback";
 
 export type Cellule = string | number | null;
@@ -34,12 +34,15 @@ export interface MetaRapport {
   /** Libellés « donnée client » (couche 3, §3.3 v2.2) : champs saisis
    *  par le client qui PRIMENT sur les défauts du registre. */
   donneesClient?: string[];
+  /** 1.6 — stratégie réellement retenue (nommée en tête du PDF et de l'Excel). */
+  strategieRetenue?: StrategieRetenue;
 }
 
 const L = {
   fr: {
     titre: (p: string, o: string) => `Plan de remplacement — ${p} (${o})`,
     genere: (d: string, v: string, e: string) => `Généré le ${d} — moteur H2Fleet ${v} — empreinte ${e}`,
+    strategie: (s: string) => `Stratégie retenue : ${s}`,
     note: "Dollars courants (vue budgétaire). Écart positif = le plan coûte moins cher que le statu quo.",
     colonnesBudget: ["Année", "Investissement (PTI)", "Subventions", "Reste à financer", "Fonctionnement", "Valeurs résiduelles", "Net plan", "Net statu quo", "Écart"],
     tcoPlan: "TCO actualisé du plan",
@@ -63,6 +66,7 @@ const L = {
   en: {
     titre: (p: string, o: string) => `Replacement plan — ${p} (${o})`,
     genere: (d: string, v: string, e: string) => `Generated on ${d} — H2Fleet engine ${v} — fingerprint ${e}`,
+    strategie: (s: string) => `Selected strategy: ${s}`,
     note: "Current dollars (budget view). Positive difference = the plan costs less than the status quo.",
     colonnesBudget: ["Year", "Investment (capital)", "Subsidies", "Remaining to finance", "Operations", "Residual values", "Plan net", "Status quo net", "Difference"],
     tcoPlan: "Plan discounted TCO",
@@ -99,6 +103,7 @@ export function construireClasseurPlan(
   const budget: Cellule[][] = [
     [l.titre(meta.projet, meta.organisation)],
     [l.genere(meta.dateIso, ENGINE_VERSION, resultat.empreinteEntree)],
+    [l.strategie(libelleStrategieRetenue(meta.strategieRetenue ?? { cle: null, ecarts: 0 }, langue))],
     [l.note],
     [],
     l.colonnesBudget,

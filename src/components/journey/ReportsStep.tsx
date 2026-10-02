@@ -17,7 +17,7 @@ import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useConfirmedSubsidies } from "@/hooks/useConfirmedSubsidies";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { construireClasseurPlan, type MetaRapport } from "@/lib/journey/report";
-import { construireStrategie } from "@/lib/journey/strategies";
+import { construireStrategie, strategieRetenue } from "@/lib/journey/strategies";
 import { analyserSensibilite, ENGINE_VERSION, LISTE_HYPOTHESES } from "@/lib/tco";
 import {
   dernierSnapshotRapport,
@@ -55,16 +55,16 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
   const donnees = useMemo(() => {
     if (!options || !organization || projectVehicles.length === 0) return null;
     const anneeReference = options.anneeReference;
-    const strategie = construireStrategie(
-      projectVehicles.map((pv) => ({
-        ...pv.vehicles,
-        replacement_year: pv.replacement_year,
-        target_technology: pv.target_technology,
-        subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
-      })),
-      "plan_actuel",
-      options,
-    );
+    const vehicules = projectVehicles.map((pv) => ({
+      ...pv.vehicles,
+      replacement_year: pv.replacement_year,
+      target_technology: pv.target_technology,
+      subventionsConfirmees: confirmeesParVehicule.get(pv.vehicle_id),
+    }));
+    // Les chiffres viennent TOUJOURS des cibles réelles du plan ; le
+    // libellé nomme la stratégie appliquée (1.6), écarts compris.
+    const strategie = construireStrategie(vehicules, "plan_actuel", options);
+    const retenue = strategieRetenue(vehicules, project.selectedStrategy, options);
     if (!strategie.plan || !strategie.resultat) return null;
     const meta: MetaRapport = {
       organisation: organization.name,
@@ -74,6 +74,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
       horizonAns: project.defaultAnalysisHorizonYears,
       tauxActualisationNominal: options.tauxActualisationNominal,
       donneesClient,
+      strategieRetenue: retenue,
     };
     const unites = new Map(projectVehicles.map((pv) => [pv.vehicle_id, pv.vehicles.unit_number]));
     return { strategie, meta, unites };
@@ -92,7 +93,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
     try {
       await insererSnapshotRapport({
         projectId,
-        strategyKey: "plan_actuel",
+        strategyKey: donnees!.meta.strategieRetenue?.cle ?? "plan_actuel",
         reportKind,
         engineVersion: ENGINE_VERSION,
         fingerprint: resultat.empreinteEntree,

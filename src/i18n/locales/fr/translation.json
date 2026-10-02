@@ -5939,7 +5939,9 @@
         "ecart": "Écart vs statu quo"
       },
       "tableTitle": "Plan de remplacement, année par année",
-      "tableSubtitle": "Stratégie « Plan actuel » : les choix faits à l'étape Flotte, chiffrés par le moteur (vue budgétaire, dollars courants).",
+      "tableSubtitle": "Stratégie retenue : {{strategy}} — chiffrée par le moteur sur les technologies cibles du plan (vue budgétaire, dollars courants).",
+      "modifiedSince": ", modifiée depuis son application ({{count}} véhicule(s) changé(s))",
+      "manualChoices": "choix faits véhicule par véhicule (étape Flotte)",
       "columns": {
         "year": "Année",
         "replacements": "Remplacements",
