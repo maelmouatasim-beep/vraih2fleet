@@ -22,6 +22,8 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from "react-i18next";
+import { estServiceNonConfigure } from "@/lib/serviceNonConfigure";
 
 const SUPPORT_CATEGORIES = [
   { value: 'technical', label: 'Technical Issue' },
@@ -38,6 +40,7 @@ const PRIORITY_LEVELS = [
 ];
 
 export default function Support() {
+  const { t } = useTranslation();
   const { user, profile } = useAuth();
   const { tier, canAccessFeature, isLoading: subscriptionLoading } = useSubscription();
   
@@ -101,6 +104,14 @@ export default function Support() {
       setMessage('');
     } catch (error) {
       console.error('Error sending support request:', error);
+      if (await estServiceNonConfigure(error)) {
+        toast({
+          title: t('servicesExternes.supportNonTransmisTitre'),
+          description: t('servicesExternes.supportNonTransmis'),
+          variant: 'destructive',
+        });
+        return;
+      }
       toast({
         title: 'Error',
         description: 'Failed to submit your request. Please try again.',

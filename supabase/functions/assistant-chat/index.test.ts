@@ -46,3 +46,15 @@ Deno.test("assistant-chat - historique trop long => 400", async () => {
   assertEquals(response.status, 400);
   await response.text();
 });
+
+Deno.test("assistant-chat - fournisseur IA non configuré => 503 service_non_configure", async () => {
+  // LOVABLE_API_KEY absent de supabase/tests/functions.env.
+  const user = await createTestUser("chat-sans-ia");
+  const response = await callFunction(
+    "assistant-chat",
+    { message: "bonjour" },
+    { Authorization: `Bearer ${user.token}` },
+  );
+  assertEquals(response.status, 503);
+  assertEquals(await response.json(), { error: "service_non_configure" });
+});

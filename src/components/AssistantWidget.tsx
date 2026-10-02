@@ -13,6 +13,7 @@ import {
   type TriggerContext 
 } from '@/lib/proactive-triggers';
 import { actionsRapides, typePage, type TypePage } from '@/lib/assistant/context';
+import { estServiceNonConfigure } from "@/lib/serviceNonConfigure";
 
 interface Message {
   id: string;
@@ -381,6 +382,12 @@ export function AssistantWidget() {
         }),
       });
 
+      if (await estServiceNonConfigure(response)) {
+        setMessages(prev => prev.map(m =>
+          m.id === assistantId ? { ...m, content: t('assistant.notConfigured') } : m
+        ));
+        return;
+      }
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);
       }

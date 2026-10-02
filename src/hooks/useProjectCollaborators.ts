@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import i18n from "i18next";
+import { estServiceNonConfigure } from "@/lib/serviceNonConfigure";
 
 export type ProjectRole = "owner" | "editor" | "viewer";
 
@@ -178,18 +180,21 @@ export function useProjectCollaborators(projectId: string | undefined) {
 
     // 3. Send invitation email — le destinataire est résolu côté serveur
     // à partir de l'invitation en base (plus de "to" libre).
-    try {
-      await supabase.functions.invoke("send-email", {
-        body: {
-          templateType: "collaboration_invite",
-          data: { invitationId: invitation.id },
-        },
-      });
-
-    toast.success(`Invitation envoyée à ${normalizedEmail}`);
-    } catch (emailError) {
-      // Email failed but invitation is saved
-      toast.warning("Invitation créée, mais l'email n'a pas pu être envoyé.");
+    // functions.invoke ne lève pas d'exception : l'erreur est dans le
+    // résultat (avant : « Invitation envoyée » même si l'envoi échouait).
+    const { error: emailError } = await supabase.functions.invoke("send-email", {
+      body: {
+        templateType: "collaboration_invite",
+        data: { invitationId: invitation.id },
+      },
+    });
+    if (!emailError) {
+      toast.success(i18n.t("servicesExternes.invitationEnvoyee", { email: normalizedEmail }));
+    } else if (await estServiceNonConfigure(emailError)) {
+      toast.warning(i18n.t("servicesExternes.invitationSansCourriel"));
+    } else {
+      // L'invitation est enregistrée ; seul le courriel a échoué.
+      toast.warning(i18n.t("servicesExternes.invitationCourrielEchec"));
     }
 
     return { type: "pending", email: normalizedEmail };

@@ -180,13 +180,26 @@ function leadEmailHtml(
 }
 
 // ── Envoi SendGrid ──────────────────────────────────────────────────────────
+/**
+ * Formulaires publics : la demande est déjà enregistrée (email_leads) ;
+ * sans SendGrid on renvoie un succès avec emailSent=false au lieu d'une
+ * erreur — l'interface l'indique honnêtement.
+ */
+async function sendEmailSiConfigure(...args: Parameters<typeof sendEmail>): Promise<boolean> {
+  if (!SENDGRID_API_KEY) return false;
+  await sendEmail(...args);
+  return true;
+}
+
 async function sendEmail(
   to: string,
   subject: string,
   html: string,
   text: string,
 ): Promise<void> {
-  if (!SENDGRID_API_KEY) throw new HttpError(500, "SENDGRID_API_KEY is not configured");
+  // Service non branché (ex. site de test sans SendGrid) : réponse 503
+  // explicite que l'interface traduit en message clair (jamais une 500).
+  if (!SENDGRID_API_KEY) throw new HttpError(503, "service_non_configure");
   const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
     method: "POST",
     headers: {
@@ -236,7 +249,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
             message: d.message ?? null,
           },
         });
-        await sendEmail(
+        const emailSent = await sendEmailSiConfigure(
           INTERNAL_INBOX,
           `[Demo Request] ${d.company} - ${d.fullName}`,
           leadEmailHtml(
@@ -251,7 +264,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
           ),
           `New Demo Request\n\nName: ${d.fullName}\nEmail: ${d.email}\nCompany: ${d.company}\nFleet Size: ${d.fleetSize}\n${d.message ? `\nNotes: ${d.message}` : ""}`,
         );
-        return jsonResponse(req, { success: true });
+        return jsonResponse(req, { success: true, emailSent });
       }
 
       case "contact": {
@@ -268,9 +281,12 @@ Deno.serve(async (req: Request): Promise<Response> => {
             company: d.company ?? null,
             fleetSize: d.fleetSize ?? null,
             subject: d.subject,
+            // Le texte du message est conservé : il reste lisible même si
+            // l'envoi par courriel n'est pas (encore) configuré.
+            message: d.message,
           },
         });
-        await sendEmail(
+        const emailSent = await sendEmailSiConfigure(
           INTERNAL_INBOX,
           `[Contact] ${d.subject}`,
           leadEmailHtml(
@@ -286,7 +302,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
           ),
           `New contact from ${d.name} (${d.email})\n\nSubject: ${d.subject}\n\nMessage:\n${d.message}`,
         );
-        return jsonResponse(req, { success: true });
+        return jsonResponse(req, { success: true, emailSent });
       }
 
       case "support_request": {

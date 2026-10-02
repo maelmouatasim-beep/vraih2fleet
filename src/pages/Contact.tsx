@@ -50,7 +50,7 @@ const Contact = () => {
         other: t('pages.contact.form.subjects.other'),
       };
       
-      const { error } = await supabase.functions.invoke('send-email', {
+      const { data: envoi, error } = await supabase.functions.invoke('send-email', {
         body: {
           templateType: 'contact',
           data: {
@@ -68,8 +68,13 @@ const Contact = () => {
       if (error) throw error;
 
       toast({
-        title: t('pages.contact.form.success.title'),
-        description: t('pages.contact.form.success.message'),
+        title: envoi?.emailSent === false
+          ? t('servicesExternes.demandeEnregistree')
+          : t('pages.contact.form.success.title'),
+        // Demande enregistrée mais courriel non envoyé (service non branché).
+        description: envoi?.emailSent === false
+          ? t('servicesExternes.emailEnregistreSansEnvoi')
+          : t('pages.contact.form.success.message'),
       });
       
       setFormData({

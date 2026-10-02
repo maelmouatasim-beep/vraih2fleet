@@ -58,15 +58,17 @@ Deno.test("send-email - demo_request : email invalide => 400", async () => {
   await response.text();
 });
 
-Deno.test("send-email - demo_request valide : lead enregistré (envoi échoue sans SendGrid)", async () => {
+Deno.test("send-email - demo_request valide sans SendGrid : lead enregistré, succès emailSent=false", async () => {
   const email = `lead-${Date.now()}@example.com`;
   const response = await callFunction("send-email", {
     templateType: "demo_request",
     data: { fullName: "Prospect", email, company: "FlotteCo", fleetSize: "50-200" },
   });
-  // SENDGRID_API_KEY absent en test : l'envoi échoue APRÈS l'enregistrement.
-  assertEquals(response.status, 500);
-  await response.text();
+  // SENDGRID_API_KEY absent en test : la demande est enregistrée et le
+  // serveur le dit (pas d'erreur 500 pour un service non branché).
+  assertEquals(response.status, 200);
+  const body = await response.json();
+  assertEquals(body, { success: true, emailSent: false });
 
   const { data } = await adminClient()
     .from("email_leads")
@@ -163,7 +165,8 @@ Deno.test("send-email - collaboration_invite d'une invitation d'autrui => 404", 
 
 Deno.test("send-email - rate limit IP : bloque après 5 requêtes publiques", async () => {
   // Le pot de miel n'incrémente pas le compteur ; on utilise des requêtes
-  // valides (500 sans SendGrid mais comptées) puis on vérifie le 429.
+  // valides (200 emailSent=false sans SendGrid, mais comptées) puis on
+  // vérifie le 429.
   let got429 = false;
   for (let i = 0; i < 8; i++) {
     const response = await callFunction("send-email", {
@@ -182,4 +185,38 @@ Deno.test("send-email - rate limit IP : bloque après 5 requêtes publiques", as
     }
   }
   assert(got429, "la limite de débit par IP n'a jamais bloqué");
+});
+
+Deno.test("send-email - contact sans SendGrid : message conservé dans le lead, emailSent=false", async () => {
+  const email = `contact-${Date.now()}@example.com`;
+  const response = await callFunction(
+    "send-email",
+    {
+      templateType: "contact",
+      data: { name: "Prospect", email, subject: "Question", message: "Texte du message" },
+    },
+    { "x-forwarded-for": `10.9.${Date.now() % 250}.1` },
+  );
+  assertEquals(response.status, 200);
+  assertEquals(await response.json(), { success: true, emailSent: false });
+  const { data } = await adminClient()
+    .from("email_leads")
+    .select("source, calculator_inputs")
+    .eq("email", email);
+  assertEquals(data?.length, 1);
+  assertEquals((data![0].calculator_inputs as { message?: string }).message, "Texte du message");
+});
+
+Deno.test("send-email - support_request sans SendGrid => 503 service_non_configure", async () => {
+  const user = await createTestUser("support");
+  const response = await callFunction(
+    "send-email",
+    {
+      templateType: "support_request",
+      data: { category: "Compte", subject: "Aide", message: "Bonjour", isPriority: false },
+    },
+    { Authorization: `Bearer ${user.token}` },
+  );
+  assertEquals(response.status, 503);
+  assertEquals(await response.json(), { error: "service_non_configure" });
 });

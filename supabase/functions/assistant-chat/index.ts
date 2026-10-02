@@ -271,8 +271,9 @@ Deno.serve(async (req) => {
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
-      console.error('LOVABLE_API_KEY is not configured');
-      throw new Error('AI service not configured');
+      // Fournisseur IA non branché (ex. site de test) : 503 explicite,
+      // l'assistant affiche un message clair au lieu d'une erreur.
+      return jsonResponse(req, { error: 'service_non_configure' }, 503);
     }
 
     // Search knowledge base for relevant documents

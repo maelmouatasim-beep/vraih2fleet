@@ -14,10 +14,10 @@ serve(async (req) => {
     const mapboxToken = Deno.env.get('MAPBOX_PUBLIC_TOKEN');
     
     if (!mapboxToken) {
-      console.error('MAPBOX_PUBLIC_TOKEN not configured');
+      // Service non branché : 503 explicite (voir src/lib/serviceNonConfigure.ts).
       return new Response(
-        JSON.stringify({ success: false, error: 'Mapbox token not configured' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ success: false, error: 'service_non_configure' }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 

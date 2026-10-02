@@ -5048,7 +5048,8 @@
       "feasibilityIntro": "📝 Les verdicts sont chiffrés par le moteur pour chaque véhicule. Vos prix payés ou un devis de raccordement (« Données client ») remplacent les estimations.",
       "strategiesApply": "✅ Une stratégie vous convient ? « Appliquer cette stratégie au plan » met à jour les cibles après vous avoir montré le détail.",
       "financingConfirmed": "🧾 Vous avez une lettre d'octroi ? Saisissez la subvention confirmée avec sa référence : elle remplace l'estimation dans le plan et le rapport."
-    }
+    },
+    "notConfigured": "L'assistant IA n'est pas encore activé sur ce site de test."
   },
   "featureDoc": {
     "title": "Documentation des fonctionnalités",
@@ -6201,5 +6202,14 @@
   "notFound": {
     "message": "Oups ! Cette page n’existe pas.",
     "home": "Retour à l’accueil"
+  },
+  "servicesExternes": {
+    "emailEnregistreSansEnvoi": "Votre demande est bien enregistrée. L'envoi automatique de courriels n'est pas encore activé sur ce site de test.",
+    "supportNonTransmisTitre": "Envoi non disponible",
+    "supportNonTransmis": "L'envoi des demandes de support n'est pas encore activé sur ce site de test : votre demande n'a pas été transmise.",
+    "invitationEnvoyee": "Invitation envoyée à {{email}}",
+    "invitationSansCourriel": "Invitation créée. L'envoi de courriels n'est pas encore activé : prévenez la personne vous-même.",
+    "invitationCourrielEchec": "Invitation créée, mais le courriel n'a pas pu être envoyé.",
+    "demandeEnregistree": "Demande enregistrée"
   }
 }

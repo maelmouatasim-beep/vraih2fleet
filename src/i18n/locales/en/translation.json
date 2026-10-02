@@ -5048,7 +5048,8 @@
       "feasibilityIntro": "📝 Verdicts are costed by the engine for each vehicle. Your prices paid or a grid-connection quote (“Client data”) replace the estimates.",
       "strategiesApply": "✅ Happy with a strategy? “Apply this strategy to the plan” updates the targets after showing you the details.",
       "financingConfirmed": "🧾 Have an award letter? Enter the confirmed subsidy with its reference: it replaces the estimate in the plan and the report."
-    }
+    },
+    "notConfigured": "The AI assistant is not enabled yet on this test site."
   },
   "featureDoc": {
     "title": "Platform Feature Documentation",
@@ -6201,5 +6202,14 @@
   "notFound": {
     "message": "Oops! Page not found",
     "home": "Return to Home"
+  },
+  "servicesExternes": {
+    "emailEnregistreSansEnvoi": "Your request has been saved. Automatic emails are not enabled yet on this test site.",
+    "supportNonTransmisTitre": "Sending unavailable",
+    "supportNonTransmis": "Support requests cannot be sent yet on this test site: your request was not delivered.",
+    "invitationEnvoyee": "Invitation sent to {{email}}",
+    "invitationSansCourriel": "Invitation created. Emails are not enabled yet: please let the person know yourself.",
+    "invitationCourrielEchec": "Invitation created, but the email could not be sent.",
+    "demandeEnregistree": "Request saved"
   }
 }

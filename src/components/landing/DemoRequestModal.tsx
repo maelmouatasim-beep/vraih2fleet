@@ -70,7 +70,7 @@ export function DemoRequestModal({ open, onOpenChange }: DemoRequestModalProps) 
     try {
       // Le gabarit et le destinataire sont fixés côté serveur ; le serveur
       // enregistre aussi le lead dans email_leads.
-      const { error } = await supabase.functions.invoke('send-email', {
+      const { data: envoi, error } = await supabase.functions.invoke('send-email', {
         body: {
           templateType: 'demo_request',
           data: {
@@ -89,8 +89,12 @@ export function DemoRequestModal({ open, onOpenChange }: DemoRequestModalProps) 
       setIsSuccess(true);
       
       toast({
-        title: t('demoModal.success.title'),
-        description: t('demoModal.success.message'),
+        title: envoi?.emailSent === false
+          ? t('servicesExternes.demandeEnregistree')
+          : t('demoModal.success.title'),
+        description: envoi?.emailSent === false
+          ? t('servicesExternes.emailEnregistreSansEnvoi')
+          : t('demoModal.success.message'),
       });
 
       // Reset after delay
