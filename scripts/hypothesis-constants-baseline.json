@@ -1,43 +1,6 @@
 {
-  "src/components/reports/FeatureDocumentationPDF.tsx": {
-    "conso BEV 120 kWh/100 codée": 1
-  },
-  "src/components/reports/charts/PDFAreaChart.tsx": {
-    "conso BEV 120 kWh/100 codée": 1
-  },
-  "src/components/reports/charts/PDFDonutChart.tsx": {
-    "conso BEV 120 kWh/100 codée": 1
-  },
   "src/data/mockData.ts": {
     "facteur CO2 diesel (2,6x)": 4,
     "prix diesel codé (1,48 / 1,85)": 2
-  },
-  "src/hooks/useCustomPricing.ts": {
-    "facteur CO2 diesel (2,6x)": 1,
-    "prix diesel codé (1,48 / 1,85)": 2
-  },
-  "src/hooks/useRealDataMetrics.ts": {
-    "facteur CO2 diesel (2,6x)": 1
-  },
-  "src/lib/caseStudies.ts": {
-    "facteur CO2 diesel (2,6x)": 2
-  },
-  "src/lib/supabase/referenceData.ts": {
-    "facteur CO2 diesel (2,6x)": 1,
-    "prix diesel codé (1,48 / 1,85)": 1,
-    "conso BEV 120 kWh/100 codée": 1
-  },
-  "src/pages/CaseStudies.tsx": {
-    "facteur CO2 diesel (2,6x)": 2
-  },
-  "src/pages/HelpTraining.tsx": {
-    "facteur CO2 diesel (2,6x)": 1,
-    "prix diesel codé (1,48 / 1,85)": 1
-  },
-  "src/pages/Methodology.tsx": {
-    "facteur CO2 diesel (2,6x)": 1
-  },
-  "supabase/functions/assistant-chat/index.ts": {
-    "conso BEV 120 kWh/100 codée": 1
   }
 }

@@ -696,7 +696,7 @@
         "guides": "Guides",
         "apiReference": "API Reference",
         "blog": "Blog",
-        "caseStudies": "Études de cas",
+        "caseStudies": "Exemples illustratifs",
         "about": "À propos",
         "contact": "Contact",
         "careers": "Carrières",
@@ -716,7 +716,7 @@
       "demo": "Démo",
       "comparisons": "Comparaisons",
       "solutions": "Solutions",
-      "caseStudies": "Études de Cas",
+      "caseStudies": "Exemples illustratifs",
       "useCases": "Cas d'Usage Sectoriels",
       "pricing": "Tarifs",
       "resources": "Ressources",
@@ -2553,113 +2553,6 @@
       "small": "Petite (jusqu'à 50 véhicules)",
       "medium": "Moyenne (jusqu'à 200 véhicules)",
       "large": "Grande (véhicules illimités)"
-    }
-  },
-  "caseStudies": {
-    "pageTitle": "Projets de flottes canadiennes - H2Fleet Planner",
-    "badge": "Projets canadiens",
-    "representativeBadge": "Projet documenté",
-    "hero": {
-      "title": "Projets de transition de flottes canadiennes",
-      "subtitle": "Explorez des projets documentés d'électrification et de pilotes hydrogène actuellement en cours à travers le Canada."
-    },
-    "prominentDisclaimer": "Basé sur des projets de transition de flottes canadiennes en cours. Données : STM 2025, Winnipeg Transit 2025, ERA Alberta.",
-    "context": "Contexte & État actuel",
-    "scenariosCompared": "Scénarios comparés",
-    "results": "Résultats & Impact",
-    "labels": {
-      "currentFleet": "Flotte actuelle",
-      "electricityRate": "Tarif électricité",
-      "h2Rate": "Prix H₂",
-      "annualMileage": "Kilométrage annuel",
-      "goal": "Objectif",
-      "optimal": "Choix optimal",
-      "baseline": "Référence",
-      "annualCost": "Coût annuel",
-      "infrastructure": "Infrastructure",
-      "annualSavings": "Économies annuelles",
-      "yearTCO": "TCO sur",
-      "years": "ans",
-      "payback": "ROI infrastructure",
-      "tonnesCO2Year": "tonnes CO₂/an évitées",
-      "source": "Source"
-    },
-    "scenarios": {
-      "diesel": "Diesel (Statu quo)",
-      "electric": "100% Électrique",
-      "hydrogen": "100% Hydrogène",
-      "hybrid": "Mix hybride",
-      "strategic": "Mix stratégique (8 H₂ + 8 BEV)"
-    },
-    "cases": {
-      "stm_montreal": {
-        "organization": "STM (Société de transport de Montréal)",
-        "title": "Flotte de bus électriques STM - Montréal",
-        "location": "Montréal, Québec",
-        "context": {
-          "current": "40 bus électriques (Phase 1)",
-          "goal": "Électrification complète de la flotte d'ici 2040"
-        },
-        "results": {
-          "optimal": "L'électrique pur est le grand gagnant grâce aux tarifs bas d'Hydro-Québec (0,1065$/kWh). Chaque bus économise 3 500$/jour vs diesel, remboursant l'infrastructure en 2,5 ans."
-        }
-      },
-      "winnipeg_transit": {
-        "organization": "Winnipeg Transit",
-        "title": "Projet pilote bus zéro-émission - Fort Rouge",
-        "location": "Winnipeg, Manitoba",
-        "context": {
-          "current": "16 bus ZEB (8 H₂ pile à combustible + 8 BEV)",
-          "goal": "Évaluer la performance par temps froid (-40°C)",
-          "depot": "Garage Fort Rouge + station H₂"
-        },
-        "electricDetail": "8 bus électriques à batterie pour trajets courts",
-        "mixDetail": "Mix stratégique : 8 H₂ FCEV + 8 BEV pour tests complets",
-        "results": {
-          "optimal": "Le mix stratégique H₂ + BEV est optimal pour ce pilote en climat froid. Permet une comparaison directe FCEV vs BEV par -40°C tout en développant l'expertise opérationnelle sur les deux technologies.",
-          "note": "Pilote conçu pour comparer BEV vs FCEV par froid extrême (-40°C). Inclut la première station de ravitaillement H₂ pour transit au Canada au dépôt Fort Rouge."
-        }
-      },
-      "azetec_alberta": {
-        "organization": "ERA (Emissions Reduction Alberta) - Pilote AZETEC",
-        "title": "Corridor hydrogène Edmonton-Calgary",
-        "location": "Alberta, Canada",
-        "context": {
-          "current": "5 camions hydrogène Classe 8 (pilote)",
-          "routes": "Edmonton-Calgary, 700km aller-retour",
-          "goal": "Prouver la viabilité commerciale du H₂ longue distance"
-        },
-        "electricNotViable": "Le trajet de 700km dépasse l'autonomie BEV avec cargo - non viable",
-        "hydrogenDetail": "Seule option ZEV viable pour corridor lourd de 700km",
-        "results": {
-          "optimal": "L'hydrogène est la SEULE option zéro-émission viable pour les corridors lourds de 700km. L'électrique à batterie ne peut pas satisfaire les exigences d'autonomie avec cargo. Rentabilité atteinte avec tarification carbone aux coûts H₂ actuels (12-15$/kg).",
-          "note": "L'économie s'améliore significativement avec la baisse des prix H₂ (cible : 8$/kg d'ici 2030) et les crédits carbone fédéraux. AZETEC financé par ERA Alberta et RNCan."
-        }
-      }
-    },
-    "actions": {
-      "downloadReport": "Télécharger le rapport",
-      "tryScenario": "Essayer ce scénario"
-    },
-    "cta": {
-      "title": "Calculez le potentiel de votre flotte",
-      "subtitle": "Ces projets canadiens démontrent des résultats prouvés. Découvrez ce que votre flotte pourrait accomplir.",
-      "button": "Commencer l'analyse"
-    },
-    "disclaimer": "Basé sur des projets de transition de flottes canadiennes en cours. Les résultats opérationnels peuvent varier selon les conditions spécifiques et facteurs de marché.",
-    "dataSources": {
-      "title": "Sources de données & Méthodologie",
-      "intro": "Toutes les études de cas sont basées sur des données 2025 vérifiées provenant de sources officielles gouvernementales et d'autorités de transport canadiennes :",
-      "sources": {
-        "stm": "STM Montréal 2025 - Données de déploiement des bus électriques et économies opérationnelles",
-        "winnipeg": "Winnipeg Transit 2025 - Résultats du pilote bus zéro-émission et station Fort Rouge",
-        "era": "Emissions Reduction Alberta (ERA) 2025 - Données du projet corridor hydrogène AZETEC",
-        "hydroQuebec": "Hydro-Québec - Tarifs d'électricité du Québec (0,1065$/kWh tarif M)",
-        "manitobaHydro": "Manitoba Hydro - Tarifs d'électricité du Manitoba",
-        "nrcan": "RNCan - Programmes fédéraux de subvention H₂ et VE (iMHZEV, ZEVIP)"
-      },
-      "methodology": "Méthodologie",
-      "methodologyText": "Les calculs TCO incluent l'acquisition des véhicules, les coûts carburant/énergie, la maintenance, l'assurance et les investissements infrastructure sur une période d'analyse de 10 ans. Les calculs VAN utilisent un taux d'actualisation de 5%. Les coûts d'infrastructure sont basés sur des données publiées par les autorités de transport et des devis constructeurs. Les résultats réels varieront selon les paramètres opérationnels spécifiques, les facteurs régionaux et les conditions de marché."
     }
   },
   "incentives": {
@@ -6203,6 +6096,26 @@
           ]
         }
       ]
+    }
+  },
+  "examples": {
+    "title": "Exemples illustratifs",
+    "subtitle": "Sept cas de référence du moteur de calcul, recalculés en direct sur cette page — y compris ceux où l'électrique ou l'hydrogène coûte plus cher que le diesel.",
+    "disclaimer": "Cas FICTIFS : ils ne représentent aucune organisation cliente et ne sont pas des résultats observés. Ils servent à vérifier le moteur : chaque résultat est contre-calculé par un calculateur indépendant (écart ≤ 0,01 $, vérifié à chaque modification du code). Les hypothèses sont figées à la date de création des cas ; votre plan réel utilise vos données et les hypothèses à jour.",
+    "fictional": "Fictif",
+    "payback": "Récupération actualisée",
+    "inputs_one": "{{count}} véhicule · {{km}} km/an · horizon {{horizon}} ans · infrastructure {{infra}} · subventions {{subventions}}",
+    "inputs_other": "{{count}} véhicules · {{km}} km/an au total · horizon {{horizon}} ans · infrastructure {{infra}} · subventions {{subventions}}",
+    "method": "Formules, conventions et sources :",
+    "methodLink": "méthodologie publique",
+    "cases": {
+      "c1": "Camionnette de service électrique",
+      "c2": "Autobus urbain 12 m électrique",
+      "c3": "Camion lourd électrique (classe 8)",
+      "c4": "Véhicule léger électrique",
+      "c5": "Camion lourd à hydrogène (électrolyse)",
+      "c6": "Mini-plan de 5 véhicules (12 ans, infrastructure partagée, re-remplacement)",
+      "c7": "Autobus urbain électrique — vie complète de 16 ans (avant aides au transport collectif)"
     }
   }
 }
