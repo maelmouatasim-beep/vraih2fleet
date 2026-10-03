@@ -20,6 +20,19 @@ hydrogène : TCO, infrastructure, subventions canadiennes, télématique
 - `src/components/` — composants par domaine (`dashboard/`, `landing/`,
   `reports/`, `telematics/`, …) ; `ui/` = primitives shadcn, ne pas y
   mettre de logique métier.
+- `src/components/layout/` — **système de design commun** (à utiliser
+  pour toute page) : `Page` + `PageHeader` (conteneur, titre 24 px,
+  sous-titre, retour, actions), `StatCard`/`StatGrid` (indicateurs),
+  `StatusBadge` + tables de tons `tons.ts` (un sens = une couleur :
+  vérifié vert, à valider ambre, estimation bleu, fermé/à risque rouge),
+  `EmptyState`, `LoadingState` (squelettes), `ErrorState`, `charts.ts`
+  (infobulle des graphiques). `src/hooks/useLargeur.ts` = largeur du
+  conteneur (la barre latérale prend 256 px). Formats : `src/lib/format.ts`
+  (`formateurCad`, `formateurNombre`, `formaterPourcentage`,
+  `formaterDate`, selon la langue — jamais `toLocaleString()` nu ni
+  « fr-CA » en dur). Tableaux de 4 colonnes et plus : largeur minimale et
+  défilement dans la carte (`index.css`) ; colonnes de chiffres
+  `text-right` ; identifiants `whitespace-nowrap`.
 - `src/hooks/` — hooks de données et d'état (Supabase, TanStack Query).
 - `src/lib/tco/` — **LE moteur de calcul TCO/émissions** (pur, testé,
   hypothèses sourcées) ; spec : `docs/tco-methodologie.md` ; tout import
@@ -98,6 +111,8 @@ npm run build:preview  # build de l'APERÇU hébergé (hash routing, base ./)
 npm run test:tco       # tests du moteur TCO avec seuils de couverture 95 %
 npm run docs:tco       # régénère docs/tco-hypotheses.md depuis assumptions.ts
 npm run e2e:local      # parcours complet Playwright contre Supabase LOCAL (voir scripts/e2e-parcours.mjs)
+npm run e2e:visuel     # régression visuelle : toutes les pages (démo Rivière-Claire), 1440/1024/390, fr/en — échoue sur débordement, texte/mot coupé, chiffres non alignés, bouton hors carte (aussi en CI)
+node scripts/typographie-fr.mjs   # typographie des traductions (insécables, « », unités) ; --check en lecture seule, règles testées en CI
 npm run e2e:terrain    # cas terrain 12 véhicules / 3 garages : totaux identiques Stratégies/Plan/Financement/PDF/Excel (aussi en CI)
 ```
 
@@ -427,6 +442,16 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   rapport détaillé. Migrations 20261004010000 → 20261004040000
   (additives). e2e terrain : 17 étapes (faux serveur Claude, veille
   fictive `scripts/veille/fixtures/`).
+
+- **Passe visuelle (A + B) : LIVRÉE, en attente du « ok ».** A : barre
+  des 7 étapes refaite (`JourneyStepper`, `src/lib/journey/stepper.ts` :
+  grille de 7 colonnes égales, un seul système d'états, modes complet /
+  compact / cercles selon la largeur du conteneur, AA, tests) ; menu en
+  tiroir sous 768 px. B : système de design `src/components/layout/`,
+  toutes les pages de l'application migrées ; typographie française des
+  traductions (script + test) ; formats selon la langue ; pastilles,
+  indicateurs, chargements unifiés ; `scripts/e2e-visuel.mjs` en CI
+  (156 captures, 0 problème ; 17 débordements avant).
 
 Rappels de méthode : chaque phase finit par `npm run check` vert → push →
 résumé court → **attendre le « ok » de l'utilisateur** ; kanban intégré à
