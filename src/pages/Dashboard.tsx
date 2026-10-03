@@ -26,6 +26,8 @@ import { useOrganization } from "@/hooks/useOrganization";
 import { useVehicles } from "@/hooks/useVehicles";
 import { listProjects } from "@/lib/supabase/projects";
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
+import { StatCard, StatGrid } from "@/components/layout/StatCard";
+import { LoadingState } from "@/components/layout/States";
 
 const COULEURS_CARBURANT: Record<string, string> = {
   diesel: "hsl(var(--chart-diesel))",
@@ -109,17 +111,7 @@ const Dashboard = () => {
             <Skeleton className="h-8 w-48" />
             <Skeleton className="h-4 w-72" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map((i) => (
-              <Card key={i}>
-                <CardContent className="p-6">
-                  <Skeleton className="h-10 w-10 rounded-xl mb-4" />
-                  <Skeleton className="h-8 w-16 mb-2" />
-                  <Skeleton className="h-4 w-24" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <LoadingState variante="cartes" />
         </Page>
       </DashboardLayout>
     );
@@ -193,24 +185,19 @@ const Dashboard = () => {
           }
         />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatGrid>
           {statsCards.map((stat) => (
-            <Link key={stat.title} to={stat.href} className="block">
-              <Card className="h-full hover:border-primary/40 transition-colors">
-                <CardContent className="p-6">
-                  <div className={`w-10 h-10 rounded-xl ${stat.color} flex items-center justify-center`}>
-                    <stat.icon className="w-5 h-5" />
-                  </div>
-                  <div className="mt-4">
-                    <p className="text-2xl font-bold text-foreground">{stat.value.toLocaleString(locale)}</p>
-                    <p className="text-sm text-muted-foreground">{stat.title}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{stat.detail}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            <StatCard
+              key={stat.title}
+              vers={stat.href}
+              icone={stat.icon}
+              classeIcone={stat.color}
+              libelle={stat.title}
+              valeur={stat.value.toLocaleString(locale)}
+              detail={stat.detail}
+            />
           ))}
-        </div>
+        </StatGrid>
 
         <ReceivedInvitationsCard />
 

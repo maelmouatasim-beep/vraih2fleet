@@ -25,7 +25,7 @@ import { construireStrategie } from "@/lib/journey/strategies";
 import { PROGRAMMES, statutEffectif } from "@/lib/tco";
 import { formateurCad } from "@/lib/format";
 import type { ProjectDTO } from "@/lib/supabase/projects";
-import { ExternalLink, Loader2 } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import ConfirmedSubsidiesCard from "./ConfirmedSubsidiesCard";
 import SubsidyApplicationsCard from "./SubsidyApplicationsCard";
 import { cumulProgramme, nomProgramme, traduireLibelleSubvention } from "@/lib/tco/translations-en";
@@ -34,6 +34,9 @@ import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 import ClientDocumentsCard from "@/components/documents/ClientDocumentsCard";
 import ProgramChangesAlert from "./ProgramChangesAlert";
 import { estVehiculeDemo } from "@/lib/demoData/villeDemo";
+import { StatusBadge, LoadingState } from "@/components/layout/States";
+import { TON_PROGRAMME, TON_VERIFICATION } from "@/components/layout/tons";
+import { StatCard, StatGrid } from "@/components/layout/StatCard";
 
 interface FinancingStepProps {
   projectId: string;
@@ -95,34 +98,32 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
   if (orgLoading || isLoading) {
     return (
       <Card>
-        <CardContent className="flex items-center justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-        </CardContent>
+        <LoadingState nombre={6} />
       </Card>
     );
   }
 
   const badgeStatut = (statut: string, dateFin?: string) => {
     if (statut === "actif") {
-      return <Badge variant="default">{t("journey.financing.status.actif")}</Badge>;
+      return <StatusBadge ton={TON_PROGRAMME.actif}>{t("journey.financing.status.actif")}</StatusBadge>;
     }
     if (statut === "ferme") {
       return (
-        <Badge variant="destructive">
+        <StatusBadge ton={TON_PROGRAMME.ferme}>
           {dateFin && dateFin < aujourdHui
             ? t("journey.financing.status.echu", { date: dateFin })
             : t("journey.financing.status.ferme")}
-        </Badge>
+        </StatusBadge>
       );
     }
-    return <Badge variant="outline">{t("journey.financing.status.suspendu")}</Badge>;
+    return <StatusBadge ton={TON_PROGRAMME.suspendu}>{t("journey.financing.status.suspendu")}</StatusBadge>;
   };
 
   const badgeVerification = (statut: string) =>
     statut === "verifie" ? (
-      <Badge variant="secondary">{t("journey.financing.verified")}</Badge>
+      <StatusBadge ton={TON_VERIFICATION.verifie}>{t("journey.financing.verified")}</StatusBadge>
     ) : (
-      <Badge variant="outline">{t("journey.financing.toValidate")}</Badge>
+      <StatusBadge ton={TON_VERIFICATION.a_valider}>{t("journey.financing.toValidate")}</StatusBadge>
     );
 
   const nbActifs = PROGRAMMES.filter((p) => statutEffectif(p, aujourdHui) === "actif").length;
@@ -143,7 +144,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
           })}
         </p>
       )}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <StatGrid>
         {(
           [
             ["planned", donnees ? argent.format(donnees.total) : "—"],
@@ -152,18 +153,9 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
             ["activePrograms", String(nbActifs)],
           ] as const
         ).map(([cle, valeur]) => (
-          <Card key={cle}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-muted-foreground font-medium">
-                {t(`journey.financing.stats.${cle}`)}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xl font-bold">{valeur}</p>
-            </CardContent>
-          </Card>
+          <StatCard key={cle} libelle={t(`journey.financing.stats.${cle}`)} valeur={valeur} />
         ))}
-      </div>
+      </StatGrid>
 
       <Card>
         <CardHeader>
@@ -187,14 +179,14 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
                   <TableHead>{t("fleet.columns.unit")}</TableHead>
                   <TableHead>{t("journey.fleet.columns.target")}</TableHead>
                   <TableHead>{t("journey.financing.columns.purchaseYear")}</TableHead>
-                  <TableHead>{t("journey.financing.columns.programs")}</TableHead>
+                  <TableHead className="min-w-[16rem]">{t("journey.financing.columns.programs")}</TableHead>
                   <TableHead className="text-right">{t("journey.financing.columns.total")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {donnees.lignes.map((l) => (
                   <TableRow key={l.unite}>
-                    <TableCell className="font-medium">{l.unite}</TableCell>
+                    <TableCell className="font-medium whitespace-nowrap">{l.unite}</TableCell>
                     <TableCell>
                       {t(`journey.fleet.targets.${l.techno === "BEV" ? "bev" : "fcev"}`)}
                     </TableCell>

@@ -787,6 +787,22 @@
       "electricity": "Electricity",
       "diesel": "Diesel",
       "hydrogen": "Hydrogen"
+    },
+    "subscriptionBadge": {
+      "tiers": {
+        "free": "Free",
+        "small": "Small fleet",
+        "medium": "Medium fleet",
+        "large": "Large fleet"
+      },
+      "statuses": {
+        "active": "Active",
+        "trial": "Trial",
+        "canceled": "Canceled",
+        "expired": "Expired"
+      },
+      "daysLeft_one": "{{count}} day left",
+      "daysLeft_other": "{{count}} days left"
     }
   },
   "forms": {

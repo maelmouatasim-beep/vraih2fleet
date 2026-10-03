@@ -13,7 +13,6 @@ import { useTranslation } from "react-i18next";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Page, PageHeader } from "@/components/layout/Page";
 import SubsidyWatchCard from "@/components/library/SubsidyWatchCard";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -33,18 +32,15 @@ import {
   historiqueDiesel,
   resumeStatuts,
 } from "@/lib/library/registry";
-import { formateurCad } from "@/lib/format";
+import { formateurCad, formateurNombre } from "@/lib/format";
 import { ArrowRight, ExternalLink, Plug } from "lucide-react";
 import { cumulProgramme, descriptionHypothese, nomProgramme } from "@/lib/tco/translations-en";
+import { StatusBadge } from "@/components/layout/States";
+import { ton, TON_PROGRAMME, TON_VERIFICATION } from "@/components/layout/tons";
+import { StatCard, StatGrid } from "@/components/layout/StatCard";
 
 const selectCls =
   "flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2";
-
-const VARIANTE_STATUT: Record<StatutHypothese, "secondary" | "outline" | "destructive"> = {
-  verifie: "secondary",
-  estimation: "outline",
-  a_valider: "destructive",
-};
 
 export default function Library() {
   const { t, i18n } = useTranslation();
@@ -62,7 +58,7 @@ export default function Library() {
   const aujourdHui = new Date().toISOString().slice(0, 10);
 
   const badgeStatut = (s: StatutHypothese) => (
-    <Badge variant={VARIANTE_STATUT[s]}>{t(`library.status.${s}`)}</Badge>
+    <StatusBadge ton={ton(TON_VERIFICATION, s)}>{t(`library.status.${s}`)}</StatusBadge>
   );
 
   return (
@@ -70,7 +66,7 @@ export default function Library() {
       <Page>
         <PageHeader titre={t("library.title")} sousTitre={t("library.subtitleRegistry")} />
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <StatGrid>
           {(
             [
               ["total", resume.total],
@@ -79,18 +75,9 @@ export default function Library() {
               ["a_valider", resume.a_valider],
             ] as const
           ).map(([cle, valeur]) => (
-            <Card key={cle}>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-muted-foreground font-medium">
-                  {t(`library.counts.${cle}`)}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-bold">{valeur}</p>
-              </CardContent>
-            </Card>
+          <StatCard key={cle} libelle={t(`library.counts.${cle}`)} valeur={valeur} />
           ))}
-        </div>
+        </StatGrid>
 
         <Tabs defaultValue="hypotheses">
           <TabsList>
@@ -182,9 +169,9 @@ export default function Library() {
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <p className="font-medium">{nomProgramme(prog.id, langue)}</p>
                       <div className="flex flex-wrap gap-1.5">
-                        <Badge variant={statutProg === "actif" ? "default" : "outline"}>
+                        <StatusBadge ton={ton(TON_PROGRAMME, statutProg)}>
                           {t(`journey.financing.status.${statutProg}`, { date: prog.dateFin })}
-                        </Badge>
+                        </StatusBadge>
                         {badgeStatut(prog.statutVerification)}
                       </div>
                     </div>
@@ -240,8 +227,8 @@ export default function Library() {
                     {historique.points.map((p) => (
                       <TableRow key={p.mois}>
                         <TableCell>{p.mois}</TableCell>
-                        <TableCell className="text-right">{p.quebec.toLocaleString(i18n.language === "en" ? "en-CA" : "fr-CA")} ¢</TableCell>
-                        <TableCell className="text-right">{p.montreal.toLocaleString(i18n.language === "en" ? "en-CA" : "fr-CA")} ¢</TableCell>
+                        <TableCell className="text-right whitespace-nowrap">{formateurNombre(i18n.language, 1).format(p.quebec)}{"\u00a0¢"}</TableCell>
+                        <TableCell className="text-right whitespace-nowrap">{formateurNombre(i18n.language, 1).format(p.montreal)}{"\u00a0¢"}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

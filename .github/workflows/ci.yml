@@ -140,3 +140,25 @@ jobs:
           name: e2e-terrain
           path: e2e-terrain/
           retention-days: 7
+
+      # Régression visuelle : toutes les pages principales avec la démo
+      # « Ville de Rivière-Claire », en 1440 / 1024 / 390 px, fr et en.
+      # Échoue sur débordement horizontal, texte coupé, mot coupé, chiffres
+      # non alignés, bouton hors de sa carte, clé de traduction ou erreur JS.
+      - name: Régression visuelle (toutes les pages, 3 largeurs, fr/en)
+        if: ${{ !cancelled() }}
+        run: |
+          eval "$(supabase status -o env | sed 's/^/export /')"
+          if ! curl -sf http://127.0.0.1:8080/ >/dev/null; then
+            VITE_SUPABASE_URL=http://127.0.0.1:54321 VITE_SUPABASE_PUBLISHABLE_KEY="$ANON_KEY" VITE_SUPABASE_PROJECT_ID=local \
+              npx vite --port 8080 --host 127.0.0.1 &
+            for i in $(seq 1 30); do curl -sf http://127.0.0.1:8080/ >/dev/null && break; sleep 1; done
+          fi
+          node scripts/e2e-visuel.mjs e2e-visuel
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: e2e-visuel
+          path: e2e-visuel/
+          retention-days: 7

@@ -12,7 +12,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -42,6 +41,10 @@ import { TECHNOLOGIES_CIBLES, type ProjectVehicleInsert } from "@/lib/fleet/proj
 import { cibleSuggeree, evaluerFaisabiliteVehicule } from "@/lib/journey/feasibility";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 import { ArrowDown, ArrowUp, ArrowUpDown, Loader2, Plus, Sparkles, Truck } from "lucide-react";
+import { StatusBadge, LoadingState } from "@/components/layout/States";
+import { ton, TON_SOURCE, TON_VEHICULE } from "@/components/layout/tons";
+import { StatCard, StatGrid } from "@/components/layout/StatCard";
+import { formateurNombre } from "@/lib/format";
 
 const selectCls =
   "flex h-9 rounded-md border border-input bg-background px-2 py-1 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -54,7 +57,7 @@ interface FleetStepProps {
 }
 
 export default function FleetStep({ projectId, project }: FleetStepProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { organization, isLoading: orgLoading } = useOrganization();
   const { vehicles, isLoading: fleetLoading } = useVehicles(organization?.id);
   const { projectVehicles, isLoading, ajouter, modifier, retirer } = useProjectVehicles(projectId);
@@ -263,18 +266,14 @@ export default function FleetStep({ projectId, project }: FleetStepProps) {
   };
 
   const sourceBadge = (source: string) => {
-    if (source === "telematique") return <Badge variant="default">{t("fleet.source.telematique")}</Badge>;
-    if (source === "saisie") return <Badge variant="secondary">{t("fleet.source.saisie")}</Badge>;
-    if (source === "import") return <Badge variant="secondary">{t("fleet.source.import")}</Badge>;
-    return <Badge variant="outline">{t("fleet.source.estimation")}</Badge>;
+    const cle = source === "telematique" || source === "saisie" || source === "import" ? source : "estimation";
+    return <StatusBadge ton={TON_SOURCE[cle]}>{t(`fleet.source.${cle}`)}</StatusBadge>;
   };
 
   if (orgLoading || isLoading || fleetLoading) {
     return (
       <Card>
-        <CardContent className="flex items-center justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-        </CardContent>
+        <LoadingState nombre={6} />
       </Card>
     );
   }
@@ -304,7 +303,7 @@ export default function FleetStep({ projectId, project }: FleetStepProps) {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <StatGrid>
         {(
           [
             ["included", stats.total],
@@ -313,22 +312,13 @@ export default function FleetStep({ projectId, project }: FleetStepProps) {
             ["noYear", stats.sansAnnee],
           ] as const
         ).map(([cle, valeur]) => (
-          <Card key={cle}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-muted-foreground font-medium">
-                {t(`journey.fleet.stats.${cle}`)}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{valeur}</p>
-            </CardContent>
-          </Card>
+          <StatCard key={cle} libelle={t(`journey.fleet.stats.${cle}`)} valeur={valeur} />
         ))}
-      </div>
+      </StatGrid>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0">
-          <div>
+        <CardHeader className="flex flex-col gap-3 space-y-0 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
             <CardTitle className="text-lg">{t("journey.fleet.tableTitle")}</CardTitle>
             <p className="text-sm text-muted-foreground mt-1">{t("journey.fleet.suggestedNote")}</p>
           </div>
@@ -469,7 +459,7 @@ export default function FleetStep({ projectId, project }: FleetStepProps) {
                         <TableCell>{t(`fleet.categories.${pv.vehicles.category}`)}</TableCell>
                         <TableCell className="text-right">
                           {pv.vehicles.annual_km != null
-                            ? pv.vehicles.annual_km.toLocaleString("fr-CA")
+                            ? formateurNombre(i18n.language).format(pv.vehicles.annual_km)
                             : "—"}
                         </TableCell>
                         <TableCell>{sourceBadge(pv.vehicles.consumption_source)}</TableCell>
@@ -567,14 +557,14 @@ export default function FleetStep({ projectId, project }: FleetStepProps) {
                     className="flex items-center gap-3 px-3 py-2 text-sm cursor-pointer hover:bg-muted/50"
                   >
                     <Checkbox checked={selection.has(v.id)} onCheckedChange={() => basculer(v.id)} />
-                    <span className="font-medium w-20 shrink-0">{v.unit_number}</span>
+                    <span className="font-medium w-20 shrink-0 whitespace-nowrap">{v.unit_number}</span>
                     <span className="flex-1 truncate">
                       {[v.make, v.model, v.model_year].filter(Boolean).join(" ") || "—"}
                     </span>
                     <span className="text-muted-foreground">{t(`fleet.categories.${v.category}`)}</span>
-                    <Badge variant={v.status === "actif" ? "default" : "outline"}>
+                    <StatusBadge ton={ton(TON_VEHICULE, v.status)}>
                       {t(`fleet.statuses.${v.status}`)}
-                    </Badge>
+                    </StatusBadge>
                   </label>
                 ))}
               </div>

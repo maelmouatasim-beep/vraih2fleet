@@ -104,8 +104,8 @@ const egaux = (nom, valeurs) => {
   return ref;
 };
 async function valeurCarte(page, titre) {
-  const carte = page.locator("div.rounded-lg, div.rounded-xl").filter({ has: page.getByText(titre, { exact: true }) }).last();
-  return montant(await carte.locator("p.text-xl").first().innerText());
+  const carte = page.locator('[data-testid="stat-card"]').filter({ has: page.getByText(titre, { exact: true }) }).last();
+  return montant(await carte.locator('[data-testid="stat-value"]').first().innerText());
 }
 async function etatEtape(page, cle) {
   return page.locator(`a[href$="/${cle}"][data-etat]`).first().getAttribute("data-etat");
@@ -565,7 +565,7 @@ try {
     if (!types.includes(attendu)) throw new Error(`surveillance : alerte « ${attendu} » absente (${types.join(", ")})`);
   }
   const texteEnergie = await panneauAlertes.locator('[data-kind="donnees_energie"]').innerText();
-  if (!/le prix du diesel a (baissé|augmenté) de \d+ %/i.test(texteEnergie) || !/(scénarios? sur 3|aucun des 3 scénarios)/.test(texteEnergie)) {
+  if (!/le prix du diesel a (baissé|augmenté) de \d+\s%/i.test(texteEnergie) || !/(scénarios?\ssur\s3|aucun\sdes\s3\sscénarios)/.test(texteEnergie)) {
     throw new Error(`surveillance : alerte énergie inattendue « ${texteEnergie} »`);
   }
   const niveau = await page.getByTestId("plan-health-badge").getAttribute("data-level");

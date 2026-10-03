@@ -9,6 +9,9 @@
  *  - ÉCHEC si la page déborde horizontalement ;
  *  - ÉCHEC si un texte est coupé sans moyen de le lire (débordement caché
  *    sans points de suspension, ou points de suspension sans infobulle) ;
+ *  - ÉCHEC si une colonne de chiffres d'un tableau n'est pas alignée à droite ;
+ *  - ÉCHEC si un mot (identifiant, montant) est coupé sur deux lignes ;
+ *  - ÉCHEC si un bouton ou un champ dépasse de sa carte ;
  *  - ÉCHEC si une clé de traduction brute s'affiche (ex. « journey.steps… ») ;
  *  - ÉCHEC si une erreur JavaScript survient.
  *
@@ -78,9 +81,58 @@ async function mesurer(page) {
       const ellipse = s.textOverflow === "ellipsis";
       if (!ellipse || !lisible(el)) coupes.push(`${texte.slice(0, 60)}${ellipse ? " (… sans infobulle)" : " (coupé)"}`);
     }
+    // Colonnes numériques (montants, nombres, unités) : alignées à droite.
+    const NUM = /^[-−+]?\s?\$?[\d\s\u00a0\u202f.,]+\s?(\$|%|¢|km|kW|kWh|t|L|ans?|years?|yrs?|t\s?CO₂e?)?$/;
+    const nonAlignees = [];
+    for (const table of document.querySelectorAll("table")) {
+      if (table.closest("[data-visuel-ignorer]") || table.getClientRects().length === 0) continue;
+      const lignes = [...table.querySelectorAll("tbody tr")].filter((tr) => tr.children.length > 1);
+      if (lignes.length < 2) continue;
+      const nbCol = Math.max(...lignes.map((tr) => tr.children.length));
+      for (let c = 0; c < nbCol; c++) {
+        const cellules = lignes.map((tr) => tr.children[c]).filter(Boolean);
+        const textes = cellules.map((td) => td.innerText.trim().split("\n")[0]).filter((x) => x && x !== "—");
+        if (textes.length < 2 || !textes.every((x) => NUM.test(x)) || textes.every((x) => /^\d{4}$/.test(x))) continue;
+        const gauche = cellules.filter((td) => !["right", "end"].includes(getComputedStyle(td).textAlign));
+        if (gauche.length) {
+          const entete = table.querySelectorAll("thead th")[c]?.innerText.trim() ?? `colonne ${c + 1}`;
+          nonAlignees.push(`${entete} (${textes[0]})`);
+        }
+      }
+    }
+    // Mot coupé en deux lignes (« C-\n01 », « Électri-\nque ») : colonne trop étroite.
+    const motsCoupes = [];
+    const marcheur = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    for (let n = marcheur.nextNode(); n; n = marcheur.nextNode()) {
+      const texte = n.textContent.trim();
+      if (!texte || texte.length > 30 || /\s/.test(texte.replace(/[\u00a0\u202f]/g, "x")) === true) continue;
+      const parent = n.parentElement;
+      if (!parent || parent.closest("svg, [data-visuel-ignorer], [role=dialog], pre, code")) continue;
+      const r = document.createRange();
+      r.selectNodeContents(n);
+      const hauts = new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top)));
+      // Un mot composé de la prose peut passer à la ligne au trait d'union
+      // (« Hydro-Québec ») ; un identifiant, une date ou un montant, jamais.
+      if (hauts.size > 1 && (/\d/.test(texte) || !/[-‑–]/.test(texte))) motsCoupes.push(texte);
+    }
+    // Bouton ou champ qui dépasse de sa carte (en-tête « titre + bouton » écrasé).
+    const horsCarte = [];
+    for (const el of document.querySelectorAll("button, a, input, select")) {
+      if (el.getClientRects().length === 0 || el.closest("[data-visuel-ignorer], [role=dialog], [aria-hidden=true]")) continue;
+      const carte = el.closest(".bg-card");
+      if (!carte) continue;
+      let defile = false;
+      for (let n = el.parentElement; n && n !== carte; n = n.parentElement) {
+        if (["auto", "scroll"].includes(getComputedStyle(n).overflowX)) defile = true;
+      }
+      if (defile) continue;
+      const a = el.getBoundingClientRect();
+      const c = carte.getBoundingClientRect();
+      if (a.right > c.right + 1 || a.left < c.left - 1) horsCarte.push((el.innerText || el.getAttribute("aria-label") || el.tagName).trim().slice(0, 40));
+    }
     const texteVisible = document.body.innerText;
     const cles = [...new Set(texteVisible.match(/\b(?:journey|pages|dashboard|notifications|common|landing|legal|copilot)\.[a-zA-Z_]+\.[a-zA-Z_.]+/g) ?? [])];
-    return { debordement, coupes: [...new Set(coupes)].slice(0, 15), cles: cles.slice(0, 10) };
+    return { debordement, coupes: [...new Set(coupes)].slice(0, 15), cles: cles.slice(0, 10), nonAlignees: [...new Set(nonAlignees)].slice(0, 10), motsCoupes: [...new Set(motsCoupes)].slice(0, 10), horsCarte: [...new Set(horsCarte)].slice(0, 10) };
   });
 }
 
@@ -135,6 +187,9 @@ async function parcourir(ctx, langue, pages) {
       const pb = [];
       if (m.debordement > 1) pb.push(`débordement horizontal de ${m.debordement} px`);
       if (m.coupes.length) pb.push(`texte coupé : ${m.coupes.join(" | ")}`);
+      if (m.nonAlignees.length) pb.push(`chiffres non alignés à droite : ${m.nonAlignees.join(" | ")}`);
+      if (m.motsCoupes.length) pb.push(`mot coupé sur deux lignes : ${m.motsCoupes.join(" | ")}`);
+      if (m.horsCarte.length) pb.push(`élément qui dépasse de sa carte : ${m.horsCarte.join(" | ")}`);
       if (m.cles.length) pb.push(`clé de traduction affichée : ${m.cles.join(", ")}`);
       if (erreursJs.length) pb.push(`erreur JavaScript : ${erreursJs[0]}`);
       resultats.push({ langue, largeur, nom, chemin, fichier, problemes: pb });

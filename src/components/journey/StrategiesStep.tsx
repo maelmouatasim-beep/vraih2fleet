@@ -60,6 +60,7 @@ import { CheckCircle2, ClipboardCheck, Loader2, SlidersHorizontal } from "lucide
 import StressTestPanel from "./StressTestPanel";
 import { traduireAvertissement } from "@/lib/tco/translations-en";
 import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
+import { LoadingState } from "@/components/layout/States";
 
 interface StrategiesStepProps {
   projectId: string;
@@ -214,9 +215,7 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
   if (orgLoading || isLoading || (projectVehicles.length > 0 && !strategies)) {
     return (
       <Card>
-        <CardContent className="flex items-center justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-        </CardContent>
+        <LoadingState nombre={6} />
       </Card>
     );
   }

@@ -220,3 +220,13 @@ table th {
 .recharts-wrapper {
   overflow: hidden;
 }
+
+/* Tableaux de 4 colonnes et plus : largeur minimale, défilement horizontal
+   dans leur carte plutôt que des colonnes écrasées (identifiants « C-01 »
+   coupés, pastilles repliées) sur mobile et tablette. */
+table:has(> thead > tr > th:nth-child(4)) {
+  min-width: 40rem;
+}
+table:has(> thead > tr > th:nth-child(6)) {
+  min-width: 52rem;
+}

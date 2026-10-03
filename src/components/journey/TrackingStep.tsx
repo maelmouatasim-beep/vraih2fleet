@@ -45,6 +45,8 @@ import {
 import { formateurCad } from "@/lib/format";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 import { CheckCircle2, ListChecks, Loader2, Sparkles } from "lucide-react";
+import { StatCard, StatGrid } from "@/components/layout/StatCard";
+import { LoadingState } from "@/components/layout/States";
 
 interface TrackingStepProps {
   projectId: string;
@@ -207,9 +209,7 @@ export default function TrackingStep({ projectId, project }: TrackingStepProps) 
   if (orgLoading || isLoading) {
     return (
       <Card>
-        <CardContent className="flex items-center justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-        </CardContent>
+        <LoadingState nombre={6} />
       </Card>
     );
   }
@@ -217,7 +217,7 @@ export default function TrackingStep({ projectId, project }: TrackingStepProps) 
   return (
     <div className="space-y-4">
       <PlanAlertsPanel projectId={projectId} project={project} />
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <StatGrid>
         {(
           [
             ["realise", suivi.realises],
@@ -226,22 +226,13 @@ export default function TrackingStep({ projectId, project }: TrackingStepProps) 
             ["a_venir", suivi.aVenir],
           ] as const
         ).map(([cle, valeur]) => (
-          <Card key={cle}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-muted-foreground font-medium">
-                {t(`journey.tracking.states.${cle}`)}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{valeur}</p>
-            </CardContent>
-          </Card>
+          <StatCard key={cle} libelle={t(`journey.tracking.states.${cle}`)} valeur={valeur} />
         ))}
-      </div>
+      </StatGrid>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0">
-          <div>
+        <CardHeader className="flex flex-col gap-3 space-y-0 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
             <CardTitle className="text-lg">{t("journey.tracking.tableTitle")}</CardTitle>
             <p className="text-sm text-muted-foreground mt-1">{t("journey.tracking.tableSubtitle")}</p>
           </div>

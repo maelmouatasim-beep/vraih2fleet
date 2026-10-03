@@ -15,6 +15,7 @@ import { useEnergyClientInputs } from "@/hooks/useEnergyClientInputs";
 import { useOrganization } from "@/hooks/useOrganization";
 import { HYPOTHESES } from "@/lib/tco";
 import { Loader2, Zap } from "lucide-react";
+import { formateurNombre } from "@/lib/format";
 
 interface EnergyClientDataCardProps {
   /** Absent = niveau organisation ; présent = surcharge de CE projet. */
@@ -31,7 +32,7 @@ const DEFAUTS: Record<Champ, number> = {
 };
 
 export default function EnergyClientDataCard({ projectId }: EnergyClientDataCardProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { organization } = useOrganization();
   const { organisation, projet, enregistrer, isLoading } = useEnergyClientInputs(projectId);
   const ligne = projectId ? projet : organisation;
@@ -111,7 +112,7 @@ export default function EnergyClientDataCard({ projectId }: EnergyClientDataCard
                     value={forme[cle]}
                     disabled={!peutEcrire}
                     placeholder={t("energyClient.defaultPlaceholder", {
-                      valeur: DEFAUTS[cle].toLocaleString("fr-CA"),
+                      valeur: formateurNombre(i18n.language, 4).format(DEFAUTS[cle]),
                     })}
                     onChange={(e) => setForme({ ...forme, [cle]: e.target.value })}
                   />

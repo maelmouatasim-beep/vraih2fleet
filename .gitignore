@@ -42,3 +42,5 @@ coverage/
 e2e-captures/
 # Captures du cas terrain (scripts/e2e-terrain.mjs)
 e2e-terrain/
+# Régression visuelle (scripts/e2e-visuel.mjs)
+e2e-visuel/

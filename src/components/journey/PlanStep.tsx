@@ -37,10 +37,11 @@ import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { construireStrategie, estPlanVide, strategieRetenue } from "@/lib/journey/strategies";
 import { formateurCad, formateurCadCompact } from "@/lib/format";
 import type { ProjectDTO } from "@/lib/supabase/projects";
-import { Loader2 } from "lucide-react";
 import DepotInfrastructureCard from "./DepotInfrastructureCard";
 import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 import { INFOBULLE_GRAPHIQUE } from "@/components/layout/charts";
+import { StatCard, StatGrid } from "@/components/layout/StatCard";
+import { LoadingState } from "@/components/layout/States";
 
 interface PlanStepProps {
   projectId: string;
@@ -89,9 +90,7 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
   if (orgLoading || isLoading) {
     return (
       <Card>
-        <CardContent className="flex items-center justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-        </CardContent>
+        <LoadingState nombre={6} />
       </Card>
     );
   }
@@ -149,7 +148,7 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
           })}
         </p>
       )}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <StatGrid>
         {(
           [
             ["investment", argent.format(totaux.investissement)],
@@ -161,18 +160,9 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
             ],
           ] as const
         ).map(([cle, valeur]) => (
-          <Card key={cle}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-muted-foreground font-medium">
-                {t(`journey.plan.stats.${cle}`)}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xl font-bold">{valeur}</p>
-            </CardContent>
-          </Card>
+          <StatCard key={cle} libelle={t(`journey.plan.stats.${cle}`)} valeur={valeur} />
         ))}
-      </div>
+      </StatGrid>
 
       <Card>
         <CardHeader>
@@ -238,7 +228,7 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
                         <div className="flex flex-wrap items-center gap-1">
                           {liste.map((r) => (
                             <span key={r.unite} className="inline-flex items-center gap-1 text-xs">
-                              <span className="font-medium">{r.unite}</span>
+                              <span className="font-medium whitespace-nowrap">{r.unite}</span>
                               {badgeTechno(r.techno)}
                             </span>
                           ))}

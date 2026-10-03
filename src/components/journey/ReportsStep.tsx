@@ -35,6 +35,7 @@ import { diagnostiquerHiver } from "@/lib/journey/winter";
 import { cleGarage } from "@/lib/journey/infrastructure";
 import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 import { listerDocuments, piecesDepuisDocuments } from "@/lib/supabase/clientDocuments";
+import { LoadingState } from "@/components/layout/States";
 
 interface ReportsStepProps {
   projectId: string;
@@ -191,9 +192,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
   if (orgLoading || isLoading) {
     return (
       <Card>
-        <CardContent className="flex items-center justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-        </CardContent>
+        <LoadingState nombre={6} />
       </Card>
     );
   }

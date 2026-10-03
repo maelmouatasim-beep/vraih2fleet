@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -44,6 +44,10 @@ import ChangeLogCard from "@/components/journey/ChangeLogCard";
 import { useGarages } from "@/hooks/useGarages";
 import { assurerGarages } from "@/lib/fleet/garages";
 import { CLASSES_PNBV, proposerClasse } from "@/lib/fleet/gvwr";
+import { StatusBadge, LoadingState } from "@/components/layout/States";
+import { ton, TON_SOURCE, TON_VEHICULE } from "@/components/layout/tons";
+import { StatCard, StatGrid } from "@/components/layout/StatCard";
+import { formateurNombre } from "@/lib/format";
 
 const selectCls =
   "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -212,10 +216,8 @@ export default function MyFleet() {
   };
 
   const sourceBadge = (source: string) => {
-    if (source === "telematique") return <Badge variant="default">{t("fleet.source.telematique")}</Badge>;
-    if (source === "saisie") return <Badge variant="secondary">{t("fleet.source.saisie")}</Badge>;
-    if (source === "import") return <Badge variant="secondary">{t("fleet.source.import")}</Badge>;
-    return <Badge variant="outline">{t("fleet.source.estimation")}</Badge>;
+    const cle = source === "telematique" || source === "saisie" || source === "import" ? source : "estimation";
+    return <StatusBadge ton={TON_SOURCE[cle]}>{t(`fleet.source.${cle}`)}</StatusBadge>;
   };
 
   return (
@@ -239,7 +241,7 @@ export default function MyFleet() {
           }
         />
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <StatGrid>
           {(
             [
               ["total", stats.total],
@@ -248,25 +250,14 @@ export default function MyFleet() {
               ["estimated", stats.estimations],
             ] as const
           ).map(([cle, valeur]) => (
-            <Card key={cle}>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm text-muted-foreground font-medium">
-                  {t(`fleet.stats.${cle}`)}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-bold">{valeur}</p>
-              </CardContent>
-            </Card>
+          <StatCard key={cle} libelle={t(`fleet.stats.${cle}`)} valeur={valeur} />
           ))}
-        </div>
+        </StatGrid>
 
         <Card>
           <CardContent className="p-0">
             {orgLoading || isLoading ? (
-              <div className="flex items-center justify-center py-16">
-                <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-              </div>
+              <LoadingState nombre={6} />
             ) : vehicles.length === 0 ? (
               <div className="text-center py-16 px-6">
                 <Truck className="w-10 h-10 mx-auto text-muted-foreground mb-3" />
@@ -304,7 +295,7 @@ export default function MyFleet() {
                       <TableCell>{t(`fleet.categories.${v.category}`)}</TableCell>
                       <TableCell>{t(`fleet.fuels.${v.fuel_type}`)}</TableCell>
                       <TableCell className="text-right">
-                        {v.annual_km != null ? v.annual_km.toLocaleString("fr-CA") : "—"}
+                        {v.annual_km != null ? formateurNombre(i18n.language).format(v.annual_km) : "—"}
                       </TableCell>
                       <TableCell className="text-right">
                         {v.consumption_per_100km != null ? v.consumption_per_100km : "—"}
@@ -312,9 +303,9 @@ export default function MyFleet() {
                       <TableCell>{sourceBadge(v.consumption_source)}</TableCell>
                       <TableCell>{v.depot ?? "—"}</TableCell>
                       <TableCell>
-                        <Badge variant={v.status === "actif" ? "default" : "outline"}>
+                        <StatusBadge ton={ton(TON_VEHICULE, v.status)}>
                           {t(`fleet.statuses.${v.status}`)}
-                        </Badge>
+                        </StatusBadge>
                       </TableCell>
                       <TableCell>
                         <div className="flex justify-end gap-1">

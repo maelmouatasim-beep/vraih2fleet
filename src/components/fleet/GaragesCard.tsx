@@ -129,8 +129,8 @@ export default function GaragesCard({ organizationId, depots }: GaragesCardProps
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
-        <div>
+      <CardHeader className="flex flex-col gap-3 space-y-0 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
           <CardTitle className="text-lg flex items-center gap-2">
             <Warehouse className="w-5 h-5" /> {t("fleet.garages.title")}
           </CardTitle>

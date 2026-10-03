@@ -29,10 +29,12 @@ import {
   type EvaluationTechno,
   type FaisabiliteVehicule,
 } from "@/lib/journey/feasibility";
-import { formateurCad } from "@/lib/format";
+import { formateurCad, formateurNombre } from "@/lib/format";
 import type { ProjectDTO } from "@/lib/supabase/projects";
-import { Loader2 } from "lucide-react";
 import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
+import { StatusBadge, LoadingState } from "@/components/layout/States";
+import { ton, TON_VERDICT } from "@/components/layout/tons";
+import { StatCard, StatGrid } from "@/components/layout/StatCard";
 
 interface FeasibilityStepProps {
   projectId: string;
@@ -103,9 +105,7 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
   if (orgLoading || isLoading || !evaluations) {
     return (
       <Card>
-        <CardContent className="flex items-center justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-        </CardContent>
+        <LoadingState nombre={6} />
       </Card>
     );
   }
@@ -149,10 +149,8 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
   };
 
   const verdictBadge = (e: EvaluationTechno | undefined) => {
-    if (!e) return <Badge variant="outline">{t("journey.feasibility.verdicts.non_evaluable")}</Badge>;
-    const variante =
-      e.verdict === "favorable" ? "default" : e.verdict === "conditionnel" ? "secondary" : "destructive";
-    return <Badge variant={variante}>{t(`journey.feasibility.verdicts.${e.verdict}`)}</Badge>;
+    const verdict = e?.verdict ?? "non_evaluable";
+    return <StatusBadge ton={ton(TON_VERDICT, verdict)}>{t(`journey.feasibility.verdicts.${verdict}`)}</StatusBadge>;
   };
 
   const detailTechno = (e: EvaluationTechno | undefined) => {
@@ -193,7 +191,7 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
   return (
     <div className="space-y-4">
       <EnergyClientDataCard projectId={projectId} />
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <StatGrid>
         {(
           [
             ["favorable", stats.favorables],
@@ -202,18 +200,9 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
             ["notAssessable", stats.nonEvaluables],
           ] as const
         ).map(([cle, valeur]) => (
-          <Card key={cle}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-muted-foreground font-medium">
-                {t(`journey.feasibility.stats.${cle}`)}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{valeur}</p>
-            </CardContent>
-          </Card>
+          <StatCard key={cle} libelle={t(`journey.feasibility.stats.${cle}`)} valeur={valeur} />
         ))}
-      </div>
+      </StatGrid>
 
       {recommandations.size > 0 && (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber-300/60 bg-amber-50 dark:bg-amber-950/30 p-3 text-sm">
@@ -240,9 +229,9 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
                 <TableHead>{t("fleet.columns.unit")}</TableHead>
                 <TableHead>{t("fleet.columns.vehicle")}</TableHead>
                 <TableHead className="text-right">{t("fleet.columns.annualKm")}</TableHead>
-                <TableHead>{t("journey.feasibility.columns.bev")}</TableHead>
-                <TableHead>{t("journey.feasibility.columns.fcev")}</TableHead>
-                <TableHead>{t("journey.feasibility.columns.notes")}</TableHead>
+                <TableHead className="min-w-[13rem]">{t("journey.feasibility.columns.bev")}</TableHead>
+                <TableHead className="min-w-[13rem]">{t("journey.feasibility.columns.fcev")}</TableHead>
+                <TableHead className="min-w-[10rem]">{t("journey.feasibility.columns.notes")}</TableHead>
                 <TableHead>{t("journey.feasibility.columns.target")}</TableHead>
               </TableRow>
             </TableHeader>
@@ -252,7 +241,7 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
                 if (f?.horsHorizon) {
                   return (
                     <TableRow key={pv.id}>
-                      <TableCell className="font-medium">{pv.vehicles.unit_number}</TableCell>
+                      <TableCell className="font-medium whitespace-nowrap">{pv.vehicles.unit_number}</TableCell>
                       <TableCell colSpan={5} className="text-sm text-muted-foreground">
                         {t("journey.feasibility.outOfHorizon", {
                           annee: f.horsHorizon.anneeRemplacement,
@@ -266,7 +255,7 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
                 if (f?.aReporter) {
                   return (
                     <TableRow key={pv.id}>
-                      <TableCell className="font-medium">{pv.vehicles.unit_number}</TableCell>
+                      <TableCell className="font-medium whitespace-nowrap">{pv.vehicles.unit_number}</TableCell>
                       <TableCell>
                         <p className="text-xs text-muted-foreground">{t(`fleet.categories.${pv.vehicles.category}`)}</p>
                       </TableCell>
@@ -284,7 +273,7 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
                 const reserves = new Set([...(bev?.reserves ?? []), ...(fcev?.reserves ?? [])]);
                 return (
                   <TableRow key={pv.id}>
-                    <TableCell className="font-medium">{pv.vehicles.unit_number}</TableCell>
+                    <TableCell className="font-medium whitespace-nowrap">{pv.vehicles.unit_number}</TableCell>
                     <TableCell>
                       <p>
                         {[pv.vehicles.make, pv.vehicles.model, pv.vehicles.model_year]
@@ -296,7 +285,7 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
                       </p>
                     </TableCell>
                     <TableCell className="text-right align-top">
-                      {f?.kmParAnRetenu != null ? f.kmParAnRetenu.toLocaleString("fr-CA") : "—"}
+                      {f?.kmParAnRetenu != null ? formateurNombre(i18n.language).format(f.kmParAnRetenu) : "—"}
                       {f?.donneesEstimees.includes("km") && (
                         <p className="text-xs text-muted-foreground">{t("fleet.source.estimation")}</p>
                       )}

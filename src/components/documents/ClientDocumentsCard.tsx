@@ -350,8 +350,8 @@ export default function ClientDocumentsCard({ organizationId, projectId = null, 
 
   return (
     <Card data-testid={projectId ? "project-documents" : "org-documents"}>
-      <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
-        <div>
+      <CardHeader className="flex flex-col gap-3 space-y-0 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
           <CardTitle className="text-lg flex items-center gap-2">
             <FileCheck2 className="w-5 h-5 text-muted-foreground" />
             {t("documents.title")}

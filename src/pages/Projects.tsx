@@ -62,9 +62,10 @@ import {
   type ProjectDTO,
 } from "@/lib/supabase/projects";
 import { seedDemoProject, getDemoProjectInfo } from "@/lib/demoData";
+import { formaterDate, formaterPourcentage } from "@/lib/format";
 
 const Projects = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -511,12 +512,12 @@ const Projects = () => {
                       </Badge>
                       <Badge variant="outline" className="gap-1">
                         <TrendingUp className="w-3 h-3" />
-                        {(project.defaultDiscountRate * 100).toFixed(1)}% {t('pages.projects.card.discountRate')}
+                        {formaterPourcentage(i18n.language, project.defaultDiscountRate)} {t('pages.projects.card.discountRate')}
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between pt-2 border-t border-border">
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(project.updatedAt).toLocaleDateString()}
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        {formaterDate(i18n.language, project.updatedAt)}
                       </span>
                       <Button variant="outline" size="sm" asChild>
                         <Link to={`/dashboard/projects/${project.id}`}>
