@@ -877,10 +877,12 @@ export type Database = {
       notifications: {
         Row: {
           actor_id: string | null
-          created_at: string | null
+          archived_at: string | null
+          created_at: string
           id: string
-          is_read: boolean | null
+          is_read: boolean
           message: string
+          payload: Json
           project_id: string | null
           related_id: string | null
           title: string
@@ -889,10 +891,12 @@ export type Database = {
         }
         Insert: {
           actor_id?: string | null
-          created_at?: string | null
+          archived_at?: string | null
+          created_at?: string
           id?: string
-          is_read?: boolean | null
+          is_read?: boolean
           message: string
+          payload?: Json
           project_id?: string | null
           related_id?: string | null
           title: string
@@ -901,10 +905,12 @@ export type Database = {
         }
         Update: {
           actor_id?: string | null
-          created_at?: string | null
+          archived_at?: string | null
+          created_at?: string
           id?: string
-          is_read?: boolean | null
+          is_read?: boolean
           message?: string
+          payload?: Json
           project_id?: string | null
           related_id?: string | null
           title?: string
@@ -1189,6 +1195,7 @@ export type Database = {
           created_at: string
           email: string | null
           email_notifications: Json | null
+          notification_preferences: Json
           fleet_size: string | null
           fleet_types: string[] | null
           full_name: string | null
@@ -1204,6 +1211,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           email_notifications?: Json | null
+          notification_preferences?: Json
           fleet_size?: string | null
           fleet_types?: string[] | null
           full_name?: string | null
@@ -1219,6 +1227,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           email_notifications?: Json | null
+          notification_preferences?: Json
           fleet_size?: string | null
           fleet_types?: string[] | null
           full_name?: string | null

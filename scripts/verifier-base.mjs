@@ -43,6 +43,42 @@ select json_build_object(
   'buckets', (select coalesce(json_agg(id order by id), '[]') from storage.buckets)
 ) as inventaire`;
 
+// Notifications (cloche) : table dans la publication temps réel, policies
+// du destinataire, et chaque type écrit par une fonction émettrice autorisé
+// par la contrainte CHECK (sinon l'action qui déclenche la notification
+// échoue). Mêmes types que src/lib/notifications/model.ts.
+const TYPES_NOTIFICATIONS = [
+  "comment", "reply", "invitation", "version", "role_change", "task_assigned", "task_mentioned",
+  "milestone_assigned", "collaboration_accepted", "subsidy", "plan_alert", "tasks_generated",
+];
+const NOTIFICATIONS_SQL = `
+select json_build_object(
+  'realtime', exists (select 1 from pg_publication_tables where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'notifications'),
+  'contrainte', (select pg_get_constraintdef(oid) from pg_constraint where conname = 'notifications_type_check'),
+  'policies', (select coalesce(json_agg(polcmd::text), '[]') from pg_policy where polrelid = 'public.notifications'::regclass),
+  'emetteurs', (select coalesce(json_agg(json_build_object('nom', p.proname, 'src', p.prosrc)), '[]')
+                from pg_proc p where p.pronamespace = 'public'::regnamespace
+                 and (p.prosrc ilike '%into notifications%' or p.prosrc ilike '%into public.notifications%'))
+) as notifications`;
+
+function verifierNotifications(n) {
+  if (n.realtime) ok("notifications : table dans la publication temps réel");
+  else ko("notifications : table ABSENTE de la publication supabase_realtime (la cloche ne se met plus à jour)");
+  const autorises = new Set([...String(n.contrainte ?? "").matchAll(/'([a-z_]+)'/g)].map((m) => m[1]));
+  const manquants = TYPES_NOTIFICATIONS.filter((t) => !autorises.has(t));
+  if (manquants.length) ko(`notifications : types refusés par la contrainte : ${manquants.join(", ")}`);
+  else ok(`notifications : ${TYPES_NOTIFICATIONS.length} types autorisés par la contrainte`);
+  const cmds = new Set(n.policies ?? []);
+  if (cmds.has("r") && cmds.has("w") && !cmds.has("a")) ok("notifications : policies SELECT/UPDATE du destinataire, aucune insertion directe");
+  else ko(`notifications : policies inattendues (${[...cmds].join(", ")})`);
+  const motif = new RegExp(`'(${TYPES_NOTIFICATIONS.join("|")}|[a-z]+_(?:assigned|mentioned|accepted|generated|alert))'`, "g");
+  for (const f of n.emetteurs ?? []) {
+    const refuses = [...String(f.src).matchAll(motif)].map((m) => m[1]).filter((t) => !autorises.has(t));
+    if (refuses.length) ko(`notifications : ${f.nom} écrit le type « ${refuses[0]} », refusé par la contrainte`);
+  }
+  ok(`notifications : ${(n.emetteurs ?? []).length} fonctions émettrices vérifiées`);
+}
+
 const trier = (inv) => Object.fromEntries(Object.entries(inv).map(([k, v]) => [k, [...(v ?? [])].sort()]));
 
 // ── Accès SQL ───────────────────────────────────────────────────────────
@@ -121,6 +157,9 @@ if (mode === "--generer") {
     } else attention("éléments présents en base mais absents du dépôt (créés à la main ?)");
     afficher("en plus —", enTrop);
   }
+
+  const brutNotif = mode === "--local" ? JSON.parse(sqlLocal(NOTIFICATIONS_SQL)) : (await sqlHeberge(NOTIFICATIONS_SQL))[0].notifications;
+  verifierNotifications(typeof brutNotif === "string" ? JSON.parse(brutNotif) : brutNotif);
 
   if (mode === "--heberge") {
     const ref = exigerEnv("SUPABASE_PROJECT_REF");
