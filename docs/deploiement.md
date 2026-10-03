@@ -91,6 +91,7 @@ Même page, onglet **Variables** → **New repository variable** :
 | `VITE_SUPABASE_PROJECT_ID` | le Project ref |
 | `VITE_SUPABASE_URL` | `https://<ref>.supabase.co` |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | la clé publishable/anon (remplace l'ancienne) |
+| `VITE_EMAILS_ACTIVE` | (facultatif) `true` une fois SendGrid branché : retire l'avis « courriels pas encore activés » des Paramètres |
 
 Je n'ai pas d'outil pour écrire ces variables : c'est toi qui les saisis.
 Le workflow *Deploy Pages* vérifie que l'URL correspond au ref.

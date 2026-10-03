@@ -51,6 +51,16 @@ hydrogène : TCO, infrastructure, subventions canadiennes, télématique
   (`smartImport.ts` pur : correspondance, conversions, validation ligne
   par ligne ; `smartImportFile.ts` : lecture CSV/XLSX/PDF). Un module testé ne
   doit pas importer le client Supabase (la CI n'a pas de `.env`).
+- `src/lib/notifications/model.ts` — notifications (PUR, testé) : types
+  autorisés (identiques à la contrainte CHECK), catégories (identiques à
+  `public.notification_category`), écran cible par type (étapes du
+  parcours uniquement), textes fr/en depuis `payload`. Une seule source
+  côté client : `NotificationsProvider` (`src/hooks/useNotifications.tsx`,
+  monté dans App.tsx — un canal temps réel, compteur exact) ; cloche
+  protégée par `NotificationsBoundary`. Côté base : trigger commun
+  `notifications_before_insert` (préférences + paramètres des textes),
+  alertes du plan et tâches générées versées dans la cloche
+  (migration 20261006010000).
 - `src/i18n/locales/{fr,en}/translation.json` — tous les textes UI.
 - `src/integrations/supabase/` — client et types générés (ne pas éditer
   à la main sauf nécessité ; fichiers marqués « automatically generated »).
@@ -475,6 +485,10 @@ sinon « à_valider » avec l'URL à consulter.
 - Invitations d'équipe : aucun courriel envoyé automatiquement (la
   personne voit l'invitation en se connectant) — brancher send-email.
 - Récapitulatif hebdomadaire (préférence courriel) non implémenté.
+- Notifications : les alertes du plan n'entrent dans la cloche que lorsque
+  la surveillance est recalculée (ouverture du projet par un éditeur) ;
+  un recalcul planifié côté serveur reste à faire. Variable de dépôt
+  `VITE_EMAILS_ACTIVE=true` à poser quand SendGrid sera branché.
 - /dashboard/roadmap encore accessible hors menu (à retirer ou
   intégrer au Suivi).
 - Tarifs à définir (fin de projet) : `landing.pricing`, Pricing.tsx,

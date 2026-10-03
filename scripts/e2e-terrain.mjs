@@ -636,6 +636,63 @@ try {
   execFileSync("pdftoppm", ["-png", "-r", "70", "-f", "1", "-l", "2", join(SORTIE, "note-conseil-fr.pdf"), join(SORTIE, "15c-note-pdf")]);
   etape("Note au conseil : brouillon IA avec chiffre en clair rejeté puis rédigé à jetons, nombre inventé = export bloqué, PDF et Word exportés, plan figé dans un snapshot lié à la note");
 
+  // NOTIFICATIONS : générer les tâches du plan → une notification arrive en
+  // temps réel dans la cloche (avec les alertes du plan déjà présentes) →
+  // clic sur la cloche → clic sur la notification → étape Suivi, marquée
+  // lue, compteur identique sur la cloche, l'Accueil et la page Notifications.
+  const erreursPage = [];
+  page.on("pageerror", (e) => erreursPage.push(String(e.message ?? e)));
+  const badge = page.getByTestId("notifications-badge");
+  const lireBadge = async () => ((await badge.count()) ? Number((await badge.innerText()).replace("+", "")) : 0);
+  await page.goto(`${base}/suivi`);
+  await page.getByRole("button", { name: "Générer les tâches du plan" }).waitFor({ timeout: 20000 });
+  await page.waitForTimeout(1500);
+  const avantGeneration = await lireBadge();
+  await page.getByRole("button", { name: "Générer les tâches du plan" }).click();
+  let apresGeneration = avantGeneration;
+  for (let i = 0; i < 60 && apresGeneration <= avantGeneration; i++) {
+    await page.waitForTimeout(250);
+    apresGeneration = await lireBadge();
+  }
+  if (apresGeneration !== avantGeneration + 1) throw new Error(`notifications : compteur ${avantGeneration} → ${apresGeneration} après la génération (temps réel ?)`);
+  await page.goto(url("/dashboard"));
+  const compteurAccueil = page.getByTestId("home-unread");
+  await compteurAccueil.waitFor({ timeout: 20000 });
+  for (let i = 0; i < 20 && Number(await compteurAccueil.getAttribute("data-count")) !== apresGeneration; i++) await page.waitForTimeout(250);
+  if (Number(await compteurAccueil.getAttribute("data-count")) !== apresGeneration) throw new Error("notifications : compteur de l'Accueil ≠ cloche");
+  await page.getByTestId("notifications-bell").click();
+  const panneauNotifs = page.getByTestId("notifications-panel");
+  const itemGeneration = panneauNotifs.locator('[data-testid="notification-item"][data-type="tasks_generated"]').first();
+  await itemGeneration.waitFor({ timeout: 10000 });
+  const typesCloche = [...new Set(await panneauNotifs.getByTestId("notification-item").evaluateAll((els) => els.map((e) => e.getAttribute("data-type"))))];
+  if (typesCloche.length < 2 || !typesCloche.includes("plan_alert")) throw new Error(`notifications : types attendus dans la cloche (${typesCloche.join(", ")})`);
+  const texteGeneration = await itemGeneration.innerText();
+  if (!/Vous avez généré \d+ tâche\(s\) du plan/.test(texteGeneration)) throw new Error(`notifications : texte inattendu « ${texteGeneration} »`);
+  await captureDialogue(page, panneauNotifs, "15a-cloche-notifications");
+  await itemGeneration.locator("button").first().click();
+  await page.waitForURL(/\/suivi$/, { timeout: 10000 });
+  let apresClic = await lireBadge();
+  for (let i = 0; i < 20 && apresClic !== apresGeneration - 1; i++) {
+    await page.waitForTimeout(250);
+    apresClic = await lireBadge();
+  }
+  if (apresClic !== apresGeneration - 1) throw new Error(`notifications : compteur ${apresClic} après le clic (attendu ${apresGeneration - 1})`);
+  const luEnBase = psql(`select count(*) from public.notifications where project_id = '${projetId}' and type = 'tasks_generated' and is_read`).trim();
+  if (luEnBase !== "1") throw new Error("notifications : la notification ouverte n'est pas marquée lue en base");
+  await page.goto(url("/dashboard/notifications"));
+  const compteurPage = page.getByTestId("notifications-page-unread");
+  let texteCompteurPage = await compteurPage.innerText();
+  for (let i = 0; i < 40 && !texteCompteurPage.startsWith(`${apresClic} `); i++) {
+    await page.waitForTimeout(250);
+    texteCompteurPage = await compteurPage.innerText();
+  }
+  if (!texteCompteurPage.startsWith(`${apresClic} `)) throw new Error(`notifications : page « ${texteCompteurPage} » ≠ cloche (${apresClic})`);
+  await page.getByRole("button", { name: "Tout marquer comme lu" }).click();
+  for (let i = 0; i < 20 && (await badge.count()) > 0; i++) await page.waitForTimeout(250);
+  if ((await badge.count()) > 0) throw new Error("notifications : « Tout marquer comme lu » n'a pas remis le compteur à zéro");
+  if (erreursPage.length) throw new Error(`notifications : erreur JavaScript dans la page — ${erreursPage[0]}`);
+  etape(`Notifications : tâches générées → notification en temps réel (${typesCloche.join(", ")}) → clic → étape Suivi, lue ; compteur ${apresGeneration} → ${apresClic} identique cloche/Accueil/page ; tout lu → 0 ; aucune erreur JavaScript`);
+
   writeFileSync(join(SORTIE, "resultat.json"), JSON.stringify({ infraStrategie, infraPlan, subvStrategie, vanPlan, sousTitre, statutOpt, nbDecisions, nbChangements }, null, 2));
   if (erreurs.length) throw new Error(`réponses locales en erreur :\n${erreurs.join("\n")}`);
   console.log(`\n${journal.length} étapes, 0 erreur. Captures : ${SORTIE}`);

@@ -96,7 +96,11 @@ insérée dans le SQL en chaîne « dollar-quoted » à étiquette aléatoire.
 - RLS activée sur toutes les tables du schéma public (vérifié par
   `supabase/tests/rls-audit.test.ts`, exécuté en CI contre Supabase local).
 - Écritures sensibles réservées au serveur : `subscriptions` (tier/status),
-  compteurs d'`api_keys`, `notifications` (triggers SECURITY DEFINER).
+  compteurs d'`api_keys`, `notifications` (triggers SECURITY DEFINER ;
+  aucune insertion directe ; le destinataire ne peut changer que « lu » et
+  « archivé » — trigger `notifications_guard_update` ; ses préférences
+  sont appliquées à la source par `notifications_before_insert` ;
+  `project_audience` n'est pas exécutable par les clients).
 - Les contacts de `hydrogen_suppliers` ne sont lisibles que par les admins.
   L'ancienne vue `hydrogen_suppliers_directory` (security definer, signalée
   CRITICAL par le Security Advisor, inutilisée) est supprimée (migration
