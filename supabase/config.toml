@@ -38,6 +38,10 @@ verify_jwt = true
 [functions.document-reader]
 verify_jwt = true
 
+# Phase 5.7 — note au conseil (JWT vérifié dans le code, projet relu avec RLS).
+[functions.council-note]
+verify_jwt = true
+
 # Gabarits publics (rate limit + pot de miel) et internes (secrets) : la
 # fonction fait le tri elle-même.
 [functions.send-email]

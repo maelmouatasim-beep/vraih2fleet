@@ -51,6 +51,7 @@ appelant via `supabase/functions/_shared/auth.ts` :
 | `copilot` | utilisateur | `getUserOrThrow` + projet relu avec le client RLS + fonction activée pour l'organisation + quotas jour/mois par organisation + débit par utilisateur ; clé `ANTHROPIC_API_KEY` côté serveur seulement ; chaque nombre de la réponse vérifié contre les résultats d'outils |
 | `fleet-import` | utilisateur | `getUserOrThrow` + réglages lus avec le client RLS (membre de l'organisation) + « import intelligent » activé + quotas par organisation + débit par utilisateur ; reçoit seulement entêtes + ≤ 3 exemples par colonne (colonnes personnelles filtrées dans le navigateur) ; réponse filtrée : entêtes et libellés absents de la requête rejetés, valeurs hors listes vidées ; rien n'est stocké |
 | `document-reader` | utilisateur | `getUserOrThrow` + réglages et pièce relus avec le client RLS (même organisation, pièce encore « à vérifier ») + « lecture de factures et devis » activée + quotas + débit ; texte du PDF seul quand il existe, sinon fichier téléchargé avec le client RLS ; champs hors type et garages inconnus rejetés, nombres retrouvés dans le texte ; rien n'est écrit par la fonction (confirmation dans l'application) |
+| `council-note` | utilisateur | `getUserOrThrow` + projet relu avec le client RLS (l'utilisateur doit le voir) + « note au conseil » activée pour l'organisation du projet + quotas + débit ; ne reçoit que des faits agrégés du plan (aucun nom de personne, aucune donnée de véhicule individuelle) ; l'IA n'écrit aucun chiffre : tout brouillon contenant un chiffre hors jeton {{fait}} ou un jeton inconnu est rejeté puis redemandé une fois ; rien n'est stocké par la fonction |
 | `authenticate-telematics`, `fetch-telematics-vehicles` | utilisateur | `getUserOrThrow` |
 | `get-mapbox-token` | utilisateur | verify_jwt (jeton public Mapbox uniquement) |
 | `api-gateway`, `mcp` | reportés | 404 sauf `FEATURE_PUBLIC_API=true` |
@@ -104,6 +105,12 @@ Le rôle admin s'attribue en base uniquement :
   Les textes enregistrés sont rendus par l'application à partir des
   sorties du moteur ; un éditeur pourrait techniquement y écrire un autre
   texte, que le courriel échappe (pas de HTML, lien fixé côté serveur).
+- Note au conseil (Phase 5.7) : `council_notes` lisible par les membres
+  du projet, écrite par ses éditeurs (`can_edit_project`), sans policy
+  DELETE ; trigger qui verrouille projet, auteur et date de création,
+  signe l'auteur de la modification et refuse un snapshot d'un autre
+  projet. Avant tout export, chaque nombre du texte édité est vérifié
+  contre les faits du moteur (export bloqué sinon).
 - Veille des subventions (Phase 5.5) : `subsidy_watch_changes` (file de
   validation) lisible par les seuls administrateurs H2Fleet
   (`has_role 'admin'`), sans aucune policy d'écriture ; le dépôt est fait

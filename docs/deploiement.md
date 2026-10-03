@@ -233,7 +233,7 @@ confirmés par l'API d'administration).
 ## Points ouverts
 
 - **IA** : fournisseur = API Claude d'Anthropic (fonctions `copilot`,
-  Phase 5.2, `fleet-import`, Phase 5.3, et `document-reader`, Phase 5.4) ; l'ancienne fonction `assistant-chat` (passerelle Lovable)
+  Phase 5.2, `fleet-import`, Phase 5.3, `document-reader`, Phase 5.4, et `council-note`, Phase 5.7) ; l'ancienne fonction `assistant-chat` (passerelle Lovable)
   est retirée du dépôt — si elle reste déployée sur la base hébergée,
   la supprimer : `supabase functions delete assistant-chat`.
 - **Courriels** : SMTP personnalisé nécessaire pour des testeurs externes

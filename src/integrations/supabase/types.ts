@@ -170,6 +170,72 @@ export type Database = {
         }
         Relationships: []
       }
+      council_notes: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          engine_version: string
+          exported_at: string | null
+          facts: Json
+          fingerprint: string
+          id: string
+          language: string
+          project_id: string
+          report_snapshot_id: string | null
+          sections: Json
+          source: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          engine_version: string
+          exported_at?: string | null
+          facts: Json
+          fingerprint: string
+          id?: string
+          language: string
+          project_id: string
+          report_snapshot_id?: string | null
+          sections: Json
+          source: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          engine_version?: string
+          exported_at?: string | null
+          facts?: Json
+          fingerprint?: string
+          id?: string
+          language?: string
+          project_id?: string
+          report_snapshot_id?: string | null
+          sections?: Json
+          source?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "council_notes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "council_notes_report_snapshot_id_fkey"
+            columns: ["report_snapshot_id"]
+            isOneToOne: false
+            referencedRelation: "report_snapshots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organization_ai_settings: {
         Row: {
           copilot_enabled: boolean

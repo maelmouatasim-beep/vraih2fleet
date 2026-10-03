@@ -915,3 +915,37 @@ plus. L'état (première détection, vue par qui et quand, résolution,
 courriel) est enregistré dans `plan_alerts` par les éditeurs du projet ;
 le résumé par courriel (`plan-alerts-digest`, quotidien) part dès que le
 service de courriel est branché.
+
+## 14. Note au conseil (Phase 5.7) — l'IA rédige, le moteur chiffre
+
+1. **Faits.** `src/lib/journey/councilNote.ts` (`faitsNote`) extrait du
+   résultat du moteur et du stress test les seuls nombres qu'une note peut
+   contenir : économie actualisée (VAN), coûts totaux actualisés du plan et
+   du statu quo, récupération, CO2e évité (cycle complet et pot
+   d'échappement), coût par tonne, investissement, subventions, reste à
+   financer, année de pointe, programmes retenus, VAN des scénarios
+   prudent et favorable, nombre de scénarios gagnants, facteurs les plus
+   influents, verdicts du diagnostic hivernal (§ bloc 2.4), garages dont
+   la capacité est dépassée, nombre d'hypothèses à valider ou estimées.
+   Chaque fait a un identifiant, une valeur brute, un rendu fr/en et une
+   source (moteur, registre ou données du projet).
+2. **Rédaction.** Par l'IA (fonction `council-note`) : la prose ne
+   contient que des jetons `{{fait}}`, jamais un chiffre ; un brouillon
+   contenant un chiffre hors jeton ou un jeton inconnu est rejeté et
+   redemandé une fois, puis abandonné. Sans IA : modèle déterministe
+   (`brouillonModele`) qui adapte la recommandation au résultat (adopter ;
+   adopter sous réserve si le plan n'est pas gagnant dans les trois
+   scénarios ; ne pas adopter tel quel si l'économie centrale est
+   négative). L'application remplace les jetons par les valeurs du moteur.
+3. **Édition et vérification.** L'utilisateur édite librement. Avant tout
+   export, chaque nombre du texte doit correspondre à un fait (tolérance
+   d'affichage seulement, `numberCheck`) ; sinon l'export est bloqué et les
+   nombres en cause sont listés. Une note dont l'empreinte diffère du plan
+   courant doit être régénérée.
+4. **Export.** PDF et Word, même structure : recommandation encadrée,
+   chiffres clés, sections dont la première phrase est le titre d'action,
+   pièces numérotées et sourcées (coût actualisé, calendrier
+   d'investissement, stress test), « Ce que cette note ne dit pas »,
+   annexe de traçabilité (chaque fait, sa valeur, sa source). Chaque export
+   fige le plan dans un snapshot de rapport (`note_pdf` ou `note_docx`)
+   auquel la note enregistrée est liée.

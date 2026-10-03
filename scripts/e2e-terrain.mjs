@@ -581,6 +581,54 @@ try {
   await captureDialogue(page, carteSante, "14b-accueil-sante");
   etape(`Surveillance : ${nbAvant} alertes (${[...new Set(types)].join(", ")}), santé « ${niveau} », une alerte marquée vue (tracée), carte « Santé du plan » sur l'Accueil`);
 
+  // Phase 5.7 — NOTE AU CONSEIL : faits du moteur, rédaction IA à jetons
+  // (le faux Claude écrit d'abord un chiffre en clair : rejeté et
+  // redemandé), édition vérifiée (nombre inventé = export bloqué), export
+  // PDF et Word, plan figé dans un snapshot lié à la note.
+  await page.goto(url("/dashboard/organization"));
+  const interrupteurNote = page.getByTestId("ai-settings").locator("#ai-councilNote");
+  await interrupteurNote.click();
+  for (let i = 0; i < 20 && (await interrupteurNote.getAttribute("data-state")) !== "checked"; i++) await page.waitForTimeout(250);
+  await page.waitForTimeout(1200);
+  await page.goto(`${base}/rapports`);
+  const carteNote = page.getByTestId("council-note-card");
+  await carteNote.waitFor({ timeout: 20000 });
+  const appelsNoteAvant = (await fetch("http://127.0.0.1:35563/appels").then((r) => r.json()).catch(() => [])).length;
+  await carteNote.getByTestId("council-note-ai").click();
+  await carteNote.getByTestId("council-note-editor").waitFor({ timeout: 90000 });
+  const appelsNote = (await fetch("http://127.0.0.1:35563/appels").then((r) => r.json()).catch(() => [])).slice(appelsNoteAvant);
+  if (appelsNote.length !== 2) throw new Error(`note : ${appelsNote.length} appel(s) à l'API au lieu de 2 (brouillon rejeté puis corrigé)`);
+  const couts = carteNote.getByTestId("council-note-section-couts");
+  const texteCouts = await couts.inputValue();
+  if (texteCouts.includes("1 234 567") || /\{\{/.test(texteCouts)) throw new Error(`note : chiffre inventé ou jeton dans « ${texteCouts} »`);
+  await carteNote.getByTestId("council-note-verified").waitFor();
+  await couts.fill(`${texteCouts} Le gain atteindrait 987 654 $ par an.`);
+  await carteNote.getByTestId("council-note-unverified").waitFor();
+  if (await carteNote.getByTestId("council-note-export-pdf").isEnabled()) throw new Error("note : export permis malgré un nombre non vérifié");
+  await captureDialogue(page, carteNote, "15a-note-nombre-bloque");
+  await couts.fill(texteCouts);
+  await carteNote.getByTestId("council-note-verified").waitFor();
+  await captureDialogue(page, carteNote, "15b-note-verifiee");
+  const [dlNote] = await Promise.all([page.waitForEvent("download", { timeout: 60000 }), carteNote.getByTestId("council-note-export-pdf").click()]);
+  await dlNote.saveAs(join(SORTIE, "note-conseil-fr.pdf"));
+  const textePdfNote = execFileSync("pdftotext", ["-layout", join(SORTIE, "note-conseil-fr.pdf"), "-"], { encoding: "utf8" });
+  for (const attendu of ["NOTE AU CONSEIL", "RECOMMANDATION", "PIÈCE 1", "CE QUE CETTE NOTE NE DIT PAS", "TRAÇABILITÉ DES CHIFFRES", "empreinte"]) {
+    if (!textePdfNote.includes(attendu)) throw new Error(`note PDF : « ${attendu} » absent`);
+  }
+  const [dlWord] = await Promise.all([page.waitForEvent("download", { timeout: 60000 }), carteNote.getByTestId("council-note-export-docx").click()]);
+  await dlWord.saveAs(join(SORTIE, "note-conseil-fr.docx"));
+  const xmlWord = execFileSync("unzip", ["-p", join(SORTIE, "note-conseil-fr.docx"), "word/document.xml"], { encoding: "utf8" });
+  if (!xmlWord.includes("RECOMMANDATION") || !xmlWord.includes("TRAÇABILITÉ")) throw new Error("note Word : contenu attendu absent");
+  // La note est enregistrée (liée au snapshot) juste après le téléchargement.
+  let lienNote = "";
+  for (let i = 0; i < 40 && lienNote !== "ia|true|note_docx"; i++) {
+    lienNote = psql(`select n.source || '|' || (n.report_snapshot_id is not null) || '|' || r.report_kind from public.council_notes n join public.report_snapshots r on r.id = n.report_snapshot_id where n.project_id = '${projetId}' order by n.updated_at desc limit 1`).trim();
+    if (lienNote !== "ia|true|note_docx") await page.waitForTimeout(250);
+  }
+  if (lienNote !== "ia|true|note_docx") throw new Error(`note : lien au snapshot inattendu « ${lienNote} »`);
+  execFileSync("pdftoppm", ["-png", "-r", "70", "-f", "1", "-l", "2", join(SORTIE, "note-conseil-fr.pdf"), join(SORTIE, "15c-note-pdf")]);
+  etape("Note au conseil : brouillon IA avec chiffre en clair rejeté puis rédigé à jetons, nombre inventé = export bloqué, PDF et Word exportés, plan figé dans un snapshot lié à la note");
+
   writeFileSync(join(SORTIE, "resultat.json"), JSON.stringify({ infraStrategie, infraPlan, subvStrategie, vanPlan, sousTitre, statutOpt, nbDecisions, nbChangements }, null, 2));
   if (erreurs.length) throw new Error(`réponses locales en erreur :\n${erreurs.join("\n")}`);
   console.log(`\n${journal.length} étapes, 0 erreur. Captures : ${SORTIE}`);

@@ -13,6 +13,10 @@
  *
  *   node scripts/mock-anthropic.mjs [port]   (défaut 35563, écoute 0.0.0.0)
  *
+ * Note au conseil (json_schema à sections) : un PREMIER brouillon contient
+ * un chiffre en clair (rejeté par la fonction `council-note`), le second
+ * n'utilise que des jetons {{fait}} de la liste reçue.
+ *
  * La fonction Edge l'atteint via ANTHROPIC_BASE_URL=http://host.docker.internal:<port>.
  */
 import http from "node:http";
@@ -126,8 +130,32 @@ function extractionDocument(corps) {
   };
 }
 
+function noteConseil(corps) {
+  const messages = corps.messages ?? [];
+  const premier = String(messages[0]?.content ?? "");
+  const faits = JSON.parse(premier.match(/<faits>\n([\s\S]*)\n<\/faits>/)?.[1] ?? "[]");
+  const ids = new Set(faits.map((f) => f.id));
+  const j = (id, sinon = "") => (ids.has(id) ? `{{${id}}}` : sinon);
+  const correction = messages.some((m) => m.role === "user" && String(m.content).startsWith("[Vérification]"));
+  const couts = correction
+    ? `Le plan coûte ${j("tco_plan")} en valeur actualisée contre ${j("tco_statu_quo")} pour le statu quo. La récupération actualisée est de ${j("recuperation")}.`
+    : "Le plan économise 1 234 567 $ sur dix ans.";
+  return {
+    recommandation: String(faits.find((f) => f.id === "van_centrale")?.valeur ?? "").trim().startsWith("-")
+      ? `Il est recommandé de revoir le plan avant de l'adopter : dans le scénario central, il coûte ${j("ecart_central_abs")} de plus que le statu quo en valeur actualisée, et il n'est gagnant que dans ${j("scenarios_gagnants")} des ${j("nb_scenarios")} scénarios du stress test.`
+      : `Il est recommandé d'adopter le plan « ${j("strategie_retenue")} » : il économise ${j("van_centrale")} en valeur actualisée et reste gagnant dans ${j("scenarios_gagnants")} des ${j("nb_scenarios")} scénarios du stress test.`,
+    contexte: `${j("organisation")} exploite ${j("nb_vehicules")} véhicules ; le plan en remplace ${j("nb_ze")} par des véhicules zéro émission sur ${j("horizon_ans")}.`,
+    couts,
+    financement: `L'investissement total atteint ${j("investissement_total")}, dont ${j("subventions_total")} de subventions prévues ; le reste à financer est de ${j("reste_a_financer")}.`,
+    risques: `Dans le scénario prudent, la VAN est de ${j("van_prudente")} ; le niveau de risque est ${j("niveau_risque")}.`,
+    hiver: `Sur ${j("nb_bev")} véhicules électriques à batterie, ${j("hiver_tient")} tiennent l'hiver sur la recharge de nuit.`,
+    prochaines_etapes: `- Lancer les appels d'offres des premiers achats.\n- Déposer les demandes de subvention avant l'achat.\n- Présenter un suivi annuel au conseil.`,
+  };
+}
+
 function repondre(corps) {
   const schema = corps.output_config?.format?.schema;
+  if (schema?.properties?.recommandation) return texte(JSON.stringify(noteConseil(corps)));
   if (schema?.properties?.type_detecte) return texte(JSON.stringify(extractionDocument(corps)));
   if (corps.output_config?.format?.type === "json_schema") return texte(JSON.stringify(correspondanceImport(corps)));
   const messages = corps.messages ?? [];

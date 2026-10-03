@@ -4708,7 +4708,7 @@
         },
         "councilNote": {
           "title": "Note au conseil",
-          "description": "Sommaire décisionnel rédigé, chiffres injectés et vérifiés (à venir)."
+          "description": "Sommaire décisionnel rédigé à partir des faits du moteur : l'IA n'écrit aucun chiffre, chaque nombre est vérifié avant l'export (PDF ou Word)."
         }
       },
       "monthlyTokens": "Jetons maximum par mois",
@@ -5068,6 +5068,59 @@
         "updatedBody": "Le dernier rapport (généré le {{date}}) a été figé avec une économie (VAN) de {{avant}}. Avec les données actuelles, elle serait de {{apres}}. Le rapport émis ne change JAMAIS : générez un nouveau rapport pour prendre en compte les nouvelles données.",
         "upToDate": "Dernier rapport figé le {{date}} (moteur {{version}}) — à jour avec les données actuelles.",
         "saveError": "Le rapport a été téléchargé, mais le snapshot n'a pas pu être enregistré."
+      },
+      "councilNote": {
+        "title": "Note au conseil",
+        "subtitle": "Sommaire décisionnel prêt à déposer au conseil : recommandation, coûts, financement, risques et stress test, hiver, prochaines étapes. Chaque chiffre est un fait du moteur, vérifié avant l'export.",
+        "language": "Langue de la note",
+        "draftAi": "Rédiger avec l'IA",
+        "draftTemplate": "Partir du modèle (sans IA)",
+        "aiDisabled": "Rédaction par l'IA désactivée pour votre organisation (Organisation › Intelligence artificielle). Le modèle sans IA reste disponible.",
+        "drafting": "Rédaction en cours…",
+        "lastNote": "Dernière note : {{date}} ({{source}}){{export}}.",
+        "lastNoteExport": ", exportée le {{date}}",
+        "sources": {
+          "ia": "rédigée par l'IA puis éditée",
+          "modele": "modèle sans IA puis éditée"
+        },
+        "open": "Ouvrir la dernière note",
+        "staleTitle": "Le plan a changé depuis cette note",
+        "staleBody": "Les chiffres de la note ne correspondent plus au plan actuel : régénérez-la (IA ou modèle) avant de l'exporter.",
+        "sections": {
+          "recommandation": "Recommandation",
+          "contexte": "Contexte",
+          "couts": "Coûts et bénéfices",
+          "financement": "Financement",
+          "risques": "Risques et stress test",
+          "hiver": "Exploitation hivernale",
+          "prochaines_etapes": "Prochaines étapes"
+        },
+        "editHint": "Vous pouvez modifier le texte librement. Chaque nombre doit rester un fait du moteur (liste ci-dessous) ; la première phrase de chaque section sert de titre dans le document.",
+        "verifiedOk": "Tous les nombres du texte correspondent aux faits du moteur.",
+        "verifiedKo": "Export bloqué : nombres absents des faits du moteur",
+        "tokensLeft": "Jetons sans valeur : {{liste}}",
+        "facts": "Faits du moteur utilisables ({{count}})",
+        "save": "Enregistrer",
+        "saved": "Note enregistrée",
+        "exportPdf": "Exporter en PDF",
+        "exportWord": "Exporter en Word",
+        "exported": "Note exportée ; plan figé dans un snapshot du {{date}}",
+        "aiRejected": "Brouillon IA non retenu : il contenait des chiffres hors des faits du moteur, même après correction. Utilisez le modèle sans IA ou réessayez.",
+        "aiRefused": "Le modèle a refusé de rédiger cette note.",
+        "aiRetried": "Brouillon IA vérifié : {{count}} écart(s) rejeté(s) puis corrigé(s) par une seconde rédaction.",
+        "errors": {
+          "service_non_configure": "La rédaction par l'IA n'est pas encore branchée sur ce site (clé ANTHROPIC_API_KEY à ajouter dans les secrets Supabase). Le modèle sans IA reste disponible.",
+          "fonction_desactivee": "La note au conseil par l'IA est désactivée pour votre organisation.",
+          "quota_journalier": "Limite quotidienne de requêtes IA de l'organisation atteinte.",
+          "quota_mensuel": "Limite mensuelle de jetons IA de l'organisation atteinte.",
+          "trop_de_requetes": "Trop de demandes en peu de temps. Patientez quelques minutes.",
+          "projet_introuvable": "Projet introuvable ou inaccessible.",
+          "erreur_service": "Le service IA ne répond pas pour l'instant. Réessayez dans un moment."
+        },
+        "languages": {
+          "fr": "Français",
+          "en": "English"
+        }
       }
     },
     "tracking": {

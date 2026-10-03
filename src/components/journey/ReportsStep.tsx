@@ -30,6 +30,9 @@ import type { Json } from "@/integrations/supabase/types";
 import type { ProjectDTO } from "@/lib/supabase/projects";
 import { FileSpreadsheet, FileText, Info, Loader2 } from "lucide-react";
 import CouncilReportPDF from "./CouncilReportPDF";
+import CouncilNoteCard from "./CouncilNoteCard";
+import { diagnostiquerHiver } from "@/lib/journey/winter";
+import { cleGarage } from "@/lib/journey/infrastructure";
 import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 import { listerDocuments, piecesDepuisDocuments } from "@/lib/supabase/clientDocuments";
 
@@ -83,7 +86,19 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
       pieces,
     };
     const unites = new Map(projectVehicles.map((pv) => [pv.vehicle_id, pv.vehicles.unit_number]));
-    return { strategie, meta, unites };
+    // Phase 5.7 — diagnostic hiver des véhicules électriques à batterie du plan
+    const bev = new Set(strategie.plan.vehicules.filter((v) => v.alternative.technologie === "BEV").map((v) => v.id));
+    const hiver = vehicules
+      .filter((v) => bev.has(v.id))
+      .map((v) =>
+        diagnostiquerHiver({
+          category: v.category,
+          annual_km: v.annual_km,
+          max_daily_km: v.max_daily_km,
+          fenetre: options.garages?.get(cleGarage(v.depot ?? null))?.fenetreRecharge,
+        }),
+      );
+    return { strategie, meta, unites, hiver };
   }, [options, donneesClient, organization, project, projectVehicles, confirmeesParVehicule, pieces]);
 
   // Règle A1 : chaque rapport généré FIGE le plan (snapshot immuable).
@@ -284,6 +299,19 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
           </CardContent>
         </Card>
       </div>
+
+      <CouncilNoteCard
+        projectId={projectId}
+        organizationId={project?.organizationId}
+        organisation={donnees.meta.organisation}
+        projet={donnees.meta.projet}
+        anneeReference={donnees.meta.anneeReference}
+        horizonAns={donnees.meta.horizonAns}
+        tauxActualisationNominal={donnees.meta.tauxActualisationNominal}
+        strategie={donnees.strategie}
+        retenue={donnees.meta.strategieRetenue ?? { cle: null, ecarts: 0 }}
+        hiver={donnees.hiver}
+      />
 
       <p className="text-xs text-muted-foreground">{t("journey.reports.note")}</p>
     </div>

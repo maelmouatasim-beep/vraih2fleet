@@ -4708,7 +4708,7 @@
         },
         "councilNote": {
           "title": "Council memo",
-          "description": "Drafted decision summary, figures injected and checked (coming)."
+          "description": "Decision memo drafted from engine facts: the AI writes no figure, every number is checked before export (PDF or Word)."
         }
       },
       "monthlyTokens": "Maximum tokens per month",
@@ -5068,6 +5068,59 @@
         "updatedBody": "The last report (generated on {{date}}) was frozen with a net saving (NPV) of {{avant}}. With current data it would be {{apres}}. An issued report NEVER changes: generate a new report to reflect the new data.",
         "upToDate": "Last report frozen on {{date}} (engine {{version}}) — up to date with current data.",
         "saveError": "The report was downloaded, but the snapshot could not be saved."
+      },
+      "councilNote": {
+        "title": "Note to council",
+        "subtitle": "Decision memo ready to table at council: recommendation, costs, financing, risks and stress test, winter, next steps. Every figure is an engine fact, checked before export.",
+        "language": "Note language",
+        "draftAi": "Draft with AI",
+        "draftTemplate": "Start from the template (no AI)",
+        "aiDisabled": "AI drafting is disabled for your organization (Organization › Artificial intelligence). The template without AI remains available.",
+        "drafting": "Drafting…",
+        "lastNote": "Latest note: {{date}} ({{source}}){{export}}.",
+        "lastNoteExport": ", exported on {{date}}",
+        "sources": {
+          "ia": "drafted by AI then edited",
+          "modele": "template without AI then edited"
+        },
+        "open": "Open the latest note",
+        "staleTitle": "The plan has changed since this note",
+        "staleBody": "The note's figures no longer match the current plan: regenerate it (AI or template) before exporting.",
+        "sections": {
+          "recommandation": "Recommendation",
+          "contexte": "Context",
+          "couts": "Costs and benefits",
+          "financement": "Financing",
+          "risques": "Risks and stress test",
+          "hiver": "Winter operation",
+          "prochaines_etapes": "Next steps"
+        },
+        "editHint": "You can edit the text freely. Every number must remain an engine fact (list below); the first sentence of each section becomes its heading in the document.",
+        "verifiedOk": "Every number in the text matches an engine fact.",
+        "verifiedKo": "Export blocked: numbers not found among engine facts",
+        "tokensLeft": "Tokens without a value: {{liste}}",
+        "facts": "Engine facts available ({{count}})",
+        "save": "Save",
+        "saved": "Note saved",
+        "exportPdf": "Export to PDF",
+        "exportWord": "Export to Word",
+        "exported": "Note exported; plan frozen in a snapshot dated {{date}}",
+        "aiRejected": "AI draft not kept: it contained figures outside the engine facts, even after correction. Use the template without AI or try again.",
+        "aiRefused": "The model declined to draft this note.",
+        "aiRetried": "AI draft checked: {{count}} issue(s) rejected then corrected by a second draft.",
+        "errors": {
+          "service_non_configure": "AI drafting is not connected on this site yet (ANTHROPIC_API_KEY to add to the Supabase secrets). The template without AI remains available.",
+          "fonction_desactivee": "AI note to council is disabled for your organization.",
+          "quota_journalier": "The organization's daily AI request limit has been reached.",
+          "quota_mensuel": "The organization's monthly AI token limit has been reached.",
+          "trop_de_requetes": "Too many requests in a short time. Please wait a few minutes.",
+          "projet_introuvable": "Project not found or not accessible.",
+          "erreur_service": "The AI service is not responding right now. Try again in a moment."
+        },
+        "languages": {
+          "fr": "Français",
+          "en": "English"
+        }
       }
     },
     "tracking": {
