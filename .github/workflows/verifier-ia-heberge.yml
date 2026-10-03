@@ -1,0 +1,62 @@
+name: Vérifier l'IA (base hébergée)
+
+# Vérifie que les fonctions IA du projet Supabase de TEST reconnaissent la
+# clé ANTHROPIC_API_KEY (secret Supabase, jamais affiché) : un compte
+# jetable e2e-…@example.com se connecte au site GitHub Pages, charge la démo
+# « Ville de Rivière-Claire », active le copilote pour SON organisation et
+# pose une question (un appel réel à l'API Claude, quelques cents). Le
+# compte et son organisation sont SUPPRIMÉS en fin de run, même en cas
+# d'échec. Lancement manuel : Actions → Vérifier l'IA (base hébergée).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-heberge
+  cancel-in-progress: false
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+    steps:
+      - name: Configuration présente ?
+        run: |
+          for v in SUPABASE_ACCESS_TOKEN SUPABASE_PROJECT_REF; do
+            [ -n "${!v}" ] || { echo "::error::$v manquant (docs/deploiement.md)"; exit 1; }
+          done
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Navigateur Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Créer le compte de test
+        run: node scripts/comptes-e2e.mjs creer
+
+      - name: Copilote sur la démo Rivière-Claire
+        run: node scripts/verifier-copilote-heberge.mjs verification-ia
+
+      - name: Supprimer les comptes de test
+        if: always()
+        run: node scripts/comptes-e2e.mjs supprimer
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verification-ia
+          path: verification-ia/
+          retention-days: 7
