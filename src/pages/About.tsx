@@ -75,7 +75,7 @@ const About = () => {
       </section>
 
       {/* Mission Section */}
-      <section className="py-24 bg-background">
+      <section className="py-24 bg-background overflow-x-clip">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
             <div>

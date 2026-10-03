@@ -9,11 +9,11 @@
  * entre les cercles. Infobulle au survol et au focus : état + ce qui
  * manque. Mise en page selon la largeur réelle (src/lib/journey/stepper.ts).
  */
-import { useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { useLargeur } from "@/hooks/useLargeur";
 import { ETAPES_PARCOURS, type EtapeParcoursCle } from "@/lib/journey/steps";
 import type { EtatEtape, EtatParcours } from "@/lib/journey/progress";
 import { etatVisuel, modeBarre, segmentTermine, type ModeBarre } from "@/lib/journey/stepper";
@@ -36,23 +36,6 @@ const LIBELLE: Record<EtatEtape, string> = {
   en_cours: "text-foreground",
   a_faire: "text-muted-foreground",
 };
-
-/** Largeur intérieure de l'élément, suivie au redimensionnement. */
-function useLargeur<T extends HTMLElement>() {
-  const ref = useRef<T>(null);
-  const [largeur, setLargeur] = useState<number | null>(null);
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const mesurer = () => setLargeur(el.clientWidth);
-    mesurer();
-    if (typeof ResizeObserver === "undefined") return;
-    const obs = new ResizeObserver(mesurer);
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-  return { ref, largeur };
-}
 
 export default function JourneyStepper({ base, etape, etats }: JourneyStepperProps) {
   const { t } = useTranslation();

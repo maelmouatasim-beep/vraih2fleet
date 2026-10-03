@@ -206,3 +206,17 @@ html {
 .stagger-3 { animation-delay: 0.3s; }
 .stagger-4 { animation-delay: 0.4s; }
 .stagger-5 { animation-delay: 0.5s; }
+
+/* Hors @layer : Tailwind ne purge pas ces règles (classes de bibliothèques). */
+
+/* Tableaux : chiffres tabulaires (colonnes de nombres alignées). */
+table td,
+table th {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Graphiques : l'infobulle reste dans le cadre du graphique (sinon, même
+   masquée, elle élargit la page sur mobile). */
+.recharts-wrapper {
+  overflow: hidden;
+}

@@ -40,6 +40,7 @@ import type { ProjectDTO } from "@/lib/supabase/projects";
 import { Loader2 } from "lucide-react";
 import DepotInfrastructureCard from "./DepotInfrastructureCard";
 import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
+import { INFOBULLE_GRAPHIQUE } from "@/components/layout/charts";
 
 interface PlanStepProps {
   projectId: string;
@@ -186,11 +187,7 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
               <YAxis tickFormatter={(v: number) => compact.format(v)} className="text-xs" />
               <Tooltip
                 formatter={(value: number, name: string) => [argent.format(value), t(`journey.plan.series.${name}`)]}
-                contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "8px",
-                }}
+                {...INFOBULLE_GRAPHIQUE}
               />
               <Legend formatter={(value: string) => t(`journey.plan.series.${value}`)} />
               <Bar dataKey="pti" stackId="budget" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />

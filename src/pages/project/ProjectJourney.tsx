@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { Page, PageHeader } from "@/components/layout/Page";
 import { Button } from "@/components/ui/button";
 import { getProjectById } from "@/lib/supabase/projects";
 import FleetStep from "@/components/journey/FleetStep";
@@ -18,7 +19,7 @@ import CopilotPanel from "@/components/copilot/CopilotPanel";
 import { ETAPES_PARCOURS, type EtapeParcoursCle } from "@/lib/journey/steps";
 import { useEtatParcours } from "@/hooks/useEtatParcours";
 import JourneyStepper from "@/components/journey/JourneyStepper";
-import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 export { ETAPES_PARCOURS };
 export type EtapeParcours = EtapeParcoursCle;
@@ -49,31 +50,24 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between flex-wrap gap-3">
-          <div>
-            <Link
-              to="/dashboard/projects"
-              className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-            >
-              <ArrowLeft className="w-4 h-4" /> {t("journey.backToProjects")}
-            </Link>
-            <h1 className="text-2xl font-bold text-foreground mt-1">
-              {project?.name ?? "…"}
-            </h1>
-            <p className="text-muted-foreground">{t("journey.subtitle")}</p>
-          </div>
-          {project && (
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" onClick={() => setCopiloteOuvert(true)} data-testid="open-copilot">
-                <Sparkles className="w-4 h-4 mr-2" />
-                {t("copilot.open")}
-              </Button>
-              <ShareProjectButton projectId={project.id} />
-              <ProjectSettingsDialog project={project} />
-            </div>
-          )}
-        </div>
+      <Page>
+        <PageHeader
+          retour={{ vers: "/dashboard/projects", libelle: t("journey.backToProjects") }}
+          titre={project?.name ?? "…"}
+          sousTitre={t("journey.subtitle")}
+          actions={
+            project && (
+              <>
+                <Button variant="outline" onClick={() => setCopiloteOuvert(true)} data-testid="open-copilot">
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  {t("copilot.open")}
+                </Button>
+                <ShareProjectButton projectId={project.id} />
+                <ProjectSettingsDialog project={project} />
+              </>
+            )
+          }
+        />
 
         {/* Barre des 7 étapes : composant unique */}
         <JourneyStepper base={base} etape={etape} etats={etats} />
@@ -109,7 +103,7 @@ export default function ProjectJourney({ etape }: ProjectJourneyProps) {
             </Button>
           </div>
         )}
-      </div>
+      </Page>
     </DashboardLayout>
   );
 }

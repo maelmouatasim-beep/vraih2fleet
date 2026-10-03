@@ -49,6 +49,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { Page, PageHeader } from "@/components/layout/Page";
 import { availableRegions, availableCurrencies } from "@/data/mockData";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -254,21 +255,18 @@ const Projects = () => {
   return (
     <>
       <DashboardLayout>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">{t('pages.projects.title')}</h1>
-            <p className="text-muted-foreground">
-              {t('pages.projects.subtitle')}
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <div className="relative">
+      <Page>
+        <PageHeader
+          titre={t('pages.projects.title')}
+          sousTitre={t('pages.projects.subtitle')}
+          actions={
+          <>
+            <div className="relative w-full sm:w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder={t('pages.projects.searchPlaceholder')}
-                className="pl-9 w-64"
+                aria-label={t('pages.projects.searchPlaceholder')}
+                className="pl-9 w-full"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -394,8 +392,9 @@ const Projects = () => {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-          </div>
-        </div>
+          </>
+          }
+        />
 
         {/* Projects grid */}
         {isLoadingProjects ? (
@@ -531,7 +530,7 @@ const Projects = () => {
             })}
           </div>
         )}
-      </div>
+      </Page>
     </DashboardLayout>
     </>
   );

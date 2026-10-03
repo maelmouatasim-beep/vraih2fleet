@@ -2,8 +2,9 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { isToday, isYesterday, isThisWeek } from "date-fns";
-import { AlertTriangle, Bell, CheckCheck, Inbox } from "lucide-react";
+import { AlertTriangle, CheckCheck, Inbox } from "lucide-react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { Page, PageHeader } from "@/components/layout/Page";
 import { useNotifications, type Notification } from "@/hooks/useNotifications";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -60,28 +61,25 @@ export default function NotificationsPage() {
 
   return (
     <DashboardLayout>
-      <div className="p-6 max-w-4xl mx-auto">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Bell className="w-6 h-6 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold">{t("notifications.title")}</h1>
-              <p className="text-sm text-muted-foreground" data-testid="notifications-page-unread">
-                {isLoading ? t("notifications.loading") : unreadCount > 0 ? t("notifications.unreadCount", { count: unreadCount }) : t("notifications.allRead")}
-              </p>
-            </div>
-          </div>
-          {!isLoading && unreadCount > 0 && (
-            <Button variant="outline" size="sm" onClick={() => void markAllAsRead()}>
-              <CheckCheck className="w-4 h-4 mr-2" />
-              {t("notifications.markAllRead")}
-            </Button>
-          )}
-        </div>
+      <Page largeur="etroite">
+        <PageHeader
+          titre={t("notifications.title")}
+          sousTitre={
+            <span data-testid="notifications-page-unread">
+              {isLoading ? t("notifications.loading") : unreadCount > 0 ? t("notifications.unreadCount", { count: unreadCount }) : t("notifications.allRead")}
+            </span>
+          }
+          actions={
+            !isLoading && unreadCount > 0 ? (
+              <Button variant="outline" onClick={() => void markAllAsRead()}>
+                <CheckCheck className="w-4 h-4 mr-2" />
+                {t("notifications.markAllRead")}
+              </Button>
+            ) : undefined
+          }
+        />
 
-        <Tabs value={filtre} onValueChange={(v) => setFiltre(v as Filtre)} className="mb-6">
+        <Tabs value={filtre} onValueChange={(v) => setFiltre(v as Filtre)}>
           <TabsList className="flex flex-wrap h-auto gap-1 p-1">
             {FILTRES.map((f) => (
               <TabsTrigger key={f} value={f} className="flex items-center gap-1.5 px-3 py-1.5">
@@ -146,7 +144,7 @@ export default function NotificationsPage() {
             </NotificationsBoundary>
           </CardContent>
         </Card>
-      </div>
+      </Page>
     </DashboardLayout>
   );
 }

@@ -11,6 +11,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { Page, PageHeader } from "@/components/layout/Page";
 import SubsidyWatchCard from "@/components/library/SubsidyWatchCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -33,7 +34,7 @@ import {
   resumeStatuts,
 } from "@/lib/library/registry";
 import { formateurCad } from "@/lib/format";
-import { ArrowRight, BookOpen, ExternalLink, Plug } from "lucide-react";
+import { ArrowRight, ExternalLink, Plug } from "lucide-react";
 import { cumulProgramme, descriptionHypothese, nomProgramme } from "@/lib/tco/translations-en";
 
 const selectCls =
@@ -66,13 +67,8 @@ export default function Library() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-            <BookOpen className="w-6 h-6" /> {t("library.title")}
-          </h1>
-          <p className="text-muted-foreground">{t("library.subtitleRegistry")}</p>
-        </div>
+      <Page>
+        <PageHeader titre={t("library.title")} sousTitre={t("library.subtitleRegistry")} />
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {(
@@ -314,7 +310,7 @@ export default function Library() {
             </Card>
           </TabsContent>
         </Tabs>
-      </div>
+      </Page>
     </DashboardLayout>
   );
 }

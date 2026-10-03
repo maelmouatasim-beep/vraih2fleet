@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { Page, PageHeader } from "@/components/layout/Page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,7 +20,7 @@ import {
   updateOrganization,
 } from "@/lib/supabase/organizations";
 import { supabase } from "@/integrations/supabase/client";
-import { AlertTriangle, Building2, Loader2 } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react";
 
 const selectCls =
   "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -98,13 +99,8 @@ export default function OrganizationPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-            <Building2 className="w-6 h-6" /> {t("organization.title")}
-          </h1>
-          <p className="text-muted-foreground">{t("organization.subtitle")}</p>
-        </div>
+      <Page largeur="etroite">
+        <PageHeader titre={t("organization.title")} sousTitre={t("organization.subtitle")} />
 
         {organizations.length > 1 && (
           <Card>
@@ -238,7 +234,7 @@ export default function OrganizationPage() {
             </CardContent>
           </Card>
         )}
-      </div>
+      </Page>
     </DashboardLayout>
   );
 }

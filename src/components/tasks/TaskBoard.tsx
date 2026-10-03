@@ -84,10 +84,10 @@ export function TaskBoard({ projectId }: TaskBoardProps) {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4 px-1">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4 px-1">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <h2 className="text-lg font-semibold">{t('tasks.title', 'Tasks')}</h2>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
             <span>{stats.completed}/{stats.total} {t('tasks.completed', 'completed')}</span>
             {stats.overdue > 0 && (
               <span className="text-red-500">• {stats.overdue} {t('tasks.overdue', 'overdue')}</span>

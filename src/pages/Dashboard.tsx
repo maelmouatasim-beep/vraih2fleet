@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { Page, PageHeader } from "@/components/layout/Page";
 import { SubscriptionBadge } from "@/components/dashboard/SubscriptionBadge";
 import RecommendedActionsCard from "@/components/dashboard/RecommendedActionsCard";
 import PlanHealthCard from "@/components/dashboard/PlanHealthCard";
@@ -103,9 +104,9 @@ const Dashboard = () => {
   if (loading) {
     return (
       <DashboardLayout>
-        <div className="space-y-6">
-          <div>
-            <Skeleton className="h-8 w-48 mb-2" />
+        <Page>
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-48" />
             <Skeleton className="h-4 w-72" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -119,7 +120,7 @@ const Dashboard = () => {
               </Card>
             ))}
           </div>
-        </div>
+        </Page>
       </DashboardLayout>
     );
   }
@@ -161,42 +162,36 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-foreground">{t("pages.dashboard.title")}</h1>
-              <SubscriptionBadge />
-            </div>
-            <p className="text-muted-foreground">
-              {organization
-                ? t("pages.dashboard.subtitleOrg", { org: organization.name })
-                : t("pages.dashboard.subtitle")}
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            {!notificationsLoading && (
-            <Button variant="ghost" asChild>
-              <Link to="/dashboard/notifications" data-testid="home-unread" data-count={unreadCount}>
-                <Bell className="w-4 h-4 mr-2" />
-                {unreadCount > 0 ? t("notifications.homeUnread", { count: unreadCount }) : t("notifications.homeNone")}
-              </Link>
-            </Button>
-            )}
-            <Button variant="outline" asChild>
-              <Link to="/dashboard/fleet">
-                <Truck className="w-4 h-4 mr-2" />
-                {t("pages.dashboard.openFleet")}
-              </Link>
-            </Button>
-            <Button asChild>
-              <Link to="/dashboard/projects?create=true">
-                <Plus className="w-4 h-4 mr-2" />
-                {t("pages.dashboard.newProject")}
-              </Link>
-            </Button>
-          </div>
-        </div>
+      <Page>
+        <PageHeader
+          titre={t("pages.dashboard.title")}
+          badge={<SubscriptionBadge />}
+          sousTitre={organization ? t("pages.dashboard.subtitleOrg", { org: organization.name }) : t("pages.dashboard.subtitle")}
+          actions={
+            <>
+              {!notificationsLoading && (
+                <Button variant="ghost" asChild>
+                  <Link to="/dashboard/notifications" data-testid="home-unread" data-count={unreadCount}>
+                    <Bell className="w-4 h-4 mr-2" />
+                    {unreadCount > 0 ? t("notifications.homeUnread", { count: unreadCount }) : t("notifications.homeNone")}
+                  </Link>
+                </Button>
+              )}
+              <Button variant="outline" asChild>
+                <Link to="/dashboard/fleet">
+                  <Truck className="w-4 h-4 mr-2" />
+                  {t("pages.dashboard.openFleet")}
+                </Link>
+              </Button>
+              <Button asChild>
+                <Link to="/dashboard/projects?create=true">
+                  <Plus className="w-4 h-4 mr-2" />
+                  {t("pages.dashboard.newProject")}
+                </Link>
+              </Button>
+            </>
+          }
+        />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {statsCards.map((stat) => (
@@ -313,7 +308,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </Page>
     </DashboardLayout>
   );
 };

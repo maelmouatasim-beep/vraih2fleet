@@ -15,7 +15,7 @@ const composants: Components = {
   ul: (p) => <ul className="my-3 list-disc pl-6 space-y-1" {...p} />,
   ol: (p) => <ol className="my-3 list-decimal pl-6 space-y-1" {...p} />,
   blockquote: (p) => <blockquote className="my-4 border-l-4 border-primary/40 bg-muted/40 px-4 py-2 text-sm" {...p} />,
-  code: (p) => <code className="rounded bg-muted px-1 py-0.5 text-[0.85em]" {...p} />,
+  code: (p) => <code className="rounded bg-muted px-1 py-0.5 text-[0.85em] [overflow-wrap:anywhere]" {...p} />,
   pre: (p) => <pre className="my-4 overflow-x-auto rounded-md bg-muted p-3 text-sm" {...p} />,
   table: (p) => (
     <div className="my-4 overflow-x-auto">

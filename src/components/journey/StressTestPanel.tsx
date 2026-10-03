@@ -23,6 +23,8 @@ import { analyserSensibilite, type PlanTcoEntree } from "@/lib/tco";
 import { formateurCad, formateurCadCompact } from "@/lib/format";
 import { AlertTriangle } from "lucide-react";
 import { PARAMETRES_STRESS_EN } from "@/lib/tco/translations-en";
+import { INFOBULLE_GRAPHIQUE } from "@/components/layout/charts";
+import { useLargeur } from "@/hooks/useLargeur";
 
 interface StressTestPanelProps {
   plan: PlanTcoEntree;
@@ -35,6 +37,10 @@ export default function StressTestPanel({ plan }: StressTestPanelProps) {
 
   const analyse = useMemo(() => analyserSensibilite(plan), [plan]);
 
+  // Axe des libellés proportionné à la place disponible (mobile : abrégés, nom complet dans l'infobulle).
+  const { ref: refTornade, largeur } = useLargeur<HTMLDivElement>();
+  const largeurAxe = Math.round(Math.min(220, Math.max(96, (largeur ?? 700) * 0.38)));
+  const maxCaracteres = Math.max(12, Math.floor(largeurAxe / 6.2));
   const donneesTornade = analyse.tornade.map((b) => {
     const min = Math.min(b.vanBasse, b.vanHaute);
     const max = Math.max(b.vanBasse, b.vanHaute);
@@ -92,7 +98,7 @@ export default function StressTestPanel({ plan }: StressTestPanelProps) {
         </div>
 
         {/* Tornade : VAN aux bornes sourcées de chaque hypothèse */}
-        <div className="h-[280px]">
+        <div className="h-[280px]" ref={refTornade}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={donneesTornade} layout="vertical" margin={{ left: 8, right: 16 }}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
@@ -101,17 +107,19 @@ export default function StressTestPanel({ plan }: StressTestPanelProps) {
                 tickFormatter={(v: number) => compact.format(v)}
                 className="text-xs"
               />
-              <YAxis dataKey="libelle" type="category" width={220} className="text-xs" />
+              <YAxis
+                dataKey="libelle"
+                type="category"
+                width={largeurAxe}
+                className="text-xs"
+                tickFormatter={(v: string) => (v.length > maxCaracteres ? `${v.slice(0, maxCaracteres - 1)}…` : v)}
+              />
               <Tooltip
                 formatter={(value: [number, number]) => [
                   `${compact.format(value[0])} → ${compact.format(value[1])}`,
                   t("journey.strategies.stress.vanRange"),
                 ]}
-                contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
-                  borderRadius: "8px",
-                }}
+                {...INFOBULLE_GRAPHIQUE}
               />
               <ReferenceLine x={0} stroke="hsl(var(--muted-foreground))" />
               <ReferenceLine

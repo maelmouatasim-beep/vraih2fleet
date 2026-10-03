@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { Page, PageHeader } from "@/components/layout/Page";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useEmailNotifications } from "@/hooks/useEmailNotifications";
@@ -176,23 +177,17 @@ const Settings = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6 max-w-4xl">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">{t('pages.settings.title')}</h1>
-            <p className="text-muted-foreground">
-              {t('pages.settings.subtitle')}
-            </p>
-          </div>
-          <Button onClick={handleSaveProfile} className="gap-2" disabled={isSaving}>
-            {isSaving ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Save className="w-4 h-4" />
-            )}
-            {t('pages.settings.save')}
-          </Button>
-        </div>
+      <Page largeur="etroite">
+        <PageHeader
+          titre={t('pages.settings.title')}
+          sousTitre={t('pages.settings.subtitle')}
+          actions={
+            <Button onClick={handleSaveProfile} className="gap-2" disabled={isSaving}>
+              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              {t('pages.settings.save')}
+            </Button>
+          }
+        />
 
         <Card>
           <CardHeader>
@@ -499,7 +494,7 @@ const Settings = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </Page>
     </DashboardLayout>
   );
 };

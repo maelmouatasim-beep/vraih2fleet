@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import { Page, PageHeader } from "@/components/layout/Page";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -219,26 +220,24 @@ export default function MyFleet() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-              <Truck className="w-6 h-6" /> {t("fleet.title")}
-            </h1>
-            <p className="text-muted-foreground">{t("fleet.subtitle")}</p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Button variant="outline" onClick={() => setImportIntelligentOuvert(true)} data-testid="smart-import-open">
-              <FileSearch className="w-4 h-4 mr-2" /> {t("smartImport.button")}
-            </Button>
-            <Button variant="outline" onClick={() => setImportOuvert(true)}>
-              <Upload className="w-4 h-4 mr-2" /> {t("fleet.import.button")}
-            </Button>
-            <Button onClick={() => setAjoutOuvert(true)}>
-              <Plus className="w-4 h-4 mr-2" /> {t("fleet.add.button")}
-            </Button>
-          </div>
-        </div>
+      <Page>
+        <PageHeader
+          titre={t("fleet.title")}
+          sousTitre={t("fleet.subtitle")}
+          actions={
+            <>
+              <Button variant="outline" onClick={() => setImportIntelligentOuvert(true)} data-testid="smart-import-open">
+                <FileSearch className="w-4 h-4 mr-2" /> {t("smartImport.button")}
+              </Button>
+              <Button variant="outline" onClick={() => setImportOuvert(true)}>
+                <Upload className="w-4 h-4 mr-2" /> {t("fleet.import.button")}
+              </Button>
+              <Button onClick={() => setAjoutOuvert(true)}>
+                <Plus className="w-4 h-4 mr-2" /> {t("fleet.add.button")}
+              </Button>
+            </>
+          }
+        />
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {(
@@ -343,7 +342,7 @@ export default function MyFleet() {
         <GaragesCard organizationId={organization?.id} depots={vehicles.map((v) => v.depot)} />
 
         <ChangeLogCard organizationId={organization?.id} />
-      </div>
+      </Page>
 
       {/* Ajout / modification */}
       <Dialog open={dialogueFormulaireOuvert} onOpenChange={(o) => !o && fermerFormulaire()}>
