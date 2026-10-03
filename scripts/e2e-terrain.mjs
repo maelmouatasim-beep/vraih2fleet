@@ -256,8 +256,8 @@ try {
     if (pourquoi.length < 10) throw new Error(`optimiseur : décision sans explication (ligne ${i + 1})`);
   }
   await capture(page, "06c-optimiseur-resultat");
-  const infraStrategieTxt = await carteOpt.getByText(/^Infrastructure :/).innerText().catch(() => "Infrastructure : 0 $");
-  const subvStrategie = montant(await carteOpt.getByText(/^Subventions :/).innerText());
+  const infraStrategieTxt = await carteOpt.getByText(/^Infrastructure\s:/).innerText().catch(() => "Infrastructure : 0 $");
+  const subvStrategie = montant(await carteOpt.getByText(/^Subventions\s:/).innerText());
   const vanTexte = await carteOpt.locator("p.text-xl").first().innerText();
   const vanStrategie = (vanTexte.includes("Surcoût") ? -1 : 1) * montant(vanTexte);
   await page.getByRole("button", { name: /Appliquer cette stratégie au plan/ }).click();
@@ -272,9 +272,9 @@ try {
   // Plan : même infrastructure, bon libellé
   await page.goto(`${base}/plan`);
   await page.getByText("Infrastructure de recharge par garage").waitFor({ timeout: 15000 });
-  const sousTitre = await page.getByText(/^Stratégie retenue :/).first().innerText();
+  const sousTitre = await page.getByText(/^Stratégie retenue\s:/).first().innerText();
   if (!sousTitre.includes("Optimisée")) throw new Error(`libellé du Plan : ${sousTitre}`);
-  const totalPlanTxt = await page.getByText(/^CAPEX infrastructure total :/).innerText().catch(() => "CAPEX infrastructure total : 0 $");
+  const totalPlanTxt = await page.getByText(/^CAPEX infrastructure total\s:/).innerText().catch(() => "CAPEX infrastructure total : 0 $");
   await capture(page, "07-plan");
   const infraStrategie = montant(infraStrategieTxt);
   const infraPlan = montant(totalPlanTxt);
@@ -299,7 +299,7 @@ try {
   await capture(page, "09-rapports");
   // PDF : texte extrait (pdftotext)
   const pdf = execFileSync("pdftotext", ["-layout", join(SORTIE, "rapport-fr.pdf"), "-"], { encoding: "utf8" });
-  if (!pdf.includes("Stratégie retenue : Optimisée")) throw new Error("PDF : stratégie retenue absente");
+  if (!/Stratégie retenue\s:\sOptimisée/.test(pdf)) throw new Error("PDF : stratégie retenue absente");
   const infraPdf = montant(pdf.match(/Infrastructure totale \(avant taxes\)\s+([\d\s\u00a0\u202f]+) \$/)?.[1] ?? "NaN");
   const lignesPdf = pdf.split("\n");
   const iSub = lignesPdf.findIndex((l) => l.includes("Subventions prévues"));
@@ -314,7 +314,7 @@ try {
     return r;
   };
   const budget = lignes(classeur.worksheets[0]);
-  if (!budget.some((l) => String(l[0]).includes("Stratégie retenue : Optimisée"))) throw new Error("Excel : stratégie retenue absente");
+  if (!budget.some((l) => /Stratégie retenue\s:\sOptimisée/.test(String(l[0])))) throw new Error("Excel : stratégie retenue absente");
   const iEntete = budget.findIndex((l) => l[0] === "Année");
   let subvExcel = 0;
   for (const l of budget.slice(iEntete + 1)) {
@@ -382,8 +382,8 @@ try {
 
   await page.goto(`${base}/suivi`);
   const historique = page.getByTestId("change-log");
-  await historique.getByText(/Stratégie « Optimisée » appliquée/).waitFor({ timeout: 15000 });
-  await historique.getByText(/Stratégie « Économies d'abord » appliquée/).waitFor();
+  await historique.getByText(/Stratégie «\sOptimisée\s» appliquée/).waitFor({ timeout: 15000 });
+  await historique.getByText(/Stratégie «\sÉconomies d'abord\s» appliquée/).waitFor();
   await historique.getByText(/Copilote — simulation appliquée/).waitFor({ timeout: 10000 });
   await historique.scrollIntoViewIfNeeded();
   await capture(page, "10-suivi");
@@ -416,7 +416,7 @@ try {
   if ((await statut(1)) !== "Mise à jour") throw new Error(`GM-01 : ${await statut(1)}`);
   if ((await dialogue.getByTestId("row-1").getByTestId("smart-import-diff").count()) < 2) throw new Error("GM-01 : aperçu avant → après incomplet");
   if ((await statut(2)) !== "Erreur") throw new Error(`TP-07 devrait être en erreur (catégorie incertaine laissée vide) : ${await statut(2)}`);
-  if (!(await dialogue.getByTestId("row-2").innerText()).includes("« Unité multifonction MX-3 » non reconnu")) throw new Error("TP-07 : libellé incertain non signalé");
+  if (!(await dialogue.getByTestId("row-2").innerText()).replace(/[\u00a0\u202f]/g, " ").includes("« Unité multifonction MX-3 » non reconnu")) throw new Error("TP-07 : libellé incertain non signalé");
   if ((await statut(4)) !== "Exclue" || !(await dialogue.getByTestId("row-4").innerText()).includes("Doublon probable de l'unité GM-01")) throw new Error("GM 01 : doublon non exclu");
   await captureDialogue(page, dialogue, "11a-import-intelligent");
   await dialogue.getByTestId("fix-category-2").selectOption("vehicule_specialise");
@@ -428,7 +428,7 @@ try {
   await dialogue.waitFor({ state: "hidden", timeout: 20000 });
   await page.getByText("TP-08").first().waitFor({ timeout: 10000 });
   const journalFlotte = page.getByTestId("fleet-change-log");
-  await journalFlotte.getByText(/Import intelligent : 2 véhicules créés, 1 mis à jour/).waitFor({ timeout: 10000 });
+  await journalFlotte.getByText(/Import intelligent\s: 2 véhicules créés, 1 mis à jour/).waitFor({ timeout: 10000 });
   await journalFlotte.scrollIntoViewIfNeeded();
   await capture(page, "11c-flotte-journal");
   const appelsImport = (await fetch("http://127.0.0.1:35563/appels").then((r) => r.json()).catch(() => [])).filter((a) => a.format === "json_schema");
@@ -470,12 +470,12 @@ try {
   if (!(await dialogueDoc.getByTestId("field-montant_avant_taxes").innerText()).includes("retrouvée")) throw new Error("facture : sous-total non vérifié");
   await dialogueDoc.getByTestId("document-not-found-warning").waitFor();
   const derive = await dialogueDoc.getByTestId("document-derived").innerText();
-  if (!/1,421 \$\/L/.test(derive)) throw new Error(`facture : prix au litre inattendu « ${derive} »`);
+  if (!/1,421\s\$\/L/.test(derive)) throw new Error(`facture : prix au litre inattendu « ${derive} »`);
   await captureDialogue(page, dialogueDoc, "12a-facture-lecture");
   await champTotal.locator("input").fill("7371.68");
   if ((await dialogueDoc.getByTestId("document-not-found-warning").count()) !== 0) throw new Error("facture : avertissement non levé après correction");
   const apercuDoc = await dialogueDoc.getByTestId("document-apply-preview").innerText();
-  if (!/organisation · prix du diesel : .* → 1,421 \$\/L/.test(apercuDoc)) throw new Error(`facture : aperçu inattendu « ${apercuDoc} »`);
+  if (!/organisation · prix du diesel\s: .* → 1,421\s\$\/L/.test(apercuDoc)) throw new Error(`facture : aperçu inattendu « ${apercuDoc} »`);
   await captureDialogue(page, dialogueDoc, "12b-facture-corrigee");
   await dialogueDoc.getByTestId("document-confirm").click();
   await dialogueDoc.waitFor({ state: "hidden", timeout: 20000 });
@@ -484,7 +484,7 @@ try {
   const lecture = appelsDoc.find((a) => a.format === "json_schema");
   if (!lecture) throw new Error("facture : aucun appel de lecture");
   await page.goto(url("/dashboard/fleet"));
-  await page.getByTestId("fleet-change-log").getByText(/Facture de carburant confirmé\(e\) : 1 valeur/).waitFor({ timeout: 10000 });
+  await page.getByTestId("fleet-change-log").getByText(/Facture de carburant confirmé\(e\)\s: 1 valeur/).waitFor({ timeout: 10000 });
   await page.goto(url("/dashboard/organization"));
   await page.getByTestId("org-documents").scrollIntoViewIfNeeded();
   await capture(page, "12c-organisation-pieces");

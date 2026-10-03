@@ -18,7 +18,7 @@
       "category": "Category",
       "fuel": "Fuel",
       "annualKm": "km/yr",
-      "consumption": "Cons. /100 km",
+      "consumption": "Cons. /100 km",
       "source": "Source",
       "depot": "Depot",
       "status": "Status",
@@ -66,7 +66,7 @@
       "button": "Add a vehicle",
       "title": "New vehicle",
       "subtitle": "Fields marked * are required; the rest can be completed later.",
-      "consumption": "Actual consumption /100 km",
+      "consumption": "Actual consumption /100 km",
       "consumptionHint": "empty = category estimate",
       "confirm": "Add",
       "maxDailyKm": "Max daily km"
@@ -115,7 +115,7 @@
       "deleteTitle": "Delete depot \"{{name}}\"?",
       "deleteSubtitle": "Linked vehicles are kept; their depot becomes \"not specified\".",
       "unknownPower": "to be entered",
-      "windowValue": "{{retour}} → {{depart}} ({{heures}} h)",
+      "windowValue": "{{retour}} → {{depart}} ({{heures}} h)",
       "powerHelp": "Available capacity: remaining capacity of the depot's electrical service, per your electrician or Hydro-Québec. A grid connection quote entered here always takes priority.",
       "columns": {
         "vehicles": "Vehicles",
@@ -819,7 +819,7 @@
       "powertrainMix": "Fleet allocation",
       "totalAllocation": "Total",
       "consumptionH2": "H₂ consumption (kg/100km)",
-      "consumptionH2Placeholder": "Suggested: {{value}} kg/100km ({{ptac}})",
+      "consumptionH2Placeholder": "Suggested: {{value}} kg/100km ({{ptac}})",
       "consumptionH2Hint": "Reference value based on NACFE Run on Less. Modify according to your OEM data.",
       "consumptionH2Badge": {
         "reference": "NACFE Reference",
@@ -833,7 +833,7 @@
       "h2TypeGreen": "Green H₂ (Renewable electrolysis)",
       "h2TypeBlue": "Blue H₂ (Natural gas + CCS)",
       "h2TypeGrey": "Grey H₂ (Methane reforming)",
-      "h2TypeHint": "Factors: Green = 0.5 | Blue = 3.0 | Grey = 10.0 kg CO₂/kg H₂ (Source: IEA 2023)",
+      "h2TypeHint": "Factors: Green = 0.5 | Blue = 3.0 | Grey = 10.0 kg CO₂/kg H₂ (Source: IEA 2023)",
       "h2TypeBadge": {
         "reference": "Ref. IEA 2023"
       },
@@ -863,7 +863,7 @@
       "description": "Choose the data source to pre-fill the form",
       "telematics": "Telematics data",
       "telematicsConnected": "{{count}} connected vehicles",
-      "telematicsStats": "Avg. {{km}} km/year, {{fuel}} L/100km",
+      "telematicsStats": "Avg. {{km}} km/year, {{fuel}} L/100km",
       "lastSync": "Last sync:",
       "noTelematics": "No telematics connection",
       "connectTelematics": "Connect a provider →",
@@ -955,7 +955,7 @@
       "description": "Choose the data source to pre-fill the form",
       "telematics": "Telematics data",
       "telematicsConnected": "{{count}} connected vehicles",
-      "telematicsStats": "Avg. {{km}} km/year, {{fuel}} L/100km",
+      "telematicsStats": "Avg. {{km}} km/year, {{fuel}} L/100km",
       "lastSync": "Last sync:",
       "noTelematics": "No telematics connection",
       "connectTelematics": "Connect a provider →",
@@ -978,7 +978,7 @@
       "title": "Methodology",
       "tco": "TCO = CAPEX + NPV(OPEX 10 years) - Residual value",
       "opex": "OPEX = Fuel + Maintenance + Insurance",
-      "co2": "CO₂ calculated using EPA factors (diesel: 10.21 kg/gal)",
+      "co2": "CO₂ calculated using EPA factors (diesel: 10.21 kg/gal)",
       "infrastructure": "Infrastructure included in total TCO",
       "discountRate": "Default discount rate: 5%",
       "viewComplete": "View complete methodology →"
@@ -1435,7 +1435,7 @@
       "methodologyItems": [
         "TCO = CAPEX + NPV(OPEX 10 years) - Residual value",
         "OPEX = Fuel + Maintenance + Insurance",
-        "CO₂ calculated using EPA factors (diesel: 10.21 kg/gal)",
+        "CO₂ calculated using EPA factors (diesel: 10.21 kg/gal)",
         "Discount rate: 5%",
         "Residual value: 15% after 10 years"
       ]
@@ -1710,8 +1710,8 @@
         "everyNDays": "Every {{n}} days"
       },
       "chargingSpeed": {
-        "slow": "Level 2 (7-19 kW)",
-        "fast": "DC Fast (50-150 kW)",
+        "slow": "Level 2 (7-19 kW)",
+        "fast": "DC Fast (50-150 kW)",
         "ultra": "Ultra-fast (350+ kW)"
       }
     },
@@ -1986,7 +1986,7 @@
       "en": "English"
     },
     "comingSoon": "Coming soon",
-    "loading": "Loading...",
+    "loading": "Loading…",
     "error": "Error",
     "success": "Success",
     "save": "Save",
@@ -2029,7 +2029,9 @@
     "back": "Back",
     "contactUs": "Contact us",
     "never": "Never",
-    "languageLabel": "Language"
+    "languageLabel": "Language",
+    "loadError": "Unable to load this data. Check your connection.",
+    "retry": "Retry"
   },
   "pages": {
     "dashboard": {
@@ -3749,24 +3751,24 @@
     "urban": {
       "title": "Urban Delivery",
       "description": "Electrification strategies for urban delivery fleets with short, frequent routes",
-      "readTime": "10 min read"
+      "readTime": "10 min read"
     },
     "regional": {
       "title": "Regional Transport",
-      "description": "Recommendations for fleets operating medium distances (200-500 km) with mixed highway and urban routes",
-      "readTime": "12 min read"
+      "description": "Recommendations for fleets operating medium distances (200-500 km) with mixed highway and urban routes",
+      "readTime": "12 min read"
     },
     "longhaul": {
       "title": "Long-Haul Trucking",
       "description": "Solutions for long-distance heavy transport: hydrogen, biomethane and future BEV prospects",
-      "readTime": "15 min read"
+      "readTime": "15 min read"
     },
-    "readTime": "{{minutes}} min read",
+    "readTime": "{{minutes}} min read",
     "bev": {
       "title": "Battery Electric Vehicles (BEV)",
       "subtitle": "Complete guide to determine if BEVs are right for your operations",
       "description": "Battery electric vehicles are the most mature solution for fleet electrification. This guide helps you determine if they suit your operation.",
-      "readTime": "15 min read",
+      "readTime": "15 min read",
       "toc": {
         "suitability": "Is it right for you?",
         "infrastructure": "Required infrastructure",
@@ -3779,13 +3781,13 @@
         "optimal": "Optimal use cases",
         "optimalCases": [
           "Urban delivery (predictable routes)",
-          "Daily trips under 200 km",
+          "Daily trips under 200 km",
           "Return to depot every night",
           "City operations (zero-emission zones)"
         ],
         "lessIdeal": "Less suitable for",
         "lessIdealCases": [
-          "Long distance (>400 km/day)",
+          "Long distance (>400 km/day)",
           "No access to depot charging",
           "Constant heavy loads",
           "Very tight schedules (no charging time)"
@@ -3794,14 +3796,14 @@
       "infrastructure": {
         "title": "Required Infrastructure",
         "level2": {
-          "title": "Level 2 Chargers (19.2 kW)",
+          "title": "Level 2 Chargers (19.2 kW)",
           "cost": "Cost: see the sourced typical costs in the Library (replace with quotes)",
           "time": "Charging time: 6-8h (full charge)",
           "ideal": "Ideal for: Overnight depot charging",
           "ratio": "Quantity: 1 charger for 2-3 vehicles"
         },
         "dcFast": {
-          "title": "DC Fast Chargers (50-150 kW)",
+          "title": "DC Fast Chargers (50-150 kW)",
           "cost": "Cost: see the sourced typical costs in the Library (replace with quotes)",
           "time": "Charging time: depends on charger power and vehicle battery",
           "ideal": "Ideal for: Fleets with tight schedules",
@@ -3817,18 +3819,18 @@
         "description": "Actual consumption varies significantly by vehicle class and season",
         "van": {
           "title": "Van (Class 2)",
-          "summer": "Summer: 40-50 kWh/100km",
-          "winter": "Winter (-20°C): 55-70 kWh/100km"
+          "summer": "Summer: 40-50 kWh/100km",
+          "winter": "Winter (-20°C): 55-70 kWh/100km"
         },
         "medium": {
           "title": "Medium Truck (Class 5)",
-          "summer": "Summer: 120-150 kWh/100km",
-          "winter": "Winter: 160-190 kWh/100km"
+          "summer": "Summer: 120-150 kWh/100km",
+          "winter": "Winter: 160-190 kWh/100km"
         },
         "heavy": {
           "title": "Heavy Truck (Class 8)",
-          "summer": "Summer: 180-220 kWh/100km",
-          "winter": "Winter: 240-280 kWh/100km"
+          "summer": "Summer: 180-220 kWh/100km",
+          "winter": "Winter: 240-280 kWh/100km"
         }
       },
       "climate": {
@@ -3865,7 +3867,7 @@
       "title": "Hydrogen Fuel Cell Vehicles (FCEV)",
       "subtitle": "Complete guide to hydrogen technology for heavy-duty fleets",
       "description": "Hydrogen fuel cell vehicles offer unique advantages for long-distance heavy transport with fast refueling and cold weather performance.",
-      "readTime": "12 min read",
+      "readTime": "12 min read",
       "toc": {
         "whyHydrogen": "Why hydrogen?",
         "infrastructure": "H₂ infrastructure",
@@ -3877,8 +3879,8 @@
         "advantages": {
           "title": "Unique advantages",
           "items": [
-            "700 km range (like diesel)",
-            "15-20 min refueling",
+            "700 km range (like diesel)",
+            "15-20 min refueling",
             "No winter range loss",
             "Preserved payload capacity"
           ]
@@ -3886,7 +3888,7 @@
         "useCases": {
           "title": "Optimal use cases",
           "items": [
-            "Long-haul trucking (>400 km/day)",
+            "Long-haul trucking (>400 km/day)",
             "Heavy transport (>26,000 lbs)",
             "Very cold climate operations",
             "24/7 operations"
@@ -3899,7 +3901,7 @@
           "title": "Option A: Private Station (fleet >20 vehicles)",
           "cost": "Cost: $5M-10M",
           "funding": "Funding: see the programs’ computed status in the Library",
-          "capacity": "Capacity: 500-1000 kg/day",
+          "capacity": "Capacity: 500-1000 kg/day",
           "timeline": "Installation: 18-24 months"
         },
         "public": {
@@ -3922,7 +3924,7 @@
         },
         "consumption": {
           "title": "Typical consumption",
-          "class8": "Class 8 heavy: 8-10 kg H₂/100km",
+          "class8": "Class 8 heavy: 8-10 kg H₂/100km",
           "fuelCost": "Energy cost per km: computed by the engine for each vehicle",
           "vsDiesel": "Comparison with diesel: see the Feasibility step"
         },
@@ -3937,7 +3939,7 @@
         ],
         "callout": {
           "title": "Loblaw Vancouver Case Study",
-          "description": "Hyundai XCIENT, 700 km range confirmed, refueling at HTEC stations"
+          "description": "Hyundai XCIENT, 700 km range confirmed, refueling at HTEC stations"
         }
       },
       "cta": {
@@ -3948,7 +3950,7 @@
       "title": "Biomethane / RNG",
       "subtitle": "Transition solution with existing infrastructure",
       "description": "Renewable natural gas offers an immediate emissions reduction path using converted diesel engines and existing refueling networks.",
-      "readTime": "8 min read",
+      "readTime": "8 min read",
       "toc": {
         "what": "What is biomethane?",
         "conversion": "Fleet conversion",
@@ -3999,11 +4001,11 @@
       "title": "Urban Delivery",
       "subtitle": "Electrification guide for urban and last-mile delivery fleets",
       "description": "Urban delivery is the ideal use case for battery electric vehicles with predictable routes and depot returns.",
-      "readTime": "10 min read",
+      "readTime": "10 min read",
       "profile": {
         "title": "Typical Profile",
         "items": [
-          "30-100 km/day",
+          "30-100 km/day",
           "Frequent stops (10-50 per day)",
           "Return to depot every night",
           "Urban areas"
@@ -4030,9 +4032,9 @@
     },
     "sectorRegional": {
       "title": "Regional Transport",
-      "subtitle": "Guide for 200-500 km daily routes",
+      "subtitle": "Guide for 200-500 km daily routes",
       "description": "Regional transport requires careful analysis to choose between BEV with fast charging, hydrogen, or biomethane.",
-      "readTime": "12 min read",
+      "readTime": "12 min read",
       "profile": {
         "title": "Typical Profile",
         "items": [
@@ -4045,7 +4047,7 @@
       "recommendation": "Recommendation: Case-by-case analysis",
       "decisionTree": {
         "title": "Decision Guide",
-        "question1": "Is your route under 250 km?",
+        "question1": "Is your route under 250 km?",
         "answer1Yes": "BEV with DC fast charging at midpoint",
         "answer1No": "TCO analysis: BEV vs H₂ vs Biomethane",
         "question2": "Can you charge 4h at night?",
@@ -4062,9 +4064,9 @@
     },
     "sectorLongHaul": {
       "title": "Long-Haul Trucking",
-      "subtitle": "Guide for routes over 500 km/day",
+      "subtitle": "Guide for routes over 500 km/day",
       "description": "Long-haul trucking remains challenging for electrification. Hydrogen and biomethane offer current solutions while BEV technology matures.",
-      "readTime": "15 min read",
+      "readTime": "15 min read",
       "profile": {
         "title": "Typical Profile",
         "items": [
@@ -4079,7 +4081,7 @@
         "bev": {
           "status": "Not yet viable",
           "reasons": [
-            "Insufficient range (300-400 km max loaded)",
+            "Insufficient range (300-400 km max loaded)",
             "Too long charging time (2-4h)",
             "Non-existent corridor infrastructure"
           ]
@@ -4087,7 +4089,7 @@
         "h2": {
           "status": "Promising but expensive",
           "reasons": [
-            "Adequate range (700 km)",
+            "Adequate range (700 km)",
             "Almost no stations (2026)",
             "High cost per km today — costed vehicle by vehicle in the Feasibility step"
           ]
@@ -4115,7 +4117,7 @@
       "title": "Transition Planning Guide",
       "subtitle": "24-month step-by-step plan to electrify your fleet",
       "description": "A detailed month-by-month timeline for fleet electrification from audit to full deployment.",
-      "readTime": "25 min read",
+      "readTime": "25 min read",
       "toc": {
         "phase1": "Phase 1: Evaluation (Months 1-2)",
         "phase2": "Phase 2: TCO Analysis (Months 2-3)",
@@ -4165,7 +4167,7 @@
       "title": "Funding & Subsidies Guide",
       "subtitle": "Navigate complex programs and maximize your financing",
       "description": "Complete overview of Canadian federal and provincial programs for fleet electrification with application strategies.",
-      "readTime": "20 min read",
+      "readTime": "20 min read",
       "toc": {
         "federal": "Federal Programs",
         "provincial": "Provincial Programs",
@@ -4197,7 +4199,7 @@
       "title": "Operations Management Guide",
       "subtitle": "Optimize daily operations of an electric fleet",
       "description": "Best practices for route optimization, energy management, and fleet monitoring with electric vehicles.",
-      "readTime": "15 min read",
+      "readTime": "15 min read",
       "toc": {
         "routes": "Route Optimization",
         "energy": "Energy Management",
@@ -4447,11 +4449,11 @@
       "h2": "Default hydrogen consumption for Class 8 trucks"
     },
     "infra": {
-      "bevChargerSlowCapex": "Slow charger (7-22 kW) equipment cost",
-      "bevChargerFastCapex": "Fast charger (50 kW) equipment cost",
+      "bevChargerSlowCapex": "Slow charger (7-22 kW) equipment cost",
+      "bevChargerFastCapex": "Fast charger (50 kW) equipment cost",
       "bevChargerUltraCapex": "Ultra-fast charger (150+ kW) equipment cost",
-      "h2StationSmallCapex": "Small H₂ station (100 kg/day) equipment cost",
-      "h2StationLargeCapex": "Large H₂ station (1000 kg/day) equipment cost",
+      "h2StationSmallCapex": "Small H₂ station (100 kg/day) equipment cost",
+      "h2StationLargeCapex": "Large H₂ station (1000 kg/day) equipment cost",
       "h2OpexPercent": "H₂ station annual operating cost (% of CAPEX)",
       "bevOpexPercent": "EV charger annual operating cost (% of CAPEX)"
     },
@@ -4929,7 +4931,7 @@
         "economies_negatives": "annual savings are zero or negative",
         "surcout_non_resorbe": "the extra cost is not recovered within the {{horizon}}-year horizon"
       },
-      "co2Avoided": "{{ttw}} t CO2e avoided at the tailpipe · {{wtw}} t full cycle (totals)",
+      "co2Avoided": "{{ttw}} t CO2e avoided at the tailpipe · {{wtw}} t full cycle (totals)",
       "subsidies": "Subsidies: {{amount}}",
       "reserves": {
         "longue_distance": "Range to verify (long distance)",
@@ -4954,9 +4956,9 @@
       },
       "borrowedDefaults": "Defaults borrowed from an engine category (estimate)",
       "winter": {
-        "tient": "Winter: OK — winter range {{autonomie}} km (rated {{nominale}} km) for {{km}} km/day; overnight charging restores {{nuit}} kWh for {{jour}} kWh used ({{fenetre}} h at {{kw}} kW).",
-        "recharge_journee": "Winter: OK with daytime charging — winter range {{autonomie}} km for {{km}} km/day; {{journee}} kWh to recover during the day (overnight: {{nuit}} kWh over {{fenetre}} h at {{kw}} kW).",
-        "ne_tient_pas": "Winter: not feasible — {{km}} km/day for a winter range of {{autonomie}} km (rated {{nominale}} km), even with a full daytime charge.",
+        "tient": "Winter: OK — winter range {{autonomie}} km (rated {{nominale}} km) for {{km}} km/day; overnight charging restores {{nuit}} kWh for {{jour}} kWh used ({{fenetre}} h at {{kw}} kW).",
+        "recharge_journee": "Winter: OK with daytime charging — winter range {{autonomie}} km for {{km}} km/day; {{journee}} kWh to recover during the day (overnight: {{nuit}} kWh over {{fenetre}} h at {{kw}} kW).",
+        "ne_tient_pas": "Winter: not feasible — {{km}} km/day for a winter range of {{autonomie}} km (rated {{nominale}} km), even with a full daytime charge.",
         "kmEstimated": "(km/day estimated: enter the maximum daily km in My fleet)",
         "windowPresumed": "(presumed charging window: enter the depot hours)"
       },
@@ -4996,7 +4998,7 @@
       },
       "metrics": {
         "vehicles": "{{ze}} zero-emission out of {{total}} vehicles",
-        "co2": "{{ttw}} t CO2e avoided at the tailpipe · {{wtw}} t full cycle (used in totals)",
+        "co2": "{{ttw}} t CO2e avoided at the tailpipe · {{wtw}} t full cycle (used in totals)",
         "infra": "Infrastructure: {{amount}}",
         "subsidies": "Subsidies: {{amount}}"
       },
@@ -5321,9 +5323,9 @@
       "total": "Total infrastructure CAPEX: {{amount}}",
       "sourceNote": "Typical costs from {{source}}, verified on {{date}} — to be replaced by quotes.",
       "borneTypes": {
-        "niveau2": "level 2 charger (7-19 kW)",
-        "rapide50": "50 kW fast charger",
-        "rapide150": "150 kW fast charger"
+        "niveau2": "level 2 charger (7-19 kW)",
+        "rapide50": "50 kW fast charger",
+        "rapide150": "150 kW fast charger"
       },
       "connectionSource": {
         "capacite_existante": "no upgrade",
@@ -5332,7 +5334,7 @@
         "devis_garage": "depot client quote"
       },
       "garageTotal": "Depot total: {{amount}}",
-      "connectionDetail": "Grid connection: {{demandes}} kW requested (chargers at full power) · {{disponibles}} kW available · {{supplementaires}} kW extra.",
+      "connectionDetail": "Grid connection: {{demandes}} kW requested (chargers at full power) · {{disponibles}} kW available · {{supplementaires}} kW extra.",
       "presumedCapacity": "PRESUMED available capacity (registry): enter the depot's real capacity in My fleet › Depots.",
       "tier": "Upgrade tier {{palier}} applied.",
       "noUpgrade": "The chargers fit within the existing capacity: no upgrade."
@@ -5439,7 +5441,7 @@
       "reasons": {
         "garde": "Kept as is (your choice).",
         "electrifie_rentable": "Electrified: saves {{amount}} (NPV, garage chargers included).",
-        "electrifie_co2": "Electrified for CO2: {{tonnes}} t avoided for an extra cost of {{amount}}.",
+        "electrifie_co2": "Electrified for CO2: {{tonnes}} t avoided for an extra cost of {{amount}}.",
         "electrifie_cible": "Electrified to reach your target, despite an extra cost of {{amount}}.",
         "techno_imposee": "Technology imposed: diesel is not allowed for this category.",
         "subvention_avant_fin": "Bought before \"{{programme}}\" ends ({{date}}).",
@@ -5458,11 +5460,11 @@
       "violations": {
         "budget_investissement": "Investment {{year}}: {{amount}} for a budget of {{budget}} (over by {{over}}).",
         "budget_reste": "Remaining to finance {{year}}: {{amount}} for a budget of {{budget}} (over by {{over}}).",
-        "capacite_kw": "Garage {{garage}}, {{year}}: {{demand}} kW of chargers for {{capacity}} kW available (+{{over}} kW).",
+        "capacite_kw": "Garage {{garage}}, {{year}}: {{demand}} kW of chargers for {{capacity}} kW available (+{{over}} kW).",
         "capacite_places": "Garage {{garage}}, {{year}}: {{demand}} chargers for {{places}} spots (+{{over}}).",
         "cible_ze_one": "Target {{year}}: {{target}} zero-emission requested, {{reached}} reached — {{count}} vehicle short.",
         "cible_ze_other": "Target {{year}}: {{target}} zero-emission requested, {{reached}} reached — {{count}} vehicles short.",
-        "cible_ges": "Target {{year}}: {{target}} GHG reduction requested, {{reached}} reached — {{tonnes}} t CO2e per year short.",
+        "cible_ges": "Target {{year}}: {{target}} GHG reduction requested, {{reached}} reached — {{tonnes}} t CO2e per year short.",
         "aucune_techno": "{{unit}}: no technology allowed for its category (diesel kept)."
       },
       "form": {
@@ -5485,7 +5487,7 @@
         "technologies": "Allowed technologies by category",
         "garages": "Garage capacity",
         "garagesHelp": "Maximum charger power (kW, at full power) and number of charging spots. Blank = no limit (the grid connection upgrade is then priced). An increase can be planned from a given year (works).",
-        "garageKnown": "Known at the garage: {{places}} spots · {{kw}} kW available",
+        "garageKnown": "Known at the garage: {{places}} spots · {{kw}} kW available",
         "capacityKw": "Max kW",
         "places": "Spots",
         "upgrade": "Increase planned from",
@@ -5518,8 +5520,8 @@
         "quote_price": "quoted purchase price ($ before taxes)",
         "charger_unit_quote": {
           "niveau2": "cost per Level 2 charger ($ before taxes)",
-          "rapide50": "cost per 50 kW fast charger ($ before taxes)",
-          "rapide150": "cost per 150 kW fast charger ($ before taxes)"
+          "rapide50": "cost per 50 kW fast charger ($ before taxes)",
+          "rapide150": "cost per 150 kW fast charger ($ before taxes)"
         }
       },
       "sources": {
@@ -5571,7 +5573,7 @@
       "programTitle": "Program changed: {{programme}}",
       "programMessage": "{{resume}} (validated on {{date}} by the H2Fleet team). Plan amounts follow the program registry, updated after reading the source.",
       "garageTitle": "Electrical capacity exceeded: {{garage}}",
-      "garageMessage": "Planned chargers need {{demandes}} kW for {{disponibles}} kW available (+{{supp}} kW); grid connection costed at {{cout}} ({{source}}).",
+      "garageMessage": "Planned chargers need {{demandes}} kW for {{disponibles}} kW available (+{{supp}} kW); grid connection costed at {{cout}} ({{source}}).",
       "garagePresumed": "Available power is presumed: enter it in My fleet › Garages.",
       "noGarage": "vehicles without a garage",
       "sources": {
@@ -5854,8 +5856,8 @@
     "disclaimer": "FICTIONAL cases: they represent no client organization and are not observed results. They are used to verify the engine: each result is cross-checked by an independent calculator (difference ≤ $0.01, verified on every code change). Assumptions are frozen at the date the cases were created; your real plan uses your data and current assumptions.",
     "fictional": "Fictional",
     "payback": "Discounted payback",
-    "inputs_one": "{{count}} vehicle · {{km}} km/yr · {{horizon}}-year horizon · infrastructure {{infra}} · subsidies {{subventions}}",
-    "inputs_other": "{{count}} vehicles · {{km}} km/yr in total · {{horizon}}-year horizon · infrastructure {{infra}} · subsidies {{subventions}}",
+    "inputs_one": "{{count}} vehicle · {{km}} km/yr · {{horizon}}-year horizon · infrastructure {{infra}} · subsidies {{subventions}}",
+    "inputs_other": "{{count}} vehicles · {{km}} km/yr in total · {{horizon}}-year horizon · infrastructure {{infra}} · subsidies {{subventions}}",
     "method": "Formulas, conventions and sources:",
     "methodLink": "public methodology",
     "cases": {
@@ -5967,11 +5969,11 @@
     "hidden": "(not shown)",
     "personal": "Personal data — excluded",
     "ignore": "— Ignore —",
-    "unitDefault": "km · L/100 km",
+    "unitDefault": "km · L/100 km",
     "units": {
       "km": "km",
       "mi": "miles",
-      "L/100km": "L/100 km",
+      "L/100km": "L/100 km",
       "mpg_us": "mpg (US)",
       "mpg_imp": "mpg (imperial)",
       "km/L": "km/L"
@@ -6007,7 +6009,7 @@
       "annee_future": "Model year {{year}} is in the future.",
       "mise_en_service_avant_modele": "In service ({{year}}) before the model year ({{model}}).",
       "km_incoherents": "Annual km ({{annual}}) exceeds 365 days at the max daily km ({{daily}}).",
-      "conso_a_verifier": "Consumption {{value}} L/100 km far from the category reference ({{reference}}).",
+      "conso_a_verifier": "Consumption {{value}} L/100 km far from the category reference ({{reference}}).",
       "garage_nouveau": "New garage “{{garage}}” (created on import)."
     },
     "validationTitle": "3. Row-by-row validation",
@@ -6031,7 +6033,7 @@
       "category": "Category",
       "fuel_type": "Fuel",
       "annual_km": "Annual km",
-      "consumption_per_100km": "Consumption /100 km",
+      "consumption_per_100km": "Consumption /100 km",
       "usage_profile": "Usage profile",
       "department": "Department",
       "depot": "Garage",
@@ -6123,9 +6125,9 @@
     "garageNone": "— Choose —",
     "chargerType": "Charger type",
     "chargers": {
-      "niveau2": "Level 2 (AC, ≤ 19.2 kW)",
-      "rapide50": "Fast 50 kW",
-      "rapide150": "Fast 150 kW"
+      "niveau2": "Level 2 (AC, ≤ 19.2 kW)",
+      "rapide50": "Fast 50 kW",
+      "rapide150": "Fast 150 kW"
     },
     "vehicles": "Project vehicles covered by this quote",
     "derivedTitle": "Values used in calculations",

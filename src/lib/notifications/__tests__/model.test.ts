@@ -95,7 +95,7 @@ describe("notifications — modèle", () => {
     const tfr = await traducteur("fr");
     const ten = await traducteur("en");
     const n = notif("task_assigned");
-    expect(texteNotification(n, tfr, "fr").message).toContain("« Remplacer U-12 »");
+    expect(texteNotification(n, tfr, "fr").message).toContain("«\u00a0Remplacer U-12\u00a0»");
     expect(texteNotification(n, tfr, "fr").message).toContain("Ville de Rivière-Claire");
     expect(texteNotification(n, ten, "en").titre).toBe("New task assigned");
     expect(texteNotification(notif("invitation"), tfr, "fr").message).toContain("éditeur");

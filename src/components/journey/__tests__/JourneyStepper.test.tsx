@@ -124,7 +124,8 @@ describe("JourneyStepper — structure et états", () => {
   it("phrase sous la barre : état de l'étape affichée et ce qui manque, dans le même conteneur", () => {
     const d = monter("plan");
     const phrase = d.querySelector('[data-testid="etat-etape"]')!;
-    expect(phrase.textContent).toBe("Étape en cours — ce qui manque : 1 véhicule sans année de remplacement");
+    // Espaces insécables de la typographie française ramenées à des espaces simples pour la comparaison.
+    expect(phrase.textContent!.replace(/[\u00a0\u202f]/g, " ")).toBe("Étape en cours — ce qui manque : 1 véhicule sans année de remplacement");
     expect(phrase.parentElement).toBe(d.querySelector("ol")!.parentElement);
   });
 });
