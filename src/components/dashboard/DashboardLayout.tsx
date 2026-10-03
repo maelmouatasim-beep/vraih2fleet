@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProfileOnboardingDialog } from "@/components/onboarding/ProfileOnboardingDialog";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -9,6 +9,8 @@ import {
   Settings,
   LogOut,
   ChevronLeft,
+  Menu,
+  X,
   Search,
   Leaf,
   Plus,
@@ -34,10 +36,18 @@ interface DashboardLayoutProps {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { t } = useTranslation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  // < 768 px : la barre latérale devient un tiroir (fermé par défaut).
+  const [menuMobile, setMenuMobile] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, profile, role, signOut } = useAuth();
+  // Repli « icônes seules » : grand écran uniquement (le tiroir mobile montre toujours les libellés).
+  const replie = sidebarCollapsed && !menuMobile;
+
+  useEffect(() => {
+    setMenuMobile(false);
+  }, [location.pathname]);
 
   // Menu réduit à 6 entrées (direction produit, refonte 2f) :
   // Accueil, Projets, Ma flotte, Bibliothèque, Organisation, Aide.
@@ -94,14 +104,15 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Sidebar */}
-      <aside 
-        className={`fixed left-0 top-0 bottom-0 bg-sidebar z-40 flex flex-col transition-all duration-300 ${
-          sidebarCollapsed ? "w-16" : "w-64"
-        }`}
+      <aside
+        className={`fixed left-0 top-0 bottom-0 bg-sidebar z-40 flex w-64 flex-col transition-all duration-300 ${
+          replie ? "md:w-16" : "md:w-64"
+        } ${menuMobile ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+        data-testid="dashboard-sidebar"
       >
         {/* Logo */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-sidebar-border">
-          {!sidebarCollapsed && (
+          {!replie && (
             <Link to="/" className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center">
                 <Leaf className="w-4 h-4 text-sidebar-primary-foreground" />
@@ -112,10 +123,20 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="text-sidebar-foreground hover:bg-sidebar-accent"
+            onClick={() => setSidebarCollapsed(!replie)}
+            className="hidden text-sidebar-foreground hover:bg-sidebar-accent md:inline-flex"
+            aria-label={t(replie ? "dashboard.header.expandMenu" : "dashboard.header.collapseMenu")}
           >
-            <ChevronLeft className={`w-4 h-4 transition-transform ${sidebarCollapsed ? "rotate-180" : ""}`} />
+            <ChevronLeft className={`w-4 h-4 transition-transform ${replie ? "rotate-180" : ""}`} />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setMenuMobile(false)}
+            className="text-sidebar-foreground hover:bg-sidebar-accent md:hidden"
+            aria-label={t("dashboard.header.closeMenu")}
+          >
+            <X className="w-4 h-4" />
           </Button>
         </div>
 
@@ -136,10 +157,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                     isActive 
                       ? "bg-sidebar-primary text-sidebar-primary-foreground" 
                       : "text-sidebar-foreground hover:bg-sidebar-accent"
-                  } ${sidebarCollapsed ? "justify-center" : ""}`}
+                  } ${replie ? "justify-center" : ""}`}
                 >
                   <link.icon className="w-5 h-5 flex-shrink-0" />
-                  {!sidebarCollapsed && (
+                  {!replie && (
                     <span className="font-medium text-sm">{t(link.labelKey)}</span>
                   )}
                 </Link>
@@ -149,7 +170,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
           {/* Separator */}
           {dataLinks.length > 0 && (
-            <div className={`my-3 ${sidebarCollapsed ? "mx-2" : "mx-3"}`}>
+            <div className={`my-3 ${replie ? "mx-2" : "mx-3"}`}>
               <div className="border-t border-sidebar-border" />
             </div>
           )}
@@ -166,10 +187,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                     isActive 
                       ? "bg-sidebar-primary text-sidebar-primary-foreground" 
                       : "text-sidebar-foreground hover:bg-sidebar-accent"
-                  } ${sidebarCollapsed ? "justify-center" : ""}`}
+                  } ${replie ? "justify-center" : ""}`}
                 >
                   <link.icon className="w-5 h-5 flex-shrink-0" />
-                  {!sidebarCollapsed && (
+                  {!replie && (
                     <span className="font-medium text-sm">{t(link.labelKey)}</span>
                   )}
                 </Link>
@@ -179,7 +200,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
           {/* Separator */}
           {configLinks.length > 0 && (
-            <div className={`my-3 ${sidebarCollapsed ? "mx-2" : "mx-3"}`}>
+            <div className={`my-3 ${replie ? "mx-2" : "mx-3"}`}>
               <div className="border-t border-sidebar-border" />
             </div>
           )}
@@ -196,10 +217,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                     isActive 
                       ? "bg-sidebar-primary text-sidebar-primary-foreground" 
                       : "text-sidebar-foreground hover:bg-sidebar-accent"
-                  } ${sidebarCollapsed ? "justify-center" : ""}`}
+                  } ${replie ? "justify-center" : ""}`}
                 >
                   <link.icon className="w-5 h-5 flex-shrink-0" />
-                  {!sidebarCollapsed && (
+                  {!replie && (
                     <span className="font-medium text-sm">{t(link.labelKey)}</span>
                   )}
                 </Link>
@@ -213,17 +234,17 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           <Link
             to="/dashboard/settings"
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent transition-colors ${
-              sidebarCollapsed ? "justify-center" : ""
+              replie ? "justify-center" : ""
             }`}
           >
             <Settings className="w-5 h-5 flex-shrink-0" />
-            {!sidebarCollapsed && <span className="font-medium text-sm">{t('dashboard.menu.settings')}</span>}
+            {!replie && <span className="font-medium text-sm">{t('dashboard.menu.settings')}</span>}
           </Link>
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent transition-colors ${
-              sidebarCollapsed ? "justify-center" : ""
+              replie ? "justify-center" : ""
             }`}
           >
             {isLoggingOut ? (
@@ -231,7 +252,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             ) : (
               <LogOut className="w-5 h-5 flex-shrink-0" />
             )}
-            {!sidebarCollapsed && (
+            {!replie && (
               <span className="font-medium text-sm">
                 {isLoggingOut ? t('dashboard.menu.loggingOut') : t('dashboard.menu.logout')}
               </span>
@@ -241,13 +262,27 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       </aside>
 
       {/* Main content */}
+      {menuMobile && (
+        <div className="fixed inset-0 z-30 bg-black/40 md:hidden" onClick={() => setMenuMobile(false)} aria-hidden />
+      )}
+
       <div className={`flex-1 min-w-0 flex flex-col transition-all duration-300 ${
-        sidebarCollapsed ? "ml-16" : "ml-64"
+        sidebarCollapsed ? "md:ml-16" : "md:ml-64"
       }`}>
         {/* Top bar */}
-        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6 sticky top-0 z-30">
-          <div className="flex items-center gap-4">
-            <div className="relative">
+        <header className="h-16 bg-card border-b border-border flex items-center justify-between gap-2 px-4 md:px-6 sticky top-0 z-20">
+          <div className="flex min-w-0 items-center gap-2 md:gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setMenuMobile(true)}
+              aria-label={t("dashboard.header.openMenu")}
+              data-testid="open-mobile-menu"
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
+            <div className="relative hidden xl:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input 
                 placeholder={t('dashboard.header.search')}
@@ -256,10 +291,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             </div>
           </div>
           
-          <div className="flex items-center gap-4">
-            <Button variant="default" size="sm" className="gap-2" onClick={handleNewProject}>
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2 md:gap-4">
+            <Button variant="default" size="sm" className="gap-2" onClick={handleNewProject} aria-label={t('dashboard.header.newProject')}>
               <Plus className="w-4 h-4" />
-              {t('dashboard.header.newProject')}
+              <span className="hidden sm:inline">{t('dashboard.header.newProject')}</span>
             </Button>
             
             <LanguageSelector />
@@ -268,7 +303,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               <NotificationsDropdown />
             </NotificationsBoundary>
             
-            <div className="flex items-center gap-3 pl-4 border-l border-border">
+            <div className="flex items-center gap-3 pl-2 md:pl-4 border-l border-border">
               <Avatar className="w-8 h-8">
                 <AvatarImage src={profile?.avatar_url || ""} />
                 <AvatarFallback className="bg-primary text-primary-foreground text-sm">
@@ -286,7 +321,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-4 md:p-6">
           {children}
         </main>
       </div>

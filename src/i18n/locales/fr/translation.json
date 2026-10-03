@@ -756,7 +756,11 @@
     },
     "header": {
       "search": "Rechercher...",
-      "newProject": "Nouveau projet"
+      "newProject": "Nouveau projet",
+      "openMenu": "Ouvrir le menu",
+      "closeMenu": "Fermer le menu",
+      "collapseMenu": "Réduire le menu",
+      "expandMenu": "Déployer le menu"
     },
     "user": {
       "admin": "Admin",
@@ -5366,7 +5370,10 @@
         "rapportPerime": "le plan a changé depuis le dernier rapport : le régénérer",
         "remplacementsRestants_one": "{{count}} remplacement à marquer réalisé",
         "remplacementsRestants_other": "{{count}} remplacements à marquer réalisés"
-      }
+      },
+      "ariaLabel": "Étapes du parcours",
+      "stepOf": "Étape {{n}} sur {{total}}",
+      "complete": "Rien ne manque."
     },
     "optimizer": {
       "running": "Calcul en cours…",

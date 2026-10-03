@@ -756,7 +756,11 @@
     },
     "header": {
       "search": "Search...",
-      "newProject": "New project"
+      "newProject": "New project",
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu",
+      "collapseMenu": "Collapse menu",
+      "expandMenu": "Expand menu"
     },
     "user": {
       "admin": "Admin",
@@ -5366,7 +5370,10 @@
         "rapportPerime": "the plan changed since the last report: regenerate it",
         "remplacementsRestants_one": "{{count}} replacement to mark as completed",
         "remplacementsRestants_other": "{{count}} replacements to mark as completed"
-      }
+      },
+      "ariaLabel": "Journey steps",
+      "stepOf": "Step {{n}} of {{total}}",
+      "complete": "Nothing missing."
     },
     "optimizer": {
       "running": "Computing…",
