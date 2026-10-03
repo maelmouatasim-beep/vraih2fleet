@@ -13,6 +13,8 @@
   :root {
     /* Deep teal primary - trust & sustainability */
     --primary: 173 58% 39%;
+    /* Primaire foncé : texte et pastilles pleines au contraste AA (5,2:1 sur blanc). */
+    --primary-strong: 173 58% 30%;
     --primary-foreground: 0 0% 100%;
     
     /* Backgrounds */
@@ -79,6 +81,7 @@
 
   .dark {
     --primary: 173 58% 50%;
+    --primary-strong: 173 58% 55%;
     --primary-foreground: 222 47% 11%;
     
     --background: 222 47% 7%;
