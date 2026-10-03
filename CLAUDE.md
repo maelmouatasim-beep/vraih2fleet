@@ -450,8 +450,18 @@ sinon « à_valider » avec l'URL à consulter.
   « Confirm email » ; débloque aussi le résumé des alertes
   `plan-alerts-digest`), Mapbox, clé IA, tâches pg_cron
   (`supabase/snippets/taches-planifiees.sql`, 4 tâches).
-- Veille des subventions : nommer au moins un administrateur H2Fleet
-  (`user_roles`) pour traiter la file ; la première lecture hebdomadaire
+- **Sauvegardes de la base : AUCUNE aujourd'hui.** Solution la plus
+  simple : plan Supabase incluant les sauvegardes quotidiennes
+  automatiques (Database → Backups, restauration en un clic ; plan et
+  rétention à vérifier sur la grille tarifaire). Alternative gratuite :
+  workflow planifié `supabase db dump` chiffré (dépôt public : jamais
+  d'artefact en clair). À faire AVANT toute donnée client réelle.
+- Administrateur H2Fleet et fonctions IA du compte de l'utilisateur :
+  secret GitHub `H2FLEET_ADMIN_EMAIL` → étape idempotente du workflow
+  Deploy Supabase (`scripts/admin-heberge.mjs`) ; ne fait qu'activer
+  (retirer le secret pour garder une fonction désactivée).
+- Veille des subventions : la file est traitée par les administrateurs
+  H2Fleet (`user_roles`, voir ci-dessus) ; la première lecture hebdomadaire
   établit l'état initial ; un changement validé ne met PAS le registre à
   jour (mise à jour dans `subsidy-programs.ts` après lecture de la
   source).

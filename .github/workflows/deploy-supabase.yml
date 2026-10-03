@@ -9,6 +9,11 @@ name: Deploy Supabase
 #   SUPABASE_ACCESS_TOKEN  jeton personnel (supabase.com → Account → Access Tokens)
 #   SUPABASE_DB_PASSWORD   mot de passe de la base du projet
 #   SUPABASE_PROJECT_REF   ref du projet (20 caractères)
+#   H2FLEET_ADMIN_EMAIL    (facultatif) adresse du compte à nommer
+#                          administrateur H2Fleet, dont les organisations
+#                          reçoivent les fonctions IA activées — lue
+#                          seulement par scripts/admin-heberge.mjs, jamais
+#                          écrite dans le dépôt ni les journaux
 # Tant qu'ils ne sont pas définis, le workflow s'arrête proprement (avertissement).
 
 on:
@@ -76,3 +81,13 @@ jobs:
       - name: Contrôle de santé (schéma, fonctions, secrets, auth, cron)
         if: steps.cfg.outputs.ok == 'true'
         run: node scripts/verifier-base.mjs --heberge
+
+      # Idempotent (scripts/admin-heberge.mjs) : rôle admin H2Fleet +
+      # copilote, import intelligent, factures et devis, note au conseil
+      # activés pour les organisations du compte H2FLEET_ADMIN_EMAIL.
+      # Sans ce secret : étape ignorée (avis).
+      - name: Administrateur H2Fleet et fonctions IA
+        if: steps.cfg.outputs.ok == 'true'
+        env:
+          H2FLEET_ADMIN_EMAIL: ${{ secrets.H2FLEET_ADMIN_EMAIL }}
+        run: node scripts/admin-heberge.mjs

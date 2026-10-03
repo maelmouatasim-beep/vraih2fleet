@@ -376,22 +376,19 @@ Deno.test("B16 hydrogen_suppliers : contacts réservés aux admins", async () =>
     .eq("company_name", "Fournisseur Test");
   assertEquals(baseRows?.length ?? 0, 0, "non-admin lit la table de base");
 
-  // vue annuaire : lisible, sans colonnes de contact
-  const { data: dirRows, error: dirErr } = await userA.client
-    .from("hydrogen_suppliers_directory")
-    .select("*")
-    .eq("company_name", "Fournisseur Test");
-  assertEquals(dirErr, null);
-  assertEquals(dirRows?.length, 1, "la vue annuaire doit rester lisible");
-  assert(!("contact_email" in dirRows![0]), "contact_email exposé par la vue");
-  assert(!("contact_phone" in dirRows![0]), "contact_phone exposé par la vue");
-
-  // anon : rien
-  const { data: anonRows } = await anonClient()
-    .from("hydrogen_suppliers_directory")
-    .select("*")
-    .limit(1);
-  assertEquals(anonRows?.length ?? 0, 0);
+  // L'ancienne vue annuaire (security definer, contournait la RLS) est
+  // supprimée (migration 20261005010000) ; aucune vue publique ne doit
+  // rester en « security definer » (alerte CRITICAL du Security Advisor).
+  const vues = await sql`
+    SELECT c.relname, c.reloptions
+    FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE n.nspname = 'public' AND c.relkind = 'v'
+  `;
+  assert(!vues.some((v) => v.relname === "hydrogen_suppliers_directory"), "vue annuaire encore présente");
+  const sansInvoker = vues
+    .filter((v) => !(v.reloptions ?? []).some((o: string) => /^security_invoker=(on|true)$/.test(o)))
+    .map((v) => v.relname);
+  assertEquals(sansInvoker, [], `vues en security definer : ${sansInvoker.join(", ")}`);
 });
 
 Deno.test("email_leads : insert public OK, lecture refusée aux non-admins", async () => {

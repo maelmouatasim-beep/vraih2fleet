@@ -86,6 +86,10 @@ corrigées malgré la désactivation (clé cherchée par hash, webhooks limités
 
 Le rôle admin s'attribue en base uniquement :
 `INSERT INTO user_roles (user_id, role) VALUES ('<uuid>', 'admin');`
+— sur le projet hébergé de test, par `scripts/admin-heberge.mjs` (workflow
+Deploy Supabase) à partir du secret GitHub `H2FLEET_ADMIN_EMAIL` : adresse
+jamais écrite dans le dépôt (public) ni les journaux (`::add-mask::`),
+insérée dans le SQL en chaîne « dollar-quoted » à étiquette aléatoire.
 
 ## Base de données
 
@@ -93,8 +97,11 @@ Le rôle admin s'attribue en base uniquement :
   `supabase/tests/rls-audit.test.ts`, exécuté en CI contre Supabase local).
 - Écritures sensibles réservées au serveur : `subscriptions` (tier/status),
   compteurs d'`api_keys`, `notifications` (triggers SECURITY DEFINER).
-- Les contacts de `hydrogen_suppliers` ne sont lisibles que par les admins ;
-  l'annuaire passe par la vue `hydrogen_suppliers_directory`.
+- Les contacts de `hydrogen_suppliers` ne sont lisibles que par les admins.
+  L'ancienne vue `hydrogen_suppliers_directory` (security definer, signalée
+  CRITICAL par le Security Advisor, inutilisée) est supprimée (migration
+  20261005010000) ; toute vue du schéma public doit être en
+  `security_invoker` (vérifié par `supabase/tests/rls-audit.test.ts`).
 - Migrations : additives et horodatées, jamais modifiées après coup ; toute
   nouvelle table reçoit sa RLS dans la migration de création.
 - Surveillance du plan (Phase 5.6) : `plan_alerts` lisible par les

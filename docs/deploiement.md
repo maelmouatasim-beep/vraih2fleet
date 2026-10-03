@@ -75,6 +75,12 @@ https://github.com/maelmouatasim-beep/vraih2fleet/settings/secrets/actions
 | `SUPABASE_ACCESS_TOKEN` | le jeton d'accès (étape 1.5) |
 | `SUPABASE_DB_PASSWORD` | le mot de passe de la base (étape 1.3) |
 | `SUPABASE_PROJECT_REF` | le Project ref (étape 1.4) |
+| `H2FLEET_ADMIN_EMAIL` | (facultatif) l'adresse de TON compte sur le site de test : rôle administrateur H2Fleet (file de la veille des subventions) + les 4 fonctions IA activées pour tes organisations, quotas de test (2 000 000 jetons/mois, 200 requêtes/jour) — étape « Administrateur H2Fleet et fonctions IA » du workflow Deploy Supabase (`scripts/admin-heberge.mjs`, idempotent, adresse masquée dans les journaux) |
+
+Le dépôt est PUBLIC : l'adresse ne vit que dans ce secret. Après l'avoir
+créé, relancer **Deploy Supabase** (Actions → Deploy Supabase → Run
+workflow) ou pousser un commit. Le script ne fait qu'activer : pour garder
+une fonction IA désactivée, retirer le secret après l'activation.
 
 ## Étape 3 — Variables GitHub (toi) — FAIT
 
@@ -231,6 +237,14 @@ Le workflow « E2E base hébergée » n'en dépend pas (comptes créés
 confirmés par l'API d'administration).
 
 ## Points ouverts
+
+- **Sauvegardes** : aucune sauvegarde restaurable de la base de test
+  aujourd'hui. Solution la plus simple : passer le projet à un plan
+  Supabase qui inclut les sauvegardes quotidiennes automatiques
+  (Database → Backups ; restauration depuis le tableau de bord — vérifier
+  le plan et la rétention sur la grille tarifaire avant de souscrire).
+  Alternative sans abonnement : workflow GitHub planifié `supabase db
+  dump` CHIFFRÉ (dépôt public : jamais d'artefact en clair).
 
 - **IA** : fournisseur = API Claude d'Anthropic (fonctions `copilot`,
   Phase 5.2, `fleet-import`, Phase 5.3, `document-reader`, Phase 5.4, et `council-note`, Phase 5.7) ; l'ancienne fonction `assistant-chat` (passerelle Lovable)
