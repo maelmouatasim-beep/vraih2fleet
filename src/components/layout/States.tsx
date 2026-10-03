@@ -3,7 +3,7 @@
  * pour un même sens dans toute l'application), état vide, chargement
  * (squelettes) et erreur.
  */
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 import { AlertTriangle, Inbox, type LucideIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 export type Ton = "succes" | "attention" | "danger" | "info" | "neutre";
 
 // Contraste AA (texte 800 sur fond 50 en clair, 300 sur fond 15 % en sombre).
-export const CLASSES_TON: Record<Ton, string> = {
+const CLASSES_TON: Record<Ton, string> = {
   succes: "bg-emerald-50 text-emerald-800 ring-emerald-600/20 dark:bg-emerald-500/15 dark:text-emerald-300 dark:ring-emerald-400/30",
   attention: "bg-amber-50 text-amber-800 ring-amber-600/20 dark:bg-amber-500/15 dark:text-amber-300 dark:ring-amber-400/30",
   danger: "bg-red-50 text-red-800 ring-red-600/20 dark:bg-red-500/15 dark:text-red-300 dark:ring-red-400/30",
@@ -22,24 +22,22 @@ export const CLASSES_TON: Record<Ton, string> = {
   neutre: "bg-muted text-muted-foreground ring-border",
 };
 
-interface StatusBadgeProps {
+interface StatusBadgeProps extends HTMLAttributes<HTMLSpanElement> {
   ton: Ton;
   children: ReactNode;
   icone?: LucideIcon;
-  className?: string;
-  title?: string;
 }
 
-export function StatusBadge({ ton, children, icone: Icone, className, title }: StatusBadgeProps) {
+export function StatusBadge({ ton, children, icone: Icone, className, ...rest }: StatusBadgeProps) {
   return (
     <span
+      {...rest}
       className={cn(
         "inline-flex max-w-full items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset",
         CLASSES_TON[ton],
         className,
       )}
       data-ton={ton}
-      title={title}
     >
       {Icone && <Icone className="h-3 w-3 shrink-0" aria-hidden />}
       <span className="truncate">{children}</span>

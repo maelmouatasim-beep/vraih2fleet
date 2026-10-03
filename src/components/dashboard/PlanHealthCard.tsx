@@ -5,11 +5,10 @@
  */
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePlanSurveillance } from "@/hooks/usePlanSurveillance";
 import type { ProjectDTO } from "@/lib/supabase/projects";
-import { CLASSES_SANTE } from "@/components/journey/PlanAlertsPanel";
+import { BadgeSante } from "@/components/journey/PlanAlertsPanel";
 import { texteAlerte } from "@/components/journey/surveillanceTexts";
 import { Activity, ArrowRight } from "lucide-react";
 
@@ -31,9 +30,7 @@ function LigneProjet({ project }: { project: ProjectDTO }) {
         <Link to={`/dashboard/projects/${project.id}/suivi`} className="font-medium hover:underline">
           {project.name}
         </Link>
-        <Badge variant="outline" className={CLASSES_SANTE[sante.niveau]} data-level={sante.niveau}>
-          {t(`journey.monitoring.health.${sante.niveau}`)}
-        </Badge>
+        <BadgeSante niveau={sante.niveau} />
         <span className="text-xs text-muted-foreground">
           {actives.length > 0 ? t("pages.dashboard.health.alerts", { count: actives.length }) : t("pages.dashboard.health.allGood")}
         </span>

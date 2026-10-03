@@ -6,7 +6,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
@@ -15,12 +14,18 @@ import type { ProjectDTO } from "@/lib/supabase/projects";
 import type { GraviteAlerte, NiveauSante } from "@/lib/journey/surveillance";
 import { texteAlerte } from "./surveillanceTexts";
 import { Activity, AlertOctagon, AlertTriangle, ArrowRight, Eye, Info } from "lucide-react";
+import { StatusBadge } from "@/components/layout/States";
+import { TON_GRAVITE, TON_SANTE } from "@/components/layout/tons";
 
-export const CLASSES_SANTE: Record<NiveauSante, string> = {
-  bon: "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950/40 dark:text-emerald-200",
-  a_surveiller: "bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950/40 dark:text-amber-200",
-  a_risque: "bg-red-100 text-red-800 border-red-300 dark:bg-red-950/40 dark:text-red-200",
-};
+/** Pastille de santé du plan (même rendu dans Suivi et sur l'Accueil). */
+export function BadgeSante({ niveau, ...rest }: { niveau: NiveauSante; "data-testid"?: string }) {
+  const { t } = useTranslation();
+  return (
+    <StatusBadge ton={TON_SANTE[niveau]} data-level={niveau} {...rest}>
+      {t(`journey.monitoring.health.${niveau}`)}
+    </StatusBadge>
+  );
+}
 
 const ICONES: Record<GraviteAlerte, typeof Info> = { critique: AlertOctagon, attention: AlertTriangle, info: Info };
 const COULEURS: Record<GraviteAlerte, string> = {
@@ -49,7 +54,7 @@ function Ligne({
       <div className="flex flex-wrap items-center gap-2">
         <Icone className="w-4 h-4 shrink-0" />
         <span className="font-medium">{titre}</span>
-        <Badge variant="outline" className="text-[11px]">{t(`journey.monitoring.severity.${a.gravite}`)}</Badge>
+        <StatusBadge ton={TON_GRAVITE[a.gravite]}>{t(`journey.monitoring.severity.${a.gravite}`)}</StatusBadge>
         {a.ligne && (
           <span className="text-xs text-muted-foreground">{t("journey.monitoring.since", { date: a.ligne.first_seen_at.slice(0, 10) })}</span>
         )}
@@ -93,9 +98,7 @@ export default function PlanAlertsPanel({ projectId, project }: { projectId: str
       <CardHeader className="pb-3">
         <CardTitle className="text-lg flex flex-wrap items-center gap-2">
           <Activity className="w-5 h-5 text-muted-foreground" /> {t("journey.monitoring.title")}
-          <Badge variant="outline" className={CLASSES_SANTE[sante.niveau]} data-testid="plan-health-badge" data-level={sante.niveau}>
-            {t(`journey.monitoring.health.${sante.niveau}`)}
-          </Badge>
+          <BadgeSante niveau={sante.niveau} data-testid="plan-health-badge" />
         </CardTitle>
         <CardDescription>{t("journey.monitoring.subtitle")}</CardDescription>
       </CardHeader>

@@ -1,22 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { useSubscription, SubscriptionTier, SubscriptionStatus } from "@/hooks/useSubscription";
-import { Badge } from "@/components/ui/badge";
-import { Crown, Sparkles, Building2, Zap } from "lucide-react";
+import { useSubscription, SubscriptionTier } from "@/hooks/useSubscription";
+import { Skeleton } from "@/components/ui/skeleton";
+import { StatusBadge, type Ton } from "@/components/layout/States";
+import { Crown, Sparkles, Building2, Zap, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const tierConfig: Record<SubscriptionTier, { label: string; icon: React.ElementType; className: string }> = {
-  free: { label: 'Free', icon: Zap, className: 'bg-muted text-muted-foreground' },
-  small: { label: 'Small Fleet', icon: Sparkles, className: 'bg-chart-ev/10 text-chart-ev border-chart-ev/20' },
-  medium: { label: 'Medium Fleet', icon: Crown, className: 'bg-primary/10 text-primary border-primary/20' },
-  large: { label: 'Large Fleet', icon: Building2, className: 'bg-accent/10 text-accent border-accent/20' },
-};
-
-const statusLabels: Record<SubscriptionStatus, string> = {
-  active: 'Active',
-  trial: 'Trial',
-  canceled: 'Canceled',
-  expired: 'Expired',
-};
+const ICONES: Record<SubscriptionTier, LucideIcon> = { free: Zap, small: Sparkles, medium: Crown, large: Building2 };
+const TON_STATUT: Record<"canceled" | "expired", Ton> = { canceled: "danger", expired: "danger" };
 
 interface SubscriptionBadgeProps {
   showStatus?: boolean;
@@ -27,32 +17,18 @@ export const SubscriptionBadge = ({ showStatus = true, className }: Subscription
   const { t } = useTranslation();
   const { tier, status, daysLeftInTrial, isLoading } = useSubscription();
 
-  if (isLoading) {
-    return (
-      <Badge variant="outline" className={cn("animate-pulse", className)}>
-        {t('common.loading', 'Loading...')}
-      </Badge>
-    );
-  }
-
-  const config = tierConfig[tier];
-  const Icon = config.icon;
+  if (isLoading) return <Skeleton className={cn("h-6 w-28 rounded-full", className)} />;
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
-      <Badge variant="outline" className={cn("gap-1.5", config.className)}>
-        <Icon className="w-3.5 h-3.5" />
-        {config.label}
-      </Badge>
-      {showStatus && status === 'trial' && daysLeftInTrial !== null && (
-        <Badge variant="secondary" className="text-xs">
-          {daysLeftInTrial} days left
-        </Badge>
+    <div className={cn("flex flex-wrap items-center gap-2", className)}>
+      <StatusBadge ton="info" icone={ICONES[tier]}>
+        {t(`dashboard.subscriptionBadge.tiers.${tier}`)}
+      </StatusBadge>
+      {showStatus && status === "trial" && daysLeftInTrial !== null && (
+        <StatusBadge ton="attention">{t("dashboard.subscriptionBadge.daysLeft", { count: daysLeftInTrial })}</StatusBadge>
       )}
-      {showStatus && status !== 'active' && status !== 'trial' && (
-        <Badge variant="destructive" className="text-xs">
-          {statusLabels[status]}
-        </Badge>
+      {showStatus && (status === "canceled" || status === "expired") && (
+        <StatusBadge ton={TON_STATUT[status]}>{t(`dashboard.subscriptionBadge.statuses.${status}`)}</StatusBadge>
       )}
     </div>
   );
