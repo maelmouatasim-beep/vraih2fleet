@@ -30,16 +30,22 @@ import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useEmailNotifications } from "@/hooks/useEmailNotifications";
+import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
+import { CATEGORIES } from "@/lib/notifications/model";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
 import { useOrganization } from "@/hooks/useOrganization";
 import { updateOrganization } from "@/lib/supabase/organizations";
 import { langueCourte, memoriserChoixLangue } from "@/i18n/preference";
 
+/** Envoi de courriels branché (SendGrid) sur ce déploiement — variable publique de build. */
+const COURRIELS_ACTIFS = import.meta.env.VITE_EMAILS_ACTIVE === "true";
+
 const Settings = () => {
   const { t, i18n } = useTranslation();
   const { user, profile, updateProfile } = useAuth();
   const { preferences: emailPreferences, togglePreference, isSaving: isSavingEmail } = useEmailNotifications();
+  const inApp = useNotificationPreferences();
   const [isSaving, setIsSaving] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   
@@ -89,12 +95,6 @@ const Settings = () => {
       });
     }
   };
-
-  const [notifications, setNotifications] = useState({
-    emailReports: true,
-    projectUpdates: true,
-    weeklyDigest: false,
-  });
 
   const passwordSchema = z.object({
     newPassword: z.string().min(8, t('pages.settings.password.minLength')),
@@ -357,7 +357,7 @@ const Settings = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card data-testid="notification-preferences">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bell className="w-5 h-5" />
@@ -368,50 +368,25 @@ const Settings = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>{t('pages.settings.notifications.emailReports')}</Label>
-                <p className="text-sm text-muted-foreground">
-                  {t('pages.settings.notifications.emailReportsDesc')}
-                </p>
+            {CATEGORIES.map((categorie, i) => (
+              <div key={categorie} className="space-y-4">
+                {i > 0 && <Separator />}
+                <div className="flex items-center justify-between gap-4">
+                  <div className="space-y-0.5">
+                    <Label htmlFor={`notif-${categorie}`}>{t(`pages.settings.notifications.${categorie}`)}</Label>
+                    <p className="text-sm text-muted-foreground">
+                      {t(`pages.settings.notifications.${categorie}Desc`)}
+                    </p>
+                  </div>
+                  <Switch
+                    id={`notif-${categorie}`}
+                    checked={inApp.preferences[categorie]}
+                    onCheckedChange={() => inApp.basculer(categorie)}
+                    disabled={inApp.isLoading || inApp.isSaving}
+                  />
+                </div>
               </div>
-              <Switch
-                checked={notifications.emailReports}
-                onCheckedChange={(checked) => 
-                  setNotifications({ ...notifications, emailReports: checked })
-                }
-              />
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>{t('pages.settings.notifications.projectUpdates')}</Label>
-                <p className="text-sm text-muted-foreground">
-                  {t('pages.settings.notifications.projectUpdatesDesc')}
-                </p>
-              </div>
-              <Switch
-                checked={notifications.projectUpdates}
-                onCheckedChange={(checked) => 
-                  setNotifications({ ...notifications, projectUpdates: checked })
-                }
-              />
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>{t('pages.settings.notifications.weeklyDigest')}</Label>
-                <p className="text-sm text-muted-foreground">
-                  {t('pages.settings.notifications.weeklyDigestDesc')}
-                </p>
-              </div>
-              <Switch
-                checked={notifications.weeklyDigest}
-                onCheckedChange={(checked) => 
-                  setNotifications({ ...notifications, weeklyDigest: checked })
-                }
-              />
-            </div>
+            ))}
           </CardContent>
         </Card>
 
@@ -427,6 +402,11 @@ const Settings = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {!COURRIELS_ACTIFS && (
+              <p className="text-sm rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-amber-800 dark:text-amber-200" data-testid="emails-not-active">
+                {t('pages.settings.emailNotifications.notActive')}
+              </p>
+            )}
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label>{t('pages.settings.emailNotifications.subsidyReminders', 'Rappels d\'échéances subventions')}</Label>

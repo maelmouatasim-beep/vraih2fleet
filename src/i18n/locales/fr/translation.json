@@ -2181,14 +2181,18 @@
         "adminOnly": "Seul un administrateur de l'organisation peut modifier la devise et la région."
       },
       "notifications": {
-        "title": "Notifications",
-        "subtitle": "Gérez vos préférences de notifications",
-        "emailReports": "Rapports par email",
-        "emailReportsDesc": "Recevoir les rapports TCO par email",
-        "projectUpdates": "Mises à jour projets",
-        "projectUpdatesDesc": "Notifications des modifications de projets",
-        "weeklyDigest": "Résumé hebdomadaire",
-        "weeklyDigestDesc": "Recevoir un résumé de l'activité chaque semaine",
+        "title": "Notifications dans l'application",
+        "subtitle": "Choisissez ce qui apparaît dans la cloche. Une catégorie désactivée n'est plus créée pour vous.",
+        "comments": "Commentaires et réponses",
+        "commentsDesc": "Quand quelqu'un commente un projet dont vous faites partie ou répond à votre commentaire",
+        "tasks": "Tâches et jalons",
+        "tasksDesc": "Tâches assignées, mentions, jalons et tâches du plan générées",
+        "team": "Équipe et invitations",
+        "teamDesc": "Ajout à un projet, invitation acceptée, changement de rôle",
+        "plan_alerts": "Alertes du plan",
+        "plan_alertsDesc": "Échéances de subventions, programmes modifiés, remplacements en retard, énergie, garages",
+        "versions": "Versions de projet",
+        "versionsDesc": "Quand une nouvelle version d'un projet est enregistrée",
         "preferencesSaved": "Préférences de notification enregistrées"
       },
       "appearance": {
@@ -2217,7 +2221,8 @@
         "weeklyDigest": "Résumé hebdomadaire",
         "weeklyDigestDesc": "Un récapitulatif de l'activité de vos projets chaque lundi",
         "planAlerts": "Alertes de surveillance du plan",
-        "planAlertsDesc": "Résumé des nouvelles alertes de vos projets (énergie, subventions, retards, garages) — envoyé dès que le service de courriel sera branché"
+        "planAlertsDesc": "Résumé des nouvelles alertes de vos projets (énergie, subventions, retards, garages) — envoyé dès que le service de courriel sera branché",
+        "notActive": "L'envoi de courriels n'est pas encore activé sur ce site : vos choix sont enregistrés et s'appliqueront dès son activation."
       }
     },
     "blog": {
@@ -3419,15 +3424,15 @@
   },
   "notifications": {
     "title": "Notifications",
-    "markAllRead": "Tout marquer lu",
+    "bell": "Notifications",
+    "bellUnread": "Notifications ({{count}} non lues)",
+    "markAllRead": "Tout marquer comme lu",
+    "markRead": "Marquer comme lue",
+    "archive": "Archiver",
+    "archived": "Notification archivée",
     "empty": "Aucune notification",
-    "types": {
-      "comment": "Commentaire",
-      "reply": "Réponse",
-      "invitation": "Invitation",
-      "version": "Version",
-      "role_change": "Changement de rôle"
-    },
+    "emptyDesc": "Vous n'avez pas encore de notifications",
+    "emptyFilterDesc": "Aucune notification de ce type",
     "viewAll": "Voir toutes les notifications",
     "today": "Aujourd'hui",
     "yesterday": "Hier",
@@ -3435,8 +3440,84 @@
     "older": "Plus ancien",
     "unreadCount": "{{count}} non lue(s)",
     "allRead": "Tout est à jour",
-    "emptyDesc": "Vous n'avez pas encore de notifications",
-    "emptyFilterDesc": "Aucune notification de ce type"
+    "loading": "Chargement des notifications…",
+    "error": "Impossible de charger les notifications. Vérifiez votre connexion.",
+    "retry": "Réessayer",
+    "unavailable": "Notifications momentanément indisponibles — cliquez pour réessayer",
+    "homeUnread": "{{count}} notification(s) non lue(s)",
+    "homeNone": "Aucune notification non lue",
+    "filters": {
+      "all": "Toutes",
+      "unread": "Non lues",
+      "comments": "Commentaires",
+      "tasks": "Tâches",
+      "team": "Équipe",
+      "plan_alerts": "Alertes du plan",
+      "versions": "Versions"
+    },
+    "fallback": {
+      "title": "Notification",
+      "actor": "Un membre de l'équipe",
+      "project": "un projet",
+      "subject": "sans titre",
+      "role": "membre"
+    },
+    "roles": {
+      "owner": "propriétaire",
+      "editor": "éditeur",
+      "viewer": "lecteur"
+    },
+    "kinds": {
+      "comment": {
+        "title": "Nouveau commentaire",
+        "message": "{{actor}} a commenté le projet « {{project}} »."
+      },
+      "reply": {
+        "title": "Réponse à votre commentaire",
+        "message": "{{actor}} a répondu à votre commentaire sur « {{project}} »."
+      },
+      "invitation": {
+        "title": "Ajout à un projet",
+        "message": "{{actor}} vous a ajouté au projet « {{project}} » en tant que {{role}}."
+      },
+      "version": {
+        "title": "Nouvelle version enregistrée",
+        "message": "{{actor}} a enregistré la version « {{subject}} » du projet « {{project}} »."
+      },
+      "role_change": {
+        "title": "Rôle modifié",
+        "message": "Votre rôle a changé dans « {{project}} »."
+      },
+      "task_assigned": {
+        "title": "Nouvelle tâche assignée",
+        "message": "Vous êtes assigné à la tâche « {{subject}} » du projet « {{project}} »."
+      },
+      "task_mentioned": {
+        "title": "Vous avez été mentionné",
+        "message": "{{actor}} vous a mentionné dans la tâche « {{subject}} » du projet « {{project}} »."
+      },
+      "milestone_assigned": {
+        "title": "Nouveau jalon assigné",
+        "message": "Vous êtes assigné au jalon « {{subject}} » du projet « {{project}} »."
+      },
+      "collaboration_accepted": {
+        "title": "Invitation acceptée",
+        "message": "Vous avez rejoint le projet « {{project}} »."
+      },
+      "subsidy": {
+        "title": "Subvention",
+        "message": "Une information de subvention concerne le projet « {{project}} »."
+      },
+      "tasks_generated": {
+        "title": "Tâches du plan générées",
+        "message": "{{actor}} a généré {{count}} tâche(s) du plan « {{project}} ».",
+        "messageSelf": "Vous avez généré {{count}} tâche(s) du plan « {{project}} »."
+      },
+      "plan_alert": {
+        "title": "Alerte du plan",
+        "message": "Une alerte de surveillance concerne le projet « {{project}} »."
+      }
+    }
   },
   "helpTraining": {
     "title": "Aide et méthode",

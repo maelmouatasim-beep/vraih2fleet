@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Users, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,8 @@ import { VersionsPanel } from "./VersionsPanel";
 import { useProjectCollaborators } from "@/hooks/useProjectCollaborators";
 import { useProjectComments } from "@/hooks/useProjectComments";
 
+const ONGLETS = ["collaborators", "comments", "versions"];
+
 interface ShareProjectButtonProps {
   projectId: string;
   variant?: "default" | "outline" | "ghost";
@@ -29,6 +32,20 @@ export function ShareProjectButton({
 }: ShareProjectButtonProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const [onglet, setOnglet] = useState("collaborators");
+  const [params, setParams] = useSearchParams();
+
+  // Lien direct (ex. depuis une notification) : ?partage=comments|versions|collaborators
+  useEffect(() => {
+    const demande = params.get("partage");
+    if (demande && ONGLETS.includes(demande)) {
+      setOnglet(demande);
+      setIsOpen(true);
+      const suite = new URLSearchParams(params);
+      suite.delete("partage");
+      setParams(suite, { replace: true });
+    }
+  }, [params, setParams]);
   const { collaborators } = useProjectCollaborators(projectId);
   const { totalCount: commentCount } = useProjectComments(projectId);
 
@@ -56,7 +73,7 @@ export function ShareProjectButton({
             </DialogTitle>
           </DialogHeader>
 
-          <Tabs defaultValue="collaborators" className="flex-1 overflow-hidden flex flex-col">
+          <Tabs value={onglet} onValueChange={setOnglet} className="flex-1 overflow-hidden flex flex-col">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="collaborators" className="gap-2">
                 <Users className="w-4 h-4" />

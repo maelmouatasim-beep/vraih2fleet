@@ -1,113 +1,124 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Bell, Check, Loader2 } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useNotifications } from '@/hooks/useNotifications';
-import { NotificationItem } from './NotificationItem';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AlertTriangle, Bell, Check, Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useNotifications, type Notification } from "@/hooks/useNotifications";
+import { lienNotification } from "@/lib/notifications/model";
+import { NotificationItem } from "./NotificationItem";
+import { NotificationsBoundary } from "./NotificationsBoundary";
 
 export const NotificationsDropdown = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const { notifications, isLoading, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+  const { notifications, isLoading, isError, refetch, unreadCount, markAsRead, markAllAsRead, archive } = useNotifications();
 
-  const handleNotificationClick = async (notification: typeof notifications[0]) => {
-    if (!notification.is_read) {
-      await markAsRead(notification.id);
-    }
-    
-    if (notification.project_id) {
+  const ouvrir = (notification: Notification) => {
+    if (!notification.is_read) void markAsRead(notification.id);
+    const lien = lienNotification(notification);
+    if (lien) {
       setOpen(false);
-      // Navigate based on notification type
-      if (notification.type === 'task_assigned' || notification.type === 'task_mentioned') {
-        navigate(`/dashboard/projects/${notification.project_id}/tasks`);
-      } else if (notification.type === 'milestone_assigned') {
-        navigate(`/dashboard/roadmap?project=${notification.project_id}`);
-      } else {
-        navigate(`/dashboard/projects/${notification.project_id}`);
-      }
+      navigate(lien);
     }
   };
 
-  const handleViewAll = () => {
-    setOpen(false);
-    navigate('/dashboard/notifications');
-  };
+  const libelle = unreadCount > 0 ? t("notifications.bellUnread", { count: unreadCount }) : t("notifications.bell");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
+        <Button variant="ghost" size="icon" className="relative" aria-label={libelle} title={libelle} data-testid="notifications-bell">
           <Bell className="w-5 h-5" />
           {unreadCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-medium bg-destructive text-destructive-foreground rounded-full px-1">
-              {unreadCount > 99 ? '99+' : unreadCount}
+            <span
+              className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-medium bg-destructive text-destructive-foreground rounded-full px-1"
+              data-testid="notifications-badge"
+            >
+              {unreadCount > 99 ? "99+" : unreadCount}
             </span>
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-0" align="end">
+      <PopoverContent className="w-[22rem] max-w-[calc(100vw-1rem)] p-0" align="end" data-testid="notifications-panel">
         <div className="flex items-center justify-between p-3 border-b border-border">
-          <h4 className="font-semibold text-sm">
-            {t('notifications.title')}
-          </h4>
+          <h4 className="font-semibold text-sm">{t("notifications.title")}</h4>
           {unreadCount > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-7 text-xs gap-1"
-              onClick={() => markAllAsRead()}
-            >
+            <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" onClick={() => void markAllAsRead()} data-testid="notifications-mark-all">
               <Check className="w-3 h-3" />
-              {t('notifications.markAllRead')}
+              {t("notifications.markAllRead")}
             </Button>
           )}
         </div>
 
-        <ScrollArea className="h-[360px]">
-          {isLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
-            </div>
-          ) : notifications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8 px-4 text-center">
-              <Bell className="w-10 h-10 text-muted-foreground/50 mb-2" />
-              <p className="text-sm text-muted-foreground">
-                {t('notifications.empty')}
-              </p>
-            </div>
-          ) : (
-            <div className="p-2 space-y-1">
-              {notifications.map(notification => (
-                <NotificationItem
-                  key={notification.id}
-                  notification={notification}
-                  onClick={() => handleNotificationClick(notification)}
-                />
-              ))}
-            </div>
+        {/* Un élément défectueux n'emporte que la liste, pas la page. */}
+        <NotificationsBoundary
+          fallback={(retry) => (
+            <EtatErreur
+              onRetry={() => {
+                refetch();
+                retry();
+              }}
+            />
           )}
-        </ScrollArea>
-        
-        {/* View All Link */}
+        >
+          {/* Défilement vertical seul : le texte se coupe au lieu d'élargir le panneau. */}
+          <div className="max-h-[360px] min-h-[120px] overflow-y-auto overflow-x-hidden">
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center gap-2 py-8 text-sm text-muted-foreground" role="status">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                {t("notifications.loading")}
+              </div>
+            ) : isError ? (
+              <EtatErreur onRetry={refetch} />
+            ) : notifications.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-8 px-4 text-center" data-testid="notifications-empty">
+                <Bell className="w-10 h-10 text-muted-foreground/50 mb-2" />
+                <p className="text-sm text-muted-foreground">{t("notifications.empty")}</p>
+              </div>
+            ) : (
+              <div className="p-2 space-y-1">
+                {notifications.map((notification) => (
+                  <NotificationItem
+                    key={notification.id}
+                    notification={notification}
+                    onClick={() => ouvrir(notification)}
+                    onArchive={() => void archive(notification.id)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </NotificationsBoundary>
+
         <div className="p-2 border-t">
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             className="w-full text-xs"
-            onClick={handleViewAll}
+            onClick={() => {
+              setOpen(false);
+              navigate("/dashboard/notifications");
+            }}
           >
-            {t('notifications.viewAll', 'Voir toutes les notifications')}
+            {t("notifications.viewAll")}
           </Button>
         </div>
       </PopoverContent>
     </Popover>
   );
 };
+
+function EtatErreur({ onRetry }: { onRetry: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-col items-center justify-center gap-3 py-8 px-4 text-center" role="alert" data-testid="notifications-error">
+      <AlertTriangle className="w-8 h-8 text-amber-500" />
+      <p className="text-sm text-muted-foreground">{t("notifications.error")}</p>
+      <Button variant="outline" size="sm" onClick={onRetry}>
+        {t("notifications.retry")}
+      </Button>
+    </div>
+  );
+}

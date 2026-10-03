@@ -25,7 +25,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import LanguageSelector from "@/components/LanguageSelector";
-import { NotificationsDropdown } from "@/components/notifications";
+import { NotificationsBoundary, NotificationsDropdown } from "@/components/notifications";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -264,7 +264,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             
             <LanguageSelector />
             
-            <NotificationsDropdown />
+            <NotificationsBoundary>
+              <NotificationsDropdown />
+            </NotificationsBoundary>
             
             <div className="flex items-center gap-3 pl-4 border-l border-border">
               <Avatar className="w-8 h-8">

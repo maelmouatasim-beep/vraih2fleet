@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, HashRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import { NotificationsProvider } from "@/hooks/useNotifications";
 import ScrollToTop from "@/components/ScrollToTop";
 import { PUBLIC_API_ENABLED } from "@/lib/constants";
 import { SubscriptionProvider } from "@/hooks/useSubscription";
@@ -56,6 +57,7 @@ const App = () => (
       <AuthProvider>
         <AuthRedirectHandler />
         <SubscriptionProvider>
+        <NotificationsProvider>
           <TooltipProvider delayDuration={0}>
           <Toaster />
           <Sonner />
@@ -177,6 +179,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           </TooltipProvider>
+        </NotificationsProvider>
         </SubscriptionProvider>
       </AuthProvider>
     </Router>

@@ -9,7 +9,7 @@ import { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, FolderKanban, Leaf, Plus, Route, Truck } from "lucide-react";
+import { ArrowRight, Bell, FolderKanban, Leaf, Plus, Route, Truck } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -20,6 +20,7 @@ import PlanHealthCard from "@/components/dashboard/PlanHealthCard";
 import ReceivedInvitationsCard from "@/components/organization/ReceivedInvitationsCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useNotifications } from "@/hooks/useNotifications";
 import { useOrganization } from "@/hooks/useOrganization";
 import { useVehicles } from "@/hooks/useVehicles";
 import { listProjects } from "@/lib/supabase/projects";
@@ -34,6 +35,7 @@ const COULEURS_CARBURANT: Record<string, string> = {
 
 const Dashboard = () => {
   const { t, i18n } = useTranslation();
+  const { unreadCount, isLoading: notificationsLoading } = useNotifications();
   const { user } = useAuth();
   const { organization, isLoading: orgLoading } = useOrganization();
   const { vehicles, isLoading: fleetLoading } = useVehicles(organization?.id);
@@ -172,7 +174,15 @@ const Dashboard = () => {
                 : t("pages.dashboard.subtitle")}
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
+            {!notificationsLoading && (
+            <Button variant="ghost" asChild>
+              <Link to="/dashboard/notifications" data-testid="home-unread" data-count={unreadCount}>
+                <Bell className="w-4 h-4 mr-2" />
+                {unreadCount > 0 ? t("notifications.homeUnread", { count: unreadCount }) : t("notifications.homeNone")}
+              </Link>
+            </Button>
+            )}
             <Button variant="outline" asChild>
               <Link to="/dashboard/fleet">
                 <Truck className="w-4 h-4 mr-2" />

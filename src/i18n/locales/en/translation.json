@@ -2181,14 +2181,18 @@
         "adminOnly": "Only an organization admin can change the currency and region."
       },
       "notifications": {
-        "title": "Notifications",
-        "subtitle": "Manage your notification preferences",
-        "emailReports": "Email reports",
-        "emailReportsDesc": "Receive TCO reports by email",
-        "projectUpdates": "Project updates",
-        "projectUpdatesDesc": "Notifications of project changes",
-        "weeklyDigest": "Weekly digest",
-        "weeklyDigestDesc": "Receive an activity summary each week",
+        "title": "In-app notifications",
+        "subtitle": "Choose what appears in the bell. A disabled category is no longer created for you.",
+        "comments": "Comments and replies",
+        "commentsDesc": "When someone comments on a project you belong to or replies to your comment",
+        "tasks": "Tasks and milestones",
+        "tasksDesc": "Assigned tasks, mentions, milestones and generated plan tasks",
+        "team": "Team and invitations",
+        "teamDesc": "Added to a project, invitation accepted, role change",
+        "plan_alerts": "Plan alerts",
+        "plan_alertsDesc": "Subsidy deadlines, changed programs, late replacements, energy, garages",
+        "versions": "Project versions",
+        "versionsDesc": "When a new version of a project is saved",
         "preferencesSaved": "Notification preferences saved"
       },
       "appearance": {
@@ -2217,7 +2221,8 @@
         "weeklyDigest": "Weekly digest",
         "weeklyDigestDesc": "A summary of your projects’ activity every Monday",
         "planAlerts": "Plan monitoring alerts",
-        "planAlertsDesc": "Summary of new alerts on your projects (energy, subsidies, delays, garages) — sent once the email service is connected"
+        "planAlertsDesc": "Summary of new alerts on your projects (energy, subsidies, delays, garages) — sent once the email service is connected",
+        "notActive": "Email sending is not enabled on this site yet: your choices are saved and will apply as soon as it is enabled."
       }
     },
     "blog": {
@@ -3419,24 +3424,100 @@
   },
   "notifications": {
     "title": "Notifications",
-    "markAllRead": "Mark all read",
+    "bell": "Notifications",
+    "bellUnread": "Notifications ({{count}} unread)",
+    "markAllRead": "Mark all as read",
+    "markRead": "Mark as read",
+    "archive": "Archive",
+    "archived": "Notification archived",
     "empty": "No notifications",
-    "types": {
-      "comment": "Comment",
-      "reply": "Reply",
-      "invitation": "Invitation",
-      "version": "Version",
-      "role_change": "Role change"
-    },
+    "emptyDesc": "You don't have any notifications yet",
+    "emptyFilterDesc": "No notifications of this type",
     "viewAll": "View all notifications",
     "today": "Today",
     "yesterday": "Yesterday",
     "thisWeek": "This week",
     "older": "Older",
     "unreadCount": "{{count}} unread",
-    "allRead": "All caught up",
-    "emptyDesc": "You have no notifications yet",
-    "emptyFilterDesc": "No notification of this type"
+    "allRead": "You're all caught up",
+    "loading": "Loading notifications…",
+    "error": "Unable to load notifications. Check your connection.",
+    "retry": "Retry",
+    "unavailable": "Notifications temporarily unavailable — click to retry",
+    "homeUnread": "{{count}} unread notification(s)",
+    "homeNone": "No unread notifications",
+    "filters": {
+      "all": "All",
+      "unread": "Unread",
+      "comments": "Comments",
+      "tasks": "Tasks",
+      "team": "Team",
+      "plan_alerts": "Plan alerts",
+      "versions": "Versions"
+    },
+    "fallback": {
+      "title": "Notification",
+      "actor": "A team member",
+      "project": "a project",
+      "subject": "untitled",
+      "role": "member"
+    },
+    "roles": {
+      "owner": "owner",
+      "editor": "editor",
+      "viewer": "viewer"
+    },
+    "kinds": {
+      "comment": {
+        "title": "New comment",
+        "message": "{{actor}} commented on the project “{{project}}”."
+      },
+      "reply": {
+        "title": "Reply to your comment",
+        "message": "{{actor}} replied to your comment on “{{project}}”."
+      },
+      "invitation": {
+        "title": "Added to a project",
+        "message": "{{actor}} added you to the project “{{project}}” as {{role}}."
+      },
+      "version": {
+        "title": "New version saved",
+        "message": "{{actor}} saved the version “{{subject}}” of the project “{{project}}”."
+      },
+      "role_change": {
+        "title": "Role changed",
+        "message": "Your role changed in “{{project}}”."
+      },
+      "task_assigned": {
+        "title": "New task assigned",
+        "message": "You are assigned to the task “{{subject}}” in the project “{{project}}”."
+      },
+      "task_mentioned": {
+        "title": "You were mentioned",
+        "message": "{{actor}} mentioned you in the task “{{subject}}” of the project “{{project}}”."
+      },
+      "milestone_assigned": {
+        "title": "New milestone assigned",
+        "message": "You are assigned to the milestone “{{subject}}” in the project “{{project}}”."
+      },
+      "collaboration_accepted": {
+        "title": "Invitation accepted",
+        "message": "You joined the project “{{project}}”."
+      },
+      "subsidy": {
+        "title": "Subsidy",
+        "message": "Subsidy information concerns the project “{{project}}”."
+      },
+      "tasks_generated": {
+        "title": "Plan tasks generated",
+        "message": "{{actor}} generated {{count}} plan task(s) for “{{project}}”.",
+        "messageSelf": "You generated {{count}} plan task(s) for “{{project}}”."
+      },
+      "plan_alert": {
+        "title": "Plan alert",
+        "message": "A monitoring alert concerns the project “{{project}}”."
+      }
+    }
   },
   "helpTraining": {
     "title": "Help and method",
