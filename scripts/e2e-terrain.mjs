@@ -136,11 +136,18 @@ try {
   // Import des 12 véhicules
   const fichier = join(SORTIE, "flotte-terrain.csv");
   writeFileSync(fichier, FLOTTE_TERRAIN);
+  // Questionnaire de profil (facultatif) : s'ouvre quand la lecture du
+  // profil revient — plusieurs secondes après sur un runner lent — et masque
+  // alors le reste de la page (aria-hidden). On attend cette lecture, puis
+  // on le ferme s'il est ouvert, avant de cliquer sur l'import.
+  const profilLu = page
+    .waitForResponse((r) => r.url().includes("/rest/v1/profiles") && r.url().includes("company"), { timeout: 30000 })
+    .catch(() => null);
   await page.goto(url("/dashboard/fleet"));
-  // Questionnaire de profil (facultatif) : peut s'ouvrir quelques secondes
-  // après l'inscription — fermé avant d'importer.
+  await profilLu;
+  await page.waitForTimeout(500);
   const plusTard = page.getByRole("button", { name: "Plus tard" });
-  await plusTard.waitFor({ timeout: 6000 }).then(() => plusTard.click(), () => {});
+  if (await plusTard.isVisible().catch(() => false)) await plusTard.click();
   await page.getByRole("button", { name: /Importer CSV/ }).click();
   await page.setInputFiles('input[type="file"]', fichier);
   // Premier import : le serveur de dev compile à froid la lecture Excel/CSV.
