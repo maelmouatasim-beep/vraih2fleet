@@ -115,6 +115,16 @@ const CHROMIUM_LOCAL = "/opt/pw-browsers/chromium";
 const navigateur = await chromium.launch({ executablePath: process.env.CHROMIUM || (existsSync(CHROMIUM_LOCAL) ? CHROMIUM_LOCAL : undefined) });
 const contexte = await navigateur.newContext({ locale: "fr-CA", acceptDownloads: true, viewport: { width: 1360, height: 900 } });
 await contexte.route(/\.supabase\.(co|in)\//, (r) => r.abort());
+// Questionnaire de profil (facultatif, couvert par ses propres tests) : marqué
+// « plus tard » d'avance. Sinon, sur un runner lent, il s'ouvre après coup et
+// masque la page (aria-hidden) au moment de cliquer sur l'import.
+await contexte.addInitScript(() => {
+  try {
+    localStorage.setItem("h2fleet-profile-onboarding-skipped", "true");
+  } catch {
+    /* stockage indisponible : la fermeture par « Plus tard » ci-dessous prend le relais */
+  }
+});
 const page = await contexte.newPage();
 const erreurs = [];
 page.on("response", (r) => {
