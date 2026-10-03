@@ -139,7 +139,7 @@ export async function construireNoteDocx(o: {
           new TableCell({
             shading: { type: ShadingType.CLEAR, color: "auto", fill: "F4F6F9" },
             borders: { ...bordures, bottom: bordures.top, left: { style: BorderStyle.SINGLE, size: 24, color: ENCRE } },
-            margins: { top: 120, bottom: 120, left: 200, right: 200 },
+            margins: { top: 110, bottom: 110, left: 200, right: 200 },
             children: [p(en ? "RECOMMENDATION" : "RECOMMANDATION", { gras: true, taille: 15, couleur: ENCRE, apres: 60 }), ...texte(o.sections.recommandation)],
           }),
         ],
@@ -174,7 +174,7 @@ export async function construireNoteDocx(o: {
     ),
     p("", { apres: 160 }),
     recommandation,
-    p("", { apres: 120 }),
+    p("", { apres: 110 }),
     ...section(en ? "1 · Context" : "1 · Contexte", o.sections.contexte),
     ...section(en ? "2 · Costs and benefits" : "2 · Coûts et bénéfices", o.sections.couts),
     ...piece(

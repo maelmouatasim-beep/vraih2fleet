@@ -225,13 +225,14 @@ export function Piece({
   );
 }
 
-export function Tuiles({ tuiles }: { tuiles: { libelle: string; valeur: string; negatif?: boolean }[] }) {
+export function Tuiles({ tuiles }: { tuiles: { libelle: string; valeur: string; negatif?: boolean; note?: string }[] }) {
   return (
     <View style={styles.tuiles} wrap={false}>
       {tuiles.map((t, i) => (
         <View key={i} style={styles.tuile}>
           <Text style={styles.tuileLibelle}>{t.libelle}</Text>
           <Text style={[styles.tuileValeur, t.negatif ? { color: COULEURS.negatif } : {}]}>{t.valeur}</Text>
+          {t.note ? <Text style={[styles.note, { marginTop: 1 }]}>{t.note}</Text> : null}
         </View>
       ))}
     </View>

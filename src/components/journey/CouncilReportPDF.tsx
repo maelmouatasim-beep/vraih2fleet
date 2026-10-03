@@ -12,7 +12,7 @@ import { ENGINE_VERSION, LISTE_HYPOTHESES, type ResultatPlan } from "@/lib/tco";
 import type { ResultatSensibilite } from "@/lib/tco";
 import { libelleStrategieRetenue, type StrategieConstruite } from "@/lib/journey/strategies";
 import { lignePiece, valeursPiece, type MetaRapport } from "@/lib/journey/report";
-import { texteRecuperation } from "@/lib/journey/payback";
+import { raisonJamais, texteRecuperation } from "@/lib/journey/payback";
 import {
   descriptionHypothese,
   traduireAvertissement,
@@ -136,7 +136,13 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
           tuiles={[
             { libelle: en ? "Savings vs status quo (NPV)" : "Économie vs statu quo (VAN)", valeur: cad(van), negatif: van < 0 },
             { libelle: en ? "CO2e avoided (full cycle)" : "CO2e évité (cycle complet)", valeur: `${nb(resultat.co2EviteWtwTonnes)} t` },
-            { libelle: en ? "Discounted payback" : "Récupération actualisée", valeur: texteRecuperation(resultat.paybackActualise, resultat.horizonAns, en) },
+            resultat.paybackActualise.annees != null
+              ? { libelle: en ? "Discounted payback" : "Récupération actualisée", valeur: texteRecuperation(resultat.paybackActualise, resultat.horizonAns, en) }
+              : {
+                  libelle: en ? "Discounted payback" : "Récupération actualisée",
+                  valeur: en ? "Never" : "Jamais",
+                  note: raisonJamais(resultat.paybackActualise, resultat.horizonAns, en),
+                },
             { libelle: en ? "Stress-test risk" : "Risque (stress test)", valeur: libRisque },
           ]}
         />

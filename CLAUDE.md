@@ -63,8 +63,10 @@ hydrogène : TCO, infrastructure, subventions canadiennes, télématique
   `ai.ts` (client Anthropic, réglages par organisation, quotas, débit,
   usage en jetons), `numberCheck.ts` (chaque nombre d'un texte généré
   vérifié contre les sorties du moteur), `copilotTools.ts`,
-  `importSchema.ts` (identique à `src/lib/fleet`, testé). Fonctions IA :
-  `copilot`, `fleet-import`.
+  `importSchema.ts` (identique à `src/lib/fleet`, testé),
+  `documentSchema.ts`, `councilNote.ts` (règles de la note au conseil).
+  Fonctions IA : `copilot`, `fleet-import`, `document-reader`,
+  `council-note` ; tâche planifiée `plan-alerts-digest`.
 - `scripts/mock-anthropic.mjs` — FAUX serveur de l'API Claude (réponses
   scriptées) pour l'e2e ; aucune vraie clé en CI.
 - `supabase/tests/` — tests d'intégration contre Supabase local
@@ -357,8 +359,8 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   (VITE_ADMIN_EMAILS retiré), README à jour.
   Reste pour la fin : tarification (Pricing.tsx démonté, clés
   `landing.pricing` et badges d'abonnement, DEMO_MODE).
-- **Phase 5 — H2Fleet intelligent : points 1 à 3 LIVRÉS, en attente du
-  « ok » avant les points 4 à 7.** Règles : l'IA ne produit JAMAIS un
+- **Phase 5 — H2Fleet intelligent : points 1 à 7 LIVRÉS + démonstration
+  finale, en attente du « ok ».** Règles : l'IA ne produit JAMAIS un
   chiffre (moteur via outils, nombres vérifiés, sinon réponse rejetée) ;
   toute action = aperçu avant → après + confirmation + journal
   (`plan_change_log`, immuable) ; API Claude d'Anthropic par fonction
@@ -383,8 +385,38 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   un texte collé à un nombre = erreur. Démo : export fictif
   « GestFlotte » ; e2e terrain : 13 étapes dont copilote et import
   (faux serveur Claude). Migrations 20261003010000, 20261003020000.
-  À venir après le « ok » : 4 factures/devis, 5 veille des subventions,
-  6 surveillance du plan, 7 note au conseil, puis démonstration finale.
+  5.4 factures et devis (`document-reader`, `src/lib/documents/`,
+  `client_documents` + stockage privé `client-documents`) : extraction
+  vérifiée (chaque nombre retrouvé dans le texte du PDF, total faux
+  signalé), valeurs DÉRIVÉES par le code (formule affichée), aperçu avant
+  → après, confirmation, couche 3 « donnée client » ; pièce immuable une
+  fois confirmée, citée aux rapports (SHA-256) ; méthodologie §12.
+  5.5 veille des subventions (`.github/workflows/veille-subventions.yml`,
+  `scripts/veille/`, `src/lib/veille/detection.ts`, aucune IA) : pages et
+  PDF officiels relus chaque lundi, texte archivé dans `data/veille/`,
+  changements de montant/date/statut déposés dans
+  `subsidy_watch_changes` (admins H2Fleet seulement), validés ou rejetés
+  dans Bibliothèque › Veille ; jamais appliqués au registre
+  automatiquement ; événements validés → alerte au Financement.
+  5.6 surveillance du plan (`src/lib/journey/surveillance.ts`, pur) :
+  prix de l'énergie ±5 % depuis le rapport (stress test relancé, effet du
+  prix isolé à plan égal, plan modifié signalé par l'empreinte), échéance
+  de programme retenu, remplacements en retard, programmes modifiés,
+  capacité de garage ; état dans `plan_alerts` (vue tracée) ; panneau
+  dans Suivi, carte « Santé du plan » sur l'Accueil ; résumé courriel
+  `plan-alerts-digest` (pg_cron, 503 tant que SendGrid absent) ;
+  méthodologie §13. 5.7 note au conseil (`src/lib/journey/councilNote.ts`,
+  `council-note`, `_shared/councilNote.ts`, `council_notes`) : faits du
+  moteur → rédaction IA à jetons `{{fait}}` (aucun chiffre écrit par
+  l'IA, brouillon rejeté sinon) ou modèle sans IA → édition (chaque nombre
+  vérifié, export bloqué sinon) → PDF (`CouncilNotePDF.tsx`) et Word
+  (`councilNoteDocx.ts`, bibliothèque docx) liés à un snapshot
+  (`note_pdf`/`note_docx`) ; méthodologie §14. Gabarit PDF « cabinet »
+  commun (`src/components/journey/pdf/theme.tsx`, titres d'action =
+  première phrase, pièces numérotées et sourcées) appliqué aussi au
+  rapport détaillé. Migrations 20261004010000 → 20261004040000
+  (additives). e2e terrain : 17 étapes (faux serveur Claude, veille
+  fictive `scripts/veille/fixtures/`).
 
 Rappels de méthode : chaque phase finit par `npm run check` vert → push →
 résumé court → **attendre le « ok » de l'utilisateur** ; kanban intégré à
@@ -415,8 +447,19 @@ sinon « à_valider » avec l'URL à consulter.
   de l'essence (reprise du diesel) ; prix de l'essence saisi au registre
   (la collecte hebdomadaire ne couvre que le diesel).
 - Services reportés sur le site de test : SendGrid (+ réactiver
-  « Confirm email »), Mapbox, clé IA, tâches pg_cron
-  (`supabase/snippets/taches-planifiees.sql`).
+  « Confirm email » ; débloque aussi le résumé des alertes
+  `plan-alerts-digest`), Mapbox, clé IA, tâches pg_cron
+  (`supabase/snippets/taches-planifiees.sql`, 4 tâches).
+- Veille des subventions : nommer au moins un administrateur H2Fleet
+  (`user_roles`) pour traiter la file ; la première lecture hebdomadaire
+  établit l'état initial ; un changement validé ne met PAS le registre à
+  jour (mise à jour dans `subsidy-programs.ts` après lecture de la
+  source).
+- Note au conseil : faire relire le modèle et la note IA par un
+  responsable municipal avant le premier dépôt ; les montants restent
+  ceux du moteur (hypothèses « à valider » listées en annexe).
+- Favicon de `index.html` encore hébergé sur le stockage de Lovable
+  (gpt-engineer-file-uploads) : à remplacer par un fichier du dépôt.
 - `get-mapbox-token` : CORS `*` et pas de vérification explicite de
   l'appelant (jeton public, risque faible) — à aligner sur `_shared/`.
 - Invitations d'équipe : aucun courriel envoyé automatiquement (la
