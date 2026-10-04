@@ -354,7 +354,7 @@ const Projects = () => {
                         <SelectContent>
                           {availableCurrencies.map((c) => (
                             <SelectItem key={c.value} value={c.value}>
-                              {c.label}
+                              {c.value === "CAD" ? t("common.currencyCad") : c.label}
                             </SelectItem>
                           ))}
                         </SelectContent>

@@ -223,7 +223,7 @@ Palier : federal — cible : vehicule — **statut : ferme** (✅ vérifié, le 
 Source : [Transports Canada — Page officielle : « Closed: Incentives for Medium- and Heavy-Duty Zero-Emission Vehicles »](https://tc.canada.ca/en/road-transportation/innovative-technologies/zero-emission-vehicles/medium-heavy-duty-zero-emission-vehicles)
 
 - camionnette, camion_moyen, camion_lourd, autobus_urbain_12m × BEV/FCEV : jusqu’à 200 000 $ — Jusqu’à 200 000 $ selon la catégorie, du temps du programme.
-- Cumul : N/A (fermé).
+- Cumul : Sans objet (programme fermé).
 - Année de versement par défaut : année d’acquisition (point de vente)
 - Notes : VÉRIFIÉ FERMÉ : « Status: Closed — The iMHZEV Program has ended » (page lue le 2026-09-28). NON COMPTÉ par défaut. Conservé au registre parce que l’ancien contenu du produit le présentait encore comme actif.
 

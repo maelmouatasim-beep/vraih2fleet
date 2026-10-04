@@ -17,6 +17,8 @@ import { texteRecuperation } from "./payback";
 import { texteExplication } from "./subsidy-explain";
 import type { AnalyseEquite, ScenarioReduction } from "./fmv";
 import { investissementCompare, LIBELLES_POSTES, POSTES_VAN } from "./synthese";
+import { formateurCad } from "@/lib/format";
+import { libelleUnite, valeurCelluleHypothese } from "./hypotheseAffichage";
 
 export type Cellule = string | number | null;
 
@@ -112,6 +114,24 @@ const CATEGORIES_EN: Record<string, string> = {
   autobus_urbain_12m: "12 m urban bus",
 };
 
+const TECHNOS: Record<Langue, Record<string, string>> = {
+  fr: { diesel: "Thermique neuf (statu quo)", BEV: "Électrique (batterie)", FCEV: "Hydrogène (pile à combustible)" },
+  en: { diesel: "New combustion (status quo)", BEV: "Battery electric", FCEV: "Hydrogen fuel cell" },
+};
+
+/** Technologie en clair (jamais le code brut « BEV » dans un export). */
+export function libelleTechnologie(techno: string, langue: Langue): string {
+  return TECHNOS[langue][techno] ?? techno;
+}
+
+/** Arrondi des nombres d'un export : 2 décimales (montants), 4 sous 100
+ *  (taux, prix unitaires) — aucun 5401606.875000001 dans un classeur. */
+export function arrondirCellule<T>(c: T): T {
+  if (typeof c !== "number" || !Number.isFinite(c) || Number.isInteger(c)) return c;
+  const d = Math.abs(c) >= 100 ? 100 : 10_000;
+  return (Math.round(c * d) / d) as T;
+}
+
 export function libelleCategorie(c: CategorieVehicule, langue: Langue): string {
   return langue === "en" ? CATEGORIES_EN[c] ?? c : DEFAUTS_CATEGORIES[c].libelle;
 }
@@ -164,7 +184,7 @@ export function feuilleFondsMunicipalVert(
           c.kmParAn,
           c.kmParAnType,
           `${Math.round(c.ratio * 100)} %`,
-          c.technologie,
+          libelleTechnologie(c.technologie, langue),
           Math.round(c.tcoEvite),
           Math.round(c.co2WtwEviteTonnes),
           c.aJugerParLeService ? t.aJuger : "",
@@ -388,14 +408,14 @@ export function construireClasseurPlan(
       const subventions = v.subventionsAlternative ?? [];
       return [
         unites.get(v.id) ?? v.id,
-        v.alternative.technologie,
+        libelleTechnologie(v.alternative.technologie, langue),
         meta.anneeReference + (v.anneeAcquisition ?? 0),
         v.kmParAn,
         v.dureeVieAns,
         v.reference.prixAvantTaxes,
         v.alternative.prixAvantTaxes,
         subventions
-          .map((s) => `${traduireLibelleSubvention(s.libelle, langue)} : ${s.montant} $ (${l.an} ${s.annee})`)
+          .map((s) => `${traduireLibelleSubvention(s.libelle, langue)}${langue === "en" ? ":" : "\u00a0:"} ${formateurCad(langue).format(s.montant)} (${l.an} ${s.annee})`)
           .join(" ; ") || "—",
         subventions.reduce((a, s) => a + s.montant, 0),
         (strategie.explicationsSubventions[v.id] ?? []).map((e) => texteExplication(e, langue)).join(" ; ") || "—",
@@ -446,8 +466,8 @@ export function construireClasseurPlan(
       descriptionHypothese(h.id, langue),
       // Le taux d'actualisation affiché est celui RÉELLEMENT utilisé
       // (paramètre du projet), pas le défaut du registre (revue A5).
-      h.id === "taux_actualisation_nominal" ? meta.tauxActualisationNominal : h.valeur,
-      h.unite,
+      valeurCelluleHypothese(h.id === "taux_actualisation_nominal" ? meta.tauxActualisationNominal : h.valeur, h.unite),
+      libelleUnite(h.unite, langue),
       h.id === "taux_actualisation_nominal"
         ? l.parametreProjet
         : (l.statuts[h.statut] ?? h.statut),
@@ -462,5 +482,5 @@ export function construireClasseurPlan(
     { nom: l.feuilles[1], lignes: vehicules },
     ...(meta.fmv ? [feuilleFondsMunicipalVert(meta.fmv, unites, langue)] : []),
     { nom: l.feuilles[2], lignes: hypotheses },
-  ];
+  ].map((f) => ({ ...f, lignes: f.lignes.map((ligne) => ligne.map(arrondirCellule)) }));
 }

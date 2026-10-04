@@ -174,8 +174,8 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
               })}
           {" · "}
           {t("journey.feasibility.co2Avoided", {
-            ttw: e.co2EviteTtwTonnes.toFixed(1),
-            wtw: e.co2EviteWtwTonnes.toFixed(1),
+            ttw: formateurNombre(i18n.language, 1).format(e.co2EviteTtwTonnes),
+            wtw: formateurNombre(i18n.language, 1).format(e.co2EviteWtwTonnes),
           })}
         </p>
         {e.subventions.length > 0 && (

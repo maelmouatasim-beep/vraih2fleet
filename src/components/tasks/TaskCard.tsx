@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { formateurCadCompact } from '@/lib/format';
 import { Task, TASK_PRIORITY_CONFIG } from '@/types/project-management';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -22,11 +23,8 @@ export function TaskCard({ task, onClick, isDragging }: TaskCardProps) {
     : 0;
   const dateLocale = getDateLocale(i18n.language);
 
-  const formatCurrency = (amount: number) => {
-    if (amount >= 1000000) return `${(amount / 1000000).toFixed(1)}M$`;
-    if (amount >= 1000) return `${(amount / 1000).toFixed(0)}K$`;
-    return `${amount}$`;
-  };
+  // Audit acheteur, point 10 : format de la langue (« 12 k$ », « 0 $ »).
+  const formatCurrency = (amount: number) => formateurCadCompact(i18n.language).format(amount);
 
   return (
     <Card

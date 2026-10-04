@@ -349,7 +349,7 @@
       "info": {
         "title": "Informations de contact",
         "email": {
-          "title": "Email"
+          "title": "Courriel"
         },
         "phone": {
           "title": "Téléphone"
@@ -370,7 +370,7 @@
         "subtitle": "Nous vous répondrons dès que possible.",
         "fields": {
           "name": "Nom complet",
-          "email": "Email professionnel",
+          "email": "Courriel professionnel",
           "company": "Entreprise",
           "fleetSize": "Taille de flotte",
           "subject": "Sujet",
@@ -926,7 +926,7 @@
     },
     "validation": {
       "nameRequired": "Le nom est requis",
-      "emailInvalid": "Email invalide",
+      "emailInvalid": "Courriel invalide",
       "companyRequired": "L'entreprise est requise",
       "fleetSizeRequired": "La taille de flotte est requise"
     }
@@ -963,7 +963,7 @@
       "loginRequired": "Vous devez être connecté pour créer un scénario",
       "errors": {
         "loginError": "Erreur de connexion",
-        "invalidCredentials": "Email ou mot de passe incorrect"
+        "invalidCredentials": "Courriel ou mot de passe incorrect"
       },
       "loginSuccess": "Connexion réussie",
       "welcomeBack": "Bienvenue sur H2Fleet !"
@@ -1514,7 +1514,7 @@
   },
   "auth": {
     "validation": {
-      "invalidEmail": "Email invalide",
+      "invalidEmail": "Courriel invalide",
       "passwordRequired": "Mot de passe requis",
       "nameMinLength": "Le nom doit contenir au moins 2 caractères",
       "selectFunction": "Veuillez sélectionner votre fonction",
@@ -1531,12 +1531,12 @@
       "passwordsMatch": "Les mots de passe correspondent"
     },
     "fields": {
-      "email": "Email",
+      "email": "Courriel",
       "password": "Mot de passe",
       "fullName": "Nom complet",
       "functionTitle": "Fonction / titre",
       "company": "Nom de l'organisation",
-      "professionalEmail": "Email professionnel",
+      "professionalEmail": "Courriel professionnel",
       "fleetSize": "Taille de la flotte",
       "fleetType": "Type de flotte",
       "multipleChoices": "(plusieurs choix possibles)",
@@ -1553,7 +1553,7 @@
       "vehicleCount": "Nombre de véhicules"
     },
     "errors": {
-      "emailInUse": "Cet email est déjà utilisé",
+      "emailInUse": "Ce courriel est déjà utilisé",
       "accountCreationError": "Une erreur est survenue lors de la création du compte",
       "loginError": "Erreur de connexion",
       "invalidCredentials": "Courriel ou mot de passe invalide",
@@ -1632,9 +1632,9 @@
     },
     "forgotPassword": {
       "title": "Mot de passe oublié ?",
-      "subtitle": "Entrez votre email pour recevoir un lien de réinitialisation",
-      "successTitle": "Email envoyé !",
-      "successMessage": "Si un compte existe avec l'adresse <strong>{{email}}</strong>, vous recevrez un email avec les instructions pour réinitialiser votre mot de passe.",
+      "subtitle": "Entrez votre courriel pour recevoir un lien de réinitialisation",
+      "successTitle": "Courriel envoyé !",
+      "successMessage": "Si un compte existe avec l'adresse <strong>{{email}}</strong>, vous recevrez un courriel avec les instructions pour réinitialiser votre mot de passe.",
       "backToLogin": "Retour à la connexion",
       "sending": "Envoi en cours...",
       "sendLink": "Envoyer le lien"
@@ -1648,7 +1648,7 @@
       "registerSubtitle": "Inscrivez-vous et créez votre organisation",
       "fullName": "Nom complet",
       "fullNamePlaceholder": "Jean Dupont",
-      "professionalEmail": "Email professionnel",
+      "professionalEmail": "Courriel professionnel",
       "emailPlaceholder": "votre@entreprise.com",
       "orgName": "Nom de l'organisation",
       "orgPlaceholder": "Transport SA",
@@ -2076,7 +2076,10 @@
     "never": "Jamais",
     "languageLabel": "Langue",
     "loadError": "Impossible de charger ces données. Vérifiez votre connexion.",
-    "retry": "Réessayer"
+    "retry": "Réessayer",
+    "currencyCad": "Dollar canadien (CAD)",
+    "toggleMenu": "Ouvrir ou fermer le menu",
+    "scrollToFeatures": "Aller aux fonctionnalités"
   },
   "pages": {
     "dashboard": {
@@ -2212,8 +2215,8 @@
         "title": "Profil utilisateur",
         "subtitle": "Informations de votre compte",
         "fullName": "Nom complet",
-        "email": "Email",
-        "emailNote": "L'email ne peut pas être modifié",
+        "email": "Courriel",
+        "emailNote": "Le courriel ne peut pas être modifié",
         "company": "Entreprise"
       },
       "password": {
@@ -2300,7 +2303,7 @@
     "subtitle": "Remplissez ce formulaire et notre équipe vous contactera rapidement pour planifier une démonstration personnalisée.",
     "fields": {
       "fullName": "Nom complet",
-      "email": "Email professionnel",
+      "email": "Courriel professionnel",
       "company": "Entreprise",
       "fleetSize": "Taille de flotte",
       "message": "Message (optionnel)"
@@ -2496,7 +2499,7 @@
     "serviceRegions": "Régions desservies",
     "contactInfo": "Coordonnées",
     "visitWebsite": "Visiter le site",
-    "sendEmail": "Envoyer un email",
+    "sendEmail": "Envoyer un courriel",
     "verified": "Vérifié",
     "favorites": {
       "title": "Mes favoris",
@@ -2538,14 +2541,14 @@
       "title": "Connecter un compte télématique",
       "description": "Importez les données de votre flotte directement depuis votre fournisseur télématique",
       "database": "Base de données",
-      "username": "Nom d'utilisateur (email)",
+      "username": "Nom d'utilisateur (courriel)",
       "password": "Mot de passe",
       "connect": "Connecter et importer la flotte",
       "testConnection": "Tester la connexion",
       "securityNote": "Vos identifiants sont chiffrés et stockés de manière sécurisée"
     },
     "samsara": {
-      "accountEmail": "Email du compte",
+      "accountEmail": "Courriel du compte",
       "apiToken": "Jeton API"
     },
     "syncNow": "Synchroniser",
@@ -5083,7 +5086,7 @@
       },
       "stress": {
         "title": "Stress test de la stratégie sélectionnée",
-        "subtitle": "Le moteur est relancé aux bornes sourcées de chaque hypothèse — jamais un ±20 % arbitraire.",
+        "subtitle": "Le moteur est relancé aux valeurs basse et haute sourcées de chaque hypothèse — jamais un ±20 % arbitraire.",
         "risk": {
           "faible": "Risque faible — gagnante même au scénario prudent",
           "moyen": "Risque moyen — gagnante au central, pas au prudent",
@@ -5094,8 +5097,8 @@
           "central": "Scénario central",
           "favorable": "Scénario favorable"
         },
-        "tcoCompare": "TCO stratégie {{alt}} vs statu quo {{ref}}",
-        "vanRange": "Économie (VAN) aux bornes de l'hypothèse",
+        "tcoCompare": "TCO stratégie {{alt}} vs statu quo {{ref}} (le statu quo est recalculé avec les mêmes hypothèses que le scénario)",
+        "vanRange": "Économie (VAN) aux valeurs basse et haute de l'hypothèse",
         "note": "Économie centrale : {{van}}. Chaque barre montre l'économie recalculée par le moteur quand l'hypothèse passe de sa borne basse à sa borne haute (plages du registre)."
       },
       "apply": {

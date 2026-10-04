@@ -325,5 +325,5 @@ export const availableRegions = [
 
 // Currencies (CAD only)
 export const availableCurrencies = [
-  { value: 'CAD', label: '$ Canadian Dollar' },
+  { value: 'CAD', label: 'CAD' },
 ];

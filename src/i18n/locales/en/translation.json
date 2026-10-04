@@ -2076,7 +2076,10 @@
     "never": "Never",
     "languageLabel": "Language",
     "loadError": "Unable to load this data. Check your connection.",
-    "retry": "Retry"
+    "retry": "Retry",
+    "currencyCad": "Canadian dollar (CAD)",
+    "toggleMenu": "Open or close the menu",
+    "scrollToFeatures": "Go to features"
   },
   "pages": {
     "dashboard": {
@@ -5094,7 +5097,7 @@
           "central": "Central scenario",
           "favorable": "Favorable scenario"
         },
-        "tcoCompare": "Strategy TCO {{alt}} vs status quo {{ref}}",
+        "tcoCompare": "Strategy TCO {{alt}} vs status quo {{ref}} (the status quo is recomputed with the same assumptions as the scenario)",
         "vanRange": "Savings (NPV) at the assumption's bounds",
         "note": "Central savings: {{van}}. Each bar shows the savings recomputed by the engine as the assumption moves from its low to its high bound (registry ranges)."
       },

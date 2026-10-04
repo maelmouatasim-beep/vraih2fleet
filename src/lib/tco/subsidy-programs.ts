@@ -265,7 +265,7 @@ export const PROGRAMMES: ProgrammeSubvention[] = [
         notes: 'Jusqu’à 200 000 $ selon la catégorie, du temps du programme.',
       },
     ],
-    cumul: 'N/A (fermé).',
+    cumul: 'Sans objet (programme fermé).',
     anneeVersementDefaut: 0,
     dateFin: '2026-03-31',
     source: {

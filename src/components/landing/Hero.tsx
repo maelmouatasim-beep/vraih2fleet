@@ -96,7 +96,7 @@ const Hero = () => {
         <button 
           onClick={scrollToFeatures}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-primary-foreground/60 hover:text-primary-foreground transition-colors cursor-pointer animate-bounce"
-          aria-label="Scroll to features"
+          aria-label={t("common.scrollToFeatures")}
         >
           <ChevronDown className="w-6 h-6" />
         </button>

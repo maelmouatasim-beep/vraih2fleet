@@ -86,7 +86,7 @@ export const PROGRAMMES_EN: Record<string, { nom: string; cumul: string }> = {
   },
   imhzev: {
     nom: "iMHZEV (federal) — medium and heavy vehicles",
-    cumul: "N/A (closed).",
+    cumul: "Not applicable (program closed).",
   },
   pivez: {
     nom: "ZEVIP (federal, NRCan) — charging infrastructure",

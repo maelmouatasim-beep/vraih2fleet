@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ENGINE_VERSION, LISTE_HYPOTHESES } from "@/lib/tco";
-import { construireClasseurPlan } from "../report";
+import { arrondirCellule, construireClasseurPlan } from "../report";
 import { construireStrategie, type VehiculeProjet } from "../strategies";
 
 const OPTIONS = {
@@ -53,7 +53,7 @@ describe("construireClasseurPlan", () => {
     const premiere = budget[6];
     expect(premiere[0]).toBe(2026);
     const vue = strategie.resultat!.vueBudgetaire;
-    expect(budget.slice(6, 6 + vue.length).map((l) => l[8])).toEqual(vue.map((l) => l.ecart));
+    expect(budget.slice(6, 6 + vue.length).map((l) => l[8])).toEqual(vue.map((l) => arrondirCellule(l.ecart)));
     // traçabilité : version du moteur et empreinte dans l'en-tête
     expect(String(budget[1][0])).toContain(ENGINE_VERSION);
     expect(String(budget[1][0])).toContain(strategie.resultat!.empreinteEntree);
@@ -63,7 +63,7 @@ describe("construireClasseurPlan", () => {
     const lignes = feuilles[1].lignes;
     const v1 = lignes[1];
     expect(v1[0]).toBe("U-101");
-    expect(v1[1]).toBe("BEV");
+    expect(v1[1]).toBe("Électrique (batterie)");
     expect(v1[2]).toBe(2028);
     expect(typeof v1[8]).toBe("number");
   });
@@ -78,7 +78,8 @@ describe("construireClasseurPlan", () => {
   it("l'annexe affiche le VRAI taux d'actualisation du projet, pas le défaut du registre (revue A5)", () => {
     const lignes = feuilles[2].lignes;
     const taux = lignes.find((l) => l[0] === "taux_actualisation_nominal")!;
-    expect(taux[2]).toBe(0.07);
+    expect(taux[2]).toBe(7); // en %, colonne unité « % » (audit, point 10)
+    expect(taux[3]).toBe("%");
     expect(taux[4]).toBe("paramètre du projet");
   });
 

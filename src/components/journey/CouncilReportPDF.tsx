@@ -14,6 +14,7 @@ import { libelleStrategieRetenue, type StrategieConstruite } from "@/lib/journey
 import { libelleCategorie, lignePiece, TEXTES_FMV, valeursPiece, type MetaRapport } from "@/lib/journey/report";
 import { investissementCompare, LIBELLES_POSTES, lignesDecomposition } from "@/lib/journey/synthese";
 import { raisonJamais, texteRecuperation } from "@/lib/journey/payback";
+import { formaterValeurHypothese, libelleUnite } from "@/lib/journey/hypotheseAffichage";
 import {
   descriptionHypothese,
   traduireAvertissement,
@@ -420,7 +421,7 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
                       TEXTES_FMV[langue].pistes,
                       ...meta.fmv.reduction.pistes.map(
                         (p) =>
-                          `- ${unites.get(p.id) ?? p.unit_number ?? p.id}${en ? ":" : "\u00a0:"} ${libelleCategorie(p.de, langue)} → ${libelleCategorie(p.vers, langue)} (${cad(p.economie)})`,
+                          `- ${unites.get(p.id) ?? p.unit_number ?? p.id}${en ? ":" : "\u00a0:"} ${libelleCategorie(p.de, langue)}${en ? " to " : " vers "}${libelleCategorie(p.vers, langue)} (${cad(p.economie)})`,
                       ),
                     ]
                   : []),
@@ -483,8 +484,8 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
           lignes={LISTE_HYPOTHESES.map((h) => [
             descriptionHypothese(h.id, langue),
             // Taux d'actualisation : la valeur RÉELLEMENT utilisée (paramètre du projet), pas le défaut du registre (A5).
-            String(h.id === "taux_actualisation_nominal" ? meta.tauxActualisationNominal : h.valeur),
-            h.unite,
+            formaterValeurHypothese(h.id === "taux_actualisation_nominal" ? meta.tauxActualisationNominal : h.valeur, h.unite, langue),
+            libelleUnite(h.unite, langue),
             h.id === "taux_actualisation_nominal" ? (en ? "project setting" : "paramètre du projet") : (statutsHyp[h.statut] ?? h.statut),
             `${h.source.organisme} (${h.source.annee})`,
             h.dateVerification,

@@ -17,7 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Navbar from "@/components/landing/Navbar";
 import Footer from "@/components/landing/Footer";
 import { calculerPlan, type PlanTcoEntree } from "@/lib/tco";
-import { formateurCad } from "@/lib/format";
+import { formateurCad, formateurNombre } from "@/lib/format";
 import { texteRecuperation } from "@/lib/journey/payback";
 import cas from "../../docs/tco-cas-de-reference.json";
 
@@ -99,8 +99,8 @@ export default function CaseStudies() {
                   </p>
                   <p>
                     {t("journey.strategies.metrics.co2", {
-                      ttw: e.r.co2EviteTtwTonnes.toFixed(0),
-                      wtw: e.r.co2EviteWtwTonnes.toFixed(0),
+                      ttw: formateurNombre(i18n.language).format(e.r.co2EviteTtwTonnes),
+                      wtw: formateurNombre(i18n.language).format(e.r.co2EviteWtwTonnes),
                     })}
                   </p>
                 </CardContent>

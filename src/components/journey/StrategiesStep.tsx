@@ -49,7 +49,7 @@ import { cleGarage } from "@/lib/journey/infrastructure";
 import { journaliser } from "@/lib/supabase/changeLog";
 import { useGarages } from "@/hooks/useGarages";
 import { OptimizedStrategyDetail, OptimizerConstraintsDialog, type GarageOptimiseur } from "./OptimizerPanel";
-import { formateurCad } from "@/lib/format";
+import { formateurCad, formateurNombre } from "@/lib/format";
 import {
   saveOptimizerConstraints,
   setOptimizedStrategy,
@@ -281,8 +281,8 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
           </p>
           <p>
             {t("journey.strategies.metrics.co2", {
-              ttw: r.co2EviteTtwTonnes.toFixed(0),
-              wtw: r.co2EviteWtwTonnes.toFixed(0),
+              ttw: formateurNombre(i18n.language).format(r.co2EviteTtwTonnes),
+              wtw: formateurNombre(i18n.language).format(r.co2EviteWtwTonnes),
             })}
           </p>
           <p>

@@ -219,7 +219,7 @@ const Navbar = () => {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2"
-              aria-label="Toggle menu"
+              aria-label={t("common.toggleMenu")}
               aria-expanded={isMobileMenuOpen}
             >
               {isMobileMenuOpen ? (
@@ -261,7 +261,7 @@ const Navbar = () => {
             <button
               onClick={() => setIsMobileMenuOpen(false)}
               className="p-2 hover:bg-muted rounded-lg transition-colors"
-              aria-label="Close menu"
+              aria-label={t("dashboard.header.closeMenu")}
             >
               <X className="w-5 h-5 text-foreground" />
             </button>
