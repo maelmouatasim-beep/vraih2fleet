@@ -106,6 +106,13 @@ describe("PDF du conseil lisible à toute taille de flotte", () => {
     expect(pages[2]).toBeGreaterThan(pages[1] + 4);
   }, 120000);
 
+  it("600 véhicules : le rapport se génère (pied de page positionné par le haut — re-audit)", async () => {
+    const { buffer } = await rapport(600);
+    const r = await chevauchements(buffer);
+    expect(r.pages).toBeGreaterThan(15);
+    expect(r.paires.slice(0, 5)).toEqual([]);
+  }, 180000);
+
   it("note au conseil (80 véhicules) : aucun texte superposé", async () => {
     const { strategie, sensibilite } = await rapport(80);
     const faits = faitsNote({

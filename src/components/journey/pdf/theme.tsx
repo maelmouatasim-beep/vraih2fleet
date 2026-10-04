@@ -79,8 +79,11 @@ export const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   piedPage: {
+    // Positionné par le HAUT (format Lettre, 792 pt) : `bottom` + numéro de
+    // page dynamique fait planter react-pdf au-delà d'une dizaine de pages
+    // (« unsupported number », re-audit : rapport à 500+ véhicules).
     position: "absolute",
-    bottom: 22,
+    top: 792 - 22 - 10,
     left: 54,
     right: 54,
     flexDirection: "row",
