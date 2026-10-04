@@ -140,7 +140,7 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
               ? { libelle: en ? "Discounted payback" : "Récupération actualisée", valeur: texteRecuperation(resultat.paybackActualise, resultat.horizonAns, en) }
               : {
                   libelle: en ? "Discounted payback" : "Récupération actualisée",
-                  valeur: en ? "Never" : "Jamais",
+                  valeur: resultat.paybackActualise.code === "aucun_ecart" ? "—" : en ? "Never" : "Jamais",
                   note: raisonJamais(resultat.paybackActualise, resultat.horizonAns, en),
                 },
             { libelle: en ? "Stress-test risk" : "Risque (stress test)", valeur: libRisque },

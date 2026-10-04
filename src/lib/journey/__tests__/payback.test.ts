@@ -12,4 +12,13 @@ describe("texteRecuperation (PDF, Excel)", () => {
       "never (annual savings are zero or negative)",
     );
   });
+
+  it("aucun écart (aucun véhicule retenu) : « — » avec la raison, jamais « 0 an »", () => {
+    expect(texteRecuperation({ annees: null, raison: "x", code: "aucun_ecart" }, 10)).toBe(
+      "— (aucun véhicule ne change de technologie : rien à récupérer)",
+    );
+    expect(texteRecuperation({ annees: null, raison: "x", code: "aucun_ecart" }, 10, true)).toBe(
+      "— (no vehicle changes technology: nothing to recover)",
+    );
+  });
 });

@@ -11,7 +11,7 @@
  * de recharge et/ou un site H2 par garage dans le moteur.
  */
 import { classePourSubventions } from "@/lib/fleet/gvwr";
-import { raisonAReporter } from "./categories";
+import { categorieMoteur, raisonAReporter } from "./categories";
 import {
   calculerPlan,
   parametresParDefaut,
@@ -28,13 +28,18 @@ import {
   type SubventionConfirmee,
 } from "@/lib/confirmedSubsidies";
 import {
+  BORNES,
+  calculerRaccordement,
   cleGarage,
+  PALIERS_RACCORDEMENT,
   planifierInfrastructure,
   sitesInfraMoteur,
+  TYPE_BORNE_PAR_CATEGORIE,
   type CaracteristiquesGarage,
   type PlanInfrastructure,
   type VehiculeInfra,
 } from "./infrastructure";
+import { marchesRaccordement, proposerSousEnsembles, type CandidatGarage } from "./selectionGarage";
 import {
   analyserDonneesVehicule,
   classeEmission,
@@ -63,6 +68,9 @@ export type OptionsStrategie = OptionsParametres & {
   programmes?: ProgrammeSubvention[];
 };
 
+/** Pourquoi un véhicule rentable seul n'est pas retenu dans son garage. */
+export type RaisonExclusion = "borne" | "raccordement";
+
 /** « Économies d'abord » : ce que la sélection a retenu, garage par garage. */
 export interface SelectionGarage {
   depot: string | null;
@@ -72,6 +80,19 @@ export interface SelectionGarage {
   retenus: number;
   /** VAN différentielle du garage avec sa propre infrastructure (0 si rien retenu). */
   vanAvecInfra: number;
+  /** Infrastructure du sous-ensemble retenu (null si rien retenu). */
+  infra: {
+    capexBornes: number;
+    kwDemandes: number;
+    kwDisponibles: number;
+    kwDisponiblesSource: "garage" | "presumee";
+    coutRaccordement: number;
+    palier: 0 | 1 | 2 | 3;
+  } | null;
+  /** Candidats écartés et raison : « borne » = la borne coûte plus que
+   *  l'économie du véhicule ; « raccordement » = ajouter ce véhicule ferait
+   *  monter le raccordement plus que ce qu'il rapporte. */
+  exclus: { id: string; unit_number?: string; raison: RaisonExclusion }[];
 }
 
 /** Les trois stratégies construites automatiquement. */
@@ -152,15 +173,24 @@ interface ResultatSelection {
 }
 
 /**
- * 1.3 — « Économies d'abord » : sélection PAR GARAGE, infrastructure
- * comprise AVANT de choisir. Pour chaque garage, les véhicules rentables
- * seuls (économie BEV > 0 sans infrastructure, moteur) sont triés par
- * économie décroissante ; on chiffre avec le moteur les k premiers AVEC
- * les bornes et le raccordement que ce sous-ensemble exige au garage
- * (planifierInfrastructure, source unique) et on retient le k de VAN
- * maximale, 0 si aucune n'est positive : un garage dont l'infrastructure
- * mange l'économie reste au diesel. Un devis de raccordement saisi au
- * niveau du projet est compté en entier pour chaque garage (prudent).
+ * 1.3 — « Économies d'abord » : MEILLEUR SOUS-ENSEMBLE PAR GARAGE,
+ * bornes et raccordement compris AVANT de choisir (méthodologie §11.1).
+ *
+ * 1. Candidats : véhicules rentables seuls (économie BEV > 0 sans
+ *    infrastructure, moteur) dont l'autonomie hivernale tient.
+ * 2. Valeur nette de chaque candidat = VAN du moteur pour ce véhicule SEUL
+ *    avec SA borne, sans raccordement (capacité du garage supposée
+ *    suffisante pour ce calcul seulement).
+ * 3. Pour chaque marche du raccordement (capacité existante, paliers 1 à
+ *    3, ou devis), le sous-ensemble de valeur nette maximale qui tient sous
+ *    son plafond de kW (sac à dos exact, ./selectionGarage.ts).
+ * 4. Chaque proposition est RE-CHIFFRÉE par le moteur avec l'infrastructure
+ *    réelle du garage (planifierInfrastructure, source unique), puis
+ *    améliorée véhicule par véhicule (ajout / retrait) tant que la VAN
+ *    monte. On retient la meilleure VAN si elle est positive, sinon le
+ *    garage reste au diesel.
+ * Un devis de raccordement saisi au niveau du projet est compté en entier
+ * pour chaque garage (prudent).
  */
 function selectionEconomiesDAbord(
   vehicules: VehiculeProjet[],
@@ -169,7 +199,7 @@ function selectionEconomiesDAbord(
   const enCache = cacheSelection.get(vehicules)?.get(options);
   if (enCache) return enCache;
 
-  const parGarage = new Map<string, { depot: string | null; liste: { v: VehiculeProjet; eco: number }[] }>();
+  const parGarage = new Map<string, { depot: string | null; liste: VehiculeProjet[] }>();
   for (const v of vehicules) {
     if (!analyserDonneesVehicule(v).defauts || !dansHorizon(v, options)) continue;
     const f = evaluerFaisabiliteVehicule(v, options);
@@ -177,29 +207,100 @@ function selectionEconomiesDAbord(
     const cle = cleGarage(v.depot ?? null);
     const entree = parGarage.get(cle) ?? { depot: v.depot?.trim() || null, liste: [] };
     // Autonomie hivernale insuffisante (bloc 2.4) : jamais candidat.
-    if (bev && bev.economieActualisee > 0 && f.hiver?.verdict !== "ne_tient_pas") {
-      entree.liste.push({ v, eco: bev.economieActualisee });
-    }
+    if (bev && bev.economieActualisee > 0 && f.hiver?.verdict !== "ne_tient_pas") entree.liste.push(v);
     parGarage.set(cle, entree);
   }
 
+  // Valeur nette « véhicule + sa borne » : chaque garage est supposé avoir
+  // la puissance nécessaire et aucun devis de raccordement n'est compté.
+  const garagesSansRaccordement = new Map<string, CaracteristiquesGarage>();
+  for (const cle of parGarage.keys()) {
+    garagesSansRaccordement.set(cle, {
+      ...options.garages?.get(cle),
+      puissanceDisponibleKw: Number.POSITIVE_INFINITY,
+      devisRaccordement: null,
+    });
+  }
+  const optionsSansRaccordement: OptionsStrategie = {
+    ...options,
+    garages: garagesSansRaccordement,
+    surchargesEnergie: options.surchargesEnergie
+      ? { ...options.surchargesEnergie, devisRaccordement: undefined }
+      : undefined,
+  };
+  const devisProjet = options.surchargesEnergie?.devisRaccordement ?? null;
+
   const ids = new Set<string>();
   const detail: SelectionGarage[] = [];
-  for (const { depot, liste } of parGarage.values()) {
-    liste.sort((a, b) => b.eco - a.eco);
-    let meilleurK = 0;
+  for (const [cleG, { depot, liste }] of parGarage) {
+    const parId = new Map(liste.map((v) => [v.id, v]));
+    const vanDe = (sousEnsemble: string[]) => {
+      if (sousEnsemble.length === 0) return { van: 0, strategie: null as StrategieConstruite | null };
+      const vs = sousEnsemble.map((id) => parId.get(id)!);
+      const r = chiffrer(vs, "economies_d_abord", options, new Set(sousEnsemble));
+      return { van: r.resultat?.vanDifferentielle ?? 0, strategie: r };
+    };
+
+    const candidats: CandidatGarage[] = liste.map((v) => {
+      const seul = chiffrer([v], "economies_d_abord", optionsSansRaccordement, new Set([v.id]));
+      const type = TYPE_BORNE_PAR_CATEGORIE[categorieMoteur(v.category) ?? v.category];
+      return { id: v.id, kw: type ? BORNES[type].puissanceMaxKw : 0, net: seul.resultat?.vanDifferentielle ?? 0 };
+    });
+    const garage = options.garages?.get(cleG);
+    const kwDisponibles = calculerRaccordement(0, garage).kwDisponibles;
+    const devis = garage?.devisRaccordement ?? devisProjet;
+    const propositions = proposerSousEnsembles(candidats, marchesRaccordement(kwDisponibles, PALIERS_RACCORDEMENT, devis));
+
+    // Re-chiffrage exact des propositions, puis amélioration locale.
+    let meilleur: string[] = [];
     let meilleureVan = 0;
-    for (let k = 1; k <= liste.length; k++) {
-      const sousEnsemble = liste.slice(0, k).map((x) => x.v);
-      const r = chiffrer(sousEnsemble, "economies_d_abord", options, new Set(sousEnsemble.map((v) => v.id)));
-      const van = r.resultat?.vanDifferentielle ?? 0;
+    for (const p of propositions) {
+      const { van } = vanDe(p.ids);
       if (van > meilleureVan + 1e-6) {
         meilleureVan = van;
-        meilleurK = k;
+        meilleur = p.ids;
       }
     }
-    for (const x of liste.slice(0, meilleurK)) ids.add(x.v.id);
-    detail.push({ depot, candidats: liste.length, retenus: meilleurK, vanAvecInfra: meilleureVan });
+    const utiles = candidats.filter((c) => c.net > 0).map((c) => c.id);
+    for (let tour = 0; tour < utiles.length; tour++) {
+      let coup: { ensemble: string[]; van: number } | null = null;
+      for (const id of utiles) {
+        const ensemble = meilleur.includes(id) ? meilleur.filter((x) => x !== id) : [...meilleur, id];
+        const { van } = vanDe(ensemble);
+        if (van > (coup?.van ?? meilleureVan) + 1e-6) coup = { ensemble, van };
+      }
+      if (!coup) break;
+      meilleur = coup.ensemble;
+      meilleureVan = coup.van;
+    }
+    if (meilleureVan <= 1e-6) meilleur = [];
+
+    const retenus = new Set(meilleur);
+    for (const id of retenus) ids.add(id);
+    const infraRetenue = meilleur.length > 0 ? vanDe(meilleur).strategie?.infra.garages[0] : undefined;
+    detail.push({
+      depot,
+      candidats: liste.length,
+      retenus: retenus.size,
+      vanAvecInfra: retenus.size > 0 ? meilleureVan : 0,
+      infra: infraRetenue
+        ? {
+            capexBornes: infraRetenue.capexBornes,
+            kwDemandes: infraRetenue.raccordement.kwDemandes,
+            kwDisponibles: infraRetenue.raccordement.kwDisponibles,
+            kwDisponiblesSource: infraRetenue.raccordement.kwDisponiblesSource,
+            coutRaccordement: infraRetenue.raccordement.cout,
+            palier: infraRetenue.raccordement.palier,
+          }
+        : null,
+      exclus: candidats
+        .filter((c) => !retenus.has(c.id))
+        .map((c) => ({
+          id: c.id,
+          unit_number: parId.get(c.id)?.unit_number,
+          raison: c.net > 0 ? ("raccordement" as const) : ("borne" as const),
+        })),
+    });
   }
   detail.sort((a, b) => (a.depot ?? "\uffff").localeCompare(b.depot ?? "\uffff", "fr"));
 

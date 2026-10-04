@@ -38,15 +38,20 @@
 import { z } from "zod";
 import { calculerPlan, parametresParDefaut, type PlanTcoEntree, type VehiculePlan } from "@/lib/tco";
 import { PROGRAMMES, type ProgrammeSubvention } from "@/lib/tco/subsidy-programs";
-import { raisonAReporter } from "./categories";
+import { categorieMoteur, raisonAReporter } from "./categories";
 import { analyserDonneesVehicule, evaluerFaisabiliteVehicule } from "./feasibility";
 import {
+  BORNES,
+  calculerRaccordement,
   cleGarage,
+  PALIERS_RACCORDEMENT,
   planifierInfrastructure,
   sitesInfraMoteur,
+  TYPE_BORNE_PAR_CATEGORIE,
   type InfraGarage,
   type VehiculeInfra,
 } from "./infrastructure";
+import { marchesRaccordement, proposerSousEnsembles } from "./selectionGarage";
 import {
   chiffrerChoix,
   construireStrategie,
@@ -713,9 +718,26 @@ function rechercheLocale(ctx: Contexte, depart: number[], nbProjet: number): Eta
         parGarage.set(vo.garage, l);
       }
     }
-    for (const l of parGarage.values()) {
+    for (const [cleG, l] of parGarage) {
       l.sort((a, b) => b.gain - a.gain || a.i - b.i);
       for (let k = 2; k <= l.length; k++) essayer(l.slice(0, k).map((x) => [x.i, x.j]));
+      // 3) Meilleur sous-ensemble du garage par marche de raccordement
+      //    (même recherche que « Économies d'abord », ./selectionGarage.ts) :
+      //    gain du véhicule moins sa borne, sac à dos sur les kW.
+      if (ctx.contraintes.objectif === "co2") continue;
+      const garage = ctx.options.garages?.get(cleG);
+      const bev = l.filter((x) => ctx.vehicules[x.i].options[x.j].techno === "BEV");
+      const candidats = bev.map((x) => {
+        const type = TYPE_BORNE_PAR_CATEGORIE[categorieMoteur(ctx.vehicules[x.i].v.category) ?? ctx.vehicules[x.i].v.category];
+        const borne = type ? garage?.coutBorneDevis?.[type] ?? BORNES[type].capex : 0;
+        return { id: String(x.i), kw: type ? BORNES[type].puissanceMaxKw : 0, net: x.gain - borne };
+      });
+      const devis = garage?.devisRaccordement ?? ctx.options.surchargesEnergie?.devisRaccordement ?? null;
+      const marches = marchesRaccordement(calculerRaccordement(0, garage).kwDisponibles, PALIERS_RACCORDEMENT, devis);
+      const parI = new Map(bev.map((x) => [String(x.i), x]));
+      for (const p of proposerSousEnsembles(candidats, marches)) {
+        if (p.ids.length >= 2) essayer(p.ids.map((id) => [parI.get(id)!.i, parI.get(id)!.j]));
+      }
     }
     if (!meilleurCoup) break;
     const coup = meilleurCoup as { changes: [number, number][]; score: Score };

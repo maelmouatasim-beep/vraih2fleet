@@ -264,3 +264,18 @@ describe("optimiseur : textes et journal", () => {
     ]);
   });
 });
+
+describe("optimiseur — meilleur sous-ensemble par garage (même recherche qu'« Économies d'abord »)", () => {
+  it("un camion très rentable seul mais gourmand en kW n'empêche pas d'électrifier les camionnettes", () => {
+    const flotte = [
+      vehicule({ id: "lourd", category: "camion_lourd", annual_km: 40000, consumption_per_100km: 40, depot: "G" }),
+      ...["a", "b", "c"].map((id) => vehicule({ id, annual_km: 20000, depot: "G" })),
+    ];
+    const r = optimiserCalendrier({ vehicules: flotte, options: OPTIONS, contraintes: { objectif: "economies" } });
+    const eco = construireStrategies(flotte, OPTIONS).find((s) => s.cle === "economies_d_abord")!;
+    expect(eco.nbZeroEmission).toBeGreaterThan(0);
+    expect(r.strategie!.resultat!.vanDifferentielle).toBeGreaterThanOrEqual(eco.resultat!.vanDifferentielle - 0.01);
+    expect(r.strategie!.resultat!.vanDifferentielle).toBeGreaterThan(0);
+  });
+});
+

@@ -8,20 +8,24 @@ import type { Payback } from "@/lib/tco";
 const RAISONS = {
   fr: {
     economies_negatives: "les économies annuelles sont nulles ou négatives",
+    aucun_ecart: "aucun véhicule ne change de technologie : rien à récupérer",
     surcout_non_resorbe: (h: number) => `le surcoût n'est pas résorbé sur l'horizon de ${h} ans`,
   },
   en: {
     economies_negatives: "annual savings are zero or negative",
+    aucun_ecart: "no vehicle changes technology: nothing to recover",
     surcout_non_resorbe: (h: number) => `the extra cost is not recovered within the ${h}-year horizon`,
   },
 };
 
 export function raisonJamais(p: Payback, horizonAns: number, en = false): string {
   const r = en ? RAISONS.en : RAISONS.fr;
+  if (p.code === "aucun_ecart") return r.aucun_ecart;
   return p.code === "economies_negatives" ? r.economies_negatives : r.surcout_non_resorbe(horizonAns);
 }
 
 export function texteRecuperation(p: Payback, horizonAns: number, en = false): string {
   if (p.annees != null) return en ? `${p.annees} yrs` : `${p.annees} ans`;
+  if (p.code === "aucun_ecart") return `— (${raisonJamais(p, horizonAns, en)})`;
   return `${en ? "never" : "jamais"} (${raisonJamais(p, horizonAns, en)})`;
 }

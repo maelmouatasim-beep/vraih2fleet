@@ -219,3 +219,21 @@ describe('référence essence (revue 1.8)', () => {
     expect(() => calculerPlan({ ...base, vehicules: plan.vehicules })).toThrow(/essence/);
   });
 });
+
+describe('délai de récupération sans écart (engineVersion 2.4.0)', () => {
+  it("scénarios identiques (aucun véhicule ne change) : « sans objet », jamais « 0 an »", () => {
+    const plan = base();
+    const v = plan.vehicules[0];
+    plan.vehicules[0] = { ...v, alternative: v.reference, subventionsAlternative: [] };
+    plan.sitesInfra = [];
+    const r = calculerPlan(plan);
+    expect(r.vanDifferentielle).toBeCloseTo(0, 6);
+    expect(r.paybackActualise).toEqual(expect.objectContaining({ annees: null, code: 'aucun_ecart' }));
+    expect(r.paybackSimple.code).toBe('aucun_ecart');
+  });
+
+  it('un véhicule électrifié garde un délai ou « jamais » avec raison (non touché)', () => {
+    const r = calculerPlan(base());
+    expect(r.paybackActualise.code).not.toBe('aucun_ecart');
+  });
+});

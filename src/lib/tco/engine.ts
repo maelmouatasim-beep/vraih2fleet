@@ -323,6 +323,11 @@ function calculerPayback(diffs: number[], actualise: boolean, p: ParametresProje
       dernierNegatif = n;
     }
   }
+  // Aucun écart entre les scénarios (aucun véhicule retenu) : il n'y a
+  // rien à récupérer — jamais « 0 an », qui laisserait croire à un gain.
+  if (diffs.every((d) => Math.abs(d) < EPS)) {
+    return { annees: null, raison: 'aucun écart entre les deux scénarios (aucun véhicule ne change de technologie)', code: 'aucun_ecart' };
+  }
   if (cumul < -EPS) {
     return economieMax <= 0
       ? { annees: null, raison: 'les économies annuelles sont nulles ou négatives', code: 'economies_negatives' }

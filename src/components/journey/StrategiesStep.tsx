@@ -288,7 +288,9 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
           <p>
             {r.paybackActualise.annees != null
               ? t("journey.feasibility.payback", { years: r.paybackActualise.annees })
-              : t("journey.feasibility.noPayback", {
+              : r.paybackActualise.code === "aucun_ecart"
+                ? t("journey.feasibility.paybackNotApplicable", { reason: t("journey.feasibility.paybackNever.aucun_ecart") })
+                : t("journey.feasibility.noPayback", {
                   reason: t(
                     `journey.feasibility.paybackNever.${r.paybackActualise.code ?? "surcout_non_resorbe"}`,
                     { horizon: r.horizonAns },
@@ -308,18 +310,55 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
           </p>
         )}
         {s.selection && s.selection.some((g) => g.candidats > 0) && (
-          <ul className="text-xs text-muted-foreground space-y-0.5">
+          <ul className="text-xs text-muted-foreground space-y-1.5" data-testid="selection-garages">
             {s.selection
               .filter((g) => g.candidats > 0)
-              .map((g) => (
-                <li key={g.depot ?? ""}>
-                  {t("journey.strategies.selectionGarage", {
-                    garage: g.depot ?? t("journey.infra.noDepot"),
-                    retenus: g.retenus,
-                    candidats: g.candidats,
-                  })}
-                </li>
-              ))}
+              .map((g) => {
+                const unites = (raison: "borne" | "raccordement") =>
+                  g.exclus.filter((e) => e.raison === raison).map((e) => e.unit_number ?? e.id);
+                const borne = unites("borne");
+                const raccordement = unites("raccordement");
+                return (
+                  <li key={g.depot ?? ""} className="space-y-0.5" data-testid="selection-garage">
+                    <p className="font-medium text-foreground">
+                      {t("journey.strategies.selectionGarage", {
+                        garage: g.depot ?? t("journey.infra.noDepot"),
+                        retenus: g.retenus,
+                        candidats: g.candidats,
+                      })}
+                    </p>
+                    {g.infra && (
+                      <p>
+                        {t("journey.strategies.selectionInfra", {
+                          bornes: argent.format(g.infra.capexBornes),
+                          kw: g.infra.kwDemandes,
+                          dispo: g.infra.kwDisponibles,
+                          source: t(`journey.strategies.selectionSource.${g.infra.kwDisponiblesSource}`),
+                          raccordement:
+                            g.infra.palier === 0 && g.infra.coutRaccordement === 0
+                              ? t("journey.strategies.selectionRaccordement0")
+                              : t("journey.strategies.selectionRaccordement", {
+                                  palier: g.infra.palier,
+                                  cout: argent.format(g.infra.coutRaccordement),
+                                }),
+                        })}
+                      </p>
+                    )}
+                    {borne.length > 0 && (
+                      <p>{t("journey.strategies.selectionExclusBorne", { count: borne.length, unites: borne.join(", ") })}</p>
+                    )}
+                    {raccordement.length > 0 && (
+                      <p>
+                        {t("journey.strategies.selectionExclusRaccordement", {
+                          count: raccordement.length,
+                          unites: raccordement.join(", "),
+                        })}
+                      </p>
+                    )}
+                  </li>
+                );
+              })}
+            <li className="italic">{t("journey.strategies.selectionMethode")}</li>
           </ul>
         )}
         {s.cle === meilleure && <Badge variant="secondary">{t("journey.strategies.bestSavings")}</Badge>}

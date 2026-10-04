@@ -4945,7 +4945,8 @@
       "noPayback": "Récupération : jamais — {{reason}}",
       "paybackNever": {
         "economies_negatives": "les économies annuelles sont nulles ou négatives",
-        "surcout_non_resorbe": "le surcoût n'est pas résorbé sur l'horizon de {{horizon}} ans"
+        "surcout_non_resorbe": "le surcoût n'est pas résorbé sur l'horizon de {{horizon}} ans",
+        "aucun_ecart": "aucun véhicule ne change de technologie : rien à récupérer"
       },
       "co2Avoided": "{{ttw}} t CO2e évitées au pot d'échappement · {{wtw}} t cycle complet (totaux)",
       "subsidies": "Subventions : {{amount}}",
@@ -4987,7 +4988,8 @@
         "banner_other": "{{count}} véhicules n'ont pas de technologie cible : la recommandation (meilleure techno non défavorable, sinon remplacement à l'identique) est proposée dans le tableau.",
         "done_one": "{{count}} technologie cible appliquée au plan",
         "done_other": "{{count}} technologies cibles appliquées au plan"
-      }
+      },
+      "paybackNotApplicable": "Récupération : — ({{reason}})"
     },
     "strategies": {
       "empty": {
@@ -5063,7 +5065,17 @@
         "retained": "Stratégie retenue",
         "logSummary": "Stratégie « {{strategy}} » appliquée — {{count}} véhicule(s) modifié(s)",
         "logged": "L'application est journalisée (qui, quand, quoi) et visible par l'équipe."
-      }
+      },
+      "selectionInfra": "bornes {{bornes}} ; {{kw}} kW demandés pour {{dispo}} kW disponibles ({{source}}) ; {{raccordement}}",
+      "selectionSource": {
+        "garage": "puissance du garage",
+        "presumee": "puissance présumée"
+      },
+      "selectionRaccordement0": "aucun raccordement à ajouter",
+      "selectionRaccordement": "raccordement palier {{palier}} : {{cout}}",
+      "selectionExclusBorne": "{{count}} écarté(s) : la borne coûte plus que l'économie du véhicule ({{unites}})",
+      "selectionExclusRaccordement": "{{count}} écarté(s) : le raccordement supplémentaire coûterait plus qu'ils ne rapportent ({{unites}})",
+      "selectionMethode": "Sélection : meilleur sous-ensemble par garage, bornes et raccordement compris (méthodologie §11.1)."
     },
     "plan": {
       "empty": {

@@ -47,6 +47,12 @@ Version 2.3 (test terrain) — 2026-10-02 — statut : **en validation**
 > × rendement) → « tient l'hiver », « tient avec recharge en journée »
 > (au plus une recharge complète le jour) ou « ne tient pas » (BEV
 > défavorable, jamais retenu automatiquement).
+> engineVersion 2.4.0 (§6.1) : quand les deux scénarios sont identiques
+> (aucun véhicule ne change de technologie), la récupération est « sans
+> objet » (code `aucun_ecart`, affichée « — » avec la raison) et non plus
+> « 0 an ». Sélection « Économies d'abord » (hors moteur, §11.1) :
+> meilleur sous-ensemble de véhicules PAR GARAGE, bornes et raccordement
+> compris (voir §11.1).
 
 Ce document est la référence unique de la méthode de calcul. Il est écrit
 pour être lu par un directeur des finances municipal : chaque formule est
@@ -842,6 +848,40 @@ moteur décrit ci-dessus chiffre chaque choix.
    même année, meilleure option zéro émission) : économie ou surcoût
    marginal (bornes du garage comprises), contrainte qui serait violée,
    programme de subvention perdu l'année suivante.
+
+### 11.1 « Économies d'abord » : meilleur sous-ensemble par garage
+
+L'infrastructure d'un garage a un coût par véhicule (une borne selon la
+catégorie) et un coût commun en escalier : le raccordement, nul tant que la
+puissance des bornes tient dans la puissance disponible du garage, puis
+paliers 1, 2, 3 du registre selon les kW supplémentaires (ou le devis du
+garage). Électrifier « tout ou rien » ou « les k plus rentables » rate les
+bons choix : un camion très rentable seul mais gourmand en kW peut faire
+basculer tout le garage dans un palier coûteux.
+
+Méthode, garage par garage :
+
+1. **Candidats** : véhicules dont l'économie BEV est positive sans
+   infrastructure (moteur) et dont l'autonomie hivernale tient.
+2. **Valeur nette** de chaque candidat = VAN du moteur pour ce véhicule
+   seul AVEC sa borne, sans raccordement.
+3. **Pour chaque marche du raccordement** (capacité existante, paliers 1 à
+   3, ou devis), le sous-ensemble de valeur nette maximale dont la
+   puissance totale tient sous le plafond de la marche — problème du sac à
+   dos 0/1 sur les kW, résolu exactement (`src/lib/journey/selectionGarage.ts`) ;
+   valeur = somme des valeurs nettes − coût de la marche.
+4. **Vérification par le moteur** : chaque proposition est re-chiffrée avec
+   l'infrastructure réelle du garage (`planifierInfrastructure`, même source
+   que Plan, Financement et rapports), puis améliorée véhicule par véhicule
+   (ajout ou retrait) tant que la VAN augmente. Le garage retient la
+   meilleure VAN si elle est positive ; sinon il reste au diesel.
+
+L'écran explique le choix : véhicules retenus sur rentables seuls, coût
+des bornes, kW demandés contre kW disponibles (renseignés ou présumés),
+palier et coût du raccordement, et pour chaque véhicule écarté la raison
+(« la borne coûte plus que l'économie » ou « le raccordement
+supplémentaire coûterait plus qu'il ne rapporte »). L'optimiseur (§11)
+essaie les mêmes sous-ensembles dans sa recherche locale.
 
 ## 12. Pièces justificatives (Phase 5.4) — devis et factures du client
 

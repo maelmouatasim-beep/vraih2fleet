@@ -179,8 +179,10 @@ export interface Payback {
   /** Années entières depuis le premier investissement net ; null = jamais récupéré sur l'horizon. */
   annees: number | null;
   raison: string | null;
-  /** Raison stable (traduite à l'affichage) quand `annees` est null. */
-  code: 'economies_negatives' | 'surcout_non_resorbe' | null;
+  /** Raison stable (traduite à l'affichage) quand `annees` est null.
+   *  aucun_ecart = les deux scénarios sont identiques (aucun véhicule ne
+   *  change de technologie) : la récupération est sans objet (« — »). */
+  code: 'economies_negatives' | 'surcout_non_resorbe' | 'aucun_ecart' | null;
 }
 
 export interface LigneBudgetaire {

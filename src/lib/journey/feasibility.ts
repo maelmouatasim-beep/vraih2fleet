@@ -67,7 +67,7 @@ export interface EvaluationTechno {
   economieActualisee: number;
   paybackActualiseAns: number | null;
   /** Raison quand la récupération n'arrive jamais sur l'horizon (null sinon). */
-  paybackJamaisCode: "economies_negatives" | "surcout_non_resorbe" | null;
+  paybackJamaisCode: "economies_negatives" | "surcout_non_resorbe" | "aucun_ecart" | null;
   /** CO2e évité au pot d'échappement (réservoir-à-roue). */
   co2EviteTtwTonnes: number;
   /** CO2e évité sur le cycle complet (puits-à-roue) — celui des totaux. */

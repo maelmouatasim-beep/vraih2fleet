@@ -5,7 +5,7 @@
  */
 
 /** Version sémantique du moteur : à incrémenter à CHAQUE changement de calcul. */
-export const ENGINE_VERSION = '2.3.0';
+export const ENGINE_VERSION = '2.4.0';
 
 /** Sérialisation canonique : clés d'objets triées récursivement. */
 export function serialiserCanonique(valeur: unknown): string {

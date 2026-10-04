@@ -110,7 +110,58 @@ describe("construireStrategie", () => {
       expect(s.nbZeroEmission).toBe(0);
       expect(s.infraCapex).toBe(0);
       expect(s.aucuneElectrificationRentable).toBe(true);
-      expect(s.selection).toEqual([{ depot: "Hôtel de ville", candidats: 1, retenus: 0, vanAvecInfra: 0 }]);
+      expect(s.selection).toEqual([
+        { depot: "Hôtel de ville", candidats: 1, retenus: 0, vanAvecInfra: 0, infra: null, exclus: [{ id: "a", unit_number: undefined, raison: "borne" }] },
+      ]);
+      // Point 2 : rien n'est retenu → récupération « sans objet », jamais « 0 an ».
+      expect(s.resultat!.paybackActualise).toEqual(expect.objectContaining({ annees: null, code: "aucun_ecart" }));
+    });
+
+    it("cas de la démo : un camion très « rentable seul » mais gourmand en kW ne bloque plus les camionnettes", () => {
+      // Avant : tri par économie seule puis « les k premiers » → le camion
+      // lourd (économie seule ≈ 75 k$, mais borne 150 kW à 150 k$ + palier 2)
+      // passait en tête et plombait tous les sous-ensembles : 0 retenu.
+      // Le meilleur sous-ensemble garde la camionnette qui tient dans la
+      // capacité existante du garage (20 kW présumés, aucun raccordement).
+      const flotte = [
+        vehicule({ id: "lourd", depot: "G", category: "camion_lourd", annual_km: 40000, consumption_per_100km: 40, target_technology: null }),
+        ...["a", "b", "c"].map((id) => petit(id, "G", 20000)),
+      ];
+      const s = construireStrategie(flotte, "economies_d_abord", OPTIONS);
+      const g = s.selection![0];
+      expect(g.candidats).toBe(4);
+      expect(g.retenus).toBe(1);
+      expect(s.resultat!.vanDifferentielle).toBeGreaterThan(0);
+      const bev = s.plan!.vehicules.filter((v) => v.alternative.technologie === "BEV").map((v) => v.id);
+      expect(bev).not.toContain("lourd");
+      // L'explication : infrastructure réelle du sous-ensemble + raison de chaque exclusion.
+      expect(g.infra).toEqual({
+        capexBornes: HYPOTHESES.borne_niveau2_installee.valeur,
+        kwDemandes: 19,
+        kwDisponibles: 20,
+        kwDisponiblesSource: "presumee",
+        coutRaccordement: 0,
+        palier: 0,
+      });
+      const raisons = Object.fromEntries(g.exclus.map((e) => [e.id, e.raison]));
+      expect(raisons.lourd).toBe("borne");
+      expect(Object.values(raisons).filter((r) => r === "raccordement")).toHaveLength(2);
+      // Optimal : aucun sous-ensemble (2^4) ne fait mieux, moteur à l'appui.
+      let meilleure = 0;
+      for (let masque = 1; masque < 16; masque++) {
+        const choisis = flotte.filter((_, i) => masque & (1 << i)).map((v) => ({ ...v, target_technology: "bev" }));
+        meilleure = Math.max(meilleure, construireStrategie(choisis, "plan_actuel", OPTIONS).resultat!.vanDifferentielle);
+      }
+      expect(s.resultat!.vanDifferentielle).toBeGreaterThanOrEqual(meilleure - 0.01);
+    });
+
+    it("garage à puissance connue : tous les véhicules qui tiennent dans la capacité existante sont retenus sans raccordement", () => {
+      const garages = new Map([[cleGarage("Atelier"), { puissanceDisponibleKw: 100 }]]);
+      const flotte = ["a", "b", "c", "d", "e"].map((id) => petit(id, "Atelier", 40000));
+      const s = construireStrategie(flotte, "economies_d_abord", { ...OPTIONS, garages });
+      const g = s.selection![0];
+      expect(g.retenus).toBe(5);
+      expect(g.infra).toEqual(expect.objectContaining({ kwDemandes: 95, kwDisponibles: 100, kwDisponiblesSource: "garage", coutRaccordement: 0, palier: 0 }));
     });
 
     it("le palier de raccordement déclenché par le 2e véhicule est compté (choix optimal sur sous-ensembles)", () => {

@@ -4945,7 +4945,8 @@
       "noPayback": "Payback: never — {{reason}}",
       "paybackNever": {
         "economies_negatives": "annual savings are zero or negative",
-        "surcout_non_resorbe": "the extra cost is not recovered within the {{horizon}}-year horizon"
+        "surcout_non_resorbe": "the extra cost is not recovered within the {{horizon}}-year horizon",
+        "aucun_ecart": "no vehicle changes technology: nothing to recover"
       },
       "co2Avoided": "{{ttw}} t CO2e avoided at the tailpipe · {{wtw}} t full cycle (totals)",
       "subsidies": "Subsidies: {{amount}}",
@@ -4987,7 +4988,8 @@
         "banner_other": "{{count}} vehicles have no target technology: the recommendation (best non-unfavourable technology, otherwise like-for-like replacement) is shown in the table.",
         "done_one": "{{count}} target technology applied to the plan",
         "done_other": "{{count}} target technologies applied to the plan"
-      }
+      },
+      "paybackNotApplicable": "Payback: — ({{reason}})"
     },
     "strategies": {
       "empty": {
@@ -5063,7 +5065,17 @@
         "retained": "Retained strategy",
         "logSummary": "Strategy \"{{strategy}}\" applied — {{count}} vehicle(s) changed",
         "logged": "The change is logged (who, when, what) and visible to the team."
-      }
+      },
+      "selectionInfra": "chargers {{bornes}}; {{kw}} kW required for {{dispo}} kW available ({{source}}); {{raccordement}}",
+      "selectionSource": {
+        "garage": "garage power",
+        "presumee": "assumed power"
+      },
+      "selectionRaccordement0": "no grid upgrade needed",
+      "selectionRaccordement": "grid upgrade tier {{palier}}: {{cout}}",
+      "selectionExclusBorne": "{{count}} left out: the charger costs more than the vehicle saves ({{unites}})",
+      "selectionExclusRaccordement": "{{count}} left out: the extra grid upgrade would cost more than they save ({{unites}})",
+      "selectionMethode": "Selection: best subset per garage, chargers and grid upgrade included (methodology §11.1)."
     },
     "plan": {
       "empty": {
