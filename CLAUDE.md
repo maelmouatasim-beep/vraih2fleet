@@ -468,6 +468,37 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   valider). Liste « prêt pour un premier client » :
   `docs/pret-premier-client.md` (à tenir à jour).
 
+- **Audit acheteur (points 1 à 11 + ajustements A, B, C) : LIVRÉ, en
+  attente du « ok » avant le prompt de mise en production.** Rapport :
+  https://claude.ai/artifact/V7Xyg4VH4CFy2YVWEnJzxW (tableau avant/après).
+  (1) PDF lisible à toute taille (pièces sécables, en-têtes de tableau
+  répétés, test pdfjs de non-chevauchement à 40/80/300 véhicules) ;
+  (2) import d'un vrai Excel (titre fusionné, ligne d'en-tête détectée,
+  totaux ignorés, « n/d », séparateurs de milliers, synonymes, messages
+  sans nom technique) ; (3) erreurs d'auth en français
+  (`src/lib/authErrors.ts`), écran « courriel envoyé », réglages SMTP dans
+  `docs/deploiement.md` ; (4) note au conseil cohérente (étapes selon la
+  VAN, subventions confirmées vs à demander, statu quo, pluriels) ;
+  (5) démo : plan retenu « Économies d'abord » appliqué (VAN positive,
+  nuancé), garages en station H2 externe ; (6) appliquer une stratégie =
+  une écriture atomique (`apply_project_vehicle_changes`) ; (7) rattrapage
+  lissé des remplacements en retard (`lisserRattrapage`, paramétrable) +
+  investissement brut / statu quo / écart partout ; (8) bandeau « puissance
+  de garage présumée » → Ma flotte › Garages ; (9) libellés en clair
+  (électrique, hydrogène, thermique neuf, « à l'échappement », hypothèses
+  prudentes, conditions de subvention lisibles, vrais pluriels — garde-fou
+  CI) ; (10) formats selon la langue (tonnes, annexe du PDF, Excel arrondi,
+  % au lieu de ratio), derniers textes anglais ; (11) nom d'organisation
+  demandé (accueil, Rapports), jamais « Mon organisation » sur un rapport.
+  A : **moteur 2.5.0** — ravitaillement H2 par garage auto/dépôt/externe
+  (prix livré, détour, aucun capex de station), seuil
+  `seuil_station_h2_depot_vehicules` (estimation), méthodologie §3.5.
+  B : VAN décomposée par poste (Σ = VAN) à l'écran, au PDF et dans l'Excel
+  (`synthese.ts`, `VanDecompositionCard`). C : optimiseur borné à 5 s,
+  progression, meilleur résultat « approché », plus aucune relance
+  automatique (Web Worker complet : plus tard). Migrations 20261007010000,
+  20261007020000 (additives).
+
 Rappels de méthode : chaque phase finit par `npm run check` vert → push →
 résumé court → **attendre le « ok » de l'utilisateur** ; kanban intégré à
 l'étape Suivi (pas de module autonome) ; aucune suppression de données en
@@ -518,6 +549,9 @@ sinon « à_valider » avec l'URL à consulter.
 - Note au conseil : faire relire le modèle et la note IA par un
   responsable municipal avant le premier dépôt ; les montants restent
   ceux du moteur (hypothèses « à valider » listées en annexe).
+- SMTP personnalisé à brancher par l'utilisateur (réglages exacts :
+  `docs/deploiement.md`, section SMTP) ; tant qu'il ne l'est pas,
+  l'inscription hébergée bute sur le quota de courriels de Supabase.
 - Favicon de `index.html` encore hébergé sur le stockage de Lovable
   (gpt-engineer-file-uploads) : à remplacer par un fichier du dépôt.
 - `get-mapbox-token` : CORS `*` et pas de vérification explicite de
