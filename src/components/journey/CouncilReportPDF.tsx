@@ -11,7 +11,7 @@ import { Document, Page, Text, View } from "@react-pdf/renderer";
 import { ENGINE_VERSION, LISTE_HYPOTHESES, type ResultatPlan } from "@/lib/tco";
 import type { ResultatSensibilite } from "@/lib/tco";
 import { libelleStrategieRetenue, type StrategieConstruite } from "@/lib/journey/strategies";
-import { lignePiece, valeursPiece, type MetaRapport } from "@/lib/journey/report";
+import { libelleCategorie, lignePiece, TEXTES_FMV, valeursPiece, type MetaRapport } from "@/lib/journey/report";
 import { raisonJamais, texteRecuperation } from "@/lib/journey/payback";
 import {
   descriptionHypothese,
@@ -288,6 +288,122 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
         </Piece>
         {pied}
       </Page>
+
+      {/* Exigences du Fonds municipal vert : équité + réduction de la flotte */}
+      {meta.fmv && (
+        <Page size="LETTER" style={styles.page}>
+          {entete}
+          <Text style={styles.etiquetteSection}>{en ? "GREEN MUNICIPAL FUND (FCM)" : "FONDS MUNICIPAL VERT (FCM)"}</Text>
+          <Text style={styles.titreAction}>{TEXTES_FMV[langue].titre}</Text>
+          <Piece
+            numero={piece()}
+            titre={en ? "Equity analysis — who benefits" : "Analyse d'équité — qui en bénéficie"}
+            sousTitre={TEXTES_FMV[langue].equite}
+            source={source}
+          >
+            <Tableau
+              colonnes={[
+                { titre: TEXTES_FMV[langue].colonnesService[0], flex: 1.6 },
+                { titre: TEXTES_FMV[langue].colonnesService[2], flex: 0.8, droite: true },
+                { titre: TEXTES_FMV[langue].colonnesService[3], flex: 1, droite: true },
+                { titre: TEXTES_FMV[langue].colonnesService[4], flex: 1, droite: true },
+                { titre: TEXTES_FMV[langue].colonnesService[5], flex: 1.1, droite: true },
+              ]}
+              lignes={meta.fmv.equite.parService.map((l) => [
+                l.libelle ?? TEXTES_FMV[langue].nonRenseigne,
+                `${l.zeroEmission} / ${l.vehicules}`,
+                `${nb(l.co2TtwEviteTonnes)} t`,
+                `${nb(l.co2WtwEviteTonnes)} t`,
+                cad(l.vanVehicules),
+              ])}
+              negatifs
+            />
+            <View style={{ height: 10 }} />
+            <Tableau
+              colonnes={[
+                { titre: TEXTES_FMV[langue].colonnesSecteur[0], flex: 1.6 },
+                { titre: TEXTES_FMV[langue].colonnesSecteur[2], flex: 0.8, droite: true },
+                { titre: TEXTES_FMV[langue].colonnesSecteur[4], flex: 1, droite: true },
+                { titre: TEXTES_FMV[langue].colonnesSecteur[5], flex: 1.1, droite: true },
+                { titre: TEXTES_FMV[langue].colonnesSecteur[6], flex: 1.1, droite: true },
+              ]}
+              lignes={meta.fmv.equite.parSecteur.map((l) => [
+                l.libelle ?? TEXTES_FMV[langue].nonRenseigne,
+                `${l.zeroEmission} / ${l.vehicules}`,
+                `${nb(l.co2WtwEviteTonnes)} t`,
+                cad(l.vanVehicules),
+                cad(l.infraCapex),
+              ])}
+              negatifs
+            />
+            <View style={{ height: 8 }} />
+            <Texte
+              texte={[
+                `${TEXTES_FMV[langue].partTransport}${en ? ":" : "\u00a0:"} ${
+                  meta.fmv.equite.partTransportCollectifCo2 == null
+                    ? "—"
+                    : `${nb(meta.fmv.equite.partTransportCollectifCo2 * 100)}\u00a0%`
+                }.`,
+                TEXTES_FMV[langue].aDocumenter,
+                ...meta.fmv.equite.questions.map((q) => `- ${TEXTES_FMV[langue].questions[q]}`),
+              ].join("\n")}
+            />
+          </Piece>
+          <Piece
+            numero={piece()}
+            titre={en ? "Fleet reduction / right-sizing scenario" : "Scénario de réduction / redimensionnement de la flotte"}
+            sousTitre={TEXTES_FMV[langue].reduction(meta.fmv.reduction.seuil)}
+            source={source}
+          >
+            {meta.fmv.reduction.candidats.length === 0 ? (
+              <Texte texte={TEXTES_FMV[langue].aucunCandidat} />
+            ) : (
+              <Tableau
+                colonnes={[
+                  { titre: TEXTES_FMV[langue].colonnesReduction[0], flex: 0.7 },
+                  { titre: TEXTES_FMV[langue].colonnesReduction[1], flex: 1.2 },
+                  { titre: TEXTES_FMV[langue].colonnesReduction[4], flex: 0.8, droite: true },
+                  { titre: TEXTES_FMV[langue].colonnesReduction[5], flex: 0.8 },
+                  { titre: TEXTES_FMV[langue].colonnesReduction[6], flex: 1.3, droite: true },
+                  { titre: TEXTES_FMV[langue].colonnesReduction[7], flex: 0.9, droite: true },
+                ]}
+                lignes={meta.fmv.reduction.candidats.map((c) => [
+                  `${unites.get(c.id) ?? c.unit_number ?? c.id}${c.aJugerParLeService ? " *" : ""}`,
+                  libelleCategorie(c.categorie, langue),
+                  `${nb(c.ratio * 100)}\u00a0%`,
+                  c.technologie === "diesel" ? "Diesel" : c.technologie,
+                  cad(c.tcoEvite),
+                  `${nb(c.co2WtwEviteTonnes)} t`,
+                ])}
+                total={[
+                  TEXTES_FMV[langue].totalReduction(meta.fmv.reduction.candidats.length, meta.fmv.reduction.vehiculesDuPlan),
+                  "",
+                  "",
+                  "",
+                  cad(meta.fmv.reduction.tcoEviteTotal),
+                  `${nb(meta.fmv.reduction.co2WtwEviteTotal)} t`,
+                ]}
+              />
+            )}
+            <Texte
+              texte={[
+                TEXTES_FMV[langue].hypotheseReduction,
+                ...(meta.fmv.reduction.candidats.some((c) => c.aJugerParLeService) ? [`* ${TEXTES_FMV[langue].aJuger}.`] : []),
+                ...(meta.fmv.reduction.pistes.length > 0
+                  ? [
+                      TEXTES_FMV[langue].pistes,
+                      ...meta.fmv.reduction.pistes.map(
+                        (p) =>
+                          `- ${unites.get(p.id) ?? p.unit_number ?? p.id}${en ? ":" : "\u00a0:"} ${libelleCategorie(p.de, langue)} → ${libelleCategorie(p.vers, langue)} (${cad(p.economie)})`,
+                      ),
+                    ]
+                  : []),
+              ].join("\n")}
+            />
+          </Piece>
+          {pied}
+        </Page>
+      )}
 
       {/* Annexes */}
       <Page size="LETTER" style={styles.page}>

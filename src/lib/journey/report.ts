@@ -5,7 +5,7 @@
  * Tout vient du moteur (ResultatPlan) et du registre d'hypothèses —
  * aucune valeur recalculée à la main ici.
  */
-import { ENGINE_VERSION, LISTE_HYPOTHESES, type ResultatPlan } from "@/lib/tco";
+import { DEFAUTS_CATEGORIES, ENGINE_VERSION, LISTE_HYPOTHESES, type CategorieVehicule, type ResultatPlan } from "@/lib/tco";
 import {
   descriptionHypothese,
   traduireDonneeClient,
@@ -15,6 +15,7 @@ import {
 import { libelleStrategieRetenue, type StrategieConstruite, type StrategieRetenue } from "./strategies";
 import { texteRecuperation } from "./payback";
 import { texteExplication } from "./subsidy-explain";
+import type { AnalyseEquite, ScenarioReduction } from "./fmv";
 
 export type Cellule = string | number | null;
 
@@ -40,6 +41,155 @@ export interface MetaRapport {
   /** Phase 5.4 — pièces justificatives CONFIRMÉES (factures, devis) :
    *  citées en annexe avec leur empreinte et ce qu'elles ont modifié. */
   pieces?: PieceJustificative[];
+  /** Exigences du Fonds municipal vert : analyse d'équité et scénario de
+   *  réduction / redimensionnement de la stratégie retenue (./fmv.ts). */
+  fmv?: { equite: AnalyseEquite; reduction: ScenarioReduction };
+}
+
+export const TEXTES_FMV = {
+  fr: {
+    feuille: "Fonds municipal vert",
+    titre: "Exigences du Fonds municipal vert (FCM) — analyse d'équité et scénario de réduction de la flotte",
+    equite: "ANALYSE D'ÉQUITÉ — répartition des bénéfices de la stratégie retenue (moteur : véhicules du groupe seuls ; infrastructure partagée présentée par secteur)",
+    colonnesService: ["Service", "Véhicules", "Zéro émission", "CO2e évité au pot (t)", "CO2e évité, cycle complet (t)", "VAN des véhicules ($)"],
+    colonnesSecteur: ["Secteur (garage)", "Véhicules", "Zéro émission", "CO2e évité au pot (t)", "CO2e évité, cycle complet (t)", "VAN des véhicules ($)", "Infrastructure du secteur ($)"],
+    nonRenseigne: "Non renseigné",
+    partTransport: "Part du CO2e évité au pot portée par le transport collectif (service utilisé directement par la population)",
+    aDocumenter: "À documenter par la municipalité (non calculé par l'outil) :",
+    questions: {
+      quartiers: "Quartiers et populations desservis par les véhicules électrifiés, dont les populations vulnérables.",
+      qualite_air: "Effet sur la qualité de l'air et le bruit dans les secteurs les plus exposés (abords des garages, circuits d'autobus).",
+      emploi: "Formation et requalification des mécaniciens ; emplois locaux.",
+      accessibilite: "Accessibilité universelle des véhicules de service public.",
+      cout_citoyens: "Effet sur les taxes ou les tarifs payés par les citoyens.",
+      consultation: "Consultation des employés et de la population.",
+    } as Record<string, string>,
+    reduction: (seuil: number) =>
+      `SCÉNARIO DE RÉDUCTION / REDIMENSIONNEMENT — véhicules dont le km/an est inférieur à ${Math.round(seuil * 100)} % du km/an type de leur catégorie (registre : seuil_sous_utilisation_flotte, à valider)`,
+    colonnesReduction: ["Unité", "Catégorie", "km/an", "km/an type", "Utilisation", "Technologie prévue", "Coût total actualisé évité si non remplacé ($)", "CO2e évité, cycle complet (t)", "Remarque"],
+    aJuger: "service saisonnier ou d'urgence : à juger par le service",
+    aucunCandidat: "Aucun véhicule sous le seuil d'utilisation.",
+    totalReduction: (n: number, total: number) => `Total — ${n} véhicule(s) sur ${total}`,
+    hypotheseReduction: "Hypothèse : les déplacements des véhicules retirés sont absorbés par le parc restant (autopartage interne) ; le kilométrage reporté n'est pas chiffré.",
+    pistes: "Pistes de redimensionnement — véhicule plus petit, si l'usage le permet (à confirmer par le service) :",
+    colonnesPistes: ["Unité", "Catégorie actuelle", "Catégorie proposée", "Économie actualisée ($)"],
+  },
+  en: {
+    feuille: "Green Municipal Fund",
+    titre: "Green Municipal Fund (FCM) requirements — equity analysis and fleet reduction scenario",
+    equite: "EQUITY ANALYSIS — distribution of the retained strategy's benefits (engine: the group's vehicles only; shared infrastructure shown by sector)",
+    colonnesService: ["Department", "Vehicles", "Zero-emission", "Tailpipe CO2e avoided (t)", "Full-cycle CO2e avoided (t)", "Vehicles NPV ($)"],
+    colonnesSecteur: ["Sector (depot)", "Vehicles", "Zero-emission", "Tailpipe CO2e avoided (t)", "Full-cycle CO2e avoided (t)", "Vehicles NPV ($)", "Sector infrastructure ($)"],
+    nonRenseigne: "Not specified",
+    partTransport: "Share of tailpipe CO2e avoided carried by public transit (a service residents use directly)",
+    aDocumenter: "To be documented by the municipality (not computed by the tool):",
+    questions: {
+      quartiers: "Neighbourhoods and populations served by the electrified vehicles, including vulnerable populations.",
+      qualite_air: "Effect on air quality and noise in the most exposed areas (around depots, bus routes).",
+      emploi: "Training and reskilling of mechanics; local jobs.",
+      accessibilite: "Universal accessibility of public service vehicles.",
+      cout_citoyens: "Effect on taxes or fees paid by residents.",
+      consultation: "Consultation of employees and residents.",
+    } as Record<string, string>,
+    reduction: (seuil: number) =>
+      `FLEET REDUCTION / RIGHT-SIZING SCENARIO — vehicles driven less than ${Math.round(seuil * 100)}% of their category's typical annual mileage (registry: seuil_sous_utilisation_flotte, to validate)`,
+    colonnesReduction: ["Unit", "Category", "km/yr", "Typical km/yr", "Utilization", "Planned technology", "Discounted total cost avoided if not replaced ($)", "Full-cycle CO2e avoided (t)", "Note"],
+    aJuger: "seasonal or emergency service: to be judged by the department",
+    aucunCandidat: "No vehicle below the utilization threshold.",
+    totalReduction: (n: number, total: number) => `Total — ${n} vehicle(s) out of ${total}`,
+    hypotheseReduction: "Assumption: trips of the retired vehicles are absorbed by the remaining fleet (internal car sharing); the shifted mileage is not costed.",
+    pistes: "Right-sizing options — a smaller vehicle, if the use allows it (to be confirmed by the department):",
+    colonnesPistes: ["Unit", "Current category", "Proposed category", "Discounted savings ($)"],
+  },
+};
+
+const CATEGORIES_EN: Record<string, string> = {
+  vehicule_leger: "Light vehicle",
+  camionnette: "Pickup / van",
+  camion_moyen: "Medium truck",
+  camion_lourd: "Heavy truck",
+  autobus_urbain_12m: "12 m urban bus",
+};
+
+export function libelleCategorie(c: CategorieVehicule, langue: Langue): string {
+  return langue === "en" ? CATEGORIES_EN[c] ?? c : DEFAUTS_CATEGORIES[c].libelle;
+}
+
+/** Feuille « Fonds municipal vert » : équité + scénario de réduction. */
+export function feuilleFondsMunicipalVert(
+  fmv: NonNullable<MetaRapport["fmv"]>,
+  unites: Map<string, string>,
+  langue: Langue,
+): FeuilleClasseur {
+  const t = TEXTES_FMV[langue];
+  const { equite, reduction } = fmv;
+  const lignes: Cellule[][] = [
+    [t.titre],
+    [],
+    [t.equite],
+    t.colonnesService,
+    ...equite.parService.map((l): Cellule[] => [
+      l.libelle ?? t.nonRenseigne,
+      l.vehicules,
+      l.zeroEmission,
+      Math.round(l.co2TtwEviteTonnes),
+      Math.round(l.co2WtwEviteTonnes),
+      Math.round(l.vanVehicules),
+    ]),
+    [],
+    t.colonnesSecteur,
+    ...equite.parSecteur.map((l): Cellule[] => [
+      l.libelle ?? t.nonRenseigne,
+      l.vehicules,
+      l.zeroEmission,
+      Math.round(l.co2TtwEviteTonnes),
+      Math.round(l.co2WtwEviteTonnes),
+      Math.round(l.vanVehicules),
+      Math.round(l.infraCapex),
+    ]),
+    [],
+    [t.partTransport, equite.partTransportCollectifCo2 == null ? "—" : `${Math.round(equite.partTransportCollectifCo2 * 100)} %`],
+    [],
+    [t.aDocumenter],
+    ...equite.questions.map((q): Cellule[] => [`• ${t.questions[q]}`]),
+    [],
+    [t.reduction(reduction.seuil)],
+    t.colonnesReduction,
+    ...(reduction.candidats.length === 0
+      ? [[t.aucunCandidat]]
+      : reduction.candidats.map((c): Cellule[] => [
+          unites.get(c.id) ?? c.unit_number ?? c.id,
+          libelleCategorie(c.categorie, langue),
+          c.kmParAn,
+          c.kmParAnType,
+          `${Math.round(c.ratio * 100)} %`,
+          c.technologie,
+          Math.round(c.tcoEvite),
+          Math.round(c.co2WtwEviteTonnes),
+          c.aJugerParLeService ? t.aJuger : "",
+        ])),
+    [
+      t.totalReduction(reduction.candidats.length, reduction.vehiculesDuPlan),
+      null,
+      null,
+      null,
+      null,
+      null,
+      Math.round(reduction.tcoEviteTotal),
+      Math.round(reduction.co2WtwEviteTotal),
+    ],
+    [t.hypotheseReduction],
+    [],
+    [t.pistes],
+    t.colonnesPistes,
+    ...reduction.pistes.map((p): Cellule[] => [
+      unites.get(p.id) ?? p.unit_number ?? p.id,
+      libelleCategorie(p.de, langue),
+      libelleCategorie(p.vers, langue),
+      Math.round(p.economie),
+    ]),
+  ];
+  return { nom: t.feuille, lignes };
 }
 
 export interface PieceJustificative {
@@ -289,6 +439,7 @@ export function construireClasseurPlan(
   return [
     { nom: l.feuilles[0], lignes: budget },
     { nom: l.feuilles[1], lignes: vehicules },
+    ...(meta.fmv ? [feuilleFondsMunicipalVert(meta.fmv, unites, langue)] : []),
     { nom: l.feuilles[2], lignes: hypotheses },
   ];
 }

@@ -5169,7 +5169,8 @@
         "item3": "Subsidies per vehicle (programs, amounts, years)",
         "item4": "Appendix: methodology and assumption registry (status, source, read date)",
         "download_fr": "PDF (français)",
-        "download_en": "PDF (English)"
+        "download_en": "PDF (English)",
+        "item5": "Green Municipal Fund requirements: equity analysis (benefits by department and sector) and fleet reduction / right-sizing scenario"
       },
       "xlsx": {
         "title": "Excel workbook (.xlsx)",
@@ -5177,7 +5178,8 @@
         "item1": "“Plan annuel” sheet: the full budget view, line by line",
         "item2": "“Véhicules” sheet: units, targets, years, prices, subsidies",
         "item3": "“Hypothèses” sheet: all {{count}} assumptions with status, source and verification date",
-        "download": "Download the .xlsx"
+        "download": "Download the .xlsx",
+        "item4": "“Green Municipal Fund” sheet: equity analysis and fleet reduction scenario"
       },
       "note": "The report carries the input fingerprint and engine version: the same fingerprint reproduces exactly the same figures. “To validate” assumptions are shown as such — check them before an official presentation.",
       "snapshot": {

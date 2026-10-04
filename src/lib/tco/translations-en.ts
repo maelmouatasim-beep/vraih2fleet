@@ -52,6 +52,8 @@ export const HYPOTHESES_EN: Record<string, string> = {
   prix_essence: "Regular gasoline price EXCLUDING GST/QST (fuel taxes and cap-and-trade included) — 12-month StatCan average, Montréal/Québec",
   fe_essence_ttw_legers: "Tank-to-wheel emission factor, gasoline, new light-duty vehicles and trucks (tier 3)",
   raccordement_depot: "Depot grid connection and electrical upgrade (service entrance, transformer, distribution)",
+  seuil_sous_utilisation_flotte:
+    "Right-sizing scenario (Green Municipal Fund): a vehicle is \"under-used\" when its annual mileage is below this fraction of its category's typical annual mileage (registry)",
   puissance_disponible_garage_presumee: "Presumed spare electrical capacity of an existing depot, when the depot's actual available power is not entered",
   raccordement_seuil_palier1_kw: "Grid connection — upper limit of tier 1 (power needed beyond the depot's available capacity)",
   raccordement_seuil_palier2_kw: "Grid connection — upper limit of tier 2 (above: tier 3)",

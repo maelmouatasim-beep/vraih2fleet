@@ -5169,7 +5169,8 @@
         "item3": "Subventions retenues par véhicule (programmes, montants, années)",
         "item4": "Annexe : méthodologie et registre des hypothèses (statut, source, date de lecture)",
         "download_fr": "PDF (français)",
-        "download_en": "PDF (anglais)"
+        "download_en": "PDF (anglais)",
+        "item5": "Exigences du Fonds municipal vert : analyse d'équité (bénéfices par service et par secteur) et scénario de réduction / redimensionnement de la flotte"
       },
       "xlsx": {
         "title": "Classeur Excel (.xlsx)",
@@ -5177,7 +5178,8 @@
         "item1": "Feuille « Plan annuel » : la vue budgétaire complète, ligne à ligne",
         "item2": "Feuille « Véhicules » : unités, cibles, années, prix, subventions",
         "item3": "Feuille « Hypothèses » : les {{count}} hypothèses avec statut, source et date de vérification",
-        "download": "Télécharger le .xlsx"
+        "download": "Télécharger le .xlsx",
+        "item4": "Feuille « Fonds municipal vert » : analyse d'équité et scénario de réduction de la flotte"
       },
       "note": "Le rapport porte l'empreinte des entrées et la version du moteur : la même empreinte reproduit exactement les mêmes chiffres. Les hypothèses « à valider » sont affichées comme telles — vérifiez-les avant une présentation officielle.",
       "snapshot": {

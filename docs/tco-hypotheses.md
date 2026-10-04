@@ -8,7 +8,7 @@ Statuts : ✅ vérifié = source réellement lue à la date indiquée ;
 ≈ estimation = ordre de grandeur professionnel à affiner ;
 ⚠️ à valider = source non consultable depuis l’environnement — consulter l’URL.
 
-Bilan : 12 vérifiées, 28 estimations, 12 à valider (hors défauts par catégorie, tous « estimation »).
+Bilan : 12 vérifiées, 28 estimations, 13 à valider (hors défauts par catégorie, tous « estimation »).
 
 ## Hypothèses générales
 
@@ -55,6 +55,7 @@ Bilan : 12 vérifiées, 28 estimations, 12 à valider (hors défauts par catégo
 | Borne rapide CC ~150 kW installée (matériel + installation) | 150000 (CAD 2026) | $ | 100000 – 220000 | QC | ≈ estimation | [RNCan (PIVEZ) — Coûts types des projets PIVEZ ; à remplacer par soumissions](https://ressources-naturelles.canada.ca/efficacite-energetique/efficacite-energetique-transports/pivez) | 2026-09-28 |
 | Raccordement et mise à niveau électrique d’un dépôt (entrée, transformateur, distribution) | 100000 (CAD 2026) | $ | 20000 – 500000 | QC | ≈ estimation | [Hydro-Québec — Très variable selon la capacité disponible — UN DEVIS HQ SAISI DANS LE PROJET EST PRIORITAIRE](https://www.hydroquebec.com/affaires/demenagement-travaux/demande-alimentation.html) | 2026-09-28 |
 | Puissance électrique résiduelle présumée d’un garage existant, quand la puissance disponible réelle n’est pas renseignée (fiche du garage) | 20 | kW | 0 – 100 | QC | ≈ estimation | [Hydro-Québec — Demande d’alimentation électrique — le coût réel dépend de la capacité disponible ; UN DEVIS HQ SAISI DANS LE PROJET EST PRIORITAIRE](https://www.hydroquebec.com/affaires/demenagement-travaux/demande-alimentation.html) | 2026-09-28 |
+| Scénario de redimensionnement (Fonds municipal vert) : un véhicule est « sous-utilisé » quand son kilométrage annuel est inférieur à cette fraction du kilométrage annuel type de sa catégorie (registre) | 0.6 | ratio | 0.4 – 0.75 | CA | ⚠️ à valider | [Fédération canadienne des municipalités — Fonds municipal vert — Exigences des études de planification de flotte (scénario de réduction / redimensionnement de la flotte)](https://greenmunicipalfund.ca/fr) | 2026-09-28 |
 | Raccordement — limite haute du palier 1 (puissance supplémentaire au-delà de la capacité disponible du garage) | 50 | kW | 30 – 75 | QC | ≈ estimation | [Hydro-Québec — Demande d’alimentation électrique — le coût réel dépend de la capacité disponible ; UN DEVIS HQ SAISI DANS LE PROJET EST PRIORITAIRE](https://www.hydroquebec.com/affaires/demenagement-travaux/demande-alimentation.html) | 2026-09-28 |
 | Raccordement — limite haute du palier 2 (au-delà : palier 3) | 250 | kW | 150 – 400 | QC | ≈ estimation | [Hydro-Québec — Demande d’alimentation électrique — le coût réel dépend de la capacité disponible ; UN DEVIS HQ SAISI DANS LE PROJET EST PRIORITAIRE](https://www.hydroquebec.com/affaires/demenagement-travaux/demande-alimentation.html) | 2026-09-28 |
 | Mise à niveau électrique — palier 1 : jusqu’à 50 kW supplémentaires (circuits et panneau, sans changement d’entrée) | 20000 (CAD 2026) | $ | 10000 – 50000 | QC | ≈ estimation | [Hydro-Québec — Demande d’alimentation électrique — le coût réel dépend de la capacité disponible ; UN DEVIS HQ SAISI DANS LE PROJET EST PRIORITAIRE](https://www.hydroquebec.com/affaires/demenagement-travaux/demande-alimentation.html) | 2026-09-28 |
@@ -93,6 +94,7 @@ Bilan : 12 vérifiées, 28 estimations, 12 à valider (hors défauts par catégo
 - **taux_recup_tvq_municipalite** : VÉRIFIÉ : « le taux de remboursement des municipalités … de 50 % depuis le 1er janvier 2015 » (62,8 % en 2014, 43 % avant l’abolition de 1997) — archive : data/sources/2026-09-28/qc-depenses-fiscales-310302.txt. Taux non récupérable municipal résultant ≈ 0,5 × 9,975 % = 4,99 % du prix avant taxes. Entreprises : CTI/RTI complets → 0 %. Sociétés de transport : à confirmer (organismes désignés ou non selon leur statut).
 - **raccordement_depot** : Plage de référence et valeur proposée par défaut pour un devis saisi. Le calcul d’infrastructure n’applique plus ce forfait par garage : il retient un palier selon les kW supplémentaires (raccordement_palier1 à 3).
 - **puissance_disponible_garage_presumee** : Ordre de grandeur prudent (une borne niveau 2 tient sans travaux). À remplacer par la puissance réellement disponible : facture Hydro-Québec (puissance appelée vs puissance de l’entrée) ou relevé d’un électricien.
+- **seuil_sous_utilisation_flotte** : Seuil de REVUE proposé (aucune valeur normative lue) : il désigne les véhicules à examiner, pas une décision. À ajuster par la municipalité ; les véhicules saisonniers ou d’urgence (déneigement) restent à juger par le service.
 - **raccordement_palier1** : Borne basse de la plage du raccordement de dépôt (raccordement_depot : 20 000 $ à 500 000 $).
 - **raccordement_palier2** : Valeur centrale du raccordement de dépôt du registre (raccordement_depot).
 - **raccordement_palier3** : Borne haute de la plage du raccordement de dépôt du registre (raccordement_depot) ; un devis Hydro-Québec est indispensable à ce niveau.
@@ -266,6 +268,7 @@ Source : [MTMD (Québec) — Programmes d’aide au transport collectif](https:/
 - Facteur d’émission puits-à-roue, H2 par électrolyse au Québec → https://propulsionquebec.com/wp-content/uploads/2023/11/PropulsionQc_Hydrogene-vert_VF1.pdf
 - Facteur d’émission puits-à-roue, H2 par reformage du méthane (SMR) sans captage → https://ressources-naturelles.canada.ca/production-denergie/lavenir-de-lhydrogene-au-canada
 - Taux de la TVQ → https://www.revenuquebec.ca/fr/entreprises/taxes/tpstvh-et-tvq/perception-de-la-tps-et-de-la-tvq/calcul-des-taxes/
+- Scénario de redimensionnement (Fonds municipal vert) : un véhicule est « sous-utilisé » quand son kilométrage annuel est inférieur à cette fraction du kilométrage annuel type de sa catégorie (registre) → https://greenmunicipalfund.ca/fr
 - Station de ravitaillement H2 au dépôt (capacité moyenne, clés en main) → https://propulsionquebec.com/wp-content/uploads/2023/11/PropulsionQc_Hydrogene-vert_VF1.pdf
 - Baisse annuelle attendue du prix des packs batterie (désactivée par défaut dans le moteur) → https://about.bnef.com/insights/clean-transport/lithium-ion-battery-pack-prices-fall-to-108-per-kilowatt-hour-despite-rising-metal-prices-bloombergnef/
 - Taux de change USD → CAD (véhicules importés des É.-U.) → https://www.banqueducanada.ca/taux/taux-de-change/

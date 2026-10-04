@@ -193,7 +193,7 @@ export const GARAGES_DEMO: GarageDemo[] = [
   {
     name: "Dépôt Nord",
     address: "45, chemin du Lac-Vert, Rivière-Claire (adresse fictive)",
-    available_power_kw: 120,
+    available_power_kw: 125,
     parking_spots: 16,
     return_time: "16:30",
     departure_time: "06:00",

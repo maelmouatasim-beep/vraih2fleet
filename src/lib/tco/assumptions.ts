@@ -774,6 +774,26 @@ export const HYPOTHESES = {
       'Ordre de grandeur prudent (une borne niveau 2 tient sans travaux). À remplacer par la puissance réellement ' +
       'disponible : facture Hydro-Québec (puissance appelée vs puissance de l’entrée) ou relevé d’un électricien.',
   },
+  seuil_sous_utilisation_flotte: {
+    id: 'seuil_sous_utilisation_flotte',
+    description:
+      'Scénario de redimensionnement (Fonds municipal vert) : un véhicule est « sous-utilisé » quand son kilométrage annuel est inférieur à cette fraction du kilométrage annuel type de sa catégorie (registre)',
+    valeur: 0.6,
+    unite: 'ratio',
+    plage: { basse: 0.4, haute: 0.75 },
+    region: 'CA',
+    source: {
+      organisme: 'Fédération canadienne des municipalités — Fonds municipal vert',
+      document: 'Exigences des études de planification de flotte (scénario de réduction / redimensionnement de la flotte)',
+      annee: 2026,
+      url: 'https://greenmunicipalfund.ca/fr',
+    },
+    dateVerification: V,
+    statut: 'a_valider',
+    notes:
+      'Seuil de REVUE proposé (aucune valeur normative lue) : il désigne les véhicules à examiner, pas une décision. ' +
+      'À ajuster par la municipalité ; les véhicules saisonniers ou d’urgence (déneigement) restent à juger par le service.',
+  },
   raccordement_seuil_palier1_kw: {
     id: 'raccordement_seuil_palier1_kw',
     description: 'Raccordement — limite haute du palier 1 (puissance supplémentaire au-delà de la capacité disponible du garage)',

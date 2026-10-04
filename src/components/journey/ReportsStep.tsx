@@ -18,6 +18,7 @@ import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useConfirmedSubsidies } from "@/hooks/useConfirmedSubsidies";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { construireClasseurPlan, type MetaRapport } from "@/lib/journey/report";
+import { analyserEquite, scenarioReduction } from "@/lib/journey/fmv";
 import { construireStrategie, strategieRetenue } from "@/lib/journey/strategies";
 import { analyserSensibilite, ENGINE_VERSION, LISTE_HYPOTHESES } from "@/lib/tco";
 import {
@@ -85,6 +86,8 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
       donneesClient,
       strategieRetenue: retenue,
       pieces,
+      // Exigences du Fonds municipal vert (équité + réduction de la flotte).
+      fmv: { equite: analyserEquite(strategie, vehicules), reduction: scenarioReduction(strategie, vehicules, options) },
     };
     const unites = new Map(projectVehicles.map((pv) => [pv.vehicle_id, pv.vehicles.unit_number]));
     // Phase 5.7 — diagnostic hiver des véhicules électriques à batterie du plan
@@ -254,6 +257,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
               <li>{t("journey.reports.pdf.item2")}</li>
               <li>{t("journey.reports.pdf.item3")}</li>
               <li>{t("journey.reports.pdf.item4")}</li>
+              <li>{t("journey.reports.pdf.item5")}</li>
             </ul>
             <div className="flex gap-2">
               {(["fr", "en"] as const).map((langue) => (
@@ -286,6 +290,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
               <li>{t("journey.reports.xlsx.item1")}</li>
               <li>{t("journey.reports.xlsx.item2")}</li>
               <li>{t("journey.reports.xlsx.item3", { count: LISTE_HYPOTHESES.length })}</li>
+              <li>{t("journey.reports.xlsx.item4")}</li>
             </ul>
             <Button onClick={genererXlsx} disabled={enCours !== null} variant="outline">
               {enCours === "xlsx" ? (

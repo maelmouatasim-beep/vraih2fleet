@@ -343,7 +343,15 @@ try {
   });
   egaux("VAN", { strategies: vanStrategie, plan: vanPlan, excel: vanExcel });
   if ((await etatEtape(page, "rapports")) !== "termine") throw new Error("Rapports devrait être « terminé » après génération");
-  etape(`Rapports : totaux identiques partout — infrastructure ${infra} $, subventions ${subv} $, VAN ${vanPlan} $`);
+  // Exigences du Fonds municipal vert : équité + scénario de réduction, au PDF et à l'Excel.
+  for (const attendu of [/FONDS MUNICIPAL VERT/, /Analyse d'équité/, /Scénario de réduction \/ redimensionnement/]) {
+    if (!attendu.test(pdf)) throw new Error(`PDF : ${attendu} absent (Fonds municipal vert)`);
+  }
+  const feuilleFmv = classeur.worksheets.find((f) => f.name === "Fonds municipal vert");
+  if (!feuilleFmv) throw new Error("Excel : feuille « Fonds municipal vert » absente");
+  const texteFmv = lignes(feuilleFmv).flat().join(" ");
+  if (!/ANALYSE D'ÉQUITÉ/.test(texteFmv) || !/SCÉNARIO DE RÉDUCTION/.test(texteFmv)) throw new Error("Excel : équité ou réduction absente");
+  etape(`Rapports : totaux identiques partout — infrastructure ${infra} $, subventions ${subv} $, VAN ${vanPlan} $ ; équité et réduction de flotte (Fonds municipal vert) au PDF et à l'Excel`);
 
   // Phase 5.2 — COPILOTE (fonction Edge réelle + faux serveur Claude
   // scripté, scripts/mock-anthropic.mjs) : activation par l'admin, outils
