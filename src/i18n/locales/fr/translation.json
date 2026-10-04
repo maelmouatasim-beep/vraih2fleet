@@ -2151,7 +2151,9 @@
         "vehicles": "véhicules",
         "region": "Région",
         "horizon": "ans",
-        "discountRate": "taux"
+        "discountRate": "taux",
+        "vehicleCount_one": "{{count}} véhicule",
+        "vehicleCount_other": "{{count}} véhicules"
       },
       "toast": {
         "error": "Erreur",

@@ -7,6 +7,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 import type { VehicleRow } from "./vehicles";
+import { compterVehiculesParProjet } from "./projectCounts";
 
 export type ProjectVehicleRow = Tables<"project_vehicles">;
 export type ProjectVehicleInsert = TablesInsert<"project_vehicles">;
@@ -55,4 +56,12 @@ export async function updateProjectVehicle(id: string, patch: ProjectVehicleUpda
 export async function removeProjectVehicle(id: string): Promise<void> {
   const { error } = await supabase.from("project_vehicles").delete().eq("id", id);
   if (error) throw error;
+}
+
+/** Nombre de véhicules inclus, par projet (liste des projets). */
+export async function countVehiclesByProject(projectIds: string[]): Promise<Map<string, number>> {
+  if (projectIds.length === 0) return new Map();
+  const { data, error } = await supabase.from("project_vehicles").select("project_id").in("project_id", projectIds);
+  if (error) throw error;
+  return compterVehiculesParProjet(data ?? []);
 }

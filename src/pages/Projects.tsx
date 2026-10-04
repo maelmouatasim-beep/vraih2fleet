@@ -63,6 +63,7 @@ import {
 } from "@/lib/supabase/projects";
 import { seedDemoProject, getDemoProjectInfo } from "@/lib/demoData";
 import { formaterDate, formaterPourcentage } from "@/lib/format";
+import { countVehiclesByProject } from "@/lib/fleet/projectVehicles";
 
 const Projects = () => {
   const { t, i18n } = useTranslation();
@@ -136,8 +137,19 @@ const Projects = () => {
     );
   }, [projects, searchQuery]);
 
-  // Vehicle groups are not persisted yet; keep count at 0 for now.
-  const getVehicleCount = (_projectId: string) => 0;
+  // Nombre RÉEL de véhicules inclus dans chaque projet (project_vehicles).
+  const [nbVehicules, setNbVehicules] = useState<Map<string, number>>(new Map());
+  const idsProjets = projects.map((p) => p.id).join(",");
+  useEffect(() => {
+    let actif = true;
+    countVehiclesByProject(idsProjets ? idsProjets.split(",") : [])
+      .then((m) => actif && setNbVehicules(m))
+      .catch(() => actif && setNbVehicules(new Map()));
+    return () => {
+      actif = false;
+    };
+  }, [idsProjets]);
+  const getVehicleCount = (projectId: string) => nbVehicules.get(projectId) ?? 0;
 
   const handleCreateProject = async () => {
     if (!user) return;
@@ -500,7 +512,7 @@ const Projects = () => {
                     <div className="flex flex-wrap gap-2">
                       <Badge variant="secondary" className="gap-1">
                         <Truck className="w-3 h-3" />
-                        {vehicleCount} {t('pages.projects.card.vehicles')}
+                        <span data-testid="project-vehicle-count">{t('pages.projects.card.vehicleCount', { count: vehicleCount })}</span>
                       </Badge>
                       <Badge variant="outline" className="gap-1">
                         <MapPin className="w-3 h-3" />
