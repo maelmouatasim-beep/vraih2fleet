@@ -49,6 +49,11 @@ const ENTETES: Record<string, string> = {
   categorie: "category",
   category: "category",
   classe: "category",
+  type: "category",
+  typedevehicule: "category",
+  typevehicule: "category",
+  genre: "category",
+  vehicletype: "category",
   carburant: "fuel_type",
   fuel: "fuel_type",
   fueltype: "fuel_type",
@@ -98,6 +103,13 @@ const ENTETES: Record<string, string> = {
 
 /** Entêtes « kilométrage d'une année » (« Km 2025 », « Kilométrage 2024 »). */
 const ENTETES_KM_ANNEE = new Set(["km", "kms", "kilometrage", "kmparcourus"]);
+
+/** Entêtes de texte libre qui portent souvent la catégorie (« Description ») :
+ *  utilisées comme catégorie SEULEMENT quand aucune colonne catégorie n'existe. */
+const ENTETES_CATEGORIE_SECONDAIRES = new Set(["description", "desc", "designation", "libelle"]);
+export function estEnteteCategorieSecondaire(entete: string): boolean {
+  return ENTETES_CATEGORIE_SECONDAIRES.has(normaliserCle(entete));
+}
 
 /** Champ du modèle d'import reconnu pour une entête (synonymes FR/EN), ou null. */
 export function champPourEntete(entete: string): string | null {
@@ -196,13 +208,15 @@ export function lignesDepuisGrille(grille: string[][]): { lignes: Array<Record<s
     lignes.push(objet);
   }
   const nonVides = [...new Set(entetes.filter(Boolean))];
-  const reconnues = nonVides.filter((e) => champPourEntete(e) !== null);
+  const avecCategorie = nonVides.some((e) => champPourEntete(e) === "category");
+  const reconnue = (e: string) => champPourEntete(e) !== null || (!avecCategorie && estEnteteCategorieSecondaire(e));
+  const reconnues = nonVides.filter(reconnue);
   return {
     lignes,
     diagnostic: {
       ligneEntete: i + 1,
       reconnues,
-      ignorees: nonVides.filter((e) => champPourEntete(e) === null),
+      ignorees: nonVides.filter((e) => !reconnue(e)),
       sansUnite: !reconnues.some((e) => champPourEntete(e) === "unit_number"),
       lignesTotal,
     },
@@ -210,15 +224,32 @@ export function lignesDepuisGrille(grille: string[][]): { lignes: Array<Record<s
 }
 
 /** Une valeur de choix fermé est-elle reconnue par les synonymes ? */
+/**
+ * Catégorie déduite d'un libellé usuel de parc municipal (« Auto compacte »,
+ * « Pick-up 1/2 tonne », « Camion 10 roues », « Chasse-neige »…) quand il
+ * n'est pas un synonyme exact. Seulement les libellés SANS ambiguïté :
+ * « Minibus adapté » ou « Camion » seul restent non reconnus (à choisir).
+ */
+export function categorieDepuisLibelle(brut: string): string | null {
+  const t = ` ${brut.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9/]+/g, " ").trim()} `;
+  const regles: [RegExp, string][] = [
+    [/ (chasse neige|deneigeuse|charrue|epandeuse) /, "deneigeuse"],
+    [/ souffleuse /, "souffleuse"],
+    [/ (autopompe|pompe|echelle|camion incendie|ambulance|police|patrouille|urgence) /, "vehicule_urgence"],
+    [/ (balai|balayeuse|nacelle|tracteur a trottoir|chargeuse|retrocaveuse|niveleuse|tondeuse|chariot) /, "vehicule_specialise"],
+    [/ (camion a benne|benne) /, "camion_benne"],
+    [/ (10|dix|12|douze) roues /, "camion_lourd"],
+    [/ (6|six) roues /, "camion_moyen"],
+    [/ (pick ?up|camionnette|fourgon|fourgonnette|minifourgonnette|cube) /, "camionnette"],
+    [/ (auto|automobile|voiture|berline|compacte|sous compacte|vus|suv|multisegment|vehicule leger) /, "vehicule_leger"],
+  ];
+  for (const [re, cat] of regles) if (re.test(t)) return cat;
+  return null;
+}
+
 export function valeurReconnue(champ: "category" | "fuel_type" | "usage_profile" | "status", brut: string): string | null {
-  const table =
-    champ === "category"
-      ? SYNONYMES_CATEGORIE
-      : champ === "fuel_type"
-        ? SYNONYMES_CARBURANT
-        : champ === "usage_profile"
-          ? SYNONYMES_USAGE
-          : SYNONYMES_STATUT;
+  if (champ === "category") return SYNONYMES_CATEGORIE[normaliserValeur(brut)] ?? categorieDepuisLibelle(brut);
+  const table = champ === "fuel_type" ? SYNONYMES_CARBURANT : champ === "usage_profile" ? SYNONYMES_USAGE : SYNONYMES_STATUT;
   return table[normaliserValeur(brut)] ?? null;
 }
 
@@ -396,6 +427,8 @@ function nombre(v: unknown, entier = false): Nombre {
   let compact = brut.replace(/[\s\u00a0\u202f]/g, "");
   // Champ ENTIER (km, année) : « 12,500 » ou « 12.500 » = séparateur de
   // milliers (12 500), jamais 12,5 km lu en silence.
+  // « 2015? » (valeur douteuse notée dans le fichier) : la valeur écrite est lue.
+  if (entier) compact = compact.replace(/^(\d+)\?$/, "$1");
   if (entier) compact = compact.replace(/^(\d{1,3})((?:[.,]\d{3})+)(?=[^\d.,]|$)/, (_, a: string, b: string) => a + b.replace(/[.,]/g, ""));
   // virgule décimale acceptée
   const s = compact.replace(",", ".");
@@ -409,6 +442,21 @@ function nombre(v: unknown, entier = false): Nombre {
   const n = Number(m[1]);
   return Number.isFinite(n) ? { ok: true, valeur: n } : { ok: false, brut };
 }
+
+const MOIS: Record<string, number> = {
+  janvier: 1, janv: 1, jan: 1, january: 1,
+  fevrier: 2, fevr: 2, fev: 2, february: 2, feb: 2,
+  mars: 3, mar: 3, march: 3,
+  avril: 4, avr: 4, april: 4, apr: 4,
+  mai: 5, may: 5,
+  juin: 6, june: 6, jun: 6,
+  juillet: 7, juil: 7, july: 7, jul: 7,
+  aout: 8, august: 8, aug: 8,
+  septembre: 9, sept: 9, sep: 9, september: 9,
+  octobre: 10, oct: 10, october: 10,
+  novembre: 11, nov: 11, november: 11,
+  decembre: 12, dec: 12, december: 12,
+};
 
 /**
  * Date de mise en service : « AAAA-MM-JJ » (séparateurs -, / ou .
@@ -427,6 +475,16 @@ function dateISO(v: unknown): { ok: true; valeur: string | null } | { ok: false;
   if (m) {
     const [, a, mo, j] = m;
     return { ok: true, valeur: `${a}-${mo.padStart(2, "0")}-${j.padStart(2, "0")}` };
+  }
+  // « mai 2016 », « sept. 2018 », « May 2016 » : premier jour du mois.
+  const mm = brut
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .match(/^([a-z]+)\.?\s+(\d{4})$/);
+  if (mm) {
+    const mois = MOIS[mm[1]];
+    if (mois) return { ok: true, valeur: `${mm[2]}-${String(mois).padStart(2, "0")}-01` };
   }
   return { ok: false, brut };
 }
@@ -540,6 +598,11 @@ export function validerLignes(
       const champ = champPourEntete(cle);
       if (champ && !fourni(champs[champ])) champs[champ] = valeur;
     }
+    // Pas de colonne catégorie : « Description » en tient lieu (audit, point 2).
+    if (!Object.keys(brute).some((cle) => champPourEntete(cle) === "category")) {
+      const cleDesc = Object.keys(brute).find(estEnteteCategorieSecondaire);
+      if (cleDesc && fourni(brute[cleDesc])) champs.category = brute[cleDesc];
+    }
     if (Object.values(champs).every((v) => !fourni(v))) return; // ligne vide/ignorée
 
     const erreursLigne: ErreurImport[] = [];
@@ -557,7 +620,9 @@ export function validerLignes(
       libelle: string,
     ): string | undefined => {
       if (!fourni(champs[champ])) return undefined;
-      const v = table[normaliserValeur(String(champs[champ]))];
+      const v =
+        table[normaliserValeur(String(champs[champ]))] ??
+        (champ === "category" ? categorieDepuisLibelle(String(champs[champ])) ?? undefined : undefined);
       if (!v) {
         erreursLigne.push({
           ligne,

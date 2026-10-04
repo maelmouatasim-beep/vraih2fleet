@@ -359,3 +359,14 @@ describe("schéma partagé avec la fonction Edge fleet-import", () => {
     for (const champ of CHAMPS_A_CHOIX) expect([...schema.VALEURS[champ]]).toEqual([...VALEURS_CIBLES[champ]]);
   });
 });
+
+describe("re-audit, point 2 — « Description » proposée comme catégorie", () => {
+  it("sans colonne catégorie, la colonne « Description » est associée à la catégorie (probable)", () => {
+    const t = tableauDepuisGrille([["No", "Description", "Carburant"], ["101", "Auto compacte", "Gaz"]], "xlsx");
+    const c = correspondanceInitiale(t);
+    expect(c.colonnes.find((x) => x.entete === "Description")).toMatchObject({ champ: "category", certitude: "probable" });
+    const r = appliquerCorrespondance(t, c, { organizationId: "org", existants: [], garagesExistants: [], anneeCourante: 2026 });
+    expect(r.import.valides[0]).toMatchObject({ category: "vehicule_leger", fuel_type: "essence" });
+  });
+});
+

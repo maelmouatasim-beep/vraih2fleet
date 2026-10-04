@@ -190,8 +190,9 @@ describe("audit acheteur, point 2 — un vrai fichier municipal s'importe", () =
     expect(detecterEntete(grille)).toBe(3);
     const { lignes, diagnostic } = lignesDepuisGrille(grille);
     expect(diagnostic).toMatchObject({ ligneEntete: 4, sansUnite: false, lignesTotal: 2 });
-    expect(diagnostic.reconnues).toEqual(["No", "Service", "Carburant", "Km 2025", "Conso L/100"]);
-    expect(diagnostic.ignorees).toEqual(["Description"]);
+    // sans colonne catégorie, « Description » en tient lieu (re-audit)
+    expect(diagnostic.reconnues).toEqual(["No", "Description", "Service", "Carburant", "Km 2025", "Conso L/100"]);
+    expect(diagnostic.ignorees).toEqual([]);
     expect(lignes).toHaveLength(3);
   });
 
@@ -217,5 +218,49 @@ describe("audit acheteur, point 2 — un vrai fichier municipal s'importe", () =
   it("la consommation garde sa virgule décimale (« 9,600 » n'est pas un millier)", () => {
     const r = validerLignes([{ Unité: "U-1", Catégorie: "camionnette", Carburant: "diesel", Consommation: "9,600" }], ORG);
     expect(r.valides[0].consumption_per_100km).toBeCloseTo(9.6, 6);
+  });
+});
+
+describe("re-audit, point 2 — le fichier BRUT du directeur s'importe en mode strict", () => {
+  it("« Description » sert de catégorie (libellés usuels), dates « mai 2016 », années « 2015? »", () => {
+    const lignes = [
+      { No: "101", Description: "Auto compacte", Carburant: "Ess.", Année: "2015?", "Mise en service": "mai 2016" },
+      { No: "Unité 102", Description: "Pick-up 1/2 tonne", Carburant: "gaz", Année: 2018, "Mise en service": "sept. 2018" },
+      { No: "103", Description: "Camion 10 roues", Carburant: "Diesel B5", "Mise en service": "2019-03-15" },
+      { No: "104", Description: "Chasse-neige", Carburant: "Diesel" },
+      { No: "105", Description: "Tracteur à trottoir", Carburant: "Diesel" },
+      { No: "106", Description: "Autopompe", Carburant: "Diesel" },
+      { No: "107", Description: "VUS", Carburant: "Hybride" },
+      { No: "108", Description: "Camion 6 roues", Carburant: "Diésel" },
+      { No: "109", Description: "Fourgon", Carburant: "Essence" },
+      { No: "110", Description: "Balai de rue", Carburant: "Diesel" },
+    ];
+    const r = validerLignes(lignes, ORG);
+    expect(r.erreurs).toEqual([]);
+    expect(r.valides.map((v) => v.category)).toEqual([
+      "vehicule_leger",
+      "camionnette",
+      "camion_lourd",
+      "deneigeuse",
+      "vehicule_specialise",
+      "vehicule_urgence",
+      "vehicule_leger",
+      "camion_moyen",
+      "camionnette",
+      "vehicule_specialise",
+    ]);
+    expect(r.valides[0]).toMatchObject({ model_year: 2015, in_service_date: "2016-05-01" });
+    expect(r.valides[1].in_service_date).toBe("2018-09-01");
+  });
+
+  it("un libellé ambigu n'est jamais deviné : « Minibus adapté » reste à choisir, avec un message clair", () => {
+    const r = validerLignes([{ No: "201", Description: "Minibus adapté", Carburant: "Essence" }], ORG);
+    expect(r.valides).toHaveLength(0);
+    expect(r.erreurs[0].message).toMatch(/catégorie non reconnu\(e\) : « Minibus adapté »/);
+  });
+
+  it("une vraie colonne catégorie reste prioritaire sur « Description »", () => {
+    const r = validerLignes([{ No: "301", Catégorie: "camion_moyen", Description: "Auto compacte", Carburant: "Diesel" }], ORG);
+    expect(r.valides[0].category).toBe("camion_moyen");
   });
 });

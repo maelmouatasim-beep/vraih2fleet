@@ -18,7 +18,7 @@
  */
 import { CLASSES_PNBV, lireClassePnbv } from "./gvwr";
 import { CARBURANTS, CATEGORIES_VEHICULE, PROFILS_USAGE, STATUTS_VEHICULE } from "./constants";
-import { champPourEntete, detecterEntete, estLigneTotal, validerLignes, valeurReconnue, type ResultatImport } from "./importVehicles";
+import { champPourEntete, detecterEntete, estEnteteCategorieSecondaire, estLigneTotal, validerLignes, valeurReconnue, type ResultatImport } from "./importVehicles";
 import { DEFAUTS_CATEGORIES } from "@/lib/tco";
 import { categorieMoteur } from "@/lib/journey/categories";
 import { cleGarage } from "@/lib/journey/infrastructure";
@@ -250,6 +250,12 @@ export function correspondanceInitiale(t: TableauBrut): Correspondance {
     }
     return { index, entete, champ: "ignorer", certitude: "incertaine", origine: "synonyme" };
   });
+  // Pas de colonne catégorie : « Description » en tient lieu, certitude
+  // « probable » (affichée, modifiable) — audit acheteur, point 2.
+  if (!dejaPris.has("category")) {
+    const desc = colonnes.find((c) => c.champ === "ignorer" && !c.personnelle && estEnteteCategorieSecondaire(c.entete));
+    if (desc) Object.assign(desc, { champ: "category", certitude: "probable" });
+  }
   return { colonnes, valeurs: [] };
 }
 
@@ -422,13 +428,14 @@ export function appliquerCorrespondance(
         const ch = champ as ChampAChoix;
         const reconnu =
           ch === "gvwr_class" ? lireClassePnbv(brut) : valeurReconnue(ch as Exclude<ChampAChoix, "gvwr_class">, brut);
-        if (!reconnu) {
-          const v = c.valeurs.find((x) => x.champ === ch && x.source === brut);
-          if (v && v.cible && v.certitude !== "incertaine") brut = v.cible;
-          else {
-            sign.push({ code: "valeur_incertaine", champ: ch, valeur: brut });
-            continue; // champ laissé VIDE, jamais deviné
-          }
+        // Choix explicite (utilisateur ou IA) d'abord, puis synonyme reconnu
+        // (valeur canonique affichée : « Pick-up » → camionnette).
+        const v = c.valeurs.find((x) => x.champ === ch && x.source === brut);
+        if (v && v.cible && v.certitude !== "incertaine") brut = v.cible;
+        else if (reconnu) brut = reconnu;
+        else {
+          sign.push({ code: "valeur_incertaine", champ: ch, valeur: brut });
+          continue; // champ laissé VIDE, jamais deviné
         }
       }
       if (champ === "annual_km" || champ === "max_daily_km" || champ === "consumption_per_100km") {
