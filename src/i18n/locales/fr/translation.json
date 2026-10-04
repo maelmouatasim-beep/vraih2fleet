@@ -87,7 +87,12 @@
       "done": "{{count}} véhicule(s) importé(s), {{updated}} mis à jour",
       "readError": "Fichier illisible",
       "updatesTitle": "Unités déjà présentes — leurs champs fournis seront mis à jour :",
-      "template": "Modèle d'import (colonnes, exemples, valeurs acceptées, onglet « Lisez-moi ») :"
+      "template": "Modèle d'import (colonnes, exemples, valeurs acceptées, onglet « Lisez-moi ») :",
+      "headerRow": "Entête lue en ligne {{line}} : {{count}} colonne(s) reconnue(s) ({{columns}}).",
+      "ignoredColumns": "Colonnes non importées : {{columns}}.",
+      "totalsSkipped": "{{count}} ligne(s) de total ou de sous-total ignorée(s).",
+      "noUnitColumn": "Aucune colonne de numéro d'unité n'est reconnue : renommez-la « Unité » (par exemple « No » → « Unité »), recopiez vos données dans le modèle ci-dessus, ou utilisez l'Import intelligent, qui associe les colonnes pour vous.",
+      "noRows": "Aucune ligne de véhicule sous l'entête : vérifiez que la feuille contient bien vos véhicules."
     },
     "edit": {
       "title": "Modifier le véhicule {{unit}}",

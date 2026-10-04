@@ -34,7 +34,7 @@ import {
   type VehicleInsert,
   type VehicleRow,
 } from "@/lib/fleet/vehicles";
-import { lireFichier, validerLignes, type ResultatImport } from "@/lib/fleet/importVehicles";
+import { lireFichier, validerLignes, type DiagnosticEntete, type ResultatImport } from "@/lib/fleet/importVehicles";
 import { estVehiculeDemo } from "@/lib/demoData/villeDemo";
 import { Download, FileSearch, Loader2, Pencil, Plus, Trash2, Truck, Upload } from "lucide-react";
 import { telechargerModeleCsv, telechargerModeleExcel } from "@/lib/fleet/importTemplateFile";
@@ -79,7 +79,7 @@ export default function MyFleet() {
   const [suppression, setSuppression] = useState<{ vehicule: VehicleRow; projets: number | null } | null>(null);
   const [importOuvert, setImportOuvert] = useState(false);
   const [importIntelligentOuvert, setImportIntelligentOuvert] = useState(false);
-  const [apercu, setApercu] = useState<ResultatImport | null>(null);
+  const [apercu, setApercu] = useState<(ResultatImport & { diagnostic: DiagnosticEntete }) | null>(null);
   const [nomFichier, setNomFichier] = useState<string>("");
   const fichierRef = useRef<HTMLInputElement>(null);
 
@@ -181,9 +181,9 @@ export default function MyFleet() {
     if (!organization) return;
     setNomFichier(file.name);
     try {
-      const lignes = await lireFichier(file);
+      const { lignes, diagnostic } = await lireFichier(file);
       const existantes = new Map(vehicles.map((v) => [v.unit_number, v.id]));
-      setApercu(validerLignes(lignes, organization.id, existantes));
+      setApercu({ ...validerLignes(lignes, organization.id, existantes), diagnostic });
     } catch (e) {
       toast({ title: t("fleet.import.readError"), description: e instanceof Error ? e.message : "", variant: "destructive" });
       setApercu(null);
@@ -545,7 +545,29 @@ export default function MyFleet() {
                     </p>
                   </div>
                 )}
-                {apercu.erreurs.length > 0 && (
+                <div className="rounded-md border border-border bg-muted/40 p-3 text-xs space-y-1" data-testid="import-diagnostic">
+                  <p>
+                    {t("fleet.import.headerRow", {
+                      line: apercu.diagnostic.ligneEntete,
+                      count: apercu.diagnostic.reconnues.length,
+                      columns: apercu.diagnostic.reconnues.join(", ") || "—",
+                    })}
+                  </p>
+                  {apercu.diagnostic.ignorees.length > 0 && (
+                    <p className="text-muted-foreground">{t("fleet.import.ignoredColumns", { columns: apercu.diagnostic.ignorees.join(", ") })}</p>
+                  )}
+                  {apercu.diagnostic.lignesTotal > 0 && (
+                    <p className="text-muted-foreground">{t("fleet.import.totalsSkipped", { count: apercu.diagnostic.lignesTotal })}</p>
+                  )}
+                </div>
+                {apercu.diagnostic.sansUnite ? (
+                  <p className="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm" data-testid="import-no-unit">
+                    {t("fleet.import.noUnitColumn")}
+                  </p>
+                ) : apercu.valides.length + apercu.misesAJour.length + apercu.erreurs.length === 0 ? (
+                  <p className="rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm">{t("fleet.import.noRows")}</p>
+                ) : null}
+                {apercu.erreurs.length > 0 && !apercu.diagnostic.sansUnite && (
                   <div className="max-h-40 overflow-y-auto rounded-md border border-destructive/40 bg-destructive/5 p-3 text-xs space-y-1">
                     {apercu.erreurs.slice(0, 50).map((e, i) => (
                       <p key={i}>

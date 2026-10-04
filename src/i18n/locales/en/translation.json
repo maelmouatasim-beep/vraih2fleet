@@ -87,7 +87,12 @@
       "done": "{{count}} vehicle(s) imported, {{updated}} updated",
       "readError": "Unreadable file",
       "updatesTitle": "Units already in the fleet — their provided fields will be updated:",
-      "template": "Import template (columns, examples, accepted values, \"Read me\" tab):"
+      "template": "Import template (columns, examples, accepted values, \"Read me\" tab):",
+      "headerRow": "Header read on row {{line}}: {{count}} column(s) recognized ({{columns}}).",
+      "ignoredColumns": "Columns not imported: {{columns}}.",
+      "totalsSkipped": "{{count}} total or subtotal row(s) skipped.",
+      "noUnitColumn": "No unit number column is recognized: rename it “Unit” (for example “No” → “Unit”), copy your data into the template above, or use Smart import, which maps the columns for you.",
+      "noRows": "No vehicle row under the header: check that the sheet contains your vehicles."
     },
     "edit": {
       "title": "Edit vehicle {{unit}}",

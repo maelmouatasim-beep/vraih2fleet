@@ -41,7 +41,7 @@ const exportFlotte = (): TableauBrut =>
       ["Rapport d'inventaire — généré le 2026-09-30", "", "", "", "", "", "", ""],
       ["", "", "", "", "", "", "", ""],
       ["Asset #", "Type équipement", "Énergie", "Odo annuel (mi)", "MPG", "Chauffeur", "Yard", "Yr"],
-      ["T-12", "Pickup 3/4 t", "Gas", "12 000", "15", "Jean Tremblay", "garage nord", "2019"],
+      ["T-12", "Pickup 3/4 t", "Sans plomb", "12 000", "15", "Jean Tremblay", "garage nord", "2019"],
       ["T-13", "Pickup 3/4 t", "Diesel", "9 500", "18", "Marie Roy", "Garage Nord", "2021"],
       ["T 12", "Chasse-neige", "Diesel", "4 000", "4", "", "Garage Sud", "2015"],
       ["T-14", "Machin", "Bio-truc", "1 000", "20", "", "Garage Sud", "2031"],
@@ -132,7 +132,7 @@ describe("minimisation (Loi 25) et correspondance", () => {
     expect(JSON.stringify(envoye)).not.toContain("Tremblay");
     // au plus 3 exemples ; valeurs distinctes seulement si peu nombreuses
     expect(envoye.every((x) => x.exemples.length <= 3)).toBe(true);
-    expect(envoye.find((x) => x.entete === "Énergie")?.valeursDistinctes).toEqual(["Gas", "Diesel", "Bio-truc"]);
+    expect(envoye.find((x) => x.entete === "Énergie")?.valeursDistinctes).toEqual(["Sans plomb", "Diesel", "Bio-truc"]);
   });
 
   it("synonymes connus : sûrs ; inconnus : ignorés et incertains", () => {
@@ -167,7 +167,7 @@ describe("minimisation (Loi 25) et correspondance", () => {
         { champ: "category", source: "Pickup 3/4 t", cible: "camionnette", certitude: "probable" },
         { champ: "category", source: "Chasse-neige", cible: "deneigeuse", certitude: "sure" },
         { champ: "category", source: "Machin", cible: "super_camion", certitude: "sure" },
-        { champ: "fuel_type", source: "Gas", cible: "essence", certitude: "sure" },
+        { champ: "fuel_type", source: "Sans plomb", cible: "essence", certitude: "sure" },
         { champ: "fuel_type", source: "Bio-truc", cible: "", certitude: "incertaine" },
       ],
     });
@@ -218,7 +218,7 @@ describe("application de la correspondance et tableau de validation", () => {
         { champ: "category", source: "Pickup 3/4 t", cible: "camionnette", certitude: "sure" },
         { champ: "category", source: "Chasse-neige", cible: "deneigeuse", certitude: "sure" },
         { champ: "category", source: "Machin", cible: "", certitude: "incertaine" },
-        { champ: "fuel_type", source: "Gas", cible: "essence", certitude: "sure" },
+        { champ: "fuel_type", source: "Sans plomb", cible: "essence", certitude: "sure" },
         { champ: "fuel_type", source: "Bio-truc", cible: "", certitude: "incertaine" },
       ],
     });
@@ -321,12 +321,12 @@ describe("corrections de l'utilisateur", () => {
     expect(c.colonnes[1]).toMatchObject({ champ: "unit_number", certitude: "sure", origine: "utilisateur" });
     expect(c.colonnes[3].unite).toBe("mi");
     expect(choisirChamp(c, 3, "make").colonnes[3].unite).toBeUndefined();
-    // « Diesel » reconnu par synonyme ; « Gas » et « Bio-truc » à associer
-    expect(valeursAAssocier(t, c).map((v) => v.source)).toEqual(["Gas", "Bio-truc"]);
-    c = choisirValeur(c, "fuel_type", "Gas", "essence");
+    // « Diesel » reconnu par synonyme ; « Sans plomb » et « Bio-truc » à associer
+    expect(valeursAAssocier(t, c).map((v) => v.source)).toEqual(["Sans plomb", "Bio-truc"]);
+    c = choisirValeur(c, "fuel_type", "Sans plomb", "essence");
     c = choisirValeur(c, "fuel_type", "Bio-truc", "kerosene"); // hors liste ⇒ vide
     expect(valeursAAssocier(t, c)).toEqual([
-      { champ: "fuel_type", source: "Gas", cible: "essence", certitude: "sure", origine: "utilisateur" },
+      { champ: "fuel_type", source: "Sans plomb", cible: "essence", certitude: "sure", origine: "utilisateur" },
       { champ: "fuel_type", source: "Bio-truc", cible: "", certitude: "incertaine", origine: "utilisateur" },
     ]);
   });

@@ -29,6 +29,10 @@ const ENTETES: Record<string, string> = {
   unite: "unit_number",
   unit: "unit_number",
   unitnumber: "unit_number",
+  no: "unit_number",
+  numero: "unit_number",
+  nounite: "unit_number",
+  numerovehicule: "unit_number",
   vin: "vin",
   niv: "vin",
   marque: "make",
@@ -51,9 +55,15 @@ const ENTETES: Record<string, string> = {
   kman: "annual_km",
   kmparan: "annual_km",
   kmannuel: "annual_km",
+  kilometrageannuel: "annual_km",
   annualkm: "annual_km",
   consommation: "consumption_per_100km",
   conso: "consumption_per_100km",
+  consol100: "consumption_per_100km",
+  consol100km: "consumption_per_100km",
+  consommationl100: "consumption_per_100km",
+  consommationl100km: "consumption_per_100km",
+  l100km: "consumption_per_100km",
   consumption: "consumption_per_100km",
   consumptionper100km: "consumption_per_100km",
   sourceconsommation: "consumption_source",
@@ -63,6 +73,7 @@ const ENTETES: Record<string, string> = {
   usageprofile: "usage_profile",
   departement: "department",
   department: "department",
+  service: "department",
   depot: "depot",
   garage: "depot",
   kmjournaliermax: "max_daily_km",
@@ -85,9 +96,117 @@ const ENTETES: Record<string, string> = {
   notes: "notes",
 };
 
+/** Entêtes « kilométrage d'une année » (« Km 2025 », « Kilométrage 2024 »). */
+const ENTETES_KM_ANNEE = new Set(["km", "kms", "kilometrage", "kmparcourus"]);
+
 /** Champ du modèle d'import reconnu pour une entête (synonymes FR/EN), ou null. */
 export function champPourEntete(entete: string): string | null {
-  return ENTETES[normaliserCle(entete)] ?? null;
+  const cle = normaliserCle(entete);
+  const direct = ENTETES[cle];
+  if (direct) return direct;
+  // « Km 2025 » = kilométrage parcouru dans l'année = km annuel (jamais
+  // l'odomètre, qui n'a pas d'année dans son entête).
+  const sansAnnee = cle.replace(/(19|20)\d{2}/, "");
+  if (sansAnnee !== cle && ENTETES_KM_ANNEE.has(sansAnnee)) return "annual_km";
+  return null;
+}
+
+/** Libellé français d'un champ (messages d'erreur : jamais le nom technique). */
+export const LIBELLES_CHAMPS: Record<string, string> = {
+  unit_number: "unité",
+  vin: "NIV",
+  make: "marque",
+  model: "modèle",
+  model_year: "année modèle",
+  in_service_date: "mise en service",
+  category: "catégorie",
+  fuel_type: "carburant",
+  annual_km: "kilométrage annuel",
+  consumption_per_100km: "consommation",
+  consumption_source: "source de consommation",
+  usage_profile: "usage",
+  department: "service",
+  depot: "garage",
+  gvwr_class: "classe PNBV",
+  max_daily_km: "km journalier max",
+  status: "statut",
+  notes: "notes",
+};
+
+// ---------------------------------------------------------------------------
+// Lecture d'une grille brute : ligne d'entête, lignes de total
+// ---------------------------------------------------------------------------
+
+const estNombreCellule = (s: string) => /^-?[\d\s\u00a0\u202f.,]+$/.test(s.trim()) && /\d/.test(s);
+
+/**
+ * Ligne d'entête parmi les 15 premières. Score = cellules texte DISTINCTES
+ * (une cellule fusionnée répète sa valeur sur toutes ses colonnes : un
+ * titre fusionné ne compte qu'une fois) + 3 par entête reconnue par les
+ * synonymes ; au moins 2 cellules distinctes ; à égalité, la première.
+ */
+export function detecterEntete(grille: string[][]): number {
+  let meilleure = 0;
+  let score = -1;
+  grille.slice(0, 15).forEach((ligne, i) => {
+    const textes = new Set(ligne.map((c) => (c ?? "").trim()).filter((c) => c !== "" && !estNombreCellule(c)));
+    if (textes.size < 2) return;
+    const connues = [...textes].filter((c) => champPourEntete(c) !== null).length;
+    const s = textes.size + 3 * connues;
+    if (s > score) {
+      score = s;
+      meilleure = i;
+    }
+  });
+  return meilleure;
+}
+
+/** Ligne de total ou de sous-total (« Sous-total Travaux publics », « TOTAL ») : jamais un véhicule. */
+export function estLigneTotal(ligne: string[]): boolean {
+  const premiere = ligne.map((c) => (c ?? "").trim()).find((c) => c !== "");
+  return premiere !== undefined && /^(sous[-\s]?)?total\b/i.test(premiere);
+}
+
+export interface DiagnosticEntete {
+  /** Numéro de la ligne d'entête dans le fichier (1 = première ligne). */
+  ligneEntete: number;
+  reconnues: string[];
+  ignorees: string[];
+  /** Aucune colonne reconnue comme numéro d'unité. */
+  sansUnite: boolean;
+  lignesTotal: number;
+}
+
+/** Grille → lignes {entête → valeur} sous l'entête détectée, totaux retirés. */
+export function lignesDepuisGrille(grille: string[][]): { lignes: Array<Record<string, unknown>>; diagnostic: DiagnosticEntete } {
+  const i = detecterEntete(grille);
+  const entetes = (grille[i] ?? []).map((c) => (c ?? "").trim());
+  const lignes: Array<Record<string, unknown>> = [];
+  let lignesTotal = 0;
+  for (const ligne of grille.slice(i + 1)) {
+    if (ligne.every((c) => (c ?? "").trim() === "")) continue;
+    if (estLigneTotal(ligne)) {
+      lignesTotal++;
+      continue;
+    }
+    const objet: Record<string, unknown> = {};
+    entetes.forEach((e, j) => {
+      if (e && !(e in objet)) objet[e] = (ligne[j] ?? "").trim();
+    });
+    lignes.push(objet);
+  }
+  const nonVides = [...new Set(entetes.filter(Boolean))];
+  const reconnues = nonVides.filter((e) => champPourEntete(e) !== null);
+  return {
+    lignes,
+    diagnostic: {
+      ligneEntete: i + 1,
+      reconnues,
+      ignorees: nonVides.filter((e) => champPourEntete(e) === null),
+      sansUnite: !reconnues.some((e) => champPourEntete(e) === "unit_number"),
+      lignesTotal,
+    },
+  };
 }
 
 /** Une valeur de choix fermé est-elle reconnue par les synonymes ? */
@@ -117,6 +236,7 @@ function normaliserValeur(s: string): string {
     .replace(/[̀-ͯ]/g, "")
     .toLowerCase()
     .trim()
+    .replace(/\.+$/, "")
     .replace(/[\s-]+/g, "_");
 }
 
@@ -192,6 +312,13 @@ export function synonymesParCategorie(): Record<string, string[]> {
 
 const SYNONYMES_CARBURANT: Record<string, string> = {
   diesel: "diesel",
+  diesel_b5: "diesel",
+  diesel_b20: "diesel",
+  biodiesel: "diesel",
+  ess: "essence",
+  gaz: "essence", // « gaz » = essence au Québec (le gaz naturel est « gaz naturel » / GNC)
+  gas: "essence",
+  gaz_naturel: "gnc",
   essence: "essence",
   gasoline: "essence",
   hybride: "hybride",
@@ -256,14 +383,22 @@ type Nombre = { ok: true; valeur: number | null } | { ok: false; brut: string };
 
 const UNITES_CANONIQUES = /^(km|kms|km\/an|km\/j|l\/100km|l|kw|kwh|kwh\/100km|kg|%|\$)$/i;
 
-function nombre(v: unknown): Nombre {
+/** Valeur explicitement « non disponible » : champ vide, jamais une erreur ni un zéro. */
+const NON_DISPONIBLE = /^(n\/?d|n\.d\.?|n\/?a|nc|inconnu|unknown|-+|—|–|\?)$/i;
+
+function nombre(v: unknown, entier = false): Nombre {
   if (v === undefined || v === null || String(v).trim() === "") return { ok: true, valeur: null };
   if (typeof v === "number") {
     return Number.isFinite(v) ? { ok: true, valeur: v } : { ok: false, brut: String(v) };
   }
   const brut = String(v).trim();
-  // espaces (y compris insécables) retirés, virgule décimale acceptée
-  const s = brut.replace(/[\s\u00a0\u202f]/g, "").replace(",", ".");
+  if (NON_DISPONIBLE.test(brut)) return { ok: true, valeur: null };
+  let compact = brut.replace(/[\s\u00a0\u202f]/g, "");
+  // Champ ENTIER (km, année) : « 12,500 » ou « 12.500 » = séparateur de
+  // milliers (12 500), jamais 12,5 km lu en silence.
+  if (entier) compact = compact.replace(/^(\d{1,3})((?:[.,]\d{3})+)(?=[^\d.,]|$)/, (_, a: string, b: string) => a + b.replace(/[.,]/g, ""));
+  // virgule décimale acceptée
+  const s = compact.replace(",", ".");
   const m = s.match(/^(-?\d+(?:\.\d+)?)(.*)$/);
   if (!m) return { ok: false, brut };
   const suffixe = m[2];
@@ -402,15 +537,15 @@ export function validerLignes(
     // 1. renommage des entêtes
     const champs: Record<string, unknown> = {};
     for (const [cle, valeur] of Object.entries(brute)) {
-      const champ = ENTETES[normaliserCle(cle)];
-      if (champ) champs[champ] = valeur;
+      const champ = champPourEntete(cle);
+      if (champ && !fourni(champs[champ])) champs[champ] = valeur;
     }
     if (Object.values(champs).every((v) => !fourni(v))) return; // ligne vide/ignorée
 
     const erreursLigne: ErreurImport[] = [];
     const unitNumber = String(champs.unit_number ?? "").trim();
     if (!unitNumber) {
-      erreurs.push({ ligne, champ: "unit_number", message: "numéro d'unité manquant" });
+      erreurs.push({ ligne, champ: LIBELLES_CHAMPS.unit_number, message: "numéro d'unité manquant" });
       return;
     }
     const idExistant = unitesExistantes?.get(unitNumber);
@@ -460,8 +595,8 @@ export function validerLignes(
     }
 
     // 3. nombres : illisible = erreur, jamais ignoré
-    const num = (champ: string, libelle: string): number | null | undefined => {
-      const r = nombre(champs[champ]);
+    const num = (champ: string, libelle: string, entier = false): number | null | undefined => {
+      const r = nombre(champs[champ], entier);
       if (r.ok === false) {
         erreursLigne.push({
           ligne,
@@ -472,10 +607,10 @@ export function validerLignes(
       }
       return r.valeur;
     };
-    const anneeModele = num("model_year", "année modèle");
-    const kmAnnuel = num("annual_km", "kilométrage annuel");
+    const anneeModele = num("model_year", "année modèle", true);
+    const kmAnnuel = num("annual_km", "kilométrage annuel", true);
     const conso = num("consumption_per_100km", "consommation");
-    const kmJourMax = num("max_daily_km", "km journalier max");
+    const kmJourMax = num("max_daily_km", "km journalier max", true);
 
     const classePnbv = fourni(champs.gvwr_class) ? lireClassePnbv(champs.gvwr_class) : null;
     if (fourni(champs.gvwr_class) && !classePnbv) {
@@ -530,14 +665,15 @@ export function validerLignes(
     const resultat = zLigne.safeParse(candidat);
     if (!resultat.success) {
       for (const e of resultat.error.errors) {
-        erreurs.push({ ligne, champ: e.path.join(".") || "ligne", message: e.message });
+        const cle = e.path.join(".");
+        erreurs.push({ ligne, champ: LIBELLES_CHAMPS[cle] ?? (cle || "ligne"), message: e.message });
       }
       return;
     }
     if (unitesVues.has(unitNumber)) {
       erreurs.push({
         ligne,
-        champ: "unit_number",
+        champ: LIBELLES_CHAMPS.unit_number,
         message: `numéro d'unité en double dans le fichier : ${unitNumber}`,
       });
       return;
@@ -579,47 +715,32 @@ function valeurCellule(v: unknown): unknown {
 }
 
 /** Lit un fichier CSV (papaparse) ou Excel .xlsx (exceljs — SheetJS
- *  0.18.5 est retiré : CVE-2023-30533 / CVE-2024-22363). Le vieux
- *  format .xls n'est plus accepté : exporter en .xlsx ou CSV. */
-export async function lireFichier(file: File): Promise<Array<Record<string, unknown>>> {
+ *  0.18.5 est retiré : CVE-2023-30533 / CVE-2024-22363) en grille brute,
+ *  puis détecte la ligne d'entête (titre, lignes vides ou cellules
+ *  fusionnées au-dessus) et retire les lignes de total. Le vieux format
+ *  .xls n'est plus accepté : exporter en .xlsx ou CSV. */
+export async function lireFichier(file: File): Promise<{ lignes: Array<Record<string, unknown>>; diagnostic: DiagnosticEntete }> {
   const nom = file.name.toLowerCase();
   if (nom.endsWith(".csv") || nom.endsWith(".txt")) {
-    const texte = await file.text();
-    const resultat = Papa.parse<Record<string, unknown>>(texte, {
-      header: true,
-      skipEmptyLines: true,
-    });
-    return resultat.data;
+    const r = Papa.parse<string[]>(await file.text(), { header: false, skipEmptyLines: true });
+    return lignesDepuisGrille(r.data.map((l) => l.map((c) => String(c ?? ""))));
   }
   if (nom.endsWith(".xlsx")) {
     const ExcelJS = await import("exceljs");
     const classeur = new ExcelJS.Workbook();
     await classeur.xlsx.load(await file.arrayBuffer());
     const feuille = classeur.worksheets[0];
-    if (!feuille) return [];
-    const entetes: string[] = [];
-    feuille.getRow(1).eachCell({ includeEmpty: true }, (cellule, col) => {
-      entetes[col] = String(valeurCellule(cellule.value)).trim();
-    });
-    const lignes: Array<Record<string, unknown>> = [];
-    for (let r = 2; r <= feuille.rowCount; r++) {
-      const rangee = feuille.getRow(r);
-      const objet: Record<string, unknown> = {};
-      let vide = true;
+    if (!feuille) return lignesDepuisGrille([]);
+    const grille: string[][] = [];
+    feuille.eachRow({ includeEmpty: false }, (rangee) => {
+      const ligne: string[] = [];
       rangee.eachCell({ includeEmpty: true }, (cellule, col) => {
-        const cle = entetes[col];
-        if (!cle) return;
-        const valeur = valeurCellule(cellule.value);
-        objet[cle] = valeur;
-        if (valeur !== "" && valeur !== null) vide = false;
+        const v = valeurCellule(cellule.value);
+        ligne[col - 1] = v === null || v === undefined ? "" : String(v);
       });
-      // les colonnes sans cellule restent définies (comme defval: "")
-      for (const cle of entetes) {
-        if (cle && !(cle in objet)) objet[cle] = "";
-      }
-      if (!vide) lignes.push(objet);
-    }
-    return lignes;
+      grille.push(Array.from(ligne, (c) => c ?? ""));
+    });
+    return lignesDepuisGrille(grille);
   }
   if (nom.endsWith(".xls")) {
     throw new Error("le format .xls (Excel 97-2003) n'est plus pris en charge : enregistrer en .xlsx ou en CSV");

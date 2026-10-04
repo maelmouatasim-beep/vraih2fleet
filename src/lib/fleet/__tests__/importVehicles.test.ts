@@ -111,7 +111,7 @@ describe("validation de l'import de flotte", () => {
     expect(r.erreurs).toHaveLength(3 + 1);
     expect(r.erreurs.some((e) => e.champ === "catégorie" && e.ligne === 3)).toBe(true);
     expect(r.erreurs.some((e) => e.ligne === 4 && e.message.includes("hors plage"))).toBe(true);
-    expect(r.erreurs.some((e) => e.champ === "unit_number" && e.ligne === 5)).toBe(true);
+    expect(r.erreurs.some((e) => e.champ === "unité" && e.ligne === 5)).toBe(true);
   });
 
   it("carburants électrique/hydrogène normalisés, statut anglais accepté", () => {
@@ -166,5 +166,56 @@ describe("validation de l'import de flotte", () => {
     const r = validerLignes([{ unite: "U-300", consommation: "22,5" }], ORG, existantes);
     expect(r.erreurs).toEqual([]);
     expect(r.misesAJour[0].patch).toEqual({ consumption_per_100km: 22.5, consumption_source: "import" });
+  });
+});
+
+describe("audit acheteur, point 2 — un vrai fichier municipal s'importe", () => {
+  // Titre FUSIONNÉ sur 6 colonnes (exceljs répète sa valeur dans chaque
+  // cellule), sous-titre, ligne vide, entêtes maison, sous-totaux.
+  const titre = "Ville de Val-des-Pins — Inventaire du parc au 30 septembre 2026";
+  const grille = [
+    Array(6).fill(titre),
+    ["Préparé par : Service des travaux publics"],
+    [],
+    ["No", "Description", "Service", "Carburant", "Km 2025", "Conso L/100"],
+    ["101", "Pick-up", "Travaux publics", "Ess.", "12,500", "14,2"],
+    ["102", "Pick-up", "Travaux publics", "Gaz", "12 500 km", "n/d"],
+    ["Sous-total Travaux publics", "", "", "", "", ""],
+    ["103", "Camion", "Parcs", "Diesel B5", "n/d", ""],
+    ["TOTAL", "", "", "", "", "3 véhicules"],
+  ];
+
+  it("entête trouvée sous le titre fusionné, totaux retirés, colonnes maison reconnues", async () => {
+    const { detecterEntete, lignesDepuisGrille } = await import("../importVehicles");
+    expect(detecterEntete(grille)).toBe(3);
+    const { lignes, diagnostic } = lignesDepuisGrille(grille);
+    expect(diagnostic).toMatchObject({ ligneEntete: 4, sansUnite: false, lignesTotal: 2 });
+    expect(diagnostic.reconnues).toEqual(["No", "Service", "Carburant", "Km 2025", "Conso L/100"]);
+    expect(diagnostic.ignorees).toEqual(["Description"]);
+    expect(lignes).toHaveLength(3);
+  });
+
+  it("« Ess. », « Gaz », « Diesel B5 », « n/d », « 12,500 » et « 12 500 km » sont lus sans erreur", async () => {
+    const { lignesDepuisGrille } = await import("../importVehicles");
+    const lignes = lignesDepuisGrille(grille).lignes.map((l) => ({ ...l, Catégorie: "camionnette" }));
+    const r = validerLignes(lignes, ORG);
+    expect(r.erreurs).toEqual([]);
+    expect(r.valides.map((v) => [v.unit_number, v.fuel_type, v.annual_km, v.consumption_per_100km, v.department])).toEqual([
+      ["101", "essence", 12500, 14.2, "Travaux publics"],
+      ["102", "essence", 12500, null, "Travaux publics"],
+      ["103", "diesel", null, null, "Parcs"],
+    ]);
+  });
+
+  it("sans colonne d'unité : diagnostic explicite, et les erreurs citent le libellé français", async () => {
+    const { lignesDepuisGrille } = await import("../importVehicles");
+    const { lignes, diagnostic } = lignesDepuisGrille([["Matricule", "Carburant"], ["A1", "diesel"]]);
+    expect(diagnostic.sansUnite).toBe(true);
+    expect(validerLignes(lignes, ORG).erreurs[0]).toMatchObject({ champ: "unité" });
+  });
+
+  it("la consommation garde sa virgule décimale (« 9,600 » n'est pas un millier)", () => {
+    const r = validerLignes([{ Unité: "U-1", Catégorie: "camionnette", Carburant: "diesel", Consommation: "9,600" }], ORG);
+    expect(r.valides[0].consumption_per_100km).toBeCloseTo(9.6, 6);
   });
 });

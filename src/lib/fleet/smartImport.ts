@@ -18,7 +18,7 @@
  */
 import { CLASSES_PNBV, lireClassePnbv } from "./gvwr";
 import { CARBURANTS, CATEGORIES_VEHICULE, PROFILS_USAGE, STATUTS_VEHICULE } from "./constants";
-import { champPourEntete, validerLignes, valeurReconnue, type ResultatImport } from "./importVehicles";
+import { champPourEntete, detecterEntete, estLigneTotal, validerLignes, valeurReconnue, type ResultatImport } from "./importVehicles";
 import { DEFAUTS_CATEGORIES } from "@/lib/tco";
 import { categorieMoteur } from "@/lib/journey/categories";
 import { cleGarage } from "@/lib/journey/infrastructure";
@@ -74,6 +74,8 @@ export interface TableauBrut {
   lignes: string[][];
   /** Lignes du document qui n'ont pas pu être alignées sur les colonnes (PDF). */
   lignesNonReconnues: number;
+  /** Lignes de total ou de sous-total retirées (jamais importées). */
+  lignesTotal?: number;
 }
 
 export interface ColonneCorrespondance {
@@ -105,33 +107,26 @@ export interface Correspondance {
 // Lecture : détection de l'entête dans une grille
 // ---------------------------------------------------------------------------
 
-const estNombre = (s: string) => /^-?[\d\s\u00a0\u202f.,]+$/.test(s.trim()) && /\d/.test(s);
-
-/** Ligne d'entête : parmi les 15 premières, celle qui a le plus de cellules
- *  texte non vides (≥ 2), à égalité la première. */
-export function detecterEntete(grille: string[][]): number {
-  let meilleure = 0;
-  let score = -1;
-  grille.slice(0, 15).forEach((ligne, i) => {
-    const texte = ligne.filter((c) => c.trim() !== "" && !estNombre(c)).length;
-    if (texte >= 2 && texte > score) {
-      score = texte;
-      meilleure = i;
-    }
-  });
-  return meilleure;
-}
+// Détection de l'entête : MÊME règle que l'import Excel (cellules
+// fusionnées comptées une fois, entêtes connues favorisées).
+export { detecterEntete };
 
 /** Grille → tableau (entêtes + lignes non vides alignées sur les entêtes). */
 export function tableauDepuisGrille(grille: string[][], source: TableauBrut["source"]): TableauBrut {
   const i = detecterEntete(grille);
   const entetes = (grille[i] ?? []).map((c, j) => c.trim() || `Colonne ${j + 1}`);
   const lignes: string[][] = [];
+  let lignesTotal = 0;
   for (const ligne of grille.slice(i + 1)) {
     if (ligne.every((c) => c.trim() === "")) continue;
+    // « Sous-total Travaux publics », « TOTAL » : jamais un véhicule
+    if (estLigneTotal(ligne)) {
+      lignesTotal++;
+      continue;
+    }
     lignes.push(entetes.map((_, j) => (ligne[j] ?? "").trim()));
   }
-  return { source, entetes, lignes, lignesNonReconnues: 0 };
+  return { source, entetes, lignes, lignesNonReconnues: 0, lignesTotal };
 }
 
 export interface ElementTextePdf {
