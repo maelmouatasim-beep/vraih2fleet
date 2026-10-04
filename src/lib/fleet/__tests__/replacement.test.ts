@@ -53,3 +53,28 @@ describe("anneeRemplacementSuggeree", () => {
     ).toBeNull();
   });
 });
+
+describe("rattrapage lissé des remplacements en retard (audit acheteur, point 7)", () => {
+  it("42 véhicules en retard : plus aucun dans l'année en cours, répartis à parts égales sur 3 ans, les plus anciens d'abord", async () => {
+    const { lisserRattrapage } = await import("../replacement");
+    const vehicules = Array.from({ length: 42 }, (_, i) => ({ id: `v${String(i).padStart(2, "0")}`, anneeFinVie: 2015 + (i % 11) }));
+    const r = lisserRattrapage([...vehicules, { id: "futur", anneeFinVie: 2031 }, { id: "inconnu", anneeFinVie: null }], ANNEE, 3);
+    const parAnnee = new Map<number, number>();
+    for (const v of vehicules) parAnnee.set(r.get(v.id)!, (parAnnee.get(r.get(v.id)!) ?? 0) + 1);
+    expect([...parAnnee.keys()].sort()).toEqual([2027, 2028, 2029]);
+    expect([...parAnnee.values()]).toEqual([14, 14, 14]);
+    expect(r.get("futur")).toBe(2031); // pas en retard : inchangé
+    expect(r.get("inconnu")).toBeNull();
+    // le plus ancien passe en premier
+    const plusAncien = vehicules.find((v) => v.anneeFinVie === 2015)!;
+    expect(r.get(plusAncien.id)).toBe(2027);
+  });
+
+  it("paramétrable : 1 an = tout l'an prochain ; 5 ans = étalé sur 5 ans ; déterministe", async () => {
+    const { lisserRattrapage } = await import("../replacement");
+    const v = Array.from({ length: 10 }, (_, i) => ({ id: `v${i}`, anneeFinVie: 2020 }));
+    expect(new Set(lisserRattrapage(v, ANNEE, 1).values())).toEqual(new Set([2027]));
+    expect(new Set(lisserRattrapage(v, ANNEE, 5).values())).toEqual(new Set([2027, 2028, 2029, 2030, 2031]));
+    expect(lisserRattrapage(v, ANNEE, 5)).toEqual(lisserRattrapage([...v].reverse(), ANNEE, 5));
+  });
+});

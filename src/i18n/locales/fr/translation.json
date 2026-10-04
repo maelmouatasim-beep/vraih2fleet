@@ -4897,7 +4897,7 @@
     "fleet": {
       "addButton": "Ajouter des véhicules",
       "tableTitle": "Véhicules inclus dans ce projet",
-      "suggestedNote": "Année suggérée à l'ajout = mise en service + durée de vie de la catégorie (estimation du moteur TCO, modifiable).",
+      "suggestedNote": "Année suggérée à l'ajout = mise en service + durée de vie de la catégorie (estimation du moteur TCO, modifiable) ; un véhicule déjà en fin de vie est placé dans un rattrapage lissé sur les années suivantes, jamais dans l'année en cours.",
       "stats": {
         "included": "Véhicules au projet",
         "zeroEmissionTarget": "Cible zéro émission",
@@ -4947,7 +4947,15 @@
         "removed": "{{count}} véhicule(s) retiré(s) du projet"
       },
       "suggestion": "Suggestion faisabilité : {{target}}",
-      "suggestedSuffix": "(suggérée)"
+      "suggestedSuffix": "(suggérée)",
+      "catchUp": {
+        "banner": "{{count}} remplacement(s) prévu(s) en {{year}} ou avant : véhicules déjà en fin de vie. Un budget de l'année en cours est rarement encore ouvert — étalez le rattrapage.",
+        "over": "Étaler sur",
+        "years_one": "{{count}} an",
+        "years_other": "{{count}} ans",
+        "apply": "Lisser le rattrapage",
+        "done": "{{count}} remplacement(s) étalé(s) sur {{years}} an(s), les plus anciens d'abord."
+      }
     },
     "feasibility": {
       "tableTitle": "Verdict par véhicule",

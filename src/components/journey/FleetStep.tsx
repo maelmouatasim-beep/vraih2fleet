@@ -36,7 +36,7 @@ import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useOrganization } from "@/hooks/useOrganization";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
 import { useVehicles } from "@/hooks/useVehicles";
-import { anneeRemplacementSuggeree } from "@/lib/fleet/replacement";
+import { anneeFinVie, lisserRattrapage, RATTRAPAGE_ANS_DEFAUT } from "@/lib/fleet/replacement";
 import { TECHNOLOGIES_CIBLES, type ProjectVehicleInsert } from "@/lib/fleet/projectVehicles";
 import { cibleSuggeree, evaluerFaisabiliteVehicule } from "@/lib/journey/feasibility";
 import type { ProjectDTO } from "@/lib/supabase/projects";
@@ -73,6 +73,7 @@ export default function FleetStep({ projectId, project }: FleetStepProps) {
   const [cibleGroupee, setCibleGroupee] = useState<string>("");
 
   const anneeCourante = new Date().getFullYear();
+  const [rattrapageAns, setRattrapageAns] = useState(RATTRAPAGE_ANS_DEFAUT);
   const anneesChoix = useMemo(() => {
     const annees = Array.from({ length: 21 }, (_, i) => anneeCourante + i);
     // valeurs déjà en base hors plage (données importées) restent visibles
@@ -192,15 +193,37 @@ export default function FleetStep({ projectId, project }: FleetStepProps) {
     );
   };
 
+  // Remplacements prévus cette année ou avant (en retard) : à étaler.
+  const enRetard = projectVehicles.filter((pv) => pv.replacement_year != null && pv.replacement_year <= anneeCourante);
+  const lisserRetards = async () => {
+    const annees = lisserRattrapage(
+      enRetard.map((pv) => ({ id: pv.id, anneeFinVie: anneeFinVie(pv.vehicles) ?? pv.replacement_year })),
+      anneeCourante,
+      rattrapageAns,
+    );
+    try {
+      const n = await appliquerLot.mutateAsync(enRetard.map((pv) => ({ id: pv.id, replacement_year: annees.get(pv.id) ?? null })));
+      toast({ title: t("journey.fleet.catchUp.done", { count: n, years: rattrapageAns }) });
+    } catch (e) {
+      toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
+    }
+  };
+
   const confirmerAjout = async () => {
-    const lignes: ProjectVehicleInsert[] = disponibles
-      .filter((v) => selection.has(v.id))
-      .map((v) => ({
-        project_id: projectId,
-        vehicle_id: v.id,
-        replacement_year: anneeRemplacementSuggeree(v, anneeCourante),
-        target_technology: null,
-      }));
+    const choisis = disponibles.filter((v) => selection.has(v.id));
+    // Véhicules déjà en fin de vie : rattrapage LISSÉ sur les années
+    // suivantes (point 7 de l'audit), jamais tous dans l'année en cours.
+    const annees = lisserRattrapage(
+      choisis.map((v) => ({ id: v.id, anneeFinVie: anneeFinVie(v) })),
+      anneeCourante,
+      rattrapageAns,
+    );
+    const lignes: ProjectVehicleInsert[] = choisis.map((v) => ({
+      project_id: projectId,
+      vehicle_id: v.id,
+      replacement_year: annees.get(v.id) ?? null,
+      target_technology: null,
+    }));
     try {
       const n = await ajouter.mutateAsync(lignes);
       toast({ title: t("journey.fleet.toast.added", { count: n }) });
@@ -314,6 +337,30 @@ export default function FleetStep({ projectId, project }: FleetStepProps) {
           <StatCard key={cle} libelle={t(`journey.fleet.stats.${cle}`)} valeur={valeur} />
         ))}
       </StatGrid>
+
+      {enRetard.length > 0 && (
+        <div className="flex flex-col gap-3 rounded-lg border border-amber-300/60 bg-amber-50 p-3 text-sm dark:bg-amber-950/30 sm:flex-row sm:items-center sm:justify-between" data-testid="catch-up-banner">
+          <p className="min-w-0">{t("journey.fleet.catchUp.banner", { count: enRetard.length, year: anneeCourante })}</p>
+          <div className="flex shrink-0 items-center gap-2">
+            <label htmlFor="rattrapage-ans" className="whitespace-nowrap">{t("journey.fleet.catchUp.over")}</label>
+            <select
+              id="rattrapage-ans"
+              className={selectCls}
+              value={rattrapageAns}
+              onChange={(e) => setRattrapageAns(Number(e.target.value))}
+            >
+              {[1, 2, 3, 4, 5].map((n) => (
+                <option key={n} value={n}>
+                  {t("journey.fleet.catchUp.years", { count: n })}
+                </option>
+              ))}
+            </select>
+            <Button size="sm" onClick={() => void lisserRetards()} disabled={appliquerLot.isPending} data-testid="catch-up-apply">
+              {t("journey.fleet.catchUp.apply")}
+            </Button>
+          </div>
+        </div>
+      )}
 
       <Card>
         <CardHeader className="flex flex-col gap-3 space-y-0 sm:flex-row sm:items-start sm:justify-between">

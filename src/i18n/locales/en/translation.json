@@ -4897,7 +4897,7 @@
     "fleet": {
       "addButton": "Add vehicles",
       "tableTitle": "Vehicles included in this project",
-      "suggestedNote": "Suggested year at add time = in-service year + category service life (TCO engine estimate, editable).",
+      "suggestedNote": "Suggested year at add time = in-service year + category service life (TCO engine estimate, editable); a vehicle already at end of life goes into a catch-up smoothed over the following years, never the current year.",
       "stats": {
         "included": "Vehicles in project",
         "zeroEmissionTarget": "Zero-emission target",
@@ -4947,7 +4947,15 @@
         "removed": "{{count}} vehicle(s) removed from project"
       },
       "suggestion": "Feasibility suggestion: {{target}}",
-      "suggestedSuffix": "(suggested)"
+      "suggestedSuffix": "(suggested)",
+      "catchUp": {
+        "banner": "{{count}} replacement(s) scheduled in {{year}} or earlier: vehicles already at end of life. A current-year budget is rarely still open — spread the catch-up.",
+        "over": "Spread over",
+        "years_one": "{{count}} year",
+        "years_other": "{{count}} years",
+        "apply": "Smooth the catch-up",
+        "done": "{{count}} replacement(s) spread over {{years}} year(s), oldest first."
+      }
     },
     "feasibility": {
       "tableTitle": "Verdict per vehicle",
