@@ -124,3 +124,20 @@ describe('fichiers de traduction', () => {
     expect(enSeulement, `clés en sans équivalent fr : ${enSeulement.slice(0, 20).join(', ')}`).toEqual([]);
   });
 });
+
+describe('audit acheteur, point 9 — libellés du parcours compréhensibles', () => {
+  const valeurs = (o: unknown, out: string[] = []): string[] => {
+    if (typeof o === 'string') out.push(o);
+    else if (o && typeof o === 'object') for (const v of Object.values(o)) valeurs(v, out);
+    return out;
+  };
+  for (const langue of ['fr', 'en'] as const) {
+    it(`${langue} : ni sigles BEV/FCEV, ni « (s) », ni « pot d'échappement », ni « bornes défavorables » dans le parcours`, () => {
+      const parcours = valeurs(JSON.parse(readFileSync(CHEMINS[langue], 'utf8')).journey);
+      const fautifs = parcours.filter((v) =>
+        /\b(BEV|FCEV)\b|\w\(s\)|pot d'échappement|tailpipe|bornes défavorables|unfavourable bounds?|Diesel \(statu quo\)|Diesel \(status quo\)/.test(v),
+      );
+      expect(fautifs).toEqual([]);
+    });
+  }
+});

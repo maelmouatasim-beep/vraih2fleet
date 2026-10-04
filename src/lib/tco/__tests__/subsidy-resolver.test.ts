@@ -84,7 +84,7 @@ describe('résolveur de subventions', () => {
       typeOrganisme: 'municipalite',
       classePoids: '8',
     });
-    expect(r.avertissements.some((a) => a.includes('À VALIDER'))).toBe(true);
+    expect(r.avertissements.some((a) => a.includes('à confirmer auprès du programme'))).toBe(true);
   });
 
   it('bonification achat local : +15 % DANS le plafond du barème', () => {

@@ -654,6 +654,6 @@ export function libelleStrategieRetenue(r: StrategieRetenue, langue: "fr" | "en"
   const nom = NOMS_STRATEGIES[langue][r.cle];
   if (r.ecarts === 0) return nom;
   return en
-    ? `${nom}, modified since it was applied (${r.ecarts} vehicle(s) changed)`
-    : `${nom}, modifiée depuis son application (${r.ecarts} véhicule(s) changé(s))`;
+    ? `${nom}, modified since it was applied (${r.ecarts} ${r.ecarts === 1 ? "vehicle" : "vehicles"} changed)`
+    : `${nom}, modifiée depuis son application (${r.ecarts} ${r.ecarts === 1 ? "véhicule changé" : "véhicules changés"})`;
 }

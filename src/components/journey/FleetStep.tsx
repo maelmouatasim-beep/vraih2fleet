@@ -203,7 +203,7 @@ export default function FleetStep({ projectId, project }: FleetStepProps) {
     );
     try {
       const n = await appliquerLot.mutateAsync(enRetard.map((pv) => ({ id: pv.id, replacement_year: annees.get(pv.id) ?? null })));
-      toast({ title: t("journey.fleet.catchUp.done", { count: n, years: rattrapageAns }) });
+      toast({ title: t("journey.fleet.catchUp.done", { count: n, duree: t("journey.fleet.catchUp.years", { count: rattrapageAns }) }) });
     } catch (e) {
       toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
     }

@@ -256,9 +256,9 @@ export function resoudreSubventions(
     if (b.pourcentageAValider) {
       raisons.push({ code: 'pourcentage_a_valider', pct: b.pourcentage ?? 0 });
       avertissements.push(
-        `${prog.nom} : le pourcentage du coût d'achat appliqué (${Math.round(
+        `${prog.nom} : pourcentage du coût d'achat retenu de ${Math.round(
           (b.pourcentage ?? 0) * 100,
-        )} %, borne basse prudente) est À VALIDER — la cellule correspondante du tableau officiel est vide.`,
+        )} % (valeur prudente), à confirmer auprès du programme — le tableau officiel ne le précise pas pour cette classe.`,
       );
     }
     if (prog.id === 'pave') {
@@ -271,9 +271,9 @@ export function resoudreSubventions(
     if (prog.id === 'ecocamionnage_v1') {
       if (b.classesPoids && !b.classesPoids.includes('2b')) {
         avertissements.push(
-          'Écocamionnage : inscription au Registre des propriétaires et exploitants de véhicules lourds ' +
-            '(RPEVL) avec cote de sécurité satisfaisante requise (sauf fourgonnettes classe 2b) ; plafond ' +
-            'de 3 M$ d’aide par demandeur par année financière pour les acquisitions.',
+          'Écocamionnage : l’organisme doit être inscrit au registre des véhicules lourds de la Commission ' +
+            'des transports du Québec (RPEVL) avec une cote de sécurité satisfaisante (sauf fourgonnettes de ' +
+            'classe 2b) ; aide plafonnée à 3 M$ par demandeur et par année financière.',
         );
       }
     }

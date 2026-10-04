@@ -155,9 +155,9 @@ const MOTIFS: { re: RegExp; en: (m: RegExpMatchArray) => string }[] = [
       `${m[1]}: vehicle weight class (GVWR) unknown — lowest scale among possible classes used as a precaution ($${m[2].replace(/\s/g, ",")}). Enter the weight class to get the exact scale.`,
   },
   {
-    re: /^(.*) : le pourcentage du coût d'achat appliqué \((\d+) %, borne basse prudente\) est À VALIDER — la cellule correspondante du tableau officiel est vide\.$/,
+    re: /^(.*) : pourcentage du coût d'achat retenu de (\d+) % \(valeur prudente\), à confirmer auprès du programme — le tableau officiel ne le précise pas pour cette classe\.$/,
     en: (m) =>
-      `${m[1]}: the purchase-cost percentage applied (${m[2]}%, conservative lower bound) is TO VALIDATE — the corresponding cell of the official table is empty.`,
+      `${m[1]}: purchase-cost percentage of ${m[2]}% used (conservative value), to be confirmed with the program — the official table does not specify it for this class.`,
   },
   {
     re: /^PAVÉ : barème dégressif/,
@@ -165,9 +165,9 @@ const MOTIFS: { re: RegExp; en: (m: RegExpMatchArray) => string }[] = [
       "EVAP: declining scale — the amount depends on the date the dealer submits the application, not the purchase date; limit of 10 incentives per organization (municipalities included) over the program's lifetime.",
   },
   {
-    re: /^Écocamionnage : inscription au Registre/,
+    re: /^Écocamionnage : l’organisme doit être inscrit/,
     en: () =>
-      "Écocamionnage: registration in the heavy vehicle owners and operators register (RPEVL) with a satisfactory safety rating required (except class 2b vans); cap of $3M of aid per applicant per fiscal year for acquisitions.",
+      "Écocamionnage: the organization must be registered in the Commission des transports du Québec heavy vehicle register (RPEVL) with a satisfactory safety rating (except class 2b vans); aid capped at $3M per applicant per fiscal year.",
   },
   {
     re: /^(.*) : aide réduite de (.*) \$ pour respecter le plafond de cumul des aides publiques \((\d+) % des dépenses admissibles, art\. 7\.14\.2\)\.$/,

@@ -71,17 +71,17 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
   const constats = en
     ? [
         `- ${strategie.nbZeroEmission} of ${strategie.nbVehicules} vehicles move to zero emission${achats.length ? `, purchased between ${achats[0]} and ${achats[achats.length - 1]}` : ""}.`,
-        `- Total investment: ${cad(investissement)} in current dollars, including ${cad(strategie.infra.totalCapex)} for charging and grid connection; the status quo (same replacements with new diesels) would invest ${cad(inv.statuQuo)}, a gap of ${ecartInv}.`,
+        `- Total investment: ${cad(investissement)} in current dollars, including ${cad(strategie.infra.totalCapex)} for charging and grid connection; the status quo (same replacements with new combustion vehicles) would invest ${cad(inv.statuQuo)}, a gap of ${ecartInv}.`,
         `- Expected subsidies: ${cad(strategie.subventionsTotal)}; amount left to finance: ${cad(reste)}.`,
         `- Stress test: cautious-scenario NPV of ${cad(sc.prudent.van)}, favourable ${cad(sc.favorable.van)} (risk ${libRisque.toLowerCase()}).`,
-        `- CO2e avoided: ${nb(resultat.co2EviteWtwTonnes)} t over the full cycle, ${nb(resultat.co2EviteTtwTonnes)} t at the tailpipe.`,
+        `- CO2e avoided: ${nb(resultat.co2EviteWtwTonnes)} t over the full cycle, ${nb(resultat.co2EviteTtwTonnes)} t at the exhaust.`,
       ]
     : [
         `- ${strategie.nbZeroEmission} des ${strategie.nbVehicules} véhicules passent au zéro émission${achats.length ? `, achetés entre ${achats[0]} et ${achats[achats.length - 1]}` : ""}.`,
-        `- Investissement total : ${cad(investissement)} en dollars courants, dont ${cad(strategie.infra.totalCapex)} pour la recharge et le raccordement ; le statu quo (mêmes remplacements en diesel neuf) investirait ${cad(inv.statuQuo)}, soit un écart de ${ecartInv}.`,
+        `- Investissement total : ${cad(investissement)} en dollars courants, dont ${cad(strategie.infra.totalCapex)} pour la recharge et le raccordement ; le statu quo (mêmes remplacements en thermique neuf) investirait ${cad(inv.statuQuo)}, soit un écart de ${ecartInv}.`,
         `- Subventions prévues : ${cad(strategie.subventionsTotal)} ; reste à financer : ${cad(reste)}.`,
         `- Stress test : VAN de ${cad(sc.prudent.van)} dans le scénario prudent, ${cad(sc.favorable.van)} dans le favorable (risque ${libRisque.toLowerCase()}).`,
-        `- CO2e évité : ${nb(resultat.co2EviteWtwTonnes)} t sur le cycle complet, ${nb(resultat.co2EviteTtwTonnes)} t au pot d'échappement.`,
+        `- CO2e évité : ${nb(resultat.co2EviteWtwTonnes)} t sur le cycle complet, ${nb(resultat.co2EviteTtwTonnes)} t à l'échappement.`,
       ];
 
   const source = en
@@ -94,13 +94,13 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
 
   const avertissements = [
     ...(strategie.exclusions.length > 0
-      ? [en ? `${strategie.exclusions.length} vehicle(s) in category "other" are outside the computation.` : `${strategie.exclusions.length} véhicule(s) de catégorie « autre » hors du calcul.`]
+      ? [en ? `${strategie.exclusions.length} ${strategie.exclusions.length === 1 ? "vehicle" : "vehicles"} in category "other" outside the computation.` : `${strategie.exclusions.length} ${strategie.exclusions.length === 1 ? "véhicule" : "véhicules"} de catégorie « autre » hors du calcul.`]
       : []),
     ...(strategie.sansAnnee.length > 0
       ? [
           en
-            ? `${strategie.sansAnnee.length} vehicle(s) without a replacement year, treated as replaced in ${meta.anneeReference}.`
-            : `${strategie.sansAnnee.length} véhicule(s) sans année de remplacement, traités comme remplacés en ${meta.anneeReference}.`,
+            ? `${strategie.sansAnnee.length} ${strategie.sansAnnee.length === 1 ? "vehicle" : "vehicles"} without a replacement year, treated as replaced in ${meta.anneeReference}.`
+            : `${strategie.sansAnnee.length} ${strategie.sansAnnee.length === 1 ? "véhicule sans année de remplacement, traité comme remplacé" : "véhicules sans année de remplacement, traités comme remplacés"} en ${meta.anneeReference}.`,
         ]
       : []),
     ...(strategie.horsHorizon.length > 0
@@ -108,8 +108,8 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
           (() => {
             const liste = strategie.horsHorizon.map((h) => `${unites.get(h.id) ?? "?"} (${h.anneeRemplacement})`).join(", ");
             return en
-              ? `${strategie.horsHorizon.length} vehicle(s) scheduled for replacement AFTER the ${meta.horizonAns}-year analysis horizon — excluded from every total and from the financing table: ${liste}.`
-              : `${strategie.horsHorizon.length} véhicule(s) dont le remplacement est prévu APRÈS l'horizon d'analyse de ${meta.horizonAns} ans — exclus de tous les totaux et du tableau de financement : ${liste}.`;
+              ? `${strategie.horsHorizon.length} ${strategie.horsHorizon.length === 1 ? "vehicle" : "vehicles"} scheduled for replacement AFTER the ${meta.horizonAns}-year analysis horizon — excluded from every total and from the financing table: ${liste}.`
+              : `${strategie.horsHorizon.length} ${strategie.horsHorizon.length === 1 ? "véhicule" : "véhicules"} dont le remplacement est prévu APRÈS l'horizon d'analyse de ${meta.horizonAns} ans — exclus de tous les totaux et du tableau de financement : ${liste}.`;
           })(),
         ]
       : []),
@@ -210,16 +210,16 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
             ]}
             lignes={(["prudent", "central", "favorable"] as const).map((cle) => [
               en
-                ? { prudent: "Cautious (all bounds unfavourable)", central: "Central", favorable: "Favourable" }[cle]
-                : { prudent: "Prudent (toutes bornes défavorables)", central: "Central", favorable: "Favorable" }[cle],
+                ? { prudent: "Cautious (every assumption at its least favourable value)", central: "Central", favorable: "Favourable" }[cle]
+                : { prudent: "Prudent (chaque hypothèse à sa valeur la moins favorable)", central: "Central", favorable: "Favorable" }[cle],
               cad(sc[cle].van),
             ])}
             negatifs
           />
           <Text style={styles.note}>
             {en
-              ? "The status quo replaces the same vehicles, in the same years, with equivalent new diesels."
-              : "Le statu quo remplace les mêmes véhicules, les mêmes années, par des diesels neufs équivalents."}
+              ? "The status quo replaces the same vehicles, in the same years, with equivalent new combustion vehicles (same fuel)."
+              : "Le statu quo remplace les mêmes véhicules, les mêmes années, par des véhicules thermiques neufs équivalents (même carburant)."}
           </Text>
         </Piece>
 
@@ -440,8 +440,8 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
         </Text>
         <Text style={styles.paragraphe}>
           {en
-            ? "Method (docs/tco-methodologie.md): year 0 = acquisition (undiscounted); operating flows are nominal (per-item inflation) and discounted at the nominal rate; the reference is the same fleet replaced on the same schedule by equivalent new diesels; subsidies are counted in their payment year and capped by stacking rules; residual values are geometric with a floor. CO2e: two scopes are shown side by side — tailpipe (tank-to-wheel, what leaves the exhaust; zero for electric and hydrogen) and full cycle (well-to-wheel: fuel extraction and refining, electricity grid, hydrogen production); the FULL CYCLE is used in every total and in the cost per tonne. A gasoline vehicle is compared with a new gasoline vehicle (gasoline price and emission factor). Every assumption below carries an honest status: an amount is only “verified” if the official source was actually read on the indicated date."
-            : "Méthode (docs/tco-methodologie.md) : année 0 = acquisition (non actualisée) ; flux d'exploitation nominaux (inflation par poste) actualisés au taux nominal ; la référence est la même flotte remplacée au même calendrier par des diesels neufs équivalents ; les subventions sont comptées à leur année de versement et plafonnées par les règles de cumul ; valeurs résiduelles géométriques avec plancher. CO2e : deux périmètres côte à côte — au pot d'échappement (réservoir à la roue, ce qui sort de l'échappement ; nul pour l'électrique et l'hydrogène) et cycle complet (puits à la roue : extraction et raffinage du carburant, réseau électrique, production d'hydrogène) ; le CYCLE COMPLET est retenu dans tous les totaux et dans le coût par tonne. Un véhicule à essence est comparé à un véhicule neuf à essence (prix et facteur d'émission de l'essence). Chaque hypothèse ci-dessous porte un statut honnête : un montant n'est « vérifié » que si la source officielle a réellement été lue à la date indiquée."}
+            ? "Method (docs/tco-methodologie.md): year 0 = acquisition (undiscounted); operating flows are nominal (per-item inflation) and discounted at the nominal rate; the reference is the same fleet replaced on the same schedule by equivalent new combustion vehicles (same fuel); subsidies are counted in their payment year and capped by stacking rules; residual values are geometric with a floor. CO2e: two scopes are shown side by side — tailpipe (tank-to-wheel, what leaves the exhaust; zero for electric and hydrogen) and full cycle (well-to-wheel: fuel extraction and refining, electricity grid, hydrogen production); the FULL CYCLE is used in every total and in the cost per tonne. A gasoline vehicle is compared with a new gasoline vehicle (gasoline price and emission factor). Every assumption below carries an honest status: an amount is only “verified” if the official source was actually read on the indicated date."
+            : "Méthode (docs/tco-methodologie.md) : année 0 = acquisition (non actualisée) ; flux d'exploitation nominaux (inflation par poste) actualisés au taux nominal ; la référence est la même flotte remplacée au même calendrier par des véhicules thermiques neufs équivalents (même carburant) ; les subventions sont comptées à leur année de versement et plafonnées par les règles de cumul ; valeurs résiduelles géométriques avec plancher. CO2e : deux périmètres côte à côte — à l'échappement (réservoir à la roue, ce qui sort de l'échappement ; nul pour l'électrique et l'hydrogène) et cycle complet (puits à la roue : extraction et raffinage du carburant, réseau électrique, production d'hydrogène) ; le CYCLE COMPLET est retenu dans tous les totaux et dans le coût par tonne. Un véhicule à essence est comparé à un véhicule neuf à essence (prix et facteur d'émission de l'essence). Chaque hypothèse ci-dessous porte un statut honnête : un montant n'est « vérifié » que si la source officielle a réellement été lue à la date indiquée."}
         </Text>
         {(meta.donneesClient?.length ?? 0) > 0 && (
           <View>

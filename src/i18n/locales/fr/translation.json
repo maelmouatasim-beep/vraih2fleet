@@ -4909,9 +4909,9 @@
         "target": "Technologie cible"
       },
       "targets": {
-        "diesel": "Diesel (statu quo)",
-        "bev": "Électrique (BEV)",
-        "fcev": "Hydrogène (FCEV)"
+        "diesel": "Thermique neuf (statu quo)",
+        "bev": "Électrique (batterie)",
+        "fcev": "Hydrogène (pile à combustible)"
       },
       "chooseTarget": "À choisir",
       "remove": "Retirer",
@@ -4928,14 +4928,15 @@
         "subtitle": "Sélectionnez les véhicules de votre inventaire « Ma flotte » à inclure dans ce projet.",
         "selectAll": "Tout sélectionner",
         "empty": "Tous les véhicules de votre inventaire sont déjà inclus dans ce projet.",
-        "confirm": "Ajouter {{count}} véhicule(s)"
+        "confirm_one": "Ajouter {{count}} véhicule",
+        "confirm_other": "Ajouter {{count}} véhicules"
       },
       "toast": {
         "removed": "Véhicule retiré du projet (il reste dans Ma flotte)",
-        "added": "{{count}} véhicule(s) ajouté(s) au projet"
+        "added_one": "{{count}} véhicule ajouté au projet",
+        "added_other": "{{count}} véhicules ajoutés au projet"
       },
       "bulk": {
-        "selected": "{{count}} véhicule(s) sélectionné(s)",
         "selectAll": "Tout sélectionner",
         "chooseYear": "Année…",
         "applyYear": "Appliquer l'année",
@@ -4943,32 +4944,38 @@
         "applyTarget": "Appliquer la cible",
         "applySuggested": "Cibles suggérées",
         "remove": "Retirer du projet",
-        "applied": "{{count}} véhicule(s) mis à jour",
-        "removed": "{{count}} véhicule(s) retiré(s) du projet"
+        "selected_one": "{{count}} véhicule sélectionné",
+        "selected_other": "{{count}} véhicules sélectionnés",
+        "applied_one": "{{count}} véhicule mis à jour",
+        "applied_other": "{{count}} véhicules mis à jour",
+        "removed_one": "{{count}} véhicule retiré du projet",
+        "removed_other": "{{count}} véhicules retirés du projet"
       },
       "suggestion": "Suggestion faisabilité : {{target}}",
       "suggestedSuffix": "(suggérée)",
       "catchUp": {
-        "banner": "{{count}} remplacement(s) prévu(s) en {{year}} ou avant : véhicules déjà en fin de vie. Un budget de l'année en cours est rarement encore ouvert — étalez le rattrapage.",
         "over": "Étaler sur",
         "years_one": "{{count}} an",
         "years_other": "{{count}} ans",
         "apply": "Lisser le rattrapage",
-        "done": "{{count}} remplacement(s) étalé(s) sur {{years}} an(s), les plus anciens d'abord."
+        "banner_one": "{{count}} remplacement prévu en {{year}} ou avant : véhicule déjà en fin de vie. Un budget de l'année en cours est rarement encore ouvert — étalez le rattrapage.",
+        "banner_other": "{{count}} remplacements prévus en {{year}} ou avant : véhicules déjà en fin de vie. Un budget de l'année en cours est rarement encore ouvert — étalez le rattrapage.",
+        "done_one": "{{count}} remplacement étalé sur {{duree}}.",
+        "done_other": "{{count}} remplacements étalés sur {{duree}}, les plus anciens d'abord."
       }
     },
     "feasibility": {
       "tableTitle": "Verdict par véhicule",
-      "methodNote": "Comparaison sur {{horizon}} ans avec un diesel neuf équivalent, chiffrée par le moteur TCO (hypothèses du registre, consommation réelle utilisée quand elle est connue). Infrastructure du dépôt non incluse à cette étape — elle est répartie aux étapes Stratégies et Plan.",
+      "methodNote": "Comparaison sur {{horizon}} ans avec un véhicule thermique neuf équivalent (même carburant, diesel ou essence), chiffrée par le moteur TCO (hypothèses du registre, consommation réelle utilisée quand elle est connue). Infrastructure du dépôt non incluse à cette étape — elle est répartie aux étapes Stratégies et Plan.",
       "stats": {
-        "favorable": "Favorables (BEV)",
-        "conditional": "Conditionnels (BEV)",
-        "unfavorable": "Défavorables (BEV)",
+        "favorable": "Électrique favorable",
+        "conditional": "Électrique sous conditions",
+        "unfavorable": "Électrique défavorable",
         "notAssessable": "Non évaluables"
       },
       "columns": {
-        "bev": "Électrique (BEV)",
-        "fcev": "Hydrogène (FCEV)",
+        "bev": "Électrique (batterie)",
+        "fcev": "Hydrogène (pile à combustible)",
         "notes": "Réserves",
         "target": "Technologie cible"
       },
@@ -4987,7 +4994,7 @@
         "surcout_non_resorbe": "le surcoût n'est pas résorbé sur l'horizon de {{horizon}} ans",
         "aucun_ecart": "aucun véhicule ne change de technologie : rien à récupérer"
       },
-      "co2Avoided": "{{ttw}} t CO2e évitées au pot d'échappement · {{wtw}} t cycle complet (totaux)",
+      "co2Avoided": "{{ttw}} t CO2e évitées à l'échappement · {{wtw}} t cycle complet (totaux)",
       "subsidies": "Subventions : {{amount}}",
       "reserves": {
         "longue_distance": "Autonomie à vérifier (longue distance)",
@@ -5042,11 +5049,11 @@
         },
         "tout_electrique": {
           "title": "Tout électrique",
-          "description": "Chaque remplacement passe au BEV, même calendrier."
+          "description": "Chaque remplacement passe à l'électrique, même calendrier."
         },
         "economies_d_abord": {
           "title": "Économies d'abord",
-          "description": "BEV seulement là où le moteur calcule une économie, bornes et raccordement du garage compris ; diesel sinon."
+          "description": "Électrique seulement là où le moteur calcule une économie, bornes et raccordement du garage compris ; thermique sinon."
         },
         "optimisee": {
           "title": "Optimisée",
@@ -5055,22 +5062,24 @@
       },
       "metrics": {
         "vehicles": "{{ze}} zéro émission sur {{total}} véhicules",
-        "co2": "{{ttw}} t CO2e évitées au pot d'échappement · {{wtw}} t sur le cycle complet (retenu dans les totaux)",
+        "co2": "{{ttw}} t CO2e évitées à l'échappement · {{wtw}} t sur le cycle complet (retenu dans les totaux)",
         "infra": "Infrastructure : {{amount}}",
         "subsidies": "Subventions : {{amount}}",
         "investment": "Investissement : {{amount}} (statu quo : {{sq}}, écart : {{diff}})"
       },
       "noProfitable": "Aucune électrification rentable avec les hypothèses actuelles (bornes et raccordement du garage compris).",
-      "selectionGarage": "{{garage}} : {{retenus}} retenu(s) sur {{candidats}} rentable(s) seul(s), infrastructure du garage comptée",
+      "selectionGarage": "{{garage}} — retenus : {{retenus}} sur {{candidats}} rentables pris isolément, infrastructure du garage comptée",
       "emptyPlan": "Choisissez une technologie cible pour au moins un véhicule (étape Flotte ou Faisabilité).",
       "bestSavings": "Meilleure économie",
       "notComputable": "Non calculable (aucun véhicule évaluable).",
       "methodTitle": "Ce que comparent ces chiffres",
-      "methodNote1": "Chaque stratégie est comparée au statu quo : les mêmes véhicules remplacés aux mêmes années par un diesel neuf équivalent. Les achats futurs sont indexés à l'inflation générale ; un programme de subvention échu avant l'année d'achat prévue n'est pas compté.",
+      "methodNote1": "Chaque stratégie est comparée au statu quo : les mêmes véhicules remplacés aux mêmes années par un véhicule thermique neuf équivalent (même carburant, diesel ou essence). Les achats futurs sont indexés à l'inflation générale ; un programme de subvention échu avant l'année d'achat prévue n'est pas compté.",
       "methodNote2": "Infrastructure du dépôt : bornes par catégorie (niveau 2 / rapide) + raccordement, et station H2 s'il y a des véhicules à hydrogène — montants du registre d'hypothèses (statut « estimation », remplacés par vos devis dès qu'ils existent).",
       "warnings": {
-        "excluded": "{{count}} véhicule(s) de catégorie « autre » hors du calcul (à évaluer manuellement).",
-        "noYear": "{{count}} véhicule(s) sans année de remplacement : traités comme remplacés dès maintenant."
+        "excluded_one": "{{count}} véhicule de catégorie « autre » hors du calcul (à évaluer manuellement).",
+        "excluded_other": "{{count}} véhicules de catégorie « autre » hors du calcul (à évaluer manuellement).",
+        "noYear_one": "{{count}} véhicule sans année de remplacement : traités comme remplacés dès maintenant.",
+        "noYear_other": "{{count}} véhicules sans année de remplacement : traités comme remplacés dès maintenant."
       },
       "stress": {
         "title": "Stress test de la stratégie sélectionnée",
@@ -5089,10 +5098,8 @@
         "vanRange": "Économie (VAN) aux bornes de l'hypothèse",
         "note": "Économie centrale : {{van}}. Chaque barre montre l'économie recalculée par le moteur quand l'hypothèse passe de sa borne basse à sa borne haute (plages du registre)."
       },
-      "outOfHorizon": "{{count}} véhicule(s) dont le remplacement est prévu après l'horizon d'analyse — exclus de tous les totaux et du financement : {{liste}}.",
       "apply": {
         "title": "Appliquer « {{strategy}} » au plan",
-        "pending": "{{count}} véhicule(s) changeraient de technologie cible.",
         "noChange": "Aucun changement de cible : le plan correspond déjà à cette stratégie.",
         "noChangeDetail": "Aucune cible ne change ; la stratégie sera simplement enregistrée comme stratégie retenue du projet.",
         "current": "Stratégie retenue actuelle : {{strategy}} (appliquée le {{date}}).",
@@ -5100,11 +5107,16 @@
         "dialogTitle": "Appliquer « {{strategy}} » ?",
         "dialogSubtitle": "Les technologies cibles ci-dessous seront mises à jour dans l'étape Flotte et le Plan. Les années de remplacement ne changent pas.",
         "none": "aucune",
-        "confirm": "Appliquer ({{count}} changement(s))",
-        "done": "Stratégie appliquée au plan — {{count}} cible(s) mise(s) à jour",
         "retained": "Stratégie retenue",
-        "logSummary": "Stratégie « {{strategy}} » appliquée — {{count}} véhicule(s) modifié(s)",
-        "logged": "L'application est journalisée (qui, quand, quoi) et visible par l'équipe."
+        "logged": "L'application est journalisée (qui, quand, quoi) et visible par l'équipe.",
+        "pending_one": "{{count}} véhicule changerait de technologie cible.",
+        "pending_other": "{{count}} véhicules changeraient de technologie cible.",
+        "confirm_one": "Appliquer ({{count}} changement)",
+        "confirm_other": "Appliquer ({{count}} changements)",
+        "done_one": "Stratégie appliquée au plan — {{count}} cible mise à jour",
+        "done_other": "Stratégie appliquée au plan — {{count}} cibles mises à jour",
+        "logSummary_one": "Stratégie « {{strategy}} » appliquée — {{count}} véhicule modifié",
+        "logSummary_other": "Stratégie « {{strategy}} » appliquée — {{count}} véhicules modifiés"
       },
       "selectionInfra": "bornes {{bornes}} ; {{kw}} kW demandés pour {{dispo}} kW disponibles ({{source}}) ; {{raccordement}}",
       "selectionSource": {
@@ -5113,9 +5125,13 @@
       },
       "selectionRaccordement0": "aucun raccordement à ajouter",
       "selectionRaccordement": "raccordement palier {{palier}} : {{cout}}",
-      "selectionExclusBorne": "{{count}} écarté(s) : la borne coûte plus que l'économie du véhicule ({{unites}})",
-      "selectionExclusRaccordement": "{{count}} écarté(s) : le raccordement supplémentaire coûterait plus qu'ils ne rapportent ({{unites}})",
-      "selectionMethode": "Sélection : meilleur sous-ensemble par garage, bornes et raccordement compris (méthodologie §11.1)."
+      "selectionMethode": "Sélection : meilleur sous-ensemble par garage, bornes et raccordement compris (méthodologie §11.1).",
+      "outOfHorizon_one": "{{count}} véhicule dont le remplacement est prévu après l'horizon d'analyse — exclus de tous les totaux et du financement : {{liste}}.",
+      "outOfHorizon_other": "{{count}} véhicules dont le remplacement est prévu après l'horizon d'analyse — exclus de tous les totaux et du financement : {{liste}}.",
+      "selectionExclusBorne_one": "{{count}} écarté : la borne coûte plus que l'économie du véhicule ({{unites}})",
+      "selectionExclusBorne_other": "{{count}} écartés : la borne coûte plus que l'économie du véhicule ({{unites}})",
+      "selectionExclusRaccordement_one": "{{count}} écarté : le raccordement supplémentaire coûterait plus qu'ils ne rapportent ({{unites}})",
+      "selectionExclusRaccordement_other": "{{count}} écartés : le raccordement supplémentaire coûterait plus qu'ils ne rapportent ({{unites}})"
     },
     "plan": {
       "empty": {
@@ -5127,7 +5143,7 @@
         "subsidies": "Subventions prévues",
         "toFinance": "Reste à financer",
         "netSavings": "Économie vs statu quo (VAN)",
-        "investmentDetail": "Statu quo (mêmes remplacements en diesel neuf) : {{sq}} — écart : {{diff}}"
+        "investmentDetail": "Statu quo (mêmes remplacements en thermique neuf) : {{sq}} — écart : {{diff}}"
       },
       "chartTitle": "Budget annuel du plan",
       "chartSubtitle": "Reste à financer (investissement − subventions) et fonctionnement, par année ; la ligne montre l'écart annuel vs statu quo (positif = le plan coûte moins cher cette année-là).",
@@ -5138,7 +5154,6 @@
       },
       "tableTitle": "Plan de remplacement, année par année",
       "tableSubtitle": "Stratégie retenue : {{strategy}} — chiffrée par le moteur sur les technologies cibles du plan (vue budgétaire, dollars courants).",
-      "modifiedSince": ", modifiée depuis son application ({{count}} véhicule(s) changé(s))",
       "manualChoices": "choix faits véhicule par véhicule (étape Flotte)",
       "columns": {
         "year": "Année",
@@ -5149,7 +5164,9 @@
         "operating": "Fonctionnement",
         "gap": "Écart vs statu quo"
       },
-      "note": "Montants en dollars courants (vue budgétaire). Un véhicule sans technologie cible reste au diesel (statu quo) ; ajustez-le à l'étape Flotte. L'infrastructure de chaque garage est comptée l'année d'arrivée de ses premiers véhicules électriques."
+      "note": "Montants en dollars courants (vue budgétaire). Un véhicule sans technologie cible est remplacé à l'identique, en thermique neuf (statu quo) ; ajustez-le à l'étape Flotte. L'infrastructure de chaque garage est comptée l'année d'arrivée de ses premiers véhicules électriques.",
+      "modifiedSince_one": ", modifiée depuis son application ({{count}} véhicule changé)",
+      "modifiedSince_other": ", modifiée depuis son application ({{count}} véhicules changés)"
     },
     "financing": {
       "stats": {
@@ -5265,7 +5282,6 @@
         "exported": "Note exportée ; plan figé dans un snapshot du {{date}}",
         "aiRejected": "Brouillon IA non retenu : il contenait des chiffres hors des faits du moteur, même après correction. Utilisez le modèle sans IA ou réessayez.",
         "aiRefused": "Le modèle a refusé de rédiger cette note.",
-        "aiRetried": "Brouillon IA vérifié : {{count}} écart(s) rejeté(s) puis corrigé(s) par une seconde rédaction.",
         "errors": {
           "service_non_configure": "La rédaction par l'IA n'est pas encore branchée sur ce site (clé ANTHROPIC_API_KEY à ajouter dans les secrets Supabase). Le modèle sans IA reste disponible.",
           "fonction_desactivee": "La note au conseil par l'IA est désactivée pour votre organisation.",
@@ -5278,7 +5294,9 @@
         "languages": {
           "fr": "Français",
           "en": "English"
-        }
+        },
+        "aiRetried_one": "Brouillon IA vérifié : {{count}} écart rejeté puis corrigé par une seconde rédaction.",
+        "aiRetried_other": "Brouillon IA vérifié : {{count}} écarts rejetés puis corrigés par une seconde rédaction."
       }
     },
     "tracking": {
@@ -5300,10 +5318,11 @@
         "title": "Tâches du projet",
         "subtitle": "Kanban et vue liste, assignation et commentaires ; les tâches générées sont liées au véhicule, à l'année du plan et au programme de subvention.",
         "generate": "Générer les tâches du plan",
-        "generated": "{{count}} tâche(s) créée(s) depuis les échéances du plan",
         "upToDate": "Les tâches du plan existent déjà — rien à créer.",
         "replaceTitle": "Remplacer {{unit}} ({{techno}})",
-        "submitTitle": "Déposer la demande {{program}} — {{unit}}"
+        "submitTitle": "Déposer la demande {{program}} — {{unit}}",
+        "generated_one": "{{count}} tâche créée depuis les échéances du plan",
+        "generated_other": "{{count}} tâches créées depuis les échéances du plan"
       },
       "completed": {
         "markButton": "Marquer réalisé",
@@ -5386,8 +5405,6 @@
       "power": "Puissance appelée",
       "capexChargers": "CAPEX bornes",
       "connection": "Raccordement",
-      "h2": "{{count}} véhicule(s) hydrogène : station H2 au dépôt estimée à {{amount}}.",
-      "unknownCategories": "{{count}} véhicule(s) de catégorie « autre » : borne à dimensionner manuellement.",
       "phasing": "Phasage (bornes ajoutées par année) :",
       "clientQuote": "Devis de raccordement saisi dans le projet : {{amount}} — il REMPLACE les estimations de raccordement (réparti entre les garages).",
       "quoteHint": "Aucun devis de raccordement saisi : les montants de raccordement sont l'hypothèse du registre. Saisissez le devis Hydro-Québec dans « Données client » (Faisabilité ou Organisation).",
@@ -5409,11 +5426,17 @@
       "presumedCapacity": "Puissance disponible PRÉSUMÉE (registre) : renseignez la puissance réelle du garage dans Ma flotte › Garages.",
       "tier": "Palier {{palier}} de mise à niveau retenu.",
       "noUpgrade": "Les bornes tiennent dans la capacité existante : aucune mise à niveau.",
-      "h2ExternalAuto": "{{count}} véhicule(s) hydrogène : ravitaillement à une station externe, aucun investissement de station au dépôt (moins de {{seuil}} véhicules H2 dans ce garage, seuil du registre ; modifiable dans Ma flotte › Garages).",
-      "h2External": "{{count}} véhicule(s) hydrogène : ravitaillement à une station externe (choix du garage), aucun investissement de station au dépôt.",
       "h2ExternalPrice": "Prix livré propre au garage : {{price}}/kg.",
       "h2ExternalProjectPrice": "Prix livré : celui du projet (registre ou donnée client).",
-      "h2Detour": "Détour : {{km}} km aller-retour par jour d'utilisation, compté dans l'énergie et l'entretien."
+      "h2Detour": "Détour : {{km}} km aller-retour par jour d'utilisation, compté dans l'énergie et l'entretien.",
+      "h2_one": "{{count}} véhicule hydrogène : station H2 au dépôt estimée à {{amount}}.",
+      "h2_other": "{{count}} véhicules hydrogène : station H2 au dépôt estimée à {{amount}}.",
+      "unknownCategories_one": "{{count}} véhicule de catégorie « autre » : borne à dimensionner manuellement.",
+      "unknownCategories_other": "{{count}} véhicules de catégorie « autre » : borne à dimensionner manuellement.",
+      "h2ExternalAuto_one": "{{count}} véhicule hydrogène : ravitaillement à une station externe, aucun investissement de station au dépôt (moins de {{seuil}} véhicules H2 dans ce garage, seuil du registre ; modifiable dans Ma flotte › Garages).",
+      "h2ExternalAuto_other": "{{count}} véhicules hydrogène : ravitaillement à une station externe, aucun investissement de station au dépôt (moins de {{seuil}} véhicules H2 dans ce garage, seuil du registre ; modifiable dans Ma flotte › Garages).",
+      "h2External_one": "{{count}} véhicule hydrogène : ravitaillement à une station externe (choix du garage), aucun investissement de station au dépôt.",
+      "h2External_other": "{{count}} véhicules hydrogène : ravitaillement à une station externe (choix du garage), aucun investissement de station au dépôt."
     },
     "settings": {
       "button": "Paramètres du projet",
@@ -5503,8 +5526,8 @@
       "methodNote": "Méthode : algorithme déterministe (aucune IA, aucun hasard). Chaque option véhicule × année × technologie est chiffrée par le moteur TCO, l'infrastructure par garage aussi ; la solution retenue est recalculée en entier par le moteur. Les économies comparent chaque véhicule à un diesel neuf acheté la même année. L'optimiseur ne fait jamais moins bien qu'une des trois autres stratégies qui respecte vos contraintes.",
       "technos": {
         "diesel": "Diesel",
-        "BEV": "Électrique (BEV)",
-        "FCEV": "Hydrogène (FCEV)"
+        "BEV": "Électrique (batterie)",
+        "FCEV": "Hydrogène (pile à combustible)"
       },
       "objectives": {
         "economies": "Maximiser les économies",
@@ -5645,12 +5668,11 @@
       "verdictNone": "votre plan n'est gagnant dans aucun des 3 scénarios du stress test",
       "energyVan": "À plan égal, ce changement fait passer la VAN centrale de {{avant}} à {{apres}} (scénario prudent : {{prudent}}).",
       "deadlineTitle": "Échéance : {{programme}} se termine le {{date}}",
-      "deadlineMessage_one": "Dans {{count}} jour. {{montant}} prévus au plan ({{vehicules}} véhicule(s)) et aucune demande déposée : déposez-la avant la fin du programme.",
-      "deadlineMessage_other": "Dans {{count}} jours. {{montant}} prévus au plan ({{vehicules}} véhicule(s)) et aucune demande déposée : déposez-la avant la fin du programme.",
+      "deadlineMessage_one": "Dans {{count}} jour. {{montant}} prévus au plan (véhicules concernés : {{vehicules}}) et aucune demande déposée : déposez-la avant la fin du programme.",
+      "deadlineMessage_other": "Dans {{count}} jours. {{montant}} prévus au plan (véhicules concernés : {{vehicules}}) et aucune demande déposée : déposez-la avant la fin du programme.",
       "lateTitle_one": "{{count}} remplacement en retard",
       "lateTitle_other": "{{count}} remplacements en retard",
       "lateMessage": "Prévus avant cette année et non marqués réalisés : {{liste}}. Marquez-les réalisés ci-dessous ou replanifiez-les à l'étape Flotte.",
-      "andMore": " et {{count}} autre(s)",
       "programTitle": "Programme modifié : {{programme}}",
       "programMessage": "{{resume}} (validé le {{date}} par l'équipe H2Fleet). Les montants du plan suivent le registre des programmes, mis à jour après lecture de la source.",
       "garageTitle": "Capacité électrique dépassée : {{garage}}",
@@ -5672,7 +5694,9 @@
       "since": "Relevée le {{date}}",
       "emailNote": "Résumé par courriel aux membres du projet (préférence dans Paramètres) dès que le service de courriel sera branché.",
       "energyPlanChanged": "Le plan a aussi changé depuis le rapport (VAN présentée alors : {{van}}).",
-      "energyRegenerate": "Régénérez le rapport avant de le présenter."
+      "energyRegenerate": "Régénérez le rapport avant de le présenter.",
+      "andMore_one": " et {{count}} autre",
+      "andMore_other": " et {{count}} autres"
     },
     "van": {
       "title": "D'où vient l'écart avec le statu quo",

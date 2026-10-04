@@ -62,7 +62,7 @@ describe("synthèse financière (audit acheteur : point 7 et ajustement B)", () 
     });
     const lignes = feuilles[0].lignes;
     const valeur = (libelle: string) => lignes.find((l) => l[0] === libelle)?.[1];
-    expect(valeur("Investissement du statu quo — mêmes remplacements en diesel neuf (dollars courants)")).toBeCloseTo(investissementCompare(r).statuQuo, 6);
+    expect(valeur("Investissement du statu quo — mêmes remplacements en thermique neuf (dollars courants)")).toBeCloseTo(investissementCompare(r).statuQuo, 6);
     expect(valeur("Achat des véhicules")).toBeCloseTo(r.decompositionVan.achat, 6);
     expect(valeur("Total = VAN")).toBeCloseTo(r.vanDifferentielle, 6);
   });

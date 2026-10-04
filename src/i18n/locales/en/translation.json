@@ -4909,9 +4909,9 @@
         "target": "Target technology"
       },
       "targets": {
-        "diesel": "Diesel (status quo)",
-        "bev": "Electric (BEV)",
-        "fcev": "Hydrogen (FCEV)"
+        "diesel": "New combustion (status quo)",
+        "bev": "Battery electric",
+        "fcev": "Hydrogen fuel cell"
       },
       "chooseTarget": "To choose",
       "remove": "Remove",
@@ -4928,14 +4928,15 @@
         "subtitle": "Select the vehicles from your “My fleet” inventory to include in this project.",
         "selectAll": "Select all",
         "empty": "All vehicles in your inventory are already included in this project.",
-        "confirm": "Add {{count}} vehicle(s)"
+        "confirm_one": "Add {{count}} vehicle",
+        "confirm_other": "Add {{count}} vehicles"
       },
       "toast": {
         "removed": "Vehicle removed from the project (it stays in My fleet)",
-        "added": "{{count}} vehicle(s) added to the project"
+        "added_one": "{{count}} vehicle added to the project",
+        "added_other": "{{count}} vehicles added to the project"
       },
       "bulk": {
-        "selected": "{{count}} vehicle(s) selected",
         "selectAll": "Select all",
         "chooseYear": "Year…",
         "applyYear": "Apply year",
@@ -4943,32 +4944,38 @@
         "applyTarget": "Apply target",
         "applySuggested": "Suggested targets",
         "remove": "Remove from project",
-        "applied": "{{count}} vehicle(s) updated",
-        "removed": "{{count}} vehicle(s) removed from project"
+        "selected_one": "{{count}} vehicle selected",
+        "selected_other": "{{count}} vehicles selected",
+        "applied_one": "{{count}} vehicle updated",
+        "applied_other": "{{count}} vehicles updated",
+        "removed_one": "{{count}} vehicle removed from project",
+        "removed_other": "{{count}} vehicles removed from project"
       },
       "suggestion": "Feasibility suggestion: {{target}}",
       "suggestedSuffix": "(suggested)",
       "catchUp": {
-        "banner": "{{count}} replacement(s) scheduled in {{year}} or earlier: vehicles already at end of life. A current-year budget is rarely still open — spread the catch-up.",
         "over": "Spread over",
         "years_one": "{{count}} year",
         "years_other": "{{count}} years",
         "apply": "Smooth the catch-up",
-        "done": "{{count}} replacement(s) spread over {{years}} year(s), oldest first."
+        "banner_one": "{{count}} replacement scheduled in {{year}} or earlier: vehicle already at end of life. A current-year budget is rarely still open — spread the catch-up.",
+        "banner_other": "{{count}} replacements scheduled in {{year}} or earlier: vehicles already at end of life. A current-year budget is rarely still open — spread the catch-up.",
+        "done_one": "{{count}} replacement spread over {{duree}}.",
+        "done_other": "{{count}} replacements spread over {{duree}}, oldest first."
       }
     },
     "feasibility": {
       "tableTitle": "Verdict per vehicle",
-      "methodNote": "Comparison over {{horizon}} years against an equivalent new diesel, computed by the TCO engine (registry assumptions, real consumption used when known). Depot infrastructure is not included at this step — it is allocated in the Strategies and Plan steps.",
+      "methodNote": "Comparison over {{horizon}} years against an equivalent new combustion vehicle (same fuel, diesel or gasoline), computed by the TCO engine (registry assumptions, real consumption used when known). Depot infrastructure is not included at this step — it is allocated in the Strategies and Plan steps.",
       "stats": {
-        "favorable": "Favorable (BEV)",
-        "conditional": "Conditional (BEV)",
-        "unfavorable": "Unfavorable (BEV)",
+        "favorable": "Electric favorable",
+        "conditional": "Electric with conditions",
+        "unfavorable": "Electric unfavorable",
         "notAssessable": "Not assessable"
       },
       "columns": {
-        "bev": "Electric (BEV)",
-        "fcev": "Hydrogen (FCEV)",
+        "bev": "Battery electric",
+        "fcev": "Hydrogen fuel cell",
         "notes": "Caveats",
         "target": "Target technology"
       },
@@ -4987,7 +4994,7 @@
         "surcout_non_resorbe": "the extra cost is not recovered within the {{horizon}}-year horizon",
         "aucun_ecart": "no vehicle changes technology: nothing to recover"
       },
-      "co2Avoided": "{{ttw}} t CO2e avoided at the tailpipe · {{wtw}} t full cycle (totals)",
+      "co2Avoided": "{{ttw}} t CO2e avoided at the exhaust · {{wtw}} t full cycle (totals)",
       "subsidies": "Subsidies: {{amount}}",
       "reserves": {
         "longue_distance": "Range to verify (long distance)",
@@ -5042,11 +5049,11 @@
         },
         "tout_electrique": {
           "title": "All electric",
-          "description": "Every replacement switches to BEV, same schedule."
+          "description": "Every replacement switches to electric, same schedule."
         },
         "economies_d_abord": {
           "title": "Savings first",
-          "description": "BEV only where the engine computes a saving, garage chargers and grid connection included; diesel otherwise."
+          "description": "Electric only where the engine computes a saving, garage chargers and grid connection included; combustion otherwise."
         },
         "optimisee": {
           "title": "Optimized",
@@ -5055,7 +5062,7 @@
       },
       "metrics": {
         "vehicles": "{{ze}} zero-emission out of {{total}} vehicles",
-        "co2": "{{ttw}} t CO2e avoided at the tailpipe · {{wtw}} t full cycle (used in totals)",
+        "co2": "{{ttw}} t CO2e avoided at the exhaust · {{wtw}} t full cycle (used in totals)",
         "infra": "Infrastructure: {{amount}}",
         "subsidies": "Subsidies: {{amount}}",
         "investment": "Investment: {{amount}} (status quo: {{sq}}, gap: {{diff}})"
@@ -5066,11 +5073,13 @@
       "bestSavings": "Best savings",
       "notComputable": "Not computable (no assessable vehicle).",
       "methodTitle": "What these numbers compare",
-      "methodNote1": "Each strategy is compared to the status quo: the same vehicles replaced in the same years by an equivalent new diesel. Future purchases are indexed to general inflation; a subsidy program that expires before the planned purchase year is not counted.",
+      "methodNote1": "Each strategy is compared to the status quo: the same vehicles replaced in the same years by an equivalent new combustion vehicle (same fuel, diesel or gasoline). Future purchases are indexed to general inflation; a subsidy program that expires before the planned purchase year is not counted.",
       "methodNote2": "Depot infrastructure: chargers per category (level 2 / fast) plus grid connection, and an H2 station when hydrogen vehicles are present — registry amounts (status “estimate”, replaced by your quotes as soon as they exist).",
       "warnings": {
-        "excluded": "{{count}} vehicle(s) in category “other” excluded from the computation (assess manually).",
-        "noYear": "{{count}} vehicle(s) without a replacement year: treated as replaced now."
+        "excluded_one": "{{count}} vehicle in category “other” excluded from the computation (assess manually).",
+        "excluded_other": "{{count}} vehicles in category “other” excluded from the computation (assess manually).",
+        "noYear_one": "{{count}} vehicle without a replacement year: treated as replaced now.",
+        "noYear_other": "{{count}} vehicles without a replacement year: treated as replaced now."
       },
       "stress": {
         "title": "Stress test of the selected strategy",
@@ -5089,10 +5098,8 @@
         "vanRange": "Savings (NPV) at the assumption's bounds",
         "note": "Central savings: {{van}}. Each bar shows the savings recomputed by the engine as the assumption moves from its low to its high bound (registry ranges)."
       },
-      "outOfHorizon": "{{count}} vehicle(s) scheduled for replacement after the analysis horizon — excluded from every total and from financing: {{liste}}.",
       "apply": {
         "title": "Apply “{{strategy}}” to the plan",
-        "pending": "{{count}} vehicle(s) would change target technology.",
         "noChange": "No target change: the plan already matches this strategy.",
         "noChangeDetail": "No target changes; the strategy will simply be recorded as the project’s retained strategy.",
         "current": "Current retained strategy: {{strategy}} (applied on {{date}}).",
@@ -5100,11 +5107,16 @@
         "dialogTitle": "Apply “{{strategy}}”?",
         "dialogSubtitle": "The target technologies below will be updated in the Fleet step and the Plan. Replacement years are unchanged.",
         "none": "none",
-        "confirm": "Apply ({{count}} change(s))",
-        "done": "Strategy applied to the plan — {{count}} target(s) updated",
         "retained": "Retained strategy",
-        "logSummary": "Strategy \"{{strategy}}\" applied — {{count}} vehicle(s) changed",
-        "logged": "The change is logged (who, when, what) and visible to the team."
+        "logged": "The change is logged (who, when, what) and visible to the team.",
+        "pending_one": "{{count}} vehicle would change target technology.",
+        "pending_other": "{{count}} vehicles would change target technology.",
+        "confirm_one": "Apply ({{count}} change)",
+        "confirm_other": "Apply ({{count}} changes)",
+        "done_one": "Strategy applied to the plan — {{count}} target updated",
+        "done_other": "Strategy applied to the plan — {{count}} targets updated",
+        "logSummary_one": "Strategy \"{{strategy}}\" applied — {{count}} vehicle changed",
+        "logSummary_other": "Strategy \"{{strategy}}\" applied — {{count}} vehicles changed"
       },
       "selectionInfra": "chargers {{bornes}}; {{kw}} kW required for {{dispo}} kW available ({{source}}); {{raccordement}}",
       "selectionSource": {
@@ -5113,9 +5125,13 @@
       },
       "selectionRaccordement0": "no grid upgrade needed",
       "selectionRaccordement": "grid upgrade tier {{palier}}: {{cout}}",
-      "selectionExclusBorne": "{{count}} left out: the charger costs more than the vehicle saves ({{unites}})",
-      "selectionExclusRaccordement": "{{count}} left out: the extra grid upgrade would cost more than they save ({{unites}})",
-      "selectionMethode": "Selection: best subset per garage, chargers and grid upgrade included (methodology §11.1)."
+      "selectionMethode": "Selection: best subset per garage, chargers and grid upgrade included (methodology §11.1).",
+      "outOfHorizon_one": "{{count}} vehicle scheduled for replacement after the analysis horizon — excluded from every total and from financing: {{liste}}.",
+      "outOfHorizon_other": "{{count}} vehicles scheduled for replacement after the analysis horizon — excluded from every total and from financing: {{liste}}.",
+      "selectionExclusBorne_one": "{{count}} left out: the charger costs more than the vehicle saves ({{unites}})",
+      "selectionExclusBorne_other": "{{count}} left out: the charger costs more than the vehicle saves ({{unites}})",
+      "selectionExclusRaccordement_one": "{{count}} left out: the extra grid upgrade would cost more than they save ({{unites}})",
+      "selectionExclusRaccordement_other": "{{count}} left out: the extra grid upgrade would cost more than they save ({{unites}})"
     },
     "plan": {
       "empty": {
@@ -5127,7 +5143,7 @@
         "subsidies": "Expected subsidies",
         "toFinance": "Left to finance",
         "netSavings": "Savings vs status quo (NPV)",
-        "investmentDetail": "Status quo (same replacements with new diesels): {{sq}} — gap: {{diff}}"
+        "investmentDetail": "Status quo (same replacements with new combustion vehicles): {{sq}} — gap: {{diff}}"
       },
       "chartTitle": "Annual plan budget",
       "chartSubtitle": "Left to finance (investment − subsidies) and operating costs per year; the line shows the yearly gap vs status quo (positive = the plan costs less that year).",
@@ -5138,7 +5154,6 @@
       },
       "tableTitle": "Replacement plan, year by year",
       "tableSubtitle": "Selected strategy: {{strategy}} — computed by the engine on the plan's target technologies (budget view, current dollars).",
-      "modifiedSince": ", modified since it was applied ({{count}} vehicle(s) changed)",
       "manualChoices": "choices made vehicle by vehicle (Fleet step)",
       "columns": {
         "year": "Year",
@@ -5149,7 +5164,9 @@
         "operating": "Operating",
         "gap": "Gap vs status quo"
       },
-      "note": "Amounts in current dollars (budget view). A vehicle without a target technology stays diesel (status quo); adjust it in the Fleet step. Each depot's infrastructure is booked in the year its first electric vehicles arrive."
+      "note": "Amounts in current dollars (budget view). A vehicle without a target technology is replaced like-for-like with a new combustion vehicle (status quo); adjust it in the Fleet step. Each depot's infrastructure is booked in the year its first electric vehicles arrive.",
+      "modifiedSince_one": ", modified since it was applied ({{count}} vehicle changed)",
+      "modifiedSince_other": ", modified since it was applied ({{count}} vehicles changed)"
     },
     "financing": {
       "stats": {
@@ -5265,7 +5282,6 @@
         "exported": "Note exported; plan frozen in a snapshot dated {{date}}",
         "aiRejected": "AI draft not kept: it contained figures outside the engine facts, even after correction. Use the template without AI or try again.",
         "aiRefused": "The model declined to draft this note.",
-        "aiRetried": "AI draft checked: {{count}} issue(s) rejected then corrected by a second draft.",
         "errors": {
           "service_non_configure": "AI drafting is not connected on this site yet (ANTHROPIC_API_KEY to add to the Supabase secrets). The template without AI remains available.",
           "fonction_desactivee": "AI note to council is disabled for your organization.",
@@ -5278,7 +5294,9 @@
         "languages": {
           "fr": "Français",
           "en": "English"
-        }
+        },
+        "aiRetried_one": "AI draft checked: {{count}} issue rejected then corrected by a second draft.",
+        "aiRetried_other": "AI draft checked: {{count}} issues rejected then corrected by a second draft."
       }
     },
     "tracking": {
@@ -5300,10 +5318,11 @@
         "title": "Project tasks",
         "subtitle": "Kanban and list views, assignment and comments; generated tasks are linked to the vehicle, the plan year and the subsidy program.",
         "generate": "Generate plan tasks",
-        "generated": "{{count}} task(s) created from the plan deadlines",
         "upToDate": "Plan tasks already exist — nothing to create.",
         "replaceTitle": "Replace {{unit}} ({{techno}})",
-        "submitTitle": "Submit the {{program}} application — {{unit}}"
+        "submitTitle": "Submit the {{program}} application — {{unit}}",
+        "generated_one": "{{count}} task created from the plan deadlines",
+        "generated_other": "{{count}} tasks created from the plan deadlines"
       },
       "completed": {
         "markButton": "Mark completed",
@@ -5386,8 +5405,6 @@
       "power": "Demand (power)",
       "capexChargers": "Chargers CAPEX",
       "connection": "Grid connection",
-      "h2": "{{count}} hydrogen vehicle(s): depot H2 station estimated at {{amount}}.",
-      "unknownCategories": "{{count}} vehicle(s) in category “other”: charger to size manually.",
       "phasing": "Phasing (chargers added per year):",
       "clientQuote": "Grid connection quote entered in the project: {{amount}} — it REPLACES the connection estimates (split between depots).",
       "quoteHint": "No grid-connection quote entered: connection amounts are the registry assumption. Enter the Hydro-Québec quote in “Client data” (Feasibility or Organization).",
@@ -5409,11 +5426,17 @@
       "presumedCapacity": "PRESUMED available capacity (registry): enter the depot's real capacity in My fleet › Depots.",
       "tier": "Upgrade tier {{palier}} applied.",
       "noUpgrade": "The chargers fit within the existing capacity: no upgrade.",
-      "h2ExternalAuto": "{{count}} hydrogen vehicle(s): refuelling at an external station, no depot station investment (fewer than {{seuil}} H2 vehicles at this depot, registry threshold; editable in My fleet › Depots).",
-      "h2External": "{{count}} hydrogen vehicle(s): refuelling at an external station (depot setting), no depot station investment.",
       "h2ExternalPrice": "Depot-specific delivered price: {{price}}/kg.",
       "h2ExternalProjectPrice": "Delivered price: the project price (registry or client data).",
-      "h2Detour": "Detour: {{km}} round-trip km per operating day, counted in energy and maintenance."
+      "h2Detour": "Detour: {{km}} round-trip km per operating day, counted in energy and maintenance.",
+      "h2_one": "{{count}} hydrogen vehicle: depot H2 station estimated at {{amount}}.",
+      "h2_other": "{{count}} hydrogen vehicles: depot H2 station estimated at {{amount}}.",
+      "unknownCategories_one": "{{count}} vehicle in category “other”: charger to size manually.",
+      "unknownCategories_other": "{{count}} vehicles in category “other”: charger to size manually.",
+      "h2ExternalAuto_one": "{{count}} hydrogen vehicle: refuelling at an external station, no depot station investment (fewer than {{seuil}} H2 vehicles at this depot, registry threshold; editable in My fleet › Depots).",
+      "h2ExternalAuto_other": "{{count}} hydrogen vehicles: refuelling at an external station, no depot station investment (fewer than {{seuil}} H2 vehicles at this depot, registry threshold; editable in My fleet › Depots).",
+      "h2External_one": "{{count}} hydrogen vehicle: refuelling at an external station (depot setting), no depot station investment.",
+      "h2External_other": "{{count}} hydrogen vehicles: refuelling at an external station (depot setting), no depot station investment."
     },
     "settings": {
       "button": "Project settings",
@@ -5503,8 +5526,8 @@
       "methodNote": "Method: deterministic algorithm (no AI, no randomness). Each vehicle × year × technology option is priced by the TCO engine, as is the infrastructure of each garage; the selected solution is fully recomputed by the engine. Savings compare each vehicle with a new diesel bought the same year. The optimizer never does worse than any of the three other strategies that meets your constraints.",
       "technos": {
         "diesel": "Diesel",
-        "BEV": "Electric (BEV)",
-        "FCEV": "Hydrogen (FCEV)"
+        "BEV": "Battery electric",
+        "FCEV": "Hydrogen fuel cell"
       },
       "objectives": {
         "economies": "Maximize savings",
@@ -5645,12 +5668,11 @@
       "verdictNone": "your plan no longer comes out ahead in any of the 3 stress-test scenarios",
       "energyVan": "With the plan unchanged, this moves the central NPV from {{avant}} to {{apres}} (cautious scenario: {{prudent}}).",
       "deadlineTitle": "Deadline: {{programme}} ends on {{date}}",
-      "deadlineMessage_one": "In {{count}} day. {{montant}} planned ({{vehicules}} vehicle(s)) and no application submitted: submit it before the program ends.",
-      "deadlineMessage_other": "In {{count}} days. {{montant}} planned ({{vehicules}} vehicle(s)) and no application submitted: submit it before the program ends.",
+      "deadlineMessage_one": "In {{count}} day. {{montant}} planned (vehicles concerned: {{vehicules}}) and no application submitted: submit it before the program ends.",
+      "deadlineMessage_other": "In {{count}} days. {{montant}} planned (vehicles concerned: {{vehicules}}) and no application submitted: submit it before the program ends.",
       "lateTitle_one": "{{count}} late replacement",
       "lateTitle_other": "{{count}} late replacements",
       "lateMessage": "Planned before this year and not marked completed: {{liste}}. Mark them completed below or reschedule them in the Fleet step.",
-      "andMore": " and {{count}} more",
       "programTitle": "Program changed: {{programme}}",
       "programMessage": "{{resume}} (validated on {{date}} by the H2Fleet team). Plan amounts follow the program registry, updated after reading the source.",
       "garageTitle": "Electrical capacity exceeded: {{garage}}",
@@ -5672,7 +5694,9 @@
       "since": "Raised on {{date}}",
       "emailNote": "Email summary to project members (preference in Settings) once the email service is connected.",
       "energyPlanChanged": "The plan itself has also changed since the report (NPV presented then: {{van}}).",
-      "energyRegenerate": "Regenerate the report before presenting it."
+      "energyRegenerate": "Regenerate the report before presenting it.",
+      "andMore_one": " and {{count}} more",
+      "andMore_other": " and {{count}} more"
     },
     "van": {
       "title": "Where the gap with the status quo comes from",

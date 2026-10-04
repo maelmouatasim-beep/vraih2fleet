@@ -45,7 +45,7 @@ describe("traductions anglaises du registre (E2)", () => {
     expect(avertissements.length).toBeGreaterThan(0);
     for (const a of avertissements) {
       const en = traduireAvertissement(a, "en");
-      expect(en, a).not.toMatch(/ inconnue | réduite | est À VALIDER|inscription au Registre|barème dégressif/);
+      expect(en, a).not.toMatch(/ inconnue | réduite | est À VALIDER|à confirmer auprès|l’organisme doit|barème dégressif/);
       const montants = a.match(/\d[\d\s]*(?= \$)/g) ?? [];
       for (const m of montants) expect(en.replace(/,/g, "")).toContain(m.replace(/\s/g, ""));
     }
@@ -101,9 +101,9 @@ describe("traductions anglaises du registre (E2)", () => {
 
 describe("modèles d'avertissements et aides (couverture complète)", () => {
   const cas: [string, RegExp][] = [
-    ["X : le pourcentage du coût d'achat appliqué (25 %, borne basse prudente) est À VALIDER — la cellule correspondante du tableau officiel est vide.", /^X: the purchase-cost percentage applied \(25%/],
+    ["X : pourcentage du coût d'achat retenu de 25 % (valeur prudente), à confirmer auprès du programme — le tableau officiel ne le précise pas pour cette classe.", /^X: purchase-cost percentage of 25% used/],
     ["PAVÉ : barème dégressif — …", /^EVAP: declining scale/],
-    ["Écocamionnage : inscription au Registre des propriétaires…", /^Écocamionnage: registration/],
+    ["Écocamionnage : l’organisme doit être inscrit…", /^Écocamionnage: the organization must be registered/],
     ["X : aide réduite de 12 000 $ pour respecter le plafond de cumul des aides publiques (75 % des dépenses admissibles, art. 7.14.2).", /^X: aid reduced by \$12,000 .*75% of eligible/],
     ["X : classe de poids (PNBV) du véhicule inconnue — barème le plus bas des classes possibles retenu par prudence (5 000 $). Renseignez la classe de poids pour obtenir le barème exact.", /^X: vehicle weight class \(GVWR\) unknown .*\$5,000/],
     ["v1 : année d'acquisition (12) hors de l'horizon H=10 — véhicule sans effet sur le plan", /^v1: acquisition year \(12\) outside the horizon H=10/],

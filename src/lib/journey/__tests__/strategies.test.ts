@@ -454,7 +454,7 @@ describe("1.6 — stratégie réellement retenue (Plan, PDF, Excel)", () => {
     );
     const r = strategieRetenue(plan, "economies_d_abord", OPTIONS);
     expect(r.ecarts).toBe(1);
-    expect(libelleStrategieRetenue(r, "fr")).toContain("modifiée depuis son application (1 véhicule(s)");
+    expect(libelleStrategieRetenue(r, "fr")).toContain("modifiée depuis son application (1 véhicule changé)");
     expect(strategieRetenue(plan, null, OPTIONS).cle).toBeNull();
     expect(strategieRetenue(plan, "inconnue", OPTIONS).cle).toBeNull();
     expect(libelleStrategieRetenue({ cle: null, ecarts: 0 }, "en")).toContain("vehicle by vehicle");

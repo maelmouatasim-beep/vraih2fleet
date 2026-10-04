@@ -88,7 +88,7 @@ export default function CouncilNotePDF({ langue, sections, faits, meta, strategi
                 [en ? "Discounted total cost — status quo (new combustion)" : "Coût total actualisé — statu quo (combustion neuf)", fait("tco_statu_quo")],
                 [en ? "Discounted payback" : "Récupération actualisée", fait("recuperation")],
                 [en ? "CO2e avoided — full cycle" : "CO2e évité — cycle complet", fait("co2_evite_t")],
-                [en ? "CO2e avoided — tailpipe" : "CO2e évité — au pot d'échappement", fait("co2_evite_pot_t")],
+                [en ? "CO2e avoided — exhaust" : "CO2e évité — à l'échappement", fait("co2_evite_pot_t")],
               ]}
               total={[en ? "Savings vs status quo (NPV)" : "Économie vs statu quo (VAN)", fait("van_centrale")]}
               negatifs
@@ -135,7 +135,7 @@ export default function CouncilNotePDF({ langue, sections, faits, meta, strategi
                 { titre: en ? "Savings (NPV)" : "Économie (VAN)", flex: 1.4, droite: true },
               ]}
               lignes={[
-                [en ? "Cautious — every bound unfavourable" : "Prudent — toutes les bornes défavorables", cad(sensibilite.scenarios.prudent.van)],
+                [en ? "Cautious — every assumption at its least favourable value" : "Prudent — chaque hypothèse à sa valeur la moins favorable", cad(sensibilite.scenarios.prudent.van)],
                 [en ? "Central" : "Central", cad(sensibilite.scenarios.central.van)],
                 [en ? "Favourable" : "Favorable", cad(sensibilite.scenarios.favorable.van)],
               ]}
