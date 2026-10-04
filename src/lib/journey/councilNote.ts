@@ -24,6 +24,8 @@ import {
   type SectionsNote,
 } from "../../../supabase/functions/_shared/councilNote";
 import { texteRecuperation } from "./payback";
+import { investissementCompare } from "./synthese";
+import { traduireLibelleSubvention } from "@/lib/tco/translations-en";
 import { libelleStrategieRetenue, type StrategieConstruite, type StrategieRetenue } from "./strategies";
 import type { DiagnosticHiver } from "./winter";
 
@@ -157,6 +159,13 @@ export function faitsNote(e: EntreeFaits): FaitNote[] {
   const investissement = budget.reduce((a, l) => a + l.investissementAlt, 0);
   const reste = budget.reduce((a, l) => a + l.resteAFinancerAlt, 0);
   montant("investissement_total", { fr: "Investissement total (dollars courants)", en: "Total investment (current dollars)" }, investissement);
+  const inv = investissementCompare(r);
+  montant(
+    "investissement_statu_quo",
+    { fr: "Investissement du statu quo (mêmes remplacements en diesel neuf)", en: "Status quo investment (same replacements with new diesels)" },
+    inv.statuQuo,
+  );
+  montant("ecart_investissement", { fr: "Écart d'investissement : plan − statu quo", en: "Investment gap: plan − status quo" }, inv.surcout);
   montant("subventions_total", { fr: "Subventions prévues", en: "Expected subsidies" }, s.subventionsTotal);
   montant("reste_a_financer", { fr: "Reste à financer", en: "Amount to finance" }, reste);
   montant("infra_total", { fr: "Infrastructure de recharge et raccordement", en: "Charging infrastructure and grid connection" }, s.infra.totalCapex);
@@ -165,14 +174,35 @@ export function faitsNote(e: EntreeFaits): FaitNote[] {
     annee("annee_pointe", { fr: "Année de pointe d'investissement", en: "Peak investment year" }, pointe.annee);
     montant("investissement_pointe", { fr: "Investissement de l'année de pointe", en: "Peak-year investment" }, pointe.investissementAlt);
   }
-  const programmes = new Map<string, number>();
-  for (const liste of Object.values(s.explicationsSubventions)) {
-    for (const ex of liste) if (ex.montant > 0) programmes.set(ex.programmeId, (programmes.get(ex.programmeId) ?? 0) + ex.montant);
+  // Programmes : subventions RÉELLEMENT comptées par le moteur, y compris
+  // celles confirmées par le client (lettre d'octroi) — séparées de celles
+  // qui restent à demander.
+  const confirmes = new Map<string, number>();
+  const aDemander = new Map<string, number>();
+  for (const pv of plan.vehicules) {
+    for (const sub of pv.subventionsAlternative ?? []) {
+      if (sub.montant <= 0) continue;
+      const base = sub.libelle.split(" — ")[0];
+      const cible = /confirmée par le client/i.test(sub.libelle) ? confirmes : aDemander;
+      cible.set(base, (cible.get(base) ?? 0) + sub.montant);
+    }
   }
-  const listeProgrammes = (l: Langue) =>
-    [...programmes].map(([id, m]) => `${nomCourtProgramme(id, l)} (${cad(l).format(m)})`).join(l === "fr" ? " ; " : "; ");
+  const liste = (m: Map<string, number>, l: Langue) =>
+    [...m].map(([lib, v]) => `${l === "en" ? traduireLibelleSubvention(lib, "en") : lib} (${cad(l).format(v)})`).join(l === "fr" ? " ; " : "; ");
+  const programmes = new Map([...aDemander, ...confirmes]);
   if (programmes.size > 0) {
-    texte("programmes_retenus", { fr: "Programmes retenus", en: "Programs counted" }, { fr: listeProgrammes("fr"), en: listeProgrammes("en") }, MOTEUR);
+    texte("programmes_retenus", { fr: "Programmes retenus", en: "Programs counted" }, { fr: liste(programmes, "fr"), en: liste(programmes, "en") }, MOTEUR);
+  }
+  if (aDemander.size > 0) {
+    texte("programmes_a_demander", { fr: "Subventions à demander", en: "Subsidies to apply for" }, { fr: liste(aDemander, "fr"), en: liste(aDemander, "en") }, MOTEUR);
+  }
+  if (confirmes.size > 0) {
+    texte(
+      "programmes_confirmes",
+      { fr: "Subventions confirmées par l'organisation", en: "Subsidies confirmed by the organization" },
+      { fr: liste(confirmes, "fr"), en: liste(confirmes, "en") },
+      PROJET,
+    );
   }
   compte("nb_programmes", { fr: "Programmes de subvention retenus", en: "Subsidy programs counted" }, programmes.size);
 
@@ -196,7 +226,7 @@ export function faitsNote(e: EntreeFaits): FaitNote[] {
   const facteurs = (l: Langue) =>
     e.sensibilite.tornade
       .slice(0, 3)
-      .map((b) => (l === "en" ? (PARAMETRES_STRESS_EN[b.id] ?? b.libelle) : b.libelle))
+      .map((b) => (l === "en" ? (PARAMETRES_STRESS_EN[b.id] ?? b.libelle) : b.libelle).replace(/\s*\((facteur|factor)\)\s*$/i, ""))
       .join(l === "fr" ? " ; " : "; ");
   if (e.sensibilite.tornade.length > 0) {
     texte("facteurs_influents", { fr: "Facteurs les plus influents", en: "Most influential factors" }, { fr: facteurs("fr"), en: facteurs("en") }, MOTEUR);
@@ -278,6 +308,8 @@ export function brouillonModele(faits: FaitNote[], langue: Langue): SectionsNote
   const recharge = Number(v("hiver_recharge_journee") ?? 0);
   const garages = Number(v("garages_depasses") ?? 0);
   const subventions = Number(v("subventions_total") ?? 0);
+  const memeAnnee = v("premiere_annee_achat") === v("derniere_annee_achat");
+  const achatsPremiere = Number(v("nb_achats_premiere_annee") ?? 0);
   const fr = langue === "fr";
 
   const recommandation =
@@ -290,20 +322,20 @@ export function brouillonModele(faits: FaitNote[], langue: Langue): SectionsNote
           ? "Il est recommandé que le conseil adopte le plan de remplacement de la flotte (stratégie « {{strategie_retenue}} »), sous réserve de valider d'ici le premier achat les hypothèses les plus influentes. Dans le scénario central, il économise {{van_centrale}} en valeur actualisée sur {{horizon_ans}} ; il reste gagnant dans {{scenarios_gagnants}} des {{nb_scenarios}} scénarios du stress test."
           : "Council is asked to adopt the fleet replacement plan (strategy “{{strategie_retenue}}”), subject to validating the most influential assumptions before the first purchase. In the central scenario it saves {{van_centrale}} in present value over {{horizon_ans}}; it comes out ahead in {{scenarios_gagnants}} of the {{nb_scenarios}} stress-test scenarios."
         : fr
-          ? "Il est recommandé de ne pas adopter le plan tel quel et d'en demander la révision. Dans le scénario central, il coûte {{ecart_central_abs}} de plus que le statu quo en valeur actualisée sur {{horizon_ans}} ; il n'est gagnant que dans {{scenarios_gagnants}} des {{nb_scenarios}} scénarios du stress test."
-          : "Council is asked not to adopt the plan as it stands and to request a revision. In the central scenario it costs {{ecart_central_abs}} more than the status quo in present value over {{horizon_ans}}; it comes out ahead in only {{scenarios_gagnants}} of the {{nb_scenarios}} stress-test scenarios.";
+          ? `Il est recommandé de ne pas adopter le plan tel quel et d'en demander une version révisée. Dans le scénario central, il coûte {{ecart_central_abs}} de plus que le statu quo en valeur actualisée sur {{horizon_ans}}${a("cout_par_tonne") ? ", soit {{cout_par_tonne}} par tonne de CO2e évitée" : ""} ; il n'est gagnant que dans {{scenarios_gagnants}} des {{nb_scenarios}} scénarios du stress test. Le conseil peut aussi l'adopter en connaissance de cause, s'il juge ce coût acceptable pour les réductions d'émissions visées.`
+          : `Council is asked not to adopt the plan as it stands and to request a revised version. In the central scenario it costs {{ecart_central_abs}} more than the status quo in present value over {{horizon_ans}}${a("cout_par_tonne") ? ", i.e. {{cout_par_tonne}} per tonne of CO2e avoided" : ""}; it comes out ahead in only {{scenarios_gagnants}} of the {{nb_scenarios}} stress-test scenarios. Council may also adopt it knowingly, if it considers this cost acceptable for the emission reductions sought.`;
 
   const contexte = fr
-    ? `${nbZe > 0 ? `Le plan fait passer {{nb_ze}} des {{nb_vehicules}} véhicules au zéro émission${a("derniere_annee_achat") ? " d'ici {{derniere_annee_achat}}" : ""}` : "Le plan ne prévoit aucun véhicule zéro émission"}. Le périmètre du projet « {{projet}} » de {{organisation}} compte {{nb_vehicules}} véhicules ; les remplacements zéro émission représentent {{part_ze}} de la flotte du plan${a("premiere_annee_achat") ? " et s'échelonnent de {{premiere_annee_achat}} à {{derniere_annee_achat}}" : ""}. L'analyse couvre {{horizon_ans}} à partir de {{annee_reference}} et compare chaque remplacement à un véhicule neuf équivalent à combustion, au même calendrier.`
-    : `${nbZe > 0 ? `The plan moves {{nb_ze}} of {{nb_vehicules}} vehicles to zero emission${a("derniere_annee_achat") ? " by {{derniere_annee_achat}}" : ""}` : "The plan includes no zero-emission vehicle"}. The scope of {{organisation}}'s “{{projet}}” project covers {{nb_vehicules}} vehicles; zero-emission replacements account for {{part_ze}} of the plan's fleet${a("premiere_annee_achat") ? " and are spread from {{premiere_annee_achat}} to {{derniere_annee_achat}}" : ""}. The analysis covers {{horizon_ans}} from {{annee_reference}} and compares each replacement with an equivalent new combustion vehicle on the same schedule.`;
+    ? `${nbZe > 0 ? `Le plan fait passer {{nb_ze}} des {{nb_vehicules}} véhicules au zéro émission${a("derniere_annee_achat") ? " d'ici {{derniere_annee_achat}}" : ""}` : "Le plan ne prévoit aucun véhicule zéro émission"}. Le périmètre du projet « {{projet}} » de {{organisation}} compte {{nb_vehicules}} véhicules ; les remplacements zéro émission représentent {{part_ze}} de la flotte du plan${a("premiere_annee_achat") ? (memeAnnee ? " et ont tous lieu en {{premiere_annee_achat}}" : " et s'échelonnent de {{premiere_annee_achat}} à {{derniere_annee_achat}}") : ""}. L'analyse couvre {{horizon_ans}} à partir de {{annee_reference}} et compare chaque remplacement à un véhicule neuf équivalent à combustion, au même calendrier.`
+    : `${nbZe > 0 ? `The plan moves {{nb_ze}} of {{nb_vehicules}} vehicles to zero emission${a("derniere_annee_achat") ? " by {{derniere_annee_achat}}" : ""}` : "The plan includes no zero-emission vehicle"}. The scope of {{organisation}}'s “{{projet}}” project covers {{nb_vehicules}} vehicles; zero-emission replacements account for {{part_ze}} of the plan's fleet${a("premiere_annee_achat") ? (memeAnnee ? " and all take place in {{premiere_annee_achat}}" : " and are spread from {{premiere_annee_achat}} to {{derniere_annee_achat}}") : ""}. The analysis covers {{horizon_ans}} from {{annee_reference}} and compares each replacement with an equivalent new combustion vehicle on the same schedule.`;
 
   const couts = fr
     ? `${van > 0 ? "Le plan est moins coûteux que le statu quo" : "Le plan est plus coûteux que le statu quo"} : son coût total actualisé atteint {{tco_plan}}, contre {{tco_statu_quo}} pour le statu quo, soit un écart de {{ecart_central_abs}}. Récupération actualisée : {{recuperation}}. Le plan évite {{co2_evite_t}} de CO2e sur le cycle complet, dont {{co2_evite_pot_t}} au pot d'échappement${a("cout_par_tonne") ? ", pour un coût de {{cout_par_tonne}} par tonne évitée" : a("economie_par_tonne") ? ", tout en économisant {{economie_par_tonne}} par tonne évitée" : ""}.`
     : `${van > 0 ? "The plan costs less than the status quo" : "The plan costs more than the status quo"}: its discounted total cost is {{tco_plan}}, against {{tco_statu_quo}} for the status quo, a gap of {{ecart_central_abs}}. Discounted payback: {{recuperation}}. The plan avoids {{co2_evite_t}} of CO2e over the full cycle, including {{co2_evite_pot_t}} at the tailpipe${a("cout_par_tonne") ? ", at a cost of {{cout_par_tonne}} per tonne avoided" : a("economie_par_tonne") ? ", while saving {{economie_par_tonne}} per tonne avoided" : ""}.`;
 
   const financement = fr
-    ? `L'investissement total s'élève à {{investissement_total}} en dollars courants, dont {{infra_total}} pour la recharge et le raccordement. ${subventions > 0 ? `Les subventions prévues totalisent {{subventions_total}}${a("programmes_retenus") ? " ({{programmes_retenus}})" : ""} ; le reste à financer est de {{reste_a_financer}}.` : "Aucune subvention n'est retenue au plan avec les règles en vigueur ; le reste à financer est donc de {{reste_a_financer}}."}${a("annee_pointe") ? " L'année de pointe est {{annee_pointe}}, avec {{investissement_pointe}} d'investissement." : ""} Aucune subvention n'est acquise avant l'acceptation de la demande.`
-    : `Total investment amounts to {{investissement_total}} in current dollars, including {{infra_total}} for charging and grid connection. ${subventions > 0 ? `Expected subsidies total {{subventions_total}}${a("programmes_retenus") ? " ({{programmes_retenus}})" : ""}; the amount to finance is {{reste_a_financer}}.` : "No subsidy is counted in the plan under the rules in force; the amount to finance is therefore {{reste_a_financer}}."}${a("annee_pointe") ? " The peak year is {{annee_pointe}}, with {{investissement_pointe}} of investment." : ""} No subsidy is secured until the application is accepted.`;
+    ? `L'investissement total s'élève à {{investissement_total}} en dollars courants, dont {{infra_total}} pour la recharge et le raccordement ; le statu quo (mêmes remplacements en diesel neuf) investirait {{investissement_statu_quo}}, soit un écart de {{ecart_investissement}}. ${subventions > 0 ? `Les subventions prévues totalisent {{subventions_total}}${a("programmes_confirmes") ? ", dont des montants déjà confirmés par l'organisation : {{programmes_confirmes}}" : ""}${a("programmes_a_demander") ? ` ; ${a("programmes_confirmes") ? "restent à demander" : "à demander"} : {{programmes_a_demander}}` : ""} ; le reste à financer est de {{reste_a_financer}}.` : "Aucune subvention n'est retenue au plan avec les règles en vigueur ; le reste à financer est donc de {{reste_a_financer}}."}${a("annee_pointe") ? " L'année de pointe est {{annee_pointe}}, avec {{investissement_pointe}} d'investissement." : ""} Aucune subvention n'est acquise avant l'acceptation de la demande.`
+    : `Total investment amounts to {{investissement_total}} in current dollars, including {{infra_total}} for charging and grid connection; the status quo (same replacements with new diesels) would invest {{investissement_statu_quo}}, a gap of {{ecart_investissement}}. ${subventions > 0 ? `Expected subsidies total {{subventions_total}}${a("programmes_confirmes") ? ", including amounts already confirmed by the organization: {{programmes_confirmes}}" : ""}${a("programmes_a_demander") ? `; ${a("programmes_confirmes") ? "still to apply for" : "to apply for"}: {{programmes_a_demander}}` : ""}; the amount to finance is {{reste_a_financer}}.` : "No subsidy is counted in the plan under the rules in force; the amount to finance is therefore {{reste_a_financer}}."}${a("annee_pointe") ? " The peak year is {{annee_pointe}}, with {{investissement_pointe}} of investment." : ""} No subsidy is secured until the application is accepted.`;
 
   const risques = fr
     ? `${gagnants === 3 ? "Le résultat résiste au stress test" : "Le résultat est sensible aux hypothèses"} : le plan reste gagnant dans {{scenarios_gagnants}} des {{nb_scenarios}} scénarios, avec une VAN de {{van_prudente}} dans le scénario prudent et de {{van_favorable}} dans le scénario favorable (niveau de risque {{niveau_risque}}).${a("facteurs_influents") ? " Les facteurs les plus influents sont : {{facteurs_influents}}." : ""} {{hypotheses_a_valider}} des {{hypotheses_total}} hypothèses du registre restent à valider à la source et {{hypotheses_estimations}} sont des estimations ; elles sont listées en annexe avec leur statut.`
@@ -315,22 +347,52 @@ export function brouillonModele(faits: FaitNote[], langue: Langue): SectionsNote
         ? "Le plan ne compte aucun véhicule électrique à batterie : le diagnostic hivernal ne s'applique pas."
         : "The plan includes no battery-electric vehicle: the winter diagnostic does not apply."
       : fr
-        ? `${neTient > 0 ? "L'exploitation hivernale demande des ajustements" : recharge > 0 ? "L'exploitation hivernale est assurée avec une recharge en journée pour une partie des véhicules" : "Les véhicules électriques tiennent l'hiver"} : sur {{nb_bev}} véhicules électriques à batterie, {{hiver_tient}} tiennent une journée d'hiver sur la recharge de nuit, {{hiver_recharge_journee}} demandent une recharge en journée et {{hiver_ne_tient_pas}} ne tiennent pas avec le modèle présumé.${garages > 0 ? " La capacité électrique de {{garages_depasses}} garage(s) est dépassée : le raccordement est chiffré dans le plan." : ""}`
-        : `${neTient > 0 ? "Winter operation requires adjustments" : recharge > 0 ? "Winter operation is ensured with daytime charging for some vehicles" : "The electric vehicles hold up in winter"}: of {{nb_bev}} battery-electric vehicles, {{hiver_tient}} complete a winter day on overnight charging, {{hiver_recharge_journee}} need daytime charging and {{hiver_ne_tient_pas}} do not hold up with the presumed model.${garages > 0 ? " The electrical capacity of {{garages_depasses}} garage(s) is exceeded: the grid connection is costed in the plan." : ""}`;
+        ? `${neTient > 0 ? "L'exploitation hivernale demande des ajustements" : recharge > 0 ? "L'exploitation hivernale est assurée avec une recharge en journée pour une partie des véhicules" : "Les véhicules électriques tiennent l'hiver"} : sur {{nb_bev}} véhicules électriques à batterie, {{hiver_tient}} tiennent une journée d'hiver sur la recharge de nuit, {{hiver_recharge_journee}} demandent une recharge en journée et {{hiver_ne_tient_pas}} ne tiennent pas avec le modèle présumé.${garages === 1 ? " La capacité électrique d'un garage est dépassée : le raccordement est chiffré dans le plan." : garages > 1 ? " La capacité électrique de {{garages_depasses}} garages est dépassée : le raccordement est chiffré dans le plan." : ""}`
+        : `${neTient > 0 ? "Winter operation requires adjustments" : recharge > 0 ? "Winter operation is ensured with daytime charging for some vehicles" : "The electric vehicles hold up in winter"}: of {{nb_bev}} battery-electric vehicles, {{hiver_tient}} complete a winter day on overnight charging, {{hiver_recharge_journee}} need daytime charging and {{hiver_ne_tient_pas}} do not hold up with the presumed model.${garages === 1 ? " The electrical capacity of one garage is exceeded: the grid connection is costed in the plan." : garages > 1 ? " The electrical capacity of {{garages_depasses}} garages is exceeded: the grid connection is costed in the plan." : ""}`;
 
+  // Prochaines étapes COHÉRENTES avec la recommandation : jamais « lancer
+  // les appels d'offres » d'un plan dont on recommande la révision.
+  const vehicules = (l: "fr" | "en") =>
+    achatsPremiere === 1 ? (l === "fr" ? "{{nb_achats_premiere_annee}} véhicule" : "{{nb_achats_premiere_annee}} vehicle") : l === "fr" ? "{{nb_achats_premiere_annee}} véhicules" : "{{nb_achats_premiere_annee}} vehicles";
+  const subvFr = a("programmes_a_demander")
+    ? "- Déposer les demandes de subvention avant l'achat : {{programmes_a_demander}}."
+    : a("programmes_confirmes")
+      ? "- Respecter les conditions des subventions déjà confirmées ({{programmes_confirmes}}) et vérifier l'admissibilité des autres achats."
+      : "- Vérifier l'admissibilité aux programmes de subvention avant chaque achat.";
+  const subvEn = a("programmes_a_demander")
+    ? "- Submit subsidy applications before purchase: {{programmes_a_demander}}."
+    : a("programmes_confirmes")
+      ? "- Meet the conditions of the subsidies already confirmed ({{programmes_confirmes}}) and check eligibility for other purchases."
+      : "- Check subsidy eligibility before each purchase.";
   const etapes = fr
-    ? [
-        "- Adopter la recommandation et autoriser le lancement des appels d'offres pour les premiers achats" + (a("premiere_annee_achat") ? " ({{premiere_annee_achat}}, {{nb_achats_premiere_annee}} véhicule(s))." : "."),
-        a("programmes_retenus") ? "- Déposer les demandes de subvention avant l'achat : {{programmes_retenus}}." : "- Vérifier l'admissibilité aux programmes de subvention avant chaque achat.",
-        "- Valider à la source les hypothèses les plus influentes et obtenir des devis pour les véhicules, les bornes et le raccordement.",
-        "- Mettre à jour le plan et présenter un suivi annuel au conseil (réalisé contre prévu).",
-      ].join("\n")
-    : [
-        "- Adopt the recommendation and authorize tenders for the first purchases" + (a("premiere_annee_achat") ? " ({{premiere_annee_achat}}, {{nb_achats_premiere_annee}} vehicle(s))." : "."),
-        a("programmes_retenus") ? "- Submit subsidy applications before purchase: {{programmes_retenus}}." : "- Check subsidy eligibility before each purchase.",
-        "- Validate the most influential assumptions at the source and obtain quotes for vehicles, chargers and grid connection.",
-        "- Update the plan and report progress to council every year (actual vs planned).",
-      ].join("\n");
+    ? (van > 0
+        ? [
+            "- Adopter la recommandation et autoriser le lancement des appels d'offres pour les premiers achats" + (a("premiere_annee_achat") ? ` ({{premiere_annee_achat}}, ${vehicules("fr")}).` : "."),
+            subvFr,
+            "- Valider à la source les hypothèses les plus influentes et obtenir des devis pour les véhicules, les bornes et le raccordement.",
+            "- Mettre à jour le plan et présenter un suivi annuel au conseil (réalisé contre prévu).",
+          ]
+        : [
+            "- Demander une version révisée du plan : comparer les stratégies (dont « Économies d'abord » et l'optimiseur) et retirer les remplacements qui coûtent le plus par tonne évitée.",
+            "- Ne lancer aucun appel d'offres avant l'adoption d'un plan révisé.",
+            subvFr,
+            "- Valider à la source les hypothèses les plus influentes et obtenir des devis pour les véhicules, les bornes et le raccordement.",
+          ]
+      ).join("\n")
+    : (van > 0
+        ? [
+            "- Adopt the recommendation and authorize tenders for the first purchases" + (a("premiere_annee_achat") ? ` ({{premiere_annee_achat}}, ${vehicules("en")}).` : "."),
+            subvEn,
+            "- Validate the most influential assumptions at the source and obtain quotes for vehicles, chargers and grid connection.",
+            "- Update the plan and report progress to council every year (actual vs planned).",
+          ]
+        : [
+            "- Request a revised version of the plan: compare the strategies (including “Savings first” and the optimizer) and remove the replacements that cost the most per tonne avoided.",
+            "- Launch no tender before a revised plan is adopted.",
+            subvEn,
+            "- Validate the most influential assumptions at the source and obtain quotes for vehicles, chargers and grid connection.",
+          ]
+      ).join("\n");
 
   return { recommandation, contexte, couts, financement, risques, hiver, prochaines_etapes: etapes };
 }

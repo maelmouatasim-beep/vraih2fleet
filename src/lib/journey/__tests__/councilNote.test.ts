@@ -93,4 +93,34 @@ describe("note au conseil", () => {
     // un jeton inconnu reste visible et bloque aussi
     expect(verifierNote({ ...rendu, hiver: rendreTexte("Voir {{inconnu}}.", f, "fr") }, f, "fr").jetonsRestants).toEqual(["{{inconnu}}"]);
   });
+  it("audit point 4 : un plan en surcoût n'annonce jamais d'appel d'offres ; une seule année est dite « en » ; pas de « (s) »", () => {
+    const { faits: f } = faits([vehicule({ annual_km: 2000, consumption_per_100km: 8 })]);
+    const van = Number(f.find((x) => x.id === "van_centrale")!.valeur);
+    expect(van).toBeLessThan(0);
+    for (const langue of ["fr", "en"] as const) {
+      const rendu = rendreSections(brouillonModele(f, langue), f, langue);
+      expect(rendu.prochaines_etapes).not.toMatch(/autoriser le lancement des appels d'offres|authorize tenders/);
+      expect(rendu.prochaines_etapes).toMatch(langue === "fr" ? /version révisée/ : /revised version/);
+      expect(rendu.contexte).not.toMatch(/de 2027 à 2027|from 2027 to 2027/);
+      for (const s of SECTIONS_NOTE) expect(rendu[s]).not.toMatch(/\(s\)|\(facteur\)|\(factor\)/);
+      expect(verifierNote(rendu, f, langue).ok).toBe(true);
+    }
+  });
+
+  it("audit point 4 : une subvention confirmée par le client (PAGTCP) est citée comme confirmée, avec l'investissement du statu quo", () => {
+    const { faits: f } = faits([
+      vehicule({
+        category: "autobus_urbain_12m",
+        subventionsConfirmees: [{ programId: "pagtcp", libelle: "PAGTCP", montant: 400000, anneeCalendaireVersement: null, reference: "lettre 2026-1" }],
+      }),
+    ]);
+    const confirmes = f.find((x) => x.id === "programmes_confirmes");
+    expect(confirmes?.rendu.fr).toMatch(/PAGTCP/);
+    expect(f.find((x) => x.id === "programmes_a_demander")?.rendu.fr ?? "").not.toMatch(/PAGTCP/);
+    expect(f.find((x) => x.id === "investissement_statu_quo")).toBeDefined();
+    const rendu = rendreSections(brouillonModele(f, "fr"), f, "fr");
+    expect(rendu.financement).toMatch(/déjà confirmés par l'organisation : PAGTCP/);
+    expect(rendu.financement).toMatch(/statu quo/);
+    expect(verifierNote(rendu, f, "fr").ok).toBe(true);
+  });
 });
