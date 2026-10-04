@@ -3289,6 +3289,10 @@ export type Database = {
         Args: { _invitation: string }
         Returns: string
       }
+      apply_project_vehicle_changes: {
+        Args: { _project: string; _changes: Json }
+        Returns: number
+      }
       list_organization_members_detail: {
         Args: { _org: string }
         Returns: {

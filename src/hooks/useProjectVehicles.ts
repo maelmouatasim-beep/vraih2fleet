@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addProjectVehicles,
+  appliquerChangementsProjet,
+  type ChangementProjetVehicule,
   listProjectVehicles,
   removeProjectVehicle,
   updateProjectVehicle,
@@ -30,6 +32,11 @@ export function useProjectVehicles(projectId: string | null | undefined) {
       updateProjectVehicle(id, patch),
     onSuccess: invalider,
   });
+  // Lot atomique : une requête et UNE relecture, quel que soit le nombre de véhicules.
+  const appliquerLot = useMutation({
+    mutationFn: (changements: ChangementProjetVehicule[]) => appliquerChangementsProjet(projectId!, changements),
+    onSuccess: invalider,
+  });
   const retirer = useMutation({
     mutationFn: (id: string) => removeProjectVehicle(id),
     onSuccess: invalider,
@@ -41,6 +48,7 @@ export function useProjectVehicles(projectId: string | null | undefined) {
     error: query.error,
     ajouter,
     modifier,
+    appliquerLot,
     retirer,
   };
 }

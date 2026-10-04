@@ -73,7 +73,7 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
   const { t, i18n } = useTranslation();
   const langue = i18n.language === "en" ? "en" : "fr";
   const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
-  const { projectVehicles, isLoading, modifier } = useProjectVehicles(projectId);
+  const { projectVehicles, isLoading, appliquerLot } = useProjectVehicles(projectId);
   const { confirmeesParVehicule } = useConfirmedSubsidies(projectId);
   const { garages: garagesOrg } = useGarages(project?.organizationId);
   const queryClient = useQueryClient();
@@ -166,13 +166,14 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
   const appliquerAuPlan = async () => {
     setApplicationEnCours(true);
     try {
-      for (const c of changements) {
-        const pv = uniteDe(c.vehiculeId);
-        if (!pv) continue;
-        const patch: { target_technology: string; replacement_year?: number } = { target_technology: c.cibleNouvelle };
-        if (c.anneeNouvelle != null) patch.replacement_year = c.anneeNouvelle;
-        await modifier.mutateAsync({ id: pv.id, patch });
-      }
+      // UNE écriture atomique (point 6 de l'audit) : tout ou rien.
+      await appliquerLot.mutateAsync(
+        changements.flatMap((c) => {
+          const pv = uniteDe(c.vehiculeId);
+          if (!pv) return [];
+          return [{ id: pv.id, target_technology: c.cibleNouvelle, ...(c.anneeNouvelle != null ? { replacement_year: c.anneeNouvelle } : {}) }];
+        }),
+      );
       if (selection === "optimisee" && optimisation) {
         await setOptimizedStrategy(projectId, {
           calculeLe: new Date().toISOString(),

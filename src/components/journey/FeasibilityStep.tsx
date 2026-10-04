@@ -44,7 +44,7 @@ interface FeasibilityStepProps {
 export default function FeasibilityStep({ projectId, project }: FeasibilityStepProps) {
   const { t, i18n } = useTranslation();
   const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
-  const { projectVehicles, isLoading, modifier } = useProjectVehicles(projectId);
+  const { projectVehicles, isLoading, appliquerLot } = useProjectVehicles(projectId);
   const [application, setApplication] = useState(false);
 
   const evaluations = useMemo(() => {
@@ -77,7 +77,7 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
   const appliquer = async (entrees: [string, "bev" | "fcev" | "diesel"][]) => {
     setApplication(true);
     try {
-      for (const [id, cible] of entrees) await modifier.mutateAsync({ id, patch: { target_technology: cible } });
+      await appliquerLot.mutateAsync(entrees.map(([id, cible]) => ({ id, target_technology: cible })));
       toast({ title: t("journey.feasibility.recommend.done", { count: entrees.length }) });
     } catch (e) {
       toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });

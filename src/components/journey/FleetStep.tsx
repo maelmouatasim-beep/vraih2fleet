@@ -60,7 +60,7 @@ export default function FleetStep({ projectId, project }: FleetStepProps) {
   const { t, i18n } = useTranslation();
   const { organization, isLoading: orgLoading } = useOrganization();
   const { vehicles, isLoading: fleetLoading } = useVehicles(organization?.id);
-  const { projectVehicles, isLoading, ajouter, modifier, retirer } = useProjectVehicles(projectId);
+  const { projectVehicles, isLoading, ajouter, modifier, appliquerLot, retirer } = useProjectVehicles(projectId);
   const { options } = useOptionsProjet(project, projectId);
 
   const [dialogOuvert, setDialogOuvert] = useState(false);
@@ -224,14 +224,13 @@ export default function FleetStep({ projectId, project }: FleetStepProps) {
     patchPour: (pv: (typeof projectVehicles)[number]) => { replacement_year?: number | null; target_technology?: string | null } | null,
   ) => {
     const cibles = projectVehicles.filter((pv) => lignesChoisies.has(pv.id));
-    let appliques = 0;
     try {
-      for (const pv of cibles) {
+      // Une écriture atomique pour tout le groupe (point 6 de l'audit).
+      const lot = cibles.flatMap((pv) => {
         const patch = patchPour(pv);
-        if (!patch) continue;
-        await modifier.mutateAsync({ id: pv.id, patch });
-        appliques += 1;
-      }
+        return patch ? [{ id: pv.id, ...patch }] : [];
+      });
+      const appliques = await appliquerLot.mutateAsync(lot);
       toast({ title: t("journey.fleet.bulk.applied", { count: appliques }) });
     } catch (e) {
       toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });

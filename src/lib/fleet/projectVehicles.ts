@@ -5,7 +5,7 @@
  * RLS (can_view_project / can_edit_project).
  */
 import { supabase } from "@/integrations/supabase/client";
-import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import type { Json, Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 import type { VehicleRow } from "./vehicles";
 import { compterVehiculesParProjet } from "./projectCounts";
 
@@ -50,6 +50,25 @@ export async function addProjectVehicles(rows: ProjectVehicleInsert[]): Promise<
 export async function updateProjectVehicle(id: string, patch: ProjectVehicleUpdate): Promise<void> {
   const { error } = await supabase.from("project_vehicles").update(patch).eq("id", id);
   if (error) throw error;
+}
+
+/** Changement d'un véhicule du projet (stratégie appliquée, lissage). */
+export interface ChangementProjetVehicule {
+  id: string;
+  target_technology?: string | null;
+  replacement_year?: number | null;
+}
+
+/** Applique un lot de changements en UNE transaction (RLS : éditeurs du
+ *  projet ; tout ou rien) — fonction apply_project_vehicle_changes. */
+export async function appliquerChangementsProjet(projectId: string, changements: ChangementProjetVehicule[]): Promise<number> {
+  if (changements.length === 0) return 0;
+  const { data, error } = await supabase.rpc("apply_project_vehicle_changes", {
+    _project: projectId,
+    _changes: changements as unknown as Json,
+  });
+  if (error) throw error;
+  return data ?? 0;
 }
 
 /** Retire un véhicule du projet (le véhicule reste dans « Ma flotte »). */

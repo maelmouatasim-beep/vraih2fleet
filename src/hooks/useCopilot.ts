@@ -52,7 +52,7 @@ export function useCopilot(projectId: string, project: ProjectDTO | null | undef
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const { options } = useOptionsProjet(project, projectId);
-  const { projectVehicles, modifier } = useProjectVehicles(projectId);
+  const { projectVehicles, appliquerLot } = useProjectVehicles(projectId);
   const { confirmeesParVehicule } = useConfirmedSubsidies(projectId);
   const organizationId = project?.organizationId ?? null;
   const [etat, setEtat] = useState<EtatCopilote>({ etat: "pret" });
@@ -167,14 +167,13 @@ export function useCopilot(projectId: string, project: ProjectDTO | null | undef
   const appliquer = useCallback(
     async (p: PropositionCopilote) => {
       const parVehicule = new Map(projectVehicles.map((pv) => [pv.vehicle_id, pv]));
-      for (const c of p.changements) {
-        const pv = parVehicule.get(c.vehiculeId);
-        if (!pv) continue;
-        await modifier.mutateAsync({
-          id: pv.id,
-          patch: { replacement_year: c.anneeApres, target_technology: c.cibleApres },
-        });
-      }
+      // Une écriture atomique (point 6 de l'audit) : tout ou rien.
+      await appliquerLot.mutateAsync(
+        p.changements.flatMap((c) => {
+          const pv = parVehicule.get(c.vehiculeId);
+          return pv ? [{ id: pv.id, replacement_year: c.anneeApres, target_technology: c.cibleApres }] : [];
+        }),
+      );
       if (p.type === "optimisee" && p.optimisee) {
         await saveOptimizerConstraints(projectId, p.optimisee.contraintes as unknown as Json);
         await setOptimizedStrategy(projectId, { calculeLe: new Date().toISOString(), vehicules: p.optimisee.choix } as unknown as Json);
@@ -201,7 +200,7 @@ export function useCopilot(projectId: string, project: ProjectDTO | null | undef
       await queryClient.invalidateQueries({ queryKey: ["change-log", projectId] });
       setPropositionsActives((x) => Object.fromEntries(Object.entries(x).filter(([, v]) => v.id !== p.id)));
     },
-    [projectVehicles, modifier, projectId, organizationId, queryClient, t],
+    [projectVehicles, appliquerLot, projectId, organizationId, queryClient, t],
   );
 
   return {
