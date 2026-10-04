@@ -39,7 +39,7 @@ interface ConfirmedSubsidiesCardProps {
 
 export default function ConfirmedSubsidiesCard({ projectId, vehicules }: ConfirmedSubsidiesCardProps) {
   const { t, i18n } = useTranslation();
-  const langue = i18n.language === "en" ? "en" : "fr";
+  const langue = i18n.language.startsWith("en") ? "en" : "fr";
   const { lignes, ajouter, retirer } = useConfirmedSubsidies(projectId);
   const uniteParId = new Map(vehicules.map((v) => [v.vehicleId, v.unite]));
 

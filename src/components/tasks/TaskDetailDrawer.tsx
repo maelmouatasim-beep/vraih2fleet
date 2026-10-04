@@ -81,7 +81,7 @@ export function TaskDetailDrawer({ task, isOpen, onClose, onUpdate, onDelete }: 
   };
 
   const formatCurrency = (amount: number) => {
-    const locale = i18n.language === 'fr' ? 'fr-CA' : 'en-CA';
+    const locale = i18n.language.startsWith('fr') ? 'fr-CA' : 'en-CA';
     return new Intl.NumberFormat(locale, { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 }).format(amount);
   };
 

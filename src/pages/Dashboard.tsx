@@ -101,7 +101,7 @@ const Dashboard = () => {
     return m;
   }, [selections]);
 
-  const locale = i18n.language === "en" ? "en-CA" : "fr-CA";
+  const locale = i18n.language.startsWith("en") ? "en-CA" : "fr-CA";
 
   if (loading) {
     return (

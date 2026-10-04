@@ -104,7 +104,7 @@ function Revue({ c, onFini }: { c: ChangementVeille; onFini: () => void }) {
 
 export default function SubsidyWatchCard() {
   const { t, i18n } = useTranslation();
-  const langue = i18n.language === "en" ? "en" : "fr";
+  const langue = i18n.language.startsWith("en") ? "en" : "fr";
   const queryClient = useQueryClient();
   const { isAdmin } = useIsAdmin();
   const { data: evenements = [] } = useQuery({ queryKey: ["subsidy-events"], queryFn: () => listerEvenementsProgrammes() });

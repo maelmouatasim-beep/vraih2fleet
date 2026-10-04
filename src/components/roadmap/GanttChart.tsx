@@ -30,7 +30,7 @@ const GanttChart: React.FC<GanttChartProps> = ({
   onPhaseClick,
 }) => {
   const { t, i18n } = useTranslation();
-  const locale = i18n.language === 'fr' ? fr : enUS;
+  const locale = i18n.language.startsWith('fr') ? fr : enUS;
   const [expandedPhases, setExpandedPhases] = useState<Set<string>>(new Set(phases.map(p => p.id)));
   const headerRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);

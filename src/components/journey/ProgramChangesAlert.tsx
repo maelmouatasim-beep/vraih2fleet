@@ -9,7 +9,7 @@ import { BellRing, ExternalLink } from "lucide-react";
 
 export default function ProgramChangesAlert({ programmes }: { programmes: string[] }) {
   const { t, i18n } = useTranslation();
-  const langue = i18n.language === "en" ? "en" : "fr";
+  const langue = i18n.language.startsWith("en") ? "en" : "fr";
   const cle = [...programmes].sort().join(",");
   const { data: evenements = [] } = useQuery({
     queryKey: ["subsidy-events", cle],

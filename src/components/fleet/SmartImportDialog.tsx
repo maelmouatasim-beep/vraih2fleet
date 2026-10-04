@@ -77,7 +77,7 @@ interface SmartImportDialogProps {
 
 export default function SmartImportDialog({ open, onOpenChange, organizationId, vehicles, demo }: SmartImportDialogProps) {
   const { t, i18n } = useTranslation();
-  const langue = i18n.language === "en" ? "en" : "fr";
+  const langue = i18n.language.startsWith("en") ? "en" : "fr";
   const queryClient = useQueryClient();
   const { importer, modifier } = useVehicles(organizationId);
   const { garages, rafraichir: rafraichirGarages } = useGarages(organizationId);

@@ -81,7 +81,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
     if (!strategie.plan || !strategie.resultat) return null;
     const meta: MetaRapport = {
       // Audit, point 11 : jamais « Mon organisation » sur un rapport.
-      organisation: nomOrganisationRapport(organization.name, project.name === NOM_PROJET_DEMO, i18n.language === "en" ? "en" : "fr"),
+      organisation: nomOrganisationRapport(organization.name, project.name === NOM_PROJET_DEMO, i18n.language.startsWith("en") ? "en" : "fr"),
       projet: project.name,
       dateIso: new Date().toISOString().slice(0, 10),
       anneeReference,
@@ -173,7 +173,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
         donnees.strategie,
         donnees.unites,
         donnees.meta,
-        i18n.language === "en" ? "en" : "fr",
+        i18n.language.startsWith("en") ? "en" : "fr",
       );
       // exceljs (SheetJS retiré : CVE-2023-30533 / CVE-2024-22363)
       const ExcelJS = await import("exceljs");

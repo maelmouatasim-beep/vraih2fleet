@@ -151,9 +151,9 @@ try {
   await page.goto(url("/dashboard/fleet"));
   await page.getByRole("button", { name: /Importer CSV/ }).click();
   await page.setInputFiles('input[type="file"]', fichier);
-  await page.getByText(/nouveau\(x\) véhicule\(s\)/).waitFor({ timeout: 10000 });
-  const apercu = await page.getByText(/nouveau\(x\) véhicule\(s\)/).innerText();
-  if (!apercu.includes("5 nouveau") || !apercu.includes("2 erreur")) throw new Error(`aperçu d'import inattendu : ${apercu}`);
+  await page.getByText(/Nouveaux véhicules\s:/).waitFor({ timeout: 10000 });
+  const apercu = await page.getByText(/Nouveaux véhicules\s:/).innerText();
+  if (!/Nouveaux véhicules\s:\s5\b/.test(apercu) || !/erreurs\s:\s2\b/.test(apercu)) throw new Error(`aperçu d'import inattendu : ${apercu}`);
   await capture(page, "02-ma-flotte-apercu-import");
   await page.getByRole("button", { name: /^Importer \(|Importer \d/ }).click();
   await page.getByText("U-401").waitFor({ timeout: 10000 });
@@ -245,7 +245,7 @@ try {
   await page.getByRole("button", { name: "Enregistrer" }).click();
   await page.getByText("Ford E-Transit 2027").waitFor({ timeout: 10000 });
   await page.getByRole("button", { name: "Générer les tâches du plan" }).click();
-  await page.getByText(/tâche\(s\) créée\(s\) depuis les échéances du plan/).first().waitFor({ timeout: 10000 });
+  await page.getByText(/tâches? créées? depuis les échéances du plan/).first().waitFor({ timeout: 10000 });
   await capture(page, "11-suivi");
   etape("Suivi : remplacement marqué réalisé, tâches générées");
 

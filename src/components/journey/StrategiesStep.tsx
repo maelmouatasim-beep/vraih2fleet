@@ -74,7 +74,7 @@ interface StrategiesStepProps {
 
 export default function StrategiesStep({ projectId, project }: StrategiesStepProps) {
   const { t, i18n } = useTranslation();
-  const langue = i18n.language === "en" ? "en" : "fr";
+  const langue = i18n.language.startsWith("en") ? "en" : "fr";
   const { options, isLoading: orgLoading } = useOptionsProjet(project, projectId);
   const { projectVehicles, isLoading, appliquerLot } = useProjectVehicles(projectId);
   const { confirmeesParVehicule } = useConfirmedSubsidies(projectId);
@@ -421,6 +421,8 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
             <button
               key={s.cle}
               type="button"
+              data-testid={`strategy-${s.cle}`}
+              aria-pressed={active}
               onClick={() => setSelection(s.cle)}
               className={cn(
                 "text-left rounded-xl border bg-card p-4 space-y-3 transition-colors",
@@ -521,7 +523,7 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
               <p className="text-xs text-muted-foreground mt-1">
                 {t("journey.strategies.apply.current", {
                   strategy: t(`journey.strategies.options.${project.selectedStrategy}.title`),
-                  date: new Date(project.strategyAppliedAt).toLocaleDateString(i18n.language === "en" ? "en-CA" : "fr-CA"),
+                  date: new Date(project.strategyAppliedAt).toLocaleDateString(i18n.language.startsWith("en") ? "en-CA" : "fr-CA"),
                 })}
               </p>
             )}

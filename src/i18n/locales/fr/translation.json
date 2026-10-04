@@ -81,18 +81,22 @@
       "title": "Importer la flotte",
       "subtitle": "CSV ou Excel avec entêtes (unité, catégorie, carburant, km annuel, consommation, garage, classe PNBV, km journalier max…). Aucune ligne invalide n'est importée.",
       "choose": "Choisir un fichier…",
-      "preview": "{{valid}} nouveau(x) véhicule(s), {{updates}} mise(s) à jour, {{errors}} erreur(s)",
+      "preview": "Nouveaux véhicules : {{valid}} · mises à jour : {{updates}} · erreurs : {{errors}}",
       "errorLine": "Ligne {{line}}, champ {{field}}",
-      "confirm": "Importer {{count}} véhicule(s)",
-      "done": "{{count}} véhicule(s) importé(s), {{updated}} mis à jour",
       "readError": "Fichier illisible",
       "updatesTitle": "Unités déjà présentes — leurs champs fournis seront mis à jour :",
       "template": "Modèle d'import (colonnes, exemples, valeurs acceptées, onglet « Lisez-moi ») :",
-      "headerRow": "Entête lue en ligne {{line}} : {{count}} colonne(s) reconnue(s) ({{columns}}).",
       "ignoredColumns": "Colonnes non importées : {{columns}}.",
-      "totalsSkipped": "{{count}} ligne(s) de total ou de sous-total ignorée(s).",
       "noUnitColumn": "Aucune colonne de numéro d'unité n'est reconnue : renommez-la « Unité » (par exemple « No » → « Unité »), recopiez vos données dans le modèle ci-dessus, ou utilisez l'Import intelligent, qui associe les colonnes pour vous.",
-      "noRows": "Aucune ligne de véhicule sous l'entête : vérifiez que la feuille contient bien vos véhicules."
+      "noRows": "Aucune ligne de véhicule sous l'entête : vérifiez que la feuille contient bien vos véhicules.",
+      "confirm_one": "Importer {{count}} véhicule",
+      "confirm_other": "Importer {{count}} véhicules",
+      "done_one": "{{count}} véhicule importé, {{updated}} mis à jour",
+      "done_other": "{{count}} véhicules importés, {{updated}} mis à jour",
+      "headerRow_one": "Entête lue en ligne {{line}} : {{count}} colonne reconnue ({{columns}}).",
+      "headerRow_other": "Entête lue en ligne {{line}} : {{count}} colonnes reconnues ({{columns}}).",
+      "totalsSkipped_one": "{{count}} ligne de total ou de sous-total ignorée.",
+      "totalsSkipped_other": "{{count}} lignes de total ou de sous-total ignorées."
     },
     "edit": {
       "title": "Modifier le véhicule {{unit}}",
@@ -103,9 +107,10 @@
       "title": "Supprimer le véhicule {{unit}} ?",
       "subtitle": "Cette action est définitive.",
       "checking": "Vérification des projets liés…",
-      "projectImpact": "Ce véhicule est utilisé dans {{count}} projet(s) : il sera retiré de leur plan de remplacement.",
       "noProject": "Ce véhicule n'est utilisé dans aucun projet.",
-      "confirm": "Supprimer définitivement"
+      "confirm": "Supprimer définitivement",
+      "projectImpact_one": "Ce véhicule est utilisé dans {{count}} projet : il sera retiré de leur plan de remplacement.",
+      "projectImpact_other": "Ce véhicule est utilisé dans {{count}} projets : il sera retiré de leur plan de remplacement."
     },
     "demoBadge": "démo",
     "garages": {
@@ -844,7 +849,7 @@
         "maxTemperature": "Température maximale",
         "terrain": "Type de terrain"
       },
-      "targetPowertrains": "Motorisation(s) cible(s)",
+      "targetPowertrains": "Motorisations cibles",
       "powertrainMix": "Répartition de la flotte",
       "totalAllocation": "Total",
       "consumptionH2": "Consommation H₂ (kg/100km)",
@@ -1100,7 +1105,6 @@
     },
     "params": {
       "title": "Paramètres du calcul",
-      "advancedCount": "{{count}} paramètre(s) avancé(s)",
       "badges": {
         "customConsumption": "Consommation personnalisée",
         "fcStackReplacement": "Remplacement pile FC",
@@ -1133,7 +1137,9 @@
       "h2Advanced": {
         "title": "Paramètres H₂ avancés",
         "fcStackReplacement": "Remplacement pile FC"
-      }
+      },
+      "advancedCount_one": "{{count}} paramètre avancé",
+      "advancedCount_other": "{{count}} paramètres avancés"
     },
     "comparison": {
       "title": "Comparaison avec baseline Diesel",
@@ -2096,13 +2102,17 @@
         "co2Avoided": "CO₂ évité (tonnes/an)",
         "scenariosCreated": "Scénarios créés",
         "fleetVehicles": "Véhicules dans Ma flotte",
-        "fleetActive": "{{count}} actif(s)",
         "zeroEmissionToday": "Zéro émission aujourd'hui",
-        "zeroEmissionTargeted": "{{count}} ciblé(s) dans les projets",
         "projects": "Projets",
-        "plannedVehicles": "{{count}} véhicule(s) planifié(s)",
         "completedReplacements": "Remplacements réalisés",
-        "completedOf": "sur {{count}} planifié(s)"
+        "completedOf_one": "sur {{count}} planifié",
+        "completedOf_other": "sur {{count}} planifiés",
+        "fleetActive_one": "{{count}} actif",
+        "fleetActive_other": "{{count}} actifs",
+        "plannedVehicles_one": "{{count}} véhicule planifié",
+        "plannedVehicles_other": "{{count}} véhicules planifiés",
+        "zeroEmissionTargeted_one": "{{count}} ciblé dans les projets",
+        "zeroEmissionTargeted_other": "{{count}} ciblés dans les projets"
       },
       "charts": {
         "fleetDistribution": "Répartition flotte",
@@ -2126,7 +2136,8 @@
         "noProjects": "Aucun projet récent",
         "scenarios": "scénarios",
         "updated": "Mis à jour",
-        "vehicles": "{{count}} véhicule(s)"
+        "vehicles_one": "{{count}} véhicule",
+        "vehicles_other": "{{count}} véhicules"
       },
       "toast": {
         "error": "Erreur",
@@ -2638,9 +2649,6 @@
     "importToFleet": {
       "title": "Importer dans Ma flotte",
       "subtitle": "Rapproche vos véhicules télématiques de Ma flotte (lien existant, puis NIV, puis numéro d'unité). Rien n'est écrit sans votre confirmation ; les données saisies par votre équipe ne sont jamais écrasées.",
-      "updates": "{{count}} mise(s) à jour",
-      "creations": "{{count}} création(s)",
-      "ignored": "{{count}} ignoré(s)",
       "toRecheck": "{{count}} à revérifier",
       "toRecheckNote": "Lignes créées avant la correction du 28 septembre 2026 (valeurs simulées) : seule leur identité (NIV, marque, modèle, année) est reprise. Relancez une synchronisation pour obtenir des mesures réelles.",
       "matched": "Rapprochés :",
@@ -2655,13 +2663,21 @@
       "category": "Catégorie si le fournisseur ne la donne pas",
       "categoryFromProvider": "Celle du fournisseur seulement",
       "reasons": {
-        "doublon_vin": "{{count}} doublon(s) de NIV",
-        "vehicule_deja_rapproche": "{{count}} véhicule(s) déjà rapproché(s) d’une autre ligne",
         "categorie_inconnue": "{{count}} sans catégorie reconnue",
-        "choix_creation_absent": "{{count}} sans correspondance (choisissez un carburant pour les créer)"
+        "choix_creation_absent": "{{count}} sans correspondance (choisissez un carburant pour les créer)",
+        "doublon_vin_one": "{{count}} doublon de NIV",
+        "doublon_vin_other": "{{count}} doublons de NIV",
+        "vehicule_deja_rapproche_one": "{{count}} véhicule déjà rapproché d’une autre ligne",
+        "vehicule_deja_rapproche_other": "{{count}} véhicules déjà rapprochés d’une autre ligne"
       },
       "confirm": "Appliquer ({{count}})",
-      "done": "{{updated}} véhicule(s) mis à jour, {{created}} créé(s) dans Ma flotte"
+      "done": "Ma flotte : {{updated}} mis à jour, {{created}} créés",
+      "creations_one": "{{count}} création",
+      "creations_other": "{{count}} créations",
+      "ignored_one": "{{count}} ignoré",
+      "ignored_other": "{{count}} ignorés",
+      "updates_one": "{{count}} mise à jour",
+      "updates_other": "{{count}} mises à jour"
     }
   },
   "pages_support": {
@@ -3494,13 +3510,11 @@
     "yesterday": "Hier",
     "thisWeek": "Cette semaine",
     "older": "Plus ancien",
-    "unreadCount": "{{count}} non lue(s)",
     "allRead": "Tout est à jour",
     "loading": "Chargement des notifications…",
     "error": "Impossible de charger les notifications. Vérifiez votre connexion.",
     "retry": "Réessayer",
     "unavailable": "Notifications momentanément indisponibles — cliquez pour réessayer",
-    "homeUnread": "{{count}} notification(s) non lue(s)",
     "homeNone": "Aucune notification non lue",
     "filters": {
       "all": "Toutes",
@@ -3566,14 +3580,20 @@
       },
       "tasks_generated": {
         "title": "Tâches du plan générées",
-        "message": "{{actor}} a généré {{count}} tâche(s) du plan « {{project}} ».",
-        "messageSelf": "Vous avez généré {{count}} tâche(s) du plan « {{project}} »."
+        "message_one": "{{actor}} a généré {{count}} tâche du plan « {{project}} ».",
+        "message_other": "{{actor}} a généré {{count}} tâches du plan « {{project}} ».",
+        "messageSelf_one": "Vous avez généré {{count}} tâche du plan « {{project}} ».",
+        "messageSelf_other": "Vous avez généré {{count}} tâches du plan « {{project}} »."
       },
       "plan_alert": {
         "title": "Alerte du plan",
         "message": "Une alerte de surveillance concerne le projet « {{project}} »."
       }
-    }
+    },
+    "homeUnread_one": "{{count}} notification non lue",
+    "homeUnread_other": "{{count}} notifications non lues",
+    "unreadCount_one": "{{count}} non lue",
+    "unreadCount_other": "{{count}} non lues"
   },
   "helpTraining": {
     "title": "Aide et méthode",
@@ -4436,7 +4456,6 @@
     "useSystemValue": "Utiliser valeur système",
     "sectionTitle": "Conditions opérationnelles",
     "sectionDesc": "Ajustez les multiplicateurs de consommation selon vos conditions d'exploitation",
-    "expertOverrides": "{{count}} valeur(s) expert",
     "resetAllToSystem": "Réinitialiser aux valeurs système",
     "systemShort": "système",
     "expertShort": "expert",
@@ -4507,9 +4526,12 @@
       "h2OpexPercent": "Coût d'exploitation annuel station H₂ (% du CAPEX)",
       "bevOpexPercent": "Coût d'exploitation annuel borne VE (% du CAPEX)"
     },
-    "overridesApplied": "{{count}} valeur(s) expert appliquée(s)",
     "viewAll": "Voir tous les paramètres",
-    "hideDetails": "Masquer les détails"
+    "hideDetails": "Masquer les détails",
+    "expertOverrides_one": "{{count}} valeur expert",
+    "expertOverrides_other": "{{count}} valeurs expert",
+    "overridesApplied_one": "{{count}} valeur expert appliquée",
+    "overridesApplied_other": "{{count}} valeurs expert appliquées"
   },
   "recommendedActions": {
     "title": "Actions recommandées",
@@ -4533,13 +4555,15 @@
     },
     "completePlan": {
       "title": "Compléter le plan de « {{project}} »",
-      "description": "{{count}} véhicule(s) sans année de remplacement ou sans cible",
-      "action": "Compléter"
+      "action": "Compléter",
+      "description_one": "{{count}} véhicule sans année de remplacement ou sans cible",
+      "description_other": "{{count}} véhicules sans année de remplacement ou sans cible"
     },
     "refineConsumptions": {
       "title": "Préciser les consommations",
-      "description": "{{count}} véhicule(s) utilisent une consommation estimée par catégorie",
-      "action": "Ouvrir Ma flotte"
+      "action": "Ouvrir Ma flotte",
+      "description_one": "{{count}} véhicule utilisent une consommation estimée par catégorie",
+      "description_other": "{{count}} véhicules utilisent une consommation estimée par catégorie"
     }
   },
   "wizard": {
@@ -4800,7 +4824,7 @@
       "title": "Zone dangereuse — supprimer l'organisation",
       "subtitle": "Action définitive : la flotte de l'organisation est SUPPRIMÉE, les projets sont détachés (ils restent à leurs propriétaires) et les membres perdent l'accès.",
       "showEffects": "Voir l'effet de la suppression",
-      "effects": "Seront supprimés ou détachés : {{vehicules}} véhicule(s) SUPPRIMÉ(S), {{projets}} projet(s) détaché(s), {{membres}} membre(s) retiré(s).",
+      "effects": "Seront supprimés ou détachés — véhicules SUPPRIMÉS : {{vehicules}} ; projets détachés : {{projets}} ; membres retirés : {{membres}}.",
       "typeName": "Pour confirmer, tape le nom exact de l'organisation : « {{name}} »",
       "confirm": "Supprimer définitivement l'organisation",
       "deleted": "Organisation supprimée — une nouvelle organisation vide a été créée pour toi.",
@@ -6075,7 +6099,7 @@
     "subtitle": "Déposez n'importe quel inventaire (Excel, CSV, PDF, export d'un logiciel de gestion de flotte). Les colonnes sont associées au modèle d'import, puis chaque ligne est validée avant l'import. Aucune valeur n'est inventée : un champ incertain reste vide et signalé.",
     "choose": "Choisir un fichier (CSV, XLSX ou PDF)…",
     "emptyFile": "Aucun tableau lisible dans ce fichier.",
-    "read": "{{rows}} ligne(s) et {{columns}} colonne(s) lues ({{format}}).",
+    "read": "Lignes lues : {{rows}} · colonnes : {{columns}} ({{format}}).",
     "unreadLines_one": "{{count}} ligne du document n'a pas pu être alignée sur les colonnes : elle n'est pas importée.",
     "unreadLines_other": "{{count}} lignes du document n'ont pas pu être alignées sur les colonnes : elles ne sont pas importées.",
     "mappingTitle": "1. Correspondance des colonnes",
@@ -6153,7 +6177,7 @@
     },
     "validationTitle": "3. Validation ligne par ligne",
     "onlyToCheck": "Seulement les lignes à vérifier",
-    "summary": "{{created}} nouveau(x) véhicule(s), {{updated}} mise(s) à jour, {{errors}} ligne(s) en erreur et {{excluded}} exclue(s) (non importées), {{flagged}} ligne(s) signalée(s). Les doublons probables sont exclus par défaut.",
+    "summary": "Nouveaux véhicules : {{created}} · mises à jour : {{updated}} · lignes en erreur : {{errors}} · exclues (non importées) : {{excluded}} · signalées : {{flagged}}. Les doublons probables sont exclus par défaut.",
     "newGarages": "Garages créés à l'import : {{garages}}.",
     "status": {
       "nouveau": "Nouveau",

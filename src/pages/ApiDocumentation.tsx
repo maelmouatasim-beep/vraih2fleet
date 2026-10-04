@@ -302,7 +302,7 @@ const ApiKeyManagement = () => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(i18n.language === 'fr' ? 'fr-FR' : 'en-US', {
+    return new Date(dateString).toLocaleDateString(i18n.language.startsWith('fr') ? 'fr-FR' : 'en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',

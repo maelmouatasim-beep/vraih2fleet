@@ -58,8 +58,8 @@ export default function AiSettingsCard({ organizationId, estAdmin }: Props) {
     }
   };
 
-  const nombre = new Intl.NumberFormat(i18n.language === "en" ? "en-CA" : "fr-CA");
-  const usd = new Intl.NumberFormat(i18n.language === "en" ? "en-CA" : "fr-CA", { style: "currency", currency: "USD", maximumFractionDigits: 2 });
+  const nombre = new Intl.NumberFormat(i18n.language.startsWith("en") ? "en-CA" : "fr-CA");
+  const usd = new Intl.NumberFormat(i18n.language.startsWith("en") ? "en-CA" : "fr-CA", { style: "currency", currency: "USD", maximumFractionDigits: 2 });
   const jetonsMois = (usage?.month_input_tokens ?? 0) + (usage?.month_output_tokens ?? 0);
   const cout = usage
     ? coutEstimeUsd("claude-opus-5-5", {

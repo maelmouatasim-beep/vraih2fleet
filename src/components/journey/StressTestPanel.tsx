@@ -44,7 +44,7 @@ export default function StressTestPanel({ plan }: StressTestPanelProps) {
   const donneesTornade = analyse.tornade.map((b) => {
     const min = Math.min(b.vanBasse, b.vanHaute);
     const max = Math.max(b.vanBasse, b.vanHaute);
-    const libelle = i18n.language === "en" ? PARAMETRES_STRESS_EN[b.id] ?? b.libelle : b.libelle;
+    const libelle = i18n.language.startsWith("en") ? PARAMETRES_STRESS_EN[b.id] ?? b.libelle : b.libelle;
     return { libelle, plage: [min, max], amplitude: b.amplitude };
   });
 
@@ -66,7 +66,7 @@ export default function StressTestPanel({ plan }: StressTestPanelProps) {
             </CardTitle>
             <CardDescription>{t("journey.strategies.stress.subtitle")}</CardDescription>
           </div>
-          <Badge variant={badgeRisque}>
+          <Badge variant={badgeRisque} className="max-w-full whitespace-normal text-left">
             {t(`journey.strategies.stress.risk.${analyse.niveauRisque}`)}
           </Badge>
         </div>

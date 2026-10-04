@@ -50,7 +50,7 @@ export function CommentsPanel({ projectId }: CommentsPanelProps) {
   const [editContent, setEditContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const dateLocale = i18n.language === "fr" ? fr : enUS;
+  const dateLocale = i18n.language.startsWith("fr") ? fr : enUS;
 
   const filteredComments =
     selectedSection === "all"

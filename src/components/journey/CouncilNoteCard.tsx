@@ -73,7 +73,7 @@ function telecharger(blob: Blob, nom: string) {
 export default function CouncilNoteCard(p: Props) {
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
-  const [langue, setLangue] = useState<"fr" | "en">(i18n.language === "en" ? "en" : "fr");
+  const [langue, setLangue] = useState<"fr" | "en">(i18n.language.startsWith("en") ? "en" : "fr");
   // Le brouillon en cours survit à un remontage de l'étape (navigation,
   // rafraîchissement des données) : il est gardé dans le cache de session.
   const cleBrouillon = useMemo(() => ["council-note-draft", p.projectId], [p.projectId]);
@@ -140,7 +140,7 @@ export default function CouncilNoteCard(p: Props) {
   const ouvrir = (n: NoteConseilRow) => {
     setBrouillon({
       id: n.id,
-      langue: n.language === "en" ? "en" : "fr",
+      langue: n.language.startsWith("en") ? "en" : "fr",
       sections: n.sections as unknown as SectionsNote,
       faits: n.facts as unknown as FaitNote[],
       source: n.source === "ia" ? "ia" : "modele",

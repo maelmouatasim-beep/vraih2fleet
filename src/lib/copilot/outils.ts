@@ -328,7 +328,7 @@ function simuler(snap: SnapshotProjet, entree: z.infer<typeof zSimuler>, proposi
     const p: PropositionCopilote = {
       id,
       type: "plan",
-      resume: `${changements.length} véhicule(s) : année et/ou technologie cible`,
+      resume: `${changements.length} ${changements.length === 1 ? "véhicule" : "véhicules"} : année et/ou technologie cible`,
       changements,
     };
     propositions.set(id, p);
@@ -380,7 +380,7 @@ function optimiser(snap: SnapshotProjet, entree: z.infer<typeof zOptimiser>, pro
     propositions.set(id, {
       id,
       type: "optimisee",
-      resume: `${changements.length} véhicule(s) : année et/ou technologie (solution optimisée)`,
+      resume: `${changements.length} ${changements.length === 1 ? "véhicule" : "véhicules"} : année et/ou technologie (solution optimisée)`,
       changements: changements.map((c) => ({
         vehiculeId: c.vehiculeId,
         unite: uniteDe(snap, c.vehiculeId),

@@ -84,7 +84,7 @@ const parseNombre = (s: string): number | null => {
 
 export default function ClientDocumentsCard({ organizationId, projectId = null, projectVehicles = [], peutModifier = true, demo = false }: Props) {
   const { t, i18n } = useTranslation();
-  const langue = i18n.language === "en" ? "en" : "fr";
+  const langue = i18n.language.startsWith("en") ? "en" : "fr";
   const locale = langue === "en" ? "en-CA" : "fr-CA";
   const queryClient = useQueryClient();
   const { garages } = useGarages(organizationId);

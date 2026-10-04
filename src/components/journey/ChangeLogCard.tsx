@@ -37,7 +37,7 @@ export default function ChangeLogCard({ projectId, organizationId }: ChangeLogCa
   const valeur = (v: ChangementJournal["avant"]) => (v == null || v === "" ? "—" : String(v));
   const champ = (c: string) =>
     t(`journey.changeLog.fields.${c}`, { defaultValue: t(`smartImport.fields.${c}`, { defaultValue: c }) });
-  const locale = i18n.language === "en" ? "en-CA" : "fr-CA";
+  const locale = i18n.language.startsWith("en") ? "en-CA" : "fr-CA";
 
   return (
     <Card data-testid={portee === "project" ? "change-log" : "fleet-change-log"}>

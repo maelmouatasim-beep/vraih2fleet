@@ -38,7 +38,7 @@ export default function TeamCard({ organization }: { organization: OrganizationD
   const [courriel, setCourriel] = useState("");
   const [role, setRole] = useState<OrgRole>("member");
   const [envoi, setEnvoi] = useState(false);
-  const locale = i18n.language === "en" ? "en-CA" : "fr-CA";
+  const locale = i18n.language.startsWith("en") ? "en-CA" : "fr-CA";
 
   const { data: membres = [] } = useQuery({
     queryKey: ["organization-members-detail", organization.id],

@@ -57,7 +57,7 @@ const RoadmapHeader: React.FC<RoadmapHeaderProps> = ({
   onShare,
 }) => {
   const { t, i18n } = useTranslation();
-  const locale = i18n.language === 'fr' ? fr : enUS;
+  const locale = i18n.language.startsWith('fr') ? fr : enUS;
 
   // Calculate stats
   const completedMilestones = milestones.filter(m => m.status === 'completed').length;

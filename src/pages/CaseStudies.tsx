@@ -28,7 +28,7 @@ interface CasReference {
 
 export default function CaseStudies() {
   const { t, i18n } = useTranslation();
-  const en = i18n.language === "en";
+  const en = i18n.language.startsWith("en");
   const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
 
   const exemples = useMemo(

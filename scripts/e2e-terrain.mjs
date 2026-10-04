@@ -168,9 +168,9 @@ try {
   await page.getByRole("button", { name: /Importer CSV/ }).click();
   await page.setInputFiles('input[type="file"]', fichier);
   // Premier import : le serveur de dev compile à froid la lecture Excel/CSV.
-  await page.getByText(/nouveau\(x\) véhicule\(s\)/).waitFor({ timeout: 60000 });
-  const apercu = await page.getByText(/nouveau\(x\) véhicule\(s\)/).innerText();
-  if (!apercu.includes("12 nouveau") || !apercu.includes("0 erreur")) throw new Error(`aperçu inattendu : ${apercu}`);
+  await page.getByText(/Nouveaux véhicules\s:/).waitFor({ timeout: 60000 });
+  const apercu = await page.getByText(/Nouveaux véhicules\s:/).innerText();
+  if (!/Nouveaux véhicules\s:\s12\b/.test(apercu) || !/erreurs\s:\s0\b/.test(apercu)) throw new Error(`aperçu inattendu : ${apercu}`);
   await capture(page, "01-import-apercu");
   await page.getByRole("button", { name: /^Importer \d/ }).click();
   await page.getByText("TP-06").first().waitFor({ timeout: 10000 });
@@ -223,7 +223,7 @@ try {
   for (const unite of ["GM-01", "HV-01", "TP-01"]) {
     const ligne = page.getByRole("row").filter({ has: page.getByRole("cell", { name: unite, exact: true }) });
     const derniere = (await ligne.getByRole("cell").last().innerText()).trim();
-    if (!/Électrique|Hydrogène|Diesel/.test(derniere)) throw new Error(`Faisabilité : cible absente pour ${unite} (« ${derniere} »)`);
+    if (!/Électrique|Hydrogène|Thermique/.test(derniere)) throw new Error(`Faisabilité : cible absente pour ${unite} (« ${derniere} »)`);
   }
   if ((await etatEtape(page, "faisabilite")) !== "termine") throw new Error("étape Faisabilité non terminée après les recommandations");
   await capture(page, "04b-faisabilite-recommandations");
@@ -233,7 +233,7 @@ try {
   await page.goto(`${base}/strategies`);
   await page.getByRole("button", { name: /Appliquer cette stratégie au plan/ }).waitFor({ timeout: 15000 });
   await capture(page, "05-strategies");
-  await page.getByText("Économies d'abord").first().click();
+  await page.getByTestId("strategy-economies_d_abord").click();
   if ((await etatEtape(page, "strategies")) !== "a_faire") throw new Error("Stratégies devrait être « à faire » avant application");
   await page.getByRole("button", { name: /Appliquer cette stratégie au plan/ }).click();
   await page.getByRole("button", { name: /^Appliquer \(\d+ changement/ }).click();
@@ -447,7 +447,7 @@ try {
   await dialogue.getByTestId("fix-category-2").selectOption("vehicule_specialise");
   if ((await statut(2)) !== "Nouveau") throw new Error(`TP-07 après correction : ${await statut(2)}`);
   const resume = await dialogue.getByTestId("smart-import-summary").innerText();
-  if (!/^2 nouveau.*1 mise.*0 ligne\(s\) en erreur et 1 exclue/.test(resume)) throw new Error(`import intelligent : résumé inattendu « ${resume} »`);
+  if (!/^Nouveaux véhicules\s:\s2\b.*mises à jour\s:\s1\b.*lignes en erreur\s:\s0\b.*exclues \(non importées\)\s:\s1\b/.test(resume)) throw new Error(`import intelligent : résumé inattendu « ${resume} »`);
   await captureDialogue(page, dialogue, "11b-import-intelligent-corrige");
   await dialogue.getByTestId("smart-import-confirm").click();
   await dialogue.waitFor({ state: "hidden", timeout: 20000 });
@@ -464,7 +464,7 @@ try {
   await page.setInputFiles('[data-testid="smart-import-file"]', resolve("src/lib/fleet/__tests__/fixtures/inventaire-centre.pdf"));
   const lu = page.getByTestId("smart-import-read");
   await lu.waitFor({ timeout: 60000 });
-  if (!/^45 ligne\(s\) et 6 colonne\(s\) lues \(PDF\)/.test(await lu.innerText())) throw new Error(`PDF : ${await lu.innerText()}`);
+  if (!/^Lignes lues\s:\s45\b.*colonnes\s:\s6\b.*\(PDF\)/.test(await lu.innerText())) throw new Error(`PDF : ${await lu.innerText()}`);
   if (!(await page.getByTestId("row-1").innerText()).includes("Garage central")) throw new Error("PDF : colonne Garage mal alignée");
   await page.keyboard.press("Escape");
   etape(`Import intelligent : ${resume.split(".")[0]} ; 2 propositions hors données rejetées ; colonne personnelle jamais transmise ; journalisé ; PDF de 45 lignes lu`);
@@ -561,6 +561,10 @@ try {
   const valides = Number(psql("select count(*) from public.subsidy_program_events e join public.subsidy_watch_changes c on c.id = e.change_id where c.program_id in ('pave','roulez_vert','ecocamionnage_v1')").trim());
   if (valides !== 3) throw new Error(`veille : ${valides} événement(s) validé(s) au lieu de 3`);
   await capture(page, "13b-veille-validee");
+  // HV-01 électrique acheté cette année : le plan (que l'optimiseur et le
+  // copilote ont pu modifier) examine alors PAVÉ et Roulez vert à coup sûr.
+  const projetId = base.split("/").pop();
+  psql(`update public.project_vehicles pv set replacement_year = 2026, target_technology = 'bev' from public.vehicles v where v.id = pv.vehicle_id and pv.project_id = '${projetId}' and v.unit_number = 'HV-01'`);
   await page.goto(`${base}/financement`);
   await page.getByText("Subventions prévues au plan").waitFor({ timeout: 15000 });
   const alerteVeille = page.getByTestId("program-changes-alert");
@@ -578,7 +582,6 @@ try {
   // changements de programmes ; on crée en plus un remplacement en retard
   // (GM-01 prévu en 2025) et une échéance proche (HV-01 électrique acheté
   // cette année : Roulez vert se termine le 2026-12-31).
-  const projetId = base.split("/").pop();
   psql(`update public.project_vehicles pv set replacement_year = 2025 from public.vehicles v where v.id = pv.vehicle_id and pv.project_id = '${projetId}' and v.unit_number = 'GM-01'`);
   psql(`update public.project_vehicles pv set replacement_year = 2026, target_technology = 'bev' from public.vehicles v where v.id = pv.vehicle_id and pv.project_id = '${projetId}' and v.unit_number = 'HV-01'`);
   await page.goto(`${base}/suivi`);
@@ -671,8 +674,15 @@ try {
   const lireBadge = async () => ((await badge.count()) ? Number((await badge.innerText()).replace("+", "")) : 0);
   await page.goto(`${base}/suivi`);
   await page.getByRole("button", { name: "Générer les tâches du plan" }).waitFor({ timeout: 20000 });
-  await page.waitForTimeout(1500);
-  const avantGeneration = await lireBadge();
+  // Les alertes du plan entrent dans la cloche quand la surveillance est
+  // recalculée à l'ouverture : attendre un compteur STABLE (2 s) avant de générer.
+  let avantGeneration = await lireBadge();
+  for (let stable = 0, i = 0; stable < 8 && i < 80; i++) {
+    await page.waitForTimeout(250);
+    const n = await lireBadge();
+    stable = n === avantGeneration ? stable + 1 : 0;
+    avantGeneration = n;
+  }
   await page.getByRole("button", { name: "Générer les tâches du plan" }).click();
   let apresGeneration = avantGeneration;
   for (let i = 0; i < 60 && apresGeneration <= avantGeneration; i++) {
@@ -692,7 +702,7 @@ try {
   const typesCloche = [...new Set(await panneauNotifs.getByTestId("notification-item").evaluateAll((els) => els.map((e) => e.getAttribute("data-type"))))];
   if (typesCloche.length < 2 || !typesCloche.includes("plan_alert")) throw new Error(`notifications : types attendus dans la cloche (${typesCloche.join(", ")})`);
   const texteGeneration = await itemGeneration.innerText();
-  if (!/Vous avez généré \d+ tâche\(s\) du plan/.test(texteGeneration)) throw new Error(`notifications : texte inattendu « ${texteGeneration} »`);
+  if (!/Vous avez généré \d+ tâches? du plan/.test(texteGeneration)) throw new Error(`notifications : texte inattendu « ${texteGeneration} »`);
   await captureDialogue(page, panneauNotifs, "15a-cloche-notifications");
   await itemGeneration.locator("button").first().click();
   await page.waitForURL(/\/suivi$/, { timeout: 10000 });

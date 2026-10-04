@@ -14,7 +14,7 @@ import { Activity, ArrowRight } from "lucide-react";
 
 function LigneProjet({ project }: { project: ProjectDTO }) {
   const { t, i18n } = useTranslation();
-  const langue = i18n.language === "en" ? "en" : "fr";
+  const langue = i18n.language.startsWith("en") ? "en" : "fr";
   const { alertes, sante } = usePlanSurveillance(project.id, project);
   if (!alertes || !sante) {
     return (

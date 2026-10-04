@@ -81,18 +81,22 @@
       "title": "Import fleet",
       "subtitle": "CSV or Excel with headers (unit, category, fuel, annual km, consumption, depot, GVWR class, max daily km…). No invalid row is imported.",
       "choose": "Choose a file…",
-      "preview": "{{valid}} new vehicle(s), {{updates}} update(s), {{errors}} error(s)",
+      "preview": "New vehicles: {{valid}} · updates: {{updates}} · errors: {{errors}}",
       "errorLine": "Row {{line}}, field {{field}}",
-      "confirm": "Import {{count}} vehicle(s)",
-      "done": "{{count}} vehicle(s) imported, {{updated}} updated",
       "readError": "Unreadable file",
       "updatesTitle": "Units already in the fleet — their provided fields will be updated:",
       "template": "Import template (columns, examples, accepted values, \"Read me\" tab):",
-      "headerRow": "Header read on row {{line}}: {{count}} column(s) recognized ({{columns}}).",
       "ignoredColumns": "Columns not imported: {{columns}}.",
-      "totalsSkipped": "{{count}} total or subtotal row(s) skipped.",
       "noUnitColumn": "No unit number column is recognized: rename it “Unit” (for example “No” → “Unit”), copy your data into the template above, or use Smart import, which maps the columns for you.",
-      "noRows": "No vehicle row under the header: check that the sheet contains your vehicles."
+      "noRows": "No vehicle row under the header: check that the sheet contains your vehicles.",
+      "confirm_one": "Import {{count}} vehicle",
+      "confirm_other": "Import {{count}} vehicles",
+      "done_one": "{{count}} vehicle imported, {{updated}} updated",
+      "done_other": "{{count}} vehicles imported, {{updated}} updated",
+      "headerRow_one": "Header read on row {{line}}: {{count}} column recognized ({{columns}}).",
+      "headerRow_other": "Header read on row {{line}}: {{count}} columns recognized ({{columns}}).",
+      "totalsSkipped_one": "{{count}} total or subtotal row skipped.",
+      "totalsSkipped_other": "{{count}} total or subtotal rows skipped."
     },
     "edit": {
       "title": "Edit vehicle {{unit}}",
@@ -103,9 +107,10 @@
       "title": "Delete vehicle {{unit}}?",
       "subtitle": "This action is permanent.",
       "checking": "Checking linked projects…",
-      "projectImpact": "This vehicle is used in {{count}} project(s): it will be removed from their replacement plan.",
       "noProject": "This vehicle is not used in any project.",
-      "confirm": "Delete permanently"
+      "confirm": "Delete permanently",
+      "projectImpact_one": "This vehicle is used in {{count}} project: it will be removed from their replacement plan.",
+      "projectImpact_other": "This vehicle is used in {{count}} projects: it will be removed from their replacement plan."
     },
     "demoBadge": "demo",
     "garages": {
@@ -844,7 +849,7 @@
         "maxTemperature": "Maximum temperature",
         "terrain": "Terrain type"
       },
-      "targetPowertrains": "Target powertrain(s)",
+      "targetPowertrains": "Target powertrains",
       "powertrainMix": "Fleet allocation",
       "totalAllocation": "Total",
       "consumptionH2": "H₂ consumption (kg/100km)",
@@ -1100,7 +1105,6 @@
     },
     "params": {
       "title": "Calculation Parameters",
-      "advancedCount": "{{count}} advanced parameter(s)",
       "badges": {
         "customConsumption": "Custom consumption",
         "fcStackReplacement": "FC stack replacement",
@@ -1133,7 +1137,9 @@
       "h2Advanced": {
         "title": "Advanced H₂ parameters",
         "fcStackReplacement": "FC stack replacement"
-      }
+      },
+      "advancedCount_one": "{{count}} advanced parameter",
+      "advancedCount_other": "{{count}} advanced parameters"
     },
     "comparison": {
       "title": "Comparison with Diesel baseline",
@@ -2096,13 +2102,17 @@
         "co2Avoided": "CO₂ avoided (tonnes/year)",
         "scenariosCreated": "Scenarios created",
         "fleetVehicles": "Vehicles in My fleet",
-        "fleetActive": "{{count}} active",
         "zeroEmissionToday": "Zero-emission today",
-        "zeroEmissionTargeted": "{{count}} targeted in projects",
         "projects": "Projects",
-        "plannedVehicles": "{{count}} vehicle(s) planned",
         "completedReplacements": "Completed replacements",
-        "completedOf": "out of {{count}} planned"
+        "completedOf_one": "out of {{count}} planned",
+        "completedOf_other": "out of {{count}} planned",
+        "fleetActive_one": "{{count}} active",
+        "fleetActive_other": "{{count}} active",
+        "plannedVehicles_one": "{{count}} vehicle planned",
+        "plannedVehicles_other": "{{count}} vehicles planned",
+        "zeroEmissionTargeted_one": "{{count}} targeted in projects",
+        "zeroEmissionTargeted_other": "{{count}} targeted in projects"
       },
       "charts": {
         "fleetDistribution": "Fleet distribution",
@@ -2126,7 +2136,8 @@
         "noProjects": "No recent projects",
         "scenarios": "scenarios",
         "updated": "Updated",
-        "vehicles": "{{count}} vehicle(s)"
+        "vehicles_one": "{{count}} vehicle",
+        "vehicles_other": "{{count}} vehicles"
       },
       "toast": {
         "error": "Error",
@@ -2638,9 +2649,6 @@
     "importToFleet": {
       "title": "Import into My fleet",
       "subtitle": "Matches your telematics vehicles with My fleet (existing link, then VIN, then unit number). Nothing is written without your confirmation; data entered by your team is never overwritten.",
-      "updates": "{{count}} update(s)",
-      "creations": "{{count}} creation(s)",
-      "ignored": "{{count}} ignored",
       "toRecheck": "{{count}} to recheck",
       "toRecheckNote": "Rows created before the 28 September 2026 fix (simulated values): only their identity (VIN, make, model, year) is imported. Run a new sync to get real measurements.",
       "matched": "Matched:",
@@ -2655,13 +2663,21 @@
       "category": "Category if the provider gives none",
       "categoryFromProvider": "Provider’s only",
       "reasons": {
-        "doublon_vin": "{{count}} duplicate VIN(s)",
-        "vehicule_deja_rapproche": "{{count}} vehicle(s) already matched with another row",
         "categorie_inconnue": "{{count}} without a recognized category",
-        "choix_creation_absent": "{{count}} unmatched (choose a fuel to create them)"
+        "choix_creation_absent": "{{count}} unmatched (choose a fuel to create them)",
+        "doublon_vin_one": "{{count}} duplicate VIN",
+        "doublon_vin_other": "{{count}} duplicate VINs",
+        "vehicule_deja_rapproche_one": "{{count}} vehicle already matched with another row",
+        "vehicule_deja_rapproche_other": "{{count}} vehicles already matched with another row"
       },
       "confirm": "Apply ({{count}})",
-      "done": "{{updated}} vehicle(s) updated, {{created}} created in My fleet"
+      "done": "My fleet: {{updated}} updated, {{created}} created",
+      "creations_one": "{{count}} creation",
+      "creations_other": "{{count}} creations",
+      "ignored_one": "{{count}} ignored",
+      "ignored_other": "{{count}} ignored",
+      "updates_one": "{{count}} update",
+      "updates_other": "{{count}} updates"
     }
   },
   "pages_support": {
@@ -3494,13 +3510,11 @@
     "yesterday": "Yesterday",
     "thisWeek": "This week",
     "older": "Older",
-    "unreadCount": "{{count}} unread",
     "allRead": "You're all caught up",
     "loading": "Loading notifications…",
     "error": "Unable to load notifications. Check your connection.",
     "retry": "Retry",
     "unavailable": "Notifications temporarily unavailable — click to retry",
-    "homeUnread": "{{count}} unread notification(s)",
     "homeNone": "No unread notifications",
     "filters": {
       "all": "All",
@@ -3566,14 +3580,20 @@
       },
       "tasks_generated": {
         "title": "Plan tasks generated",
-        "message": "{{actor}} generated {{count}} plan task(s) for “{{project}}”.",
-        "messageSelf": "You generated {{count}} plan task(s) for “{{project}}”."
+        "message_one": "{{actor}} generated {{count}} plan task for “{{project}}”.",
+        "message_other": "{{actor}} generated {{count}} plan tasks for “{{project}}”.",
+        "messageSelf_one": "You generated {{count}} plan task for “{{project}}”.",
+        "messageSelf_other": "You generated {{count}} plan tasks for “{{project}}”."
       },
       "plan_alert": {
         "title": "Plan alert",
         "message": "A monitoring alert concerns the project “{{project}}”."
       }
-    }
+    },
+    "homeUnread_one": "{{count}} unread notification",
+    "homeUnread_other": "{{count}} unread notifications",
+    "unreadCount_one": "{{count}} unread",
+    "unreadCount_other": "{{count}} unread"
   },
   "helpTraining": {
     "title": "Help and method",
@@ -4436,7 +4456,6 @@
     "useSystemValue": "Use system value",
     "sectionTitle": "Operational Conditions",
     "sectionDesc": "Adjust consumption multipliers based on your operating conditions",
-    "expertOverrides": "{{count}} expert override(s)",
     "resetAllToSystem": "Reset all to system values",
     "systemShort": "system",
     "expertShort": "expert",
@@ -4507,9 +4526,12 @@
       "h2OpexPercent": "H₂ station annual operating cost (% of CAPEX)",
       "bevOpexPercent": "EV charger annual operating cost (% of CAPEX)"
     },
-    "overridesApplied": "{{count}} expert value(s) applied",
     "viewAll": "View all parameters",
-    "hideDetails": "Hide details"
+    "hideDetails": "Hide details",
+    "expertOverrides_one": "{{count}} expert override",
+    "expertOverrides_other": "{{count}} expert overrides",
+    "overridesApplied_one": "{{count}} expert value applied",
+    "overridesApplied_other": "{{count}} expert values applied"
   },
   "recommendedActions": {
     "title": "Recommended Actions",
@@ -4533,13 +4555,15 @@
     },
     "completePlan": {
       "title": "Complete the plan of “{{project}}”",
-      "description": "{{count}} vehicle(s) without replacement year or target",
-      "action": "Complete"
+      "action": "Complete",
+      "description_one": "{{count}} vehicle without replacement year or target",
+      "description_other": "{{count}} vehicles without replacement year or target"
     },
     "refineConsumptions": {
       "title": "Refine fuel consumption",
-      "description": "{{count}} vehicle(s) use a category-estimated consumption",
-      "action": "Open My fleet"
+      "action": "Open My fleet",
+      "description_one": "{{count}} vehicle use a category-estimated consumption",
+      "description_other": "{{count}} vehicles use a category-estimated consumption"
     }
   },
   "wizard": {
@@ -4800,7 +4824,7 @@
       "title": "Danger zone — delete organization",
       "subtitle": "Permanent action: the organization's fleet is DELETED, projects are detached (they stay with their owners) and members lose access.",
       "showEffects": "Show deletion effects",
-      "effects": "Will be deleted or detached: {{vehicules}} vehicle(s) DELETED, {{projets}} project(s) detached, {{membres}} member(s) removed.",
+      "effects": "Will be deleted or detached — vehicles DELETED: {{vehicules}}; projects detached: {{projets}}; members removed: {{membres}}.",
       "typeName": "To confirm, type the organization's exact name: “{{name}}”",
       "confirm": "Permanently delete organization",
       "deleted": "Organization deleted — a new empty organization was created for you.",
@@ -6075,7 +6099,7 @@
     "subtitle": "Drop any inventory (Excel, CSV, PDF, fleet management software export). Columns are matched to the import template, then every row is validated before import. No value is ever invented: an uncertain field stays empty and flagged.",
     "choose": "Choose a file (CSV, XLSX or PDF)…",
     "emptyFile": "No readable table in this file.",
-    "read": "{{rows}} row(s) and {{columns}} column(s) read ({{format}}).",
+    "read": "Rows read: {{rows}} · columns: {{columns}} ({{format}}).",
     "unreadLines_one": "{{count}} line of the document could not be aligned with the columns: it is not imported.",
     "unreadLines_other": "{{count}} lines of the document could not be aligned with the columns: they are not imported.",
     "mappingTitle": "1. Column mapping",
@@ -6153,7 +6177,7 @@
     },
     "validationTitle": "3. Row-by-row validation",
     "onlyToCheck": "Only rows to review",
-    "summary": "{{created}} new vehicle(s), {{updated}} update(s), {{errors}} row(s) in error and {{excluded}} excluded (not imported), {{flagged}} flagged row(s). Probable duplicates are excluded by default.",
+    "summary": "New vehicles: {{created}} · updates: {{updated}} · rows in error: {{errors}} · excluded (not imported): {{excluded}} · flagged: {{flagged}}. Probable duplicates are excluded by default.",
     "newGarages": "Garages created on import: {{garages}}.",
     "status": {
       "nouveau": "New",

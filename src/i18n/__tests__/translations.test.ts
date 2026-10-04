@@ -141,3 +141,24 @@ describe('audit acheteur, point 9 — libellés du parcours compréhensibles', (
     });
   }
 });
+
+describe('re-audit — une langue régionale (« en-CA ») suit sa langue', () => {
+  it('aucune comparaison stricte de i18n.language (utiliser startsWith)', async () => {
+    const { readdirSync, statSync } = await import('node:fs');
+    const { join } = await import('node:path');
+    const racine = resolve(__dirname, '../..');
+    const fautifs: string[] = [];
+    const parcourir = (dossier: string) => {
+      for (const nom of readdirSync(dossier)) {
+        const chemin = join(dossier, nom);
+        if (statSync(chemin).isDirectory()) {
+          if (nom !== '__tests__' && nom !== 'node_modules') parcourir(chemin);
+        } else if (/\.tsx?$/.test(nom) && /\blanguage\s*[!=]==\s*["'](en|fr)["']/.test(readFileSync(chemin, 'utf8'))) {
+          fautifs.push(chemin.slice(racine.length + 1));
+        }
+      }
+    };
+    parcourir(racine);
+    expect(fautifs).toEqual([]);
+  });
+});

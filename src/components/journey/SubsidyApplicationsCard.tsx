@@ -77,7 +77,7 @@ const FORME_VIDE: FormulaireDemande = { programId: "", label: "", vehicleId: "",
 
 export default function SubsidyApplicationsCard({ projectId, vehicules }: SubsidyApplicationsCardProps) {
   const { t, i18n } = useTranslation();
-  const langue = i18n.language === "en" ? "en" : "fr";
+  const langue = i18n.language.startsWith("en") ? "en" : "fr";
   const { applications, tachesSubvention, isLoading, creer, modifier, supprimer } =
     useSubsidyApplications(projectId);
   const [forme, setForme] = useState<FormulaireDemande>({ ...FORME_VIDE });

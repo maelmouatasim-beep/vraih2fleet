@@ -46,7 +46,7 @@ function Ligne({
   onVue?: () => void;
 }) {
   const { t, i18n } = useTranslation();
-  const langue = i18n.language === "en" ? "en" : "fr";
+  const langue = i18n.language.startsWith("en") ? "en" : "fr";
   const { titre, message } = texteAlerte(a, t, langue);
   const Icone = ICONES[a.gravite];
   return (

@@ -79,7 +79,7 @@ const supplierTypeIcons = {
 
 const Ecosystem = () => {
   const { t, i18n } = useTranslation();
-  const isEnglish = i18n.language === 'en';
+  const isEnglish = i18n.language.startsWith("en");
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [incentives, setIncentives] = useState<IncentiveProgram[]>([]);
   const [loading, setLoading] = useState(true);

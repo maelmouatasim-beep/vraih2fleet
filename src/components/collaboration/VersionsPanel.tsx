@@ -47,7 +47,7 @@ export function VersionsPanel({ projectId }: VersionsPanelProps) {
   const [restoreTarget, setRestoreTarget] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
-  const dateLocale = i18n.language === "fr" ? fr : enUS;
+  const dateLocale = i18n.language.startsWith("fr") ? fr : enUS;
 
   const handleCreate = async () => {
     if (!versionName.trim()) return;

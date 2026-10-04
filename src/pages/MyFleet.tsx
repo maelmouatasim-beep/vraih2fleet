@@ -70,7 +70,7 @@ const FORME_VIDE = {
 
 export default function MyFleet() {
   const { t, i18n } = useTranslation();
-  const langue = i18n.language === "en" ? "en" : "fr";
+  const langue = i18n.language.startsWith("en") ? "en" : "fr";
   const { organization, isLoading: orgLoading } = useOrganization();
   const { vehicles, isLoading, creer, importer, modifier, supprimer } = useVehicles(organization?.id);
   const { garages, rafraichir: rafraichirGarages } = useGarages(organization?.id);

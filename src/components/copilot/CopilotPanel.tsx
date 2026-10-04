@@ -42,7 +42,7 @@ export default function CopilotPanel({ projectId, project, open, onOpenChange }:
   const [aConfirmer, setAConfirmer] = useState<PropositionCopilote | null>(null);
   const [application, setApplication] = useState(false);
   const enCours = copilote.etat.etat === "en_cours";
-  const locale = i18n.language === "en" ? "en-CA" : "fr-CA";
+  const locale = i18n.language.startsWith("en") ? "en-CA" : "fr-CA";
 
   const envoyer = (q: string) => {
     const texte = q.trim();

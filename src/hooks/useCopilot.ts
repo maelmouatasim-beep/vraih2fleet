@@ -112,7 +112,7 @@ export function useCopilot(projectId: string, project: ProjectDTO | null | undef
   const poser = useCallback(
     async (question: string) => {
       if (!snapshot || !organizationId) return;
-      const langue = i18n.language === "en" ? "en" : "fr";
+      const langue = i18n.language.startsWith("en") ? "en" : "fr";
       // Contexte FIGÉ pour tout le tour (prompt système identique à chaque appel).
       const contexte = contexteCopilote(snapshot);
       const precedents = historique.slice(-8).map((m) => ({ role: m.role as "user" | "assistant", content: m.content }));
