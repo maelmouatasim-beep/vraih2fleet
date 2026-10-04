@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { formaterValeurHypothese, libelleUnite, valeurCelluleHypothese } from "../hypotheseAffichage";
 
-const esp = (s: string) => s.replace(/[  ]/g, " ");
+const esp = (s: string) => s.replace(/[\u00a0\u202f]/g, " ");
 
 describe("affichage des hypothèses (audit acheteur, point 10)", () => {
   it("montants avec séparateur de milliers, fractions en %, unités traduites", () => {
