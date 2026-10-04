@@ -8,12 +8,16 @@ import {
   estVehiculeDemo,
   genererFlotteDemo,
   planDemo,
+  planRetenuDemo,
+  lignesGaragesDemo,
   subventionsConfirmeesDemo,
 } from "../villeDemo";
 import { CLASSES_PNBV } from "@/lib/fleet/gvwr";
 import { caracteristiquesGarages } from "@/lib/fleet/garagesModel";
 import { parVehicule } from "@/lib/confirmedSubsidies";
-import { construireStrategies, type VehiculeProjet } from "@/lib/journey/strategies";
+import { construireStrategie, construireStrategies, strategieRetenue, type VehiculeProjet } from "@/lib/journey/strategies";
+import { brouillonModele, faitsNote, rendreSections } from "@/lib/journey/councilNote";
+import { analyserSensibilite } from "@/lib/tco";
 import { evaluerFaisabiliteVehicule } from "@/lib/journey/feasibility";
 import { contraintesDemo } from "../villeDemo";
 import { optimiserCalendrier, zContraintesOptimiseur } from "@/lib/journey/optimizer";
@@ -202,4 +206,65 @@ describe("démo : contraintes de l'optimiseur (Phase 5.1)", () => {
     // la démo montre chaque famille d'explication
     for (const code of ["electrifie_rentable", "report_budget", "diesel_capacite"]) expect(codes.has(code as never)).toBe(true);
   }, 30000);
+});
+
+describe("audit acheteur, point 5 — une démo qui gagne, nuancée, H2 à une station externe", () => {
+  const flotte = genererFlotteDemo();
+  const OPTIONS = { anneeReference: 2026, horizonAns: 10, tauxActualisationNominal: 0.05, typeOrganisme: "municipalite" as const };
+  const options = { ...OPTIONS, garages: caracteristiquesGarages(lignesGaragesDemo()) };
+  const retenu = planRetenuDemo(flotte, 2026);
+  const confirmees = parVehicule(subventionsConfirmeesDemo(retenu).map((c) => ({ ...c, vehicle_id: c.unit_number })));
+  const vehicules: VehiculeProjet[] = flotte.map((v, i) => ({
+    ...v,
+    id: v.unit_number,
+    replacement_year: retenu[i].replacement_year,
+    target_technology: retenu[i].target_technology,
+    subventionsConfirmees: confirmees.get(v.unit_number),
+  }));
+
+  it("plan retenu = « Économies d'abord » appliquée : aucun écart, VAN positive, électrique ET diesel", () => {
+    expect(strategieRetenue(vehicules, "economies_d_abord", options)).toEqual({ cle: "economies_d_abord", ecarts: 0 });
+    const s = construireStrategie(vehicules, "plan_actuel", options);
+    expect(s.resultat!.vanDifferentielle).toBeGreaterThan(0);
+    const technos = retenu.map((p) => p.target_technology);
+    expect(technos.filter((t) => t === "bev").length).toBeGreaterThanOrEqual(8);
+    expect(technos.filter((t) => t === "diesel").length).toBeGreaterThanOrEqual(8);
+    // mêmes années que le plan du gestionnaire : seules les cibles changent
+    expect(retenu.map((p) => p.replacement_year)).toEqual(planDemo(flotte, 2026).map((p) => p.replacement_year));
+  });
+
+  it("la note au conseil de la démo recommande d'adopter, sans appel d'offres contradictoire", () => {
+    const strategie = construireStrategie(vehicules, "plan_actuel", options);
+    const f = faitsNote({
+      organisation: "Ville de Rivière-Claire",
+      projet: "Démo",
+      dateIso: "2026-10-04",
+      anneeReference: 2026,
+      horizonAns: 10,
+      tauxActualisationNominal: 0.05,
+      strategie,
+      retenue: { cle: "economies_d_abord", ecarts: 0 },
+      sensibilite: analyserSensibilite(strategie.plan!),
+      hiver: [],
+    });
+    const rendu = rendreSections(brouillonModele(f, "fr"), f, "fr");
+    expect(rendu.recommandation).toMatch(/adopte le plan/);
+    expect(rendu.recommandation).not.toMatch(/ne pas adopter/);
+  });
+
+  it("les garages de la démo ravitaillent l'hydrogène à une station EXTERNE : aucun capex de station au dépôt", () => {
+    for (const g of GARAGES_DEMO) expect(g.h2_refuelling).toBe("externe");
+    // Plan du gestionnaire (CL-01 à hydrogène) : station externe, pas de station de 3,5 M$
+    const gestionnaire = planDemo(flotte, 2026);
+    const vg: VehiculeProjet[] = flotte.map((v, i) => ({ ...v, id: v.unit_number, replacement_year: gestionnaire[i].replacement_year, target_technology: gestionnaire[i].target_technology }));
+    const s = construireStrategie(vg, "plan_actuel", options);
+    const nord = s.infra.garages.find((g) => g.ravitaillementH2)!;
+    expect(nord.ravitaillementH2!.mode).toBe("externe");
+    expect(nord.ravitaillementH2!.origine).toBe("garage");
+    const avecDepot = construireStrategie(vg, "plan_actuel", {
+      ...OPTIONS,
+      garages: caracteristiquesGarages(lignesGaragesDemo().map((g) => ({ ...g, h2_refuelling: "depot" }))),
+    });
+    expect(avecDepot.resultat!.vanDifferentielle).toBeLessThan(s.resultat!.vanDifferentielle - 1_000_000);
+  });
 });

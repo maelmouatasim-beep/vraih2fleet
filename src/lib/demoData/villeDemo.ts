@@ -7,6 +7,9 @@
  * moteur src/lib/tco sur ces véhicules.
  */
 import { anneeRemplacementSuggeree } from "@/lib/fleet/replacement";
+import { caracteristiquesGarages, type GarageRow } from "@/lib/fleet/garagesModel";
+import { parVehicule } from "@/lib/confirmedSubsidies";
+import { changementsStrategie, type OptionsStrategie, type VehiculeProjet } from "@/lib/journey/strategies";
 
 export const NOM_PROJET_DEMO = "Démo — Ville de Rivière-Claire";
 export const MARQUEUR_DEMO = "demo-h2fleet";
@@ -176,6 +179,11 @@ export interface GarageDemo {
   return_time: string;
   departure_time: string;
   hq_rate: string;
+  /** Ravitaillement H2 (méthodologie §3.5) : la démo ravitaille son
+   *  camion à hydrogène à une station EXTERNE (aucune station au dépôt). */
+  h2_refuelling: "auto" | "depot" | "externe";
+  /** Détour FICTIF aller-retour vers la station externe (km/jour). */
+  h2_detour_km_per_day: number | null;
   notes: string;
 }
 
@@ -188,6 +196,8 @@ export const GARAGES_DEMO: GarageDemo[] = [
     return_time: "17:30",
     departure_time: "06:30",
     hq_rate: "M",
+    h2_refuelling: "externe",
+    h2_detour_km_per_day: null,
     notes: `Garage fictif de démonstration — puissance disponible relevée sur le panneau principal (${MARQUEUR_DEMO})`,
   },
   {
@@ -198,7 +208,9 @@ export const GARAGES_DEMO: GarageDemo[] = [
     return_time: "16:30",
     departure_time: "06:00",
     hq_rate: "G",
-    notes: `Garage fictif de démonstration — puissance disponible relevée sur le panneau principal (${MARQUEUR_DEMO})`,
+    h2_refuelling: "externe",
+    h2_detour_km_per_day: 12,
+    notes: `Garage fictif de démonstration — puissance disponible relevée sur le panneau principal ; camion à hydrogène ravitaillé à une station externe, détour fictif de 12 km par jour (${MARQUEUR_DEMO})`,
   },
 ];
 
@@ -250,4 +262,61 @@ export function contraintesDemo(anneeCourante: number) {
     reportMaxAns: 2,
     avanceMaxAns: 0,
   };
+}
+
+/** Lignes « garages » de la démo, au format de la base (tests, plan retenu). */
+export function lignesGaragesDemo(organizationId = "demo"): GarageRow[] {
+  return GARAGES_DEMO.map((g) => ({
+    ...g,
+    id: g.name,
+    organization_id: organizationId,
+    created_at: "",
+    updated_at: "",
+    charger_quote_document_id: null,
+    charger_unit_quote: null,
+    grid_connection_quote: null,
+    grid_quote_document_id: null,
+    h2_external_price_per_kg: null,
+  })) as GarageRow[];
+}
+
+/**
+ * Plan RETENU de la démo (audit acheteur, point 5) : la stratégie
+ * « Économies d'abord » APPLIQUÉE au plan du gestionnaire, comme le ferait
+ * un utilisateur à l'étape Stratégies. Nuancé : électrique là où le moteur
+ * le trouve rentable garage par garage (bornes et raccordement compris),
+ * diesel ailleurs avec la raison affichée ; le camion à hydrogène de la
+ * route régionale reste évalué avec la station EXTERNE (Faisabilité) mais
+ * n'entre pas au plan tant qu'il coûte plus que le diesel. Calculé en
+ * direct par le moteur — aucun chiffre figé.
+ */
+export function planRetenuDemo(
+  vehicules: VehiculeDemo[],
+  anneeCourante: number,
+  options: Omit<OptionsStrategie, "garages"> = {
+    anneeReference: anneeCourante,
+    horizonAns: 10,
+    tauxActualisationNominal: 0.05,
+    typeOrganisme: "municipalite",
+  },
+): PlanVehiculeDemo[] {
+  const plan = planDemo(vehicules, anneeCourante);
+  const confirmees = parVehicule(subventionsConfirmeesDemo(plan).map((c) => ({ ...c, vehicle_id: c.unit_number })));
+  const projet: VehiculeProjet[] = vehicules.map((v, i) => ({
+    ...v,
+    id: v.unit_number,
+    replacement_year: plan[i].replacement_year,
+    target_technology: plan[i].target_technology,
+    subventionsConfirmees: confirmees.get(v.unit_number),
+  }));
+  const changements = new Map(
+    changementsStrategie(projet, "economies_d_abord", { ...options, garages: caracteristiquesGarages(lignesGaragesDemo()) }).map((c) => [
+      c.vehiculeId,
+      c.cibleNouvelle,
+    ]),
+  );
+  return plan.map((p) => {
+    const nouvelle = changements.get(p.unit_number);
+    return nouvelle ? { ...p, target_technology: nouvelle } : p;
+  });
 }

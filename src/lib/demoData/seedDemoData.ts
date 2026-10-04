@@ -13,7 +13,7 @@ import {
   NOM_PROJET_DEMO,
   contraintesDemo,
   genererFlotteDemo,
-  planDemo,
+  planRetenuDemo,
   subventionsConfirmeesDemo,
 } from "./villeDemo";
 import { garagesACreer } from "@/lib/fleet/garagesModel";
@@ -106,6 +106,9 @@ export async function seedDemoProject(userId: string): Promise<{ projectId: stri
       organization_id: organizationId,
       // Phase 5.1 : la 4e stratégie « Optimisée » est calculée dès l'ouverture.
       optimizer_constraints: contraintesDemo(new Date().getFullYear()),
+      // Audit acheteur, point 5 : plan retenu = « Économies d'abord » appliquée.
+      selected_strategy: "economies_d_abord",
+      strategy_applied_at: new Date().toISOString(),
     })
     .select("id")
     .single();
@@ -122,7 +125,7 @@ export async function seedDemoProject(userId: string): Promise<{ projectId: stri
   if (errVehicules) throw errVehicules;
 
   const idParUnite = new Map((inseres ?? []).map((v) => [v.unit_number, v.id]));
-  const plan = planDemo(flotte, new Date().getFullYear());
+  const plan = planRetenuDemo(flotte, new Date().getFullYear());
   const { error: errPlan } = await supabase.from("project_vehicles").insert(
     plan
       .filter((p) => idParUnite.has(p.unit_number))
@@ -135,7 +138,7 @@ export async function seedDemoProject(userId: string): Promise<{ projectId: stri
   );
   if (errPlan) throw errPlan;
 
-  // Subvention PAGTCP FICTIVE « confirmée par le client » (autobus électriques).
+  // Subvention PAGTCP FICTIVE « confirmée par le client » (autobus électriques du plan retenu).
   const subventions = subventionsConfirmeesDemo(plan).filter((c) => idParUnite.has(c.unit_number));
   if (subventions.length > 0) {
     const { error: errSub } = await supabase.from("confirmed_subsidies").insert(
