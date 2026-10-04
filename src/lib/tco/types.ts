@@ -127,6 +127,13 @@ export const zVehiculePlan = z.object({
    *  de vie », §4) : avant l'acquisition, le véhicule actuel est
    *  identique des deux côtés et le différentiel est nul (§10.11). */
   anneeAcquisition: z.number().int().min(0).max(40).default(0),
+  /** Ravitaillement à une station H2 EXTERNE (§3.5 v2.5) : prix livré
+   *  propre à cette station ($/kg avant taxes), au lieu du prix du projet.
+   *  Absent = prix du projet. Ne s'applique qu'à une alternative FCEV. */
+  prixH2ParKg: zMontantPositif.optional(),
+  /** Kilomètres de DÉTOUR par an pour rejoindre la station externe
+   *  (énergie, entretien et émissions de l'alternative FCEV). */
+  kmDetourParAn: zMontantNonNegatif.optional(),
 });
 export type VehiculePlan = z.infer<typeof zVehiculePlan>;
 
@@ -158,6 +165,12 @@ export type PlanTcoEntree = z.input<typeof zPlanTco>;
  *  dans `subventions` et `residuels` ; `net` = coûts − recettes. */
 export interface FluxAnnuels {
   investissement: number[];
+  /** Part de `investissement`, `residuels` et `subventions` due à
+   *  l'infrastructure (bornes, raccordement, station H2) — pour la
+   *  décomposition par poste (déjà comprise dans les totaux). */
+  investissementInfra: number[];
+  residuelsInfra: number[];
+  subventionsInfra: number[];
   subventions: number[];
   energie: number[];
   entretien: number[];
@@ -203,6 +216,22 @@ export interface PartInfraVehicule {
   part: number;
 }
 
+/** VAN différentielle par poste (§6.4) : économie ACTUALISÉE de
+ *  l'alternative sur la référence, poste par poste (positif = le plan coûte
+ *  moins cher sur ce poste). Σ des postes = vanDifferentielle. */
+export interface DecompositionVan {
+  achat: number;
+  energie: number;
+  /** Entretien et événements datés (batterie, réparations majeures). */
+  entretien: number;
+  assurance: number;
+  /** Bornes, raccordement, station H2 et leur entretien, nets de leur valeur résiduelle. */
+  infrastructure: number;
+  subventions: number;
+  /** Valeurs résiduelles des véhicules (reprises et fin d'horizon). */
+  valeurResiduelle: number;
+}
+
 export interface ResultatPlan {
   engineVersion: string;
   /** Hachage stable de l'entrée validée : même empreinte + même version ⇒ mêmes chiffres. */
@@ -220,6 +249,7 @@ export interface ResultatPlan {
   /** Négatif = gain net par tonne évitée ; null si aucune tonne évitée. */
   coutParTonneWtw: number | null;
   vueBudgetaire: LigneBudgetaire[];
+  decompositionVan: DecompositionVan;
   partsInfra: PartInfraVehicule[];
   avertissements: string[];
 }

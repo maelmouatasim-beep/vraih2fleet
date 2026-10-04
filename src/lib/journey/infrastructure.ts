@@ -6,8 +6,9 @@
  * total d'infrastructure partout, au dollar près.
  *
  * Modèle (§3.5) : une borne par véhicule électrique (BEV), du type
- * correspondant à sa catégorie ; une station H2 par garage qui accueille
- * des FCEV. Le capex d'un garage est engagé l'année d'arrivée de ses
+ * correspondant à sa catégorie ; pour les FCEV, une station H2 au dépôt
+ * ou le ravitaillement à une station externe (sans investissement), selon
+ * le nombre de véhicules H2 du garage (seuil du registre) ou son choix. Le capex d'un garage est engagé l'année d'arrivée de ses
  * premiers véhicules.
  *
  * Raccordement (1.2) : il dépend de la puissance DEMANDÉE (somme des
@@ -98,6 +99,43 @@ export interface CaracteristiquesGarage {
   coutBorneDevis?: Partial<Record<TypeBorne, number>> | null;
   /** Fenêtre de recharge : heure de retour (soir) → heure de départ (matin), « HH:MM[:SS] ». */
   fenetreRecharge?: { retour: string; depart: string };
+  /** Ravitaillement des véhicules à hydrogène (§3.5 v2.5) : « auto » =
+   *  station externe sous le seuil du registre, station au dépôt sinon. */
+  ravitaillementH2?: ModeRavitaillementH2 | "auto";
+  /** Prix livré à la station externe ($/kg avant taxes) ; absent = prix du projet. */
+  prixH2ExterneParKg?: number | null;
+  /** Détour aller-retour par jour d'utilisation pour rejoindre la station externe (km). */
+  detourH2KmParJour?: number | null;
+}
+
+export type ModeRavitaillementH2 = "depot" | "externe";
+
+export interface RavitaillementH2 {
+  mode: ModeRavitaillementH2;
+  /** auto = règle du seuil ; garage = choix saisi pour le garage. */
+  origine: "auto" | "garage";
+  /** Seuil du registre (véhicules H2) qui a fondé un choix automatique. */
+  seuil: number;
+  /** Station externe : prix propre au garage ($/kg) ; null = prix du projet. */
+  prixParKg: number | null;
+  /** Station externe : détour (km aller-retour par jour d'utilisation). */
+  detourKmParJour: number;
+}
+
+/** Mode de ravitaillement H2 d'un garage : choix du garage, sinon station
+ *  externe tant que le garage compte moins de véhicules H2 que le seuil. */
+export function ravitaillementH2Garage(nbFcev: number, garage: CaracteristiquesGarage | undefined): RavitaillementH2 {
+  const seuil = HYPOTHESES.seuil_station_h2_depot_vehicules.valeur;
+  const choix = garage?.ravitaillementH2;
+  const mode: ModeRavitaillementH2 =
+    choix === "depot" || choix === "externe" ? choix : nbFcev < seuil ? "externe" : "depot";
+  return {
+    mode,
+    origine: choix === "depot" || choix === "externe" ? "garage" : "auto",
+    seuil,
+    prixParKg: garage?.prixH2ExterneParKg != null && garage.prixH2ExterneParKg > 0 ? garage.prixH2ExterneParKg : null,
+    detourKmParJour: garage?.detourH2KmParJour != null && garage.detourH2KmParJour > 0 ? garage.detourH2KmParJour : 0,
+  };
 }
 
 export interface PhaseGarage {
@@ -124,6 +162,8 @@ export interface InfraGarage {
   puissanceMaxKw: number;
   raccordement: DetailRaccordement;
   capexStationH2: number;
+  /** Ravitaillement des véhicules H2 du garage ; null = aucun véhicule H2. */
+  ravitaillementH2: RavitaillementH2 | null;
   /** Années du PLAN de mise en service (null = rien de ce type). */
   anneeMiseEnServiceRecharge: number | null;
   anneeMiseEnServiceH2: number | null;
@@ -255,7 +295,10 @@ export function planifierInfrastructure(
     const premiere = (l: VehiculeInfra[]) =>
       l.length > 0 ? Math.min(...l.map((v) => v.anneeAcquisition)) : null;
     const raccordement = calculerRaccordement(puissanceMaxKw, options.garages?.get(cle));
-    const capexStationH2 = fcev.length > 0 ? HYPOTHESES.station_h2_depot.valeur : 0;
+    const ravitaillementH2 = fcev.length > 0 ? ravitaillementH2Garage(fcev.length, options.garages?.get(cle)) : null;
+    // Station au dépôt seulement si elle est retenue ; station externe =
+    // aucun investissement (le prix livré porte le coût, §3.5 v2.5).
+    const capexStationH2 = ravitaillementH2?.mode === "depot" ? HYPOTHESES.station_h2_depot.valeur : 0;
 
     garages.push({
       cle,
@@ -269,6 +312,7 @@ export function planifierInfrastructure(
       puissanceMaxKw,
       raccordement,
       capexStationH2,
+      ravitaillementH2,
       anneeMiseEnServiceRecharge: premiere(bev),
       anneeMiseEnServiceH2: premiere(fcev),
       phasage: [...parAnnee.values()].sort((a, b) => a.annee - b.annee),
@@ -327,7 +371,7 @@ export function sitesInfraMoteur(plan: PlanInfrastructure): {
         anneeMiseEnService: g.anneeMiseEnServiceRecharge ?? 0,
       });
     }
-    if (g.vehiculesFcev.length > 0) {
+    if (g.vehiculesFcev.length > 0 && g.capexStationH2 > 0) {
       sites.push({
         id: `h2:${g.cle}`,
         capexAvantTaxes: g.capexStationH2,

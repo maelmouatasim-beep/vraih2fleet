@@ -68,6 +68,9 @@ describe("point 3 — démo réaliste et crédible", () => {
     charger_unit_quote: null,
     grid_connection_quote: null,
     grid_quote_document_id: null,
+    h2_refuelling: "auto",
+    h2_external_price_per_kg: null,
+    h2_detour_km_per_day: null,
   }));
   const options = { ...OPTIONS, garages: caracteristiquesGarages(lignesGarages) };
   const confirmees = parVehicule(subventionsConfirmeesDemo(plan).map((c) => ({ ...c, vehicle_id: c.unit_number })));

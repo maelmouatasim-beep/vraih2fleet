@@ -14,6 +14,7 @@ import { classePourSubventions } from "@/lib/fleet/gvwr";
 import { categorieMoteur, raisonAReporter } from "./categories";
 import {
   calculerPlan,
+  HYPOTHESES,
   parametresParDefaut,
   resoudreSubventions,
   type ExplicationSubvention,
@@ -503,6 +504,23 @@ export function chiffrerChoix(
       avertissementsSubventions: [...avertissementsSubventions],
       explicationsSubventions,
     };
+  }
+
+  // Station H2 EXTERNE (§3.5 v2.5) : prix livré propre au garage et km de
+  // détour reportés sur chaque véhicule à hydrogène concerné.
+  const jours = HYPOTHESES.jours_utilisation_an.valeur;
+  for (const g of infra.garages) {
+    const r = g.ravitaillementH2;
+    if (r?.mode !== "externe" || (r.prixParKg == null && r.detourKmParJour <= 0)) continue;
+    for (const id of g.vehiculesFcev) {
+      const i = plansVehicules.findIndex((x) => x.id === id);
+      if (i < 0) continue;
+      plansVehicules[i] = {
+        ...plansVehicules[i],
+        ...(r.prixParKg != null ? { prixH2ParKg: r.prixParKg } : {}),
+        ...(r.detourKmParJour > 0 ? { kmDetourParAn: r.detourKmParJour * jours } : {}),
+      };
+    }
   }
 
   // Sites du moteur = plan d'infrastructure par garage (payé l'année

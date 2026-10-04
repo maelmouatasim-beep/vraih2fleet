@@ -277,14 +277,14 @@ describe("construireStrategie", () => {
     expect(s.resultat!.alternative.flux.investissement[3]).toBeGreaterThan(0);
   });
 
-  it("FCEV : site H2 distinct du site de recharge (répartitions homogènes)", () => {
+  it("FCEV avec station au dépôt : site H2 distinct du site de recharge (répartitions homogènes)", () => {
     const s = construireStrategie(
       [
         vehicule({ id: "b1", target_technology: "bev" }),
         vehicule({ id: "h1", target_technology: "fcev" }),
       ],
       "plan_actuel",
-      OPTIONS,
+      { ...OPTIONS, garages: new Map([["__sans_garage__", { ravitaillementH2: "depot" as const }]]) },
     );
     const sites = s.plan!.sitesInfra!;
     expect(sites.map((x) => x.id).sort()).toEqual(["h2:__sans_garage__", "recharge:__sans_garage__"]);

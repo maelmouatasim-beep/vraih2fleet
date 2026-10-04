@@ -63,6 +63,8 @@ export const HYPOTHESES_EN: Record<string, string> = {
   entretien_infra_ratio: "Annual charging infrastructure maintenance, as a share of capital",
   duree_vie_infra: "Charging infrastructure lifetime",
   station_h2_depot: "Depot H2 refuelling station (medium capacity, turnkey)",
+  seuil_station_h2_depot_vehicules:
+    "Number of hydrogen vehicles at a depot from which an on-site station is proposed; below it, refuelling at an external station (no depot station investment)",
   trajectoire_prix_batterie: "Expected annual decline in battery pack prices (disabled by default in the engine)",
   taux_change_usd_cad: "USD → CAD exchange rate (vehicles imported from the U.S.)",
   droits_douane_ve_chine: "Customs duties on China-made EVs (February 2026 quota regime)",

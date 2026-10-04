@@ -29,7 +29,8 @@ describe("planifierInfrastructure (source unique par garage)", () => {
         vi({ id: "a2", depot: "garage a ", category: "camion_moyen", anneeAcquisition: 2 }),
         vi({ id: "b1", depot: "Garage B", technologie: "FCEV", category: "camion_lourd" }),
       ],
-      { anneeReference: 2026 },
+      // station au dépôt CHOISIE pour le garage B (sinon : station externe, 1 camion < seuil)
+      { anneeReference: 2026, garages: new Map([[cleGarage("Garage B"), { ravitaillementH2: "depot" as const }]]) },
     );
     expect(p.garages.map((g) => g.depot)).toEqual(["Garage A", "Garage B"]);
     const a = p.garages[0];
@@ -177,5 +178,62 @@ describe("1.1 — le même projet affiche le même total d'infrastructure partou
     const a = construireStrategie(FLOTTE, "plan_actuel", OPTIONS);
     const b = construireStrategie(FLOTTE, "plan_actuel", OPTIONS);
     expect(a.infra.totalCapex).toBe(b.infra.totalCapex);
+  });
+});
+
+describe("ravitaillement H2 : station au dépôt ou station externe (§3.5 v2.5)", () => {
+  const SEUIL = HYPOTHESES.seuil_station_h2_depot_vehicules.valeur;
+  const camions = (n: number) =>
+    Array.from({ length: n }, (_, i) => vi({ id: `h${i}`, depot: "Dépôt Nord", technologie: "FCEV", category: "camion_lourd" }));
+
+  it("moins de N camions H2 sur un garage (seuil du registre, estimation) : station externe, aucun capex de station", () => {
+    expect(HYPOTHESES.seuil_station_h2_depot_vehicules.statut).toBe("estimation");
+    const p = planifierInfrastructure(camions(SEUIL - 1), { anneeReference: 2026 });
+    expect(p.garages[0].ravitaillementH2).toMatchObject({ mode: "externe", origine: "auto", seuil: SEUIL });
+    expect(p.garages[0].capexStationH2).toBe(0);
+    expect(p.totalCapex).toBe(0);
+    expect(sitesInfraMoteur(p)).toEqual([]);
+  });
+
+  it("à partir du seuil : station au dépôt proposée", () => {
+    const p = planifierInfrastructure(camions(SEUIL), { anneeReference: 2026 });
+    expect(p.garages[0].ravitaillementH2).toMatchObject({ mode: "depot", origine: "auto" });
+    expect(p.garages[0].capexStationH2).toBe(HYPOTHESES.station_h2_depot.valeur);
+  });
+
+  it("le choix du garage l'emporte sur le seuil, dans les deux sens", () => {
+    const g = (mode: "depot" | "externe") => new Map([[cleGarage("Dépôt Nord"), { ravitaillementH2: mode }]]);
+    expect(planifierInfrastructure(camions(1), { anneeReference: 2026, garages: g("depot") }).garages[0].capexStationH2).toBeGreaterThan(0);
+    const p = planifierInfrastructure(camions(SEUIL + 2), { anneeReference: 2026, garages: g("externe") });
+    expect(p.garages[0].ravitaillementH2).toMatchObject({ mode: "externe", origine: "garage" });
+    expect(p.garages[0].capexStationH2).toBe(0);
+  });
+
+  it("prix livré et détour de la station externe reportés sur les camions H2 dans le moteur", () => {
+    const veh = (id: string): VehiculeProjet => ({
+      id,
+      category: "camion_lourd",
+      fuel_type: "diesel",
+      annual_km: 50000,
+      consumption_per_100km: 40,
+      consumption_source: "saisie",
+      usage_profile: "regional",
+      replacement_year: 2027,
+      target_technology: "fcev",
+      depot: "Dépôt Nord",
+    });
+    const options = (garage: Record<string, unknown>) => ({
+      anneeReference: 2026,
+      horizonAns: 10,
+      tauxActualisationNominal: 0.05,
+      typeOrganisme: "municipalite" as const,
+      garages: new Map([[cleGarage("Dépôt Nord"), garage]]),
+    });
+    const sans = construireStrategie([veh("c1")], "plan_actuel", options({}));
+    const avec = construireStrategie([veh("c1")], "plan_actuel", options({ prixH2ExterneParKg: 12, detourH2KmParJour: 10 }));
+    expect(sans.infra.totalCapex).toBe(0);
+    expect(sans.plan!.vehicules[0].prixH2ParKg).toBeUndefined();
+    expect(avec.plan!.vehicules[0]).toMatchObject({ prixH2ParKg: 12, kmDetourParAn: 10 * HYPOTHESES.jours_utilisation_an.valeur });
+    expect(avec.resultat!.vanDifferentielle).not.toBe(sans.resultat!.vanDifferentielle);
   });
 });

@@ -8,7 +8,7 @@ Statuts : ✅ vérifié = source réellement lue à la date indiquée ;
 ≈ estimation = ordre de grandeur professionnel à affiner ;
 ⚠️ à valider = source non consultable depuis l’environnement — consulter l’URL.
 
-Bilan : 12 vérifiées, 28 estimations, 13 à valider (hors défauts par catégorie, tous « estimation »).
+Bilan : 12 vérifiées, 29 estimations, 13 à valider (hors défauts par catégorie, tous « estimation »).
 
 ## Hypothèses générales
 
@@ -64,6 +64,7 @@ Bilan : 12 vérifiées, 28 estimations, 13 à valider (hors défauts par catégo
 | Entretien annuel de l’infrastructure de recharge, en part du capital | 0.03 | ratio | 0.02 – 0.05 | CA | ≈ estimation | [H2Fleet — Pratique de l’industrie (contrats d’entretien réseaux de recharge)](https://github.com/maelmouatasim-beep/vraih2fleet/blob/main/docs/tco-methodologie.md) | 2026-09-28 |
 | Durée de vie de l’infrastructure de recharge | 15 | annees | 10 – 20 | CA | ≈ estimation | [H2Fleet — Convention d’amortissement (méthodologie §3.5)](https://github.com/maelmouatasim-beep/vraih2fleet/blob/main/docs/tco-methodologie.md) | 2026-09-28 |
 | Station de ravitaillement H2 au dépôt (capacité moyenne, clés en main) | 3500000 (CAD 2026) | $ | 1500000 – 8000000 | CA | ⚠️ à valider | [Propulsion Québec / Hydrolux — Étude 2023 + annonces de réseau 2025-2026 (aucun prix public normalisé)](https://propulsionquebec.com/wp-content/uploads/2023/11/PropulsionQc_Hydrogene-vert_VF1.pdf) | 2026-09-28 |
+| Nombre de véhicules à hydrogène d’un garage à partir duquel une station au dépôt est proposée ; en dessous, ravitaillement à une station externe (aucun investissement de station au dépôt) | 5 | véhicules | 3 – 10 | QC | ≈ estimation | [H2Fleet — Convention de dimensionnement (méthodologie §3.5) : une station au dépôt (≈ 3,5 M$, registre) n’est pas amortie par quelques camions ; le choix reste modifiable par garage (Ma flotte › Garages)](https://github.com/maelmouatasim-beep/vraih2fleet/blob/main/docs/tco-methodologie.md) | 2026-10-05 |
 | Baisse annuelle attendue du prix des packs batterie (désactivée par défaut dans le moteur) | -0.05 | ratio | -0.08 – 0 | CA | ⚠️ à valider | [BloombergNEF — Lithium-Ion Battery Price Survey 2025 : pack moyen 108 $US/kWh, −8 % vs 2024 ; BEV 99 $US/kWh](https://about.bnef.com/insights/clean-transport/lithium-ion-battery-pack-prices-fall-to-108-per-kilowatt-hour-despite-rising-metal-prices-bloombergnef/) | 2026-09-28 |
 | Taux de change USD → CAD (véhicules importés des É.-U.) | 1.35 | CAD/USD | 1.25 – 1.45 | CA | ⚠️ à valider | [Banque du Canada — Taux de change quotidiens](https://www.banqueducanada.ca/taux/taux-de-change/) | 2026-09-28 |
 | Droits de douane sur les VE fabriqués en Chine (régime de quota de février 2026) | 0.061 | ratio | 0.061 – 1 | CA | ⚠️ à valider | [Ministère des Finances du Canada — Surtaxe de 100 % (2024) remplacée en février 2026 par un quota de 49 000 unités/an à 6,1 % ; 100 % au-delà](https://www.canada.ca/fr/ministere-finances/nouvelles/2024/08/surtaxe-sur-les-vehicules-electriques-fabriques-en-chine.html) | 2026-09-28 |
@@ -98,6 +99,7 @@ Bilan : 12 vérifiées, 28 estimations, 13 à valider (hors défauts par catégo
 - **raccordement_palier1** : Borne basse de la plage du raccordement de dépôt (raccordement_depot : 20 000 $ à 500 000 $).
 - **raccordement_palier2** : Valeur centrale du raccordement de dépôt du registre (raccordement_depot).
 - **raccordement_palier3** : Borne haute de la plage du raccordement de dépôt du registre (raccordement_depot) ; un devis Hydro-Québec est indispensable à ce niveau.
+- **seuil_station_h2_depot_vehicules** : Seuil de proposition, pas une règle : le prix livré de la station externe reprend le prix de l’hydrogène livré du registre, sauf prix propre saisi pour le garage.
 - **trajectoire_prix_batterie** : Ne s’applique qu’à la part batterie du prix (≈ 30-40 % pour un camion lourd BEV).
 - **droits_douane_ve_chine** : Régime instable : vérifier avant tout calcul portant sur un véhicule d’origine chinoise.
 

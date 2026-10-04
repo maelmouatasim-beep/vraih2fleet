@@ -37,6 +37,7 @@ export type Unite =
   | 'annees'
   | 'kW'
   | 'jours'
+  | 'véhicules'
   | 'h'
   | 'CAD/USD';
 

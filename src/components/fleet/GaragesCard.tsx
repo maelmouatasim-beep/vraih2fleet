@@ -23,6 +23,7 @@ import { toast } from "@/hooks/use-toast";
 import { useGarages } from "@/hooks/useGarages";
 import { heuresFenetre, TARIFS_HQ, type GarageRow } from "@/lib/fleet/garages";
 import { cleGarage } from "@/lib/journey/infrastructure";
+import { HYPOTHESES } from "@/lib/tco";
 import { formateurCad } from "@/lib/format";
 import { Plus, Pencil, Trash2, Warehouse } from "lucide-react";
 
@@ -41,6 +42,9 @@ const VIDE = {
   departure_time: "",
   parking_spots: "",
   grid_connection_quote: "",
+  h2_refuelling: "auto",
+  h2_external_price_per_kg: "",
+  h2_detour_km_per_day: "",
 };
 
 const nombre = (s: string): number | null => {
@@ -75,6 +79,9 @@ export default function GaragesCard({ organizationId, depots }: GaragesCardProps
             departure_time: g.departure_time?.slice(0, 5) ?? "",
             parking_spots: g.parking_spots != null ? String(g.parking_spots) : "",
             grid_connection_quote: g.grid_connection_quote != null ? String(g.grid_connection_quote) : "",
+            h2_refuelling: g.h2_refuelling ?? "auto",
+            h2_external_price_per_kg: g.h2_external_price_per_kg != null ? String(g.h2_external_price_per_kg) : "",
+            h2_detour_km_per_day: g.h2_detour_km_per_day != null ? String(g.h2_detour_km_per_day) : "",
           },
     );
     setEdition(g);
@@ -91,6 +98,9 @@ export default function GaragesCard({ organizationId, depots }: GaragesCardProps
       departure_time: forme.departure_time || null,
       parking_spots: nombre(forme.parking_spots),
       grid_connection_quote: nombre(forme.grid_connection_quote),
+      h2_refuelling: forme.h2_refuelling || "auto",
+      h2_external_price_per_kg: nombre(forme.h2_external_price_per_kg),
+      h2_detour_km_per_day: nombre(forme.h2_detour_km_per_day),
     };
     try {
       if (edition === "nouveau") await creer.mutateAsync({ ...valeurs, organization_id: organizationId });
@@ -235,6 +245,27 @@ export default function GaragesCard({ organizationId, depots }: GaragesCardProps
             {champ("departure_time", "time")}
             {champ("parking_spots", "text", "0")}
             {champ("grid_connection_quote", "text", "$")}
+            <div className="space-y-1 sm:col-span-2">
+              <Label>{t("fleet.garages.fields.h2_refuelling")}</Label>
+              <Select value={forme.h2_refuelling} onValueChange={(v) => setForme({ ...forme, h2_refuelling: v })}>
+                <SelectTrigger data-testid="garage-h2-refuelling">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {(["auto", "externe", "depot"] as const).map((m) => (
+                    <SelectItem key={m} value={m}>
+                      {t(`fleet.garages.h2Modes.${m}`, { count: HYPOTHESES.seuil_station_h2_depot_vehicules.valeur })}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {forme.h2_refuelling !== "depot" && (
+              <>
+                {champ("h2_external_price_per_kg", "text", "$/kg")}
+                {champ("h2_detour_km_per_day", "text", "km")}
+              </>
+            )}
           </div>
           <p className="text-xs text-muted-foreground">{t("fleet.garages.powerHelp")}</p>
           <DialogFooter>

@@ -516,6 +516,9 @@ export type Database = {
           departure_time: string | null
           grid_connection_quote: number | null
           grid_quote_document_id: string | null
+          h2_detour_km_per_day: number | null
+          h2_external_price_per_kg: number | null
+          h2_refuelling: string
           hq_rate: string | null
           id: string
           name: string
@@ -534,6 +537,9 @@ export type Database = {
           departure_time?: string | null
           grid_connection_quote?: number | null
           grid_quote_document_id?: string | null
+          h2_detour_km_per_day?: number | null
+          h2_external_price_per_kg?: number | null
+          h2_refuelling?: string
           hq_rate?: string | null
           id?: string
           name: string
@@ -552,6 +558,9 @@ export type Database = {
           departure_time?: string | null
           grid_connection_quote?: number | null
           grid_quote_document_id?: string | null
+          h2_detour_km_per_day?: number | null
+          h2_external_price_per_kg?: number | null
+          h2_refuelling?: string
           hq_rate?: string | null
           id?: string
           name?: string

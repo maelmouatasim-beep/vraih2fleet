@@ -19,6 +19,7 @@ import type {
   Payback,
   PlanTco,
   PlanTcoEntree,
+  DecompositionVan,
   ResultatPlan,
   ResultatScenario,
   SpecVehicule,
@@ -32,6 +33,9 @@ function fluxVides(h: number): FluxAnnuels {
   const zero = () => new Array<number>(h + 1).fill(0);
   return {
     investissement: zero(),
+    investissementInfra: zero(),
+    residuelsInfra: zero(),
+    subventionsInfra: zero(),
     subventions: zero(),
     energie: zero(),
     entretien: zero(),
@@ -86,17 +90,25 @@ function prixEnergieAnnee(spec: SpecVehicule, vehicule: VehiculePlan, p: Paramet
     case 'BEV':
       return p.prixAnnee0.electriciteEffectiveParKwh * Math.pow(1 + p.inflations.electricite, annee);
     case 'FCEV':
-      return p.prixAnnee0.h2LivreParKg * Math.pow(1 + p.inflations.hydrogene, annee);
+      // Station EXTERNE : prix livré propre au véhicule (§3.5 v2.5).
+      return (vehicule.prixH2ParKg ?? p.prixAnnee0.h2LivreParKg) * Math.pow(1 + p.inflations.hydrogene, annee);
   }
+}
+
+/** Kilométrage annuel d'un scénario : le détour vers une station H2
+ *  externe ne s'ajoute qu'à l'alternative FCEV (§3.5 v2.5). */
+function kmScenario(spec: SpecVehicule, vehicule: VehiculePlan, nom: NomScenario): number {
+  return nom === 'alternative' && spec.technologie === 'FCEV' ? vehicule.kmParAn + (vehicule.kmDetourParAn ?? 0) : vehicule.kmParAn;
 }
 
 /** Émissions annuelles (t CO2e) d'un véhicule : [TTW, WTW]. */
 function emissionsAnnuelles(
   spec: SpecVehicule,
   vehicule: VehiculePlan,
+  km: number,
   p: ParametresProjet,
 ): [ttw: number, wtw: number] {
-  const energie = energieAnnuelleFacturee(spec, vehicule.kmParAn, p);
+  const energie = energieAnnuelleFacturee(spec, km, p);
   switch (spec.technologie) {
     case 'diesel': {
       if (vehicule.carburantReference === 'essence') {
@@ -186,10 +198,11 @@ function ajouterVehiculeAuScenario(
   // des dépenses taxables saisies AVANT TPS/TVQ — la part non récupérable
   // s'ajoute comme sur l'acquisition. L'assurance fait exception : les
   // primes ne sont pas assujetties à la TPS/TVQ, on saisit la prime payée.
-  const energieAnnuelle = energieAnnuelleFacturee(spec, vehicule.kmParAn, p);
+  const km = kmScenario(spec, vehicule, nom);
+  const energieAnnuelle = energieAnnuelleFacturee(spec, km, p);
   for (let n = debut + 1; n <= h; n++) {
     flux.energie[n] += energieAnnuelle * prixEnergieAnnee(spec, vehicule, p, n) * taxes;
-    flux.entretien[n] += vehicule.kmParAn * spec.entretienParKm * Math.pow(1 + p.inflations.entretien, n) * taxes;
+    flux.entretien[n] += km * spec.entretienParKm * Math.pow(1 + p.inflations.entretien, n) * taxes;
     // Assurance/immatriculation (§3.6) : $/an fournis, indexés à
     // l'inflation générale ; 0 si non fournis.
     flux.assurance[n] += spec.assuranceParAn * Math.pow(1 + p.inflations.generale, n);
@@ -201,7 +214,7 @@ function ajouterVehiculeAuScenario(
     flux.evenements[ev.annee] += ev.coutAvantTaxes * taxes;
   }
 
-  const [ttwAnnuel, wtwAnnuel] = emissionsAnnuelles(spec, vehicule, p);
+  const [ttwAnnuel, wtwAnnuel] = emissionsAnnuelles(spec, vehicule, km, p);
   return { ttw: ttwAnnuel * (h - debut), wtw: wtwAnnuel * (h - debut) };
 }
 
@@ -234,12 +247,15 @@ function ajouterInfra(
     for (const annee of achats) {
       const capexIndexe = site.capexAvantTaxes * Math.pow(1 + p.inflations.generale, annee);
       flux.investissement[annee] += capexIndexe * taxes;
+      flux.investissementInfra[annee] += capexIndexe * taxes;
       dernierAchat = annee;
       capexDernier = capexIndexe;
     }
     const ageFin = h - dernierAchat;
     if (ageFin < p.infra.dureeVieAns) {
-      flux.residuels[h] += (capexDernier * (p.infra.dureeVieAns - ageFin)) / p.infra.dureeVieAns;
+      const vr = (capexDernier * (p.infra.dureeVieAns - ageFin)) / p.infra.dureeVieAns;
+      flux.residuels[h] += vr;
+      flux.residuelsInfra[h] += vr;
     }
     for (const s of site.subventions) {
       if (s.annee > h) {
@@ -247,6 +263,7 @@ function ajouterInfra(
         continue;
       }
       flux.subventions[s.annee] += s.montant;
+      flux.subventionsInfra[s.annee] += s.montant;
     }
     for (let n = debut + 1; n <= h; n++) {
       // Entretien d'infrastructure : dépense taxable (taxes symétriques).
@@ -341,6 +358,29 @@ function calculerPayback(diffs: number[], actualise: boolean, p: ParametresProje
   return { annees: dernierNegatif + 1 - premierNegatif, raison: null, code: null };
 }
 
+/** VAN différentielle par poste (§6.4) : pour chaque poste, Σ actualisée
+ *  de (coût référence − coût alternative) ; les recettes (subventions,
+ *  valeurs résiduelles) comptent en sens inverse. Σ = vanDifferentielle. */
+function decomposerVan(alt: FluxAnnuels, ref: FluxAnnuels, p: ParametresProjet): DecompositionVan {
+  const d: DecompositionVan = { achat: 0, energie: 0, entretien: 0, assurance: 0, infrastructure: 0, subventions: 0, valeurResiduelle: 0 };
+  for (let n = 0; n <= p.horizonAns; n++) {
+    const f = 1 / Math.pow(1 + p.tauxActualisationNominal, n);
+    const cout = (x: FluxAnnuels, k: keyof FluxAnnuels) => x[k][n];
+    d.achat += f * (cout(ref, 'investissement') - cout(ref, 'investissementInfra') - (cout(alt, 'investissement') - cout(alt, 'investissementInfra')));
+    d.energie += f * (cout(ref, 'energie') - cout(alt, 'energie'));
+    d.entretien += f * (cout(ref, 'entretien') + cout(ref, 'evenements') - cout(alt, 'entretien') - cout(alt, 'evenements'));
+    d.assurance += f * (cout(ref, 'assurance') - cout(alt, 'assurance'));
+    d.infrastructure +=
+      f *
+      (cout(ref, 'investissementInfra') + cout(ref, 'opexInfra') - cout(ref, 'residuelsInfra') -
+        (cout(alt, 'investissementInfra') + cout(alt, 'opexInfra') - cout(alt, 'residuelsInfra')));
+    d.subventions += f * (cout(alt, 'subventions') - cout(ref, 'subventions'));
+    d.valeurResiduelle +=
+      f * (cout(alt, 'residuels') - cout(alt, 'residuelsInfra') - (cout(ref, 'residuels') - cout(ref, 'residuelsInfra')));
+  }
+  return d;
+}
+
 /** Point d'entrée du moteur. L'entrée est validée (zod) ; toute entrée
  *  invalide lève une erreur explicite. */
 export function calculerPlan(entree: PlanTcoEntree): ResultatPlan {
@@ -415,6 +455,8 @@ export function calculerPlan(entree: PlanTcoEntree): ResultatPlan {
     });
   }
 
+  const decompositionVan = decomposerVan(alternative.flux, reference.flux, p);
+
   return {
     engineVersion: ENGINE_VERSION,
     empreinteEntree: empreinte(plan),
@@ -430,6 +472,7 @@ export function calculerPlan(entree: PlanTcoEntree): ResultatPlan {
     co2EviteWtwTonnes,
     coutParTonneWtw,
     vueBudgetaire,
+    decompositionVan,
     partsInfra,
     avertissements,
   };

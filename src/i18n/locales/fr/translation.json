@@ -134,13 +134,21 @@
         "return_time": "Retour des véhicules",
         "departure_time": "Départ des véhicules",
         "parking_spots": "Places",
-        "grid_connection_quote": "Devis de raccordement ($)"
+        "grid_connection_quote": "Devis de raccordement ($)",
+        "h2_refuelling": "Ravitaillement des véhicules à hydrogène",
+        "h2_external_price_per_kg": "Prix livré à la station externe ($/kg, avant taxes)",
+        "h2_detour_km_per_day": "Détour pour la station externe (km aller-retour par jour)"
       },
       "rates": {
         "G": "G (petite puissance)",
         "M": "M (moyenne puissance)",
         "LG": "LG (grande puissance)",
         "autre": "Autre"
+      },
+      "h2Modes": {
+        "auto": "Automatique : station externe sous {{count}} véhicules H2, station au dépôt ensuite",
+        "externe": "Station externe (aucun investissement de station au dépôt)",
+        "depot": "Station au dépôt"
       }
     },
     "gvwr": {
@@ -5390,7 +5398,12 @@
       "connectionDetail": "Raccordement : {{demandes}} kW demandés (bornes à pleine puissance) · {{disponibles}} kW disponibles · {{supplementaires}} kW supplémentaires.",
       "presumedCapacity": "Puissance disponible PRÉSUMÉE (registre) : renseignez la puissance réelle du garage dans Ma flotte › Garages.",
       "tier": "Palier {{palier}} de mise à niveau retenu.",
-      "noUpgrade": "Les bornes tiennent dans la capacité existante : aucune mise à niveau."
+      "noUpgrade": "Les bornes tiennent dans la capacité existante : aucune mise à niveau.",
+      "h2ExternalAuto": "{{count}} véhicule(s) hydrogène : ravitaillement à une station externe, aucun investissement de station au dépôt (moins de {{seuil}} véhicules H2 dans ce garage, seuil du registre ; modifiable dans Ma flotte › Garages).",
+      "h2External": "{{count}} véhicule(s) hydrogène : ravitaillement à une station externe (choix du garage), aucun investissement de station au dépôt.",
+      "h2ExternalPrice": "Prix livré propre au garage : {{price}}/kg.",
+      "h2ExternalProjectPrice": "Prix livré : celui du projet (registre ou donnée client).",
+      "h2Detour": "Détour : {{km}} km aller-retour par jour d'utilisation, compté dans l'énergie et l'entretien."
     },
     "settings": {
       "button": "Paramètres du projet",

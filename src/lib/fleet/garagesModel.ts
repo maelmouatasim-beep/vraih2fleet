@@ -48,6 +48,10 @@ export function caracteristiquesGarages(garages: GarageRow[]): Map<string, Carac
       coutBorneDevis: lireDevisBornes(g.charger_unit_quote),
       fenetreRecharge:
         g.return_time && g.departure_time ? { retour: g.return_time, depart: g.departure_time } : undefined,
+      ravitaillementH2:
+        g.h2_refuelling === "depot" || g.h2_refuelling === "externe" ? g.h2_refuelling : "auto",
+      prixH2ExterneParKg: g.h2_external_price_per_kg ?? undefined,
+      detourH2KmParJour: g.h2_detour_km_per_day ?? undefined,
     });
   }
   return m;

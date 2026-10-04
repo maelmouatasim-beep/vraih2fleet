@@ -220,7 +220,7 @@ describe('référence essence (revue 1.8)', () => {
   });
 });
 
-describe('délai de récupération sans écart (engineVersion 2.4.0)', () => {
+describe('délai de récupération sans écart (depuis engineVersion 2.4.0)', () => {
   it("scénarios identiques (aucun véhicule ne change) : « sans objet », jamais « 0 an »", () => {
     const plan = base();
     const v = plan.vehicules[0];
@@ -235,5 +235,70 @@ describe('délai de récupération sans écart (engineVersion 2.4.0)', () => {
   it('un véhicule électrifié garde un délai ou « jamais » avec raison (non touché)', () => {
     const r = calculerPlan(base());
     expect(r.paybackActualise.code).not.toBe('aucun_ecart');
+  });
+});
+
+describe('décomposition de la VAN par poste (engineVersion 2.5.0, §6.4)', () => {
+  it('la somme des sept postes égale la VAN, au centième près ; infrastructure et subventions séparées', () => {
+    const r = calculerPlan(base());
+    const d = r.decompositionVan;
+    const somme = d.achat + d.energie + d.entretien + d.assurance + d.infrastructure + d.subventions + d.valeurResiduelle;
+    expect(somme).toBeCloseTo(r.vanDifferentielle, 2);
+    expect(d.achat).toBeLessThan(0); // le BEV coûte plus cher à l'achat
+    expect(d.energie).toBeGreaterThan(0); // mais moins en énergie
+    expect(d.infrastructure).toBeLessThan(0); // bornes
+    expect(d.subventions).toBeGreaterThan(0);
+    // la référence n'a pas d'infrastructure : flux d'infrastructure à zéro
+    expect(r.reference.flux.investissementInfra.every((x) => x === 0)).toBe(true);
+  });
+
+  it('sans infrastructure ni subvention, ces postes sont nuls', () => {
+    const plan = base();
+    plan.sitesInfra = [];
+    plan.vehicules[0] = { ...plan.vehicules[0], subventionsAlternative: [] };
+    const d = calculerPlan(plan).decompositionVan;
+    expect(d.infrastructure).toBe(0);
+    expect(d.subventions).toBe(0);
+  });
+});
+
+describe('ravitaillement H2 à une station externe (engineVersion 2.5.0, §3.5)', () => {
+  const fcev = (extra: Record<string, number> = {}): PlanTcoEntree => {
+    const plan = base();
+    const v = plan.vehicules[0];
+    plan.vehicules[0] = {
+      ...v,
+      alternative: { technologie: 'FCEV', prixAvantTaxes: 180000, consommationPar100km: 8, entretienParKm: 0.12, evenements: [] },
+      subventionsAlternative: [],
+      ...extra,
+    };
+    plan.sitesInfra = [];
+    return plan;
+  };
+
+  it('sans prix ni détour propres, résultat et empreinte inchangés (cas existants intacts)', () => {
+    const a = calculerPlan(fcev());
+    const b = calculerPlan(fcev({}));
+    expect(b.empreinteEntree).toBe(a.empreinteEntree);
+    expect(b.vanDifferentielle).toBe(a.vanDifferentielle);
+  });
+
+  it("prix propre à la station : seule l'énergie de l'alternative change, proportionnellement", () => {
+    const a = calculerPlan(fcev());
+    const prixProjet = PARAMETRES_CAS.prixAnnee0.h2LivreParKg;
+    const b = calculerPlan(fcev({ prixH2ParKg: prixProjet * 1.2 }));
+    expect(b.alternative.flux.energie[3]).toBeCloseTo(a.alternative.flux.energie[3] * 1.2, 6);
+    expect(b.reference.flux.energie[3]).toBe(a.reference.flux.energie[3]);
+    expect(b.alternative.flux.entretien[3]).toBe(a.alternative.flux.entretien[3]);
+  });
+
+  it("le détour ajoute des km à l'énergie, à l'entretien et aux émissions de l'alternative seulement", () => {
+    const a = calculerPlan(fcev());
+    const b = calculerPlan(fcev({ kmDetourParAn: 3000 }));
+    expect(b.alternative.flux.energie[3]).toBeCloseTo(a.alternative.flux.energie[3] * (33000 / 30000), 6);
+    expect(b.alternative.flux.entretien[3]).toBeCloseTo(a.alternative.flux.entretien[3] * (33000 / 30000), 6);
+    expect(b.alternative.emissionsWtwTonnes).toBeGreaterThan(a.alternative.emissionsWtwTonnes);
+    expect(b.reference.flux.energie[3]).toBe(a.reference.flux.energie[3]);
+    expect(b.kmActualises).toBe(a.kmActualises); // km de SERVICE inchangés
   });
 });

@@ -103,7 +103,19 @@ export default function DepotInfrastructureCard({ infra, anneeReference }: Depot
             )}
             {d.vehiculesFcev.length > 0 && (
               <p className="text-sm text-muted-foreground">
-                {t("journey.infra.h2", { count: d.vehiculesFcev.length, amount: argent.format(d.capexStationH2) })}
+                {d.ravitaillementH2?.mode === "externe"
+                  ? t(d.ravitaillementH2.origine === "auto" ? "journey.infra.h2ExternalAuto" : "journey.infra.h2External", {
+                      count: d.vehiculesFcev.length,
+                      seuil: d.ravitaillementH2.seuil,
+                    }) +
+                    " " +
+                    (d.ravitaillementH2.prixParKg != null
+                      ? t("journey.infra.h2ExternalPrice", { price: argent.format(d.ravitaillementH2.prixParKg) })
+                      : t("journey.infra.h2ExternalProjectPrice")) +
+                    (d.ravitaillementH2.detourKmParJour > 0
+                      ? " " + t("journey.infra.h2Detour", { km: d.ravitaillementH2.detourKmParJour })
+                      : "")
+                  : t("journey.infra.h2", { count: d.vehiculesFcev.length, amount: argent.format(d.capexStationH2) })}
               </p>
             )}
             {d.categoriesInconnues.length > 0 && (

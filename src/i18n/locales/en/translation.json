@@ -134,13 +134,21 @@
         "return_time": "Vehicles return",
         "departure_time": "Vehicles leave",
         "parking_spots": "Parking spots",
-        "grid_connection_quote": "Grid connection quote ($)"
+        "grid_connection_quote": "Grid connection quote ($)",
+        "h2_refuelling": "Hydrogen vehicle refuelling",
+        "h2_external_price_per_kg": "Delivered price at the external station ($/kg, before taxes)",
+        "h2_detour_km_per_day": "Detour to the external station (round-trip km per day)"
       },
       "rates": {
         "G": "G (small power)",
         "M": "M (medium power)",
         "LG": "LG (large power)",
         "autre": "Other"
+      },
+      "h2Modes": {
+        "auto": "Automatic: external station below {{count}} H2 vehicles, depot station above",
+        "externe": "External station (no depot station investment)",
+        "depot": "Depot station"
       }
     },
     "gvwr": {
@@ -5390,7 +5398,12 @@
       "connectionDetail": "Grid connection: {{demandes}} kW requested (chargers at full power) · {{disponibles}} kW available · {{supplementaires}} kW extra.",
       "presumedCapacity": "PRESUMED available capacity (registry): enter the depot's real capacity in My fleet › Depots.",
       "tier": "Upgrade tier {{palier}} applied.",
-      "noUpgrade": "The chargers fit within the existing capacity: no upgrade."
+      "noUpgrade": "The chargers fit within the existing capacity: no upgrade.",
+      "h2ExternalAuto": "{{count}} hydrogen vehicle(s): refuelling at an external station, no depot station investment (fewer than {{seuil}} H2 vehicles at this depot, registry threshold; editable in My fleet › Depots).",
+      "h2External": "{{count}} hydrogen vehicle(s): refuelling at an external station (depot setting), no depot station investment.",
+      "h2ExternalPrice": "Depot-specific delivered price: {{price}}/kg.",
+      "h2ExternalProjectPrice": "Delivered price: the project price (registry or client data).",
+      "h2Detour": "Detour: {{km}} round-trip km per operating day, counted in energy and maintenance."
     },
     "settings": {
       "button": "Project settings",

@@ -930,6 +930,27 @@ export const HYPOTHESES = {
     statut: 'a_valider',
   },
 
+  seuil_station_h2_depot_vehicules: {
+    id: 'seuil_station_h2_depot_vehicules',
+    description:
+      'Nombre de véhicules à hydrogène d’un garage à partir duquel une station au dépôt est proposée ; en dessous, ravitaillement à une station externe (aucun investissement de station au dépôt)',
+    valeur: 5,
+    unite: 'véhicules',
+    plage: { basse: 3, haute: 10 },
+    region: 'QC',
+    source: {
+      organisme: 'H2Fleet',
+      document:
+        'Convention de dimensionnement (méthodologie §3.5) : une station au dépôt (≈ 3,5 M$, registre) n’est pas amortie par quelques camions ; le choix reste modifiable par garage (Ma flotte › Garages)',
+      annee: 2026,
+      url: 'https://github.com/maelmouatasim-beep/vraih2fleet/blob/main/docs/tco-methodologie.md',
+    },
+    dateVerification: '2026-10-05',
+    statut: 'estimation',
+    notes:
+      'Seuil de proposition, pas une règle : le prix livré de la station externe reprend le prix de l’hydrogène livré du registre, sauf prix propre saisi pour le garage.',
+  },
+
   // ----- Trajectoires, change, douanes ----------------------------------------
   trajectoire_prix_batterie: {
     id: 'trajectoire_prix_batterie',

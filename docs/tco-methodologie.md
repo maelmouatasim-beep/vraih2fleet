@@ -53,6 +53,14 @@ Version 2.3 (test terrain) — 2026-10-02 — statut : **en validation**
 > « 0 an ». Sélection « Économies d'abord » (hors moteur, §11.1) :
 > meilleur sous-ensemble de véhicules PAR GARAGE, bornes et raccordement
 > compris (voir §11.1).
+> engineVersion 2.5.0 : (1) **ravitaillement H₂ à une station externe**
+> (§3.5) — prix livré propre ($/kg) et km de détour par véhicule, sans
+> capex de station au dépôt ; par défaut sous le seuil
+> `seuil_station_h2_depot_vehicules` (estimation) ; (2) **décomposition
+> de la VAN par poste** (§6.4) ; (3) flux d'infrastructure identifiés
+> dans les sorties (investissement, valeur résiduelle, subventions).
+> Entrées existantes inchangées : mêmes empreintes, cas de référence
+> identiques au centième.
 
 Ce document est la référence unique de la méthode de calcul. Il est écrit
 pour être lu par un directeur des finances municipal : chaque formule est
@@ -447,6 +455,28 @@ de vie (valeur résiduelle linéaire nulle). En fin d'horizon, le dernier
 équipement est crédité de sa valeur résiduelle **linéaire** au prorata
 de sa durée de vie restante.
 
+**Ravitaillement H₂ : station au dépôt ou station externe (v2.5)**.
+Pour les véhicules à hydrogène d'un garage, deux options :
+
+- **station au dépôt** : capex `station_h2_depot` (registre), payé à la
+  mise en service et réparti comme ci-dessus ;
+- **station externe** : **aucun capex de station** ; chaque véhicule
+  paie le **prix livré** de la station (par défaut le prix de
+  l'hydrogène livré du projet, ou un prix propre saisi pour le garage) et
+  parcourt un **détour** optionnel :
+  `kmDétour/an = détour (km aller-retour par jour) × jours d'utilisation`
+  (`jours_utilisation_an`). Ces km s'ajoutent à l'énergie, à l'entretien
+  et aux émissions de l'alternative FCEV seulement (la référence diesel
+  n'est pas touchée) ; les km de service (km actualisés, coût par km)
+  restent ceux du véhicule.
+
+Choix par défaut (« automatique ») : **station externe tant que le
+garage compte moins de N véhicules H₂**, N =
+`seuil_station_h2_depot_vehicules` (statut **estimation** : une station
+d'environ 3,5 M$ n'est pas amortie par quelques camions) ; station au
+dépôt à partir de N. Le choix reste modifiable par garage (Ma flotte ›
+Garages) et l'écran Plan affiche la règle appliquée.
+
 ### 3.6 Assurance et immatriculation
 
 Comptées seulement si fournies par l'organisme (beaucoup de municipalités
@@ -602,6 +632,26 @@ Chaque résultat comporte :
 - la **liste des hypothèses par défaut utilisées** avec leur statut
   (`vérifié` / `estimation` / `à_valider`) — le rapport final affiche
   « ce calcul repose sur N hypothèses à valider » avec la liste.
+
+### 6.4 Décomposition de la VAN par poste (v2.5)
+
+La VAN différentielle est ventilée en sept postes, chacun actualisé comme
+le total :
+
+```
+VAN_poste = Σ_{n=0..H} (Coût_ref,poste(n) − Coût_alt,poste(n)) / (1 + r)^n
+```
+
+- **achat** : investissement des véhicules (hors infrastructure) ;
+- **énergie** ; **entretien** (événements datés compris) ; **assurance** ;
+- **infrastructure** : bornes, raccordement, station H₂ et leur
+  entretien, nets de leur valeur résiduelle ;
+- **subventions** et **valeur résiduelle des véhicules** : recettes,
+  comptées en sens inverse (`Recette_alt − Recette_ref`).
+
+Positif = le plan coûte moins cher que le statu quo sur ce poste. Par
+construction (testé) : `Σ VAN_poste = VAN différentielle` au centième.
+Affichée aux étapes Stratégies et Plan, dans le PDF et dans l'Excel.
 
 ## 7. Incertitude et stress test
 
