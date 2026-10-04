@@ -5049,7 +5049,8 @@
         "vehicles": "{{ze}} zero-emission out of {{total}} vehicles",
         "co2": "{{ttw}} t CO2e avoided at the tailpipe · {{wtw}} t full cycle (used in totals)",
         "infra": "Infrastructure: {{amount}}",
-        "subsidies": "Subsidies: {{amount}}"
+        "subsidies": "Subsidies: {{amount}}",
+        "investment": "Investment: {{amount}} (status quo: {{sq}}, gap: {{diff}})"
       },
       "noProfitable": "No profitable electrification under current assumptions (garage chargers and grid connection included).",
       "selectionGarage": "{{garage}}: {{retenus}} kept out of {{candidats}} profitable on their own, garage infrastructure included",
@@ -5117,7 +5118,8 @@
         "investment": "Investment (capital, gross)",
         "subsidies": "Expected subsidies",
         "toFinance": "Left to finance",
-        "netSavings": "Savings vs status quo (NPV)"
+        "netSavings": "Savings vs status quo (NPV)",
+        "investmentDetail": "Status quo (same replacements with new diesels): {{sq}} — gap: {{diff}}"
       },
       "chartTitle": "Annual plan budget",
       "chartSubtitle": "Left to finance (investment − subsidies) and operating costs per year; the line shows the yearly gap vs status quo (positive = the plan costs less that year).",
@@ -5658,6 +5660,21 @@
       "emailNote": "Email summary to project members (preference in Settings) once the email service is connected.",
       "energyPlanChanged": "The plan itself has also changed since the report (NPV presented then: {{van}}).",
       "energyRegenerate": "Regenerate the report before presenting it."
+    },
+    "van": {
+      "title": "Where the gap with the status quo comes from",
+      "subtitle": "Discounted savings of the plan, item by item, over the analysis horizon: green = the plan costs less, red = it costs more.",
+      "total": "Total gap (NPV)",
+      "note": "Sum of items = plan NPV. Subsidies and resale value are revenues; infrastructure is net of its residual value (methodology §6.4).",
+      "postes": {
+        "achat": "Vehicle purchase",
+        "energie": "Energy",
+        "entretien": "Maintenance and repairs",
+        "assurance": "Insurance",
+        "infrastructure": "Infrastructure (chargers, grid connection, H2 station)",
+        "subventions": "Subsidies",
+        "valeurResiduelle": "Vehicle resale value"
+      }
     }
   },
   "energyClient": {

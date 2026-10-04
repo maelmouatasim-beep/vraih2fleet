@@ -5049,7 +5049,8 @@
         "vehicles": "{{ze}} zéro émission sur {{total}} véhicules",
         "co2": "{{ttw}} t CO2e évitées au pot d'échappement · {{wtw}} t sur le cycle complet (retenu dans les totaux)",
         "infra": "Infrastructure : {{amount}}",
-        "subsidies": "Subventions : {{amount}}"
+        "subsidies": "Subventions : {{amount}}",
+        "investment": "Investissement : {{amount}} (statu quo : {{sq}}, écart : {{diff}})"
       },
       "noProfitable": "Aucune électrification rentable avec les hypothèses actuelles (bornes et raccordement du garage compris).",
       "selectionGarage": "{{garage}} : {{retenus}} retenu(s) sur {{candidats}} rentable(s) seul(s), infrastructure du garage comptée",
@@ -5117,7 +5118,8 @@
         "investment": "Investissement (PTI, brut)",
         "subsidies": "Subventions prévues",
         "toFinance": "Reste à financer",
-        "netSavings": "Économie vs statu quo (VAN)"
+        "netSavings": "Économie vs statu quo (VAN)",
+        "investmentDetail": "Statu quo (mêmes remplacements en diesel neuf) : {{sq}} — écart : {{diff}}"
       },
       "chartTitle": "Budget annuel du plan",
       "chartSubtitle": "Reste à financer (investissement − subventions) et fonctionnement, par année ; la ligne montre l'écart annuel vs statu quo (positif = le plan coûte moins cher cette année-là).",
@@ -5658,6 +5660,21 @@
       "emailNote": "Résumé par courriel aux membres du projet (préférence dans Paramètres) dès que le service de courriel sera branché.",
       "energyPlanChanged": "Le plan a aussi changé depuis le rapport (VAN présentée alors : {{van}}).",
       "energyRegenerate": "Régénérez le rapport avant de le présenter."
+    },
+    "van": {
+      "title": "D'où vient l'écart avec le statu quo",
+      "subtitle": "Économie actualisée du plan, poste par poste, sur l'horizon d'analyse : vert = le plan coûte moins cher, rouge = il coûte plus cher.",
+      "total": "Écart total (VAN)",
+      "note": "Somme des postes = VAN du plan. Subventions et valeur de revente sont des recettes ; l'infrastructure est nette de sa valeur résiduelle (méthodologie §6.4).",
+      "postes": {
+        "achat": "Achat des véhicules",
+        "energie": "Énergie",
+        "entretien": "Entretien et réparations",
+        "assurance": "Assurance",
+        "infrastructure": "Infrastructure (bornes, raccordement, station H2)",
+        "subventions": "Subventions",
+        "valeurResiduelle": "Valeur de revente des véhicules"
+      }
     }
   },
   "energyClient": {

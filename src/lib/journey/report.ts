@@ -16,6 +16,7 @@ import { libelleStrategieRetenue, type StrategieConstruite, type StrategieRetenu
 import { texteRecuperation } from "./payback";
 import { texteExplication } from "./subsidy-explain";
 import type { AnalyseEquite, ScenarioReduction } from "./fmv";
+import { investissementCompare, LIBELLES_POSTES, POSTES_VAN } from "./synthese";
 
 export type Cellule = string | number | null;
 
@@ -276,6 +277,12 @@ const L = {
     co2: "CO2e évité — cycle complet, puits à la roue (t) — retenu dans les totaux",
     co2Ttw: "CO2e évité — au pot d'échappement, réservoir à la roue (t)",
     payback: "Délai de récupération actualisé (ans)",
+    invBrut: "Investissement total du plan (dollars courants)",
+    invSq: "Investissement du statu quo — mêmes remplacements en diesel neuf (dollars courants)",
+    invEcart: "Écart d'investissement : plan − statu quo",
+    titreDecomposition: "D'OÙ VIENT L'ÉCART — VAN par poste (positif = le plan coûte moins cher ; subventions et valeur de revente sont des recettes ; méthodologie §6.4)",
+    colonnesDecomposition: ["Poste", "Économie actualisée ($)"],
+    totalDecomposition: "Total = VAN",
     colonnesVehicules: ["Unité", "Technologie cible", "Année d'achat", "km/an retenus", "Durée de vie (ans)", "Prix avant taxes (réf. diesel)", "Prix avant taxes (cible)", "Subventions retenues", "Total subventions", "Règle appliquée et raison (programme par programme)"],
     an: "an",
     sites: ["Infrastructure par garage (avant taxes)", "Bornes", "kW demandés", "kW disponibles", "Palier", "Raccordement", "Station H2", "Total"],
@@ -303,6 +310,12 @@ const L = {
     co2: "CO2e avoided — full cycle, well-to-wheel (t) — used in totals",
     co2Ttw: "CO2e avoided — tailpipe, tank-to-wheel (t)",
     payback: "Discounted payback (years)",
+    invBrut: "Total investment of the plan (current dollars)",
+    invSq: "Investment of the status quo — same replacements with new diesels (current dollars)",
+    invEcart: "Investment gap: plan − status quo",
+    titreDecomposition: "WHERE THE GAP COMES FROM — NPV by cost item (positive = the plan costs less; subsidies and resale value are revenues; methodology §6.4)",
+    colonnesDecomposition: ["Cost item", "Discounted savings ($)"],
+    totalDecomposition: "Total = NPV",
     colonnesVehicules: ["Unit", "Target technology", "Purchase year", "km/yr used", "Lifetime (years)", "Price before taxes (diesel ref.)", "Price before taxes (target)", "Subsidies used", "Total subsidies", "Rule applied and reason (program by program)"],
     an: "year",
     sites: ["Infrastructure by depot (before taxes)", "Chargers", "kW requested", "kW available", "Tier", "Grid connection", "H2 station", "Total"],
@@ -353,12 +366,20 @@ export function construireClasseurPlan(
     [l.tcoPlan, resultat.alternative.tcoActualise],
     [l.tcoSq, resultat.reference.tcoActualise],
     [l.van, resultat.vanDifferentielle],
+    [l.invBrut, investissementCompare(resultat).brut],
+    [l.invSq, investissementCompare(resultat).statuQuo],
+    [l.invEcart, investissementCompare(resultat).surcout],
     [l.co2Ttw, resultat.co2EviteTtwTonnes],
     [l.co2, resultat.co2EviteWtwTonnes],
     [
       l.payback,
       resultat.paybackActualise.annees ?? texteRecuperation(resultat.paybackActualise, resultat.horizonAns, langue === "en"),
     ],
+    [],
+    [l.titreDecomposition],
+    [l.colonnesDecomposition[0], l.colonnesDecomposition[1]],
+    ...POSTES_VAN.map((p): Cellule[] => [LIBELLES_POSTES[langue][p], resultat.decompositionVan[p]]),
+    [l.totalDecomposition, resultat.vanDifferentielle],
   ];
 
   const vehicules: Cellule[][] = [

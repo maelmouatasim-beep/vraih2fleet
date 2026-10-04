@@ -41,6 +41,8 @@ import DepotInfrastructureCard from "./DepotInfrastructureCard";
 import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 import { INFOBULLE_GRAPHIQUE } from "@/components/layout/charts";
 import { StatCard, StatGrid } from "@/components/layout/StatCard";
+import VanDecompositionCard from "./VanDecompositionCard";
+import { investissementCompare } from "@/lib/journey/synthese";
 import { LoadingState } from "@/components/layout/States";
 
 interface PlanStepProps {
@@ -112,6 +114,7 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
   }
 
   const { resultat, remplacements, totaux } = donnees;
+  const investissement = investissementCompare(resultat);
   const graphe = resultat.vueBudgetaire.map((l) => ({
     annee: String(l.annee),
     pti: Math.round(l.resteAFinancerAlt),
@@ -160,9 +163,22 @@ export default function PlanStep({ projectId, project }: PlanStepProps) {
             ],
           ] as const
         ).map(([cle, valeur]) => (
-          <StatCard key={cle} libelle={t(`journey.plan.stats.${cle}`)} valeur={valeur} />
+          <StatCard
+            key={cle}
+            libelle={t(`journey.plan.stats.${cle}`)}
+            valeur={valeur}
+            detail={
+              cle === "investment"
+                ? t("journey.plan.stats.investmentDetail", {
+                    sq: argent.format(investissement.statuQuo),
+                    diff: (investissement.surcout >= 0 ? "+" : "") + argent.format(investissement.surcout),
+                  })
+                : undefined
+            }
+          />
         ))}
       </StatGrid>
+      <VanDecompositionCard resultat={resultat} />
 
       <Card>
         <CardHeader>

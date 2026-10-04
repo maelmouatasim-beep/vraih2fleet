@@ -58,6 +58,8 @@ import type { Json } from "@/integrations/supabase/types";
 import { cn } from "@/lib/utils";
 import { CheckCircle2, ClipboardCheck, Loader2, SlidersHorizontal } from "lucide-react";
 import StressTestPanel from "./StressTestPanel";
+import VanDecompositionCard from "./VanDecompositionCard";
+import { investissementCompare } from "@/lib/journey/synthese";
 import { traduireAvertissement } from "@/lib/tco/translations-en";
 import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 import { LoadingState } from "@/components/layout/States";
@@ -297,6 +299,18 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
                   ),
                 })}
           </p>
+          {(() => {
+            const inv = investissementCompare(r);
+            return (
+              <p data-testid="strategy-investment">
+                {t("journey.strategies.metrics.investment", {
+                  amount: argent.format(inv.brut),
+                  sq: argent.format(inv.statuQuo),
+                  diff: (inv.surcout >= 0 ? "+" : "") + argent.format(inv.surcout),
+                })}
+              </p>
+            );
+          })()}
           <p>{t("journey.strategies.metrics.infra", { amount: argent.format(s.infraCapex) })}</p>
           <p>
             {t("journey.strategies.metrics.subsidies", {
@@ -533,6 +547,7 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
         </CardContent>
       </Card>
 
+      {selectionnee?.resultat && <VanDecompositionCard resultat={selectionnee.resultat} />}
       {selectionnee?.plan && <StressTestPanel plan={selectionnee.plan} />}
 
       <OptimizerConstraintsDialog

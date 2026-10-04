@@ -12,6 +12,7 @@ import { ENGINE_VERSION, LISTE_HYPOTHESES, type ResultatPlan } from "@/lib/tco";
 import type { ResultatSensibilite } from "@/lib/tco";
 import { libelleStrategieRetenue, type StrategieConstruite } from "@/lib/journey/strategies";
 import { libelleCategorie, lignePiece, TEXTES_FMV, valeursPiece, type MetaRapport } from "@/lib/journey/report";
+import { investissementCompare, LIBELLES_POSTES, lignesDecomposition } from "@/lib/journey/synthese";
 import { raisonJamais, texteRecuperation } from "@/lib/journey/payback";
 import {
   descriptionHypothese,
@@ -48,7 +49,9 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
     ? { verifie: "verified", estimation: "estimate", a_valider: "to validate" }
     : { verifie: "vérifié", estimation: "estimation", a_valider: "à valider" };
   const strategieLib = libelleStrategieRetenue(meta.strategieRetenue ?? { cle: null, ecarts: 0 }, langue);
-  const investissement = resultat.vueBudgetaire.reduce((a, l) => a + l.investissementAlt, 0);
+  const inv = investissementCompare(resultat);
+  const investissement = inv.brut;
+  const ecartInv = (inv.surcout >= 0 ? "+" : "") + cad(inv.surcout);
   const reste = resultat.vueBudgetaire.reduce((a, l) => a + l.resteAFinancerAlt, 0);
   const achats = plan.vehicules
     .filter((v) => v.alternative.technologie !== "diesel")
@@ -68,14 +71,14 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
   const constats = en
     ? [
         `- ${strategie.nbZeroEmission} of ${strategie.nbVehicules} vehicles move to zero emission${achats.length ? `, purchased between ${achats[0]} and ${achats[achats.length - 1]}` : ""}.`,
-        `- Total investment: ${cad(investissement)} in current dollars, including ${cad(strategie.infra.totalCapex)} for charging and grid connection.`,
+        `- Total investment: ${cad(investissement)} in current dollars, including ${cad(strategie.infra.totalCapex)} for charging and grid connection; the status quo (same replacements with new diesels) would invest ${cad(inv.statuQuo)}, a gap of ${ecartInv}.`,
         `- Expected subsidies: ${cad(strategie.subventionsTotal)}; amount left to finance: ${cad(reste)}.`,
         `- Stress test: cautious-scenario NPV of ${cad(sc.prudent.van)}, favourable ${cad(sc.favorable.van)} (risk ${libRisque.toLowerCase()}).`,
         `- CO2e avoided: ${nb(resultat.co2EviteWtwTonnes)} t over the full cycle, ${nb(resultat.co2EviteTtwTonnes)} t at the tailpipe.`,
       ]
     : [
         `- ${strategie.nbZeroEmission} des ${strategie.nbVehicules} véhicules passent au zéro émission${achats.length ? `, achetés entre ${achats[0]} et ${achats[achats.length - 1]}` : ""}.`,
-        `- Investissement total : ${cad(investissement)} en dollars courants, dont ${cad(strategie.infra.totalCapex)} pour la recharge et le raccordement.`,
+        `- Investissement total : ${cad(investissement)} en dollars courants, dont ${cad(strategie.infra.totalCapex)} pour la recharge et le raccordement ; le statu quo (mêmes remplacements en diesel neuf) investirait ${cad(inv.statuQuo)}, soit un écart de ${ecartInv}.`,
         `- Subventions prévues : ${cad(strategie.subventionsTotal)} ; reste à financer : ${cad(reste)}.`,
         `- Stress test : VAN de ${cad(sc.prudent.van)} dans le scénario prudent, ${cad(sc.favorable.van)} dans le favorable (risque ${libRisque.toLowerCase()}).`,
         `- CO2e évité : ${nb(resultat.co2EviteWtwTonnes)} t sur le cycle complet, ${nb(resultat.co2EviteTtwTonnes)} t au pot d'échappement.`,
@@ -219,6 +222,29 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
               : "Le statu quo remplace les mêmes véhicules, les mêmes années, par des diesels neufs équivalents."}
           </Text>
         </Piece>
+
+        {lignesDecomposition(resultat.decompositionVan).length > 0 && (
+          <Piece
+            numero={piece()}
+            titre={en ? "Where the gap comes from: NPV by cost item" : "D'où vient l'écart : VAN par poste"}
+            sousTitre={
+              en
+                ? "Discounted savings of the plan vs the status quo, item by item (positive = the plan costs less); subsidies and resale value are revenues"
+                : "Économie actualisée du plan par rapport au statu quo, poste par poste (positif = le plan coûte moins cher) ; subventions et valeur de revente sont des recettes"
+            }
+            source={source}
+          >
+            <Tableau
+              colonnes={[
+                { titre: en ? "Cost item" : "Poste", flex: 3 },
+                { titre: en ? "Discounted savings" : "Économie actualisée", flex: 1.2, droite: true },
+              ]}
+              lignes={lignesDecomposition(resultat.decompositionVan).map((l) => [LIBELLES_POSTES[langue][l.poste], cad(l.montant)])}
+              total={[en ? "Total = NPV" : "Total = VAN", cad(van)]}
+              negatifs
+            />
+          </Piece>
+        )}
 
         {avertissements.length > 0 && (
           <View>
