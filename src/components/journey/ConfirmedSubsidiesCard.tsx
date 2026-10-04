@@ -27,6 +27,7 @@ import { libelleCourtProgramme } from "@/lib/confirmedSubsidies";
 import { PROGRAMMES } from "@/lib/tco";
 import { BadgeCheck, Loader2, Trash2 } from "lucide-react";
 import { nomCourtProgramme } from "@/lib/tco/translations-en";
+import { formateurCad } from "@/lib/format";
 
 const selectCls =
   "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -109,19 +110,15 @@ export default function ConfirmedSubsidiesCard({ projectId, vehicules }: Confirm
             <TableBody>
               {lignes.map((l) => (
                 <TableRow key={l.id}>
-                  <TableCell className="font-medium">{uniteParId.get(l.vehicle_id) ?? "—"}</TableCell>
+                  <TableCell className="font-medium whitespace-nowrap">{uniteParId.get(l.vehicle_id) ?? "—"}</TableCell>
                   <TableCell>
                     {l.program_id === "autre"
                       ? libelleCourtProgramme(l.program_id, l.label)
                       : nomCourtProgramme(l.program_id, langue)}{" "}
                     <Badge variant="secondary">{t("confirmedSubsidies.confirmed")}</Badge>
                   </TableCell>
-                  <TableCell className="text-right">
-                    {l.amount.toLocaleString(i18n.language.startsWith("fr") ? "fr-CA" : "en-CA", {
-                      style: "currency",
-                      currency: "CAD",
-                      maximumFractionDigits: 0,
-                    })}
+                  <TableCell className="text-right whitespace-nowrap">
+                    {formateurCad(i18n.language).format(l.amount)}
                   </TableCell>
                   <TableCell>{l.payment_year ?? t("confirmedSubsidies.purchaseYear")}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">{l.document_reference}</TableCell>
