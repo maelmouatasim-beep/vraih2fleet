@@ -453,6 +453,21 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   indicateurs, chargements unifiés ; `scripts/e2e-visuel.mjs` en CI
   (156 captures, 0 problème ; 17 débordements avant).
 
+- **Retours du test en ligne (5 points) : LIVRÉS, en attente du « ok ».**
+  (1) « Économies d'abord » = meilleur sous-ensemble PAR GARAGE (sac à
+  dos sur les kW par marche de raccordement, `selectionGarage.ts`,
+  re-chiffrage moteur + amélioration locale, méthodologie §11.1),
+  explication à l'écran ; l'optimiseur essaie les mêmes sous-ensembles ;
+  (2) moteur 2.4.0 : récupération « sans objet » (`aucun_ecart`, « — »)
+  quand aucun véhicule ne change ; (3) démo réaliste (PNBV, garages
+  renseignés, PAGTCP fictive, plan nuancé, CL-01 hydrogène justifié par
+  l'hiver) + subventions confirmées comptées en Faisabilité ; (4) carte
+  projet = vrai nombre de véhicules ; (5) rapports : exigences du Fonds
+  municipal vert (`src/lib/journey/fmv.ts` : équité par service/secteur,
+  scénario de réduction, hypothèse `seuil_sous_utilisation_flotte` à
+  valider). Liste « prêt pour un premier client » :
+  `docs/pret-premier-client.md` (à tenir à jour).
+
 Rappels de méthode : chaque phase finit par `npm run check` vert → push →
 résumé court → **attendre le « ok » de l'utilisateur** ; kanban intégré à
 l'étape Suivi (pas de module autonome) ; aucune suppression de données en
