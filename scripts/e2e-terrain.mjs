@@ -132,8 +132,15 @@ page.on("response", (r) => {
 });
 
 try {
-  // Inscription
+  // Inscription. Premier chargement : le serveur de dev compile toute
+  // l'application à froid (plus de 30 s sur un runner CI chargé) — on
+  // attend le formulaire jusqu'à 90 s, avec un rechargement si besoin.
   await page.goto(url("/signup"));
+  const champNom = page.locator("#fullName");
+  if (!(await champNom.waitFor({ timeout: 60000 }).then(() => true, () => false))) {
+    await page.reload();
+    await champNom.waitFor({ timeout: 30000 });
+  }
   await page.fill("#fullName", "Responsable Flotte");
   await page.fill("#email", COURRIEL);
   await page.fill("#password", MDP);
