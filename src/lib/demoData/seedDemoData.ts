@@ -8,12 +8,15 @@
  */
 import { supabase } from "@/integrations/supabase/client";
 import {
+  GARAGES_DEMO,
   MARQUEUR_DEMO,
   NOM_PROJET_DEMO,
   contraintesDemo,
   genererFlotteDemo,
   planDemo,
+  subventionsConfirmeesDemo,
 } from "./villeDemo";
+import { garagesACreer } from "@/lib/fleet/garagesModel";
 
 async function organisationDe(userId: string): Promise<string> {
   const { data, error } = await supabase
@@ -54,7 +57,8 @@ export async function deleteDemoProject(userId: string, organizationId: string):
 }
 
 /** Supprime les véhicules MARQUÉS démo de l'organisation (C7 : appelés
- *  aussi quand le projet démo est supprimé depuis la liste des projets). */
+ *  aussi quand le projet démo est supprimé depuis la liste des projets),
+ *  puis les garages fictifs créés par la démo (marqués eux aussi). */
 export async function deleteDemoVehicles(organizationId: string): Promise<void> {
   const { error } = await supabase
     .from("vehicles")
@@ -62,6 +66,25 @@ export async function deleteDemoVehicles(organizationId: string): Promise<void> 
     .eq("organization_id", organizationId)
     .like("notes", `%${MARQUEUR_DEMO}%`);
   if (error) throw error;
+  const { error: errGarages } = await supabase
+    .from("garages")
+    .delete()
+    .eq("organization_id", organizationId)
+    .like("notes", `%${MARQUEUR_DEMO}%`);
+  if (errGarages) throw errGarages;
+}
+
+/** Garages fictifs de la démo (puissance disponible renseignée). Un
+ *  garage RÉEL du même nom n'est jamais modifié : les véhicules démo s'y
+ *  rattachent et ses propres caractéristiques s'appliquent. */
+async function creerGaragesDemo(organizationId: string): Promise<void> {
+  const { data: existants, error } = await supabase.from("garages").select("name").eq("organization_id", organizationId);
+  if (error) throw error;
+  const aCreer = new Set(garagesACreer(GARAGES_DEMO.map((g) => g.name), existants ?? []));
+  const lignes = GARAGES_DEMO.filter((g) => aCreer.has(g.name)).map((g) => ({ ...g, organization_id: organizationId }));
+  if (lignes.length === 0) return;
+  const { error: errInsert } = await supabase.from("garages").insert(lignes);
+  if (errInsert) throw errInsert;
 }
 
 export async function seedDemoProject(userId: string): Promise<{ projectId: string }> {
@@ -88,6 +111,9 @@ export async function seedDemoProject(userId: string): Promise<{ projectId: stri
     .single();
   if (errProjet) throw errProjet;
 
+  // Garages AVANT les véhicules : le déclencheur rattache chaque véhicule
+  // à son garage par le nom du dépôt.
+  await creerGaragesDemo(organizationId);
   const flotte = genererFlotteDemo();
   const { data: inseres, error: errVehicules } = await supabase
     .from("vehicles")
@@ -108,6 +134,20 @@ export async function seedDemoProject(userId: string): Promise<{ projectId: stri
       })),
   );
   if (errPlan) throw errPlan;
+
+  // Subvention PAGTCP FICTIVE « confirmée par le client » (autobus électriques).
+  const subventions = subventionsConfirmeesDemo(plan).filter((c) => idParUnite.has(c.unit_number));
+  if (subventions.length > 0) {
+    const { error: errSub } = await supabase.from("confirmed_subsidies").insert(
+      subventions.map(({ unit_number, ...c }) => ({
+        ...c,
+        project_id: projet.id,
+        vehicle_id: idParUnite.get(unit_number)!,
+        created_by: userId,
+      })),
+    );
+    if (errSub) throw errSub;
+  }
 
   return { projectId: projet.id };
 }

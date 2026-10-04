@@ -218,3 +218,20 @@ describe("3.3 — recommandation pour un véhicule sans technologie cible", () =
     expect(recommandationCible(evaluerFaisabiliteVehicule(vehicule({ category: "autre" }), OPTIONS))).toBeNull();
   });
 });
+
+describe("subventions confirmées par le client (mêmes règles qu'aux Stratégies)", () => {
+  it("une PAGTCP confirmée est comptée dans l'économie de l'autobus électrique", () => {
+    const bus = vehicule({ category: "autobus_urbain_12m", annual_km: 50000, consumption_per_100km: 45, replacement_year: 2028 });
+    const sans = evaluerFaisabiliteVehicule(bus, OPTIONS).evaluations!.find((e) => e.technologie === "BEV")!;
+    const avec = evaluerFaisabiliteVehicule(
+      {
+        ...bus,
+        subventionsConfirmees: [
+          { programId: "pagtcp", libelle: "PAGTCP", montant: 650000, anneeCalendaireVersement: 2029, reference: "FICTIF-1" },
+        ],
+      },
+      OPTIONS,
+    ).evaluations!.find((e) => e.technologie === "BEV")!;
+    expect(avec.economieActualisee - sans.economieActualisee).toBeGreaterThan(400000);
+  });
+});

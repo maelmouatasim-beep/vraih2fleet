@@ -24,6 +24,7 @@ import {
   type OptionsParametres,
   type SubventionAppliquee,
 } from "@/lib/tco";
+import { appliquerSubventionsConfirmees, type SubventionConfirmee } from "@/lib/confirmedSubsidies";
 
 export interface VehiculeFaisabilite {
   id: string;
@@ -48,6 +49,9 @@ export interface VehiculeFaisabilite {
    *  technologie : remplace le prix du registre dans cette technologie
    *  (subventions recalculées sur ce prix). */
   prixDevis?: { technologie: "BEV" | "FCEV"; prix: number; documentId?: string | null } | null;
+  /** Subventions CONFIRMÉES par le client (lettre d'octroi…) : mêmes
+   *  règles qu'aux Stratégies et au Plan (priorité au client). */
+  subventionsConfirmees?: SubventionConfirmee[];
 }
 
 export type VerdictFaisabilite = "favorable" | "conditionnel" | "defavorable";
@@ -220,14 +224,15 @@ export function evaluerFaisabiliteVehicule(
   const evaluations = (["BEV", "FCEV"] as const).map((technologie): EvaluationTechno => {
     const prixAlternative =
       vehicule.prixDevis?.technologie === technologie ? vehicule.prixDevis.prix : defauts.prixAchat[technologie].valeur;
-    const subventions = resoudreSubventionsVehicule({
+    const subventionsResolues = resoudreSubventionsVehicule({
       categorie: defauts.categorie,
       technologie,
       prixAvantTaxes: prixAlternative,
       typeOrganisme: options.typeOrganisme,
       anneeAchatCalendaire: options.anneeReference + k,
       classePoids: classePourSubventions(vehicule.gvwr_class),
-    }).map((s) => ({ ...s, annee: s.annee + k }));
+    }).map((s) => ({ libelle: s.libelle, montant: s.montant, annee: s.annee + k }));
+    const subventions = appliquerSubventionsConfirmees(subventionsResolues, vehicule.subventionsConfirmees, k, options.anneeReference);
 
     const resultat = calculerPlan({
       parametres,
