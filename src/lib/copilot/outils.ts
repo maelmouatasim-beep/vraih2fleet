@@ -38,6 +38,7 @@ import { BUDGET_OPTIMISEUR_MS,
   type ResultatOptimisation,
 } from "@/lib/journey/optimizer";
 import { SECTIONS_PROJET } from "../../../supabase/functions/_shared/copilotTools";
+import { investissementCompare } from "@/lib/journey/synthese";
 
 export interface TacheResume {
   titre: string;
@@ -160,7 +161,12 @@ function lireProjet(snap: SnapshotProjet, sections: string[]) {
     };
   }
   if (sections.includes("plan") && r) {
+    const inv = investissementCompare(r);
     out.plan = {
+      // Audit, point 7 : investissement brut À CÔTÉ de celui du statu quo.
+      investissement_total: arrondi(inv.brut),
+      investissement_statu_quo: arrondi(inv.statuQuo),
+      ecart_investissement_vs_statu_quo: arrondi(inv.surcout),
       budget_annuel: r.vueBudgetaire.slice(0, r.horizonAns).map((l) => ({
         annee: l.annee,
         investissement: arrondi(l.investissementAlt),

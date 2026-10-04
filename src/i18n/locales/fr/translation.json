@@ -5176,7 +5176,8 @@
         "planned": "Subventions du plan",
         "aidedVehicles": "Véhicules aidés",
         "toFinance": "Reste à financer",
-        "activePrograms": "Programmes actifs à ce jour"
+        "activePrograms": "Programmes actifs à ce jour",
+        "toFinanceDetail": "Investissement brut {{brut}} ; statu quo (thermique neuf) {{sq}} ; écart {{diff}}"
       },
       "planTitle": "Subventions prévues au plan",
       "planSubtitle": "Résolues par le registre pour chaque véhicule zéro émission (admissibilité, plafonds, cumul) ; un programme échu avant l'année d'achat prévue n'est pas compté.",

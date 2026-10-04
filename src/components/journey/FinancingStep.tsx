@@ -37,6 +37,7 @@ import { estVehiculeDemo } from "@/lib/demoData/villeDemo";
 import { StatusBadge, LoadingState } from "@/components/layout/States";
 import { TON_PROGRAMME, TON_VERIFICATION } from "@/components/layout/tons";
 import { StatCard, StatGrid } from "@/components/layout/StatCard";
+import { investissementCompare } from "@/lib/journey/synthese";
 
 interface FinancingStepProps {
   projectId: string;
@@ -78,7 +79,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
       (a, l) => a + l.resteAFinancerAlt,
       0,
     );
-    return { lignes, total: strategie.subventionsTotal, resteAFinancer, anneeReference, strategie };
+    return { lignes, total: strategie.subventionsTotal, resteAFinancer, anneeReference, strategie, investissement: investissementCompare(strategie.resultat) };
   }, [options, projectVehicles, confirmeesParVehicule]);
 
   // Phase 5.5 — programmes EXAMINÉS pour les véhicules du plan (alertes de
@@ -153,7 +154,20 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
             ["activePrograms", String(nbActifs)],
           ] as const
         ).map(([cle, valeur]) => (
-          <StatCard key={cle} libelle={t(`journey.financing.stats.${cle}`)} valeur={valeur} />
+          <StatCard
+            key={cle}
+            libelle={t(`journey.financing.stats.${cle}`)}
+            valeur={valeur}
+            detail={
+              cle === "toFinance" && donnees
+                ? t("journey.financing.stats.toFinanceDetail", {
+                    brut: argent.format(donnees.investissement.brut),
+                    sq: argent.format(donnees.investissement.statuQuo),
+                    diff: (donnees.investissement.surcout >= 0 ? "+" : "") + argent.format(donnees.investissement.surcout),
+                  })
+                : undefined
+            }
+          />
         ))}
       </StatGrid>
 

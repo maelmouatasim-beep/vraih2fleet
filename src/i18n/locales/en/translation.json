@@ -5176,7 +5176,8 @@
         "planned": "Plan subsidies",
         "aidedVehicles": "Vehicles with aid",
         "toFinance": "Left to finance",
-        "activePrograms": "Programs active today"
+        "activePrograms": "Programs active today",
+        "toFinanceDetail": "Gross investment {{brut}}; status quo (new combustion) {{sq}}; gap {{diff}}"
       },
       "planTitle": "Subsidies expected in the plan",
       "planSubtitle": "Resolved by the registry for each zero-emission vehicle (eligibility, caps, stacking); a program that expires before the planned purchase year is not counted.",
