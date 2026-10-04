@@ -256,7 +256,8 @@ describe("re-audit, point 2 — le fichier BRUT du directeur s'importe en mode s
   it("un libellé ambigu n'est jamais deviné : « Minibus adapté » reste à choisir, avec un message clair", () => {
     const r = validerLignes([{ No: "201", Description: "Minibus adapté", Carburant: "Essence" }], ORG);
     expect(r.valides).toHaveLength(0);
-    expect(r.erreurs[0].message).toMatch(/catégorie non reconnu\(e\) : « Minibus adapté »/);
+    expect(r.erreurs[0].message).toMatch(/catégorie non reconnue : « Minibus adapté » — choisissez l'une des catégories du modèle d'import : véhicule léger/);
+    expect(r.erreurs[0].message).not.toMatch(/vehicule_leger|camion_moyen/);
   });
 
   it("une vraie colonne catégorie reste prioritaire sur « Description »", () => {

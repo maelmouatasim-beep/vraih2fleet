@@ -334,6 +334,21 @@ const SYNONYMES_CATEGORIE: Record<string, string> = {
   other: "autre",
 };
 
+/** Libellés français des catégories (messages d'erreur : jamais un code). */
+const LIBELLES_CATEGORIES: Record<string, string> = {
+  vehicule_leger: "véhicule léger",
+  camionnette: "camionnette / fourgonnette",
+  camion_moyen: "camion moyen (classes 4-6)",
+  camion_lourd: "camion lourd (classes 7-8)",
+  autobus_urbain_12m: "autobus urbain 12 m",
+  deneigeuse: "déneigeuse",
+  souffleuse: "souffleuse à neige",
+  camion_benne: "camion à benne",
+  vehicule_specialise: "véhicule spécialisé / outil",
+  vehicule_urgence: "véhicule d'urgence",
+  autre: "autre",
+};
+
 /** Valeurs acceptées par catégorie (message d'erreur de l'import et modèle). */
 export function synonymesParCategorie(): Record<string, string[]> {
   const parCat: Record<string, string[]> = {};
@@ -636,11 +651,10 @@ export function validerLignes(
     if (fourni(champs.category) && !cat) {
       // message enrichi : la liste des catégories acceptées et leurs synonymes FR/EN
       const derniere = erreursLigne[erreursLigne.length - 1];
-      derniere.message +=
-        " — catégories acceptées : " +
-        Object.entries(synonymesParCategorie())
-          .map(([c, syns]) => `${c} (${syns.filter((s) => s !== c).join(", ") || "—"})`)
-          .join(" ; ");
+      derniere.message =
+        `catégorie non reconnue : « ${String(champs.category).trim()} » — choisissez l'une des catégories du modèle d'import : ` +
+        Object.values(LIBELLES_CATEGORIES).join(", ") +
+        ".";
     }
     const fuel = choix("fuel_type", SYNONYMES_CARBURANT, "carburant");
     const statut = choix("status", SYNONYMES_STATUT, "statut");
