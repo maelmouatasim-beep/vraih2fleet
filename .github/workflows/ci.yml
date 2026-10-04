@@ -4,6 +4,12 @@ on:
   push:
     branches: ["**"]
   pull_request:
+  workflow_dispatch:
+  # Dépôt PRIVÉ : le job lourd (Supabase local + e2e, ~15 min) ne tourne
+  # plus à chaque push (2 000 min/mois gratuites) — chaque nuit, à la main
+  # et sur la branche production à la place (voir docs/production.md).
+  schedule:
+    - cron: "17 7 * * *"
 
 jobs:
   web:
@@ -28,6 +34,11 @@ jobs:
       - name: Lint (baseline)
         run: npm run lint:ci
 
+      # Test du nettoyage de l'historique git (dépôt factice) : requiert
+      # git-filter-repo, sinon le test est ignoré.
+      - name: git-filter-repo (test du nettoyage d'historique)
+        run: pipx install git-filter-repo==2.47.0
+
       - name: Tests unitaires
         run: npm run test
 
@@ -44,6 +55,9 @@ jobs:
         run: npm run build
 
   supabase:
+    if: >-
+      ${{ !github.event.repository.private || github.event_name != 'push'
+          || github.ref == 'refs/heads/production' }}
     name: Edge functions + audit RLS (Supabase local)
     runs-on: ubuntu-latest
     steps:
@@ -129,9 +143,15 @@ jobs:
             code=$(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:54321/functions/v1/copilot || echo 000)
             case "$code" in 000|502|503) sleep 2 ;; *) break ;; esac
           done
+          # BUNDLE DE PRODUCTION (BrowserRouter) servi comme Cloudflare Pages :
+          # en-têtes de dist/_headers (CSP stricte — une violation fait échouer
+          # le parcours), redirections 301 de dist/_redirects, repli SPA.
           VITE_SUPABASE_URL=http://127.0.0.1:54321 VITE_SUPABASE_PUBLISHABLE_KEY="$ANON_KEY" VITE_SUPABASE_PROJECT_ID=local \
-            npx vite --port 8080 --host 127.0.0.1 &
+            npx vite build --outDir dist-prod
+          node scripts/serveur-production.mjs 8080 dist-prod &
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:8080/ >/dev/null && break; sleep 1; done
+          curl -sI http://127.0.0.1:8080/dashboard/projects | grep -qi "^content-security-policy:" || { echo "::error::CSP absente du bundle de production"; exit 1; }
+          test "$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' http://127.0.0.1:8080/ecosystem)" = "301 http://127.0.0.1:8080/features" || { echo "::error::redirection 301 absente"; exit 1; }
           node scripts/e2e-terrain.mjs e2e-terrain
 
       - uses: actions/upload-artifact@v4
@@ -150,8 +170,9 @@ jobs:
         run: |
           eval "$(supabase status -o env | sed 's/^/export /')"
           if ! curl -sf http://127.0.0.1:8080/ >/dev/null; then
-            VITE_SUPABASE_URL=http://127.0.0.1:54321 VITE_SUPABASE_PUBLISHABLE_KEY="$ANON_KEY" VITE_SUPABASE_PROJECT_ID=local \
-              npx vite --port 8080 --host 127.0.0.1 &
+            [ -f dist-prod/index.html ] || VITE_SUPABASE_URL=http://127.0.0.1:54321 VITE_SUPABASE_PUBLISHABLE_KEY="$ANON_KEY" VITE_SUPABASE_PROJECT_ID=local \
+              npx vite build --outDir dist-prod
+            node scripts/serveur-production.mjs 8080 dist-prod &
             for i in $(seq 1 30); do curl -sf http://127.0.0.1:8080/ >/dev/null && break; sleep 1; done
           fi
           node scripts/e2e-visuel.mjs e2e-visuel

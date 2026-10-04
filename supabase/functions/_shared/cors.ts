@@ -2,8 +2,11 @@
 //
 // Les origines autorisées viennent de la variable d'environnement
 // ALLOWED_ORIGINS (liste séparée par des virgules, ex. :
-// "https://h2fleet.app,https://www.h2fleet.app,http://localhost:8080").
-// Sans configuration, seuls les localhost de dev sont autorisés — jamais "*".
+// "https://h2fleet.ca,https://www.h2fleet.ca,https://*.h2fleet.pages.dev").
+// Une entrée « https://*.domaine » autorise UN seul niveau de sous-domaine
+// en HTTPS (déploiements d'aperçu Cloudflare Pages) — jamais le domaine nu
+// ni un sous-sous-domaine. Sans configuration, seuls les localhost de dev
+// sont autorisés — jamais "*".
 
 const DEV_ORIGINS = [
   "http://localhost:8080",
@@ -20,6 +23,20 @@ function allowedOrigins(): string[] {
     .filter(Boolean);
 }
 
+/** L'origine est-elle dans la liste (entrées exactes ou « https://*.domaine ») ? */
+export function origineAutorisee(origin: string, liste: string[] = allowedOrigins()): boolean {
+  if (!origin) return false;
+  for (const entree of liste) {
+    if (entree === origin) return true;
+    const m = /^https:\/\/\*\.([a-z0-9.-]+)$/i.exec(entree);
+    if (!m) continue;
+    const suffixe = `.${m[1].toLowerCase()}`;
+    const o = /^https:\/\/([a-z0-9-]+)(\.[a-z0-9.-]+)$/i.exec(origin);
+    if (o && o[2].toLowerCase() === suffixe) return true;
+  }
+  return false;
+}
+
 /**
  * En-têtes CORS pour la requête donnée. L'origine n'est renvoyée que si elle
  * est dans la liste blanche ; sinon aucun Access-Control-Allow-Origin n'est
@@ -33,7 +50,7 @@ export function corsHeaders(req: Request): Record<string, string> {
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     Vary: "Origin",
   };
-  if (origin && allowedOrigins().includes(origin)) {
+  if (origineAutorisee(origin)) {
     headers["Access-Control-Allow-Origin"] = origin;
   }
   return headers;

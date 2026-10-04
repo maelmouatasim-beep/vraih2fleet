@@ -2,6 +2,9 @@ name: Deploy Pages
 
 # Site de test réel (l'aperçu claude.ai ne peut pas atteindre Supabase).
 # URL : https://maelmouatasim-beep.github.io/vraih2fleet/
+# Gardé jusqu'au passage du dépôt en PRIVÉ (GitHub Pages n'est pas gratuit
+# sur un dépôt privé) : le job s'arrête alors de lui-même et le site de test
+# devient l'aperçu Cloudflare Pages de la branche (docs/production.md).
 
 on:
   push:
@@ -19,6 +22,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages

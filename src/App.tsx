@@ -41,6 +41,7 @@ import NotFound from "./pages/NotFound";
 import OAuthConsent from "./pages/OAuthConsent";
 
 import Guides from "./pages/Guides";
+import { REDIRECTIONS_PUBLIQUES } from "./lib/production/site";
 import { GuideBEV, GuideFCEV, GuideBiomethane, GuideSectorUrban, GuideSectorRegional, GuideSectorLongHaul, GuidePlanning, GuideFunding, GuideOperations } from "./pages/guides";
 
 const queryClient = new QueryClient();
@@ -79,16 +80,11 @@ const App = () => (
             <Route path="/refund" element={<Refund />} />
             <Route path="/methodology" element={<Methodology />} />
             <Route path="/case-studies" element={<CaseStudies />} />
-            {/* Écosystème retiré (Phase 4) : statistiques et corridors non sourcés, annuaire de fournisseurs retiré. */}
-            <Route path="/ecosystem" element={<Navigate to="/features" replace />} />
-            <Route path="/calculator" element={<Navigate to="/features" replace />} />
-            {/* Pages publiques vides retirées (refonte 2f) : redirections propres */}
-            <Route path="/roadmap" element={<Navigate to="/" replace />} />
-            <Route path="/changelog" element={<Navigate to="/" replace />} />
-            <Route path="/docs" element={<Navigate to="/guides" replace />} />
-            <Route path="/api" element={<Navigate to="/" replace />} />
-            <Route path="/careers" element={<Navigate to="/" replace />} />
-            <Route path="/press" element={<Navigate to="/" replace />} />
+            {/* Pages publiques retirées (refonte 2f, Phase 4) : une seule liste,
+                aussi rendue en 301 côté serveur (dist/_redirects). */}
+            {REDIRECTIONS_PUBLIQUES.map((r) => (
+              <Route key={r.de} path={r.de} element={<Navigate to={r.vers} replace />} />
+            ))}
             <Route path="/guides" element={<Guides />} />
             <Route path="/guides/technology/bev" element={<GuideBEV />} />
             <Route path="/guides/technology/fcev" element={<GuideFCEV />} />

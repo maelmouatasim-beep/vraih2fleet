@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:prod": "H2FLEET_BUILD_PRODUCTION=1 vite build",
     "build:dev": "vite build --mode development",
     "build:preview": "VITE_PREVIEW_HASH_ROUTER=true vite build --base=./",
     "lint": "eslint .",

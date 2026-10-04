@@ -127,6 +127,12 @@ await contexte.addInitScript(() => {
 });
 const page = await contexte.newPage();
 const erreurs = [];
+// Bundle de production (scripts/serveur-production.mjs) : toute violation de
+// la CSP (dist/_headers) fait échouer le parcours.
+const violationsCsp = [];
+page.on("console", (m) => {
+  if (/Content Security Policy|Refused to (load|connect|execute|apply|create|frame|compile)/i.test(m.text())) violationsCsp.push(m.text().slice(0, 240));
+});
 page.on("response", (r) => {
   if (r.status() >= 400 && /127\.0\.0\.1|localhost/.test(r.url())) erreurs.push(`[${r.status()}] ${r.request().method()} ${r.url().slice(0, 140)}`);
 });
@@ -730,6 +736,7 @@ try {
 
   writeFileSync(join(SORTIE, "resultat.json"), JSON.stringify({ infraStrategie, infraPlan, subvStrategie, vanPlan, sousTitre, statutOpt, nbDecisions, nbChangements }, null, 2));
   if (erreurs.length) throw new Error(`réponses locales en erreur :\n${erreurs.join("\n")}`);
+  if (violationsCsp.length) throw new Error(`violations de la CSP :\n${violationsCsp.join("\n")}`);
   console.log(`\n${journal.length} étapes, 0 erreur. Captures : ${SORTIE}`);
 } catch (e) {
   await page.screenshot({ path: join(SORTIE, "echec.png"), fullPage: true }).catch(() => {});

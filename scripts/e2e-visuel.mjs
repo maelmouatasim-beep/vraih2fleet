@@ -170,6 +170,10 @@ async function parcourir(ctx, langue, pages) {
   const page = await ctx.newPage();
   const erreursJs = [];
   page.on("pageerror", (e) => erreursJs.push(String(e.message ?? e)));
+  // Bundle de production : une violation de la CSP compte comme une erreur JS.
+  page.on("console", (m) => {
+    if (/Content Security Policy|Refused to (load|connect|execute|apply|create|frame|compile)/i.test(m.text())) erreursJs.push(`CSP : ${m.text().slice(0, 200)}`);
+  });
   for (const largeur of LARGEURS) {
     await page.setViewportSize({ width: largeur, height: largeur < 768 ? 844 : 900 });
     for (const [nom, chemin] of pages) {
