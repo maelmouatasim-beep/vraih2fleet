@@ -37,6 +37,9 @@ import { cleGarage } from "@/lib/journey/infrastructure";
 import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 import { listerDocuments, piecesDepuisDocuments } from "@/lib/supabase/clientDocuments";
 import { LoadingState } from "@/components/layout/States";
+import OrgNamePrompt from "./OrgNamePrompt";
+import { estNomOrganisationParDefaut, nomOrganisationRapport } from "@/lib/organisationNom";
+import { NOM_PROJET_DEMO } from "@/lib/demoData/villeDemo";
 
 interface ReportsStepProps {
   projectId: string;
@@ -77,7 +80,8 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
     const retenue = strategieRetenue(vehicules, project.selectedStrategy, options, lireAssignation(project.optimizedAssignment));
     if (!strategie.plan || !strategie.resultat) return null;
     const meta: MetaRapport = {
-      organisation: organization.name,
+      // Audit, point 11 : jamais « Mon organisation » sur un rapport.
+      organisation: nomOrganisationRapport(organization.name, project.name === NOM_PROJET_DEMO, i18n.language === "en" ? "en" : "fr"),
       projet: project.name,
       dateIso: new Date().toISOString().slice(0, 10),
       anneeReference,
@@ -103,7 +107,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
         }),
       );
     return { strategie, meta, unites, hiver };
-  }, [options, donneesClient, organization, project, projectVehicles, confirmeesParVehicule, pieces]);
+  }, [options, donneesClient, organization, project, projectVehicles, confirmeesParVehicule, pieces, i18n.language]);
 
   // Règle A1 : chaque rapport généré FIGE le plan (snapshot immuable).
   // La bannière compare l'empreinte courante au dernier snapshot.
@@ -222,6 +226,9 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
 
   return (
     <div className="space-y-4">
+      {organization && estNomOrganisationParDefaut(organization.name) && project?.name !== NOM_PROJET_DEMO && (
+        <OrgNamePrompt organizationId={organization.id} />
+      )}
       {donneesMisesAJour && (
         <Alert>
           <Info className="h-4 w-4" />

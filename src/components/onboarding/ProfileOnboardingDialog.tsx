@@ -16,6 +16,10 @@ import {
 import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
+import { useOrganization } from '@/hooks/useOrganization';
+import { updateOrganization } from '@/lib/supabase/organizations';
+import { estNomOrganisationParDefaut } from '@/lib/organisationNom';
 
 const SKIP_FLAG = 'h2fleet-profile-onboarding-skipped';
 
@@ -43,6 +47,8 @@ function writeSkipFlag(): void {
 export function ProfileOnboardingDialog() {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { organization } = useOrganization();
+  const queryClient = useQueryClient();
 
   const [open, setOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -117,6 +123,17 @@ export function ProfileOnboardingDialog() {
         })
         .eq('id', user.id);
       if (error) throw error;
+      // Audit acheteur, point 11 : le nom saisi devient celui de
+      // l'organisation tant qu'elle porte le nom créé par défaut.
+      const nom = form.company.trim();
+      if (nom && organization && estNomOrganisationParDefaut(organization.name)) {
+        try {
+          await updateOrganization(organization.id, { name: nom });
+          await queryClient.invalidateQueries({ queryKey: ["organization"] });
+        } catch {
+          // membre non administrateur : le nom se change dans Organisation
+        }
+      }
       writeSkipFlag();
       setOpen(false);
       toast.success(t('onboarding.profile.saved'));

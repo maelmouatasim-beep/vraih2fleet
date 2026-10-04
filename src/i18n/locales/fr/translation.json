@@ -1548,7 +1548,7 @@
       "email": "votre@email.com",
       "fullName": "Jean Dupont",
       "selectFunction": "Sélectionnez votre fonction",
-      "company": "Transport Express Inc.",
+      "company": "Ex. : Ville de Rivière-Claire",
       "professionalEmail": "jean.dupont@entreprise.com",
       "vehicleCount": "Nombre de véhicules"
     },
@@ -5300,6 +5300,15 @@
         },
         "aiRetried_one": "Brouillon IA vérifié : {{count}} écart rejeté puis corrigé par une seconde rédaction.",
         "aiRetried_other": "Brouillon IA vérifié : {{count}} écarts rejetés puis corrigés par une seconde rédaction."
+      },
+      "orgName": {
+        "title": "Quel est le nom de votre organisation ?",
+        "body": "Il figure en en-tête du rapport au conseil, de la note et du classeur. Tant qu'il n'est pas renseigné, les rapports indiquent « Organisation (nom à renseigner) ».",
+        "label": "Nom de l'organisation",
+        "placeholder": "Ex. : Ville de Rivière-Claire",
+        "save": "Enregistrer le nom",
+        "saved": "Nom de l'organisation enregistré",
+        "error": "Seul un administrateur de l'organisation peut modifier son nom."
       }
     },
     "tracking": {

@@ -1548,7 +1548,7 @@
       "email": "your@email.com",
       "fullName": "John Smith",
       "selectFunction": "Select your role",
-      "company": "Transport Express Inc.",
+      "company": "e.g. City of Rivière-Claire",
       "professionalEmail": "john.smith@company.com",
       "vehicleCount": "Number of vehicles"
     },
@@ -5300,6 +5300,15 @@
         },
         "aiRetried_one": "AI draft checked: {{count}} issue rejected then corrected by a second draft.",
         "aiRetried_other": "AI draft checked: {{count}} issues rejected then corrected by a second draft."
+      },
+      "orgName": {
+        "title": "What is your organization's name?",
+        "body": "It appears in the header of the council report, the note and the workbook. Until it is entered, reports show “Organization (name to be entered)”.",
+        "label": "Organization name",
+        "placeholder": "e.g. City of Rivière-Claire",
+        "save": "Save the name",
+        "saved": "Organization name saved",
+        "error": "Only an organization administrator can change its name."
       }
     },
     "tracking": {
