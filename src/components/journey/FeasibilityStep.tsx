@@ -35,6 +35,7 @@ import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 import { StatusBadge, LoadingState } from "@/components/layout/States";
 import { ton, TON_VERDICT } from "@/components/layout/tons";
 import { StatCard, StatGrid } from "@/components/layout/StatCard";
+import GaragesPresumesAlert from "./GaragesPresumesAlert";
 
 interface FeasibilityStepProps {
   projectId: string;
@@ -190,6 +191,7 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
 
   return (
     <div className="space-y-4">
+      <GaragesPresumesAlert organizationId={project?.organizationId} depots={projectVehicles.map((pv) => pv.vehicles?.depot)} />
       <EnergyClientDataCard projectId={projectId} />
       <StatGrid>
         {(

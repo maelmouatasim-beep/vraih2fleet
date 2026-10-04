@@ -26,6 +26,29 @@ export function garagesACreer(depots: (string | null | undefined)[], existants: 
   return nouveaux;
 }
 
+/** Garages des véhicules d'un projet dont la puissance disponible n'est PAS
+ *  renseignée (le calcul retient alors la valeur présumée du registre) —
+ *  dédoublonnés par clé, dans l'ordre d'apparition ; `null` = véhicules
+ *  sans garage (audit acheteur, point 8). */
+export function garagesPuissancePresumee(
+  depots: (string | null | undefined)[],
+  garages: Pick<GarageRow, "name" | "available_power_kw">[],
+): (string | null)[] {
+  const renseignes = new Set(
+    garages.filter((g) => g.available_power_kw != null && g.available_power_kw >= 0).map((g) => cleGarage(g.name)),
+  );
+  const vus = new Set<string>();
+  const out: (string | null)[] = [];
+  for (const d of depots) {
+    const cle = cleGarage(d);
+    if (renseignes.has(cle) || vus.has(cle)) continue;
+    vus.add(cle);
+    const nom = d?.trim().replace(/\s+/g, " ");
+    out.push(nom ? nom : null);
+  }
+  return out;
+}
+
 /** Devis de bornes d'un garage (JSON { type: coût unitaire installé }),
  *  filtré aux types connus et aux montants positifs. */
 export function lireDevisBornes(json: unknown): Partial<Record<TypeBorne, number>> | undefined {

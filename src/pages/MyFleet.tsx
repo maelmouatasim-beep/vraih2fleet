@@ -1,4 +1,5 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Page, PageHeader } from "@/components/layout/Page";
@@ -73,6 +74,13 @@ export default function MyFleet() {
   const { organization, isLoading: orgLoading } = useOrganization();
   const { vehicles, isLoading, creer, importer, modifier, supprimer } = useVehicles(organization?.id);
   const { garages, rafraichir: rafraichirGarages } = useGarages(organization?.id);
+  // Lien « Renseigner les garages » des étapes Faisabilité/Stratégies (audit, point 8).
+  const [params] = useSearchParams();
+  const sectionGarages = params.get("section") === "garages";
+  const garagesRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (sectionGarages && organization?.id) garagesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [sectionGarages, organization?.id]);
 
   const [ajoutOuvert, setAjoutOuvert] = useState(false);
   const [edition, setEdition] = useState<VehicleRow | null>(null);
@@ -330,7 +338,9 @@ export default function MyFleet() {
           </CardContent>
         </Card>
 
-        <GaragesCard organizationId={organization?.id} depots={vehicles.map((v) => v.depot)} />
+        <div ref={garagesRef} id="garages" className="scroll-mt-4">
+          <GaragesCard organizationId={organization?.id} depots={vehicles.map((v) => v.depot)} />
+        </div>
 
         <ChangeLogCard organizationId={organization?.id} />
       </Page>

@@ -61,6 +61,7 @@ import { cn } from "@/lib/utils";
 import { CheckCircle2, ClipboardCheck, Loader2, SlidersHorizontal } from "lucide-react";
 import StressTestPanel from "./StressTestPanel";
 import VanDecompositionCard from "./VanDecompositionCard";
+import GaragesPresumesAlert from "./GaragesPresumesAlert";
 import { investissementCompare } from "@/lib/journey/synthese";
 import { traduireAvertissement } from "@/lib/tco/translations-en";
 import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
@@ -401,6 +402,7 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
 
   return (
     <div className="space-y-4">
+      <GaragesPresumesAlert organizationId={project?.organizationId} depots={projectVehicles.map((pv) => pv.vehicles?.depot)} />
       {(exclusions.length > 0 || sansAnnee.length > 0) && (
         <div className="rounded-lg border border-amber-300/60 bg-amber-50 dark:bg-amber-950/30 p-3 text-sm space-y-1">
           {exclusions.length > 0 && (

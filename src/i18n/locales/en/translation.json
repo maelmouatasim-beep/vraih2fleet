@@ -5688,6 +5688,12 @@
         "subventions": "Subsidies",
         "valeurResiduelle": "Vehicle resale value"
       }
+    },
+    "garagesPresumed": {
+      "title_one": "Electrical capacity not entered for garage {{garages}}",
+      "title_other": "Electrical capacity not entered for {{count}} garages: {{garages}}",
+      "body": "The calculation presumes {{kw}} kW available per garage (registry estimate). Chargers, grid connection and the “Savings first” strategy depend on it: read the available capacity on the main panel and enter it.",
+      "action": "Fill in the garages"
     }
   },
   "energyClient": {

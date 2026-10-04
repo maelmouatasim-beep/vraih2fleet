@@ -5688,6 +5688,12 @@
         "subventions": "Subventions",
         "valeurResiduelle": "Valeur de revente des véhicules"
       }
+    },
+    "garagesPresumed": {
+      "title_one": "Puissance électrique non renseignée pour le garage {{garages}}",
+      "title_other": "Puissance électrique non renseignée pour {{count}} garages : {{garages}}",
+      "body": "Le calcul présume {{kw}} kW disponibles par garage (estimation du registre). Les bornes, le raccordement et la stratégie « Économies d'abord » en dépendent : relevez la puissance disponible sur le panneau principal et saisissez-la.",
+      "action": "Renseigner les garages"
     }
   },
   "energyClient": {

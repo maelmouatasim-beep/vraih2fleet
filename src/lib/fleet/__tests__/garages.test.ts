@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { caracteristiquesGarages, garagesACreer, heuresFenetre, type GarageRow } from "../garagesModel";
+import { caracteristiquesGarages, garagesACreer, garagesPuissancePresumee, heuresFenetre, type GarageRow } from "../garagesModel";
 import { planifierInfrastructure } from "@/lib/journey/infrastructure";
 import { validerLignes } from "../importVehicles";
 
@@ -65,5 +65,22 @@ describe("garages (bloc 2.1)", () => {
     expect(heuresFenetre("17:00:00", "07:00:00")).toBe(14);
     expect(heuresFenetre("22:30", "06:00")).toBe(7.5);
     expect(heuresFenetre(null, "06:00")).toBeNull();
+  });
+});
+
+describe("garagesPuissancePresumee (audit acheteur, point 8)", () => {
+  it("liste les garages du projet sans puissance renseignée, dédoublonnés, et les véhicules sans garage", () => {
+    const garages = [
+      { name: "Garage central", available_power_kw: 350 },
+      { name: "Dépôt Nord", available_power_kw: null },
+    ];
+    expect(garagesPuissancePresumee(["Garage central", "dépôt  nord", "Dépôt Nord", null, "Atelier Est", ""], garages)).toEqual([
+      "dépôt nord",
+      null,
+      "Atelier Est",
+    ]);
+    expect(garagesPuissancePresumee(["Garage central"], garages)).toEqual([]);
+    // 0 kW renseigné est une vraie valeur (garage sans marge), pas une présomption
+    expect(garagesPuissancePresumee(["X"], [{ name: "X", available_power_kw: 0 }])).toEqual([]);
   });
 });
