@@ -14,6 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
+import { cleErreurAuth } from "@/lib/authErrors";
 
 const ResetPassword = () => {
   const { t } = useTranslation();
@@ -47,7 +48,7 @@ const ResetPassword = () => {
     const { error } = await supabase.auth.updateUser({ password });
     setEnCours(false);
     if (error) {
-      toast({ title: t("common.error"), description: error.message, variant: "destructive" });
+      toast({ title: t("common.error"), description: t(cleErreurAuth(error)), variant: "destructive" });
       return;
     }
     toast({ title: t("auth.resetPassword.success") });

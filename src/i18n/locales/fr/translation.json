@@ -1548,7 +1548,21 @@
       "emailInUse": "Cet email est déjà utilisé",
       "accountCreationError": "Une erreur est survenue lors de la création du compte",
       "loginError": "Erreur de connexion",
-      "invalidCredentials": "Courriel ou mot de passe invalide"
+      "invalidCredentials": "Courriel ou mot de passe invalide",
+      "codes": {
+        "generic": "L'opération n'a pas abouti. Réessayez dans un instant ; si le problème persiste, écrivez-nous.",
+        "emailRateLimit": "Trop d'inscriptions en peu de temps : le service de courriel a atteint sa limite. Réessayez dans une heure ou écrivez-nous pour obtenir un accès.",
+        "requestRateLimit": "Trop de tentatives en peu de temps. Patientez quelques minutes avant de réessayer.",
+        "emailInvalid": "Cette adresse courriel n'est pas acceptée. Vérifiez-la ou utilisez une autre adresse.",
+        "emailNotAuthorized": "Cette adresse courriel n'est pas autorisée sur ce site de test.",
+        "emailInUse": "Un compte existe déjà avec cette adresse. Connectez-vous ou réinitialisez votre mot de passe.",
+        "weakPassword": "Mot de passe trop faible : au moins 8 caractères, avec lettres et chiffres.",
+        "invalidCredentials": "Courriel ou mot de passe incorrect.",
+        "emailNotConfirmed": "Confirmez d'abord votre adresse : cliquez sur le lien reçu par courriel (pensez aux indésirables).",
+        "signupDisabled": "Les inscriptions sont fermées pour le moment.",
+        "samePassword": "Le nouveau mot de passe doit être différent de l'ancien.",
+        "network": "Connexion au serveur impossible. Vérifiez votre connexion Internet et réessayez."
+      }
     },
     "login": {
       "title": "Connexion",
@@ -1604,7 +1618,9 @@
         "feature2": "Comparaison hydrogène vs électrique",
         "feature3": "Recommandations intelligentes",
         "feature4": "Export rapports professionnels"
-      }
+      },
+      "confirmTitle": "Vérifiez votre boîte courriel",
+      "confirmMessage": "Un lien de confirmation a été envoyé à {{email}}. Cliquez dessus pour activer votre compte, puis connectez-vous."
     },
     "forgotPassword": {
       "title": "Mot de passe oublié ?",

@@ -38,7 +38,7 @@ interface AuthContextType {
   profile: Profile | null;
   role: 'admin' | 'user' | null;
   isLoading: boolean;
-  signUp: (email: string, password: string, metadata: SignUpMetadata) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, metadata: SignUpMetadata) => Promise<{ error: Error | null; confirmationRequise: boolean }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: Error | null }>;
@@ -118,7 +118,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signUp = async (email: string, password: string, metadata: SignUpMetadata) => {
     const redirectUrl = urlRetourAuth("/dashboard");
     
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -126,8 +126,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         data: metadata,
       },
     });
-    
-    return { error };
+    // « Confirm email » activé (SMTP branché) : pas de session tant que le
+    // lien reçu par courriel n'a pas été cliqué.
+    return { error, confirmationRequise: !error && !data.session };
   };
 
   const signIn = async (email: string, password: string) => {

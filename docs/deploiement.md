@@ -237,6 +237,52 @@ membres de l'équipe du projet, à très faible débit. Pour tes tests :
 Le workflow « E2E base hébergée » n'en dépend pas (comptes créés
 confirmés par l'API d'administration).
 
+### SMTP personnalisé — réglages exacts (toi, ~20 min)
+
+Sans SMTP, l'inscription d'un prospect échoue (« Trop d'inscriptions en peu
+de temps : le service de courriel a atteint sa limite », message désormais
+traduit). Exemple avec **SendGrid** (même principe pour Brevo, Postmark,
+Resend : seuls hôte, port et identifiants changent).
+
+1. **SendGrid** (app.sendgrid.com)
+   - Settings → Sender Authentication : authentifier le domaine d'envoi
+     (recommandé : enregistrements DNS SPF/DKIM) ou, au minimum, vérifier
+     une adresse d'expéditeur (*Single Sender Verification*).
+   - Settings → API Keys → *Create API Key* → « Restricted Access » avec
+     seulement **Mail Send** → copier la clé (affichée une seule fois).
+2. **Supabase** → projet `rjyvcogtvcgzwxeprgsm` → **Authentication →
+   Emails → SMTP Settings** → activer **Enable custom SMTP** :
+
+   | Champ | Valeur |
+   |---|---|
+   | Sender email | l'adresse vérifiée à l'étape 1 (ex. `no-reply@ton-domaine`) |
+   | Sender name | `H2Fleet` |
+   | Host | `smtp.sendgrid.net` |
+   | Port number | `587` |
+   | Minimum interval between emails | `60` secondes (défaut) |
+   | Username | `apikey` (le mot littéral) |
+   | Password | la clé API SendGrid (saisie par toi, jamais dans le dépôt ni le chat) |
+
+   → **Save**.
+3. **Authentication → Rate Limits** : « Rate limit for sending emails »
+   (devient modifiable une fois le SMTP actif) → `100` par heure pour le
+   pilote.
+4. **Authentication → Sign In / Providers → Email** : cocher **Confirm
+   email** → Save. L'écran d'inscription affiche alors « Vérifiez votre
+   boîte courriel » au lieu d'ouvrir une session.
+5. **Authentication → Emails → Templates** (en français) :
+   - *Confirm signup* — Objet : `Confirmez votre compte H2Fleet` —
+     Corps : `<p>Bonjour,</p><p>Pour activer votre compte H2Fleet,
+     cliquez sur le lien ci-dessous :</p><p><a href="{{ .ConfirmationURL }}">Confirmer mon adresse</a></p><p>Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.</p>`
+   - *Reset password* — Objet : `Réinitialisation de votre mot de passe
+     H2Fleet` — Corps : même modèle, lien `{{ .ConfirmationURL }}`,
+     texte « Choisir un nouveau mot de passe ».
+6. **Vérification** : t'inscrire avec une adresse externe (pas membre du
+   projet) → le courriel arrive en moins d'une minute, le lien ouvre le
+   tableau de bord du site de test. Puis poser la variable de dépôt
+   `VITE_EMAILS_ACTIVE=true` et le secret `SENDGRID_API_KEY` (même clé ou
+   une seconde clé « Mail Send ») pour les courriels applicatifs.
+
 ## Points ouverts
 
 - **Sauvegardes** : aucune sauvegarde restaurable de la base de test

@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Truck, ArrowLeft, Eye, EyeOff, Check, X, Leaf } from 'lucide-react';
 import { createSignupSchema } from '@/lib/validation/signupSchema';
+import { cleErreurAuth } from '@/lib/authErrors';
 
 // Inscription minimale : nom, email, mot de passe. Le profil (fonction,
 // entreprise, flotte) se complète après la première connexion via
@@ -18,6 +19,7 @@ export default function Signup() {
   const navigate = useNavigate();
   const location = useLocation();
   const { signUp } = useAuth();
+  const [courrielEnvoye, setCourrielEnvoye] = useState<string | null>(null);
   const { toast } = useToast();
   const { t } = useTranslation();
 
@@ -53,16 +55,19 @@ export default function Signup() {
     }
     setIsLoading(true);
     try {
-      const { error } = await signUp(formData.email, formData.password, {
+      const { error, confirmationRequise } = await signUp(formData.email, formData.password, {
         full_name: formData.fullName.trim(),
         org_type: formData.orgType,
       });
       if (error) {
-        if (error.message.includes('already registered')) {
+        const cle = cleErreurAuth(error);
+        if (cle === 'auth.errors.codes.emailInUse') {
           setErrors({ email: t('auth.errors.emailInUse') });
         } else {
-          toast({ title: t('common.error'), description: error.message, variant: 'destructive' });
+          toast({ title: t('common.error'), description: t(cle), variant: 'destructive' });
         }
+      } else if (confirmationRequise) {
+        setCourrielEnvoye(formData.email);
       } else {
         toast({ title: t('auth.signup.success'), description: t('auth.signup.welcomeMessage') });
         navigate(postAuthTarget);
@@ -122,6 +127,12 @@ export default function Signup() {
               <CardDescription className="text-base">{t('auth.signup.subtitle')}</CardDescription>
             </CardHeader>
             <CardContent>
+              {courrielEnvoye ? (
+                <div className="space-y-2 rounded-md border border-border bg-muted/40 p-4 text-sm" data-testid="signup-confirmation" role="status">
+                  <p className="font-semibold">{t('auth.signup.confirmTitle')}</p>
+                  <p className="text-muted-foreground">{t('auth.signup.confirmMessage', { email: courrielEnvoye })}</p>
+                </div>
+              ) : (
               <form onSubmit={handleSubmit} className="space-y-5 pt-2">
                 <div className="space-y-2">
                   <Label htmlFor="fullName">{t('auth.fields.fullName')}</Label>
@@ -225,6 +236,7 @@ export default function Signup() {
                   </Link>
                 </p>
               </form>
+              )}
             </CardContent>
           </Card>
         </div>

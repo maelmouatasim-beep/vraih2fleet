@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { cleErreurAuth } from "@/lib/authErrors";
 import { z } from "zod";
 import { urlRetourAuth } from "@/lib/authRedirect";
 
@@ -41,7 +42,7 @@ const ForgotPassword = () => {
     if (error) {
       toast({
         title: t('common.error'),
-        description: error.message,
+        description: t(cleErreurAuth(error)),
         variant: "destructive",
       });
       setIsLoading(false);

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { cleErreurAuth } from "@/lib/authErrors";
 import { useTranslation } from "react-i18next";
 import { Leaf, Mail, Lock, Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -55,9 +56,7 @@ const Login = () => {
     if (error) {
       toast({
         title: t('auth.errors.loginError', 'Login error'),
-        description: error.message === "Invalid login credentials" 
-          ? t('auth.errors.invalidCredentials', 'Invalid email or password') 
-          : error.message,
+        description: t(cleErreurAuth(error)),
         variant: "destructive",
       });
       setIsLoading(false);

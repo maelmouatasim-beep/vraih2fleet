@@ -1548,7 +1548,21 @@
       "emailInUse": "This email is already in use",
       "accountCreationError": "An error occurred while creating the account",
       "loginError": "Login error",
-      "invalidCredentials": "Invalid email or password"
+      "invalidCredentials": "Invalid email or password",
+      "codes": {
+        "generic": "The operation did not complete. Try again in a moment; if the problem persists, contact us.",
+        "emailRateLimit": "Too many sign-ups in a short time: the email service has reached its limit. Try again in an hour or contact us for access.",
+        "requestRateLimit": "Too many attempts in a short time. Wait a few minutes before trying again.",
+        "emailInvalid": "This email address is not accepted. Check it or use another address.",
+        "emailNotAuthorized": "This email address is not authorized on this test site.",
+        "emailInUse": "An account already exists with this address. Sign in or reset your password.",
+        "weakPassword": "Password too weak: at least 8 characters, with letters and digits.",
+        "invalidCredentials": "Incorrect email or password.",
+        "emailNotConfirmed": "Confirm your address first: click the link you received by email (check your spam folder).",
+        "signupDisabled": "Sign-ups are closed for now.",
+        "samePassword": "The new password must be different from the old one.",
+        "network": "Cannot reach the server. Check your Internet connection and try again."
+      }
     },
     "login": {
       "title": "Sign In",
@@ -1604,7 +1618,9 @@
         "feature2": "Hydrogen vs electric comparison",
         "feature3": "Smart recommendations",
         "feature4": "Professional report export"
-      }
+      },
+      "confirmTitle": "Check your inbox",
+      "confirmMessage": "A confirmation link was sent to {{email}}. Click it to activate your account, then sign in."
     },
     "forgotPassword": {
       "title": "Forgot your password?",
