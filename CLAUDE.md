@@ -498,6 +498,16 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   progression, meilleur résultat « approché », plus aucune relance
   automatique (Web Worker complet : plus tard). Migrations 20261007010000,
   20261007020000 (additives).
+  Contre-audit (même jour) : fichier Excel BRUT importé tel quel (76/80,
+  « Description » = catégorie si aucune colonne catégorie, libellés usuels
+  → catégorie, dates « mai 2016 », années « 2015? », libellé ambigu jamais
+  deviné) ; PDF > 500 véhicules réparé (pied de page positionné par le
+  haut : `bottom` + numéro de page dynamique faisait planter react-pdf ;
+  test à 600 véhicules) ; langue « en-CA » respectée (`startsWith`, garde-fou
+  CI) ; préparation de l'optimiseur découpée (gel 5,5 s → ~3 s) ; plus aucun
+  « (s) », « BEV », « au pot » ; scripts e2e alignés. Mesures à 1 000
+  véhicules : application 4,7 s, optimiseur 9,7 s « approché », PDF 16,9 s,
+  écran Stratégies 3,2–4,9 s (Web Worker du point 14 encore à faire).
 
 Rappels de méthode : chaque phase finit par `npm run check` vert → push →
 résumé court → **attendre le « ok » de l'utilisateur** ; kanban intégré à
