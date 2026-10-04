@@ -281,13 +281,16 @@ interface Contexte {
   cacheGarage: Map<string, GarageEvalue>;
 }
 
-function preparer(
+/** Préparation (chiffrage de chaque véhicule × année × technologie) en
+ *  générateur : l'interface rend la main au navigateur entre deux véhicules
+ *  (re-audit, test de charge : 5 s de gel à 1 000 véhicules sinon). */
+function* preparerIter(
   vehicules: VehiculeProjet[],
   options: OptionsStrategie,
   contraintes: ContraintesOptimiseur,
   relax: Relaxations,
   anneesPrevues: Map<string, number | null> | undefined,
-): Contexte {
+): Generator<number, Contexte, void> {
   const H = options.horizonAns;
   const ref = options.anneeReference;
   const opts: OptionsStrategie = {
@@ -318,7 +321,9 @@ function preparer(
     };
   };
 
-  for (const v of vehicules) {
+  for (let iv = 0; iv < vehicules.length; iv++) {
+    const v = vehicules[iv];
+    if (iv > 0 && iv % 8 === 0) yield iv / vehicules.length;
     if (!analyserDonneesVehicule(v).defauts) continue;
     const prevueBrute = anneesPrevues?.has(v.id) ? anneesPrevues.get(v.id)! : v.replacement_year;
     const anneePrevue = Math.max(prevueBrute ?? ref, ref);
@@ -1005,10 +1010,22 @@ function* lancerIter(
   relax: Relaxations,
   limite: Limite,
 ): Generator<number, { ctx: Contexte; etat: Etat | null }, void> {
-  const ctx = preparer(entree.vehicules, entree.options, contraintes, relax, entree.anneesPrevues);
+  // Progression : préparation = premier quart, recherche = le reste.
+  const prep = preparerIter(entree.vehicules, entree.options, contraintes, relax, entree.anneesPrevues);
+  let p = prep.next();
+  while (!p.done) {
+    yield 0.25 * (p.value as number);
+    p = prep.next();
+  }
+  const ctx = p.value;
   if (ctx.vehicules.length === 0 || !ctx.factice) return { ctx, etat: null as Etat | null };
-  const etat = yield* resoudre(ctx, entree.vehicules, entree.vehicules.length, limite);
-  return { ctx, etat };
+  const recherche = resoudre(ctx, entree.vehicules, entree.vehicules.length, limite);
+  let r = recherche.next();
+  while (!r.done) {
+    yield 0.25 + 0.75 * (r.value as number);
+    r = recherche.next();
+  }
+  return { ctx, etat: r.value };
 }
 
 function lancer(entree: EntreeOptimiseur, contraintes: ContraintesOptimiseur, relax: Relaxations, limite = new Limite()) {
