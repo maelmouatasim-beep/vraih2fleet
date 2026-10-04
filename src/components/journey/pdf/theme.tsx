@@ -180,7 +180,8 @@ export function Tableau({
   );
   return (
     <View>
-      <View style={styles.enTeteTable} wrap={false}>
+      {/* Entête répétée sur chaque page où le tableau se poursuit ; jamais seule en bas de page. */}
+      <View style={styles.enTeteTable} wrap={false} fixed minPresenceAhead={30}>
         {colonnes.map((c, j) => (
           <Text key={j} style={[styles.enTeteCellule, { flex: c.flex }, c.retrait ? { paddingLeft: c.retrait } : {}, c.droite ? styles.droite : {}]}>
             {c.titre}
@@ -214,13 +215,20 @@ export function Piece({
   source: string;
   children: ReactNode;
 }) {
+  // Une pièce longue (tableau de centaines de véhicules) se POURSUIT sur la
+  // page suivante : la rendre insécable la ferait écraser sur une seule page
+  // (texte superposé). Seul son titre reste solidaire du début du contenu.
   return (
-    <View style={styles.piece} wrap={false}>
-      <Text style={styles.pieceNumero}>{numero.toLocaleUpperCase()}</Text>
-      <Text style={styles.pieceTitre}>{titre}</Text>
-      {sousTitre ? <Text style={styles.pieceSousTitre}>{sousTitre}</Text> : null}
+    <View style={styles.piece}>
+      <View wrap={false} minPresenceAhead={60}>
+        <Text style={styles.pieceNumero}>{numero.toLocaleUpperCase()}</Text>
+        <Text style={styles.pieceTitre}>{titre}</Text>
+        {sousTitre ? <Text style={styles.pieceSousTitre}>{sousTitre}</Text> : null}
+      </View>
       {children}
-      <Text style={styles.source}>{source}</Text>
+      <Text style={styles.source} minPresenceAhead={0}>
+        {source}
+      </Text>
     </View>
   );
 }
