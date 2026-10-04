@@ -45,7 +45,7 @@ describe("catégories municipales (bloc 2.3)", () => {
     expect(explicite.plan!.vehicules[0].alternative.technologie).toBe("BEV");
   });
 
-  it("import : synonymes FR/EN reconnus ; catégorie inconnue = erreur listant catégories et synonymes", () => {
+  it("import : synonymes FR/EN reconnus ; catégorie inconnue = erreur listant les catégories en français", () => {
     const r = validerLignes(
       [
         { unite: "A", categorie: "Chasse-neige", carburant: "diesel" },
@@ -56,8 +56,8 @@ describe("catégories municipales (bloc 2.3)", () => {
       new Map(),
     );
     expect(r.valides.map((x) => x.category)).toEqual(["deneigeuse", "camion_benne"]);
-    expect(r.erreurs[0].message).toContain("catégories acceptées");
-    expect(r.erreurs[0].message).toContain("deneigeuse (chasse_neige");
-    expect(r.erreurs[0].message).toContain("dump_truck");
+    expect(r.erreurs[0].message).toContain("catégorie non reconnue : « Zamboni »");
+    expect(r.erreurs[0].message).toContain("déneigeuse");
+    expect(r.erreurs[0].message).toContain("camion à benne");
   });
 });
