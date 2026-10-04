@@ -899,6 +899,16 @@ moteur décrit ci-dessus chiffre chaque choix.
    marginal (bornes du garage comprises), contrainte qui serait violée,
    programme de subvention perdu l'année suivante.
 
+**Budget de temps (v2.5, interface)**. Dans l'application, la recherche
+est bornée à 5 secondes : elle évalue d'abord toutes les amorces (statu
+quo, plan actuel, trois stratégies), puis améliore localement tant qu'il
+reste du temps, et rend la **meilleure solution trouvée** — jamais moins
+bonne que la meilleure amorce. Si l'échéance l'a interrompue, le résultat
+est marqué **« approché »** (pas forcément l'optimum local) et le
+diagnostic d'infaisabilité n'est pas relancé. L'optimiseur n'est jamais
+relancé automatiquement à l'ouverture de l'écran ; sans budget (tests,
+calcul hors interface), il reste entièrement déterministe.
+
 ### 11.1 « Économies d'abord » : meilleur sous-ensemble par garage
 
 L'infrastructure d'un garage a un coût par véhicule (une borne selon la

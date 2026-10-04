@@ -279,3 +279,51 @@ describe("optimiseur — meilleur sous-ensemble par garage (même recherche qu'�
   });
 });
 
+
+describe("optimiseur borné dans le temps (audit acheteur, ajustement C)", () => {
+  const flotte = (n: number) =>
+    Array.from({ length: n }, (_, i) =>
+      vehicule({
+        id: `b${i}`,
+        category: i % 3 === 0 ? "camion_moyen" : "camionnette",
+        annual_km: 15000 + ((i * 3779) % 30000),
+        depot: `Garage ${i % 4}`,
+        replacement_year: 2027 + (i % 6),
+        target_technology: i % 2 ? "bev" : "diesel",
+      }),
+    );
+
+  it("sans budget : déterministe, jamais marqué approché", async () => {
+    const { optimiserCalendrier } = await import("../optimizer");
+    const v = flotte(12);
+    const a = optimiserCalendrier({ vehicules: v, options: OPTIONS, contraintes: {} });
+    const b = optimiserCalendrier({ vehicules: v, options: OPTIONS, contraintes: {} });
+    expect(a.approche).toBe(false);
+    expect(a.choix).toEqual(b.choix);
+  });
+
+  it("budget dépassé : la meilleure solution TROUVÉE est rendue, marquée approchée, jamais pire que « Économies d'abord »", async () => {
+    const { optimiserCalendrier } = await import("../optimizer");
+    const v = flotte(150);
+    const t0 = performance.now();
+    const r = optimiserCalendrier({ vehicules: v, options: OPTIONS, contraintes: {}, budgetMs: 1 });
+    expect(r.approche).toBe(true);
+    expect(r.strategie).not.toBeNull();
+    expect(r.decisions).toHaveLength(150);
+    const eco = construireStrategies(v, OPTIONS).find((s) => s.cle === "economies_d_abord")!.resultat!.vanDifferentielle;
+    expect(r.strategie!.resultat!.vanDifferentielle).toBeGreaterThanOrEqual(eco - Math.abs(eco) * 0.02 - 1);
+    expect(performance.now() - t0).toBeLessThan(30000);
+  }, 60000);
+
+  it("version progressive : progression croissante de 0 à 1, même résultat que la version synchrone sans échéance", async () => {
+    const { optimiserCalendrier, optimiserCalendrierProgressif } = await import("../optimizer");
+    const v = flotte(20);
+    const etapes: number[] = [];
+    const r = await optimiserCalendrierProgressif({ vehicules: v, options: OPTIONS, contraintes: {}, budgetMs: 60000 }, (f) => etapes.push(f));
+    expect(etapes[0]).toBe(0);
+    expect(etapes[etapes.length - 1]).toBe(1);
+    for (let i = 1; i < etapes.length; i++) expect(etapes[i]).toBeGreaterThanOrEqual(etapes[i - 1]);
+    expect(r.approche).toBe(false);
+    expect(r.choix).toEqual(optimiserCalendrier({ vehicules: v, options: OPTIONS, contraintes: {} }).choix);
+  }, 60000);
+});

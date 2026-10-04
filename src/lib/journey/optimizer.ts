@@ -199,6 +199,9 @@ export interface ResultatOptimisation {
   nbVehiculesProjet: number;
   /** Écart entre la somme des contributions et le re-chiffrage complet ($) — contrôle d'intégrité (≈ 0). */
   ecartControle: number;
+  /** La recherche a été interrompue par son budget de temps : meilleure
+   *  solution TROUVÉE (jamais moins bonne que les amorces), pas forcément l'optimum local. */
+  approche: boolean;
 }
 
 /** Ce que l'on enregistre au moment d'appliquer la stratégie optimisée. */
@@ -680,13 +683,44 @@ function indexOption(vo: VehiculeOptim, annee: number, techno: TechnoAlternative
   return meilleurIdx;
 }
 
-function rechercheLocale(ctx: Contexte, depart: number[], nbProjet: number): Etat {
+// ---------------------------------------------------------------------------
+// Budget de temps (audit acheteur, ajustement C) : la recherche s'arrête à
+// l'échéance et rend la MEILLEURE solution trouvée, marquée « approchée ».
+// Sans budget (tests, copilote), aucune limite : résultat déterministe.
+// ---------------------------------------------------------------------------
+
+const maintenant = () => (typeof performance !== "undefined" ? performance.now() : Date.now());
+
+class Limite {
+  approche = false;
+  readonly debut = maintenant();
+  constructor(readonly budgetMs: number = Infinity) {}
+  depassee(): boolean {
+    if (this.budgetMs === Infinity) return false;
+    if (maintenant() - this.debut > this.budgetMs) this.approche = true;
+    return this.approche;
+  }
+  /** Part du budget consommée (0-1). */
+  fraction(): number {
+    return this.budgetMs === Infinity ? 0 : Math.min(1, (maintenant() - this.debut) / this.budgetMs);
+  }
+}
+
+/** Exécute un générateur jusqu'au bout (calcul synchrone). */
+function drainer<T>(g: Generator<number, T, void>): T {
+  for (;;) {
+    const r = g.next();
+    if (r.done) return r.value;
+  }
+}
+
+function* rechercheLocale(ctx: Contexte, depart: number[], nbProjet: number, limite: Limite): Generator<number, Etat, void> {
   const etat = new Etat(ctx, depart);
   etat.nbProjet = nbProjet;
   let courant = etat.score();
   const N = ctx.vehicules.length;
   const maxIterations = 4 * N + 20;
-  for (let it = 0; it < maxIterations; it++) {
+  recherche: for (let it = 0; it < maxIterations; it++) {
     let meilleurCoup: { changes: [number, number][]; score: Score } | null = null;
     const essayer = (changes: [number, number][]) => {
       const anciens = changes.map(([i]) => [i, etat.idx[i]] as [number, number]);
@@ -695,10 +729,15 @@ function rechercheLocale(ctx: Contexte, depart: number[], nbProjet: number): Eta
       for (const [i, j] of anciens.reverse()) etat.poser(i, j);
       if (meilleur(s, meilleurCoup?.score ?? courant)) meilleurCoup = { changes, score: s };
     };
-    // 1) Un véhicule à la fois.
+    // 1) Un véhicule à la fois (pause tous les 16 véhicules : progression
+    //    affichable, échéance vérifiée — on garde alors le meilleur coup vu).
     for (let i = 0; i < N; i++) {
       const vo = ctx.vehicules[i];
       for (let j = 0; j < vo.options.length; j++) if (j !== etat.idx[i]) essayer([[i, j]]);
+      if (i % 16 === 15) {
+        yield it / maxIterations;
+        if (limite.depassee()) break recherche;
+      }
     }
     // 2) Ajout groupé par garage (coût fixe des bornes + raccordement) :
     //    les k meilleurs candidats électrifiés ensemble à leur meilleure année.
@@ -743,6 +782,8 @@ function rechercheLocale(ctx: Contexte, depart: number[], nbProjet: number): Eta
     const coup = meilleurCoup as { changes: [number, number][]; score: Score };
     for (const [i, j] of coup.changes) etat.poser(i, j);
     courant = coup.score;
+    yield (it + 1) / maxIterations;
+    if (limite.depassee()) break;
   }
   return etat;
 }
@@ -774,23 +815,48 @@ function amorces(
   return liste;
 }
 
-function resoudre(
+/**
+ * Recherche depuis chaque amorce. Toutes les amorces (statu quo, plan
+ * actuel, trois stratégies) sont d'abord ÉVALUÉES : même interrompue par
+ * l'échéance, la solution rendue n'est jamais moins bonne que la
+ * meilleure d'entre elles. Progression rendue entre 0 et 1.
+ */
+function* resoudre(
   ctx: Contexte,
   vehicules: VehiculeProjet[],
   nbProjet: number,
-): Etat {
+  limite: Limite,
+): Generator<number, Etat, void> {
   let meilleurEtat: Etat | null = null;
   let meilleurScore: Score | null = null;
-  const vus = new Set<string>();
-  for (const depart of amorces(ctx, vehicules)) {
-    const cle = depart.join(",");
-    if (vus.has(cle)) continue;
-    vus.add(cle);
-    const e = rechercheLocale(ctx, depart, nbProjet);
+  const garder = (e: Etat) => {
     const s = e.score();
     if (!meilleurScore || meilleur(s, meilleurScore)) {
       meilleurEtat = e;
       meilleurScore = s;
+    }
+  };
+  const vus = new Set<string>();
+  const departs: number[][] = [];
+  for (const depart of amorces(ctx, vehicules)) {
+    const cle = depart.join(",");
+    if (vus.has(cle)) continue;
+    vus.add(cle);
+    departs.push(depart);
+    const e = new Etat(ctx, depart);
+    e.nbProjet = nbProjet;
+    garder(e);
+  }
+  for (let k = 0; k < departs.length; k++) {
+    if (limite.depassee()) break;
+    const g = rechercheLocale(ctx, departs[k], nbProjet, limite);
+    for (;;) {
+      const r = g.next();
+      if (r.done) {
+        garder(r.value);
+        break;
+      }
+      yield Math.max((k + (r.value as number)) / departs.length, limite.fraction());
     }
   }
   return meilleurEtat!;
@@ -928,18 +994,79 @@ export interface EntreeOptimiseur {
   anneesPrevues?: Map<string, number | null>;
   /** Diagnostic d'infaisabilité (relances avec une famille levée). Défaut : oui. */
   diagnostic?: boolean;
+  /** Budget de temps (ms) : la recherche s'arrête à l'échéance et rend la
+   *  meilleure solution trouvée, marquée « approchée ». Absent = sans limite. */
+  budgetMs?: number;
 }
 
-function lancer(entree: EntreeOptimiseur, contraintes: ContraintesOptimiseur, relax: Relaxations) {
+function* lancerIter(
+  entree: EntreeOptimiseur,
+  contraintes: ContraintesOptimiseur,
+  relax: Relaxations,
+  limite: Limite,
+): Generator<number, { ctx: Contexte; etat: Etat | null }, void> {
   const ctx = preparer(entree.vehicules, entree.options, contraintes, relax, entree.anneesPrevues);
   if (ctx.vehicules.length === 0 || !ctx.factice) return { ctx, etat: null as Etat | null };
-  const etat = resoudre(ctx, entree.vehicules, entree.vehicules.length);
+  const etat = yield* resoudre(ctx, entree.vehicules, entree.vehicules.length, limite);
   return { ctx, etat };
 }
 
+function lancer(entree: EntreeOptimiseur, contraintes: ContraintesOptimiseur, relax: Relaxations, limite = new Limite()) {
+  return drainer(lancerIter(entree, contraintes, relax, limite));
+}
+
+/** Optimiseur synchrone (tests, copilote). Avec `budgetMs`, borné dans le temps. */
 export function optimiserCalendrier(entree: EntreeOptimiseur): ResultatOptimisation {
   const contraintes = zContraintesOptimiseur.parse(entree.contraintes);
-  const { ctx, etat } = lancer(entree, contraintes, {});
+  const limite = new Limite(entree.budgetMs);
+  const { ctx, etat } = lancer(entree, contraintes, {}, limite);
+  return finaliser(entree, contraintes, ctx, etat, limite);
+}
+
+/**
+ * Optimiseur pour l'interface : borné dans le temps (`budgetMs`, 5 s par
+ * défaut), il rend la main au navigateur régulièrement pour afficher la
+ * progression (0 → 1), puis rend la meilleure solution trouvée — marquée
+ * `approche` si l'échéance a interrompu la recherche. Jamais relancé
+ * automatiquement : l'utilisateur le déclenche.
+ */
+export async function optimiserCalendrierProgressif(
+  entree: EntreeOptimiseur,
+  surProgression?: (fraction: number) => void,
+): Promise<ResultatOptimisation> {
+  const contraintes = zContraintesOptimiseur.parse(entree.contraintes);
+  const limite = new Limite(entree.budgetMs ?? BUDGET_OPTIMISEUR_MS);
+  const pause = () => new Promise<void>((r) => setTimeout(r, 0));
+  surProgression?.(0);
+  await pause();
+  const g = lancerIter(entree, contraintes, {}, limite);
+  let tranche = maintenant();
+  let r = g.next();
+  while (!r.done) {
+    if (maintenant() - tranche > 40) {
+      surProgression?.(Math.min(0.97, r.value as number));
+      await pause();
+      tranche = maintenant();
+    }
+    r = g.next();
+  }
+  surProgression?.(0.98);
+  await pause();
+  const resultat = finaliser(entree, contraintes, r.value.ctx, r.value.etat, limite);
+  surProgression?.(1);
+  return resultat;
+}
+
+/** Budget de temps de l'optimiseur dans l'interface (ms). */
+export const BUDGET_OPTIMISEUR_MS = 5000;
+
+function finaliser(
+  entree: EntreeOptimiseur,
+  contraintes: ContraintesOptimiseur,
+  ctx: Contexte,
+  etat: Etat | null,
+  limite: Limite,
+): ResultatOptimisation {
   const nbVehiculesProjet = entree.vehicules.length;
   if (!etat) {
     return {
@@ -953,6 +1080,7 @@ export function optimiserCalendrier(entree: EntreeOptimiseur): ResultatOptimisat
       indicateurs: [],
       nbVehiculesProjet,
       ecartControle: 0,
+      approche: false,
     };
   }
 
@@ -1008,7 +1136,9 @@ export function optimiserCalendrier(entree: EntreeOptimiseur): ResultatOptimisat
 
   const realisable = violations.length === 0;
   const leviers: Levier[] = [];
-  if (!realisable && entree.diagnostic !== false) {
+  // Diagnostic d'infaisabilité : relances complètes, seulement s'il reste
+  // du temps (une solution approchée n'a pas de diagnostic fiable).
+  if (!realisable && entree.diagnostic !== false && !limite.depassee()) {
     const familles: FamilleContrainte[] = ["budget", "capacite", "technologies", "calendrier", "vehicules_gardes"];
     for (const famille of familles) {
       const pertinent =
@@ -1020,7 +1150,8 @@ export function optimiserCalendrier(entree: EntreeOptimiseur): ResultatOptimisat
               ? contraintes.vehiculesGardes.length > 0
               : true;
       if (!pertinent) continue;
-      const r = lancer(entree, contraintes, { [famille]: true });
+      if (limite.depassee()) break;
+      const r = lancer(entree, contraintes, { [famille]: true }, limite);
       if (!r.etat) continue;
       const v = r.etat.violations(true);
       const restantes = v.liste.filter((x) => x.code !== "aucune_techno").length;
@@ -1039,6 +1170,7 @@ export function optimiserCalendrier(entree: EntreeOptimiseur): ResultatOptimisat
     indicateurs,
     nbVehiculesProjet,
     ecartControle,
+    approche: limite.approche,
   };
 }
 

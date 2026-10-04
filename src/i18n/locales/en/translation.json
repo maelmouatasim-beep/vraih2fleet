@@ -5576,7 +5576,12 @@
         "kept": "Vehicles to keep as is",
         "keptHelp": "Their year and technology from the current plan do not change.",
         "run": "Optimize"
-      }
+      },
+      "runningBounded": "Searching for the best schedule (at most {{seconds}} s)…",
+      "progress": "Optimizer progress",
+      "approximate": "Approximate result: the search stopped after {{seconds}} s. This is the best solution found — never worse than the existing strategies, but not necessarily the best possible.",
+      "savedNotRun": "Constraints saved. The optimizer does not rerun on its own: run it when you want an up-to-date result.",
+      "run": "Run the optimizer"
     },
     "changeLog": {
       "title": "Plan change history",

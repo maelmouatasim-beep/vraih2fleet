@@ -29,7 +29,7 @@ import {
   type StrategieConstruite,
   type VehiculeProjet,
 } from "@/lib/journey/strategies";
-import {
+import { BUDGET_OPTIMISEUR_MS,
   changementsOptimises,
   contraintesParDefaut,
   optimiserCalendrier,
@@ -366,7 +366,8 @@ function optimiser(snap: SnapshotProjet, entree: z.infer<typeof zOptimiser>, pro
   const anneesPrevues = snap.assignation
     ? new Map(Object.entries(snap.assignation.vehicules).map(([id, c]) => [id, c.anneePrevue]))
     : undefined;
-  const r = optimiserCalendrier({ vehicules: snap.vehicules, options: snap.options, contraintes, anneesPrevues });
+  // Borné dans le temps comme dans l'interface (ajustement C de l'audit).
+  const r = optimiserCalendrier({ vehicules: snap.vehicules, options: snap.options, contraintes, anneesPrevues, budgetMs: BUDGET_OPTIMISEUR_MS });
   const changements = changementsOptimises(snap.vehicules, r.choix);
   const id = `opt-${propositions.size + 1}`;
   if (changements.length > 0) {

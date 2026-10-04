@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -38,7 +39,8 @@ import {
   contraintesParDefaut,
   lireAssignation,
   lireContraintes,
-  optimiserCalendrier,
+  BUDGET_OPTIMISEUR_MS,
+  optimiserCalendrierProgressif,
   type ContraintesOptimiseur,
   type ResultatOptimisation,
 } from "@/lib/journey/optimizer";
@@ -102,33 +104,27 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
   const contraintesSauvees = useMemo(() => lireContraintes(project?.optimizerConstraints), [project?.optimizerConstraints]);
   const assignation = useMemo(() => lireAssignation(project?.optimizedAssignment), [project?.optimizedAssignment]);
 
-  const lancerOptimisation = (contraintes: ContraintesOptimiseur) => {
+  // Optimiseur borné dans le temps (5 s), progression affichée, JAMAIS
+  // relancé automatiquement (ajustement C de l'audit) : avec des
+  // contraintes enregistrées, la carte propose « Lancer l'optimiseur ».
+  const [progression, setProgression] = useState(0);
+  const lancerOptimisation = async (contraintes: ContraintesOptimiseur) => {
     if (!options || vehiculesProjet.length === 0) return;
     setCalculEnCours(true);
-    // Laisse l'indicateur s'afficher avant le calcul (synchrone, déterministe).
-    window.setTimeout(() => {
-      try {
-        setOptimisation(
-          optimiserCalendrier({
-            vehicules: vehiculesProjet,
-            options,
-            contraintes,
-            anneesPrevues: anneesPrevuesDe(assignation),
-          }),
-        );
-      } catch (e) {
-        toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
-      } finally {
-        setCalculEnCours(false);
-      }
-    }, 30);
+    setProgression(0);
+    try {
+      setOptimisation(
+        await optimiserCalendrierProgressif(
+          { vehicules: vehiculesProjet, options, contraintes, anneesPrevues: anneesPrevuesDe(assignation) },
+          setProgression,
+        ),
+      );
+    } catch (e) {
+      toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
+    } finally {
+      setCalculEnCours(false);
+    }
   };
-
-  // Relance automatique quand le projet a des contraintes enregistrées.
-  useEffect(() => {
-    if (contraintesSauvees && options && vehiculesProjet.length > 0) lancerOptimisation(contraintesSauvees);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contraintesSauvees, options, vehiculesProjet]);
 
   const soumettreContraintes = async (c: ContraintesOptimiseur) => {
     setFormulaireOuvert(false);
@@ -139,7 +135,7 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
     } catch (e) {
       toast({ title: t("common.error"), description: e instanceof Error ? e.message : "", variant: "destructive" });
     }
-    lancerOptimisation(c);
+    void lancerOptimisation(c);
   };
 
   const uniteDe = useMemo(() => {
@@ -451,10 +447,13 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
         >
           {entete("optimisee", selection === "optimisee")}
           {calculEnCours ? (
-            <p className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              {t("journey.optimizer.running")}
-            </p>
+            <div className="space-y-2" data-testid="optimizer-progress">
+              <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                {t("journey.optimizer.runningBounded", { seconds: BUDGET_OPTIMISEUR_MS / 1000 })}
+              </p>
+              <Progress value={Math.round(progression * 100)} aria-label={t("journey.optimizer.progress")} />
+            </div>
           ) : optimisation?.strategie ? (
             <>
               {carte(optimisation.strategie)}
@@ -463,7 +462,26 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
                   ? t("journey.optimizer.cardFeasible", { count: deplaces })
                   : t("journey.optimizer.cardInfeasible", { count: optimisation.violations.length })}
               </p>
+              {optimisation.approche && (
+                <p className="text-xs text-muted-foreground" data-testid="optimizer-approximate">
+                  {t("journey.optimizer.approximate", { seconds: BUDGET_OPTIMISEUR_MS / 1000 })}
+                </p>
+              )}
             </>
+          ) : contraintesSauvees ? (
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">{t("journey.optimizer.savedNotRun")}</p>
+              <Button
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  void lancerOptimisation(contraintesSauvees);
+                }}
+                data-testid="optimizer-run"
+              >
+                {t("journey.optimizer.run")}
+              </Button>
+            </div>
           ) : (
             <p className="text-sm text-muted-foreground">{t("journey.optimizer.cardEmpty")}</p>
           )}

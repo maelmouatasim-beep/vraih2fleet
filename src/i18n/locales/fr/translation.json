@@ -5576,7 +5576,12 @@
         "kept": "Véhicules à garder tels quels",
         "keptHelp": "Leur année et leur technologie du plan actuel ne changent pas.",
         "run": "Optimiser"
-      }
+      },
+      "runningBounded": "Recherche du meilleur calendrier (au plus {{seconds}} s)…",
+      "progress": "Progression de l'optimiseur",
+      "approximate": "Résultat approché : la recherche s'est arrêtée après {{seconds}} s. C'est la meilleure solution trouvée — jamais moins bonne que les stratégies existantes, mais pas forcément la meilleure possible.",
+      "savedNotRun": "Contraintes enregistrées. L'optimiseur ne se relance pas tout seul : lancez-le quand vous voulez un résultat à jour.",
+      "run": "Lancer l'optimiseur"
     },
     "changeLog": {
       "title": "Historique des modifications du plan",
