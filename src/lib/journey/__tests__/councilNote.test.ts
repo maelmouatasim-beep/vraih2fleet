@@ -105,6 +105,8 @@ describe("note au conseil", () => {
       for (const s of SECTIONS_NOTE) expect(rendu[s]).not.toMatch(/\(s\)|\(facteur\)|\(factor\)/);
       expect(verifierNote(rendu, f, langue).ok).toBe(true);
     }
+    // annexe de traçabilité : libellés des faits sans sigle (re-audit)
+    expect(JSON.stringify(f.map((x) => x.libelle))).not.toMatch(/\bBEVs?\b|\bFCEVs?\b/);
   });
 
   it("audit point 4 : une subvention confirmée par le client (PAGTCP) est citée comme confirmée, avec l'investissement du statu quo", () => {

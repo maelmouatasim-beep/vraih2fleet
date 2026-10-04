@@ -304,7 +304,7 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
               const subventions = v.subventionsAlternative ?? [];
               return [
                 unites.get(v.id) ?? v.id,
-                v.alternative.technologie === "diesel" ? "Diesel (SQ)" : v.alternative.technologie,
+                ({ diesel: en ? "Combustion (SQ)" : "Thermique (SQ)", BEV: en ? "Electric" : "Électrique", FCEV: en ? "Hydrogen" : "Hydrogène" } as Record<string, string>)[v.alternative.technologie] ?? v.alternative.technologie,
                 String(meta.anneeReference + (v.anneeAcquisition ?? 0)),
                 subventions.map((x) => `${traduireLibelleSubvention(x.libelle, langue)} (${cad(x.montant)})`).join(" ; ") || "—",
                 cad(subventions.reduce((a, x) => a + x.montant, 0)),

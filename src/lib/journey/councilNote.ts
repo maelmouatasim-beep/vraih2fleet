@@ -240,13 +240,13 @@ export function faitsNote(e: EntreeFaits): FaitNote[] {
   // Hiver (diagnostic des véhicules électriques à batterie)
   const diag = e.hiver.filter((d): d is DiagnosticHiver => !!d);
   compte("nb_bev", { fr: "Véhicules électriques à batterie", en: "Battery-electric vehicles" }, diag.length, PROJET);
-  compte("hiver_tient", { fr: "BEV qui tiennent l'hiver", en: "BEVs that hold up in winter" }, diag.filter((d) => d.verdict === "tient").length);
+  compte("hiver_tient", { fr: "Électriques qui tiennent l'hiver", en: "Electric vehicles that hold up in winter" }, diag.filter((d) => d.verdict === "tient").length);
   compte(
     "hiver_recharge_journee",
-    { fr: "BEV avec recharge en journée", en: "BEVs needing daytime charging" },
+    { fr: "Électriques avec recharge en journée", en: "Electric vehicles needing daytime charging" },
     diag.filter((d) => d.verdict === "recharge_journee").length,
   );
-  compte("hiver_ne_tient_pas", { fr: "BEV qui ne tiennent pas l'hiver", en: "BEVs that do not hold up in winter" }, diag.filter((d) => d.verdict === "ne_tient_pas").length);
+  compte("hiver_ne_tient_pas", { fr: "Électriques qui ne tiennent pas l'hiver", en: "Electric vehicles that do not hold up in winter" }, diag.filter((d) => d.verdict === "ne_tient_pas").length);
   compte(
     "garages_depasses",
     { fr: "Garages dont la capacité électrique est dépassée", en: "Garages whose electrical capacity is exceeded" },
