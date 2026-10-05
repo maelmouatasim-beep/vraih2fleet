@@ -180,12 +180,17 @@ export function explicationStatuQuo(analyse: ResultatSensibilite, cle: CleScenar
       ? "The status quo is recomputed with the same assumptions as the scenario; the fleet and schedule do not change."
       : "Le statu quo est recalculé avec les mêmes hypothèses que le scénario ; la flotte et le calendrier ne changent pas.";
   }
+  const sansHausse = (valeur(inflation) ?? 0) === 0;
   if (langue === "en") {
+    if (cle === "prudent" && sansHausse)
+      return `Status quo cheaper than in the central case: diesel at ${d}, with no annual increase — keeping combustion vehicles costs less, which works against the plan.`;
     if (cle === "central") return `Status quo at the registry's central values: diesel at ${d}, rising ${i} a year.`;
     return cle === "prudent"
       ? `Status quo cheaper than in the central case: diesel at ${d}, rising only ${i} a year — keeping combustion vehicles costs less, which works against the plan.`
       : `Status quo more expensive than in the central case: diesel at ${d}, rising ${i} a year — keeping combustion vehicles costs more, which favours the plan.`;
   }
+  if (cle === "prudent" && sansHausse)
+    return `Statu quo moins cher qu'au central : diesel à ${d}, sans hausse annuelle — garder des véhicules thermiques coûte moins, ce qui joue contre le plan.`;
   if (cle === "central") return `Statu quo aux valeurs centrales du registre : diesel à ${d}, en hausse de ${i} par an.`;
   return cle === "prudent"
     ? `Statu quo moins cher qu'au central : diesel à ${d}, en hausse de seulement ${i} par an — garder des véhicules thermiques coûte moins, ce qui joue contre le plan.`

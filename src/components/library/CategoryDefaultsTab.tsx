@@ -29,6 +29,8 @@ export default function CategoryDefaultsTab({ categorie, colonne }: Props) {
   const langue = i18n.language.startsWith("en") ? "en" : "fr";
   const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
   const nombre = useMemo(() => formateurNombre(i18n.language, 2), [i18n.language]);
+  // Entretien en $/km : au cent près (0,10 $/km), jamais arrondi au dollar.
+  const argentKm = useMemo(() => formateurCad(i18n.language, 2), [i18n.language]);
   const cible = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -96,9 +98,9 @@ export default function CategoryDefaultsTab({ categorie, colonne }: Props) {
                           </p>
                         </td>
                         <td className={cn("py-2 pl-3 text-right tabular-nums", surligne("entretien"))}>
-                          <p className="font-medium whitespace-nowrap">{argent.format(d.entretien[tech].valeur)}{" "}/km</p>
+                          <p className="font-medium whitespace-nowrap">{argentKm.format(d.entretien[tech].valeur)}{" "}/km</p>
                           <p className="text-xs text-muted-foreground whitespace-nowrap">
-                            {plage(argent.format(d.entretien[tech].plage.basse), argent.format(d.entretien[tech].plage.haute))}
+                            {plage(argentKm.format(d.entretien[tech].plage.basse), argentKm.format(d.entretien[tech].plage.haute))}
                           </p>
                         </td>
                       </tr>
