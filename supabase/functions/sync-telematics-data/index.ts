@@ -10,6 +10,7 @@ import {
   requireCronSecret,
   serviceRoleClient,
 } from "../_shared/auth.ts";
+import { CleAbsenteError, chiffrer, dechiffrer, trousseauDepuisEnv } from "../_shared/telematicsCrypto.ts";
 
 const GEOTAB_API_URL = Deno.env.get('GEOTAB_API_URL') || 'https://my.geotab.com/apiv1';
 const SAMSARA_API_URL = Deno.env.get('SAMSARA_API_URL') || 'https://api.samsara.com';
@@ -224,9 +225,28 @@ Deno.serve(async (req) => {
     }
 
     let totalUpdated = 0;
+    const trousseau = await trousseauDepuisEnv();
 
     for (const connection of connections) {
       console.log(`Processing connection: ${connection.id} (${connection.provider})`);
+
+      // Déchiffrement côté serveur ; un ancien format (base64) ou une
+      // ancienne clé est re-chiffré avec la clé active (même sans véhicule).
+      let credentials: any;
+      const contexte = { userId: connection.user_id, provider: connection.provider };
+      try {
+        const lu = await dechiffrer(connection.encrypted_credentials, contexte, trousseau);
+        credentials = lu.valeur;
+        if (lu.aRechiffrer) {
+          await supabase
+            .from('telematics_connections')
+            .update({ encrypted_credentials: await chiffrer(credentials, contexte, trousseau) })
+            .eq('id', connection.id);
+        }
+      } catch {
+        console.error(`Failed to decrypt credentials for connection ${connection.id}`);
+        continue;
+      }
 
       // Get vehicles for this connection
       const { data: vehicles, error: vehError } = await supabase
@@ -236,15 +256,6 @@ Deno.serve(async (req) => {
 
       if (vehError || !vehicles || vehicles.length === 0) {
         console.log(`No vehicles found for connection ${connection.id}`);
-        continue;
-      }
-
-      // Decode credentials
-      let credentials: any;
-      try {
-        credentials = JSON.parse(atob(connection.encrypted_credentials));
-      } catch {
-        console.error(`Failed to decode credentials for connection ${connection.id}`);
         continue;
       }
 
@@ -295,6 +306,9 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
+    if (error instanceof CleAbsenteError) {
+      return jsonResponse(req, { success: false, error: 'service_non_configure', service: 'telematique' }, 503);
+    }
     if (error instanceof HttpError) {
       return jsonResponse(req, { success: false, error: error.message }, error.status);
     }

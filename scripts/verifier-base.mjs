@@ -22,8 +22,9 @@ import { api, exigerEnv, sqlHeberge } from "./lib/gestion-supabase.mjs";
 
 const MANIFESTE = "supabase/schema-attendu.json";
 const URL_PAGES = "https://maelmouatasim-beep.github.io/vraih2fleet/";
+const URL_PRODUCTION = "https://h2fleet.ca";
 const SECRETS_REQUIS = ["ALLOWED_ORIGINS", "CRON_SECRET", "INTERNAL_FUNCTION_SECRET"];
-const SECRETS_OPTIONNELS = ["SENDGRID_API_KEY", "CONTACT_INBOX_EMAIL", "APP_BASE_URL", "MAPBOX_PUBLIC_TOKEN", "ANTHROPIC_API_KEY"];
+const SECRETS_OPTIONNELS = ["SENDGRID_API_KEY", "CONTACT_INBOX_EMAIL", "APP_BASE_URL", "MAPBOX_PUBLIC_TOKEN", "ANTHROPIC_API_KEY", "TELEMATICS_ENCRYPTION_KEY"];
 // Créées par la plateforme Supabase elle-même sur les nouveaux projets
 // (option « RLS automatique ») : ni attendues ni signalées.
 const OBJETS_PLATEFORME = { fonctions: ["rls_auto_enable"] };
@@ -175,7 +176,10 @@ if (mode === "--generer") {
       else if (nom in verify && f.verify_jwt !== verify[nom]) ko(`fonction ${nom} : verify_jwt=${f.verify_jwt}, attendu ${verify[nom]} (config.toml)`);
       else ok(`fonction ${nom} déployée (verify_jwt=${f.verify_jwt})`);
     }
-    if (parSlug.has("calculate-tco")) ko("l'ancienne fonction calculate-tco est encore déployée (supabase functions delete calculate-tco)");
+    const retirees = JSON.parse(readFileSync("scripts/fonctions-retirees.json", "utf8"));
+    for (const slug of Object.keys(retirees)) {
+      if (parSlug.has(slug)) ko(`fonction retirée ${slug} encore déployée (${retirees[slug]}) — étape « Supprimer les fonctions retirées »`);
+    }
 
     // Secrets des fonctions : NOMS uniquement (les valeurs ne sont jamais lues)
     const secrets = new Set((await api(`/projects/${ref}/secrets`)).map((s) => s.name));
@@ -185,10 +189,16 @@ if (mode === "--generer") {
     // Auth : URL du site + redirections GitHub Pages
     const auth = await api(`/projects/${ref}/config/auth`);
     const liste = String(auth.uri_allow_list ?? "");
-    if (!String(auth.site_url ?? "").startsWith(URL_PAGES)) ko(`auth : Site URL = « ${auth.site_url} », attendu ${URL_PAGES}`);
-    else ok("auth : Site URL = GitHub Pages");
-    if (!liste.includes("maelmouatasim-beep.github.io/vraih2fleet")) ko(`auth : ${URL_PAGES}** absent des Redirect URLs`);
-    else ok("auth : GitHub Pages dans les Redirect URLs");
+    // Avant la bascule : GitHub Pages ; après (docs/production.md, phase C) : h2fleet.ca.
+    const site = String(auth.site_url ?? "").replace(/\/+$/, "");
+    if (site.startsWith(URL_PRODUCTION)) ok("auth : Site URL = h2fleet.ca (production)");
+    else if (site.startsWith(URL_PAGES.replace(/\/+$/, ""))) ok("auth : Site URL = GitHub Pages (avant la bascule)");
+    else ko(`auth : Site URL = « ${auth.site_url} », attendu ${URL_PRODUCTION} ou ${URL_PAGES}`);
+    const redirige = (u) => liste.includes(u);
+    if (!redirige(site.replace(/^https:\/\//, ""))) ko(`auth : le Site URL ${site} est absent des Redirect URLs`);
+    else ok("auth : Site URL présent dans les Redirect URLs");
+    if (redirige("maelmouatasim-beep.github.io/vraih2fleet")) ok("auth : GitHub Pages dans les Redirect URLs");
+    if (redirige("h2fleet.ca")) ok("auth : h2fleet.ca dans les Redirect URLs");
 
     // pg_cron
     const taches = await sqlHeberge("select jobname, schedule, active from cron.job order by jobname");

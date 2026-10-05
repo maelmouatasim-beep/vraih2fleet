@@ -19,7 +19,8 @@ import { useAuth } from "@/hooks/useAuth";
 interface FleetImportSectionProps {
   provider: string;
   connectionId?: string;
-  encryptedCredentials?: string;
+  /** Connexion active : les identifiants restent côté serveur (chiffrés). */
+  connected?: boolean;
   onVehiclesImported: (vehicles: MockVehicle[]) => void;
   onAnalyze: (selectedVehicles: MockVehicle[]) => void;
   isDemoMode?: boolean;
@@ -29,7 +30,7 @@ interface FleetImportSectionProps {
 const FleetImportSection = ({ 
   provider, 
   connectionId, 
-  encryptedCredentials, 
+  connected, 
   onVehiclesImported, 
   onAnalyze,
   isDemoMode = false,
@@ -54,7 +55,7 @@ const FleetImportSection = ({
     let source: 'real' | 'mock' = 'mock';
     
     // In demo mode or with mock toggle, use mock data directly
-    const shouldUseMockData = isDemoMode || useMockData || !encryptedCredentials;
+    const shouldUseMockData = isDemoMode || useMockData || !connected;
     
     if (!shouldUseMockData) {
       try {
@@ -63,10 +64,7 @@ const FleetImportSection = ({
         }));
         
         const { data, error } = await supabase.functions.invoke('fetch-telematics-vehicles', {
-          body: { 
-            provider, 
-            encryptedCredentials 
-          },
+          body: { provider },
         });
 
         if (error) {

@@ -55,7 +55,8 @@ Deno.test("sync-telematics-data - connexion d'autrui (IDOR) => 404", async () =>
       provider: "samsara",
       username: "owner@example.com",
       status: "connected",
-      encrypted_credentials: btoa(JSON.stringify({ apiToken: "x" })),
+      // Format chiffré exigé par la base (contrainte telematics_credentials_chiffrees).
+      encrypted_credentials: "v1.00000000.AAAAAAAAAAAAAAAA.AAAA",
     })
     .select("id")
     .single();

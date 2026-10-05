@@ -11,24 +11,26 @@ Deno.test("fetch-telematics-vehicles - refuse la clé anon seule (401)", async (
   await response.text();
 });
 
-Deno.test("fetch-telematics-vehicles - JWT réel + champs manquants => 400", async () => {
+Deno.test("fetch-telematics-vehicles - fournisseur absent ou inconnu => 400", async () => {
   const user = await createTestUser("telematics-fetch");
   const response = await callFunction(
     "fetch-telematics-vehicles",
-    { provider: "samsara" },
+    {},
     { Authorization: `Bearer ${user.token}` },
   );
   assertEquals(response.status, 400);
   await response.text();
 });
 
-Deno.test("fetch-telematics-vehicles - identifiants illisibles => 400", async () => {
+// Les identifiants ne viennent plus du navigateur : un « encryptedCredentials »
+// envoyé est ignoré ; sans connexion active de l'appelant → 404.
+Deno.test("fetch-telematics-vehicles - identifiants du corps ignorés, aucune connexion => 404", async () => {
   const user = await createTestUser("telematics-fetch2");
   const response = await callFunction(
     "fetch-telematics-vehicles",
-    { provider: "samsara", encryptedCredentials: "pas-du-base64-json" },
+    { provider: "samsara", encryptedCredentials: btoa(JSON.stringify({ apiToken: "x" })) },
     { Authorization: `Bearer ${user.token}` },
   );
-  assertEquals(response.status, 400);
+  assertEquals(response.status, 404);
   await response.text();
 });

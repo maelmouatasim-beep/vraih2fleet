@@ -1,6 +1,10 @@
 // fetch-telematics-vehicles — l'utilisateur réel est vérifié (getUser).
+// Les identifiants ne transitent plus par le navigateur : la fonction lit
+// la connexion de l'utilisateur (client RLS) et la déchiffre côté serveur
+// (_shared/telematicsCrypto.ts) ; un ancien chiffré base64 est re-chiffré.
 import { handleOptions, jsonResponse } from "../_shared/cors.ts";
 import { getUserOrThrow, HttpError } from "../_shared/auth.ts";
+import { CleAbsenteError, DechiffrementError, chiffrer, dechiffrer, trousseauDepuisEnv } from "../_shared/telematicsCrypto.ts";
 
 // Geotab API base URL
 const GEOTAB_API_URL = Deno.env.get('GEOTAB_API_URL') || 'https://my.geotab.com/apiv1';
@@ -322,33 +326,53 @@ Deno.serve(async (req) => {
   }
 
   try {
-    await getUserOrThrow(req);
+    const { user, supabase } = await getUserOrThrow(req);
 
-    const { provider, encryptedCredentials } = await req.json();
+    const { provider } = await req.json();
 
     console.log(`Fetching vehicles with odometer data from provider: ${provider}`);
 
-    if (!provider || !encryptedCredentials) {
-      return jsonResponse(req, { success: false, error: 'Missing required fields' }, 400);
+    if (provider !== 'geotab' && provider !== 'samsara') {
+      return jsonResponse(req, { success: false, error: 'Unsupported provider' }, 400);
     }
 
-    // Decode the base64 encoded credentials
+    const { data: connexion } = await supabase
+      .from('telematics_connections')
+      .select('id, encrypted_credentials')
+      .eq('user_id', user.id)
+      .eq('provider', provider)
+      .eq('status', 'connected')
+      .maybeSingle();
+    if (!connexion) {
+      return jsonResponse(req, { success: false, error: 'No active connection' }, 404);
+    }
+
     let credentials: any;
     try {
-      credentials = JSON.parse(atob(encryptedCredentials));
+      const trousseau = await trousseauDepuisEnv();
+      const contexte = { userId: user.id, provider };
+      const lu = await dechiffrer(connexion.encrypted_credentials, contexte, trousseau);
+      credentials = lu.valeur;
+      if (lu.aRechiffrer) {
+        await supabase
+          .from('telematics_connections')
+          .update({ encrypted_credentials: await chiffrer(credentials, contexte, trousseau) })
+          .eq('id', connexion.id);
+      }
     } catch (e) {
-      console.error('Failed to decode credentials:', e);
-      return jsonResponse(req, { success: false, error: 'Invalid credentials format' }, 400);
+      if (e instanceof CleAbsenteError) return jsonResponse(req, { error: 'service_non_configure', service: 'telematique' }, 503);
+      if (e instanceof DechiffrementError) {
+        return jsonResponse(req, { success: false, error: 'SESSION_EXPIRED', requiresReauth: true }, 401);
+      }
+      throw e;
     }
 
     let vehicles: any[] = [];
 
     if (provider === 'geotab') {
       vehicles = await fetchGeotabVehicles(credentials);
-    } else if (provider === 'samsara') {
-      vehicles = await fetchSamsaraVehicles(credentials.apiToken);
     } else {
-      return jsonResponse(req, { success: false, error: 'Unsupported provider' }, 400);
+      vehicles = await fetchSamsaraVehicles(credentials.apiToken);
     }
 
     // Count vehicles with real odometer data

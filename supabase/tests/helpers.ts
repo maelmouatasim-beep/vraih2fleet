@@ -13,6 +13,7 @@ export const DB_URL = Deno.env.get("SUPABASE_DB_URL") ??
 // Secrets de test (mêmes valeurs que supabase/tests/functions.env)
 export const TEST_CRON_SECRET = "test-cron-secret";
 export const TEST_INTERNAL_SECRET = "test-internal-secret";
+export const TEST_TELEMATICS_KEY = "dGVzdC10ZWxlbWF0aWNzLWtleS0zMi1vY3RldHMhISE=";
 
 const url = new URL(SUPABASE_URL);
 if (!["localhost", "127.0.0.1"].includes(url.hostname)) {

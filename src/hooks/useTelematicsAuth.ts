@@ -8,7 +8,6 @@ interface TelematicsConnection {
   provider: string;
   database: string | null;
   username: string;
-  encrypted_credentials: string;
 }
 
 interface ReauthState {
@@ -64,7 +63,8 @@ export function useTelematicsAuth() {
     try {
       const { connection } = reauthState;
       
-      // Re-authenticate with the provider
+      // Ré-authentification : la fonction chiffre et enregistre elle-même les
+      // nouveaux identifiants (jamais renvoyés au navigateur).
       const { data: authData, error: authError } = await supabase.functions.invoke('authenticate-telematics', {
         body: { 
           provider: connection.provider, 
@@ -80,17 +80,6 @@ export function useTelematicsAuth() {
         toast.error(authData.error || t('telematics.reauth.failed'));
         return false;
       }
-
-      // Update the connection with new credentials
-      const { error: updateError } = await supabase
-        .from('telematics_connections')
-        .update({
-          encrypted_credentials: authData.credentials,
-          last_sync_at: new Date().toISOString()
-        })
-        .eq('id', connection.id);
-
-      if (updateError) throw updateError;
 
       toast.success(t('telematics.reauth.success'));
       

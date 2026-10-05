@@ -31,7 +31,6 @@ interface TelematicsConnection {
   status: string;
   last_sync_at: string | null;
   created_at: string;
-  encrypted_credentials: string;
 }
 
 const Telematics = () => {
@@ -76,7 +75,8 @@ const Telematics = () => {
     try {
       const { data, error } = await supabase
         .from('telematics_connections')
-        .select('*')
+        // Jamais encrypted_credentials : déchiffré seulement côté serveur.
+        .select('id, user_id, provider, database, username, status, last_sync_at, created_at, updated_at')
         .eq('user_id', user.id)
         .eq('status', 'connected')
         .maybeSingle();
@@ -94,7 +94,7 @@ const Telematics = () => {
     setIsTesting(true);
     try {
       const { data, error } = await supabase.functions.invoke('authenticate-telematics', {
-        body: { provider, database, username, password }
+        body: { provider, database, username, password, enregistrer: false }
       });
 
       if (error) throw error;
@@ -128,23 +128,9 @@ const Telematics = () => {
         return;
       }
 
-      const { data, error } = await supabase
-        .from('telematics_connections')
-        .upsert({
-          user_id: user.id,
-          provider,
-          database: provider === 'geotab' ? database : null,
-          username,
-          encrypted_credentials: authData.credentials,
-          status: 'connected',
-          last_sync_at: new Date().toISOString()
-        }, {
-          onConflict: 'user_id,provider'
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
+      // La fonction a chiffré et enregistré la connexion (client RLS) ; elle
+      // ne renvoie que les colonnes publiques.
+      const data = authData.connection;
 
       setConnection(data);
       toast.success(t('telematics.connectionSuccess'));
@@ -163,7 +149,8 @@ const Telematics = () => {
     try {
       const { error } = await supabase
         .from('telematics_connections')
-        .update({ status: 'disconnected' })
+        // Déconnexion = identifiants retirés (marqueur « revoque »).
+        .update({ status: 'disconnected', encrypted_credentials: 'revoque' })
         .eq('id', connection.id);
 
       if (error) throw error;
@@ -468,7 +455,7 @@ const Telematics = () => {
             <FleetImportSection
               provider={connection?.provider || 'demo'}
               connectionId={connection?.id}
-              encryptedCredentials={connection?.encrypted_credentials}
+              connected={!!connection}
               onVehiclesImported={handleVehiclesImported}
               onAnalyze={handleAnalyze}
               isDemoMode={isDemoMode}

@@ -8,7 +8,7 @@ Deno.test("D5 : consumption_source accepte a_reverifier, refuse le reste", async
   const a = await createTestUser("telem-1");
   const { data: cnx, error: eCnx } = await a.client
     .from("telematics_connections")
-    .insert({ user_id: a.id, provider: "geotab", username: "test", encrypted_credentials: "e30=" })
+    .insert({ user_id: a.id, provider: "geotab", username: "test", encrypted_credentials: "v1.00000000.AAAAAAAAAAAAAAAA.AAAA" })
     .select("id")
     .single();
   assertEquals(eCnx, null, `connexion refusée : ${eCnx?.message}`);
