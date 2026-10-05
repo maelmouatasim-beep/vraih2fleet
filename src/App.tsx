@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { BrowserRouter, HashRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { NotificationsProvider } from "@/hooks/useNotifications";
@@ -35,13 +35,13 @@ import ApiDocumentation from "./pages/ApiDocumentation";
 import Settings from "./pages/Settings";
 import HelpTraining from "./pages/HelpTraining";
 import Telematics from "./pages/Telematics";
-import RoadmapBuilder from "./pages/RoadmapBuilder";
 import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 import OAuthConsent from "./pages/OAuthConsent";
 
 import Guides from "./pages/Guides";
-import { REDIRECTIONS_PUBLIQUES } from "./lib/production/site";
+import { REDIRECTIONS_PUBLIQUES, cibleRoadmap } from "./lib/production/site";
+import { listProjects } from "./lib/supabase/projects";
 import { GuideBEV, GuideFCEV, GuideBiomethane, GuideSectorUrban, GuideSectorRegional, GuideSectorLongHaul, GuidePlanning, GuideFunding, GuideOperations } from "./pages/guides";
 
 const queryClient = new QueryClient();
@@ -144,9 +144,8 @@ const App = () => (
             <Route path="/dashboard/infrastructure" element={<Navigate to="/dashboard/projects" replace />} />
             {/* D4 : Analytics lisait les anciens scénarios, pas le moteur — les résultats vivent dans le parcours */}
             <Route path="/dashboard/analytics" element={<Navigate to="/dashboard/projects" replace />} />
-            <Route path="/dashboard/roadmap" element={
-              <ProtectedRoute><RoadmapBuilder /></ProtectedRoute>
-            } />
+            {/* Ancienne feuille de route autonome : le suivi du plan vit dans l'étape Suivi. */}
+            <Route path="/dashboard/roadmap" element={<ProtectedRoute><RoadmapVersSuivi /></ProtectedRoute>} />
             <Route path="/dashboard/wizard" element={<Navigate to="/dashboard/projects" replace />} />
             {/* Ancienne page Support (délais de réponse garantis, rappel téléphonique : non livrés) → Aide. */}
             <Route path="/dashboard/support" element={<Navigate to="/dashboard/help" replace />} />
@@ -181,6 +180,15 @@ const App = () => (
     </Router>
   </QueryClientProvider>
 );
+
+// Ancienne page /dashboard/roadmap → étape « Suivi » du projet le plus
+// récemment modifié (sinon la liste des projets). Aucune donnée supprimée :
+// les feuilles de route existantes restent en base (tâches liées).
+function RoadmapVersSuivi() {
+  const { data: projets, isLoading } = useQuery({ queryKey: ["projects-roadmap-redirect"], queryFn: listProjects });
+  if (isLoading) return null;
+  return <Navigate to={cibleRoadmap(projets ?? [])} replace />;
+}
 
 // Le kanban autonome est intégré à l'étape « Suivi » du parcours projet.
 function TacheVersSuivi() {

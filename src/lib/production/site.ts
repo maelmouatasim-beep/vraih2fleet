@@ -36,6 +36,16 @@ export const REDIRECTIONS_PUBLIQUES: readonly Redirection[] = [
   { de: "/support", vers: "/dashboard/help" },
 ];
 
+/**
+ * /dashboard/roadmap (page retirée) → étape « Suivi » du projet le plus
+ * récemment modifié (liste déjà triée par date de modification), sinon la
+ * liste des projets.
+ */
+export function cibleRoadmap(projetsParModificationDecroissante: readonly { id: string }[]): string {
+  const p = projetsParModificationDecroissante[0];
+  return p ? `/dashboard/projects/${encodeURIComponent(p.id)}/suivi` : "/dashboard/projects";
+}
+
 /** Contenu du fichier `_redirects` (Cloudflare Pages / Netlify). */
 export function fichierRedirections(liste: readonly Redirection[] = REDIRECTIONS_PUBLIQUES): string {
   const lignes = liste.map((r) => `${r.de}  ${r.vers}  301`);

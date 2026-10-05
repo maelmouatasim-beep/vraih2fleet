@@ -125,3 +125,19 @@ describe("production — aucune ressource externe dans index.html (CSP)", () => 
     for (const f of ["favicon.ico", "favicon.svg", "apple-touch-icon.png"]) expect(existsSync(resolve(racine, "public", f))).toBe(true);
   });
 });
+
+describe("/dashboard/roadmap retiré → étape Suivi", () => {
+  it("projet le plus récent → son Suivi ; aucun projet → liste des projets", async () => {
+    const { cibleRoadmap } = await import("../site");
+    expect(cibleRoadmap([{ id: "p-recent" }, { id: "p-ancien" }])).toBe("/dashboard/projects/p-recent/suivi");
+    expect(cibleRoadmap([])).toBe("/dashboard/projects");
+  });
+  it("la page autonome n'existe plus ; la route redirige ; plus aucun lien vers elle", () => {
+    expect(existsSync(resolve(racine, "src/pages/RoadmapBuilder.tsx"))).toBe(false);
+    const app = readFileSync(resolve(racine, "src/App.tsx"), "utf8");
+    expect(app).toContain('path="/dashboard/roadmap" element={<ProtectedRoute><RoadmapVersSuivi /></ProtectedRoute>}');
+    for (const f of ["src/pages/guides/GuidePlanning.tsx", "src/pages/guides/GuideSectorLongHaul.tsx"]) {
+      expect(readFileSync(resolve(racine, f), "utf8")).not.toContain("/dashboard/roadmap");
+    }
+  });
+});

@@ -295,6 +295,7 @@
     "proteger_dernier_admin",
     "reject_subsidy_change",
     "sync_plan_alerts",
+    "sync_plan_alerts_serveur",
     "sync_profile_email",
     "update_profile_updated_at",
     "update_reference_last_updated",

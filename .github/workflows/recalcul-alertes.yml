@@ -1,0 +1,39 @@
+name: Recalcul des alertes du plan
+
+# Recalcul PLANIFIÉ côté serveur des alertes de surveillance du plan, pour
+# TOUS les projets, avec le même code que l'écran (src/lib/journey/
+# surveillanceProjet.ts) : les alertes entrent dans la cloche (et dans le
+# résumé courriel de 11 h 52 UTC) même si personne n'ouvre le projet.
+# Secrets : les mêmes que Deploy Supabase (SUPABASE_ACCESS_TOKEN,
+# SUPABASE_PROJECT_REF) ; la clé service_role est lue à l'exécution par
+# l'API de gestion et masquée dans les journaux. Sans secrets : ignoré.
+
+on:
+  schedule:
+    - cron: "23 10 * * *" # chaque jour, 6 h 23 (heure de l'Est), avant le résumé courriel
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: recalcul-alertes
+  cancel-in-progress: false
+
+jobs:
+  recalcul:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Installer les dépendances
+        run: npm ci
+      - name: Recalculer les alertes de tous les projets
+        run: node scripts/alertes/recalcul-alertes.mjs --heberge

@@ -153,6 +153,10 @@ jobs:
           curl -sI http://127.0.0.1:8080/dashboard/projects | grep -qi "^content-security-policy:" || { echo "::error::CSP absente du bundle de production"; exit 1; }
           test "$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' http://127.0.0.1:8080/ecosystem)" = "301 http://127.0.0.1:8080/features" || { echo "::error::redirection 301 absente"; exit 1; }
           node scripts/e2e-terrain.mjs e2e-terrain
+          # Recalcul planifié côté serveur (même code que l'écran) sur le
+          # projet du parcours : aucune alerte nouvelle ni résolue.
+          PROJET=$(psql "$DB_URL" -tAc "select id from public.projects order by created_at desc limit 1")
+          node scripts/alertes/recalcul-alertes.mjs --local --projet "$PROJET" --verifier-aucun-changement
 
       - uses: actions/upload-artifact@v4
         if: always()

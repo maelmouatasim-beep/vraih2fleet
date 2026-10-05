@@ -24,7 +24,7 @@ const GuidePlanning = () => {
       readTimeKey="guides.planning.readTime"
       icon={Calendar}
       tableOfContents={tableOfContents}
-      ctaLink="/dashboard/roadmap"
+      ctaLink="/dashboard/projects"
       ctaLabelKey="guides.planning.cta.startRoadmap"
     >
       {/* Introduction */}

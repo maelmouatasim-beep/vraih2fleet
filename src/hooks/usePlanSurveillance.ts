@@ -15,23 +15,14 @@ import { dernierSnapshotRapport } from "@/lib/supabase/reportSnapshots";
 import { listerEvenementsProgrammes } from "@/lib/supabase/subsidyWatch";
 import { listerAlertesPlan, marquerAlerteVue, synchroniserAlertesPlan, type LigneAlertePlan } from "@/lib/supabase/planAlerts";
 import type { ProjectDTO } from "@/lib/supabase/projects";
-import { construireStrategie } from "@/lib/journey/strategies";
-import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
-import { santeDuPlan, surveillerPlan, type AlertePlan, type PrixEnergie } from "@/lib/journey/surveillance";
-import { texteAlerte } from "@/components/journey/surveillanceTexts";
+import { santeDuPlan, type AlertePlan } from "@/lib/journey/surveillance";
+import { alertesDuProjet, chargeSynchronisation } from "@/lib/journey/surveillanceProjet";
+
+export { prixDuSnapshot } from "@/lib/journey/surveillanceProjet";
 
 export interface AlerteAffichee extends AlertePlan {
   ligne: LigneAlertePlan | null;
   vue: boolean;
-}
-
-/** Prix utilisés au dernier rapport (snapshot : parameters.parametres.prixAnnee0). */
-export function prixDuSnapshot(parameters: unknown): PrixEnergie | null {
-  const p = (parameters as { parametres?: { prixAnnee0?: Partial<PrixEnergie> } } | null)?.parametres?.prixAnnee0;
-  if (!p || typeof p.dieselParL !== "number" || typeof p.electriciteEffectiveParKwh !== "number" || typeof p.h2LivreParKg !== "number") {
-    return null;
-  }
-  return { dieselParL: p.dieselParL, electriciteEffectiveParKwh: p.electriciteEffectiveParKwh, h2LivreParKg: p.h2LivreParKg };
 }
 
 export function usePlanSurveillance(projectId: string | undefined, project: ProjectDTO | null | undefined) {
@@ -55,36 +46,15 @@ export function usePlanSurveillance(projectId: string | undefined, project: Proj
 
   const alertes = useMemo<AlertePlan[] | null>(() => {
     if (!project || !options || isLoading || snapshotLoading) return null;
-    const vehicules = projectVehicles.map((pv) => vehiculeProjetDepuis(pv, confirmeesParVehicule.get(pv.vehicle_id)));
-    if (vehicules.length === 0) return [];
-    const strategie = construireStrategie(vehicules, "plan_actuel", options);
-    return surveillerPlan({
+    // Même calcul que le recalcul planifié côté serveur (surveillanceProjet.ts).
+    return alertesDuProjet({
       aujourdHui: new Date().toISOString().slice(0, 10),
-      strategie,
-      vehicules: projectVehicles.map((pv) => ({
-        id: pv.vehicle_id,
-        unite: pv.vehicles.unit_number,
-        anneeRemplacement: pv.replacement_year,
-        realise: !!pv.completed_date,
-      })),
-      dernierRapport: snapshot
-        ? {
-            id: snapshot.id,
-            date: snapshot.created_at,
-            prix: prixDuSnapshot(snapshot.parameters),
-            van: snapshot.van,
-            empreinte: snapshot.fingerprint,
-            parametres: (snapshot.parameters as { parametres?: unknown } | null)?.parametres,
-          }
-        : null,
-      evenements: evenements.map((e) => ({
-        id: e.id,
-        programId: e.program_id,
-        resumeFr: e.summary_fr,
-        resumeEn: e.summary_en,
-        valideLe: e.validated_at,
-      })),
-      demandes: applications.map((a) => ({ programId: a.program_id, statut: a.status })),
+      options,
+      projectVehicles,
+      confirmeesParVehicule,
+      snapshot: snapshot ?? null,
+      evenements,
+      demandes: applications,
     });
   }, [project, options, isLoading, snapshotLoading, projectVehicles, confirmeesParVehicule, snapshot, evenements, applications]);
 
@@ -94,21 +64,7 @@ export function usePlanSurveillance(projectId: string | undefined, project: Proj
   const derniereSignature = useRef<string | null>(null);
   useEffect(() => {
     if (!projectId || !alertes) return;
-    const fr = i18n.getFixedT("fr");
-    const en = i18n.getFixedT("en");
-    const charge = alertes.map((a) => {
-      const tFr = texteAlerte(a, fr, "fr");
-      const tEn = texteAlerte(a, en, "en");
-      return {
-        alert_key: a.cle,
-        kind: a.type,
-        severity: a.gravite,
-        title_fr: tFr.titre.slice(0, 300),
-        title_en: tEn.titre.slice(0, 300),
-        message_fr: tFr.message.slice(0, 1500),
-        message_en: tEn.message.slice(0, 1500),
-      };
-    });
+    const charge = chargeSynchronisation(alertes, i18n.getFixedT("fr"), i18n.getFixedT("en"));
     const signature = JSON.stringify(charge);
     if (signature === derniereSignature.current) return;
     derniereSignature.current = signature;

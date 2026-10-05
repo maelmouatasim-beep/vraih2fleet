@@ -165,7 +165,7 @@ const GuideSectorLongHaul = () => {
           type="tool"
           titleKey="guides.planning.cta.startRoadmap"
           descriptionKey="guides.sectorLongHaul.description"
-          linkTo="/dashboard/roadmap"
+          linkTo="/dashboard/projects"
           linkTextKey="guides.planning.cta.startRoadmap"
         />
       </GuideSection>
