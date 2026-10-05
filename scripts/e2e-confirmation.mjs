@@ -17,7 +17,8 @@
  * Requiert API_URL et SERVICE_ROLE_KEY (supabase status -o env).
  */
 import { chromium } from "playwright";
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
+import { join } from "node:path";
 
 const BASE = (process.env.E2E_BASE ?? "http://127.0.0.1:8080").replace(/\/$/, "");
 const HASH = process.env.E2E_HASH === "1";
@@ -48,10 +49,27 @@ async function lien(email) {
   return { lien: p.action_link, code: p.email_otp };
 }
 
+// Diagnostic en cas d'échec : adresse, texte visible et capture de chaque onglet ouvert.
+const DIAGNOSTIC = process.env.E2E_DIAGNOSTIC ?? "e2e-confirmation";
+const contextes = [];
+async function diagnostiquer() {
+  mkdirSync(DIAGNOSTIC, { recursive: true });
+  let n = 0;
+  for (const ctx of contextes) {
+    for (const p of ctx.pages()) {
+      n++;
+      const texte = (await p.locator("body").innerText().catch(() => "")).replace(/\s+/g, " ").slice(0, 400);
+      console.error(`  onglet ${n} : ${p.url()}\n    « ${texte} »`);
+      await p.screenshot({ path: join(DIAGNOSTIC, `${HASH ? "hash" : "propre"}-onglet-${n}.png`), fullPage: true }).catch(() => {});
+    }
+  }
+}
+
 const navigateur = await chromium.launch({ executablePath: process.env.CHROMIUM || (existsSync(CHROMIUM_LOCAL) ? CHROMIUM_LOCAL : undefined) });
 const erreurs = [];
 async function contexte() {
   const ctx = await navigateur.newContext({ locale: "fr-CA", viewport: { width: 1280, height: 900 } });
+  contextes.push(ctx);
   await ctx.addInitScript(() => {
     try {
       localStorage.setItem("h2fleet-profile-onboarding-skipped", "true");
@@ -171,6 +189,8 @@ try {
   console.log(`\n${journal.length} scénarios, 0 erreur (${HASH ? "routage par hash" : "URL propres"}).`);
 } catch (e) {
   console.error(`✘ ${e.message}`);
+  if (erreurs.length) console.error(`erreurs dans la page :\n${erreurs.join("\n")}`);
+  await diagnostiquer();
   process.exitCode = 1;
 } finally {
   await navigateur.close();

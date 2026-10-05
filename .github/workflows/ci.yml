@@ -188,6 +188,13 @@ jobs:
           E2E_BASE=http://127.0.0.1:4173/vraih2fleet E2E_HASH=1 node scripts/e2e-confirmation.mjs
 
       - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-confirmation
+          path: e2e-confirmation/
+          retention-days: 7
+
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: e2e-terrain

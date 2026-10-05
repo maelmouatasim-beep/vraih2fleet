@@ -49,3 +49,4 @@ site-hash
 # AC de test du faux serveur SMTP (CI)
 smtp-ca.env
 functions-e2e-ci.env
+e2e-confirmation/
