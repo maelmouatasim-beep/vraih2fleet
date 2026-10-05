@@ -44,6 +44,8 @@ export interface RetourAuth {
   type: TypeRetourAuth | null;
   /** Lien expiré ou invalide (error_description renvoyé par Supabase). */
   erreur: string | null;
+  /** error_code de Supabase (ex. « otp_expired »), s'il est fourni. */
+  code?: string | null;
 }
 
 const TYPES: readonly string[] = ["recovery", "signup", "magiclink", "invite", "email_change"];
@@ -53,17 +55,22 @@ export function lireRetourAuth(hash: string, search: string): RetourAuth | null 
   const params = new URLSearchParams(hash.replace(/^#\/?/, ""));
   new URLSearchParams(search).forEach((v, k) => params.set(k, v));
   const erreur = params.get("error_description") ?? params.get("error");
-  if (erreur) return { type: null, erreur };
+  if (erreur) return { type: null, erreur, code: params.get("error_code") };
   const avecSession = params.has("access_token") || params.has("code");
   const type = params.get("type");
   if (!avecSession && !type) return null;
   return { type: type && TYPES.includes(type) ? (type as TypeRetourAuth) : null, erreur: null };
 }
 
+/** Page d'arrivée d'un lien de confirmation (succès ou erreur expliquée). */
+export const PAGE_CONFIRMATION = "/auth/confirme";
+
 /** Page vers laquelle envoyer l'utilisateur après un retour de courriel. */
 export function destinationRetour(retour: RetourAuth): string {
-  if (retour.erreur) return "/login";
-  return retour.type === "recovery" ? "/reset-password" : "/dashboard";
+  if (retour.erreur) return PAGE_CONFIRMATION;
+  if (retour.type === "recovery") return "/reset-password";
+  if (retour.type === "signup" || retour.type === "invite" || retour.type === "email_change") return PAGE_CONFIRMATION;
+  return "/dashboard";
 }
 
 // Capturé au chargement du module (importé en premier dans main.tsx),

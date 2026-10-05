@@ -158,6 +158,25 @@ jobs:
           PROJET=$(psql "$DB_URL" -tAc "select id from public.projects order by created_at desc limit 1")
           node scripts/alertes/recalcul-alertes.mjs --local --projet "$PROJET" --verifier-aucun-changement
 
+      # Confirmation du courriel : 4 scénarios + anti-énumération, en URL
+      # propres (bundle de production) ET en routage par hash (GitHub Pages).
+      - name: Parcours de confirmation du courriel (URL propres + hash)
+        if: ${{ !cancelled() }}
+        run: |
+          eval "$(supabase status -o env | sed 's/^/export /')"
+          if ! curl -sf http://127.0.0.1:8080/ >/dev/null; then
+            [ -f dist-prod/index.html ] || VITE_SUPABASE_URL=http://127.0.0.1:54321 VITE_SUPABASE_PUBLISHABLE_KEY="$ANON_KEY" VITE_SUPABASE_PROJECT_ID=local \
+              npx vite build --outDir dist-prod
+            node scripts/serveur-production.mjs 8080 dist-prod &
+            for i in $(seq 1 30); do curl -sf http://127.0.0.1:8080/ >/dev/null && break; sleep 1; done
+          fi
+          node scripts/e2e-confirmation.mjs
+          VITE_PREVIEW_HASH_ROUTER=true VITE_SUPABASE_URL=http://127.0.0.1:54321 VITE_SUPABASE_PUBLISHABLE_KEY="$ANON_KEY" VITE_SUPABASE_PROJECT_ID=local \
+            npx vite build --base=/vraih2fleet/ --outDir site-hash/vraih2fleet
+          node scripts/serveur-production.mjs 4173 site-hash &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:4173/vraih2fleet/ >/dev/null && break; sleep 1; done
+          E2E_BASE=http://127.0.0.1:4173/vraih2fleet E2E_HASH=1 node scripts/e2e-confirmation.mjs
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:

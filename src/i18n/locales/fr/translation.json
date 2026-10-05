@@ -1632,9 +1632,7 @@
         "feature2": "Comparaison hydrogène vs électrique",
         "feature3": "Recommandations intelligentes",
         "feature4": "Export rapports professionnels"
-      },
-      "confirmTitle": "Vérifiez votre boîte courriel",
-      "confirmMessage": "Un lien de confirmation a été envoyé à {{email}}. Cliquez dessus pour activer votre compte, puis connectez-vous."
+      }
     },
     "forgotPassword": {
       "title": "Mot de passe oublié ?",
@@ -1697,6 +1695,42 @@
     "linkError": {
       "title": "Lien invalide ou expiré",
       "description": "Le lien reçu par courriel n’est plus valable. Recommencez la démarche."
+    },
+    "confirmation": {
+      "waitTitle": "Vérifiez vos courriels",
+      "waitBody": "Nous avons envoyé un lien et un code de confirmation à {{email}}. Cliquez sur le lien ou saisissez le code ci-dessous.",
+      "watching": "Cette page s'ouvrira automatiquement dès la confirmation dans ce navigateur.",
+      "otherDeviceTitle": "Vous avez confirmé sur un autre appareil ?",
+      "codeLabel": "Code à 6 chiffres reçu par courriel",
+      "codeSubmit": "Valider",
+      "codeFormat": "Le code contient 6 chiffres.",
+      "codeInvalid": "Ce code est invalide ou a expiré. Vérifiez le dernier courriel reçu ou demandez-en un nouveau.",
+      "orSignIn": "Ou, si vous avez déjà cliqué sur le lien, connectez-vous sur cet appareil :",
+      "signIn": "Me connecter",
+      "resend": "Renvoyer le courriel",
+      "resendIn_one": "Renvoyer le courriel dans {{count}} s",
+      "resendIn_other": "Renvoyer le courriel dans {{count}} s",
+      "resendLink": "Renvoyer un lien",
+      "resentTitle": "Demande enregistrée",
+      "resentBody": "Si un compte en attente de confirmation existe pour cette adresse, un nouveau courriel vient d'être envoyé.",
+      "tooManyTitle": "Trop de demandes",
+      "tooManyBody": "Veuillez patienter quelques minutes avant de redemander un courriel.",
+      "changeEmail": "Modifier l'adresse",
+      "confirmedTitle": "Adresse confirmée ✅",
+      "redirecting": "Votre compte est activé. Redirection vers votre espace…",
+      "enteringSpace": "Votre compte est activé : bienvenue dans votre espace.",
+      "goToSpace": "Accéder à mon espace",
+      "alreadyConfirmed": "Adresse déjà confirmée ?",
+      "error": {
+        "expire": {
+          "title": "Ce lien a expiré",
+          "body": "Le lien de confirmation a expiré ou a déjà été utilisé. Indiquez votre adresse pour en recevoir un nouveau, ou connectez-vous si votre adresse est déjà confirmée."
+        },
+        "invalide": {
+          "title": "Lien invalide",
+          "body": "Ce lien de confirmation n'est pas valable. Indiquez votre adresse pour en recevoir un nouveau, ou connectez-vous si votre adresse est déjà confirmée."
+        }
+      }
     }
   },
   "settings": {

@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Truck, ArrowLeft, Eye, EyeOff, Check, X, Leaf } from 'lucide-react';
 import { createSignupSchema } from '@/lib/validation/signupSchema';
 import { cleErreurAuth } from '@/lib/authErrors';
+import AttenteConfirmation from '@/components/auth/AttenteConfirmation';
 
 // Inscription minimale : nom, email, mot de passe. Le profil (fonction,
 // entreprise, flotte) se complète après la première connexion via
@@ -59,15 +60,15 @@ export default function Signup() {
         full_name: formData.fullName.trim(),
         org_type: formData.orgType,
       });
-      if (error) {
-        const cle = cleErreurAuth(error);
-        if (cle === 'auth.errors.codes.emailInUse') {
-          setErrors({ email: t('auth.errors.emailInUse') });
-        } else {
-          toast({ title: t('common.error'), description: t(cle), variant: 'destructive' });
-        }
+      const cle = error ? cleErreurAuth(error) : null;
+      if (cle === 'auth.errors.codes.emailInUse') {
+        // Pas d'énumération : une adresse déjà inscrite reçoit le même écran
+        // qu'une nouvelle (Supabase n'envoie rien de plus à un compte confirmé).
+        setCourrielEnvoye(formData.email.trim());
+      } else if (error && cle) {
+        toast({ title: t('common.error'), description: t(cle), variant: 'destructive' });
       } else if (confirmationRequise) {
-        setCourrielEnvoye(formData.email);
+        setCourrielEnvoye(formData.email.trim());
       } else {
         toast({ title: t('auth.signup.success'), description: t('auth.signup.welcomeMessage') });
         navigate(postAuthTarget);
@@ -128,10 +129,7 @@ export default function Signup() {
             </CardHeader>
             <CardContent>
               {courrielEnvoye ? (
-                <div className="space-y-2 rounded-md border border-border bg-muted/40 p-4 text-sm" data-testid="signup-confirmation" role="status">
-                  <p className="font-semibold">{t('auth.signup.confirmTitle')}</p>
-                  <p className="text-muted-foreground">{t('auth.signup.confirmMessage', { email: courrielEnvoye })}</p>
-                </div>
+                <AttenteConfirmation email={courrielEnvoye} onModifier={() => setCourrielEnvoye(null)} />
               ) : (
               <form onSubmit={handleSubmit} className="space-y-5 pt-2">
                 <div className="space-y-2">

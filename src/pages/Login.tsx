@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { emailPrerempli } from "@/lib/auth/confirmation";
 import { cleErreurAuth } from "@/lib/authErrors";
 import { useTranslation } from "react-i18next";
 import { Leaf, Mail, Lock, Loader2, ArrowLeft } from "lucide-react";
@@ -12,7 +13,9 @@ import { toast } from "@/hooks/use-toast";
 import { z } from "zod";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const location = useLocation();
+  // « Me connecter » depuis l'attente de confirmation : adresse préremplie.
+  const [email, setEmail] = useState(() => emailPrerempli(location.search));
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -20,7 +23,6 @@ const Login = () => {
   const { t } = useTranslation();
   const { signIn } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   // Prefer ?next=/path (used by the OAuth consent flow) over location.state.
   const searchParams = new URLSearchParams(location.search);

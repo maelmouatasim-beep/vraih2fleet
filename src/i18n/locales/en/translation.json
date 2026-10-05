@@ -1632,9 +1632,7 @@
         "feature2": "Hydrogen vs electric comparison",
         "feature3": "Smart recommendations",
         "feature4": "Professional report export"
-      },
-      "confirmTitle": "Check your inbox",
-      "confirmMessage": "A confirmation link was sent to {{email}}. Click it to activate your account, then sign in."
+      }
     },
     "forgotPassword": {
       "title": "Forgot your password?",
@@ -1697,6 +1695,42 @@
     "linkError": {
       "title": "Invalid or expired link",
       "description": "The link from your email is no longer valid. Please start again."
+    },
+    "confirmation": {
+      "waitTitle": "Check your email",
+      "waitBody": "We sent a confirmation link and code to {{email}}. Click the link or enter the code below.",
+      "watching": "This page will open automatically as soon as you confirm in this browser.",
+      "otherDeviceTitle": "Confirmed on another device?",
+      "codeLabel": "6-digit code from the email",
+      "codeSubmit": "Confirm",
+      "codeFormat": "The code has 6 digits.",
+      "codeInvalid": "This code is invalid or has expired. Check the latest email or request a new one.",
+      "orSignIn": "Or, if you already clicked the link, sign in on this device:",
+      "signIn": "Sign in",
+      "resend": "Resend the email",
+      "resendIn_one": "Resend the email in {{count}} s",
+      "resendIn_other": "Resend the email in {{count}} s",
+      "resendLink": "Send a new link",
+      "resentTitle": "Request received",
+      "resentBody": "If an account awaiting confirmation exists for this address, a new email has just been sent.",
+      "tooManyTitle": "Too many requests",
+      "tooManyBody": "Please wait a few minutes before requesting another email.",
+      "changeEmail": "Change the address",
+      "confirmedTitle": "Email confirmed ✅",
+      "redirecting": "Your account is active. Taking you to your workspace…",
+      "enteringSpace": "Your account is active: welcome to your workspace.",
+      "goToSpace": "Go to my workspace",
+      "alreadyConfirmed": "Address already confirmed?",
+      "error": {
+        "expire": {
+          "title": "This link has expired",
+          "body": "The confirmation link has expired or was already used. Enter your address to receive a new one, or sign in if your address is already confirmed."
+        },
+        "invalide": {
+          "title": "Invalid link",
+          "body": "This confirmation link is not valid. Enter your address to receive a new one, or sign in if your address is already confirmed."
+        }
+      }
     }
   },
   "settings": {

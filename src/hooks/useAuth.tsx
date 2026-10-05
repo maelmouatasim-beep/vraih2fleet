@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { urlRetourAuth } from "@/lib/authRedirect";
+import { PAGE_CONFIRMATION, urlRetourAuth } from "@/lib/authRedirect";
 
 interface Profile {
   id: string;
@@ -116,7 +116,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signUp = async (email: string, password: string, metadata: SignUpMetadata) => {
-    const redirectUrl = urlRetourAuth("/dashboard");
+    // Le lien du courriel revient sur la page « Adresse confirmée ».
+    const redirectUrl = urlRetourAuth(PAGE_CONFIRMATION);
     
     const { data, error } = await supabase.auth.signUp({
       email,

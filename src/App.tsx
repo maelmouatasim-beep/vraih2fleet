@@ -37,6 +37,8 @@ import HelpTraining from "./pages/HelpTraining";
 import Telematics from "./pages/Telematics";
 import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
+import ConfirmationCourriel from "./pages/ConfirmationCourriel";
+import VerifierCourriel from "./pages/VerifierCourriel";
 import OAuthConsent from "./pages/OAuthConsent";
 
 import Guides from "./pages/Guides";
@@ -75,6 +77,9 @@ const App = () => (
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            {/* Confirmation du courriel : arrivée du lien (succès / erreur) et attente. */}
+            <Route path="/auth/confirme" element={<ConfirmationCourriel />} />
+            <Route path="/auth/verifier" element={<VerifierCourriel />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/refund" element={<Refund />} />

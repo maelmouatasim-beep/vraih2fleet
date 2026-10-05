@@ -45,3 +45,4 @@ e2e-terrain/
 # Régression visuelle (scripts/e2e-visuel.mjs)
 e2e-visuel/
 dist-prod
+site-hash

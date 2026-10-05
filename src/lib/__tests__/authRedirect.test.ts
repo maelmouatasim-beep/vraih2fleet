@@ -48,6 +48,7 @@ describe("lireRetourAuth", () => {
     expect(lireRetourAuth("#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid", "")).toEqual({
       type: null,
       erreur: "Email link is invalid",
+      code: "otp_expired",
     });
   });
 
@@ -58,10 +59,12 @@ describe("lireRetourAuth", () => {
 });
 
 describe("destinationRetour", () => {
-  it("récupération → /reset-password, sinon tableau de bord, erreur → connexion", () => {
+  it("récupération → /reset-password ; confirmation et erreur → page « Adresse confirmée » ; autre → espace", () => {
     expect(destinationRetour({ type: "recovery", erreur: null })).toBe("/reset-password");
-    expect(destinationRetour({ type: "signup", erreur: null })).toBe("/dashboard");
-    expect(destinationRetour({ type: null, erreur: "x" })).toBe("/login");
+    expect(destinationRetour({ type: "signup", erreur: null })).toBe("/auth/confirme");
+    expect(destinationRetour({ type: "email_change", erreur: null })).toBe("/auth/confirme");
+    expect(destinationRetour({ type: null, erreur: "x" })).toBe("/auth/confirme");
+    expect(destinationRetour({ type: null, erreur: null })).toBe("/dashboard");
   });
 });
 
