@@ -135,14 +135,24 @@ jobs:
           npx playwright install --with-deps chromium
           eval "$(supabase status -o env | sed 's/^/export /')"
           # Copilote : fonctions relancées avec un FAUX serveur Claude scripté
-          # (aucune vraie clé en CI).
+          # (aucune vraie clé en CI) ; courriels : FAUX serveur SMTP (TLS
+          # implicite comme le port 465 d'IONOS) dont l'AC de test est ajoutée
+          # à l'environnement des fonctions.
           pkill -f "supabase functions serve" || true
           node scripts/mock-anthropic.mjs 35563 &
-          supabase functions serve --env-file supabase/tests/functions-e2e.env &
+          MOCK_SMTP_ENV_OUT=smtp-ca.env node scripts/mock-smtp.mjs 2465 &
+          for i in $(seq 1 30); do [ -s smtp-ca.env ] && break; sleep 1; done
+          cat supabase/tests/functions-e2e.env smtp-ca.env > functions-e2e-ci.env
+          supabase functions serve --env-file functions-e2e-ci.env &
           for i in $(seq 1 60); do
             code=$(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:54321/functions/v1/copilot || echo 000)
             case "$code" in 000|502|503) sleep 2 ;; *) break ;; esac
           done
+          # Envoi RÉEL par SMTP (statut, courriel de test admin, invitation,
+          # mot de passe refusé) contre le faux serveur.
+          SUPABASE_URL="$API_URL" SUPABASE_ANON_KEY="$ANON_KEY" SUPABASE_SERVICE_ROLE_KEY="$SERVICE_ROLE_KEY" SUPABASE_DB_URL="$DB_URL" \
+            MOCK_SMTP_HTTP=http://127.0.0.1:2466 \
+            deno test --allow-net --allow-env --allow-read --node-modules-dir=none supabase/tests/smtp-envoi.test.ts
           # BUNDLE DE PRODUCTION (BrowserRouter) servi comme Cloudflare Pages :
           # en-têtes de dist/_headers (CSP stricte — une violation fait échouer
           # le parcours), redirections 301 de dist/_redirects, repli SPA.

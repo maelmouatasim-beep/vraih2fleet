@@ -26,8 +26,10 @@ déployées, contrôle de santé « Base conforme au dépôt » ; les tables
 
 Fait : étapes 1, 2, 3 ; étape 4 : URLs d'auth + secrets `ALLOWED_ORIGINS`,
 `CRON_SECRET`, `INTERNAL_FUNCTION_SECRET`, `APP_BASE_URL`,
-`CONTACT_INBOX_EMAIL`. **Reportés** : SendGrid, Mapbox, clé IA de
-l'assistant, tâches pg_cron (voir « Services non branchés »).
+`CONTACT_INBOX_EMAIL`. Courriels d'authentification : SMTP IONOS
+configuré dans le tableau de bord (2026-10-05). **Reportés** : secrets SMTP
+des courriels applicatifs, Mapbox, clé IA de l'assistant, tâches pg_cron
+(voir « Services non branchés »).
 
 ## Projet retenu (valeurs publiques)
 
@@ -105,7 +107,7 @@ Le workflow *Deploy Pages* vérifie que l'URL correspond au ref.
       activé. NB : le service d'envoi par défaut de Supabase n'envoie qu'aux
       membres de l'équipe du projet et à faible débit — pour des testeurs
       externes, configurer un SMTP (Authentication → Emails → SMTP
-      Settings, ex. SendGrid).
+      Settings : IONOS, section « SMTP personnalisé » plus bas — fait).
 
 **Secrets des edge functions** (Edge Functions → Secrets, ou
 `supabase secrets set`) — noms exacts :
@@ -114,8 +116,13 @@ Le workflow *Deploy Pages* vérifie que l'URL correspond au ref.
 - [ ] `CRON_SECRET` = une valeur neuve (`openssl rand -hex 32`)
 - [ ] `INTERNAL_FUNCTION_SECRET` = une autre valeur neuve (`openssl rand -hex 32`)
 - [ ] `APP_BASE_URL` = `https://maelmouatasim-beep.github.io/vraih2fleet`
-- [ ] `SENDGRID_API_KEY` (envoi des courriels applicatifs) et
-      `CONTACT_INBOX_EMAIL` (boîte qui reçoit le formulaire de contact)
+- [ ] Courriels applicatifs (SMTP IONOS, port 465) : `SMTP_HOST` =
+      `smtp.ionos.com`, `SMTP_PORT` = `465`, `SMTP_USER` =
+      `noreply@h2fleet.ca`, `SMTP_PASSWORD` = mot de passe de la boîte
+      (toi seul — c'est l'interrupteur), `EMAIL_FROM` =
+      `noreply@h2fleet.ca`, `EMAIL_FROM_NAME` = `H2Fleet` ; et
+      `CONTACT_INBOX_EMAIL` (boîte qui reçoit le formulaire de contact).
+      Détails et courriel de test : `docs/courriels.md`.
 - [ ] `MAPBOX_PUBLIC_TOKEN` (cartes), si utilisé
 - [ ] `ANTHROPIC_API_KEY` : clé de l'API Claude (console Anthropic →
       API Keys), saisie PAR TOI dans Supabase → Edge Functions → Secrets
@@ -169,7 +176,7 @@ Tâches pg_cron (`supabase/snippets/taches-planifiees.sql`, à exécuter
 une fois) : rappels d'échéances, synchronisation télématique, purge du
 journal de débit et, depuis la Phase 5.6, `h2fleet-plan-alerts-digest`
 (résumé quotidien des nouvelles alertes de surveillance ; 503
-`service_non_configure` tant que SendGrid n'est pas branché, rien n'est
+`service_non_configure` tant que `SMTP_PASSWORD` n'est pas posé, rien n'est
 perdu : les alertes partent au premier passage après branchement).
 
 Premier déploiement : après les étapes 2 et 3, relancer les deux
@@ -213,74 +220,80 @@ clair — les edge functions répondent `503 {"error":"service_non_configure"}`
 
 | Service manquant | Comportement |
 |---|---|
-| `SENDGRID_API_KEY` | Formulaires contact / démo : la demande est **enregistrée** (`email_leads`, message compris) et l'écran le dit (« Demande enregistrée — l'envoi automatique de courriels n'est pas encore activé »). Support : « votre demande n'a pas été transmise ». Invitation de collaborateur : créée, « prévenez la personne vous-même ». |
+| `SMTP_PASSWORD` | Formulaires contact / démo : la demande est **enregistrée** (`email_leads`, message compris) et l'écran le dit (« Demande enregistrée — l'envoi automatique de courriels n'est pas encore activé »). Support : « votre demande n'a pas été transmise ». Invitation de collaborateur : créée, « prévenez la personne vous-même ». |
 | `ANTHROPIC_API_KEY` | Le copilote, l'analyse IA de l'import intelligent et la lecture de factures répondent « pas encore branché sur ce site (clé ANTHROPIC_API_KEY à ajouter) » ; aucune erreur, rien n'est envoyé. L'import intelligent (synonymes connus + association manuelle) et les pièces justificatives (saisie à côté du document) restent utilisables sans IA. |
 | `MAPBOX_PUBLIC_TOKEN` | Aucune carte n'est affichée dans les écrans actuels ; la fonction répond 503. |
-| Tâches pg_cron | Pas de rappels d'échéances ni de synchro télématique planifiée ; à activer avec `supabase/snippets/taches-planifiees.sql` quand SendGrid sera branché. |
+| Tâches pg_cron | Pas de rappels d'échéances ni de synchro télématique planifiée ; à activer avec `supabase/snippets/taches-planifiees.sql` (planifiées automatiquement par *Deploy Supabase* dès que les secrets du Vault existent). |
 
-### Courriels d'authentification sans SendGrid
+### Courriels d'authentification sans SMTP (historique)
 
-Le service d'envoi intégré de Supabase n'envoie qu'aux adresses des
-membres de l'équipe du projet, à très faible débit. Pour tes tests :
+Sans SMTP personnalisé, le service intégré de Supabase n'envoie qu'aux
+adresses des membres de l'équipe du projet, à très faible débit (il
+fallait alors décocher « Confirm email » pour tester avec d'autres
+adresses). Ce n'est plus le cas depuis le branchement d'IONOS : garder
+**Confirm email** activé. Le workflow « E2E base hébergée » n'en dépend
+pas (comptes créés confirmés par l'API d'administration).
 
-- **avec ta propre adresse** (membre du projet) : « Confirm email » peut
-  rester activé, le courriel arrive (lentement) ;
-- **avec d'autres adresses** (comptes de test, testeurs) : désactiver
-  temporairement — Authentication → Sign In / Providers → **Email** →
-  décocher **Confirm email** → Save. Les inscriptions ouvrent alors une
-  session directement. « Mot de passe oublié » ne fonctionnera que pour
-  les adresses de l'équipe tant qu'un SMTP n'est pas configuré.
-- **À réactiver avant tout pilote**, une fois le SMTP (SendGrid)
-  configuré dans Authentication → Emails → SMTP Settings.
+### SMTP personnalisé — IONOS (fait le 2026-10-05)
 
-Le workflow « E2E base hébergée » n'en dépend pas (comptes créés
-confirmés par l'API d'administration).
+Même boîte pour les deux circuits : `noreply@h2fleet.ca`, créée chez
+IONOS (le domaine h2fleet.ca y est déjà : SPF et DKIM IONOS publiés).
+**Ports** : 465 (TLS implicite). Les fonctions Edge de Supabase bloquent
+25 et 587 ; le SMTP d'auth du tableau de bord accepte 465 aussi, on garde
+le même partout.
 
-### SMTP personnalisé — réglages exacts (toi, ~20 min)
-
-Sans SMTP, l'inscription d'un prospect échoue (« Trop d'inscriptions en peu
-de temps : le service de courriel a atteint sa limite », message désormais
-traduit). Exemple avec **SendGrid** (même principe pour Brevo, Postmark,
-Resend : seuls hôte, port et identifiants changent).
-
-1. **SendGrid** (app.sendgrid.com)
-   - Settings → Sender Authentication : authentifier le domaine d'envoi
-     (recommandé : enregistrements DNS SPF/DKIM) ou, au minimum, vérifier
-     une adresse d'expéditeur (*Single Sender Verification*).
-   - Settings → API Keys → *Create API Key* → « Restricted Access » avec
-     seulement **Mail Send** → copier la clé (affichée une seule fois).
-2. **Supabase** → projet `rjyvcogtvcgzwxeprgsm` → **Authentication →
-   Emails → SMTP Settings** → activer **Enable custom SMTP** :
+1. **Supabase** → projet `rjyvcogtvcgzwxeprgsm` → **Authentication →
+   Emails → SMTP Settings** → **Enable custom SMTP** (fait) :
 
    | Champ | Valeur |
    |---|---|
-   | Sender email | l'adresse vérifiée à l'étape 1 (ex. `no-reply@ton-domaine`) |
+   | Sender email | `noreply@h2fleet.ca` |
    | Sender name | `H2Fleet` |
-   | Host | `smtp.sendgrid.net` |
-   | Port number | `587` |
-   | Minimum interval between emails | `60` secondes (défaut) |
-   | Username | `apikey` (le mot littéral) |
-   | Password | la clé API SendGrid (saisie par toi, jamais dans le dépôt ni le chat) |
+   | Host | `smtp.ionos.com` |
+   | Port number | `465` |
+   | Username | `noreply@h2fleet.ca` (adresse complète) |
+   | Password | mot de passe de la boîte (saisi par toi, jamais dans le dépôt ni le chat) |
 
-   → **Save**.
-3. **Authentication → Rate Limits** : « Rate limit for sending emails »
-   (devient modifiable une fois le SMTP actif) → `100` par heure pour le
-   pilote.
-4. **Authentication → Sign In / Providers → Email** : cocher **Confirm
-   email** → Save. L'écran d'inscription affiche alors « Vérifiez votre
-   boîte courriel » au lieu d'ouvrir une session.
-5. **Authentication → Emails → Templates** (en français) :
-   - *Confirm signup* — Objet : `Confirmez votre compte H2Fleet` —
-     Corps : `<p>Bonjour,</p><p>Pour activer votre compte H2Fleet,
-     cliquez sur le lien ci-dessous :</p><p><a href="{{ .ConfirmationURL }}">Confirmer mon adresse</a></p><p>Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.</p>`
-   - *Reset password* — Objet : `Réinitialisation de votre mot de passe
-     H2Fleet` — Corps : même modèle, lien `{{ .ConfirmationURL }}`,
-     texte « Choisir un nouveau mot de passe ».
-6. **Vérification** : t'inscrire avec une adresse externe (pas membre du
-   projet) → le courriel arrive en moins d'une minute, le lien ouvre le
-   tableau de bord du site de test. Puis poser le secret
-   `SENDGRID_API_KEY` (même clé ou une seconde clé « Mail Send ») : c'est le
-   seul interrupteur des courriels applicatifs (`docs/courriels.md`).
+2. **Authentication → Rate Limits** : envoi de courriels `30` par heure
+   (fait ; à relever si la boîte IONOS le permet).
+3. **Authentication → Sign In / Providers → Email** : **Confirm email**
+   coché (fait).
+4. **Authentication → URL Configuration** : Site URL
+   `https://maelmouatasim-beep.github.io/vraih2fleet/` et Redirect URLs
+   `https://maelmouatasim-beep.github.io/vraih2fleet/**` (déjà en place ;
+   **aucune URL de plus** pour la confirmation : en routage par hash, le
+   lien revient à la racine du site, `src/lib/authRedirect.ts`). Après la
+   bascule en production : ajouter `https://h2fleet.ca/**` (le lien vise
+   alors `https://h2fleet.ca/auth/confirme`) et passer la Site URL à
+   `https://h2fleet.ca`.
+5. **Authentication → Emails → Templates** (bilingues, FR puis EN) :
+   - *Confirm signup* : objet et corps dans
+     `docs/courriels-auth/confirm-signup.html` (lien
+     `{{ .ConfirmationURL }}` **et** code à 6 chiffres `{{ .Token }}`, pour
+     confirmer depuis un autre appareil — écran « Vérifiez vos
+     courriels »). Le code expire avec le lien (réglage « Email OTP
+     Expiration », 1 h par défaut).
+   - *Reset password* : même gabarit, lien `{{ .ConfirmationURL }}`.
+6. **Courriels applicatifs** (invitations, résumés, rappels) : secrets des
+   fonctions listés à l'étape 4, puis Paramètres → *Courriel de test*
+   (`docs/courriels.md`).
+
+### Plus tard : Brevo (service transactionnel) — NON fait
+
+Si le volume dépasse la limite de la boîte IONOS, Brevo (ex-Sendinblue)
+offre un relais SMTP et un suivi de délivrabilité. Points d'attention,
+**rien n'est à faire aujourd'hui** :
+
+- le domaine reste chez IONOS : Brevo demande d'ajouter son propre
+  enregistrement DKIM (CNAME ou TXT, sans conflit) **et** d'autoriser ses
+  serveurs dans le SPF. Un domaine ne peut avoir **qu'un seul**
+  enregistrement SPF : il faudrait **fusionner** l'existant
+  (`v=spf1 include:_spf-us.ionos.com ~all`) en un seul enregistrement qui
+  contient les deux `include:` — jamais en créer un second ;
+- les enregistrements MX d'IONOS ne changent pas (la réception reste chez
+  IONOS) ;
+- côté code, seuls `SMTP_HOST`, `SMTP_USER` et `SMTP_PASSWORD` changent
+  (Brevo propose aussi le port 465).
 
 ## Points ouverts
 
@@ -296,8 +309,8 @@ Resend : seuls hôte, port et identifiants changent).
   Phase 5.2, `fleet-import`, Phase 5.3, `document-reader`, Phase 5.4, et `council-note`, Phase 5.7) ; l'ancienne fonction `assistant-chat` (passerelle Lovable)
   est retirée du dépôt — si elle reste déployée sur la base hébergée,
   la supprimer : `supabase functions delete assistant-chat`.
-- **Courriels** : SMTP personnalisé nécessaire pour des testeurs externes
-  (voir étape 4).
+- **Courriels** : SMTP IONOS branché pour l'authentification ; courriels
+  applicatifs dès que les secrets SMTP sont posés (`docs/courriels.md`).
 
 ## Supabase local (développement, CI)
 

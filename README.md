@@ -36,7 +36,7 @@ Copier `.env.example` vers `.env` et remplir. Les principales :
 
 Les variables `VITE_*` sont inlinées dans le bundle : n'y mettre que des
 valeurs publiques. Les secrets des edge functions (ALLOWED_ORIGINS, CRON_SECRET,
-INTERNAL_FUNCTION_SECRET, SendGrid, clé IA, Mapbox…) se configurent côté
+INTERNAL_FUNCTION_SECRET, SMTP IONOS, clé IA, Mapbox…) se configurent côté
 Supabase : `supabase secrets set NOM=valeur` — la liste complète des noms
 est dans `.env.example`. Le rôle administrateur vient de la table
 `user_roles` (RPC `has_role`), jamais d'une liste d'adresses.

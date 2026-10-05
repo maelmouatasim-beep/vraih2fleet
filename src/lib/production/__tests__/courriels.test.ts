@@ -1,4 +1,4 @@
-/** Point 5 — courriels prêts : un seul interrupteur (SENDGRID_API_KEY). */
+/** Courriels applicatifs : SMTP IONOS (port 465), un seul interrupteur (SMTP_PASSWORD). */
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -27,10 +27,34 @@ describe("courriels prêts à activer", () => {
   it("send-email : gabarit organization_invite, expéditeur du domaine, liens adaptés au site", () => {
     const s = lire("supabase/functions/send-email/index.ts");
     expect(s).toContain('templateType: z.literal("organization_invite")');
-    expect(s).toContain('"no-reply@h2fleet.ca"');
+    expect(lire("supabase/functions/_shared/smtpConfig.ts")).toContain('"noreply@h2fleet.ca"');
     expect(s).not.toContain("h2fleet.app");
     expect(s).not.toContain("/dashboard/tasks?project=");
     expect(s).toContain('if (req.method === "GET")');
+  });
+
+  it("SMTP IONOS : port 465 seulement, plus aucune dépendance à SendGrid", () => {
+    const config = lire("supabase/functions/_shared/smtpConfig.ts");
+    expect(config).toContain("PORTS_BLOQUES = [25, 587]");
+    expect(config).toContain('lire("SMTP_PASSWORD")');
+    expect(config).toContain('"smtp.ionos.com"');
+    for (const f of [
+      "supabase/functions/send-email/index.ts",
+      "supabase/functions/plan-alerts-digest/index.ts",
+      "supabase/functions/_shared/smtp.ts",
+      ".env.example",
+      "docs/courriels.md",
+      "docs/deploiement.md",
+      "scripts/verifier-base.mjs",
+    ]) {
+      expect(lire(f), f).not.toMatch(/SENDGRID_API_KEY|api\.sendgrid\.com/);
+    }
+  });
+
+  it("courriel de test : administrateurs H2Fleet seulement, côté serveur et à l'écran", () => {
+    const s = lire("supabase/functions/send-email/index.ts");
+    expect(s).toMatch(/case "test_email": \{\s*const \{ user, supabase: userClient \} = await getUserOrThrow\(req\);\s*const \{ data: admin \} = await userClient\.rpc\("has_role"/);
+    expect(lire("src/pages/Settings.tsx")).toMatch(/\{isAdmin && \(\s*<>\s*<Separator \/>\s*<CourrielTest \/>/);
   });
 
   it("résumé des alertes : tâche pg_cron planifiée par le déploiement dès que le Vault est prêt", () => {

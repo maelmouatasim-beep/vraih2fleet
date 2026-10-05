@@ -1,7 +1,7 @@
 // Phase 5.6 — surveillance du plan : état des alertes (plan_alerts) lisible
 // par les membres du projet, synchronisé et « vu » par les éditeurs
 // seulement (fonctions SQL), jamais écrit directement ; résumé par
-// courriel : secret cron exigé, 503 propre sans SendGrid.
+// courriel : secret cron exigé, 503 propre sans SMTP.
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import { adminClient, callFunction, createTestUser, TEST_CRON_SECRET } from "./helpers.ts";
 
@@ -77,7 +77,7 @@ Deno.test("surveillance : liste invalide refusée", async () => {
   assert(errKind, "type d'alerte hors liste refusé");
 });
 
-Deno.test("plan-alerts-digest : secret cron exigé ; sans SendGrid → 503 service_non_configure", async () => {
+Deno.test("plan-alerts-digest : secret cron exigé ; sans SMTP_PASSWORD → 503 service_non_configure", async () => {
   const sans = await callFunction("plan-alerts-digest", {});
   assertEquals(sans.status, 401);
   await sans.body?.cancel();

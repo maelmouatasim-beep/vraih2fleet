@@ -35,9 +35,10 @@ describe("brouillons juridiques (docs/legal)", () => {
 
   it("sous-traitants de l'entente = services réellement utilisés par le code", () => {
     const s = lire("entente-traitement-donnees.md");
-    for (const nom of ["Supabase", "Cloudflare", "GitHub", "SendGrid", "Anthropic"]) expect(s).toContain(nom);
+    for (const nom of ["Supabase", "Cloudflare", "GitHub", "IONOS", "Anthropic"]) expect(s).toContain(nom);
     // le code appelle bien ces services
-    expect(readFileSync(resolve(racine, "supabase/functions/send-email/index.ts"), "utf8")).toContain("api.sendgrid.com");
+    expect(readFileSync(resolve(racine, "supabase/functions/_shared/smtpConfig.ts"), "utf8")).toContain("smtp.ionos.com");
+    expect(s).not.toContain("SendGrid");
     expect(readFileSync(resolve(racine, ".github/workflows/recalcul-alertes.yml"), "utf8")).toContain("recalcul-alertes.mjs");
   });
 

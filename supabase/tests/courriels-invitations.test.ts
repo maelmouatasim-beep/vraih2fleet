@@ -1,8 +1,9 @@
 // Point 5 — courriels prêts à activer : invitation d'ORGANISATION
 // (gabarit organization_invite) et statut d'envoi (GET send-email).
-// Environnement de test SANS SendGrid : après les contrôles d'accès, la
-// fonction répond 503 « service_non_configure » (l'interface le dit) ; dès
-// que SENDGRID_API_KEY existe, le même appel envoie le courriel.
+// Environnement de test SANS SMTP (functions.env) : après les contrôles
+// d'accès, la fonction répond 503 « service_non_configure » (l'interface le
+// dit) ; dès que SMTP_PASSWORD existe, le même appel envoie le courriel
+// (vérifié contre un faux serveur : smtp-envoi.test.ts).
 import { assertEquals } from "jsr:@std/assert@1";
 import { ANON_KEY, callFunction, createTestUser, functionUrl, type TestUser } from "./helpers.ts";
 
@@ -28,7 +29,7 @@ const envoyer = (user: TestUser | null, invitationId: string) =>
     user ? { Authorization: `Bearer ${user.token}` } : {},
   );
 
-Deno.test("statut d'envoi : 401 pour la clé anon seule, { active: false } sans SendGrid", async () => {
+Deno.test("statut d'envoi : 401 pour la clé anon seule, { active: false } sans SMTP", async () => {
   const anon = await fetch(functionUrl("send-email"), { headers: { apikey: ANON_KEY, Authorization: `Bearer ${ANON_KEY}` } });
   await anon.body?.cancel();
   assertEquals(anon.status, 401);

@@ -33,13 +33,12 @@
 - [x] Favicon dans le dépôt ; /dashboard/roadmap redirigé vers Suivi — fait — Claude
 - [x] Tâches pg_cron planifiées automatiquement par le déploiement dès que les deux secrets du Vault existent — fait — Claude
 - [ ] Secrets du Vault `h2fleet_project_url` et `h2fleet_cron_secret` (`docs/securite-secrets.md`) — prêt — toi
-- [ ] Courriels — prêt — toi :
-  - authentifier le domaine chez SendGrid (`docs/production.md`, phase D) ;
-  - poser le secret `SENDGRID_API_KEY` : c'est le **seul interrupteur**
-    (`docs/courriels.md`) ;
-  - régler le SMTP de Supabase et réactiver « Confirm email »
-    (`docs/deploiement.md`).
-- [x] Invitations d'équipe envoyées par courriel et résumé des alertes : code prêt, actif dès la clé SendGrid — fait — Claude
+- [x] Courriels d'authentification par le SMTP IONOS (`noreply@h2fleet.ca`, port 465), « Confirm email » activé, modèles bilingues — fait — toi
+- [x] Confirmation du courriel : page d'arrivée, attente multi-appareils (code à 6 chiffres), erreurs claires, aucune énumération ; 4 scénarios en CI (URL propres + hash) — fait — Claude
+- [ ] Modèle « Confirm signup » avec le code `{{ .Token }}` (`docs/courriels-auth/confirm-signup.html`) — prêt — toi
+- [ ] Courriels applicatifs : secrets SMTP des fonctions, `SMTP_PASSWORD` = **seul interrupteur** (`docs/courriels.md`), puis Paramètres → *Courriel de test* — prêt — toi
+- [ ] DNS du domaine (`docs/production.md`, phase D) : vérifier l'activation DKIM chez IONOS, ajouter une adresse de rapports au DMARC — à faire — toi
+- [x] Invitations d'équipe, résumé des alertes et courriel de test par SMTP (port 465), testés en CI contre un faux serveur — fait — Claude
 - [ ] Montées de version Vite 8 / react-router 7 (avis npm audit) — à faire — Claude
 - [ ] Carte Mapbox (optionnelle) : jeton public `pk.` — à faire — toi
 - [ ] Second projet Supabase pour séparer test et production (recommandé avant des données réelles) — à décider — toi

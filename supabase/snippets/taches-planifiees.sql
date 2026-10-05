@@ -55,7 +55,7 @@ select cron.schedule(
 );
 
 -- Phase 5.6 — résumé des nouvelles alertes de surveillance du plan :
--- chaque jour à 7 h 52 (heure de l'Est). Sans SendGrid, la fonction
+-- chaque jour à 7 h 52 (heure de l'Est). Sans SMTP_PASSWORD, la fonction
 -- répond 503 « service_non_configure » et ne marque rien.
 select cron.schedule(
   'h2fleet-plan-alerts-digest',

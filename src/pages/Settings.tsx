@@ -38,6 +38,8 @@ import { z } from "zod";
 import { useOrganization } from "@/hooks/useOrganization";
 import { courrielsActifs, updateOrganization } from "@/lib/supabase/organizations";
 import { useQuery } from "@tanstack/react-query";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
+import CourrielTest from "@/components/settings/CourrielTest";
 import { langueCourte, memoriserChoixLangue } from "@/i18n/preference";
 
 
@@ -46,8 +48,9 @@ const Settings = () => {
   const { user, profile, updateProfile } = useAuth();
   const { preferences: emailPreferences, togglePreference, isSaving: isSavingEmail } = useEmailNotifications();
   const inApp = useNotificationPreferences();
-  // Envoi branché ? Lu sur le serveur (secret SENDGRID_API_KEY) : aucun
+  // Envoi branché ? Lu sur le serveur (secret SMTP_PASSWORD) : aucun
   // drapeau de build à poser (docs/courriels.md).
+  const { isAdmin } = useIsAdmin();
   const { data: envoiActif } = useQuery({ queryKey: ["courriels-actifs"], queryFn: courrielsActifs, staleTime: 5 * 60 * 1000 });
   const [isSaving, setIsSaving] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
@@ -471,6 +474,12 @@ const Settings = () => {
                 disabled={isSavingEmail}
               />
             </div>
+            {isAdmin && (
+              <>
+                <Separator />
+                <CourrielTest />
+              </>
+            )}
           </CardContent>
         </Card>
 

@@ -47,7 +47,7 @@ minimisation).
   l'Accueil ou le projet (le moteur tourne dans le navigateur) ; une
   donnée officielle arrivée un lundi est donc signalée à la visite
   suivante. Le résumé par courriel (`plan-alerts-digest`) part dès que
-  SendGrid est branché, pour les alertes déjà relevées.
+  l'envoi SMTP est branché (`SMTP_PASSWORD`), pour les alertes déjà relevées.
 - **Note au conseil** : la vérification garantit que chaque NOMBRE vient
   du moteur ; elle ne juge pas le raisonnement. Une relecture humaine
   reste nécessaire avant dépôt (formulations, contexte local). Les

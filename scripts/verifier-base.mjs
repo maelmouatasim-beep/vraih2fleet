@@ -24,7 +24,11 @@ const MANIFESTE = "supabase/schema-attendu.json";
 const URL_PAGES = "https://maelmouatasim-beep.github.io/vraih2fleet/";
 const URL_PRODUCTION = "https://h2fleet.ca";
 const SECRETS_REQUIS = ["ALLOWED_ORIGINS", "CRON_SECRET", "INTERNAL_FUNCTION_SECRET"];
-const SECRETS_OPTIONNELS = ["SENDGRID_API_KEY", "CONTACT_INBOX_EMAIL", "APP_BASE_URL", "MAPBOX_PUBLIC_TOKEN", "ANTHROPIC_API_KEY", "TELEMATICS_ENCRYPTION_KEY"];
+// Réservés aux tests locaux : leur présence sur le projet hébergé est une erreur.
+const SECRETS_INTERDITS = ["SMTP_TLS_CA_TESTS_ONLY"];
+// Courriels applicatifs (SMTP IONOS) : SMTP_PASSWORD est le seul interrupteur ;
+// SMTP_HOST / SMTP_PORT / SMTP_USER / EMAIL_FROM ont des valeurs par défaut.
+const SECRETS_OPTIONNELS = ["SMTP_PASSWORD", "CONTACT_INBOX_EMAIL", "APP_BASE_URL", "MAPBOX_PUBLIC_TOKEN", "ANTHROPIC_API_KEY", "TELEMATICS_ENCRYPTION_KEY"];
 // Créées par la plateforme Supabase elle-même sur les nouveaux projets
 // (option « RLS automatique ») : ni attendues ni signalées.
 const OBJETS_PLATEFORME = { fonctions: ["rls_auto_enable"] };
@@ -185,6 +189,7 @@ if (mode === "--generer") {
     const secrets = new Set((await api(`/projects/${ref}/secrets`)).map((s) => s.name));
     for (const s of SECRETS_REQUIS) (secrets.has(s) ? ok : ko)(`secret de fonction ${s} ${secrets.has(s) ? "défini" : "MANQUANT"}`);
     for (const s of SECRETS_OPTIONNELS) if (!secrets.has(s)) attention(`secret optionnel ${s} non défini`);
+    for (const s of SECRETS_INTERDITS) if (secrets.has(s)) ko(`secret ${s} présent : réservé aux tests locaux, à supprimer`);
 
     // Auth : URL du site + redirections GitHub Pages
     const auth = await api(`/projects/${ref}/config/auth`);

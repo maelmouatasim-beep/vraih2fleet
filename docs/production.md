@@ -55,8 +55,20 @@ site, les redirections et les enregistrements de courriel au même endroit.
    Authentication).
 2. **Ajouter le domaine** : Websites → *Add a domain* → `h2fleet.ca` →
    offre **Free**. Cloudflare importe les enregistrements DNS existants :
-   compare la liste avec celle de ton registraire (surtout MX et TXT si tu
-   reçois déjà des courriels sur ce domaine). Rien ne doit manquer.
+   compare la liste avec celle d'IONOS, **à l'identique**. Les courriels
+   du domaine sont chez IONOS (boîte `noreply@h2fleet.ca`) : ces
+   enregistrements doivent être recopiés **tels quels**, jamais modifiés
+   ni « simplifiés » :
+   - MX `mx00.ionos.com` et `mx01.ionos.com` ;
+   - TXT SPF à la racine `v=spf1 include:_spf-us.ionos.com ~all` ;
+   - CNAME DKIM `s1-ionos._domainkey` → `s1.dkim.ionos.com`,
+     `s2-ionos._domainkey` → `s2.dkim.ionos.com` (et tout autre
+     `…._domainkey` affiché par IONOS), en **DNS only (nuage gris)** ;
+   - TXT `_dmarc`.
+   Rien ne doit manquer, sinon l'envoi et la réception s'arrêtent à la
+   bascule des serveurs de noms. (Le DNS doit passer chez Cloudflare parce
+   que Cloudflare Pages n'accepte la racine `h2fleet.ca` que pour un
+   domaine dont il gère le DNS ; la messagerie, elle, reste chez IONOS.)
 3. **DNSSEC** : si DNSSEC est activé chez ton registraire, **désactive-le
    d'abord** (sinon le domaine devient injoignable pendant le changement).
 4. **Serveurs de noms** : chez ton registraire (là où h2fleet.ca a été
@@ -164,46 +176,44 @@ site, les redirections et les enregistrements de courriel au même endroit.
 *Rollback to this deployment* (immédiat). Pour revenir au site de test,
 remets le *Site URL* sur GitHub Pages : rien n'a été retiré.
 
-## Phase D — Courriels du domaine (avant d'envoyer des courriels réels)
+## Phase D — Courriels du domaine (IONOS)
 
-Objectif : envoyer depuis `no-reply@h2fleet.ca` sans finir dans les
-indésirables, et recevoir `contact@h2fleet.ca`.
+Objectif : envoyer depuis `noreply@h2fleet.ca` sans finir dans les
+indésirables. Le domaine et la boîte sont chez **IONOS** ; l'envoi passe
+par `smtp.ionos.com:465` (authentification Supabase : fait ; courriels
+applicatifs : `docs/courriels.md`). **Ne jamais toucher aux MX ni au SPF
+d'IONOS.**
 
-1. **Authentifier le domaine d'envoi** (SendGrid) : Settings → Sender
-   Authentication → *Authenticate Your Domain*.
-   - DNS host : *Cloudflare* ; domaine : `h2fleet.ca`.
-   - Laisse *Automated security* activé.
-   - SendGrid affiche **3 enregistrements CNAME** propres à ton compte :
-     `emXXXX.h2fleet.ca`, `s1._domainkey.h2fleet.ca`,
-     `s2._domainkey.h2fleet.ca`. Ils portent la signature DKIM et le SPF
-     délégué.
-   - Ajoute-les un par un dans Cloudflare → DNS → *Add record* → type
-     **CNAME**, avec le nom et la cible **exactement** comme affichés.
-   - Mets le proxy sur **DNS only (nuage gris)**. Proxifié, la vérification
-     échoue.
-   - Reviens sur SendGrid → *Verify*.
-2. **DMARC** (politique du domaine) : Cloudflare → DNS → *Add record*, type
-   **TXT** :
-   - Name : `_dmarc`
-   - Content : `v=DMARC1; p=none; rua=mailto:<ta-boîte>`. Mets une adresse
-     où lire les rapports, par exemple `contact@h2fleet.ca` une fois le
-     point 3 fait.
-   - Après 2 à 4 semaines de rapports propres, passe à `p=quarantine`.
-3. **Recevoir `contact@h2fleet.ca`** (gratuit) : Cloudflare → Email →
-   *Email Routing* → *Get started*.
-   - Crée l'adresse `contact@h2fleet.ca` et fais-la suivre vers ta boîte
-     personnelle (à confirmer par le lien reçu).
-   - Cloudflare ajoute lui-même les **MX** et un **TXT SPF**
-     (`v=spf1 include:_spf.mx.cloudflare.net ~all`).
-   - Un domaine ne doit avoir **qu'un seul** enregistrement SPF à la
-     racine. Avec l'*Automated security* de SendGrid, il n'y a rien à y
-     ajouter pour SendGrid.
-4. **SMTP de Supabase** : applique la section « SMTP personnalisé » de
-   `docs/deploiement.md` avec *Sender email* = `no-reply@h2fleet.ca`. Pose
-   ensuite le secret `CONTACT_INBOX_EMAIL` = `contact@h2fleet.ca`.
-5. **Vérification** : envoie un courriel de test vers une boîte Gmail, puis
-   « Afficher l'original ». Tu dois lire SPF **PASS**, DKIM **PASS** et
-   DMARC **PASS**.
+État relevé le 2026-10-05 (lecture DNS publique, rien modifié) :
+
+| Enregistrement | Valeur | État |
+|---|---|---|
+| MX | `mx00.ionos.com`, `mx01.ionos.com` | ✅ |
+| SPF (TXT racine) | `v=spf1 include:_spf-us.ionos.com ~all` | ✅ autorise les serveurs d'envoi IONOS |
+| DKIM `s1-ionos._domainkey`, `s2-ionos._domainkey` | CNAME → `s1/s2.dkim.ionos.com`, clés publiées | ✅ |
+| DKIM `s42582890._domainkey` | CNAME → `s42582890.dkim.ionos.com`, **cible introuvable** | ⚠️ à vérifier dans IONOS |
+| DMARC (`_dmarc`) | `v=DMARC1; p=none;` (sans adresse de rapports) | ⚠️ à compléter |
+| `s1._domainkey`, `s2._domainkey` | anciens CNAME d'un autre service d'envoi | sans effet, à retirer un jour (facultatif) |
+
+1. **DKIM** : IONOS → *Domaines & SSL* → `h2fleet.ca` → *DNS* (ou
+   *Courriel* → paramètres de la boîte) : vérifier que la signature DKIM
+   est **activée** pour le domaine. Le sélecteur `s42582890` pointe vers
+   une clé absente : soit il est inutilisé (alors sans effet), soit
+   l'activation n'est pas terminée. Le juge de paix est l'étape 3.
+2. **DMARC** : modifier l'enregistrement TXT `_dmarc` existant (pas en
+   créer un second) en
+   `v=DMARC1; p=none; rua=mailto:<une boîte que tu lis>` pour recevoir
+   les rapports. Après 2 à 4 semaines de rapports propres (SPF et DKIM
+   alignés), passer à `p=quarantine`.
+3. **Vérification** : Paramètres → *Courriel de test* vers une boîte
+   Gmail, puis « Afficher l'original ». Tu dois lire SPF **PASS**, DKIM
+   **PASS** (`d=h2fleet.ca`) et DMARC **PASS**. Faire de même avec le
+   courriel de confirmation d'inscription.
+4. **Formulaire de contact** : créer chez IONOS une boîte ou un alias
+   (ex. `contact@h2fleet.ca`) et poser le secret `CONTACT_INBOX_EMAIL`.
+   Pas de Cloudflare Email Routing : il remplacerait les MX d'IONOS.
+5. **Plus tard (Brevo)** : voir `docs/deploiement.md` — un seul SPF
+   fusionné, jamais deux.
 
 ## Phase E — Historique git
 

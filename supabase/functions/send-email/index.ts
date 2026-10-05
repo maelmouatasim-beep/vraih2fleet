@@ -1,4 +1,4 @@
-// send-email — relais SendGrid fermé.
+// send-email — relais de courriels fermé, envoi par SMTP (IONOS, port 465).
 //
 // Sécurité :
 // - Aucun destinataire ni HTML libre dans la requête : chaque gabarit (liste
@@ -10,7 +10,9 @@
 //   organization_invite, task_mention) : JWT vérifié via getUserOrThrow,
 //   destinataire résolu en base (jamais fourni par le client).
 // - GET (utilisateur connecté) : { active } — l'envoi est-il branché ?
-//   SEUL interrupteur : le secret SENDGRID_API_KEY (docs/courriels.md).
+//   SEUL interrupteur : le secret SMTP_PASSWORD (docs/courriels.md).
+// - test_email (administrateur H2Fleet seulement) : envoi de vérification
+//   vers une adresse saisie, résultat détaillé (authentification, connexion).
 // - Gabarits internes (subsidy_reminder, plan_alerts_digest) : secret
 //   partagé x-internal-secret.
 
@@ -30,12 +32,9 @@ import {
   z,
 } from "../_shared/validation.ts";
 import { lienApplication } from "../_shared/liens.ts";
+import { lireConfigSmtp, smtpActif } from "../_shared/smtpConfig.ts";
+import { EchecSmtp, envoyerSmtp } from "../_shared/smtp.ts";
 
-const SENDGRID_API_KEY = Deno.env.get("SENDGRID_API_KEY");
-// Expéditeur : adresse du domaine authentifié chez SendGrid (DKIM/SPF,
-// docs/production.md phase D).
-const FROM_EMAIL = Deno.env.get("EMAIL_FROM") ?? "no-reply@h2fleet.ca";
-const FROM_NAME = "H2Fleet";
 // Destinataire interne des formulaires publics ; jamais fourni par le client.
 const INTERNAL_INBOX = Deno.env.get("CONTACT_INBOX_EMAIL") ?? "contact@h2fleet.ca";
 const APP_BASE_URL = Deno.env.get("APP_BASE_URL") ?? "https://h2fleet.ca";
@@ -118,6 +117,14 @@ const organizationInviteSchema = z.object({
   templateType: z.literal("organization_invite"),
   data: z.object({ invitationId: z.string().uuid(), lang: z.enum(["fr", "en"]).default("fr") }),
 });
+// Courriel de vérification de la configuration SMTP : administrateurs
+// H2Fleet (user_roles), adresse saisie, 10 envois par heure.
+const testEmailSchema = z.object({
+  templateType: z.literal("test_email"),
+  data: z.object({ to: z.string().trim().email().max(254) }),
+});
+const TESTS_PAR_HEURE = 10;
+
 // Invitations envoyées par utilisateur et par heure.
 const INVITATIONS_PAR_HEURE = 20;
 
@@ -172,6 +179,7 @@ const requestSchema = z.discriminatedUnion("templateType", [
   supportRequestSchema,
   collaborationInviteSchema,
   organizationInviteSchema,
+  testEmailSchema,
   taskMentionSchema,
   subsidyReminderSchema,
   planAlertsDigestSchema,
@@ -220,14 +228,14 @@ function leadEmailHtml(
   );
 }
 
-// ── Envoi SendGrid ──────────────────────────────────────────────────────────
+// ── Envoi SMTP (IONOS) ──────────────────────────────────────────────────────
 /**
  * Formulaires publics : la demande est déjà enregistrée (email_leads) ;
- * sans SendGrid on renvoie un succès avec emailSent=false au lieu d'une
+ * sans SMTP on renvoie un succès avec emailSent=false au lieu d'une
  * erreur — l'interface l'indique honnêtement.
  */
 async function sendEmailSiConfigure(...args: Parameters<typeof sendEmail>): Promise<boolean> {
-  if (!SENDGRID_API_KEY) return false;
+  if (!smtpActif()) return false;
   await sendEmail(...args);
   return true;
 }
@@ -238,28 +246,15 @@ async function sendEmail(
   html: string,
   text: string,
 ): Promise<void> {
-  // Service non branché (ex. site de test sans SendGrid) : réponse 503
+  // Service non branché (SMTP_PASSWORD absent) ou port bloqué : 503
   // explicite que l'interface traduit en message clair (jamais une 500).
-  if (!SENDGRID_API_KEY) throw new HttpError(503, "service_non_configure");
-  const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${SENDGRID_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      personalizations: [{ to: [{ email: to }] }],
-      from: { email: FROM_EMAIL, name: FROM_NAME },
-      subject,
-      content: [
-        { type: "text/plain", value: text },
-        { type: "text/html", value: html },
-      ],
-    }),
-  });
-  if (!response.ok) {
-    console.error("SendGrid API error:", response.status);
-    throw new HttpError(502, "Email provider error");
+  const etat = lireConfigSmtp();
+  if (!etat.ok) throw new HttpError(503, "service_non_configure");
+  try {
+    await envoyerSmtp(etat.config, { to, subject, html, text });
+  } catch (e) {
+    if (e instanceof EchecSmtp) throw new HttpError(502, e.type);
+    throw e;
   }
 }
 
@@ -270,7 +265,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (req.method === "GET") {
     try {
       await getUserOrThrow(req);
-      return jsonResponse(req, { active: !!SENDGRID_API_KEY });
+      return jsonResponse(req, { active: smtpActif() });
     } catch (error) {
       if (error instanceof HttpError) return jsonResponse(req, { error: error.message }, error.status);
       throw error;
@@ -432,6 +427,29 @@ Deno.serve(async (req: Request): Promise<Response> => {
         return jsonResponse(req, { success: true });
       }
 
+      case "test_email": {
+        const { user, supabase: userClient } = await getUserOrThrow(req);
+        const { data: admin } = await userClient.rpc("has_role", { _user_id: user.id, _role: "admin" });
+        if (admin !== true) throw new HttpError(403, "Only H2Fleet administrators can send a test email");
+        if (!smtpActif()) throw new HttpError(503, "service_non_configure");
+        if (!(await checkPublicRateLimit("send-email:test", user.id, TESTS_PAR_HEURE))) {
+          return jsonResponse(req, { error: "Too many requests" }, 429);
+        }
+        const quand = new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC";
+        await sendEmail(
+          body.data.to,
+          "H2Fleet — courriel de test / test email",
+          layout(
+            "Courriel de test / Test email",
+            `<p>Ce message confirme que l'envoi de courriels de H2Fleet fonctionne (${escapeHtml(quand)}).</p>
+<p style="color:#6b7280;">This message confirms that H2Fleet email delivery works (${escapeHtml(quand)}).</p>`,
+            "Envoyé depuis Paramètres › Notifications par courriel. / Sent from Settings › Email notifications.",
+          ),
+          `Ce message confirme que l'envoi de courriels de H2Fleet fonctionne (${quand}).\nThis message confirms that H2Fleet email delivery works (${quand}).`,
+        );
+        return jsonResponse(req, { success: true });
+      }
+
       case "organization_invite": {
         const { user } = await getUserOrThrow(req);
         const admin = serviceRoleClient();
@@ -453,7 +471,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
           .eq("user_id", user.id)
           .maybeSingle();
         if (membre?.role !== "admin") throw new HttpError(403, "Only organization admins can send invitations");
-        if (!SENDGRID_API_KEY) throw new HttpError(503, "service_non_configure");
+        if (!smtpActif()) throw new HttpError(503, "service_non_configure");
         if (!(await checkPublicRateLimit("send-email:organization-invite", user.id, INVITATIONS_PAR_HEURE))) {
           return jsonResponse(req, { error: "Too many requests" }, 429);
         }

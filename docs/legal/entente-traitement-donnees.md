@@ -155,7 +155,7 @@ saisir.
 | Supabase, Inc. | base de données, authentification, stockage de fichiers, fonctions serveur | toutes les données du Service | région [à confirmer] | toujours |
 | Cloudflare, Inc. | hébergement du site (fichiers statiques), DNS, réseau de diffusion | adresses IP et requêtes des visiteurs ; aucune donnée du Client stockée | mondial | toujours |
 | GitHub, Inc. (Microsoft) | exécution des tâches planifiées (recalcul nocturne des alertes du plan) et des déploiements | données des projets lues en mémoire pendant l'exécution, non conservées | États-Unis | toujours |
-| Twilio SendGrid | envoi des courriels (invitations, résumés d'alertes, rappels) | adresse courriel du destinataire, contenu du courriel (nom de l'organisation ou du projet, textes des alertes) | États-Unis | si l'envoi de courriels est activé |
+| IONOS (1&1 IONOS) | envoi des courriels (confirmation d'inscription, invitations, résumés d'alertes, rappels) par la boîte d'envoi du domaine du Service | adresse courriel du destinataire, contenu du courriel (nom de l'organisation ou du projet, textes des alertes) | [à confirmer : centre de données de l'offre IONOS] | toujours (courriels d'authentification) ; courriels applicatifs si activés |
 | Anthropic, PBC | modèle d'IA (copilote, import intelligent, lecture de factures, note au conseil) | voir `efvp-ia-anthropic.md` (données minimisées) | États-Unis | seulement si le Client active une fonction d'IA |
 
 *Chaque communication à l'extérieur du Québec doit être couverte par une

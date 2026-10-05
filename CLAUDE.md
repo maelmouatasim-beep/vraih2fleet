@@ -87,11 +87,23 @@ hydrogène : TCO, infrastructure, subventions canadiennes, télématique
   usage en jetons), `numberCheck.ts` (chaque nombre d'un texte généré
   vérifié contre les sorties du moteur), `copilotTools.ts`,
   `importSchema.ts` (identique à `src/lib/fleet`, testé),
-  `documentSchema.ts`, `councilNote.ts` (règles de la note au conseil).
+  `documentSchema.ts`, `councilNote.ts` (règles de la note au conseil),
+  `smtpConfig.ts` (PUR, testé : SMTP IONOS port 465, 25/587 refusés,
+  seul interrupteur SMTP_PASSWORD) + `smtp.ts` (nodemailer, certificat
+  toujours vérifié, aucune adresse dans les journaux).
   Fonctions IA : `copilot`, `fleet-import`, `document-reader`,
   `council-note` ; tâche planifiée `plan-alerts-digest`.
 - `scripts/mock-anthropic.mjs` — FAUX serveur de l'API Claude (réponses
   scriptées) pour l'e2e ; aucune vraie clé en CI.
+- `scripts/mock-smtp.mjs` — FAUX serveur SMTP (TLS implicite, AC de test
+  générée au démarrage → `SMTP_TLS_CA_TESTS_ONLY` ajouté à l'env des
+  fonctions) ; `supabase/tests/smtp-envoi.test.ts` (étape e2e de la CI).
+- Confirmation du courriel : `src/lib/auth/confirmation.ts` (pur, testé),
+  `AttenteConfirmation` (même navigateur détecté, code à 6 chiffres,
+  « Me connecter », renvoi 60 s), pages `/auth/confirme` et
+  `/auth/verifier` ; `scripts/e2e-confirmation.mjs` (4 scénarios +
+  anti-énumération, URL propres ET hash, en CI) ; modèle Supabase
+  bilingue `docs/courriels-auth/confirm-signup.html`.
 - `supabase/tests/` — tests d'intégration contre Supabase local
   (helpers + audit RLS) ; exécutés en CI, jamais contre la production.
 
@@ -347,7 +359,7 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   schéma (manifeste vérifié en CI), tâches pg_cron via Vault (non encore
   planifiées), page /reset-password + liens de courriel compatibles
   GitHub Pages, services non branchés → 503 `service_non_configure` +
-  message clair (SendGrid, IA, Mapbox reportés par l'utilisateur).
+  message clair (courriels, IA, Mapbox reportés par l'utilisateur).
 - **Test terrain (petite ville, 12 véhicules, 3 garages) — blocs 1 à 3 :
   LIVRÉS, en attente du « ok » avant la Phase 4.**
   Bloc 1 (cohérence des chiffres, moteur 2.3.0, méthodologie v2.3) :
@@ -437,7 +449,7 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   de programme retenu, remplacements en retard, programmes modifiés,
   capacité de garage ; état dans `plan_alerts` (vue tracée) ; panneau
   dans Suivi, carte « Santé du plan » sur l'Accueil ; résumé courriel
-  `plan-alerts-digest` (pg_cron, 503 tant que SendGrid absent) ;
+  `plan-alerts-digest` (pg_cron, 503 tant que le SMTP n'est pas branché) ;
   méthodologie §13. 5.7 note au conseil (`src/lib/journey/councilNote.ts`,
   `council-note`, `_shared/councilNote.ts`, `council_notes`) : faits du
   moteur → rédaction IA à jetons `{{fait}}` (aucun chiffre écrit par
@@ -538,12 +550,25 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   Suivi, recalcul serveur des alertes (`surveillanceProjet.ts` partagé
   écran/serveur, `recalculAlertesServeur.ts`, workflow quotidien,
   `sync_plan_alerts_serveur` service_role, CI : 0 écart écran/serveur) ;
-  (5) courriels : seul interrupteur `SENDGRID_API_KEY` (`docs/courriels.md`),
+  (5) courriels : un seul interrupteur (aujourd'hui `SMTP_PASSWORD`, `docs/courriels.md`),
   gabarit `organization_invite`, statut GET send-email (VITE_EMAILS_ACTIVE
   retiré), pg_cron planifié par le déploiement (`scripts/taches-cron.mjs`) ;
   (6) `docs/legal/` (EFVP IA, entente de pilote, entente de traitement —
   brouillons à faire valider par un juriste), confidentialité mise à jour.
   Migrations 20261008010000, 20261008020000 (additives).
+
+- **Courriels IONOS + confirmation du courriel (parties A et B) : LIVRÉ,
+  en attente du « ok ».** A : arrivée « Adresse confirmée ✅ » 2,5 s puis
+  l'espace ; attente « Vérifiez vos courriels » (session détectée entre
+  onglets, code à 6 chiffres `verifyOtp`, « Me connecter » prérempli,
+  renvoi avec délai de 60 s, « Modifier l'adresse ») ; liens expirés /
+  déjà utilisés / invalides expliqués + « Renvoyer un lien » ; aucune
+  énumération ; hash routing compatible (aucune Redirect URL de plus).
+  B : SendGrid retiré ; `send-email` et `plan-alerts-digest` par SMTP
+  IONOS (`smtp.ionos.com:465`, `noreply@h2fleet.ca`), courriel de test
+  admin dans Paramètres, contrôle de santé (SMTP_PASSWORD, secret de test
+  interdit), DNS IONOS relevé (`docs/production.md`, phase D), Brevo
+  documenté pour plus tard (SPF à fusionner, non fait).
 
 Rappels de méthode : chaque phase finit par `npm run check` vert → push →
 résumé court → **attendre le « ok » de l'utilisateur** ; kanban intégré à
@@ -564,7 +589,9 @@ sinon « à_valider » avec l'URL à consulter.
   Anthropic, États-Unis) avant d'activer une fonction IA pour un client
   (brouillon : `docs/legal/efvp-ia-anthropic.md`) ; coût estimé à
   confirmer sur la facture réelle.
-- SMTP personnalisé (courriels d'auth vers des testeurs externes).
+- Courriels d'auth : SMTP IONOS branché (fait par l'utilisateur) ; coller
+  le modèle « Confirm signup » avec le code `{{ .Token }}`
+  (`docs/courriels-auth/confirm-signup.html`).
 - Facturation réelle (DEMO_MODE donne le plan le plus élevé à tous).
 - Revue juridique des pages légales (Loi 25, CGU, confidentialité).
 - Hypothèses et programmes « à_valider » : vérification par
@@ -574,8 +601,8 @@ sinon « à_valider » avec l'URL à consulter.
   utile, réserve, jours d'utilisation, fenêtre présumée, majoration amont
   de l'essence (reprise du diesel) ; prix de l'essence saisi au registre
   (la collecte hebdomadaire ne couvre que le diesel).
-- Services reportés : SendGrid (seul interrupteur des courriels,
-  `docs/courriels.md` ; + SMTP et « Confirm email »), Mapbox, clé IA,
+- Services reportés : secrets SMTP des courriels applicatifs
+  (`SMTP_PASSWORD` = seul interrupteur, `docs/courriels.md`), Mapbox, clé IA,
   secrets du Vault (les tâches pg_cron sont alors planifiées par Deploy
   Supabase).
 - **Sauvegardes de la base : AUCUNE aujourd'hui.** Solution la plus
@@ -596,9 +623,9 @@ sinon « à_valider » avec l'URL à consulter.
 - Note au conseil : faire relire le modèle et la note IA par un
   responsable municipal avant le premier dépôt ; les montants restent
   ceux du moteur (hypothèses « à valider » listées en annexe).
-- SMTP personnalisé à brancher par l'utilisateur (réglages exacts :
-  `docs/deploiement.md`, section SMTP) ; tant qu'il ne l'est pas,
-  l'inscription hébergée bute sur le quota de courriels de Supabase.
+- DNS courriel (IONOS) : vérifier l'activation DKIM (sélecteur
+  `s42582890` sans clé publiée), ajouter `rua=` au DMARC puis passer à
+  `p=quarantine` ; ne jamais toucher aux MX ni au SPF d'IONOS.
 - Bascule h2fleet.ca, réécriture de l'historique (adresse courriel) et
   passage du dépôt en privé : décisions de l'utilisateur
   (`docs/production.md`, `docs/historique-git.md`).

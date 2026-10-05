@@ -42,10 +42,11 @@ appelant via `supabase/functions/_shared/auth.ts` :
 | Fonction | Appelant attendu | Vérification |
 | --- | --- | --- |
 | `send-email` (demo_request, contact) | public | rate limit IP + pot de miel, destinataire fixé côté serveur |
-| `send-email` (support_request, collaboration_invite, task_mention) | utilisateur | `getUserOrThrow` (JWT réel), destinataire résolu en base |
+| `send-email` (support_request, collaboration_invite, organization_invite, task_mention) | utilisateur | `getUserOrThrow` (JWT réel), destinataire résolu en base |
+| `send-email` (test_email) | administrateur H2Fleet | `getUserOrThrow` + `has_role(admin)` (sinon 403), 10 envois / heure ; erreurs SMTP classées (`smtp_auth`, `smtp_connexion`, `smtp_refus`) sans texte du serveur |
 | `send-email` (subsidy_reminder, plan_alerts_digest) | interne | `requireInternalSecret` (x-internal-secret) ; lien du résumé construit côté serveur à partir de l'UUID du projet, textes échappés |
 | `notify-subsidy-deadlines` | pg_cron | `requireCronSecret` (x-cron-secret) |
-| `plan-alerts-digest` | pg_cron | `requireCronSecret` ; sans `SENDGRID_API_KEY` → 503 `service_non_configure` sans rien marquer ; destinataires résolus en base (propriétaire + admins/membres de l'organisation, préférence `plan_alerts`) ; aucune adresse dans les journaux |
+| `plan-alerts-digest` | pg_cron | `requireCronSecret` ; sans `SMTP_PASSWORD` → 503 `service_non_configure` sans rien marquer ; destinataires résolus en base (propriétaire + admins/membres de l'organisation, préférence `plan_alerts`) ; aucune adresse dans les journaux |
 | `sync-telematics-data` | pg_cron ou utilisateur | secret cron, OU JWT + propriété de la connexion |
 | `calculate-tco` | — | **RETIRÉE (Phase 1B refonte)** : moteur remplacé par `src/lib/tco` côté client ; `api-gateway` répond 410 sur `/scenarios/:id/calculate`. La fonction encore déployée chez Supabase doit être supprimée à la main (liste pré-pilote). |
 | `copilot` | utilisateur | `getUserOrThrow` + projet relu avec le client RLS + fonction activée pour l'organisation + quotas jour/mois par organisation + débit par utilisateur ; clé `ANTHROPIC_API_KEY` côté serveur seulement ; chaque nombre de la réponse vérifié contre les résultats d'outils |
@@ -81,7 +82,8 @@ corrigées malgré la désactivation (clé cherchée par hash, webhooks limités
   les jobs pg_cron ;
 - `INTERNAL_FUNCTION_SECRET` — aléatoire fort, appels internes
   notify-subsidy-deadlines → send-email ;
-- `SENDGRID_API_KEY`, `ANTHROPIC_API_KEY`, `MAPBOX_PUBLIC_TOKEN` ;
+- `SMTP_PASSWORD` (mot de passe de la boîte d'envoi IONOS, seul interrupteur des courriels ; `SMTP_HOST`, `SMTP_PORT` = 465, `SMTP_USER`, `EMAIL_FROM`, `EMAIL_FROM_NAME` ont des valeurs par défaut), `ANTHROPIC_API_KEY`, `MAPBOX_PUBLIC_TOKEN` ;
+- `SMTP_TLS_CA_TESTS_ONLY` : tests locaux SEULEMENT (AC du faux serveur SMTP) ; le contrôle de santé échoue s'il existe sur le projet hébergé ;
 - `CONTACT_INBOX_EMAIL`, `APP_BASE_URL` (facultatifs, valeurs par défaut) ;
 - `GEOTAB_API_URL`, `SAMSARA_API_URL` (facultatifs).
 

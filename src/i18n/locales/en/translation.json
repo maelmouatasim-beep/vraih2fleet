@@ -2323,7 +2323,27 @@
         "weeklyDigestDesc": "A summary of your projects’ activity every Monday",
         "planAlerts": "Plan monitoring alerts",
         "planAlertsDesc": "Summary of new alerts on your projects (energy, subsidies, delays, garages) — sent once the email service is connected",
-        "notActive": "Email sending is not enabled on this site yet: your choices are saved and will apply as soon as it is enabled."
+        "notActive": "Email sending is not enabled on this site yet: your choices are saved and will apply as soon as it is enabled.",
+        "test": {
+          "title": "Test email (H2Fleet administrators)",
+          "desc": "Sends a short bilingual message to the address you enter to check the site's SMTP (sender noreply@h2fleet.ca).",
+          "send": "Send test",
+          "badge": {
+            "ok": "Sent",
+            "off": "Not connected",
+            "ko": "Failed"
+          },
+          "result": {
+            "envoye": "Email handed to the sending server. Check the inbox (and spam folder) in a few minutes.",
+            "non_configure": "Sending is not connected: the SMTP_PASSWORD secret is missing from the Edge Functions (or the chosen port is blocked; use 465).",
+            "smtp_auth": "Username or password rejected by the SMTP server: check SMTP_USER (full mailbox address) and SMTP_PASSWORD.",
+            "smtp_connexion": "Could not connect to the SMTP server: check SMTP_HOST (smtp.ionos.com) and SMTP_PORT (465).",
+            "smtp_refus": "The SMTP server refused the message (sender or recipient). Check that EMAIL_FROM is the IONOS mailbox or one of its aliases.",
+            "interdit": "H2Fleet administrators only.",
+            "trop_de_demandes": "Too many tests in one hour: try again later.",
+            "echec": "Sending failed for an unexpected reason. Try again in a moment."
+          }
+        }
       }
     },
     "blog": {
@@ -5991,7 +6011,7 @@
         {
           "title": "5. Disclosure and hosting",
           "paras": [
-            "Information is hosted by Supabase (database, authentication and file storage). The website is served by Cloudflare (static files, no data from your organization); scheduled tasks (nightly recalculation of plan alerts) run on GitHub, without keeping the data. The following services receive data only if enabled: email delivery (SendGrid), artificial-intelligence features, maps (Mapbox), telematics platforms you connect.",
+            "Information is hosted by Supabase (database, authentication and file storage). The website is served by Cloudflare (static files, no data from your organization); scheduled tasks (nightly recalculation of plan alerts) run on GitHub, without keeping the data. Emails (sign-up confirmation, invitations, alerts) are sent through IONOS's mail server, which receives the recipient's address and the message content. The following services receive data only if enabled: artificial-intelligence features, maps (Mapbox), telematics platforms you connect.",
             "Database hosting region: [to be confirmed]. When information is communicated outside Québec, the Operator first carries out the privacy impact assessment required by law [to be completed].",
             "Artificial intelligence features (optional): when an administrator of your organization enables them, questions asked to the copilot and the project data needed for the calculation (units, categories, mileage, years, garages — never employees' personal data) are sent to Anthropic, PBC (United States), provider of the Claude model, to produce the answer. Only the number of tokens used is logged; the copilot history is kept in the project and can be deleted by its author or an administrator. Invoice and quote reading (if enabled): only the document's text is sent when it has one (otherwise the file); documents may contain billing information (service address, account number), which is not kept in the extracted values, and the document stays in your organization's private storage. Smart import: only headers and a few sample values are sent, never personal-data columns. Council note: only aggregated facts of the plan are sent. Privacy impact assessment of this communication outside Québec: [to be completed — to be validated by a lawyer]."
           ]

@@ -7,11 +7,12 @@
 //
 // Sécurité :
 // - Exige x-cron-secret (CRON_SECRET).
-// - SendGrid non branché → 503 « service_non_configure », rien n'est
+// - SMTP non branché (SMTP_PASSWORD absent) → 503 « service_non_configure », rien n'est
 //   marqué (les alertes partiront au premier passage après branchement).
 // - Envois par send-email (gabarit fermé, secret interne, HTML échappé).
 // - Aucune adresse ni donnée personnelle dans les journaux.
 
+import { smtpActif } from "../_shared/smtpConfig.ts";
 import { handleOptions, jsonResponse } from "../_shared/cors.ts";
 import { HttpError, requireCronSecret, serviceRoleClient } from "../_shared/auth.ts";
 import { construireEnvois, type AlerteDigest, type MembreDigest, type ProjetDigest } from "./core.ts";
@@ -32,8 +33,8 @@ Deno.serve(async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") return handleOptions(req);
   try {
     requireCronSecret(req);
-    if (!Deno.env.get("SENDGRID_API_KEY")) {
-      return jsonResponse(req, { error: "service_non_configure", service: "sendgrid" }, 503);
+    if (!smtpActif()) {
+      return jsonResponse(req, { error: "service_non_configure", service: "smtp" }, 503);
     }
     const internalSecret = Deno.env.get("INTERNAL_FUNCTION_SECRET");
     if (!internalSecret) throw new HttpError(500, "INTERNAL_FUNCTION_SECRET is not configured");

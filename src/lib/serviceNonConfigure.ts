@@ -1,6 +1,6 @@
 /**
  * Services externes pas encore branchés sur un environnement (site de test
- * sans SendGrid, sans clé IA, sans Mapbox) : les edge functions répondent
+ * sans SMTP, sans clé IA, sans Mapbox) : les edge functions répondent
  * 503 { error: "service_non_configure" } ; l'interface affiche alors un
  * message clair au lieu d'une erreur générique.
  */

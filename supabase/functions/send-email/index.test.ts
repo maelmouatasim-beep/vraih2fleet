@@ -1,5 +1,6 @@
 // Tests d'intégration contre Supabase LOCAL uniquement (voir helpers.ts).
-// SENDGRID_API_KEY est absent en test : aucun envoi réel n'est déclenché.
+// SMTP_PASSWORD est absent en test (functions.env) : aucun envoi réel.
+// L'envoi par SMTP est testé contre un faux serveur : supabase/tests/smtp-envoi.test.ts.
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import {
   adminClient,
@@ -58,13 +59,13 @@ Deno.test("send-email - demo_request : email invalide => 400", async () => {
   await response.text();
 });
 
-Deno.test("send-email - demo_request valide sans SendGrid : lead enregistré, succès emailSent=false", async () => {
+Deno.test("send-email - demo_request valide sans SMTP : lead enregistré, succès emailSent=false", async () => {
   const email = `lead-${Date.now()}@example.com`;
   const response = await callFunction("send-email", {
     templateType: "demo_request",
     data: { fullName: "Prospect", email, company: "FlotteCo", fleetSize: "50-200" },
   });
-  // SENDGRID_API_KEY absent en test : la demande est enregistrée et le
+  // SMTP_PASSWORD absent en test : la demande est enregistrée et le
   // serveur le dit (pas d'erreur 500 pour un service non branché).
   assertEquals(response.status, 200);
   const body = await response.json();
@@ -165,7 +166,7 @@ Deno.test("send-email - collaboration_invite d'une invitation d'autrui => 404", 
 
 Deno.test("send-email - rate limit IP : bloque après 5 requêtes publiques", async () => {
   // Le pot de miel n'incrémente pas le compteur ; on utilise des requêtes
-  // valides (200 emailSent=false sans SendGrid, mais comptées) puis on
+  // valides (200 emailSent=false sans SMTP, mais comptées) puis on
   // vérifie le 429.
   let got429 = false;
   for (let i = 0; i < 8; i++) {
@@ -187,7 +188,7 @@ Deno.test("send-email - rate limit IP : bloque après 5 requêtes publiques", as
   assert(got429, "la limite de débit par IP n'a jamais bloqué");
 });
 
-Deno.test("send-email - contact sans SendGrid : message conservé dans le lead, emailSent=false", async () => {
+Deno.test("send-email - contact sans SMTP : message conservé dans le lead, emailSent=false", async () => {
   const email = `contact-${Date.now()}@example.com`;
   const response = await callFunction(
     "send-email",
@@ -207,7 +208,7 @@ Deno.test("send-email - contact sans SendGrid : message conservé dans le lead, 
   assertEquals((data![0].calculator_inputs as { message?: string }).message, "Texte du message");
 });
 
-Deno.test("send-email - support_request sans SendGrid => 503 service_non_configure", async () => {
+Deno.test("send-email - support_request sans SMTP => 503 service_non_configure", async () => {
   const user = await createTestUser("support");
   const response = await callFunction(
     "send-email",

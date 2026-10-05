@@ -240,7 +240,7 @@ export type EnvoiInvitation = "envoye" | "non_configure" | "echec";
 /**
  * Envoie le courriel d'invitation (gabarit « organization_invite » : le
  * serveur relit destinataire, organisation et rôle en base). Tant que
- * l'envoi n'est pas branché (SENDGRID_API_KEY absent) : « non_configure »,
+ * l'envoi n'est pas branché (SMTP_PASSWORD absent) : « non_configure »,
  * l'invitation reste visible par la personne à sa connexion.
  */
 export async function envoyerInvitationParCourriel(invitationId: string, langue: "fr" | "en"): Promise<EnvoiInvitation> {
