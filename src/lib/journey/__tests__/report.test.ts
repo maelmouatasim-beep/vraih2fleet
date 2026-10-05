@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ENGINE_VERSION, LISTE_HYPOTHESES } from "@/lib/tco";
-import { arrondirCellule, construireClasseurPlan } from "../report";
+import { arrondirCellule, construireClasseurPlan, valeurCellule } from "../report";
 import { construireStrategie, type VehiculeProjet } from "../strategies";
 
 const OPTIONS = {
@@ -53,7 +53,7 @@ describe("construireClasseurPlan", () => {
     const premiere = budget[6];
     expect(premiere[0]).toBe(2026);
     const vue = strategie.resultat!.vueBudgetaire;
-    expect(budget.slice(6, 6 + vue.length).map((l) => l[8])).toEqual(vue.map((l) => arrondirCellule(l.ecart)));
+    expect(budget.slice(6, 6 + vue.length).map((l) => valeurCellule(l[8]))).toEqual(vue.map((l) => arrondirCellule(l.ecart)));
     // traçabilité : version du moteur et empreinte dans l'en-tête
     expect(String(budget[1][0])).toContain(ENGINE_VERSION);
     expect(String(budget[1][0])).toContain(strategie.resultat!.empreinteEntree);

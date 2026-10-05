@@ -4768,7 +4768,8 @@
       "programs": "Programs",
       "history": "Price history",
       "overrides": "Client data",
-      "watch": "Subsidy watch"
+      "watch": "Subsidy watch",
+      "categories": "Vehicle categories"
     },
     "search": "Search an assumption…",
     "filterStatus": "Filter by status",
@@ -4835,6 +4836,28 @@
       "reject": "Reject",
       "validated": "Change validated: affected projects are alerted",
       "rejected": "Change rejected"
+    },
+    "target": {
+      "shown_one": "{{count}} assumption behind the figure you opened.",
+      "shown_other": "{{count}} assumptions behind the figure you opened.",
+      "showAll": "Show the whole registry"
+    },
+    "categories": {
+      "intro": "Engine defaults by category, used until the real fleet (quotes, telematics, invoices) provides the actual value. Purchase prices before taxes, in 2026 Canadian dollars; the range feeds the stress test.",
+      "meta": "Service life: {{ans}} years · {{km}} km per year by default · typical usable battery: {{kwh}} kWh",
+      "columns": {
+        "technology": "Technology",
+        "price": "Purchase price (range)",
+        "consumption": "Consumption (range)",
+        "maintenance": "Maintenance (range)"
+      },
+      "techno": {
+        "diesel": "New combustion (status quo)",
+        "BEV": "Electric",
+        "FCEV": "Hydrogen"
+      },
+      "sources": "Sources",
+      "note": "A quote entered for a vehicle replaces its category's default price; it is then flagged as “client data” in reports."
     }
   },
   "organization": {
@@ -5121,7 +5144,8 @@
         "done_one": "{{count}} target technology applied to the plan",
         "done_other": "{{count}} target technologies applied to the plan"
       },
-      "paybackNotApplicable": "Payback: — ({{reason}})"
+      "paybackNotApplicable": "Payback: — ({{reason}})",
+      "categoryDefaultsLink": "Default purchase price, consumption and maintenance for this category"
     },
     "strategies": {
       "empty": {
@@ -5181,8 +5205,12 @@
           "favorable": "Favorable scenario"
         },
         "tcoCompare": "Strategy TCO {{alt}} vs status quo {{ref}} (the status quo is recomputed with the same assumptions as the scenario)",
-        "vanRange": "Savings (NPV) at the assumption's bounds",
-        "note": "Central savings: {{van}}. Each bar shows the savings recomputed by the engine as the assumption moves from its low to its high bound (registry ranges)."
+        "tornadoTitle": "What moves the result",
+        "tornadoHelp": "For each assumption, the engine is re-run at its low value and then at its high value (sourced registry ranges), all other assumptions staying central. The bar runs from one result to the other; the black vertical line marks the central result, the grey line zero. Assumptions are ranked from most to least influential.",
+        "tornadoAmplitude": "spread of {{amount}}",
+        "tornadoLow": "Low value ({{value}}):",
+        "tornadoHigh": "High value ({{value}}):",
+        "noteCentral": "Central result: {{ecart}} compared with the status quo (present value). A positive amount is a saving, a negative amount an extra cost."
       },
       "apply": {
         "title": "Apply “{{strategy}}” to the plan",
@@ -5532,7 +5560,10 @@
       "h2ExternalAuto_one": "{{count}} hydrogen vehicle: refuelling at an external station, no depot station investment (fewer than {{seuil}} H2 vehicles at this depot, registry threshold; editable in My fleet › Depots).",
       "h2ExternalAuto_other": "{{count}} hydrogen vehicles: refuelling at an external station, no depot station investment (fewer than {{seuil}} H2 vehicles at this depot, registry threshold; editable in My fleet › Depots).",
       "h2External_one": "{{count}} hydrogen vehicle: refuelling at an external station (depot setting), no depot station investment.",
-      "h2External_other": "{{count}} hydrogen vehicles: refuelling at an external station (depot setting), no depot station investment."
+      "h2External_other": "{{count}} hydrogen vehicles: refuelling at an external station (depot setting), no depot station investment.",
+      "sourceUnitPrice": "Unit price and source",
+      "sourceAssumption": "Assumption and source",
+      "sourceAll": "All infrastructure assumptions"
     },
     "settings": {
       "button": "Project settings",
@@ -5807,7 +5838,9 @@
         "infrastructure": "Infrastructure (chargers, grid connection, H2 station)",
         "subventions": "Subsidies",
         "valeurResiduelle": "Vehicle resale value"
-      }
+      },
+      "sourceLink": "See this item's assumptions in the Library",
+      "sourceHint": "Click an item to see its assumptions, their sources and the date they were read."
     },
     "garagesPresumed": {
       "title_one": "Electrical capacity not entered for garage {{garages}}",

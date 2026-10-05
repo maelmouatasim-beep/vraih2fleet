@@ -7,12 +7,15 @@
  * L'ancienne « Données personnalisées » n'était lue par aucun calcul :
  * elle est retirée du menu (route redirigée, aucune donnée supprimée).
  */
-import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Page, PageHeader } from "@/components/layout/Page";
 import SubsidyWatchCard from "@/components/library/SubsidyWatchCard";
+import CategoryDefaultsTab from "@/components/library/CategoryDefaultsTab";
+import { lireCibleBibliotheque, type OngletBibliotheque } from "@/lib/library/liens";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -47,12 +50,24 @@ export default function Library() {
   const langue = i18n.language.startsWith("en") ? "en" : "fr";
   const [recherche, setRecherche] = useState("");
   const [statut, setStatut] = useState<StatutHypothese | "tous">("tous");
+  // Lien profond depuis un chiffre (VAN, infrastructure, Faisabilité…) :
+  // onglet, hypothèses ciblées (filtrées et surlignées), catégorie.
+  const location = useLocation();
+  const navigate = useNavigate();
+  const cible = useMemo(() => lireCibleBibliotheque(location.search), [location.search]);
+  const [onglet, setOnglet] = useState<OngletBibliotheque>(cible.onglet);
+  useEffect(() => setOnglet(cible.onglet), [cible.onglet]);
+  const ciblees = useMemo(() => new Set<string>(cible.ids), [cible.ids]);
+  const premiereCible = useRef<HTMLTableRowElement | null>(null);
+  useEffect(() => {
+    if (cible.ids.length) premiereCible.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [cible.ids]);
 
   const resume = useMemo(() => resumeStatuts(LISTE_HYPOTHESES), []);
-  const hypotheses = useMemo(
-    () => filtrerHypotheses(LISTE_HYPOTHESES, recherche, statut),
-    [recherche, statut],
-  );
+  const hypotheses = useMemo(() => {
+    const filtrees = filtrerHypotheses(LISTE_HYPOTHESES, recherche, statut);
+    return ciblees.size ? filtrees.filter((h) => ciblees.has(h.id)) : filtrees;
+  }, [recherche, statut, ciblees]);
   const historique = useMemo(() => historiqueDiesel(), []);
   const argent = useMemo(() => formateurCad(i18n.language), [i18n.language]);
   const aujourdHui = new Date().toISOString().slice(0, 10);
@@ -79,9 +94,10 @@ export default function Library() {
           ))}
         </StatGrid>
 
-        <Tabs defaultValue="hypotheses">
+        <Tabs value={onglet} onValueChange={(v) => setOnglet(v as OngletBibliotheque)}>
           <TabsList>
             <TabsTrigger value="hypotheses">{t("library.tabs.hypotheses")}</TabsTrigger>
+            <TabsTrigger value="categories" data-testid="tab-categories">{t("library.tabs.categories")}</TabsTrigger>
             <TabsTrigger value="programmes">{t("library.tabs.programs")}</TabsTrigger>
             <TabsTrigger value="historique">{t("library.tabs.history")}</TabsTrigger>
             <TabsTrigger value="surcharges">{t("library.tabs.overrides")}</TabsTrigger>
@@ -89,6 +105,14 @@ export default function Library() {
           </TabsList>
 
           <TabsContent value="hypotheses" className="space-y-3">
+            {ciblees.size > 0 && (
+              <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-sm" data-testid="library-target">
+                <span>{t("library.target.shown", { count: ciblees.size })}</span>
+                <Button variant="outline" size="sm" onClick={() => navigate("/dashboard/library")}>
+                  {t("library.target.showAll")}
+                </Button>
+              </div>
+            )}
             <div className="flex flex-wrap gap-2">
               <Input
                 className="max-w-xs"
@@ -121,8 +145,14 @@ export default function Library() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {hypotheses.map((h) => (
-                      <TableRow key={h.id}>
+                    {hypotheses.map((h, i) => (
+                      <TableRow
+                        key={h.id}
+                        id={`hyp-${h.id}`}
+                        ref={i === 0 && ciblees.has(h.id) ? premiereCible : undefined}
+                        data-testid={`library-hypothesis-${h.id}`}
+                        className={cn(ciblees.has(h.id) && "bg-primary/5")}
+                      >
                         <TableCell className="max-w-md">
                           <p className="font-medium text-sm">{descriptionHypothese(h.id, langue)}</p>
                           <p className="text-xs text-muted-foreground font-mono">{h.id}</p>
@@ -157,6 +187,10 @@ export default function Library() {
                 )}
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="categories">
+            <CategoryDefaultsTab categorie={cible.categorie} colonne={cible.colonne} />
           </TabsContent>
 
           <TabsContent value="programmes" className="space-y-3">

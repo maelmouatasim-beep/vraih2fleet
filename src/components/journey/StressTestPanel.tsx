@@ -5,26 +5,15 @@
  * SOURCÉES de l'hypothèse (jamais un ±20 % arbitraire).
  */
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  ReferenceLine,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { analyserSensibilite, type PlanTcoEntree } from "@/lib/tco";
 import { formateurCad, formateurCadCompact } from "@/lib/format";
-import { AlertTriangle } from "lucide-react";
-import { PARAMETRES_STRESS_EN } from "@/lib/tco/translations-en";
-import { INFOBULLE_GRAPHIQUE } from "@/components/layout/charts";
-import { useLargeur } from "@/hooks/useLargeur";
+import { AlertTriangle, BookOpen } from "lucide-react";
+import { echelleTornade, explicationStatuQuo, libelleEcart, lignesTornade } from "@/lib/journey/tornade";
+import { cn } from "@/lib/utils";
 
 interface StressTestPanelProps {
   plan: PlanTcoEntree;
@@ -36,17 +25,11 @@ export default function StressTestPanel({ plan }: StressTestPanelProps) {
   const compact = useMemo(() => formateurCadCompact(i18n.language), [i18n.language]);
 
   const analyse = useMemo(() => analyserSensibilite(plan), [plan]);
-
-  // Axe des libellés proportionné à la place disponible (mobile : abrégés, nom complet dans l'infobulle).
-  const { ref: refTornade, largeur } = useLargeur<HTMLDivElement>();
-  const largeurAxe = Math.round(Math.min(220, Math.max(96, (largeur ?? 700) * 0.38)));
-  const maxCaracteres = Math.max(12, Math.floor(largeurAxe / 6.2));
-  const donneesTornade = analyse.tornade.map((b) => {
-    const min = Math.min(b.vanBasse, b.vanHaute);
-    const max = Math.max(b.vanBasse, b.vanHaute);
-    const libelle = i18n.language.startsWith("en") ? PARAMETRES_STRESS_EN[b.id] ?? b.libelle : b.libelle;
-    return { libelle, plage: [min, max], amplitude: b.amplitude };
-  });
+  const langue = i18n.language.startsWith("en") ? "en" : "fr";
+  const lignes = useMemo(() => lignesTornade(analyse.tornade, langue), [analyse, langue]);
+  const echelle = useMemo(() => echelleTornade(analyse.tornade, analyse.vanCentrale), [analyse]);
+  const pos = (v: number) => ((v - echelle.min) / (echelle.max - echelle.min)) * 100;
+  const signe = (v: number) => (v > 0 ? `+${compact.format(v)}` : compact.format(v));
 
   const badgeRisque =
     analyse.niveauRisque === "faible"
@@ -92,55 +75,64 @@ export default function StressTestPanel({ plan }: StressTestPanelProps) {
                     ref: compact.format(s.tcoRef),
                   })}
                 </p>
+                <p className="text-xs text-muted-foreground mt-1" data-testid={`statu-quo-${cle}`}>
+                  {explicationStatuQuo(analyse, cle, langue)}
+                </p>
               </div>
             );
           })}
         </div>
 
-        {/* Tornade : VAN aux bornes sourcées de chaque hypothèse */}
-        <div className="h-[280px]" ref={refTornade}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={donneesTornade} layout="vertical" margin={{ left: 8, right: 16 }}>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-              <XAxis
-                type="number"
-                tickFormatter={(v: number) => compact.format(v)}
-                className="text-xs"
-              />
-              <YAxis
-                dataKey="libelle"
-                type="category"
-                width={largeurAxe}
-                className="text-xs"
-                tickFormatter={(v: string) => (v.length > maxCaracteres ? `${v.slice(0, maxCaracteres - 1)}…` : v)}
-              />
-              <Tooltip
-                formatter={(value: [number, number]) => [
-                  `${compact.format(value[0])} → ${compact.format(value[1])}`,
-                  t("journey.strategies.stress.vanRange"),
-                ]}
-                {...INFOBULLE_GRAPHIQUE}
-              />
-              <ReferenceLine x={0} stroke="hsl(var(--muted-foreground))" />
-              <ReferenceLine
-                x={analyse.vanCentrale}
-                stroke="hsl(var(--primary))"
-                strokeDasharray="4 4"
-              />
-              <Bar dataKey="plage" radius={[4, 4, 4, 4]}>
-                {donneesTornade.map((entree, i) => (
-                  <Cell
-                    key={i}
-                    fill={entree.plage[0] < 0 ? "hsl(0, 72%, 51%)" : "hsl(160, 84%, 30%)"}
-                    fillOpacity={0.75}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+        {/* Tornade : économie recalculée aux bornes sourcées de chaque hypothèse */}
+        <div className="space-y-2" data-testid="tornade">
+          <div>
+            <p className="text-sm font-medium">{t("journey.strategies.stress.tornadoTitle")}</p>
+            <p className="text-xs text-muted-foreground">{t("journey.strategies.stress.tornadoHelp")}</p>
+          </div>
+          <ol className="space-y-3">
+            {lignes.map((l) => {
+              const g = Math.min(pos(l.basse.van), pos(l.haute.van));
+              const d = Math.max(pos(l.basse.van), pos(l.haute.van));
+              return (
+                <li key={l.id} className="space-y-1" data-testid={`tornade-${l.id}`}>
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                    <Link
+                      to={l.lien}
+                      className="group inline-flex min-w-0 items-center gap-1.5 text-sm font-medium underline-offset-2 hover:underline"
+                      title={t("journey.van.sourceLink")}
+                    >
+                      <span className="min-w-0">{l.libelle}</span>
+                      <BookOpen className="h-3.5 w-3.5 shrink-0 text-muted-foreground group-hover:text-primary" aria-hidden />
+                    </Link>
+                    <span className="text-xs text-muted-foreground tabular-nums">
+                      {t("journey.strategies.stress.tornadoAmplitude", { amount: compact.format(l.amplitude) })}
+                    </span>
+                  </div>
+                  <div className="relative h-3 rounded bg-muted" aria-hidden>
+                    <span className="absolute inset-y-0 w-px bg-muted-foreground/60" style={{ left: `${pos(0)}%` }} />
+                    <span
+                      className={cn("absolute inset-y-0 rounded", l.basse.van < 0 && l.haute.van < 0 ? "bg-destructive/70" : l.basse.van >= 0 && l.haute.van >= 0 ? "bg-primary/70" : "bg-amber-500/70")}
+                      style={{ left: `${g}%`, width: `${Math.max(0.8, d - g)}%` }}
+                    />
+                    <span className="absolute -inset-y-0.5 w-0.5 bg-foreground" style={{ left: `${pos(analyse.vanCentrale)}%` }} />
+                  </div>
+                  <div className="grid grid-cols-1 gap-x-4 text-xs tabular-nums sm:grid-cols-2">
+                    <p>
+                      <span className="text-muted-foreground">{t("journey.strategies.stress.tornadoLow", { value: l.basse.valeur })}</span>{" "}
+                      <span className={cn("font-medium", l.basse.van >= 0 ? "text-primary" : "text-destructive")}>{signe(l.basse.van)}</span>
+                    </p>
+                    <p className="sm:text-right">
+                      <span className="text-muted-foreground">{t("journey.strategies.stress.tornadoHigh", { value: l.haute.valeur })}</span>{" "}
+                      <span className={cn("font-medium", l.haute.van >= 0 ? "text-primary" : "text-destructive")}>{signe(l.haute.van)}</span>
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
         </div>
-        <p className="text-xs text-muted-foreground">
-          {t("journey.strategies.stress.note", { van: argent.format(analyse.vanCentrale) })}
+        <p className="text-xs text-muted-foreground" data-testid="tornade-centrale">
+          {t("journey.strategies.stress.noteCentral", { ecart: libelleEcart(analyse.vanCentrale, langue) })}
         </p>
       </CardContent>
     </Card>

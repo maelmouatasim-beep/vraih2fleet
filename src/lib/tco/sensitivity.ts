@@ -224,6 +224,12 @@ export function parametresStandards(plan: PlanTco): ParametreSensibilite[] {
 export interface BarreTornade {
   id: string;
   libelle: string;
+  /** Valeurs du paramètre testées (bornes sourcées) et valeur centrale du plan. */
+  basse: number;
+  centrale: number;
+  haute: number;
+  /** Effet d'une hausse du paramètre sur le dossier d'électrification. */
+  sens: SensParametre;
   vanBasse: number;
   vanHaute: number;
   amplitude: number;
@@ -261,6 +267,10 @@ export function analyserSensibilite(entree: PlanTcoEntree): ResultatSensibilite 
     return {
       id: param.id,
       libelle: param.libelle,
+      basse: param.basse,
+      centrale: param.centrale,
+      haute: param.haute,
+      sens: param.sens,
       vanBasse,
       vanHaute,
       amplitude: Math.abs(vanHaute - vanBasse),

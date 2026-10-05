@@ -8,7 +8,7 @@ import {
   type VehiculeInfra,
 } from "../infrastructure";
 import { construireStrategie, type VehiculeProjet } from "../strategies";
-import { construireClasseurPlan } from "../report";
+import { construireClasseurPlan, valeurCellule } from "../report";
 
 const N2 = HYPOTHESES.borne_niveau2_installee.valeur;
 const R50 = HYPOTHESES.borne_rapide_50kw_installee.valeur;
@@ -171,7 +171,7 @@ describe("1.1 — le même projet affiche le même total d'infrastructure partou
     });
     const lignes = classeur[1].lignes;
     const total = lignes.find((l) => l[0] === "Infrastructure totale")!;
-    expect(total[total.length - 1]).toBe(s.infra.totalCapex);
+    expect(valeurCellule(total[total.length - 1])).toBe(s.infra.totalCapex);
   });
 
   it("Stratégies (toutes) et Plan utilisent la même fonction : plan_actuel recalculé = même total", () => {

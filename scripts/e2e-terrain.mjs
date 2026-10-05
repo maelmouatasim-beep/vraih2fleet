@@ -333,7 +333,9 @@ try {
   await classeur.xlsx.readFile(join(SORTIE, "classeur-fr.xlsx"));
   const lignes = (f) => {
     const r = [];
-    f.eachRow((row) => r.push(row.values.slice(1)));
+    // Cellules à formule (totaux, TCO, VAN) : on lit le résultat ; liens : le texte.
+    const valeur = (v) => (v && typeof v === "object" ? ("result" in v ? v.result : "text" in v ? v.text : v) : v);
+    f.eachRow((row) => r.push(row.values.slice(1).map(valeur)));
     return r;
   };
   const budget = lignes(classeur.worksheets[0]);
@@ -345,6 +347,12 @@ try {
     subvExcel += Number(l[2] ?? 0);
   }
   const vanExcel = Number(budget.find((l) => l[0] === "Économie (VAN)")?.[1]);
+  // Point 12 : l'Excel porte de vraies formules (VAN = TCO statu quo − TCO plan, TCO = VAN Excel au taux du projet).
+  let formuleVan = null;
+  classeur.worksheets[0].eachRow((row) => {
+    if (row.getCell(1).value === "Économie (VAN)") formuleVan = row.getCell(2).formula ?? null;
+  });
+  if (!formuleVan) throw new Error("Excel : l'économie (VAN) n'est pas une formule");
   const infraExcel = Number(lignes(classeur.worksheets[1]).find((l) => l[0] === "Infrastructure totale")?.at(-1));
   const infra = egaux("infrastructure", { strategies: infraStrategie, plan: infraPlan, pdf: infraPdf, excel: infraExcel });
   const subv = egaux("subventions", {

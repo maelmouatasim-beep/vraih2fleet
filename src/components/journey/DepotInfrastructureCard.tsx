@@ -12,6 +12,8 @@ import { type PlanInfrastructure, type TypeBorne } from "@/lib/journey/infrastru
 import { HYPOTHESES } from "@/lib/tco";
 import { formateurCad } from "@/lib/format";
 import { PlugZap } from "lucide-react";
+import LienBibliotheque from "@/components/library/LienBibliotheque";
+import { HYPOTHESE_BORNE, HYPOTHESES_PAR_POSTE, hypothesesRaccordement, lienHypotheses } from "@/lib/library/liens";
 
 interface DepotInfrastructureCardProps {
   /** Plan d'infrastructure de la stratégie affichée (StrategieConstruite.infra). */
@@ -75,6 +77,13 @@ export default function DepotInfrastructureCard({ infra, anneeReference }: Depot
               <div>
                 <p className="text-muted-foreground">{t("journey.infra.capexChargers")}</p>
                 <p className="font-medium">{d.capexBornes > 0 ? argent.format(d.capexBornes) : "—"}</p>
+                {d.capexBornes > 0 && d.bornesSource === "registre" && (
+                  <LienBibliotheque
+                    to={lienHypotheses(ORDRE_TYPES.filter((type) => (d.bornes[type] ?? 0) > 0).map((type) => HYPOTHESE_BORNE[type]))}
+                    libelle={t("journey.infra.sourceUnitPrice")}
+                    testId={`infra-source-bornes-${d.cle}`}
+                  />
+                )}
               </div>
               <div>
                 <p className="text-muted-foreground">{t("journey.infra.connection")}</p>
@@ -85,6 +94,18 @@ export default function DepotInfrastructureCard({ infra, anneeReference }: Depot
                   <p className="text-xs text-muted-foreground">
                     {t(`journey.infra.connectionSource.${d.raccordement.source}`)}
                   </p>
+                )}
+                {(d.raccordement.source === "estimation" ||
+                  (d.raccordement.source === "capacite_existante" && d.raccordement.kwDisponiblesSource === "presumee")) && (
+                  <LienBibliotheque
+                    to={lienHypotheses(
+                      d.raccordement.source === "estimation"
+                        ? hypothesesRaccordement(d.raccordement.palier, d.raccordement.kwDisponiblesSource === "presumee")
+                        : ["puissance_disponible_garage_presumee"],
+                    )}
+                    libelle={t("journey.infra.sourceAssumption")}
+                    testId={`infra-source-raccordement-${d.cle}`}
+                  />
                 )}
               </div>
             </div>
@@ -115,7 +136,14 @@ export default function DepotInfrastructureCard({ infra, anneeReference }: Depot
                     (d.ravitaillementH2.detourKmParJour > 0
                       ? " " + t("journey.infra.h2Detour", { km: d.ravitaillementH2.detourKmParJour })
                       : "")
-                  : t("journey.infra.h2", { count: d.vehiculesFcev.length, amount: argent.format(d.capexStationH2) })}
+                  : t("journey.infra.h2", { count: d.vehiculesFcev.length, amount: argent.format(d.capexStationH2) })}{" "}
+                <LienBibliotheque
+                  to={lienHypotheses(
+                    d.ravitaillementH2?.mode === "externe" ? ["prix_h2_livre", "seuil_station_h2_depot_vehicules"] : ["station_h2_depot", "seuil_station_h2_depot_vehicules"],
+                  )}
+                  libelle={t("journey.infra.sourceAssumption")}
+                  testId={`infra-source-h2-${d.cle}`}
+                />
               </p>
             )}
             {d.categoriesInconnues.length > 0 && (
@@ -156,6 +184,11 @@ export default function DepotInfrastructureCard({ infra, anneeReference }: Depot
           <p className="font-medium">
             {t("journey.infra.total", { amount: argent.format(infra.totalCapex) })}
           </p>
+          <LienBibliotheque
+            to={lienHypotheses(HYPOTHESES_PAR_POSTE.infrastructure)}
+            libelle={t("journey.infra.sourceAll")}
+            testId="infra-source-total"
+          />
           <p className="text-xs text-muted-foreground">
             {t("journey.infra.sourceNote", {
               source: HYPOTHESES.borne_niveau2_installee.source.organisme,

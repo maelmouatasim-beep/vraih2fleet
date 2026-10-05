@@ -1,7 +1,10 @@
 /**
  * Étape 6 du parcours — Rapports : construction PURE des données
  * d'export. Le classeur Excel est décrit en lignes (aoa) testables ;
- * la conversion en fichier .xlsx (SheetJS) se fait dans le composant.
+ * la conversion en fichier .xlsx (exceljs) se fait dans le composant.
+ * Les totaux, sous-totaux, le TCO actualisé et la VAN sont de VRAIES
+ * formules Excel (avec le résultat du moteur en cache) : un trésorier
+ * peut suivre et refaire chaque calcul (point 12 de l'audit).
  * Tout vient du moteur (ResultatPlan) et du registre d'hypothèses —
  * aucune valeur recalculée à la main ici.
  */
@@ -19,8 +22,54 @@ import type { AnalyseEquite, ScenarioReduction } from "./fmv";
 import { investissementCompare, LIBELLES_POSTES, POSTES_VAN } from "./synthese";
 import { formateurCad } from "@/lib/format";
 import { libelleUnite, valeurCelluleHypothese } from "./hypotheseAffichage";
+import { sourcesCategorie } from "@/lib/library/liens";
 
-export type Cellule = string | number | null;
+/** Formule Excel (sans « = ») et résultat du moteur mis en cache. */
+export interface CelluleFormule {
+  formule: string;
+  resultat: number;
+}
+/** Lien hypertexte (source d'une hypothèse). */
+export interface CelluleLien {
+  texte: string;
+  lien: string;
+}
+export type Cellule = string | number | null | CelluleFormule | CelluleLien;
+
+export const estFormule = (c: Cellule | undefined): c is CelluleFormule => typeof c === "object" && c !== null && "formule" in c;
+export const estLien = (c: Cellule | undefined): c is CelluleLien => typeof c === "object" && c !== null && "lien" in c;
+
+/** Valeur affichée d'une cellule : résultat d'une formule, texte d'un lien. */
+export function valeurCellule(c: Cellule | undefined): string | number | null {
+  if (c === undefined) return null;
+  if (estFormule(c)) return c.resultat;
+  if (estLien(c)) return c.texte;
+  return c;
+}
+
+/** Lettre de colonne Excel (0 → A, 25 → Z, 26 → AA). */
+export function colonneExcel(i: number): string {
+  let n = i + 1;
+  let s = "";
+  while (n > 0) {
+    const r = (n - 1) % 26;
+    s = String.fromCharCode(65 + r) + s;
+    n = Math.floor((n - 1) / 26);
+  }
+  return s;
+}
+
+const f = (formule: string, resultat: number): CelluleFormule => ({ formule, resultat });
+
+/** Valeur exceljs d'une cellule : formule (avec résultat en cache), lien, ou valeur simple. */
+export function valeurExcelJs(
+  c: Cellule | undefined,
+): string | number | null | { formula: string; result: number } | { text: string; hyperlink: string } {
+  if (c === undefined) return null;
+  if (estFormule(c)) return { formula: c.formule, result: c.resultat };
+  if (estLien(c)) return { text: c.texte, hyperlink: c.lien };
+  return c;
+}
 
 export interface FeuilleClasseur {
   nom: string;
@@ -127,6 +176,10 @@ export function libelleTechnologie(techno: string, langue: Langue): string {
 /** Arrondi des nombres d'un export : 2 décimales (montants), 4 sous 100
  *  (taux, prix unitaires) — aucun 5401606.875000001 dans un classeur. */
 export function arrondirCellule<T>(c: T): T {
+  if (estFormule(c as Cellule)) {
+    const x = c as unknown as CelluleFormule;
+    return { ...x, resultat: arrondirCellule(x.resultat) } as T;
+  }
   if (typeof c !== "number" || !Number.isFinite(c) || Number.isInteger(c)) return c;
   const d = Math.abs(c) >= 100 ? 100 : 10_000;
   return (Math.round(c * d) / d) as T;
@@ -291,6 +344,11 @@ const L = {
     strategie: (s: string) => `Stratégie retenue : ${s}`,
     note: "Dollars courants (vue budgétaire). Écart positif = le plan coûte moins cher que le statu quo.",
     colonnesBudget: ["Année", "Investissement (PTI)", "Subventions", "Reste à financer", "Fonctionnement", "Valeurs résiduelles", "Net plan", "Net statu quo", "Écart"],
+    total: "Total",
+    taux: "Taux d'actualisation nominal (paramètre du projet)",
+    noteFormules: "Les colonnes D, G et I, la ligne Total, le TCO actualisé (VAN au taux ci-dessus), l'économie et les totaux sont des formules : modifiez une valeur pour voir l'effet. Les résultats affichés à l'ouverture sont ceux du moteur H2Fleet.",
+    titrePrix: "PRIX D'ACHAT PAR DÉFAUT, PAR CATÉGORIE (avant taxes, dollars canadiens de 2026 ; un devis saisi les remplace)",
+    colonnesPrix: ["Catégorie", "Thermique neuf ($)", "Électrique ($)", "Hydrogène ($)", "Plage électrique ($)", "Durée de vie (ans)", "Sources", "Adresse des sources"],
     tcoPlan: "TCO actualisé du plan",
     tcoSq: "TCO actualisé du statu quo",
     van: "Économie (VAN)",
@@ -311,7 +369,7 @@ const L = {
     totalInfra: "Infrastructure totale",
     titreHyp: "Hypothèses du registre (docs/tco-methodologie.md §8 — statuts honnêtes)",
     donneesClient: "DONNÉES CLIENT (elles priment sur les défauts du registre ci-dessous) :",
-    colonnesHyp: ["Identifiant", "Description", "Valeur", "Unité", "Statut", "Source", "Année", "Vérifiée le"],
+    colonnesHyp: ["Identifiant", "Description", "Valeur", "Unité", "Statut", "Source", "Année", "Vérifiée le", "Adresse de la source"],
     parametreProjet: "paramètre du projet",
     statuts: { verifie: "vérifié", estimation: "estimation", a_valider: "à valider" } as Record<string, string>,
     feuilles: ["Plan annuel", "Véhicules", "Hypothèses"],
@@ -324,6 +382,11 @@ const L = {
     strategie: (s: string) => `Selected strategy: ${s}`,
     note: "Current dollars (budget view). Positive difference = the plan costs less than the status quo.",
     colonnesBudget: ["Year", "Investment (capital)", "Subsidies", "Remaining to finance", "Operations", "Residual values", "Plan net", "Status quo net", "Difference"],
+    total: "Total",
+    taux: "Nominal discount rate (project setting)",
+    noteFormules: "Columns D, G and I, the Total row, the discounted TCO (NPV at the rate above), the savings and the totals are formulas: change a value to see the effect. The results shown on opening are those of the H2Fleet engine.",
+    titrePrix: "DEFAULT PURCHASE PRICES BY CATEGORY (before taxes, 2026 Canadian dollars; an entered quote replaces them)",
+    colonnesPrix: ["Category", "New combustion ($)", "Electric ($)", "Hydrogen ($)", "Electric range ($)", "Service life (years)", "Sources", "Source addresses"],
     tcoPlan: "Plan discounted TCO",
     tcoSq: "Status quo discounted TCO",
     van: "Savings (NPV)",
@@ -344,7 +407,7 @@ const L = {
     totalInfra: "Total infrastructure",
     titreHyp: "Registry assumptions (docs/tco-methodologie.md §8 — honest statuses)",
     donneesClient: "CLIENT DATA (takes priority over the registry defaults below):",
-    colonnesHyp: ["Identifier", "Description", "Value", "Unit", "Status", "Source", "Year", "Checked on"],
+    colonnesHyp: ["Identifier", "Description", "Value", "Unit", "Status", "Source", "Year", "Checked on", "Source address"],
     parametreProjet: "project setting",
     statuts: { verifie: "verified", estimation: "estimate", a_valider: "to validate" } as Record<string, string>,
     feuilles: ["Annual plan", "Vehicles", "Assumptions"],
@@ -364,6 +427,26 @@ export function construireClasseurPlan(
   const resultat = strategie.resultat as ResultatPlan;
   const plan = strategie.plan!;
 
+  // Plan annuel : lignes 1 à 6 = en-tête ; données à partir de la ligne 7.
+  // Colonnes : A année, B investissement, C subventions, D reste à financer
+  // (= B − C), E fonctionnement, F valeurs résiduelles, G net du plan
+  // (= D + E − F), H net du statu quo, I écart (= H − G).
+  const vue = resultat.vueBudgetaire;
+  const L0 = 7;
+  const Ln = L0 + vue.length - 1;
+  const ligneTotal = Ln + 1;
+  const somme = (col: string, valeurs: number[]) => f(`SUM(${col}${L0}:${col}${Ln})`, valeurs.reduce((a, b) => a + b, 0));
+  // Bloc de synthèse : ligne vide après le total, puis taux, TCO, VAN…
+  const lTaux = ligneTotal + 2;
+  const lTcoPlan = lTaux + 1;
+  const lTcoSq = lTaux + 2;
+  const lInvBrut = lTaux + 4;
+  const lInvSq = lTaux + 5;
+  const npv = (col: string) =>
+    vue.length > 1 ? `${col}${L0}+NPV($B$${lTaux},${col}${L0 + 1}:${col}${Ln})` : `${col}${L0}`;
+  const inv = investissementCompare(resultat);
+  // Taux RÉELLEMENT utilisé par le moteur pour ce résultat (= paramètre du projet).
+  const tauxMoteur = plan.parametres.tauxActualisationNominal ?? meta.tauxActualisationNominal;
   const budget: Cellule[][] = [
     [l.titre(meta.projet, meta.organisation)],
     [l.genere(meta.dateIso, ENGINE_VERSION, resultat.empreinteEntree)],
@@ -371,24 +454,39 @@ export function construireClasseurPlan(
     [l.note],
     [],
     l.colonnesBudget,
-    ...resultat.vueBudgetaire.map((l) => [
-      l.annee,
-      l.investissementAlt,
-      l.subventionsAlt,
-      l.resteAFinancerAlt,
-      l.fonctionnementAlt,
-      l.residuelsAlt,
-      l.netAlt,
-      l.netRef,
-      l.ecart,
-    ]),
+    ...vue.map((v, i): Cellule[] => {
+      const r = L0 + i;
+      return [
+        v.annee,
+        v.investissementAlt,
+        v.subventionsAlt,
+        f(`B${r}-C${r}`, v.resteAFinancerAlt),
+        v.fonctionnementAlt,
+        v.residuelsAlt,
+        f(`D${r}+E${r}-F${r}`, v.netAlt),
+        v.netRef,
+        f(`H${r}-G${r}`, v.ecart),
+      ];
+    }),
+    [
+      l.total,
+      somme("B", vue.map((v) => v.investissementAlt)),
+      somme("C", vue.map((v) => v.subventionsAlt)),
+      somme("D", vue.map((v) => v.resteAFinancerAlt)),
+      somme("E", vue.map((v) => v.fonctionnementAlt)),
+      somme("F", vue.map((v) => v.residuelsAlt)),
+      somme("G", vue.map((v) => v.netAlt)),
+      somme("H", vue.map((v) => v.netRef)),
+      somme("I", vue.map((v) => v.ecart)),
+    ],
     [],
-    [l.tcoPlan, resultat.alternative.tcoActualise],
-    [l.tcoSq, resultat.reference.tcoActualise],
-    [l.van, resultat.vanDifferentielle],
-    [l.invBrut, investissementCompare(resultat).brut],
-    [l.invSq, investissementCompare(resultat).statuQuo],
-    [l.invEcart, investissementCompare(resultat).surcout],
+    [l.taux, tauxMoteur],
+    [l.tcoPlan, f(npv("G"), resultat.alternative.tcoActualise)],
+    [l.tcoSq, f(npv("H"), resultat.reference.tcoActualise)],
+    [l.van, f(`B${lTcoSq}-B${lTcoPlan}`, resultat.vanDifferentielle)],
+    [l.invBrut, f(`B${ligneTotal}`, inv.brut)],
+    [l.invSq, inv.statuQuo],
+    [l.invEcart, f(`B${lInvBrut}-B${lInvSq}`, inv.surcout)],
     [l.co2Ttw, resultat.co2EviteTtwTonnes],
     [l.co2, resultat.co2EviteWtwTonnes],
     [
@@ -398,9 +496,11 @@ export function construireClasseurPlan(
     [],
     [l.titreDecomposition],
     [l.colonnesDecomposition[0], l.colonnesDecomposition[1]],
-    ...POSTES_VAN.map((p): Cellule[] => [LIBELLES_POSTES[langue][p], resultat.decompositionVan[p]]),
-    [l.totalDecomposition, resultat.vanDifferentielle],
   ];
+  const lPoste0 = budget.length + 1;
+  budget.push(...POSTES_VAN.map((p): Cellule[] => [LIBELLES_POSTES[langue][p], resultat.decompositionVan[p]]));
+  budget.push([l.totalDecomposition, f(`SUM(B${lPoste0}:B${lPoste0 + POSTES_VAN.length - 1})`, resultat.vanDifferentielle)]);
+  budget.push([], [l.noteFormules]);
 
   const vehicules: Cellule[][] = [
     l.colonnesVehicules,
@@ -423,21 +523,43 @@ export function construireClasseurPlan(
     }),
     [],
     l.sites,
-    // MÊME plan par garage que Stratégies, Plan, Financement et PDF.
-    ...strategie.infra.garages.map((g): Cellule[] => [
-      g.depot ?? l.sansGarage,
-      g.capexBornes,
-      g.raccordement.kwDemandes,
-      g.raccordement.kwDisponiblesSource === "presumee"
-        ? `${g.raccordement.kwDisponibles} (${l.presume})`
-        : g.raccordement.kwDisponibles,
-      g.raccordement.palier,
-      g.raccordement.cout,
-      g.capexStationH2,
-      g.capexTotal,
-    ]),
-    [l.totalInfra, null, null, null, null, null, null, strategie.infra.totalCapex],
   ];
+  // MÊME plan par garage que Stratégies, Plan, Financement et PDF. Total
+  // du garage = bornes + raccordement + station (formule) ; total général
+  // = somme des garages (formule) — sinon la valeur du moteur.
+  const lSite0 = vehicules.length + 1;
+  const garages = strategie.infra.garages;
+  vehicules.push(
+    ...garages.map((g, i): Cellule[] => {
+      const r = lSite0 + i;
+      const additif = Math.abs(g.capexBornes + g.raccordement.cout + g.capexStationH2 - g.capexTotal) < 0.01;
+      return [
+        g.depot ?? l.sansGarage,
+        g.capexBornes,
+        g.raccordement.kwDemandes,
+        g.raccordement.kwDisponiblesSource === "presumee"
+          ? `${g.raccordement.kwDisponibles} (${l.presume})`
+          : g.raccordement.kwDisponibles,
+        g.raccordement.palier,
+        g.raccordement.cout,
+        g.capexStationH2,
+        additif ? f(`B${r}+F${r}+G${r}`, g.capexTotal) : g.capexTotal,
+      ];
+    }),
+  );
+  const sommeGarages = garages.reduce((a, g) => a + g.capexTotal, 0);
+  vehicules.push([
+    l.totalInfra,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    garages.length > 0 && Math.abs(sommeGarages - strategie.infra.totalCapex) < 0.01
+      ? f(`SUM(H${lSite0}:H${lSite0 + garages.length - 1})`, strategie.infra.totalCapex)
+      : strategie.infra.totalCapex,
+  ]);
 
   const hypotheses: Cellule[][] = [
     [l.titreHyp],
@@ -471,10 +593,28 @@ export function construireClasseurPlan(
       h.id === "taux_actualisation_nominal"
         ? l.parametreProjet
         : (l.statuts[h.statut] ?? h.statut),
-      `${h.source.organisme} — ${h.source.document}`,
+      `${h.source.organisme} — ${h.source.document}${h.source.tableauOuPage ? `, ${h.source.tableauOuPage}` : ""}`,
       h.source.annee,
       h.dateVerification,
+      h.source.url ? { texte: h.source.url, lien: h.source.url } : "—",
     ]),
+    [],
+    [l.titrePrix],
+    l.colonnesPrix,
+    ...(Object.keys(DEFAUTS_CATEGORIES) as CategorieVehicule[]).map((cat): Cellule[] => {
+      const d = DEFAUTS_CATEGORIES[cat];
+      const sources = sourcesCategorie(cat);
+      return [
+        libelleCategorie(cat, langue),
+        d.prixAchat.diesel.valeur,
+        d.prixAchat.BEV.valeur,
+        d.prixAchat.FCEV.valeur,
+        `${d.prixAchat.BEV.plage.basse} – ${d.prixAchat.BEV.plage.haute}`,
+        d.dureeVieAns,
+        sources.map((x) => x.texte + (x.aValider ? ` (${l.statuts.a_valider})` : "")).join(" ; "),
+        ...sources.filter((x) => x.url).map((x): Cellule => ({ texte: x.url!, lien: x.url! })),
+      ];
+    }),
   ];
 
   return [

@@ -530,8 +530,8 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   écran Stratégies 3,2–4,9 s (Web Worker du point 14 encore à faire).
 
 - **Mise en production et sécurité (points 1 à 6) : LIVRÉ, en attente du
-  « ok » (validation de la bascule) avant le point 7 (traçabilité trésorier
-  + tornade).** Un commit et des tests par point.
+  « ok » (validation de la bascule) ; point 7 lancé à la demande de
+  l'utilisateur (« fais ce qu'il reste de ton côté »).** Un commit et des tests par point.
   (1) production h2fleet.ca : `src/lib/production/site.ts` (redirections
   301 = même liste que le routeur, CSP construite depuis l'URL Supabase,
   anciens liens « /#/ » → chemins, garde de config `build:prod`),
@@ -569,6 +569,25 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   admin dans Paramètres, contrôle de santé (SMTP_PASSWORD, secret de test
   interdit), DNS IONOS relevé (`docs/production.md`, phase D), Brevo
   documenté pour plus tard (SPF à fusionner, non fait).
+
+- **Point 7 — traçabilité trésorier + tornade (audit 12 et 13) : LIVRÉ,
+  en attente du « ok ».** `src/lib/library/liens.ts` (PUR, testé : liens
+  profonds `/dashboard/library?h=…`, `?onglet=categories&cat=…&col=prix`,
+  hypothèses par poste de la VAN, raccordement par palier) ; Bibliothèque
+  adressable (onglet piloté par l'URL, hypothèses ciblées filtrées et
+  surlignées, nouvel onglet « Catégories de véhicules »,
+  `CategoryDefaultsTab`) ; liens `LienBibliotheque` depuis la VAN par
+  poste, l'infrastructure par garage, la catégorie en Faisabilité et
+  chaque barre de la tornade. `src/lib/journey/tornade.ts` (PUR, testé :
+  libellés complets fr/en, unités, échelle commune, statu quo expliqué
+  par scénario, `libelleEcart` jamais « économie » négative) ; barres de
+  la sensibilité enrichies (`basse/centrale/haute/sens`, additif) ;
+  tornade HTML (plus de Recharts). `src/lib/journey/annexeSources.ts`
+  (sources numérotées, prix par catégorie, URL sécables) → PDF annexes E
+  et F + tableau de tornade + statu quo par scénario. Excel : cellules
+  `CelluleFormule`/`CelluleLien` (`valeurCellule`, `valeurExcelJs`),
+  vraies formules vérifiées par un évaluateur (`classeurFormules.test.ts`)
+  et par l'e2e terrain.
 
 Rappels de méthode : chaque phase finit par `npm run check` vert → push →
 résumé court → **attendre le « ok » de l'utilisateur** ; kanban intégré à

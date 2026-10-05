@@ -73,7 +73,9 @@
 
 - [x] Rapports « conseil » PDF et Excel, note au conseil, exigences du Fonds municipal vert (équité, scénario de réduction) — fait — Claude
 - [x] « Économies d'abord » et optimiseur : meilleur sous-ensemble par garage, expliqué — fait — Claude
-- [ ] Traçabilité complète pour le trésorier et tornade lisible (points 12 et 13 de l'audit) — à faire — Claude (après validation de la bascule)
+- [x] Traçabilité pour le trésorier (point 12 de l'audit) : chaque poste de la VAN, chaque montant d'infrastructure (bornes, raccordement, station H2) et la catégorie de chaque véhicule ouvrent la Bibliothèque sur les hypothèses qui les alimentent (lien profond, surlignage) ; nouvel onglet « Catégories de véhicules » (prix d'achat, consommation, entretien, plages, sources cliquables) ; annexe PDF E (prix par catégorie) et F (sources numérotées avec adresse) ; Excel avec vraies formules (reste à financer, net, écart, totaux, TCO = VAN Excel au taux du projet, économie, VAN par poste, infrastructure) et adresses des sources en liens — fait — Claude
+- [x] Tornade du stress test lisible (point 13) : toutes les hypothèses, libellés complets, valeur basse et haute dans leur unité, économie à chaque borne, écart, lien vers la Bibliothèque ; statu quo expliqué par scénario (prix et hausse du diesel testés) ; même tableau dans le PDF ; jamais d'« économie » négative — fait — Claude
+- [ ] Sources « H2Fleet » (16 hypothèses renvoient au dépôt : estimations internes documentées) : à remplacer par des sources externes lues au fil des vérifications — à faire — toi + Claude
 - [ ] Tarifs : grille, page Tarifs, badges d'abonnement, fin de `DEMO_MODE` — à faire — toi (décision) ; Claude (implémentation)
 - [ ] Facturation réelle (prestataire de paiement) — à faire — toi (compte) ; Claude (intégration)
 - [ ] Hypothèses et programmes « à valider » vérifiés à la source (dont `seuil_sous_utilisation_flotte`, PAGTCP) — à faire — toi (lecture des sources listées dans la Bibliothèque) ; Claude (workflow de vérification)

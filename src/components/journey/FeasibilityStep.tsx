@@ -36,6 +36,9 @@ import { StatusBadge, LoadingState } from "@/components/layout/States";
 import { ton, TON_VERDICT } from "@/components/layout/tons";
 import { StatCard, StatGrid } from "@/components/layout/StatCard";
 import GaragesPresumesAlert from "./GaragesPresumesAlert";
+import { categorieMoteur } from "@/lib/journey/categories";
+import LienBibliotheque from "@/components/library/LienBibliotheque";
+import { lienCategorie } from "@/lib/library/liens";
 
 interface FeasibilityStepProps {
   projectId: string;
@@ -282,9 +285,17 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
                           .filter(Boolean)
                           .join(" ") || "—"}
                       </p>
-                      <p className="text-xs text-muted-foreground">
-                        {t(`fleet.categories.${pv.vehicles.category}`)}
-                      </p>
+                      {categorieMoteur(pv.vehicles.category) ? (
+                        <LienBibliotheque
+                          to={lienCategorie(categorieMoteur(pv.vehicles.category), "prix")}
+                          libelle={t(`fleet.categories.${pv.vehicles.category}`)}
+                          titre={t("journey.feasibility.categoryDefaultsLink")}
+                          className="text-muted-foreground"
+                          testId={`faisabilite-categorie-${pv.vehicles.unit_number}`}
+                        />
+                      ) : (
+                        <p className="text-xs text-muted-foreground">{t(`fleet.categories.${pv.vehicles.category}`)}</p>
+                      )}
                     </TableCell>
                     <TableCell className="text-right align-top">
                       {f?.kmParAnRetenu != null ? formateurNombre(i18n.language).format(f.kmParAnRetenu) : "—"}

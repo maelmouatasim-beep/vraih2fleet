@@ -4768,7 +4768,8 @@
       "programs": "Programmes",
       "history": "Historique des prix",
       "overrides": "Données client",
-      "watch": "Veille des subventions"
+      "watch": "Veille des subventions",
+      "categories": "Catégories de véhicules"
     },
     "search": "Rechercher une hypothèse…",
     "filterStatus": "Filtrer par statut",
@@ -4835,6 +4836,28 @@
       "reject": "Rejeter",
       "validated": "Changement validé : les projets concernés sont alertés",
       "rejected": "Changement rejeté"
+    },
+    "target": {
+      "shown_one": "{{count}} hypothèse derrière le chiffre que vous avez ouvert.",
+      "shown_other": "{{count}} hypothèses derrière le chiffre que vous avez ouvert.",
+      "showAll": "Afficher tout le registre"
+    },
+    "categories": {
+      "intro": "Défauts du moteur par catégorie, utilisés tant que la flotte réelle (devis, télématique, factures) n'a pas fourni la vraie valeur. Prix d'achat avant taxes, en dollars canadiens de 2026 ; la plage sert au stress test.",
+      "meta": "Durée de vie : {{ans}} ans · {{km}} km par an par défaut · batterie utile type : {{kwh}} kWh",
+      "columns": {
+        "technology": "Technologie",
+        "price": "Prix d'achat (plage)",
+        "consumption": "Consommation (plage)",
+        "maintenance": "Entretien (plage)"
+      },
+      "techno": {
+        "diesel": "Thermique neuf (statu quo)",
+        "BEV": "Électrique",
+        "FCEV": "Hydrogène"
+      },
+      "sources": "Sources",
+      "note": "Un devis saisi pour un véhicule remplace le prix par défaut de sa catégorie ; il est alors signalé « donnée client » dans les rapports."
     }
   },
   "organization": {
@@ -5121,7 +5144,8 @@
         "done_one": "{{count}} technologie cible appliquée au plan",
         "done_other": "{{count}} technologies cibles appliquées au plan"
       },
-      "paybackNotApplicable": "Récupération : — ({{reason}})"
+      "paybackNotApplicable": "Récupération : — ({{reason}})",
+      "categoryDefaultsLink": "Prix d'achat, consommation et entretien par défaut de cette catégorie"
     },
     "strategies": {
       "empty": {
@@ -5181,8 +5205,12 @@
           "favorable": "Scénario favorable"
         },
         "tcoCompare": "TCO stratégie {{alt}} vs statu quo {{ref}} (le statu quo est recalculé avec les mêmes hypothèses que le scénario)",
-        "vanRange": "Économie (VAN) aux valeurs basse et haute de l'hypothèse",
-        "note": "Économie centrale : {{van}}. Chaque barre montre l'économie recalculée par le moteur quand l'hypothèse passe de sa borne basse à sa borne haute (plages du registre)."
+        "tornadoTitle": "Ce qui fait bouger le résultat",
+        "tornadoHelp": "Pour chaque hypothèse, le moteur est relancé à sa valeur basse puis à sa valeur haute (plages sourcées du registre), toutes les autres restant centrales. La barre va d'un résultat à l'autre ; le trait vertical noir marque le résultat central, le trait gris le zéro. Les hypothèses sont classées de la plus influente à la moins influente.",
+        "tornadoAmplitude": "écart de {{amount}}",
+        "tornadoLow": "Valeur basse ({{value}}) :",
+        "tornadoHigh": "Valeur haute ({{value}}) :",
+        "noteCentral": "Résultat central : {{ecart}} par rapport au statu quo (valeur actualisée). Un montant positif est une économie, un montant négatif un surcoût."
       },
       "apply": {
         "title": "Appliquer « {{strategy}} » au plan",
@@ -5532,7 +5560,10 @@
       "h2ExternalAuto_one": "{{count}} véhicule hydrogène : ravitaillement à une station externe, aucun investissement de station au dépôt (moins de {{seuil}} véhicules H2 dans ce garage, seuil du registre ; modifiable dans Ma flotte › Garages).",
       "h2ExternalAuto_other": "{{count}} véhicules hydrogène : ravitaillement à une station externe, aucun investissement de station au dépôt (moins de {{seuil}} véhicules H2 dans ce garage, seuil du registre ; modifiable dans Ma flotte › Garages).",
       "h2External_one": "{{count}} véhicule hydrogène : ravitaillement à une station externe (choix du garage), aucun investissement de station au dépôt.",
-      "h2External_other": "{{count}} véhicules hydrogène : ravitaillement à une station externe (choix du garage), aucun investissement de station au dépôt."
+      "h2External_other": "{{count}} véhicules hydrogène : ravitaillement à une station externe (choix du garage), aucun investissement de station au dépôt.",
+      "sourceUnitPrice": "Prix unitaire et source",
+      "sourceAssumption": "Hypothèse et source",
+      "sourceAll": "Toutes les hypothèses d'infrastructure"
     },
     "settings": {
       "button": "Paramètres du projet",
@@ -5807,7 +5838,9 @@
         "infrastructure": "Infrastructure (bornes, raccordement, station H2)",
         "subventions": "Subventions",
         "valeurResiduelle": "Valeur de revente des véhicules"
-      }
+      },
+      "sourceLink": "Voir les hypothèses de ce poste dans la Bibliothèque",
+      "sourceHint": "Cliquez sur un poste pour voir ses hypothèses, leurs sources et leur date de lecture."
     },
     "garagesPresumed": {
       "title_one": "Puissance électrique non renseignée pour le garage {{garages}}",

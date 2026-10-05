@@ -17,7 +17,7 @@ import { toast } from "@/hooks/use-toast";
 import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
 import { useConfirmedSubsidies } from "@/hooks/useConfirmedSubsidies";
 import { useProjectVehicles } from "@/hooks/useProjectVehicles";
-import { construireClasseurPlan, type MetaRapport } from "@/lib/journey/report";
+import { valeurExcelJs, construireClasseurPlan, type MetaRapport } from "@/lib/journey/report";
 import { analyserEquite, scenarioReduction } from "@/lib/journey/fmv";
 import { construireStrategie, strategieRetenue } from "@/lib/journey/strategies";
 import { analyserSensibilite, ENGINE_VERSION, LISTE_HYPOTHESES } from "@/lib/tco";
@@ -179,7 +179,7 @@ export default function ReportsStep({ projectId, project }: ReportsStepProps) {
       const ExcelJS = await import("exceljs");
       const classeur = new ExcelJS.Workbook();
       for (const f of feuilles) {
-        classeur.addWorksheet(f.nom).addRows(f.lignes.map((l) => l.map((c) => c ?? null)));
+        classeur.addWorksheet(f.nom).addRows(f.lignes.map((l) => l.map(valeurExcelJs)));
       }
       const tampon = await classeur.xlsx.writeBuffer();
       telecharger(

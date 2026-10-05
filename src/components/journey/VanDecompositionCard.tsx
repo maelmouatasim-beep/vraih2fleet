@@ -10,6 +10,9 @@ import type { ResultatPlan } from "@/lib/tco";
 import { formateurCad } from "@/lib/format";
 import { lignesDecomposition } from "@/lib/journey/synthese";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
+import { BookOpen } from "lucide-react";
+import { lienPoste } from "@/lib/library/liens";
 
 export default function VanDecompositionCard({ resultat }: { resultat: ResultatPlan }) {
   const { t, i18n } = useTranslation();
@@ -28,7 +31,15 @@ export default function VanDecompositionCard({ resultat }: { resultat: ResultatP
         <ul className="space-y-2">
           {lignes.map((l) => (
             <li key={l.poste} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1 sm:grid-cols-[minmax(0,14rem)_minmax(0,1fr)_auto]">
-              <span className="text-sm">{t(`journey.van.postes.${l.poste}`)}</span>
+              <Link
+                to={lienPoste(l.poste)}
+                className="group inline-flex min-w-0 items-center gap-1.5 text-sm underline-offset-2 hover:underline"
+                title={t("journey.van.sourceLink")}
+                data-testid={`van-lien-${l.poste}`}
+              >
+                <span className="min-w-0">{t(`journey.van.postes.${l.poste}`)}</span>
+                <BookOpen className="h-3.5 w-3.5 shrink-0 text-muted-foreground group-hover:text-primary" aria-hidden />
+              </Link>
               <span className="order-3 col-span-2 h-2 rounded bg-muted sm:order-none sm:col-span-1" aria-hidden>
                 <span
                   className={cn("block h-2 rounded", l.montant >= 0 ? "bg-primary" : "bg-destructive")}
@@ -50,7 +61,7 @@ export default function VanDecompositionCard({ resultat }: { resultat: ResultatP
             {signe(resultat.vanDifferentielle)}
           </span>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">{t("journey.van.note")}</p>
+        <p className="mt-2 text-xs text-muted-foreground">{t("journey.van.note")} {t("journey.van.sourceHint")}</p>
       </CardContent>
     </Card>
   );

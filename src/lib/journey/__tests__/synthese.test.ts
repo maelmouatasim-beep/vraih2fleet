@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { construireStrategie, type VehiculeProjet } from "../strategies";
 import fr from "@/i18n/locales/fr/translation.json";
 import en from "@/i18n/locales/en/translation.json";
-import { construireClasseurPlan } from "../report";
+import { construireClasseurPlan, valeurCellule } from "../report";
 import { investissementCompare, lignesDecomposition, POSTES_VAN, LIBELLES_POSTES } from "../synthese";
 
 const OPTIONS = { anneeReference: 2026, horizonAns: 10, tauxActualisationNominal: 0.05, typeOrganisme: "municipalite" as const };
@@ -61,7 +61,7 @@ describe("synthèse financière (audit acheteur : point 7 et ajustement B)", () 
       tauxActualisationNominal: 0.05,
     });
     const lignes = feuilles[0].lignes;
-    const valeur = (libelle: string) => lignes.find((l) => l[0] === libelle)?.[1];
+    const valeur = (libelle: string) => Number(valeurCellule(lignes.find((l) => l[0] === libelle)?.[1]));
     expect(valeur("Investissement du statu quo — mêmes remplacements en thermique neuf (dollars courants)")).toBeCloseTo(investissementCompare(r).statuQuo, 2);
     expect(valeur("Achat des véhicules")).toBeCloseTo(r.decompositionVan.achat, 2);
     expect(valeur("Total = VAN")).toBeCloseTo(r.vanDifferentielle, 2);

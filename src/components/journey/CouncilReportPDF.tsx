@@ -7,7 +7,7 @@
  * d'attention, annexes (méthodologie, données client, pièces
  * justificatives, hypothèses avec statut et date de vérification).
  */
-import { Document, Page, Text, View } from "@react-pdf/renderer";
+import { Document, Link, Page, Text, View } from "@react-pdf/renderer";
 import { ENGINE_VERSION, LISTE_HYPOTHESES, type ResultatPlan } from "@/lib/tco";
 import type { ResultatSensibilite } from "@/lib/tco";
 import { libelleStrategieRetenue, type StrategieConstruite } from "@/lib/journey/strategies";
@@ -15,6 +15,8 @@ import { libelleCategorie, lignePiece, TEXTES_FMV, valeursPiece, type MetaRappor
 import { investissementCompare, LIBELLES_POSTES, lignesDecomposition } from "@/lib/journey/synthese";
 import { raisonJamais, texteRecuperation } from "@/lib/journey/payback";
 import { formaterValeurHypothese, libelleUnite } from "@/lib/journey/hypotheseAffichage";
+import { explicationStatuQuo, lignesTornade } from "@/lib/journey/tornade";
+import { ligneSource, numeroterSources, prixParCategorie, renvoiSource, urlSecable } from "@/lib/journey/annexeSources";
 import {
   descriptionHypothese,
   traduireAvertissement,
@@ -41,6 +43,7 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
 
   const van = resultat.vanDifferentielle;
   const sc = sensibilite.scenarios;
+  const sourcesAnnexe = numeroterSources(LISTE_HYPOTHESES);
   const gagnants = [sc.prudent.van, sc.central.van, sc.favorable.van].filter((v) => v > 0).length;
   const risque = sensibilite.niveauRisque;
   const libRisque = en
@@ -206,23 +209,70 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
         >
           <Tableau
             colonnes={[
-              { titre: en ? "Scenario" : "Scénario", flex: 3 },
-              { titre: en ? "Savings (NPV)" : "Économie (VAN)", flex: 1.2, droite: true },
+              { titre: en ? "Scenario" : "Scénario", flex: 2.5 },
+              { titre: en ? "Plan TCO" : "TCO du plan", flex: 1.1, droite: true },
+              { titre: en ? "Status quo TCO" : "TCO du statu quo", flex: 1.1, droite: true },
+              { titre: en ? "Savings (NPV)" : "Économie (VAN)", flex: 1.1, droite: true },
             ]}
             lignes={(["prudent", "central", "favorable"] as const).map((cle) => [
               en
-                ? { prudent: "Cautious (every assumption at its least favourable value)", central: "Central", favorable: "Favourable" }[cle]
-                : { prudent: "Prudent (chaque hypothèse à sa valeur la moins favorable)", central: "Central", favorable: "Favorable" }[cle],
+                ? { prudent: "Cautious (every assumption at its least favourable value)", central: "Central", favorable: "Favourable (every assumption at its most favourable value)" }[cle]
+                : { prudent: "Prudent (chaque hypothèse à sa valeur la moins favorable)", central: "Central", favorable: "Favorable (chaque hypothèse à sa valeur la plus favorable)" }[cle],
+              cad(sc[cle].tcoAlt),
+              cad(sc[cle].tcoRef),
               cad(sc[cle].van),
             ])}
             negatifs
           />
           <Text style={styles.note}>
             {en
-              ? "The status quo replaces the same vehicles, in the same years, with equivalent new combustion vehicles (same fuel)."
-              : "Le statu quo remplace les mêmes véhicules, les mêmes années, par des véhicules thermiques neufs équivalents (même carburant)."}
+              ? "The status quo replaces the same vehicles, in the same years, with equivalent new combustion vehicles (same fuel). Why its cost changes from one scenario to the next:"
+              : "Le statu quo remplace les mêmes véhicules, les mêmes années, par des véhicules thermiques neufs équivalents (même carburant). Pourquoi son coût change d'un scénario à l'autre :"}
           </Text>
+          <Texte
+            texte={(["prudent", "central", "favorable"] as const)
+              .map((cle) => `- ${en ? { prudent: "Cautious", central: "Central", favorable: "Favourable" }[cle] : { prudent: "Prudent", central: "Central", favorable: "Favorable" }[cle]} : ${explicationStatuQuo(sensibilite, cle, langue)}`)
+              .join("\n")}
+          />
         </Piece>
+
+        {sensibilite.tornade.length > 0 && (
+          <Piece
+            numero={piece()}
+            titre={en ? "What moves the result: one assumption at a time" : "Ce qui fait bouger le résultat : une hypothèse à la fois"}
+            sousTitre={
+              en
+                ? "The engine is re-run at the low then the high value of each assumption (sourced registry ranges), all others staying central; ranked from most to least influential"
+                : "Le moteur est relancé à la valeur basse puis à la valeur haute de chaque hypothèse (plages sourcées du registre), les autres restant centrales ; classement de la plus influente à la moins influente"
+            }
+            source={source}
+          >
+            <Tableau
+              colonnes={[
+                { titre: en ? "Assumption" : "Hypothèse", flex: 2.5 },
+                { titre: en ? "Low value" : "Valeur basse", flex: 0.9, droite: true },
+                { titre: en ? "NPV at low" : "VAN à la basse", flex: 1.1, droite: true },
+                { titre: en ? "High value" : "Valeur haute", flex: 0.9, droite: true },
+                { titre: en ? "NPV at high" : "VAN à la haute", flex: 1.1, droite: true },
+                { titre: en ? "Spread" : "Écart", flex: 1, droite: true },
+              ]}
+              lignes={lignesTornade(sensibilite.tornade, langue).map((l) => [
+                l.libelle,
+                l.basse.valeur,
+                cad(l.basse.van),
+                l.haute.valeur,
+                cad(l.haute.van),
+                cad(l.amplitude),
+              ])}
+              negatifs
+            />
+            <Text style={styles.note}>
+              {en
+                ? `Central result: ${cad(sensibilite.vanCentrale)} (positive = savings, negative = extra cost compared with the status quo). Percentages are changes from the registry value (for example −15 % = 15 % cheaper).`
+                : `Résultat central : ${cad(sensibilite.vanCentrale)} (positif = économie, négatif = surcoût par rapport au statu quo). Les pourcentages sont des écarts à la valeur du registre (par exemple −15 % = 15 % moins cher).`}
+            </Text>
+          </Piece>
+        )}
 
         {lignesDecomposition(resultat.decompositionVan).length > 0 && (
           <Piece
@@ -472,6 +522,11 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
           </View>
         )}
         <Text style={styles.etiquetteSection}>{en ? "APPENDIX D — ASSUMPTION REGISTRY" : "ANNEXE D — REGISTRE DES HYPOTHÈSES"}</Text>
+        <Text style={styles.paragraphe}>
+          {en
+            ? "The number in brackets refers to the list of sources in appendix F (document, table or page, address)."
+            : "Le numéro entre crochets renvoie à la liste des sources de l'annexe F (document, tableau ou page, adresse)."}
+        </Text>
         <Tableau
           colonnes={[
             { titre: en ? "Assumption" : "Hypothèse", flex: 2.5 },
@@ -487,10 +542,47 @@ export default function CouncilReportPDF({ langue, meta, strategie, sensibilite,
             formaterValeurHypothese(h.id === "taux_actualisation_nominal" ? meta.tauxActualisationNominal : h.valeur, h.unite, langue),
             libelleUnite(h.unite, langue),
             h.id === "taux_actualisation_nominal" ? (en ? "project setting" : "paramètre du projet") : (statutsHyp[h.statut] ?? h.statut),
-            `${h.source.organisme} (${h.source.annee})`,
+            `${renvoiSource(sourcesAnnexe.parHypothese.get(h.id) ?? 0)} ${h.source.organisme} (${h.source.annee})`,
             h.dateVerification,
           ])}
         />
+        <Text style={styles.etiquetteSection}>
+          {en ? "APPENDIX E — DEFAULT PURCHASE PRICES BY CATEGORY" : "ANNEXE E — PRIX D'ACHAT PAR DÉFAUT, PAR CATÉGORIE"}
+        </Text>
+        <Text style={styles.paragraphe}>
+          {en
+            ? "Before taxes, 2026 Canadian dollars; range used by the stress test in brackets. A quote entered for a vehicle replaces these defaults (appendix B)."
+            : "Avant taxes, en dollars canadiens de 2026 ; plage utilisée par le stress test entre parenthèses. Un devis saisi pour un véhicule remplace ces défauts (annexe B)."}
+        </Text>
+        <Tableau
+          colonnes={[
+            { titre: en ? "Category" : "Catégorie", flex: 2 },
+            { titre: en ? "New combustion" : "Thermique neuf", flex: 1.5, droite: true },
+            { titre: en ? "Electric" : "Électrique", flex: 1.5, droite: true },
+            { titre: en ? "Hydrogen" : "Hydrogène", flex: 1.5, droite: true },
+            { titre: en ? "Life" : "Durée", flex: 0.6, droite: true },
+            { titre: "Source", flex: 0.7 },
+          ]}
+          lignes={prixParCategorie(sourcesAnnexe, (c) => libelleCategorie(c, langue)).map((l) => [
+            l.libelle,
+            ...(["diesel", "BEV", "FCEV"] as const).map(
+              (tech) => `${cad(l.prix[tech].valeur)} (${cad(l.prix[tech].basse)} – ${cad(l.prix[tech].haute)})`,
+            ),
+            en ? `${l.dureeVieAns} yrs` : `${l.dureeVieAns} ans`,
+            renvoiSource(l.sources),
+          ])}
+        />
+        <Text style={styles.etiquetteSection}>{en ? "APPENDIX F — SOURCES" : "ANNEXE F — SOURCES"}</Text>
+        {sourcesAnnexe.sources.map((src) => (
+          <View key={src.numero} wrap={false} style={{ marginBottom: 3 }}>
+            <Text style={styles.note}>{ligneSource(src, langue)}</Text>
+            {src.url && (
+              <Link src={src.url} style={[styles.note, { marginLeft: 10, color: "#0f766e" }]}>
+                {urlSecable(src.url)}
+              </Link>
+            )}
+          </View>
+        ))}
         <Text style={styles.note}>
           {en
             ? `Input fingerprint ${resultat.empreinteEntree} (engine ${ENGINE_VERSION}): the same fingerprint and version always reproduce these exact figures.`

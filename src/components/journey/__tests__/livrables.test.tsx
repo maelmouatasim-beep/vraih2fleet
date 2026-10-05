@@ -116,5 +116,12 @@ describe("livrables au standard cabinet", () => {
     expect(texte).toMatch(/Le plan (économise|coûte)/);
     for (const attendu of ["PIÈCE 1", "PIÈCE 4", "ANNEXE D", "Subventions prévues"]) expect(texte).toContain(attendu);
     expect(texte).toMatch(/Infrastructure totale \(avant taxes\)\s+[\d\s\u00a0\u202f]+ \$/);
+    // Point 13 : tornade lisible (libellés complets, bornes) et statu quo expliqué par scénario.
+    expect(texte).toContain("Ce qui fait bouger le résultat");
+    expect(texte).toContain("Prix du diesel");
+    expect(texte).toMatch(/Prudent : Statu quo moins cher qu'au central/);
+    // Point 12 : prix d'achat par catégorie et sources numérotées avec leur adresse.
+    for (const attendu of ["ANNEXE E", "ANNEXE F", "Autobus", "statcan.gc.ca"]) expect(texte).toContain(attendu);
+    expect(texte).toMatch(/\[\d+\] Statistique Canada/);
   });
 });

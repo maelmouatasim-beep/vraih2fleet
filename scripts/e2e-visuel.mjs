@@ -51,6 +51,9 @@ const APPLI = (projet) => [
   ...ETAPES.map((e) => [`etape-${e}`, `/dashboard/projects/${projet}/${e}`]),
   ["ma-flotte", "/dashboard/fleet"],
   ["bibliotheque", "/dashboard/library"],
+  // Point 12 : liens profonds depuis un chiffre (hypothèses ciblées, catégories).
+  ["bibliotheque-cible", "/dashboard/library?h=borne_niveau2_installee,raccordement_palier2,puissance_disponible_garage_presumee"],
+  ["bibliotheque-categories", "/dashboard/library?onglet=categories&cat=autobus_urbain_12m&col=prix"],
   ["organisation", "/dashboard/organization"],
   ["aide", "/dashboard/help"],
   ["notifications", "/dashboard/notifications"],
