@@ -5957,7 +5957,7 @@
         {
           "title": "5. Communication et hébergement",
           "paras": [
-            "Les renseignements sont hébergés chez Supabase (base de données et authentification) ; le site est servi par GitHub Pages. Les services suivants ne reçoivent des données que s'ils sont activés : envoi de courriels (SendGrid), assistant d'intelligence artificielle, cartes (Mapbox), plateformes télématiques que vous connectez.",
+            "Les renseignements sont hébergés chez Supabase (base de données, authentification et stockage de fichiers). Le site est servi par Cloudflare (fichiers statiques, sans données de votre organisation) ; les tâches planifiées (recalcul nocturne des alertes du plan) s'exécutent chez GitHub, sans conservation des données. Les services suivants ne reçoivent des données que s'ils sont activés : envoi de courriels (SendGrid), fonctions d'intelligence artificielle, cartes (Mapbox), plateformes télématiques que vous connectez.",
             "Région d'hébergement de la base de données : [à confirmer]. Lorsque des renseignements sont communiqués à l'extérieur du Québec, l'Exploitant réalise au préalable l'évaluation des facteurs relatifs à la vie privée exigée par la loi [à réaliser].",
             "Fonctions d'intelligence artificielle (facultatives) : lorsqu'un administrateur de votre organisation les active, les questions posées au copilote et les données du projet nécessaires au calcul (unités, catégories, kilométrages, années, garages — jamais de données personnelles d'employés) sont transmises à Anthropic, PBC (États-Unis), fournisseur du modèle Claude, pour produire la réponse. Seul le nombre de jetons consommés est journalisé ; l'historique du copilote est conservé dans le projet et peut être effacé par son auteur ou un administrateur. Lecture de factures et de devis (si elle est activée) : seul le texte du document est transmis quand il en a un (sinon le fichier) ; les pièces peuvent contenir des renseignements de facturation (adresse de service, numéro de compte) : ceux-ci ne sont pas retenus dans les valeurs extraites, et la pièce reste dans le stockage privé de votre organisation. Import intelligent : seuls les entêtes et quelques valeurs d'exemple sont transmis, jamais les colonnes de données personnelles. Évaluation des facteurs relatifs à la vie privée de cette communication hors Québec : [à compléter — à faire valider par un juriste]."
           ]
@@ -5971,7 +5971,7 @@
         {
           "title": "7. Sécurité",
           "paras": [
-            "Les échanges sont chiffrés (HTTPS). L'accès aux données est cloisonné par organisation au niveau de la base de données (règles de sécurité par ligne) et contrôlé à chaque requête. Le chiffrement renforcé des identifiants télématiques stockés est en cours de mise en place."
+            "Les échanges sont chiffrés (HTTPS). L'accès aux données est cloisonné par organisation au niveau de la base de données (règles de sécurité par ligne) et contrôlé à chaque requête. Les identifiants télématiques que vous fournissez sont chiffrés (AES-256) côté serveur, ne sont jamais renvoyés à votre navigateur et sont effacés à la déconnexion."
           ]
         },
         {

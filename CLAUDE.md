@@ -108,6 +108,9 @@ npm run lint:ci        # échoue seulement sur les NOUVELLES erreurs vs scripts/
 npm run lint:baseline  # verrouille la baseline après une résorption de dette
 npm run build          # build de production
 npm run build:preview  # build de l'APERÇU hébergé (hash routing, base ./)
+npm run build:prod     # build de PRODUCTION (h2fleet.ca, Cloudflare Pages) : refuse une config incomplète, écrit dist/_headers (CSP) + dist/_redirects
+node scripts/serveur-production.mjs 8080 dist-prod   # sert un build comme Cloudflare Pages (en-têtes, 301, repli SPA) — utilisé par la CI e2e
+node scripts/alertes/recalcul-alertes.mjs --local    # recalcul serveur des alertes du plan (même code que l'écran) ; --heberge en workflow quotidien
 npm run test:tco       # tests du moteur TCO avec seuils de couverture 95 %
 npm run docs:tco       # régénère docs/tco-hypotheses.md depuis assumptions.ts
 npm run e2e:local      # parcours complet Playwright contre Supabase LOCAL (voir scripts/e2e-parcours.mjs)
@@ -165,6 +168,11 @@ navigation. Le test fonctionnel (auth, données) se fait sur le site de
 test GitHub Pages, redéployé automatiquement à chaque push par
 `.github/workflows/deploy-pages.yml` :
 https://maelmouatasim-beep.github.io/vraih2fleet/
+PRODUCTION (préparée, bascule par l'utilisateur) : https://h2fleet.ca sur
+Cloudflare Pages (dépôt privé possible), branche `production`, BrowserRouter,
+étapes exactes dans `docs/production.md` ; les aperçus Cloudflare de la
+branche de dev remplaceront GitHub Pages quand le dépôt sera privé (le
+workflow Pages s'arrête alors de lui-même).
 Le projet Supabase visé vient des variables de dépôt
 `VITE_SUPABASE_URL`, `VITE_SUPABASE_PROJECT_ID`,
 `VITE_SUPABASE_PUBLISHABLE_KEY` (Actions > Variables) ; plus aucune
@@ -509,6 +517,34 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   véhicules : application 4,7 s, optimiseur 9,7 s « approché », PDF 16,9 s,
   écran Stratégies 3,2–4,9 s (Web Worker du point 14 encore à faire).
 
+- **Mise en production et sécurité (points 1 à 6) : LIVRÉ, en attente du
+  « ok » (validation de la bascule) avant le point 7 (traçabilité trésorier
+  + tornade).** Un commit et des tests par point.
+  (1) production h2fleet.ca : `src/lib/production/site.ts` (redirections
+  301 = même liste que le routeur, CSP construite depuis l'URL Supabase,
+  anciens liens « /#/ » → chemins, garde de config `build:prod`),
+  `scripts/serveur-production.mjs`, CI e2e sur le bundle de production
+  (toute violation de CSP = échec), CORS `https://*.domaine` (aperçus),
+  dépôt privé anticipé (Pages s'arrête, job lourd de nuit/manuel/production),
+  `docs/production.md` (Cloudflare, DNS, DKIM/DMARC, Email Routing,
+  bascule, dépôt privé, retour arrière) ; (2) `docs/historique-git.md` +
+  `scripts/historique/nettoyer-courriel.sh` (simulation par défaut, testé
+  sur dépôt factice, NON exécuté) ; (3) identifiants télématiques chiffrés
+  AES-256-GCM (`_shared/telematicsCrypto.ts`, clé TELEMATICS_ENCRYPTION_KEY,
+  AAD user:provider, contrainte NOT VALID 20261008010000, navigateur sans
+  identifiants), `get-mapbox-token` sur `_shared/`, fonctions retirées
+  supprimées par Deploy Supabase (`scripts/fonctions-retirees.json`),
+  `docs/securite-secrets.md` ; (4) favicon du dépôt, /dashboard/roadmap →
+  Suivi, recalcul serveur des alertes (`surveillanceProjet.ts` partagé
+  écran/serveur, `recalculAlertesServeur.ts`, workflow quotidien,
+  `sync_plan_alerts_serveur` service_role, CI : 0 écart écran/serveur) ;
+  (5) courriels : seul interrupteur `SENDGRID_API_KEY` (`docs/courriels.md`),
+  gabarit `organization_invite`, statut GET send-email (VITE_EMAILS_ACTIVE
+  retiré), pg_cron planifié par le déploiement (`scripts/taches-cron.mjs`) ;
+  (6) `docs/legal/` (EFVP IA, entente de pilote, entente de traitement —
+  brouillons à faire valider par un juriste), confidentialité mise à jour.
+  Migrations 20261008010000, 20261008020000 (additives).
+
 Rappels de méthode : chaque phase finit par `npm run check` vert → push →
 résumé court → **attendre le « ok » de l'utilisateur** ; kanban intégré à
 l'étape Suivi (pas de module autonome) ; aucune suppression de données en
@@ -519,14 +555,15 @@ sinon « à_valider » avec l'URL à consulter.
 
 ### Liste pré-pilote (à tenir à jour)
 
-- Chiffrement des identifiants télématiques (aujourd'hui simple base64).
+- Clé `TELEMATICS_ENCRYPTION_KEY` à poser (chiffrement livré ; sans clé,
+  la télématique répond 503).
 - Secrets à régénérer / créer (audit sécurité : CRON_SECRET,
   INTERNAL_FUNCTION_SECRET, ALLOWED_ORIGINS…).
 - IA (Phase 5) : ajouter `ANTHROPIC_API_KEY` dans les secrets Supabase ;
   compléter l'EFVP (communication de renseignements hors Québec vers
-  Anthropic, États-Unis) avant d'activer une fonction IA pour un client ;
-  supprimer `assistant-chat` encore déployée (`supabase functions delete
-  assistant-chat`) ; coût estimé à confirmer sur la facture réelle.
+  Anthropic, États-Unis) avant d'activer une fonction IA pour un client
+  (brouillon : `docs/legal/efvp-ia-anthropic.md`) ; coût estimé à
+  confirmer sur la facture réelle.
 - SMTP personnalisé (courriels d'auth vers des testeurs externes).
 - Facturation réelle (DEMO_MODE donne le plan le plus élevé à tous).
 - Revue juridique des pages légales (Loi 25, CGU, confidentialité).
@@ -537,10 +574,10 @@ sinon « à_valider » avec l'URL à consulter.
   utile, réserve, jours d'utilisation, fenêtre présumée, majoration amont
   de l'essence (reprise du diesel) ; prix de l'essence saisi au registre
   (la collecte hebdomadaire ne couvre que le diesel).
-- Services reportés sur le site de test : SendGrid (+ réactiver
-  « Confirm email » ; débloque aussi le résumé des alertes
-  `plan-alerts-digest`), Mapbox, clé IA, tâches pg_cron
-  (`supabase/snippets/taches-planifiees.sql`, 4 tâches).
+- Services reportés : SendGrid (seul interrupteur des courriels,
+  `docs/courriels.md` ; + SMTP et « Confirm email »), Mapbox, clé IA,
+  secrets du Vault (les tâches pg_cron sont alors planifiées par Deploy
+  Supabase).
 - **Sauvegardes de la base : AUCUNE aujourd'hui.** Solution la plus
   simple : plan Supabase incluant les sauvegardes quotidiennes
   automatiques (Database → Backups, restauration en un clic ; plan et
@@ -562,19 +599,10 @@ sinon « à_valider » avec l'URL à consulter.
 - SMTP personnalisé à brancher par l'utilisateur (réglages exacts :
   `docs/deploiement.md`, section SMTP) ; tant qu'il ne l'est pas,
   l'inscription hébergée bute sur le quota de courriels de Supabase.
-- Favicon de `index.html` encore hébergé sur le stockage de Lovable
-  (gpt-engineer-file-uploads) : à remplacer par un fichier du dépôt.
-- `get-mapbox-token` : CORS `*` et pas de vérification explicite de
-  l'appelant (jeton public, risque faible) — à aligner sur `_shared/`.
-- Invitations d'équipe : aucun courriel envoyé automatiquement (la
-  personne voit l'invitation en se connectant) — brancher send-email.
+- Bascule h2fleet.ca, réécriture de l'historique (adresse courriel) et
+  passage du dépôt en privé : décisions de l'utilisateur
+  (`docs/production.md`, `docs/historique-git.md`).
 - Récapitulatif hebdomadaire (préférence courriel) non implémenté.
-- Notifications : les alertes du plan n'entrent dans la cloche que lorsque
-  la surveillance est recalculée (ouverture du projet par un éditeur) ;
-  un recalcul planifié côté serveur reste à faire. Variable de dépôt
-  `VITE_EMAILS_ACTIVE=true` à poser quand SendGrid sera branché.
-- /dashboard/roadmap encore accessible hors menu (à retirer ou
-  intégrer au Suivi).
 - Tarifs à définir (fin de projet) : `landing.pricing`, Pricing.tsx,
   badges d'abonnement.
 - Pages légales : remplacer les placeholders (nom légal, adresse,

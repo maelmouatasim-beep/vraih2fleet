@@ -91,7 +91,6 @@ Même page, onglet **Variables** → **New repository variable** :
 | `VITE_SUPABASE_PROJECT_ID` | le Project ref |
 | `VITE_SUPABASE_URL` | `https://<ref>.supabase.co` |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | la clé publishable/anon (remplace l'ancienne) |
-| `VITE_EMAILS_ACTIVE` | (facultatif) `true` une fois SendGrid branché : retire l'avis « courriels pas encore activés » des Paramètres |
 
 Je n'ai pas d'outil pour écrire ces variables : c'est toi qui les saisis.
 Le workflow *Deploy Pages* vérifie que l'URL correspond au ref.
@@ -279,9 +278,9 @@ Resend : seuls hôte, port et identifiants changent).
      texte « Choisir un nouveau mot de passe ».
 6. **Vérification** : t'inscrire avec une adresse externe (pas membre du
    projet) → le courriel arrive en moins d'une minute, le lien ouvre le
-   tableau de bord du site de test. Puis poser la variable de dépôt
-   `VITE_EMAILS_ACTIVE=true` et le secret `SENDGRID_API_KEY` (même clé ou
-   une seconde clé « Mail Send ») pour les courriels applicatifs.
+   tableau de bord du site de test. Puis poser le secret
+   `SENDGRID_API_KEY` (même clé ou une seconde clé « Mail Send ») : c'est le
+   seul interrupteur des courriels applicatifs (`docs/courriels.md`).
 
 ## Points ouverts
 

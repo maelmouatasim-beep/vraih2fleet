@@ -93,8 +93,6 @@ site, les redirections et les enregistrements de courriel au même endroit.
    - `VITE_SUPABASE_PUBLISHABLE_KEY` = la clé publishable, celle de la
      variable GitHub (jamais la clé `service_role` ni `sb_secret_…` : le build
      la refuserait)
-   - (plus tard) `VITE_EMAILS_ACTIVE` = `true`, quand les courriels seront
-     branchés
 
    → *Save and Deploy*. Si le journal de build montre une autre version de
    Node que 22, ajoute la variable `NODE_VERSION` = `22`.

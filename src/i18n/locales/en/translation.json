@@ -5957,9 +5957,9 @@
         {
           "title": "5. Disclosure and hosting",
           "paras": [
-            "Information is hosted by Supabase (database and authentication); the website is served by GitHub Pages. The following services receive data only if enabled: email delivery (SendGrid), artificial-intelligence assistant, maps (Mapbox), telematics platforms you connect.",
+            "Information is hosted by Supabase (database, authentication and file storage). The website is served by Cloudflare (static files, no data from your organization); scheduled tasks (nightly recalculation of plan alerts) run on GitHub, without keeping the data. The following services receive data only if enabled: email delivery (SendGrid), artificial-intelligence features, maps (Mapbox), telematics platforms you connect.",
             "Database hosting region: [to be confirmed]. When information is communicated outside Québec, the Operator first carries out the privacy impact assessment required by law [to be completed].",
-            "Artificial intelligence features (optional): when an administrator of your organization enables them, questions asked to the copilot and the project data needed for the calculation (units, categories, mileage, years, garages — never employees' personal data) are sent to Anthropic, PBC (United States), provider of the Claude model, to produce the answer. Only the number of tokens used is logged; the copilot history is kept in the project and can be deleted by its author or an administrator. Invoice and quote reading (if enabled): only the document's text is sent when it has one (otherwise the file); documents may contain billing information (service address, account number), which is not kept in the extracted values, and the document stays in your organization's private storage. Smart import: only headers and a few sample values are sent, never personal-data columns. Privacy impact assessment of this communication outside Québec: [to be completed — to be validated by a lawyer]."
+            "Artificial intelligence features (optional): when an administrator of your organization enables them, questions asked to the copilot and the project data needed for the calculation (units, categories, mileage, years, garages — never employees' personal data) are sent to Anthropic, PBC (United States), provider of the Claude model, to produce the answer. Only the number of tokens used is logged; the copilot history is kept in the project and can be deleted by its author or an administrator. Invoice and quote reading (if enabled): only the document's text is sent when it has one (otherwise the file); documents may contain billing information (service address, account number), which is not kept in the extracted values, and the document stays in your organization's private storage. Smart import: only headers and a few sample values are sent, never personal-data columns. Council note: only aggregated facts of the plan are sent. Privacy impact assessment of this communication outside Québec: [to be completed — to be validated by a lawyer]."
           ]
         },
         {
@@ -5971,7 +5971,7 @@
         {
           "title": "7. Security",
           "paras": [
-            "Exchanges are encrypted (HTTPS). Access to data is partitioned by organization at the database level (row-level security rules) and checked on every request. Stronger encryption of stored telematics credentials is being implemented."
+            "Exchanges are encrypted (HTTPS). Access to data is partitioned by organization at the database level (row-level security rules) and checked on every request. The telematics credentials you provide are encrypted (AES-256) on the server, are never sent back to your browser and are erased when you disconnect."
           ]
         },
         {

@@ -1,50 +1,83 @@
 # Prêt pour un premier client — liste à cocher
 
-État au 2026-10-04. « Qui » : **Claude** (code, workflows, documents)
-ou **toi** (décision, compte, paiement, signature, saisie d'un secret).
-Une case cochée = fait et vérifié (tests, CI ou site de test).
+État au 2026-10-05.
+
+- « Qui » : **Claude** (code, workflows, documents) ou **toi** (décision,
+  compte, paiement, signature, saisie d'un secret).
+- Une case cochée = fait et vérifié (tests, CI ou site de test).
+- « prêt » = tout est en place dans le dépôt ; il ne reste que ton geste,
+  avec la procédure indiquée.
 
 ## Technique
 
 - [x] Moteur TCO unique, testé (cas de référence à ±0,01 $, couverture ≥ 95 %) — fait — Claude
-- [x] CI verte à chaque push : tests, e2e terrain (18 étapes), régression visuelle (156 captures) — fait — Claude
+- [x] CI verte à chaque push : tests, e2e terrain (18 étapes) et régression visuelle (156 captures), désormais sur le **bundle de production** (CSP stricte active) — fait — Claude
 - [x] Site de test déployé automatiquement (GitHub Pages + Supabase `rjyvcogtvcgzwxeprgsm`) — fait — Claude
 - [x] Démo « Ville de Rivière-Claire » réaliste (PNBV, garages renseignés, PAGTCP fictive, plan nuancé) — fait — Claude
+- [x] Production h2fleet.ca préparée :
+  - URL propres ;
+  - redirections 301 ;
+  - en-têtes de sécurité ;
+  - build refusé si la configuration est incomplète ;
+  - garde-fous pour le dépôt privé.
+
+  Fait — Claude.
+- [ ] **Bascule de production** (`docs/production.md`, phases A à C) — prêt — toi :
+  - compte Cloudflare ;
+  - DNS ;
+  - projet Pages ;
+  - branche `production` ;
+  - Site URL Supabase.
 - [ ] **Sauvegardes de la base** : plan Supabase avec sauvegardes quotidiennes (ou dump chiffré planifié) — à faire — toi (choisir/payer le plan) ; Claude (workflow de dump si option gratuite)
-- [ ] Domaine propre et hébergement de production (au lieu de GitHub Pages) — à faire — toi (acheter le domaine) ; Claude (configuration)
-- [ ] Courriels : compte SendGrid + clé, puis réactiver « Confirm email » et le résumé des alertes — à faire — toi (compte, clé) ; Claude (branchement)
-- [ ] Tâches planifiées pg_cron (4 tâches, `supabase/snippets/taches-planifiees.sql`) — à faire — toi (exécuter une fois dans l'éditeur SQL)
-- [ ] Recalcul planifié des alertes du plan côté serveur — à faire — Claude
-- [ ] Invitations d'équipe envoyées par courriel (après SendGrid) — à faire — Claude
-- [ ] Favicon hébergé chez Lovable → fichier du dépôt ; retirer /dashboard/roadmap — à faire — Claude
+- [x] Recalcul planifié des alertes du plan côté serveur (chaque nuit, même code que l'écran, vérifié en CI) — fait — Claude
+- [x] Favicon dans le dépôt ; /dashboard/roadmap redirigé vers Suivi — fait — Claude
+- [x] Tâches pg_cron planifiées automatiquement par le déploiement dès que les deux secrets du Vault existent — fait — Claude
+- [ ] Secrets du Vault `h2fleet_project_url` et `h2fleet_cron_secret` (`docs/securite-secrets.md`) — prêt — toi
+- [ ] Courriels — prêt — toi :
+  - authentifier le domaine chez SendGrid (`docs/production.md`, phase D) ;
+  - poser le secret `SENDGRID_API_KEY` : c'est le **seul interrupteur**
+    (`docs/courriels.md`) ;
+  - régler le SMTP de Supabase et réactiver « Confirm email »
+    (`docs/deploiement.md`).
+- [x] Invitations d'équipe envoyées par courriel et résumé des alertes : code prêt, actif dès la clé SendGrid — fait — Claude
 - [ ] Montées de version Vite 8 / react-router 7 (avis npm audit) — à faire — Claude
-- [ ] Carte Mapbox (optionnelle) : jeton — à faire — toi
+- [ ] Carte Mapbox (optionnelle) : jeton public `pk.` — à faire — toi
+- [ ] Second projet Supabase pour séparer test et production (recommandé avant des données réelles) — à décider — toi
 
 ## Sécurité
 
 - [x] Chaque fonction Edge vérifie son appelant ; RLS sur toutes les tables + tests d'audit RLS en CI — fait — Claude
 - [x] Aucun secret dans le dépôt ; secrets saisis par toi dans GitHub/Supabase — fait — toi
-- [ ] Chiffrement des identifiants télématiques (simple base64 aujourd'hui) — à faire — Claude
-- [ ] Régénérer / créer `CRON_SECRET`, `INTERNAL_FUNCTION_SECRET`, `ALLOWED_ORIGINS` — à faire — toi (saisie) ; Claude (procédure dans `docs/deploiement.md`)
-- [ ] `get-mapbox-token` : CORS et vérification de l'appelant alignés sur `_shared/` — à faire — Claude
-- [ ] Supprimer la fonction `assistant-chat` encore déployée — à faire — Claude (étape du workflow de déploiement) ou toi (une commande)
-- [ ] Décider : réécrire l'historique git pour retirer ton adresse ; passer le dépôt en privé — à faire — toi (décision)
+- [x] Identifiants télématiques **chiffrés** (AES-256-GCM côté serveur, jamais renvoyés au navigateur, écriture en clair refusée par la base) — fait — Claude
+- [ ] Clé `TELEMATICS_ENCRYPTION_KEY` (`docs/securite-secrets.md` §4) — prêt — toi
+- [ ] Régénérer `CRON_SECRET`, `INTERNAL_FUNCTION_SECRET`, `ALLOWED_ORIGINS` (avec h2fleet.ca) — prêt (`docs/securite-secrets.md`) — toi
+- [x] `get-mapbox-token` aligné sur `_shared/` (utilisateur vérifié, CORS limité, jeton public seulement) — fait — Claude
+- [x] Fonctions retirées (`assistant-chat`, `calculate-tco`) supprimées automatiquement par le workflow de déploiement — fait — Claude
+- [ ] Réécrire l'historique git pour retirer ton adresse (procédure testée, `docs/historique-git.md`) — à décider — toi ; exécution par Claude avec ton accord
+- [ ] Passer le dépôt en privé (`docs/production.md`, phase F) — à décider — toi, après la bascule et l'historique
 
 ## Légal
 
-- [ ] Entreprise créée ; remplacer les placeholders des pages légales (nom légal, adresse, responsable Loi 25) — à faire — toi
-- [ ] Revue par un juriste : conditions, confidentialité, Loi 25 — à faire — toi
-- [ ] EFVP (communication hors Québec vers Anthropic) avant d'activer une fonction IA pour un client — à faire — toi (validation) ; Claude (brouillon)
-- [ ] Entente de pilote avec le client (périmètre, données, confidentialité, responsabilité) — à faire — toi
-- [ ] Assurance responsabilité professionnelle — à faire — toi
+- [ ] Entreprise créée ; remplacer les placeholders des pages légales et des brouillons (nom légal, adresse, responsable Loi 25, région d'hébergement) — à faire — toi
+- [ ] Revue par un juriste — à faire — toi :
+  - conditions ;
+  - confidentialité (mise à jour : Cloudflare, GitHub, chiffrement) ;
+  - Loi 25 ;
+  - brouillons de `docs/legal/`.
+- [x] Brouillon d'EFVP pour l'IA (communication hors Québec vers Anthropic) — fait — Claude (`docs/legal/efvp-ia-anthropic.md`)
+- [ ] EFVP complétée et signée avant d'activer une fonction IA pour un client — à faire — toi
+- [x] Brouillon d'entente de pilote avec une municipalité — fait — Claude (`docs/legal/entente-pilote-municipalite.md`)
+- [x] Brouillon d'entente de traitement des données — fait — Claude (`docs/legal/entente-traitement-donnees.md`)
+- [ ] Assurance responsabilité professionnelle et cyber — à faire — toi
 
 ## Commercial
 
 - [x] Rapports « conseil » PDF et Excel, note au conseil, exigences du Fonds municipal vert (équité, scénario de réduction) — fait — Claude
 - [x] « Économies d'abord » et optimiseur : meilleur sous-ensemble par garage, expliqué — fait — Claude
+- [ ] Traçabilité complète pour le trésorier et tornade lisible (points 12 et 13 de l'audit) — à faire — Claude (après validation de la bascule)
 - [ ] Tarifs : grille, page Tarifs, badges d'abonnement, fin de `DEMO_MODE` — à faire — toi (décision) ; Claude (implémentation)
 - [ ] Facturation réelle (prestataire de paiement) — à faire — toi (compte) ; Claude (intégration)
 - [ ] Hypothèses et programmes « à valider » vérifiés à la source (dont `seuil_sous_utilisation_flotte`, PAGTCP) — à faire — toi (lecture des sources listées dans la Bibliothèque) ; Claude (workflow de vérification)
 - [ ] Clé Anthropic en production et coût réel confirmé sur la première facture — à faire — toi
 - [ ] Relecture du modèle de note au conseil par un responsable municipal — à faire — toi
-- [ ] Adresse et processus de support pour le client pilote — à faire — toi
+- [ ] Adresse et processus de support pour le client pilote (`contact@h2fleet.ca` via Email Routing, `docs/production.md` phase D) — prêt — toi
