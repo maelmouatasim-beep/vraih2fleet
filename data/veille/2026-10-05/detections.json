@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-05",
+  "lectures": [
+    {
+      "cle": "pave",
+      "url": "https://tc.canada.ca/en/road-transportation/innovative-technologies/electric-vehicles/electric-vehicle-affordability-program",
+      "faits": 5,
+      "detections": 0,
+      "initial": true
+    },
+    {
+      "cle": "roulez_vert",
+      "url": "https://www.quebec.ca/en/transports/electric-transportation/financial-assistance-electric-vehicle/new-vehicle/amount-financial-assistance",
+      "faits": 5,
+      "detections": 0,
+      "initial": true
+    },
+    {
+      "cle": "ecocamionnage_v1",
+      "url": "https://www.quebec.ca/transports/aide-financiere/electrification/ecocamionnage/volet-1",
+      "faits": 4,
+      "detections": 0,
+      "initial": true
+    },
+    {
+      "cle": "ecocamionnage_v1:modalites",
+      "url": "https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/transports/transports/aide_financiere/electrification/ecocamionnage/Ecocamionnage_Modalites-2025-2028.pdf",
+      "faits": 13,
+      "detections": 0,
+      "initial": true
+    },
+    {
+      "cle": "imhzev",
+      "url": "https://tc.canada.ca/en/road-transportation/innovative-technologies/zero-emission-vehicles/medium-heavy-duty-zero-emission-vehicles",
+      "faits": 4,
+      "detections": 0,
+      "initial": true
+    },
+    {
+      "cle": "pivez",
+      "url": "https://ressources-naturelles.canada.ca/efficacite-energetique/efficacite-energetique-transports/pivez",
+      "faits": 5,
+      "detections": 0,
+      "initial": true
+    }
+  ],
+  "echecs": [
+    {
+      "cle": "ftcze",
+      "url": "https://logement-infrastructure.canada.ca/zero-emissions-trans-zero-emissions/index-fra.html",
+      "erreur": "fetch failed"
+    },
+    {
+      "cle": "pagtcp",
+      "url": "https://www.transports.gouv.qc.ca/fr/aide-finan/transport-collectif/Pages/transport-collectif.aspx",
+      "erreur": "HTTP 403"
+    }
+  ],
+  "detections": []
+}
