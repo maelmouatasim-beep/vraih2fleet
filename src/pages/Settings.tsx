@@ -36,17 +36,19 @@ import { CATEGORIES } from "@/lib/notifications/model";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
 import { useOrganization } from "@/hooks/useOrganization";
-import { updateOrganization } from "@/lib/supabase/organizations";
+import { courrielsActifs, updateOrganization } from "@/lib/supabase/organizations";
+import { useQuery } from "@tanstack/react-query";
 import { langueCourte, memoriserChoixLangue } from "@/i18n/preference";
 
-/** Envoi de courriels branché (SendGrid) sur ce déploiement — variable publique de build. */
-const COURRIELS_ACTIFS = import.meta.env.VITE_EMAILS_ACTIVE === "true";
 
 const Settings = () => {
   const { t, i18n } = useTranslation();
   const { user, profile, updateProfile } = useAuth();
   const { preferences: emailPreferences, togglePreference, isSaving: isSavingEmail } = useEmailNotifications();
   const inApp = useNotificationPreferences();
+  // Envoi branché ? Lu sur le serveur (secret SENDGRID_API_KEY) : aucun
+  // drapeau de build à poser (docs/courriels.md).
+  const { data: envoiActif } = useQuery({ queryKey: ["courriels-actifs"], queryFn: courrielsActifs, staleTime: 5 * 60 * 1000 });
   const [isSaving, setIsSaving] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   
@@ -397,7 +399,7 @@ const Settings = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {!COURRIELS_ACTIFS && (
+            {envoiActif === false && (
               <p className="text-sm rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-amber-800 dark:text-amber-200" data-testid="emails-not-active">
                 {t('pages.settings.emailNotifications.notActive')}
               </p>

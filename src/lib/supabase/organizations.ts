@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { estServiceNonConfigure } from "@/lib/serviceNonConfigure";
 import type { Database } from "@/integrations/supabase/types";
 
 export type OrgRole = Database["public"]["Enums"]["org_role"];
@@ -219,14 +220,41 @@ export async function listMyInvitations(email: string): Promise<InvitationDTO[]>
   }));
 }
 
-export async function inviteMember(organizationId: string, email: string, role: OrgRole, invitedBy: string): Promise<void> {
-  const { error } = await supabase.from("organization_invitations").insert({
-    organization_id: organizationId,
-    email: email.trim().toLowerCase(),
-    role,
-    invited_by: invitedBy,
-  });
+export async function inviteMember(organizationId: string, email: string, role: OrgRole, invitedBy: string): Promise<string> {
+  const { data, error } = await supabase
+    .from("organization_invitations")
+    .insert({
+      organization_id: organizationId,
+      email: email.trim().toLowerCase(),
+      role,
+      invited_by: invitedBy,
+    })
+    .select("id")
+    .single();
   if (error) throw error;
+  return data.id;
+}
+
+export type EnvoiInvitation = "envoye" | "non_configure" | "echec";
+
+/**
+ * Envoie le courriel d'invitation (gabarit « organization_invite » : le
+ * serveur relit destinataire, organisation et rôle en base). Tant que
+ * l'envoi n'est pas branché (SENDGRID_API_KEY absent) : « non_configure »,
+ * l'invitation reste visible par la personne à sa connexion.
+ */
+export async function envoyerInvitationParCourriel(invitationId: string, langue: "fr" | "en"): Promise<EnvoiInvitation> {
+  const { error } = await supabase.functions.invoke("send-email", {
+    body: { templateType: "organization_invite", data: { invitationId, lang: langue } },
+  });
+  if (!error) return "envoye";
+  return (await estServiceNonConfigure(error)) ? "non_configure" : "echec";
+}
+
+/** L'envoi de courriels est-il branché sur ce déploiement ? (GET send-email) */
+export async function courrielsActifs(): Promise<boolean> {
+  const { data, error } = await supabase.functions.invoke("send-email", { method: "GET" });
+  return !error && data?.active === true;
 }
 
 export async function revokeInvitation(invitationId: string): Promise<void> {

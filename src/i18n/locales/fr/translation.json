@@ -4843,12 +4843,17 @@
       "invite": "Inviter",
       "invalidEmail": "Courriel invalide",
       "invited": "Invitation créée pour {{email}}",
-      "howItWorks": "La personne crée son compte (ou se connecte) avec CE courriel : l'invitation apparaît sur son Accueil et sa page Organisation, où elle l'accepte. Aucun courriel n'est envoyé automatiquement pour l'instant — prévenez-la. Validité : 14 jours.",
+      "howItWorks": "La personne crée son compte (ou se connecte) avec CE courriel : l'invitation apparaît sur son Accueil et sa page Organisation, où elle l'accepte. Un courriel d'invitation lui est envoyé dès que l'envoi de courriels est activé ; sinon, prévenez-la. Validité : 14 jours.",
       "expires": "expire le {{date}}",
       "revoke": "Révoquer",
       "received": "Invitation à rejoindre « {{org}} » (rôle : {{role}})",
       "accept": "Accepter",
-      "accepted": "Vous avez rejoint l’organisation"
+      "accepted": "Vous avez rejoint l’organisation",
+      "emailStatus": {
+        "envoye": "Courriel d'invitation envoyé.",
+        "non_configure": "Courriel non envoyé : l'envoi de courriels n'est pas encore activé. La personne verra l'invitation en se connectant ; prévenez-la.",
+        "echec": "Le courriel d'invitation n'a pas pu être envoyé. L'invitation reste valable : la personne la verra en se connectant."
+      }
     },
     "ai": {
       "title": "Intelligence artificielle",

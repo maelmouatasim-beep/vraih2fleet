@@ -28,7 +28,7 @@ const SECRETS_OPTIONNELS = ["SENDGRID_API_KEY", "CONTACT_INBOX_EMAIL", "APP_BASE
 // Créées par la plateforme Supabase elle-même sur les nouveaux projets
 // (option « RLS automatique ») : ni attendues ni signalées.
 const OBJETS_PLATEFORME = { fonctions: ["rls_auto_enable"] };
-const TACHES_CRON = ["h2fleet-notify-subsidy-deadlines", "h2fleet-sync-telematics", "h2fleet-purge-rate-limit"];
+const TACHES_CRON = ["h2fleet-notify-subsidy-deadlines", "h2fleet-sync-telematics", "h2fleet-purge-rate-limit", "h2fleet-plan-alerts-digest"];
 
 const INVENTAIRE_SQL = `
 select json_build_object(

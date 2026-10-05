@@ -4843,12 +4843,17 @@
       "invite": "Invite",
       "invalidEmail": "Invalid email",
       "invited": "Invitation created for {{email}}",
-      "howItWorks": "The person creates an account (or signs in) with THIS email: the invitation appears on their Home and Organization pages, where they accept it. No email is sent automatically yet — let them know. Valid for 14 days.",
+      "howItWorks": "The person creates an account (or signs in) with THIS email: the invitation appears on their Home and Organization pages, where they accept it. An invitation email is sent as soon as email sending is enabled; otherwise, let them know. Valid for 14 days.",
       "expires": "expires {{date}}",
       "revoke": "Revoke",
       "received": "Invitation to join “{{org}}” (role: {{role}})",
       "accept": "Accept",
-      "accepted": "You joined the organization"
+      "accepted": "You joined the organization",
+      "emailStatus": {
+        "envoye": "Invitation email sent.",
+        "non_configure": "Email not sent: email sending is not enabled yet. The person will see the invitation when they sign in; let them know.",
+        "echec": "The invitation email could not be sent. The invitation remains valid: the person will see it when they sign in."
+      }
     },
     "ai": {
       "title": "Artificial intelligence",

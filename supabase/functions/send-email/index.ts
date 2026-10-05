@@ -7,8 +7,10 @@
 // - Gabarits publics (demo_request, contact) : limite de débit par IP,
 //   champ pot de miel, enregistrement du lead dans email_leads.
 // - Gabarits authentifiés (support_request, collaboration_invite,
-//   task_mention) : JWT vérifié via getUserOrThrow, destinataire résolu en
-//   base (jamais fourni par le client).
+//   organization_invite, task_mention) : JWT vérifié via getUserOrThrow,
+//   destinataire résolu en base (jamais fourni par le client).
+// - GET (utilisateur connecté) : { active } — l'envoi est-il branché ?
+//   SEUL interrupteur : le secret SENDGRID_API_KEY (docs/courriels.md).
 // - Gabarits internes (subsidy_reminder, plan_alerts_digest) : secret
 //   partagé x-internal-secret.
 
@@ -27,19 +29,23 @@ import {
   ValidationError,
   z,
 } from "../_shared/validation.ts";
+import { lienApplication } from "../_shared/liens.ts";
 
 const SENDGRID_API_KEY = Deno.env.get("SENDGRID_API_KEY");
-const FROM_EMAIL = "contact@h2fleet.ca";
-const FROM_NAME = "H2Fleet Planner";
+// Expéditeur : adresse du domaine authentifié chez SendGrid (DKIM/SPF,
+// docs/production.md phase D).
+const FROM_EMAIL = Deno.env.get("EMAIL_FROM") ?? "no-reply@h2fleet.ca";
+const FROM_NAME = "H2Fleet";
 // Destinataire interne des formulaires publics ; jamais fourni par le client.
 const INTERNAL_INBOX = Deno.env.get("CONTACT_INBOX_EMAIL") ?? "contact@h2fleet.ca";
-const APP_BASE_URL = Deno.env.get("APP_BASE_URL") ?? "https://h2fleet.app";
+const APP_BASE_URL = Deno.env.get("APP_BASE_URL") ?? "https://h2fleet.ca";
+const lien = (chemin: string) => lienApplication(APP_BASE_URL, chemin);
 
 // ── Limite de débit par IP pour les gabarits publics ───────────────────────
 const PUBLIC_RATE_LIMIT = 5; // envois
 const PUBLIC_RATE_WINDOW_MINUTES = 60;
 
-async function checkPublicRateLimit(bucket: string, ip: string): Promise<boolean> {
+async function checkPublicRateLimit(bucket: string, ip: string, limite = PUBLIC_RATE_LIMIT): Promise<boolean> {
   const supabase = serviceRoleClient();
   const windowStart = new Date(
     Date.now() - PUBLIC_RATE_WINDOW_MINUTES * 60_000,
@@ -54,7 +60,7 @@ async function checkPublicRateLimit(bucket: string, ip: string): Promise<boolean
     console.error("rate limit check failed:", error.message);
     return true; // ne pas bloquer les utilisateurs légitimes sur une panne interne
   }
-  if ((count ?? 0) >= PUBLIC_RATE_LIMIT) return false;
+  if ((count ?? 0) >= limite) return false;
   await supabase.from("rate_limit_events").insert({ bucket, caller: ip });
   return true;
 }
@@ -104,6 +110,16 @@ const collaborationInviteSchema = z.object({
   templateType: z.literal("collaboration_invite"),
   data: z.object({ invitationId: z.string().uuid() }),
 });
+
+// Invitation à rejoindre une ORGANISATION (organization_invitations) :
+// destinataire, organisation et rôle lus en base ; l'appelant doit être
+// admin de l'organisation et l'auteur de l'invitation, encore valide.
+const organizationInviteSchema = z.object({
+  templateType: z.literal("organization_invite"),
+  data: z.object({ invitationId: z.string().uuid(), lang: z.enum(["fr", "en"]).default("fr") }),
+});
+// Invitations envoyées par utilisateur et par heure.
+const INVITATIONS_PAR_HEURE = 20;
 
 const taskMentionSchema = z.object({
   templateType: z.literal("task_mention"),
@@ -155,6 +171,7 @@ const requestSchema = z.discriminatedUnion("templateType", [
   contactSchema,
   supportRequestSchema,
   collaborationInviteSchema,
+  organizationInviteSchema,
   taskMentionSchema,
   subsidyReminderSchema,
   planAlertsDigestSchema,
@@ -199,7 +216,7 @@ function leadEmailHtml(
   return layout(
     escapeHtml(title),
     `<table style="width:100%;border-collapse:collapse;">${tableRows(rows)}</table>${messageBlock}`,
-    "Formulaire du site h2fleet.app",
+    "Formulaire du site h2fleet.ca",
   );
 }
 
@@ -248,6 +265,17 @@ async function sendEmail(
 
 Deno.serve(async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") return handleOptions(req);
+  // Statut de l'envoi (utilisateur connecté) : l'interface affiche ou non
+  // les préférences de courriel — aucun drapeau de build à poser.
+  if (req.method === "GET") {
+    try {
+      await getUserOrThrow(req);
+      return jsonResponse(req, { active: !!SENDGRID_API_KEY });
+    } catch (error) {
+      if (error instanceof HttpError) return jsonResponse(req, { error: error.message }, error.status);
+      throw error;
+    }
+  }
   if (req.method !== "POST") {
     return jsonResponse(req, { error: "Method not allowed" }, 405);
   }
@@ -384,7 +412,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
           viewer: "Lecteur",
         };
         const roleLabel = roleLabels[invitation.role] ?? invitation.role;
-        const projectUrl = `${APP_BASE_URL}/signup?invite=${invitation.project_id}`;
+        const projectUrl = lien(`/signup?invite=${invitation.project_id}`);
 
         await sendEmail(
           invitation.email,
@@ -400,6 +428,70 @@ Deno.serve(async (req: Request): Promise<Response> => {
             "Vous avez reçu cet email car un utilisateur H2Fleet vous a invité(e) sur un projet.",
           ),
           `${inviterName} vous a invité(e) à collaborer sur ${projectName} (rôle : ${roleLabel}).\n${projectUrl}`,
+        );
+        return jsonResponse(req, { success: true });
+      }
+
+      case "organization_invite": {
+        const { user } = await getUserOrThrow(req);
+        const admin = serviceRoleClient();
+        // Invitation créée par l'appelant, encore valide ; destinataire,
+        // organisation et rôle lus en base (jamais fournis par le client).
+        const { data: invitation } = await admin
+          .from("organization_invitations")
+          .select("id, email, role, organization_id, invited_by, expires_at, accepted_at, organizations(name)")
+          .eq("id", body.data.invitationId)
+          .eq("invited_by", user.id)
+          .is("accepted_at", null)
+          .gt("expires_at", new Date().toISOString())
+          .maybeSingle();
+        if (!invitation) throw new HttpError(404, "Invitation not found");
+        const { data: membre } = await admin
+          .from("organization_members")
+          .select("role")
+          .eq("organization_id", invitation.organization_id)
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (membre?.role !== "admin") throw new HttpError(403, "Only organization admins can send invitations");
+        if (!SENDGRID_API_KEY) throw new HttpError(503, "service_non_configure");
+        if (!(await checkPublicRateLimit("send-email:organization-invite", user.id, INVITATIONS_PAR_HEURE))) {
+          return jsonResponse(req, { error: "Too many requests" }, 429);
+        }
+
+        const { data: inviterProfile } = await admin.from("profiles").select("full_name").eq("id", user.id).maybeSingle();
+        const fr = body.data.lang === "fr";
+        const orgName = (invitation.organizations as { name?: string } | null)?.name ?? "H2Fleet";
+        const inviterName = inviterProfile?.full_name ?? (fr ? "Un administrateur" : "An administrator");
+        const roles: Record<string, [string, string]> = {
+          admin: ["Administrateur", "Administrator"],
+          member: ["Membre", "Member"],
+          reader: ["Lecteur", "Reader"],
+        };
+        const roleLabel = (roles[invitation.role] ?? [invitation.role, invitation.role])[fr ? 0 : 1];
+        const echeance = new Date(invitation.expires_at).toLocaleDateString(fr ? "fr-CA" : "en-CA", { year: "numeric", month: "long", day: "numeric" });
+        const url = lien("/signup");
+        const titre = fr ? `Invitation à rejoindre ${orgName} sur H2Fleet` : `Invitation to join ${orgName} on H2Fleet`;
+        const explication = fr
+          ? `Créez votre compte (ou connectez-vous) avec cette adresse courriel : l'invitation vous attend sur votre Accueil. Elle est valable jusqu'au ${echeance}.`
+          : `Create your account (or sign in) with this email address: the invitation is waiting on your Home page. It is valid until ${echeance}.`;
+
+        await sendEmail(
+          invitation.email,
+          titre,
+          layout(
+            fr ? "Invitation à rejoindre une organisation" : "Invitation to join an organization",
+            `<p style="text-align:center;color:#6b7280;"><strong>${escapeHtml(inviterName)}</strong> ${fr ? "vous invite à rejoindre" : "invites you to join"}</p>
+<div style="background:#f3f4f6;border-radius:8px;padding:20px;margin-bottom:24px;text-align:center;">
+<p style="margin:0;font-size:20px;font-weight:600;">${escapeHtml(orgName)}</p>
+<p style="margin:8px 0 0 0;color:#6b7280;font-size:14px;">${fr ? "Rôle" : "Role"} : ${escapeHtml(roleLabel)}</p>
+</div>
+<p style="color:#374151;">${escapeHtml(explication)}</p>
+<p style="text-align:center;"><a href="${escapeHtml(url)}" style="display:inline-block;background:#0f766e;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:600;">${fr ? "Rejoindre H2Fleet" : "Join H2Fleet"}</a></p>`,
+            fr
+              ? "Vous recevez ce courriel parce qu'un administrateur de cette organisation vous a invité. Si vous ne l'attendiez pas, ignorez-le : l'invitation expirera d'elle-même."
+              : "You are receiving this email because an administrator of this organization invited you. If you were not expecting it, ignore it: the invitation will expire on its own.",
+          ),
+          `${titre}\n\n${explication}\n${url}`,
         );
         return jsonResponse(req, { success: true });
       }
@@ -455,7 +547,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         const authorName = authorProfile?.full_name ?? "Un utilisateur";
         const projectName =
           (task.projects as { name?: string } | null)?.name ?? "Projet";
-        const taskUrl = `${APP_BASE_URL}/dashboard/tasks?project=${task.project_id}`;
+        const taskUrl = lien(`/dashboard/projects/${task.project_id}/suivi`);
 
         await sendEmail(
           mentioned.email,
@@ -509,7 +601,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         requireInternalSecret(req);
         const d = body.data;
         const en = d.lang === "en";
-        const projectUrl = `${APP_BASE_URL}/dashboard/projects/${d.projectId}/suivi`;
+        const projectUrl = lien(`/dashboard/projects/${d.projectId}/suivi`);
         const couleurs: Record<string, string> = { critique: "#b91c1c", attention: "#b45309", info: "#475569" };
         const libelles: Record<string, string> = en
           ? { critique: "Critical", attention: "Warning", info: "Information" }

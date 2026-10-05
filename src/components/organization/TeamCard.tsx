@@ -17,6 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   changeMemberRole,
   inviteMember,
+  envoyerInvitationParCourriel,
   listMembersDetail,
   listOrganizationInvitations,
   removeMember,
@@ -65,8 +66,12 @@ export default function TeamCard({ organization }: { organization: OrganizationD
     }
     setEnvoi(true);
     try {
-      await inviteMember(organization.id, courriel, role, user.id);
-      toast({ title: t("organization.team.invited", { email: courriel.trim().toLowerCase() }) });
+      const id = await inviteMember(organization.id, courriel, role, user.id);
+      const envoi = await envoyerInvitationParCourriel(id, i18n.language.startsWith("en") ? "en" : "fr");
+      toast({
+        title: t("organization.team.invited", { email: courriel.trim().toLowerCase() }),
+        description: t(`organization.team.emailStatus.${envoi}`),
+      });
       setCourriel("");
       rafraichir();
     } catch (e) {

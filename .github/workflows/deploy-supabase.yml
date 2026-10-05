@@ -85,6 +85,13 @@ jobs:
         if: steps.cfg.outputs.ok == 'true'
         run: node scripts/supprimer-fonctions-retirees.mjs
 
+      # Tâches pg_cron (rappels de subventions, synchro télématique, purge,
+      # résumé des alertes) planifiées dès que les deux secrets du Vault
+      # existent ; idempotent, aucune valeur lue (scripts/taches-cron.mjs).
+      - name: Planifier les tâches pg_cron
+        if: steps.cfg.outputs.ok == 'true'
+        run: node scripts/taches-cron.mjs
+
       - name: Contrôle de santé (schéma, fonctions, secrets, auth, cron)
         if: steps.cfg.outputs.ok == 'true'
         run: node scripts/verifier-base.mjs --heberge

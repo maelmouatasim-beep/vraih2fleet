@@ -1,6 +1,7 @@
--- Tâches planifiées H2Fleet (pg_cron + pg_net) — à exécuter UNE fois dans
--- le SQL Editor du projet hébergé, APRÈS avoir créé les deux secrets du
--- Vault (Integrations → Vault → Add new secret) :
+-- Tâches planifiées H2Fleet (pg_cron + pg_net) — appliqué AUTOMATIQUEMENT
+-- par le workflow Deploy Supabase (scripts/taches-cron.mjs) dès que les
+-- deux secrets du Vault existent (Integrations → Vault → Add new secret) ;
+-- peut aussi être exécuté à la main dans le SQL Editor :
 --   h2fleet_project_url  = https://<ref>.supabase.co   (sans / final)
 --   h2fleet_cron_secret  = la MÊME valeur que le secret de fonction CRON_SECRET
 -- Aucune valeur secrète dans ce fichier : les tâches lisent le Vault à
