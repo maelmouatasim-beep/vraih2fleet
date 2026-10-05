@@ -1,0 +1,232 @@
+{
+  "sources": {
+    "pave": {
+      "programmeId": "pave",
+      "url": "https://tc.canada.ca/en/road-transportation/innovative-technologies/electric-vehicles/electric-vehicle-affordability-program",
+      "date": "2026-10-05",
+      "empreinte": "46ffe3e6",
+      "faits": [
+        {
+          "type": "date",
+          "valeur": "2026-02-16",
+          "extrait": "Electric vehicle purchase or lease transactions made on, or after, February 16, 2026, may qualify for an incentive. The program will run until March 31, 2031, or earlier if funding is used up."
+        },
+        {
+          "type": "date",
+          "valeur": "2031-03-31",
+          "extrait": "Electric vehicle purchase or lease transactions made on, or after, February 16, 2026, may qualify for an incentive. The program will run until March 31, 2031, or earlier if funding is used up."
+        },
+        {
+          "type": "montant",
+          "valeur": "2",
+          "extrait": "The EVAP received $2.275B in funding over 5 years. As of October 1, 2026, there is $1.92B in remaining funds."
+        },
+        {
+          "type": "date",
+          "valeur": "2026-10-01",
+          "extrait": "The EVAP received $2.275B in funding over 5 years. As of October 1, 2026, there is $1.92B in remaining funds."
+        },
+        {
+          "type": "date",
+          "valeur": "2026-10-02",
+          "extrait": "2026-10-02"
+        }
+      ]
+    },
+    "roulez_vert": {
+      "programmeId": "roulez_vert",
+      "url": "https://www.quebec.ca/en/transports/electric-transportation/financial-assistance-electric-vehicle/new-vehicle/amount-financial-assistance",
+      "date": "2026-10-05",
+      "empreinte": "2bc3df95",
+      "faits": [
+        {
+          "type": "montant",
+          "valeur": "2000",
+          "extrait": "In 2026, you can obtain up to $2,000 of Québec government financial assistance when you purchase an eligible new electric vehicle under the Roulez vert program."
+        },
+        {
+          "type": "montant",
+          "valeur": "1000",
+          "extrait": "$1,000 or $500 for a plug-in hybrid vehicle;"
+        },
+        {
+          "type": "montant",
+          "valeur": "500",
+          "extrait": "$1,000 or $500 for a plug-in hybrid vehicle;"
+        },
+        {
+          "type": "date",
+          "valeur": "2025-03-31",
+          "extrait": "Vehicles registered between February 1 to March 31, 2025 —during the temporary suspension of the program—are not be eligible for financial assistance."
+        },
+        {
+          "type": "date",
+          "valeur": "2026-01-14",
+          "extrait": "January 14, 2026"
+        }
+      ]
+    },
+    "ecocamionnage_v1": {
+      "programmeId": "ecocamionnage_v1",
+      "url": "https://www.quebec.ca/transports/aide-financiere/electrification/ecocamionnage/volet-1",
+      "date": "2026-10-05",
+      "empreinte": "25779daf",
+      "faits": [
+        {
+          "type": "statut",
+          "valeur": "suspendu",
+          "extrait": "Une attestation de Revenu Québec confirmant que le demandeur n’a pas de compte en souffrance en vertu des lois fiscales québécoises ou, s’il a un compte en souffrance, qu’il a conclu une entente de paiement qu’il resp…"
+        },
+        {
+          "type": "date",
+          "valeur": "2028-03-31",
+          "extrait": "Au plus tard le 31 mars 2028."
+        },
+        {
+          "type": "date",
+          "valeur": "2026-09-09",
+          "extrait": "9 septembre 2026"
+        },
+        {
+          "type": "statut",
+          "valeur": "ouvert",
+          "extrait": "Gouvernement ouvert"
+        }
+      ]
+    },
+    "ecocamionnage_v1:modalites": {
+      "programmeId": "ecocamionnage_v1",
+      "url": "https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/transports/transports/aide_financiere/electrification/ecocamionnage/Ecocamionnage_Modalites-2025-2028.pdf",
+      "date": "2026-10-05",
+      "empreinte": "18061346",
+      "faits": [
+        {
+          "type": "date",
+          "valeur": "2028-03-31",
+          "extrait": "tard le 31 mars 2028 ou lorsque le budget est écoulé."
+        },
+        {
+          "type": "date",
+          "valeur": "2024-09-06",
+          "extrait": "Les dépenses admissibles doivent avoir été engagées par le bénéficiaire après le 6 septembre 2024. Les"
+        },
+        {
+          "type": "montant",
+          "valeur": "1000",
+          "extrait": "de 1 000 $ pour un véhicule léger de type fourgonnettes (classe 2 b) et de 50 000 $ pour un véhicule lourd"
+        },
+        {
+          "type": "montant",
+          "valeur": "50000",
+          "extrait": "de 1 000 $ pour un véhicule léger de type fourgonnettes (classe 2 b) et de 50 000 $ pour un véhicule lourd"
+        },
+        {
+          "type": "montant",
+          "valeur": "5000",
+          "extrait": "Une aide financière d’un montant forfaitaire de 5 000 $ est accordée pour l’acquisition d’un véhicule léger de"
+        },
+        {
+          "type": "montant",
+          "valeur": "2500",
+          "extrait": "type fourgonnettes (classe 2 b) électrique ou à pile à combustible (VPC) et de 2 500 $ pour un véhicule léger"
+        },
+        {
+          "type": "montant",
+          "valeur": "3000",
+          "extrait": "Une aide financière d’un montant de 3 000 $ est accordée pour l’acquisition d’un VBV. Par ailleurs, les VBV"
+        },
+        {
+          "type": "statut",
+          "valeur": "suspendu",
+          "extrait": "paiement qu’il respecte ou que le recouvrement de ses dettes a été légalement suspendu. Si cette"
+        },
+        {
+          "type": "statut",
+          "valeur": "ferme",
+          "extrait": "demande sera fermée, et le demandeur ne pourra pas obtenir son aide financière. Toutefois, le demandeur"
+        },
+        {
+          "type": "montant",
+          "valeur": "500000",
+          "extrait": "de 500 000 $ est accordée sur recommandation d’un comité de sélection décrit à l’article 4.3. Par ailleurs,"
+        },
+        {
+          "type": "montant",
+          "valeur": "400",
+          "extrait": "cette aide financière ne peut dépasser 400 $ par tonne d’émissions de GES réduite. Ces tonnes réduites sont"
+        },
+        {
+          "type": "montant",
+          "valeur": "15000",
+          "extrait": "de ce remboursement ne peut dépasser 15 000 $."
+        },
+        {
+          "type": "date",
+          "valeur": "2027-11-30",
+          "extrait": "secrétariat aux politiques budgétaires et aux programmes), au plus tard le 30 novembre 2027"
+        }
+      ]
+    },
+    "imhzev": {
+      "programmeId": "imhzev",
+      "url": "https://tc.canada.ca/en/road-transportation/innovative-technologies/zero-emission-vehicles/medium-heavy-duty-zero-emission-vehicles",
+      "date": "2026-10-05",
+      "empreinte": "f419786f",
+      "faits": [
+        {
+          "type": "statut",
+          "valeur": "ferme",
+          "extrait": "Closed: Incentives for Medium- and Heavy-Duty Zero-Emission Vehicles"
+        },
+        {
+          "type": "montant",
+          "valeur": "200000",
+          "extrait": "The Government of Canada launched the Incentives for Medium- and Heavy-Duty Zero-Emission Vehicles (iMHZEV) Program in July 2022. The iMHZEV Program provided incentives of up to $200,000. Many different makes and mode…"
+        },
+        {
+          "type": "date",
+          "valeur": "2026-03-31",
+          "extrait": "To have been eligible under the iMHZEV Program, a vehicle had to be a zero-emission vehicle (in other words, they had the ability to produce no tailpipe emissions). The program considered battery-electric, plug-in hyb…"
+        },
+        {
+          "type": "date",
+          "valeur": "2024-07-05",
+          "extrait": "2024-07-05"
+        }
+      ]
+    },
+    "pivez": {
+      "programmeId": "pivez",
+      "url": "https://ressources-naturelles.canada.ca/efficacite-energetique/efficacite-energetique-transports/pivez",
+      "date": "2026-10-05",
+      "empreinte": "d9ead859",
+      "faits": [
+        {
+          "type": "statut",
+          "valeur": "ferme",
+          "extrait": "Fermé aux demandes"
+        },
+        {
+          "type": "statut",
+          "valeur": "epuise",
+          "extrait": "que les fonds soient épuisés. La contribution de RNCan sera limitée à cinquante pour cent (50 %) des"
+        },
+        {
+          "type": "date",
+          "valeur": "2026-03-20",
+          "extrait": "20 mars 2026"
+        },
+        {
+          "type": "montant",
+          "valeur": "1000000000",
+          "extrait": "Depuis 2016, le Canada a investi plus de 1 G$ pour rendre les VE plus abordables et les bornes de recharge, plus"
+        },
+        {
+          "type": "date",
+          "valeur": "2027-03-31",
+          "extrait": "programme jusqu’au 31 mars 2027, assorti d’un montant supplémentaire de 500 millions de dollars que la Banque de"
+        }
+      ]
+    }
+  }
+}
