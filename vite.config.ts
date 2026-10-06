@@ -4,6 +4,7 @@ import path from "path";
 import { writeFileSync } from "fs";
 import { componentTagger } from "lovable-tagger";
 import { fichierEnTetes, fichierRedirections, verifierEnvProduction } from "./src/lib/production/site";
+import { identifiantBuild, NOM_META_VERSION } from "./src/lib/version/nouvelleVersion";
 
 /**
  * Fichiers de l'hébergeur de production (Cloudflare Pages) : `_headers`
@@ -37,6 +38,25 @@ function fichiersHebergeur(env: Record<string, string>): Plugin {
   };
 }
 
+/**
+ * Version du build : `version.json` (version EN LIGNE, relue par les onglets
+ * ouverts) + `<meta name="h2fleet-version">` dans index.html (version qui
+ * TOURNE). Voir src/lib/version/nouvelleVersion.ts.
+ */
+function versionDuBuild(): Plugin {
+  const version = identifiantBuild(process.env.GITHUB_SHA, Date.now());
+  return {
+    name: "h2fleet-version",
+    apply: "build",
+    transformIndexHtml() {
+      return [{ tag: "meta", attrs: { name: NOM_META_VERSION, content: version }, injectTo: "head" }];
+    },
+    generateBundle() {
+      this.emitFile({ type: "asset", fileName: "version.json", source: JSON.stringify({ version }) + "\n" });
+    },
+  };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = { ...loadEnv(mode, process.cwd(), "VITE_"), ...pick(process.env) };
@@ -47,7 +67,7 @@ export default defineConfig(({ mode }) => {
     },
     // mcpPlugin retiré : le serveur MCP est reporté (FEATURE_PUBLIC_API) et
     // supabase/functions/mcp/index.ts est maintenant maintenu à la main.
-    plugins: [react(), mode === "development" && componentTagger(), fichiersHebergeur(env)].filter(Boolean),
+    plugins: [react(), mode === "development" && componentTagger(), fichiersHebergeur(env), versionDuBuild()].filter(Boolean),
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),

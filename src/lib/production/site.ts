@@ -113,6 +113,9 @@ export function fichierEnTetes(supabaseUrl: string): string {
     // Fichiers fingerprintés par Vite : cache d'un an, immuable.
     "/assets/*",
     "  Cache-Control: public, max-age=31536000, immutable",
+    // Version en ligne, relue par les onglets ouverts : jamais en cache.
+    "/version.json",
+    "  Cache-Control: no-store",
     "",
   ].join("\n");
 }

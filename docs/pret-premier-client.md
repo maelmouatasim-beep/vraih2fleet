@@ -35,7 +35,8 @@
 - [ ] Secrets du Vault `h2fleet_project_url` et `h2fleet_cron_secret` (`docs/securite-secrets.md`) — prêt — toi
 - [x] Courriels d'authentification par le SMTP IONOS (`noreply@h2fleet.ca`, port 465), « Confirm email » activé, modèles bilingues — fait — toi
 - [x] Confirmation du courriel : page d'arrivée, attente multi-appareils (code à 6 chiffres), erreurs claires, aucune énumération ; 4 scénarios en CI (URL propres + hash) — fait — Claude
-- [ ] Modèle « Confirm signup » avec le code `{{ .Token }}` (`docs/courriels-auth/confirm-signup.html`) — prêt — toi
+- [ ] Modèle « Confirm signup » avec le code `{{ .Token }}` (`docs/courriels-auth/confirm-signup.html`, version du 2026-10-06 qui dit où saisir le code) — prêt — toi (recoller sujet + corps dans Supabase)
+- [x] Code de confirmation saisissable hors de l'écran post-inscription (connexion d'un compte non confirmé, lien « Vous avez reçu un code ? ») + bandeau « Nouvelle version disponible » — fait — Claude
 - [ ] Courriels applicatifs : secrets SMTP des fonctions, `SMTP_PASSWORD` = **seul interrupteur** (`docs/courriels.md`), puis Paramètres → *Courriel de test* — prêt — toi
 - [ ] DNS du domaine (`docs/production.md`, phase D) : vérifier l'activation DKIM chez IONOS, ajouter une adresse de rapports au DMARC — à faire — toi
 - [x] Invitations d'équipe, résumé des alertes et courriel de test par SMTP (port 465), testés en CI contre un faux serveur — fait — Claude

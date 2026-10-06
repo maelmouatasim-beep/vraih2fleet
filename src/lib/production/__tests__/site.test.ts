@@ -38,6 +38,8 @@ describe("production — en-têtes de sécurité", () => {
     const f = fichierEnTetes(URL_SB);
     expect(f).toMatch(/^\/\*$/m);
     expect(f).toMatch(/^\/assets\/\*\n {2}Cache-Control: public, max-age=31536000, immutable$/m);
+    // Détection de nouvelle version : version.json jamais servi depuis un cache.
+    expect(f).toMatch(/^\/version\.json\n {2}Cache-Control: no-store$/m);
   });
 });
 

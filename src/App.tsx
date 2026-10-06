@@ -6,6 +6,7 @@ import { BrowserRouter, HashRouter, Routes, Route, Navigate, useParams } from "r
 import { AuthProvider } from "@/hooks/useAuth";
 import { NotificationsProvider } from "@/hooks/useNotifications";
 import ScrollToTop from "@/components/ScrollToTop";
+import BandeauNouvelleVersion from "@/components/layout/BandeauNouvelleVersion";
 import { PUBLIC_API_ENABLED } from "@/lib/constants";
 import { SubscriptionProvider } from "@/hooks/useSubscription";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
@@ -64,6 +65,7 @@ const App = () => (
           <TooltipProvider delayDuration={0}>
           <Toaster />
           <Sonner />
+          <BandeauNouvelleVersion />
           <Routes>
             {/* Public routes */}
             <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />

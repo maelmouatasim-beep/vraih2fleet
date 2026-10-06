@@ -104,7 +104,19 @@ hydrogène : TCO, infrastructure, subventions canadiennes, télématique
   `/auth/verifier` ; `scripts/e2e-confirmation.mjs` (4 scénarios +
   anti-énumération + ordre des onglets inversé, URL propres ET hash, en CI ;
   l'entrée dans l'espace passe TOUJOURS par `useAuth().synchroniserSession`) ; modèle Supabase
-  bilingue `docs/courriels-auth/confirm-signup.html`.
+  bilingue `docs/courriels-auth/confirm-signup.html`. Code saisissable
+  partout (2026-10-06) : connexion d'un compte non confirmé
+  (`estNonConfirme`) → écran d'attente `origine="connexion"` ; lien « Vous
+  avez reçu un code de confirmation ? » (connexion + inscription →
+  `/auth/verifier?code=1`, `ConfirmerAvecCode`) ; appels partagés dans
+  `src/lib/auth/codeConfirmation.ts` ; e2e scénarios 6 et 7.
+- Nouvelle version : `version.json` + `<meta name="h2fleet-version">` écrits
+  au build (plugin `versionDuBuild`, `src/lib/version/nouvelleVersion.ts`),
+  `useNouvelleVersion` (toutes les 5 min + retour sur l'onglet) →
+  `BandeauNouvelleVersion` « Recharger » ; JAMAIS de rechargement
+  automatique ; `/version.json` en `no-store` (`_headers`) ;
+  `scripts/e2e-version.mjs` (déploiement simulé, URL propres + hash, en CI).
+  Aperçu : publier aussi `dist/version.json`.
 - `supabase/tests/` — tests d'intégration contre Supabase local
   (helpers + audit RLS) ; exécutés en CI, jamais contre la production.
 
@@ -617,9 +629,9 @@ sinon « à_valider » avec l'URL à consulter.
   Anthropic, États-Unis) avant d'activer une fonction IA pour un client
   (brouillon : `docs/legal/efvp-ia-anthropic.md`) ; coût estimé à
   confirmer sur la facture réelle.
-- Courriels d'auth : SMTP IONOS branché (fait par l'utilisateur) ; coller
-  le modèle « Confirm signup » avec le code `{{ .Token }}`
-  (`docs/courriels-auth/confirm-signup.html`).
+- Courriels d'auth : SMTP IONOS branché (fait par l'utilisateur) ; RECOLLER
+  le modèle « Confirm signup » mis à jour le 2026-10-06 (dit où saisir le
+  code : page de connexion H2Fleet) — `docs/courriels-auth/confirm-signup.html`.
 - Facturation réelle (DEMO_MODE donne le plan le plus élevé à tous).
 - Revue juridique des pages légales (Loi 25, CGU, confidentialité).
 - Hypothèses et programmes « à_valider » : vérification par

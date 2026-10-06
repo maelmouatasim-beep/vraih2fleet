@@ -6469,5 +6469,10 @@
     },
     "previewLoading": "Affichage du document…",
     "previewError": "Aperçu indisponible : ouvrez la pièce depuis la liste pour la comparer."
+  },
+  "version": {
+    "available": "Nouvelle version disponible.",
+    "reload": "Recharger",
+    "later": "Plus tard"
   }
 }

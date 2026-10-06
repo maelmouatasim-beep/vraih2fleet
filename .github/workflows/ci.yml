@@ -187,6 +187,15 @@ jobs:
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:4173/vraih2fleet/ >/dev/null && break; sleep 1; done
           E2E_BASE=http://127.0.0.1:4173/vraih2fleet E2E_HASH=1 node scripts/e2e-confirmation.mjs
 
+      # Onglet resté sur une ancienne version : bandeau « Nouvelle version
+      # disponible — Recharger », jamais de rechargement forcé (copies des
+      # builds ci-dessus, déploiement simulé).
+      - name: Détection de nouvelle version (URL propres + hash)
+        if: ${{ !cancelled() }}
+        run: |
+          node scripts/e2e-version.mjs dist-prod 8091
+          E2E_SOUS_DOSSIER=vraih2fleet E2E_HASH=1 node scripts/e2e-version.mjs site-hash 8092
+
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

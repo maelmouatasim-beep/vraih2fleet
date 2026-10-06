@@ -6469,5 +6469,10 @@
     },
     "previewLoading": "Displaying the document…",
     "previewError": "Preview unavailable: open the document from the list to compare."
+  },
+  "version": {
+    "available": "A new version is available.",
+    "reload": "Reload",
+    "later": "Later"
   }
 }
