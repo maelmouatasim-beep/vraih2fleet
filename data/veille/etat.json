@@ -3,7 +3,7 @@
     "pave": {
       "programmeId": "pave",
       "url": "https://tc.canada.ca/en/road-transportation/innovative-technologies/electric-vehicles/electric-vehicle-affordability-program",
-      "date": "2026-10-05",
+      "date": "2026-10-06",
       "empreinte": "46ffe3e6",
       "faits": [
         {
@@ -36,7 +36,7 @@
     "roulez_vert": {
       "programmeId": "roulez_vert",
       "url": "https://www.quebec.ca/en/transports/electric-transportation/financial-assistance-electric-vehicle/new-vehicle/amount-financial-assistance",
-      "date": "2026-10-05",
+      "date": "2026-10-06",
       "empreinte": "2bc3df95",
       "faits": [
         {
@@ -69,7 +69,7 @@
     "ecocamionnage_v1": {
       "programmeId": "ecocamionnage_v1",
       "url": "https://www.quebec.ca/transports/aide-financiere/electrification/ecocamionnage/volet-1",
-      "date": "2026-10-05",
+      "date": "2026-10-06",
       "empreinte": "25779daf",
       "faits": [
         {
@@ -87,7 +87,7 @@
     "ecocamionnage_v1:modalites": {
       "programmeId": "ecocamionnage_v1",
       "url": "https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/transports/transports/aide_financiere/electrification/ecocamionnage/Ecocamionnage_Modalites-2025-2028.pdf",
-      "date": "2026-10-05",
+      "date": "2026-10-06",
       "empreinte": "18061346",
       "faits": [
         {
@@ -150,7 +150,7 @@
     "imhzev": {
       "programmeId": "imhzev",
       "url": "https://tc.canada.ca/en/road-transportation/innovative-technologies/zero-emission-vehicles/medium-heavy-duty-zero-emission-vehicles",
-      "date": "2026-10-05",
+      "date": "2026-10-06",
       "empreinte": "f419786f",
       "faits": [
         {
@@ -178,7 +178,7 @@
     "pivez": {
       "programmeId": "pivez",
       "url": "https://ressources-naturelles.canada.ca/efficacite-energetique/efficacite-energetique-transports/pivez",
-      "date": "2026-10-05",
+      "date": "2026-10-06",
       "empreinte": "d9ead859",
       "faits": [
         {
@@ -200,6 +200,270 @@
           "type": "date",
           "valeur": "2027-03-31",
           "extrait": "programme jusqu’au 31 mars 2027, assorti d’un montant supplémentaire de 500 millions de dollars que la Banque de"
+        }
+      ]
+    },
+    "ftcze": {
+      "programmeId": "ftcze",
+      "url": "https://logement-infrastructure.canada.ca/zero-emissions-trans-zero-emissions/index-fra.html",
+      "date": "2026-10-06",
+      "empreinte": "cde4a012",
+      "faits": [
+        {
+          "type": "date",
+          "valeur": "2025-07-24",
+          "extrait": "2025-07-24"
+        }
+      ]
+    },
+    "pagtcp": {
+      "programmeId": "pagtcp",
+      "url": "https://www.quebec.ca/transports/aide-financiere/collectif/transport-personnes",
+      "date": "2026-10-06",
+      "empreinte": "907b0c28",
+      "faits": [
+        {
+          "type": "date",
+          "valeur": "2026-03-24",
+          "extrait": "Le programme est en vigueur du 24 mars 2026 au 31 mars 2028. La réalisation des projets autorisés pendant la durée du PAGTCP peut se prolonger au-delà de la date de fin du programme."
+        },
+        {
+          "type": "date",
+          "valeur": "2028-03-31",
+          "extrait": "Le programme est en vigueur du 24 mars 2026 au 31 mars 2028. La réalisation des projets autorisés pendant la durée du PAGTCP peut se prolonger au-delà de la date de fin du programme."
+        },
+        {
+          "type": "montant",
+          "valeur": "50000000",
+          "extrait": "Volet A : Projets réguliers dont le coût total est inférieur à 50 M$ et projets d’acquisition d’autobus. Ces projets ne sont pas soumis à la Directive sur la gestion des projets majeurs d’infrastructure publique ni à …"
+        },
+        {
+          "type": "date",
+          "valeur": "2027-09-30",
+          "extrait": "avoir été soumis au ministère des Transports et de la Mobilité durable au plus tard le 30 septembre 2027;"
+        },
+        {
+          "type": "montant",
+          "valeur": "20000000",
+          "extrait": "pour un projet régulier ou un projet d’envergure dont les coûts sont estimés à 20 M$ et plus, à l’exception des projets de maintien d’actifs existants, comprendre la présentation d’une étude d’opportunité lors de la d…"
+        },
+        {
+          "type": "date",
+          "valeur": "2026-07-13",
+          "extrait": "13 juillet 2026"
+        }
+      ]
+    },
+    "pagtcp:modalites": {
+      "programmeId": "pagtcp",
+      "url": "https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/transports/transports/aide_financiere/collectif/pagtcp/modalites-2025-2028.pdf",
+      "date": "2026-10-06",
+      "empreinte": "bd1a5b6d",
+      "faits": [
+        {
+          "type": "montant",
+          "valeur": "500000",
+          "extrait": "7.1       Projets dont l’aide financière accordée est égale ou inférieure à 500 000 $ ...................................................... 47"
+        },
+        {
+          "type": "date",
+          "valeur": "2020-11-16",
+          "extrait": "verte 2030 (PEV 2030), dévoilé le 16 novembre 2020, le Québec vise notamment à atteindre sa cible de"
+        },
+        {
+          "type": "date",
+          "valeur": "2028-03-31",
+          "extrait": "31 mars 2028. Toutefois, les dépenses admissibles au présent programme peuvent avoir été engagées à"
+        },
+        {
+          "type": "date",
+          "valeur": "2025-04-01",
+          "extrait": "partir du 1er avril 2025 si les conditions énoncées à l’article 4 du présent document sont respectées. La"
+        },
+        {
+          "type": "montant",
+          "valeur": "50000000",
+          "extrait": "− Volet A : Projets réguliers dont le coût total2 est inférieur à 50 000 000 $ et projets d’acquisition"
+        },
+        {
+          "type": "montant",
+          "valeur": "20000000",
+          "extrait": "à 20 000 000 $ et plus (volet A) et des projets d’envergure (volet B), à l’exception des projets de maintien"
+        },
+        {
+          "type": "date",
+          "valeur": "2027-09-30",
+          "extrait": "− La demande d’aide financière doit avoir été soumise au ministre au plus tard le 30 septembre 2027."
+        },
+        {
+          "type": "montant",
+          "valeur": "1000000",
+          "extrait": "le montant des dépenses totales est inférieur à 20 000 000 $, mais supérieur à 1 000 000 $;"
+        },
+        {
+          "type": "date",
+          "valeur": "1996-08-07",
+          "extrait": "gouvernementaux et publics (décret no 955-96 du 7 août 1996). Le calcul des montants admissibles"
+        },
+        {
+          "type": "montant",
+          "valeur": "25000",
+          "extrait": "subventionné au moment de l’aliénation est de 25 000 $ ou plus, l’aliénation du bien doit être autorisée par"
+        },
+        {
+          "type": "date",
+          "valeur": "2026-04-01",
+          "extrait": "À compter du 1er avril 2026, aucune aide financière ne sera accordée pour l’acquisition d’autobus si le taux"
+        },
+        {
+          "type": "date",
+          "valeur": "2027-04-01",
+          "extrait": "À compter du 1er avril 2027, aucune aide financière ne sera accordée pour l’acquisition d’autobus si le taux"
+        },
+        {
+          "type": "montant",
+          "valeur": "1650000",
+          "extrait": "− 1 650 000 $ pour un autobus électrique régulier;"
+        },
+        {
+          "type": "montant",
+          "valeur": "900000",
+          "extrait": "− 900 000 $ pour un autobus hybride régulier;"
+        },
+        {
+          "type": "montant",
+          "valeur": "2500000",
+          "extrait": "− 2 500 000 $ pour un autobus électrique articulé;"
+        },
+        {
+          "type": "montant",
+          "valeur": "1700000",
+          "extrait": "− 1 700 000 $ pour un autobus hybride articulé;"
+        },
+        {
+          "type": "montant",
+          "valeur": "1200000",
+          "extrait": "− 1 200 000 $ pour un midibus électrique;"
+        },
+        {
+          "type": "montant",
+          "valeur": "750000",
+          "extrait": "− 750 000 $ pour un midibus hybride;"
+        },
+        {
+          "type": "montant",
+          "valeur": "300000",
+          "extrait": "− 300 000 $ pour un minibus accessible aux passagers en fauteuil roulant."
+        },
+        {
+          "type": "montant",
+          "valeur": "2200",
+          "extrait": "− Une aide financière forfaitaire d’un montant de 2 200 $ par autobus peut être accordée pour compenser"
+        },
+        {
+          "type": "montant",
+          "valeur": "34322",
+          "extrait": "− 34 322 $ pour une berline;"
+        },
+        {
+          "type": "montant",
+          "valeur": "30363",
+          "extrait": "− 30 363 $ pour une minifourgonnette;"
+        },
+        {
+          "type": "montant",
+          "valeur": "39603",
+          "extrait": "− 39 603 $ pour un véhicule utilitaire sport;"
+        },
+        {
+          "type": "montant",
+          "valeur": "44880",
+          "extrait": "− 44 880 $ pour une fourgonnette;"
+        },
+        {
+          "type": "montant",
+          "valeur": "50161",
+          "extrait": "− 50 161 $ pour une camionnette (benne ouverte)."
+        },
+        {
+          "type": "montant",
+          "valeur": "434209",
+          "extrait": "maximal de 434 209 $. Il est à noter qu’un véhicule ayant un poids nominal brut égal ou supérieur à 4 500 kg"
+        },
+        {
+          "type": "montant",
+          "valeur": "5511",
+          "extrait": "plafonnées à 5 511 $ par place de stationnement, taxes nettes en sus, en excluant les coûts liés à"
+        },
+        {
+          "type": "montant",
+          "valeur": "11328",
+          "extrait": "Ce montant est haussé à 11 328 $ par place, taxes nettes en sus, pour l’aménagement de stationnements"
+        },
+        {
+          "type": "montant",
+          "valeur": "21000",
+          "extrait": "satisfaction du ministre. Ces dépenses ne pourront cependant pas excéder le plafond de 21 000 $ par mètre"
+        },
+        {
+          "type": "montant",
+          "valeur": "15000",
+          "extrait": "de 15 000 $ par mètre carré."
+        },
+        {
+          "type": "montant",
+          "valeur": "13775",
+          "extrait": "réalisé en structure légère et ayant une superficie d’environ six mètres carrés, est fixé à 13 775 $, taxes"
+        },
+        {
+          "type": "montant",
+          "valeur": "2266",
+          "extrait": "coût maximal admissible ne peut excéder 2 266 $ par mètre carré."
+        },
+        {
+          "type": "montant",
+          "valeur": "1981",
+          "extrait": "− 1 981 $ pour un support à vélos installé sur un autobus;"
+        },
+        {
+          "type": "montant",
+          "valeur": "1320",
+          "extrait": "− 1 320 $ pour les cases à vélos ou les supports à vélos superposés;"
+        },
+        {
+          "type": "montant",
+          "valeur": "950",
+          "extrait": "− 950 $ pour un support à vélos installé dans un train;"
+        },
+        {
+          "type": "montant",
+          "valeur": "660",
+          "extrait": "− 660 $ pour un support à vélos standard sous abris;"
+        },
+        {
+          "type": "montant",
+          "valeur": "131",
+          "extrait": "− 131 $ pour un support non protégé."
+        },
+        {
+          "type": "montant",
+          "valeur": "2171",
+          "extrait": "fonction de sa superficie. Le coût maximal admissible ne peut excéder 2 171 $ par mètre carré. À ce montant"
+        },
+        {
+          "type": "date",
+          "valeur": "2024-09-30",
+          "extrait": "plus tard le 30 septembre 2024, les modalités d’application du PAGTCP sont celles qui étaient"
+        },
+        {
+          "type": "date",
+          "valeur": "2026-10-01",
+          "extrait": "s’appliqueront. Les bénéficiaires ont jusqu’au 1er octobre 2026 pour déposer ces demandes d’aide"
+        },
+        {
+          "type": "date",
+          "valeur": "2026-12-31",
+          "extrait": "partir du 31 décembre 2026."
         }
       ]
     }

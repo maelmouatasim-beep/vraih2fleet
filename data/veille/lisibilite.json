@@ -2,49 +2,55 @@
   "sources": {
     "ecocamionnage_v1": {
       "url": "https://www.quebec.ca/transports/aide-financiere/electrification/ecocamionnage/volet-1",
-      "date": "2026-10-05",
+      "date": "2026-10-06",
       "lu": true,
       "mode": "requete"
     },
     "ecocamionnage_v1:modalites": {
       "url": "https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/transports/transports/aide_financiere/electrification/ecocamionnage/Ecocamionnage_Modalites-2025-2028.pdf",
-      "date": "2026-10-05",
+      "date": "2026-10-06",
       "lu": true,
       "mode": "requete"
     },
     "ftcze": {
       "url": "https://logement-infrastructure.canada.ca/zero-emissions-trans-zero-emissions/index-fra.html",
-      "date": "2026-10-05",
-      "lu": false,
-      "erreur": "fetch failed"
+      "date": "2026-10-06",
+      "lu": true,
+      "mode": "navigateur"
     },
     "imhzev": {
       "url": "https://tc.canada.ca/en/road-transportation/innovative-technologies/zero-emission-vehicles/medium-heavy-duty-zero-emission-vehicles",
-      "date": "2026-10-05",
+      "date": "2026-10-06",
       "lu": true,
       "mode": "requete"
     },
     "pagtcp": {
-      "url": "https://www.transports.gouv.qc.ca/fr/aide-finan/transport-collectif/Pages/transport-collectif.aspx",
-      "date": "2026-10-05",
-      "lu": false,
-      "erreur": "HTTP 403"
+      "url": "https://www.quebec.ca/transports/aide-financiere/collectif/transport-personnes",
+      "date": "2026-10-06",
+      "lu": true,
+      "mode": "requete"
+    },
+    "pagtcp:modalites": {
+      "url": "https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/transports/transports/aide_financiere/collectif/pagtcp/modalites-2025-2028.pdf",
+      "date": "2026-10-06",
+      "lu": true,
+      "mode": "requete"
     },
     "pave": {
       "url": "https://tc.canada.ca/en/road-transportation/innovative-technologies/electric-vehicles/electric-vehicle-affordability-program",
-      "date": "2026-10-05",
+      "date": "2026-10-06",
       "lu": true,
       "mode": "requete"
     },
     "pivez": {
       "url": "https://ressources-naturelles.canada.ca/efficacite-energetique/efficacite-energetique-transports/pivez",
-      "date": "2026-10-05",
+      "date": "2026-10-06",
       "lu": true,
       "mode": "requete"
     },
     "roulez_vert": {
       "url": "https://www.quebec.ca/en/transports/electric-transportation/financial-assistance-electric-vehicle/new-vehicle/amount-financial-assistance",
-      "date": "2026-10-05",
+      "date": "2026-10-06",
       "lu": true,
       "mode": "requete"
     }

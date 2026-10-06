@@ -1,0 +1,79 @@
+{
+  "date": "2026-10-06",
+  "lectures": [
+    {
+      "cle": "pave",
+      "url": "https://tc.canada.ca/en/road-transportation/innovative-technologies/electric-vehicles/electric-vehicle-affordability-program",
+      "mode": "requete",
+      "faits": 5,
+      "detections": 0,
+      "initial": false
+    },
+    {
+      "cle": "roulez_vert",
+      "url": "https://www.quebec.ca/en/transports/electric-transportation/financial-assistance-electric-vehicle/new-vehicle/amount-financial-assistance",
+      "mode": "requete",
+      "faits": 5,
+      "detections": 0,
+      "initial": false
+    },
+    {
+      "cle": "ecocamionnage_v1",
+      "url": "https://www.quebec.ca/transports/aide-financiere/electrification/ecocamionnage/volet-1",
+      "mode": "requete",
+      "faits": 2,
+      "detections": 0,
+      "initial": false
+    },
+    {
+      "cle": "ecocamionnage_v1:modalites",
+      "url": "https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/transports/transports/aide_financiere/electrification/ecocamionnage/Ecocamionnage_Modalites-2025-2028.pdf",
+      "mode": "requete",
+      "faits": 11,
+      "detections": 0,
+      "initial": false
+    },
+    {
+      "cle": "imhzev",
+      "url": "https://tc.canada.ca/en/road-transportation/innovative-technologies/zero-emission-vehicles/medium-heavy-duty-zero-emission-vehicles",
+      "mode": "requete",
+      "faits": 4,
+      "detections": 0,
+      "initial": false
+    },
+    {
+      "cle": "pivez",
+      "url": "https://ressources-naturelles.canada.ca/efficacite-energetique/efficacite-energetique-transports/pivez",
+      "mode": "requete",
+      "faits": 4,
+      "detections": 0,
+      "initial": false
+    },
+    {
+      "cle": "ftcze",
+      "url": "https://logement-infrastructure.canada.ca/zero-emissions-trans-zero-emissions/index-fra.html",
+      "mode": "navigateur",
+      "faits": 1,
+      "detections": 0,
+      "initial": true
+    },
+    {
+      "cle": "pagtcp",
+      "url": "https://www.quebec.ca/transports/aide-financiere/collectif/transport-personnes",
+      "mode": "requete",
+      "faits": 6,
+      "detections": 0,
+      "initial": true
+    },
+    {
+      "cle": "pagtcp:modalites",
+      "url": "https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/transports/transports/aide_financiere/collectif/pagtcp/modalites-2025-2028.pdf",
+      "mode": "requete",
+      "faits": 41,
+      "detections": 0,
+      "initial": true
+    }
+  ],
+  "echecs": [],
+  "detections": []
+}
