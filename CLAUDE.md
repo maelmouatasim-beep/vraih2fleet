@@ -108,7 +108,7 @@ hydrogène : TCO, infrastructure, subventions canadiennes, télématique
   partout (2026-10-06) : connexion d'un compte non confirmé
   (`estNonConfirme`) → écran d'attente `origine="connexion"` ; lien « Vous
   avez reçu un code de confirmation ? » (connexion + inscription →
-  `/auth/verifier?code=1`, `ConfirmerAvecCode`) ; appels partagés dans
+  `/auth/verifier?saisie=1`, `ConfirmerAvecCode`) ; appels partagés dans
   `src/lib/auth/codeConfirmation.ts` ; e2e scénarios 6 et 7.
 - Nouvelle version : `version.json` + `<meta name="h2fleet-version">` écrits
   au build (plugin `versionDuBuild`, `src/lib/version/nouvelleVersion.ts`),

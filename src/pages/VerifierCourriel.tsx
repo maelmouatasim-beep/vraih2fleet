@@ -14,7 +14,8 @@ export default function VerifierCourriel() {
   const location = useLocation();
   const navigate = useNavigate();
   const email = emailPrerempli(location.search);
-  const code = new URLSearchParams(location.search).has("code");
+  // « saisie » et non « code » : ?code= est le retour d’authentification de Supabase.
+  const code = new URLSearchParams(location.search).has("saisie");
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-6">
       <Card className="w-full max-w-md border-0 shadow-xl">

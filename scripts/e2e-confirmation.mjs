@@ -289,6 +289,12 @@ try {
   await pc7.getByTestId("link-have-code").click();
   await pc7.getByTestId("code-confirmation").waitFor({ timeout: 15000 });
   if ((await pc7.getByTestId("code-email").inputValue()) !== e7) throw new Error("7. depuis la connexion : adresse non reprise");
+  // Page rechargée (ou adresse ouverte directement) : toujours la saisie du
+  // code, jamais « Lien invalide » (le paramètre n'est pas « ?code= »).
+  await pc7.reload();
+  await pc7.getByTestId("code-confirmation").waitFor({ timeout: 15000 });
+  if (await pc7.getByTestId("link-error").count()) throw new Error("7. page rechargée prise pour un lien de courriel invalide");
+  if ((await pc7.getByTestId("code-email").inputValue()) !== e7) throw new Error("7. page rechargée : adresse perdue");
   const messageCode = async (adresse, code) => {
     await pc7.getByTestId("code-email").fill(adresse);
     await pc7.getByTestId("code-value").fill(code);

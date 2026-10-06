@@ -61,8 +61,8 @@ export function lienConnexion(email: string): string {
 export function lienCodeConfirmation(email = ""): string {
   const e = email.trim();
   return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e) && e.length <= 254
-    ? `/auth/verifier?code=1&email=${encodeURIComponent(e)}`
-    : "/auth/verifier?code=1";
+    ? `/auth/verifier?saisie=1&email=${encodeURIComponent(e)}`
+    : "/auth/verifier?saisie=1";
 }
 
 /** Vrai si l'erreur de connexion signifie « compte pas encore confirmé » (mot de passe correct). */

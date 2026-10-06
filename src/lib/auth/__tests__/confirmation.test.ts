@@ -116,9 +116,14 @@ describe("garde-fous du parcours", () => {
 
 describe("code de confirmation saisissable hors de l'écran post-inscription (test réel du 2026-10-06)", () => {
   it("lien « Vous avez reçu un code ? » : adresse reprise seulement si valide", () => {
-    expect(lienCodeConfirmation()).toBe("/auth/verifier?code=1");
-    expect(lienCodeConfirmation("  a.b@exemple.ca ")).toBe("/auth/verifier?code=1&email=a.b%40exemple.ca");
-    expect(lienCodeConfirmation("pas-une-adresse")).toBe("/auth/verifier?code=1");
+    expect(lienCodeConfirmation()).toBe("/auth/verifier?saisie=1");
+    expect(lienCodeConfirmation("  a.b@exemple.ca ")).toBe("/auth/verifier?saisie=1&email=a.b%40exemple.ca");
+    expect(lienCodeConfirmation("pas-une-adresse")).toBe("/auth/verifier?saisie=1");
+    // Jamais « ?code= » : c'est le paramètre de retour d'authentification de
+    // Supabase, la page rechargée serait prise pour un lien de courriel invalide.
+    const requete = lienCodeConfirmation("a@b.ca").slice("/auth/verifier".length);
+    expect(lireRetourAuth("", requete)).toBeNull();
+    expect(lireRetourAuth("", "?code=1")).not.toBeNull();
   });
 
   it("compte non confirmé = code email_not_confirmed (mot de passe correct) ; un mauvais mot de passe reste une erreur générique", () => {
