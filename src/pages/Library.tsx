@@ -39,7 +39,10 @@ import { formateurCad, formateurNombre } from "@/lib/format";
 import { ArrowRight, ExternalLink, Plug } from "lucide-react";
 import { cumulProgramme, descriptionHypothese, nomProgramme } from "@/lib/tco/translations-en";
 import { StatusBadge } from "@/components/layout/States";
-import { ton, TON_PROGRAMME, TON_VERIFICATION } from "@/components/layout/tons";
+import { ton, TON_LECTURE, TON_PROGRAMME, TON_VERIFICATION } from "@/components/layout/tons";
+import { etatLecture, type Lisibilite } from "@/lib/veille/lisibilite";
+// État de lecture de chaque source, écrit chaque semaine par la veille.
+import lisibiliteVeille from "../../data/veille/lisibilite.json";
 import { StatCard, StatGrid } from "@/components/layout/StatCard";
 
 const selectCls =
@@ -197,8 +200,9 @@ export default function Library() {
             {PROGRAMMES.map((prog) => {
               const statutProg = statutEffectif(prog, aujourdHui);
               const plafondMax = Math.max(...prog.baremes.map((b) => b.plafondParVehicule), 0);
+              const lecture = etatLecture(prog.id, prog.source.url, lisibiliteVeille as Lisibilite);
               return (
-                <Card key={prog.id}>
+                <Card key={prog.id} data-testid={`library-program-${prog.id}`}>
                   <CardContent className="py-4 space-y-2">
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <p className="font-medium">{nomProgramme(prog.id, langue)}</p>
@@ -207,8 +211,19 @@ export default function Library() {
                           {t(`journey.financing.status.${statutProg}`, { date: prog.dateFin })}
                         </StatusBadge>
                         {badgeStatut(prog.statutVerification)}
+                        {lecture.etat === "manuelle" && (
+                          <StatusBadge ton={ton(TON_LECTURE, "manuelle")} data-testid={`library-program-manual-${prog.id}`}>
+                            {t("library.reading.manual")}
+                          </StatusBadge>
+                        )}
                       </div>
                     </div>
+                    {lecture.etat === "manuelle" && (
+                      <div className="rounded-lg border border-amber-400/60 bg-amber-50 dark:bg-amber-950/30 p-3 text-sm space-y-1">
+                        <p>{t("library.reading.manualExplain", { date: lecture.date, erreur: lecture.erreur })}</p>
+                        <p className="text-muted-foreground">{prog.quoiVerifier?.[langue] ?? t("library.reading.generic")}</p>
+                      </div>
+                    )}
                     <div className="text-sm text-muted-foreground space-y-1">
                       {plafondMax > 0 && (
                         <p>{t("journey.financing.maxPerVehicle", { amount: argent.format(plafondMax) })}</p>
@@ -218,6 +233,11 @@ export default function Library() {
                     </div>
                     <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                       <span>{t("library.checkedOn", { date: prog.dateVerification })}</span>
+                      {lecture.etat === "lue" && (
+                        <span>
+                          · {t(lecture.mode === "navigateur" ? "library.reading.readOnBrowser" : "library.reading.readOn", { date: lecture.date })}
+                        </span>
+                      )}
                       <a
                         href={prog.source.url}
                         target="_blank"
@@ -226,6 +246,16 @@ export default function Library() {
                       >
                         {prog.source.organisme} <ExternalLink className="w-3 h-3" />
                       </a>
+                      {prog.modalitesUrl && (
+                        <a
+                          href={prog.modalitesUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 underline underline-offset-2 hover:text-foreground"
+                        >
+                          {t("library.reading.modalites")} <ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
                     </div>
                   </CardContent>
                 </Card>

@@ -251,14 +251,14 @@ Source : [Logement, Infrastructures et Collectivités Canada — Fonds pour le t
 
 ### Programme d’aide gouvernementale au transport collectif (Québec, MTMD) — électrification des autobus
 
-Palier : provincial — cible : vehicule — **statut : actif** (⚠️ à valider, le 2026-09-28)
+Palier : provincial — cible : vehicule — **statut : actif** (✅ vérifié, le 2026-10-06) — fin : 2028-03-31
 
-Source : [MTMD (Québec) — Programmes d’aide au transport collectif](https://www.transports.gouv.qc.ca/fr/aide-finan/transport-collectif/Pages/transport-collectif.aspx)
+Source : [MTMD (Québec) — PAGTCP — Modalités d’application 2025-2028 (mars 2026) : art. 2.2 (durée), 5.2 (taux), 6.1 (autobus, coûts maximaux admissibles)](https://www.quebec.ca/transports/aide-financiere/collectif/transport-personnes)
 
-- autobus_urbain_12m × BEV/FCEV : montant du projet à saisir (jamais compté automatiquement) — Aide au surcoût d’électrification des sociétés de transport (taux et enveloppes par décret) — saisir le montant réel du projet. Plafond 0 = jamais compté automatiquement.
+- autobus_urbain_12m × BEV/FCEV : montant du projet à saisir (jamais compté automatiquement) — Aide en % des dépenses admissibles d’une commande autorisée par le ministre (90 % pour un autobus entièrement électrique, coût admissible plafonné à 1 650 000 $ pour un autobus régulier) — saisir le montant réel autorisé. Plafond 0 = jamais compté automatiquement.
 - Cumul : Se combine au FTCZE fédéral dans les projets récents (ex. commandes ATUQ).
 - Année de versement par défaut : année suivant l’acquisition (après livraison/approbation)
-- Notes : Ni le statut ni les taux n’ont pu être lus depuis l’environnement — À VALIDER avant tout calcul autobus.
+- Notes : VÉRIFIÉ (page quebec.ca et PDF des modalités 2025-2028 lus le 2026-10-06 ; l’ancienne page transports.gouv.qc.ca répond HTTP 403 aux robots) : programme en vigueur jusqu’au 31 mars 2028, dépenses admissibles depuis le 1er avril 2025 (art. 2.2). Sociétés de transport, ARTM, exo (art. 5.2) : 90 % pour l’acquisition (ajout ou remplacement) d’autobus entièrement électriques ou hybrides ; 85 % pour les véhicules de service entièrement électriques. Coût d’acquisition maximal admissible, taxes nettes en sus (art. 6.1) : 1 650 000 $ autobus électrique régulier, 2 500 000 $ articulé, 1 200 000 $ midibus électrique. Le surcoût des autobus électriques est financé par le FECC. Aide accordée par commande autorisée : NON COMPTÉE automatiquement, saisir le montant réel (Financement › subventions confirmées).
 
 ## À valider en priorité (sources inaccessibles depuis l’environnement)
 
@@ -275,4 +275,3 @@ Source : [MTMD (Québec) — Programmes d’aide au transport collectif](https:/
 - Baisse annuelle attendue du prix des packs batterie (désactivée par défaut dans le moteur) → https://about.bnef.com/insights/clean-transport/lithium-ion-battery-pack-prices-fall-to-108-per-kilowatt-hour-despite-rising-metal-prices-bloombergnef/
 - Taux de change USD → CAD (véhicules importés des É.-U.) → https://www.banqueducanada.ca/taux/taux-de-change/
 - Droits de douane sur les VE fabriqués en Chine (régime de quota de février 2026) → https://www.canada.ca/fr/ministere-finances/nouvelles/2024/08/surtaxe-sur-les-vehicules-electriques-fabriques-en-chine.html
-- Programme d’aide gouvernementale au transport collectif (Québec, MTMD) — électrification des autobus → https://www.transports.gouv.qc.ca/fr/aide-finan/transport-collectif/Pages/transport-collectif.aspx

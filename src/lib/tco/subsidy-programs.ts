@@ -77,6 +77,14 @@ export interface ProgrammeSubvention {
   dateVerification: string;
   statutVerification: StatutHypothese;
   notes?: string;
+  /** Veille : PDF de modalités à relire (sinon le premier lien « modalités » de la page). */
+  modalitesUrl?: string;
+  /** Veille : site qui refuse les robots simples (HTTP 403, connexion coupée) →
+   *  relecture par un vrai navigateur (Chromium) si la lecture simple échoue. */
+  lectureNavigateur?: boolean;
+  /** Ce qu'il faut lire soi-même quand la veille n'a pas pu lire la source
+   *  (la Bibliothèque affiche alors « vérification manuelle requise »). */
+  quoiVerifier?: { fr: string; en: string };
 }
 
 const V = '2026-09-28';
@@ -336,6 +344,17 @@ export const PROGRAMMES: ProgrammeSubvention[] = [
       annee: 2026,
       url: 'https://logement-infrastructure.canada.ca/zero-emissions-trans-zero-emissions/index-fra.html',
     },
+    lectureNavigateur: true,
+    quoiVerifier: {
+      fr:
+        'Sur la page, chercher la phrase « La période de soumission des demandes … est maintenant terminée » ' +
+        '(guichet fermé) ou, au contraire, un nouvel appel de demandes avec sa date limite ; noter tout ' +
+        'montant par projet annoncé et la date « Date de modification » en bas de page.',
+      en:
+        'On the page, look for the sentence stating that the application intake period "is now closed" ' +
+        '(window closed) or, instead, a new call for applications with its deadline; note any per-project ' +
+        'amount announced and the "Date modified" at the bottom of the page.',
+    },
     dateVerification: V,
     statutVerification: 'verifie',
     notes:
@@ -357,21 +376,45 @@ export const PROGRAMMES: ProgrammeSubvention[] = [
         technologies: ['BEV', 'FCEV'],
         plafondParVehicule: 0,
         notes:
-          'Aide au surcoût d’électrification des sociétés de transport (taux et enveloppes par décret) — ' +
-          'saisir le montant réel du projet. Plafond 0 = jamais compté automatiquement.',
+          'Aide en % des dépenses admissibles d’une commande autorisée par le ministre (90 % pour un autobus ' +
+          'entièrement électrique, coût admissible plafonné à 1 650 000 $ pour un autobus régulier) — ' +
+          'saisir le montant réel autorisé. Plafond 0 = jamais compté automatiquement.',
       },
     ],
     cumul: 'Se combine au FTCZE fédéral dans les projets récents (ex. commandes ATUQ).',
     anneeVersementDefaut: 1,
+    dateFin: '2028-03-31',
     source: {
       organisme: 'MTMD (Québec)',
-      document: 'Programmes d’aide au transport collectif',
+      document:
+        'PAGTCP — Modalités d’application 2025-2028 (mars 2026) : art. 2.2 (durée), 5.2 (taux), 6.1 (autobus, coûts maximaux admissibles)',
       annee: 2026,
-      url: 'https://www.transports.gouv.qc.ca/fr/aide-finan/transport-collectif/Pages/transport-collectif.aspx',
+      url: 'https://www.quebec.ca/transports/aide-financiere/collectif/transport-personnes',
     },
-    dateVerification: V,
-    statutVerification: 'a_valider',
-    notes: 'Ni le statut ni les taux n’ont pu être lus depuis l’environnement — À VALIDER avant tout calcul autobus.',
+    quoiVerifier: {
+      fr:
+        'Sur la page quebec.ca, vérifier la période « Le programme est en vigueur du … au 31 mars 2028 » ; ' +
+        'dans le PDF « Modalités d’application 2025-2028 », lire l’art. 5.2 (taux : 90 % pour un autobus ' +
+        'entièrement électrique) et l’art. 6.1, « Spécificités pour les dépenses admissibles » (coût maximal ' +
+        'admissible : 1 650 000 $ pour un autobus électrique régulier).',
+      en:
+        'On the quebec.ca page, check the period "Le programme est en vigueur du … au 31 mars 2028"; in the ' +
+        'PDF "Modalités d’application 2025-2028", read s. 5.2 (rate: 90% for a fully electric bus) and s. 6.1, ' +
+        '"Spécificités pour les dépenses admissibles" (maximum eligible cost: $1,650,000 for a regular electric bus).',
+    },
+    modalitesUrl:
+      'https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/transports/transports/aide_financiere/collectif/pagtcp/modalites-2025-2028.pdf',
+    dateVerification: '2026-10-06',
+    statutVerification: 'verifie',
+    notes:
+      'VÉRIFIÉ (page quebec.ca et PDF des modalités 2025-2028 lus le 2026-10-06 ; l’ancienne page ' +
+      'transports.gouv.qc.ca répond HTTP 403 aux robots) : programme en vigueur jusqu’au 31 mars 2028, ' +
+      'dépenses admissibles depuis le 1er avril 2025 (art. 2.2). Sociétés de transport, ARTM, exo (art. 5.2) : ' +
+      '90 % pour l’acquisition (ajout ou remplacement) d’autobus entièrement électriques ou hybrides ; 85 % pour ' +
+      'les véhicules de service entièrement électriques. Coût d’acquisition maximal admissible, taxes nettes en ' +
+      'sus (art. 6.1) : 1 650 000 $ autobus électrique régulier, 2 500 000 $ articulé, 1 200 000 $ midibus ' +
+      'électrique. Le surcoût des autobus électriques est financé par le FECC. Aide accordée par commande ' +
+      'autorisée : NON COMPTÉE automatiquement, saisir le montant réel (Financement › subventions confirmées).',
   },
 ];
 

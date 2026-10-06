@@ -17,6 +17,9 @@ export const TON_PROGRAMME = { actif: "succes", ferme: "danger", echu: "danger",
 /** Statut de vérification d'une hypothèse ou d'un programme. */
 export const TON_VERIFICATION = { verifie: "succes", estimation: "info", a_valider: "attention" } as const satisfies Record<string, Ton>;
 
+/** Lecture de la source d'un programme par la veille (manuelle = à vérifier soi-même). */
+export const TON_LECTURE = { lue: "succes", manuelle: "attention" } as const satisfies Record<string, Ton>;
+
 /** Provenance d'une donnée véhicule : mesurée ou saisie (succès) vs estimée. */
 export const TON_SOURCE = { telematique: "succes", import: "succes", saisie: "succes", estimation: "info" } as const satisfies Record<string, Ton>;
 

@@ -219,7 +219,7 @@ jobs:
           python3 -c "import re,html;t=open('archive/ftcze.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/ftcze.txt','w').write(t)" || true
           echo "=== FTCZE STATUT/GUICHET ==="
           grep -o -E ".{250}(demande|guichet|fermé|ouvert|contribution|50 %|50%).{350}" archive/ftcze.txt | head -16 || true
-          curl -sL --max-time 90 "https://www.transports.gouv.qc.ca/fr/aide-finan/transport-collectif/Pages/transport-collectif.aspx" -o archive/pagtcp.html || true
+          curl -sL --max-time 90 "https://www.quebec.ca/transports/aide-financiere/collectif/transport-personnes" -o archive/pagtcp.html || true
           python3 -c "import re,html;t=open('archive/pagtcp.html',encoding='utf-8',errors='ignore').read();t=re.sub(r'<script.*?</script>','',t,flags=re.S);t=re.sub(r'<style.*?</style>','',t,flags=re.S);t=html.unescape(re.sub(r'<[^>]+>',' ',t));t=re.sub(r'[ \t]+',' ',t);open('archive/pagtcp.txt','w').write(t)" || true
           echo "=== PAGTCP ÉLECTRIFICATION ==="
           grep -o -E ".{250}(électri|autobus|taux|aide).{350}" archive/pagtcp.txt | head -16 || true
@@ -241,7 +241,7 @@ jobs:
             ['pave-rendu-fr', 'https://tc.canada.ca/fr/transport-routier/technologies-novatrices/vehicules-electriques/programme-abordabilite-vehicules-electriques'],
             ['tvq-municipalites-rendu', 'https://www.revenuquebec.ca/fr/entreprises/taxes/tpstvh-et-tvq/situations-particulieres-liees-a-la-tpstvh-et-a-la-tvq/organismes-de-services-publics-tpstvh-et-tvq/remboursement-de-tps-et-de-tvq-accorde-aux-osp/depenses-qui-donnent-droit-au-remboursement/remboursement-partiel-de-la-tvq-aux-municipalites-et-aux-organismes-designes-comme-municipalites/'],
             ['taux-taxes-rendu', 'https://www.revenuquebec.ca/fr/entreprises/taxes/tpstvh-et-tvq/perception-de-la-tps-et-de-la-tvq/calcul-des-taxes/'],
-            ['pagtcp-rendu', 'https://www.transports.gouv.qc.ca/fr/aide-finan/transport-collectif/Pages/transport-collectif.aspx'],
+            ['pagtcp-rendu', 'https://www.quebec.ca/transports/aide-financiere/collectif/transport-personnes'],
           ];
           const nav = await chromium.launch();
           const ctx = await nav.newContext({ locale: 'fr-CA', userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36' });

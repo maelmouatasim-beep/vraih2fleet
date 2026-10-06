@@ -35,6 +35,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+
+      # Chromium : repli pour les sites qui refusent les robots simples
+      # (programmes marqués `lectureNavigateur`, ex. FTCZE).
+      - name: Installer les dépendances et Chromium
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install chromium --with-deps
 
       - name: Installer poppler (pdftotext)
         run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils

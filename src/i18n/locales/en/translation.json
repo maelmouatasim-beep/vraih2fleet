@@ -4858,6 +4858,14 @@
       },
       "sources": "Sources",
       "note": "A quote entered for a vehicle replaces its category's default price; it is then flagged as “client data” in reports."
+    },
+    "reading": {
+      "manual": "Manual check required",
+      "manualExplain": "The automated watch could not read this page on {{date}} ({{erreur}}). Read it yourself:",
+      "generic": "Open the official page and check the program status, amounts and deadlines.",
+      "readOn": "read by the watch on {{date}}",
+      "readOnBrowser": "read by the watch on {{date}} (browser)",
+      "modalites": "Terms (PDF)"
     }
   },
   "organization": {

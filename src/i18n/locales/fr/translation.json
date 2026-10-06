@@ -4858,6 +4858,14 @@
       },
       "sources": "Sources",
       "note": "Un devis saisi pour un véhicule remplace le prix par défaut de sa catégorie ; il est alors signalé « donnée client » dans les rapports."
+    },
+    "reading": {
+      "manual": "Vérification manuelle requise",
+      "manualExplain": "La veille automatique n’a pas pu lire cette page le {{date}} ({{erreur}}). À lire vous-même :",
+      "generic": "Ouvrir la page officielle et vérifier le statut du programme, les montants et les dates limites.",
+      "readOn": "relue par la veille le {{date}}",
+      "readOnBrowser": "relue par la veille le {{date}} (navigateur)",
+      "modalites": "Modalités (PDF)"
     }
   },
   "organization": {

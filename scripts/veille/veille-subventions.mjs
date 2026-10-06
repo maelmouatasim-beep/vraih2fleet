@@ -25,6 +25,7 @@ import { join } from "node:path";
 import { randomBytes } from "node:crypto";
 import { PROGRAMMES } from "../../src/lib/tco/subsidy-programs.ts";
 import { comparerLectures, empreinte, faitsSurveilles, texteDepuisHtml } from "../../src/lib/veille/detection.ts";
+import { enregistrerLecture } from "../../src/lib/veille/lisibilite.ts";
 
 const args = process.argv.slice(2);
 const opt = (nom) => {
@@ -37,9 +38,13 @@ const SQL_LOCAL = args.includes("--sql-local");
 const RACINE = "data/veille";
 const DOSSIER = join(RACINE, JOUR);
 const ETAT = join(RACINE, "etat.json");
+// Lisibilité de chaque source (lue / échec + raison) : lue par la Bibliothèque
+// pour afficher « vérification manuelle requise ».
+const LISIBILITE = join(RACINE, "lisibilite.json");
 mkdirSync(DOSSIER, { recursive: true });
 
 const etat = existsSync(ETAT) ? JSON.parse(readFileSync(ETAT, "utf8")) : { sources: {} };
+let lisibilite = existsSync(LISIBILITE) ? JSON.parse(readFileSync(LISIBILITE, "utf8")) : { sources: {} };
 
 async function lire(cle, url) {
   if (ENTREES) {
@@ -52,7 +57,11 @@ async function lire(cle, url) {
     }
     return null;
   }
-  const r = await fetch(url, { headers: { "User-Agent": "H2Fleet-veille/1.0 (+https://maelmouatasim-beep.github.io/vraih2fleet/)" }, redirect: "follow" });
+  const r = await fetch(url, {
+    headers: { "User-Agent": "H2Fleet-veille/1.0 (+https://maelmouatasim-beep.github.io/vraih2fleet/)" },
+    redirect: "follow",
+    signal: AbortSignal.timeout(45_000),
+  });
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   const type = r.headers.get("content-type") ?? "";
   if (type.includes("pdf") || url.toLowerCase().endsWith(".pdf")) {
@@ -63,6 +72,31 @@ async function lire(cle, url) {
   }
   const html = await r.text();
   return { type: "html", texte: texteDepuisHtml(html), html };
+}
+
+/**
+ * Repli pour les sites qui refusent les robots simples (HTTP 403, connexion
+ * coupée — ex. FTCZE, logement-infrastructure.canada.ca) : la page est lue
+ * par un vrai navigateur (Chromium, Playwright), comme verify-tco-sources.
+ * Réservé aux programmes marqués `lectureNavigateur` dans le registre.
+ */
+let navigateur = null;
+async function lireNavigateur(url) {
+  const { chromium } = await import("playwright");
+  // CHROMIUM_PATH : navigateur déjà installé (développement local).
+  navigateur ??= await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
+  const page = await navigateur.newPage({
+    locale: "fr-CA",
+    userAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36",
+  });
+  try {
+    const r = await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60_000 });
+    if (!r || !r.ok()) throw new Error(`HTTP ${r?.status() ?? "?"} (navigateur)`);
+    const html = await page.content();
+    return { type: "html", texte: texteDepuisHtml(html), html };
+  } finally {
+    await page.close();
+  }
 }
 
 /** Lien du PDF de modalités référencé par une page (Écocamionnage). */
@@ -76,18 +110,29 @@ const detections = [];
 const lectures = [];
 const echecs = [];
 
-async function traiter(programmeId, cle, url) {
+function echec(cle, url, erreur) {
+  echecs.push({ cle, url, erreur });
+  lisibilite = enregistrerLecture(lisibilite, cle, { url, date: JOUR, lu: false, erreur });
+  return null;
+}
+
+async function traiter(programmeId, cle, url, { navigateurSiEchec = false } = {}) {
   let lu;
+  let mode = "requete";
   try {
     lu = await lire(cle, url);
   } catch (e) {
-    echecs.push({ cle, url, erreur: String(e.message ?? e) });
-    return null;
+    const erreur = String(e.message ?? e);
+    if (!navigateurSiEchec || ENTREES) return echec(cle, url, erreur);
+    try {
+      lu = await lireNavigateur(url);
+      mode = "navigateur";
+    } catch (e2) {
+      return echec(cle, url, `${erreur} ; navigateur : ${String(e2.message ?? e2)}`);
+    }
   }
-  if (!lu || !lu.texte.trim()) {
-    echecs.push({ cle, url, erreur: "texte vide" });
-    return null;
-  }
+  if (!lu || !lu.texte.trim()) return echec(cle, url, "texte vide");
+  lisibilite = enregistrerLecture(lisibilite, cle, { url, date: JOUR, lu: true, mode });
   const fichier = join(DOSSIER, `${cle.replace(/[:/]/g, "_")}.txt`);
   writeFileSync(fichier, lu.texte);
   const faits = faitsSurveilles(lu.texte);
@@ -95,17 +140,24 @@ async function traiter(programmeId, cle, url) {
   const nouvelles = comparerLectures(programmeId, url, precedent?.faits ?? null, faits).map((d) => ({ ...d, archive: fichier }));
   detections.push(...nouvelles);
   etat.sources[cle] = { programmeId, url, date: JOUR, empreinte: empreinte(lu.texte), faits };
-  lectures.push({ cle, url, faits: faits.length, detections: nouvelles.length, initial: !precedent });
+  lectures.push({ cle, url, mode, faits: faits.length, detections: nouvelles.length, initial: !precedent });
   return lu;
 }
 
 for (const p of PROGRAMMES) {
-  const lu = await traiter(p.id, p.id, p.source.url);
-  const pdf = lu ? lienModalites(lu.html, p.source.url) : null;
+  const lu = await traiter(p.id, p.id, p.source.url, { navigateurSiEchec: p.lectureNavigateur === true });
+  // PDF de modalités : celui que nomme le registre (version en vigueur), sinon
+  // le premier lien « modalités » de la page.
+  const pdf = p.modalitesUrl ?? (lu ? lienModalites(lu.html, p.source.url) : null);
   if (pdf) await traiter(p.id, `${p.id}:modalites`, pdf);
 }
+await navigateur?.close();
 
 writeFileSync(ETAT, JSON.stringify(etat, null, 2) + "\n");
+writeFileSync(
+  LISIBILITE,
+  JSON.stringify({ sources: Object.fromEntries(Object.entries(lisibilite.sources).sort(([a], [b]) => a.localeCompare(b))) }, null, 2) + "\n",
+);
 writeFileSync(join(DOSSIER, "detections.json"), JSON.stringify({ date: JOUR, lectures, echecs, detections }, null, 2) + "\n");
 
 // ── Dépôt dans la file de validation ────────────────────────────────────
@@ -152,5 +204,6 @@ if (detections.length > 0) {
 }
 
 console.log(`Veille du ${JOUR} : ${lectures.length} source(s) lue(s), ${echecs.length} échec(s), ${detections.length} changement(s) détecté(s), ${deposees} déposé(s) dans la file de validation.`);
-for (const l of lectures) console.log(`  ${l.initial ? "état initial" : "comparée"} — ${l.cle} : ${l.faits} faits, ${l.detections} changement(s)`);
-for (const e of echecs) console.log(`  ÉCHEC — ${e.cle} (${e.url}) : ${e.erreur}`);
+for (const l of lectures)
+  console.log(`  ${l.initial ? "état initial" : "comparée"} — ${l.cle}${l.mode === "navigateur" ? " (navigateur)" : ""} : ${l.faits} faits, ${l.detections} changement(s)`);
+for (const e of echecs) console.log(`  ÉCHEC — ${e.cle} (${e.url}) : ${e.erreur} — vérification manuelle requise`);
