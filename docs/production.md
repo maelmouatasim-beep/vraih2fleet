@@ -209,9 +209,10 @@ d'IONOS.**
    Gmail, puis « Afficher l'original ». Tu dois lire SPF **PASS**, DKIM
    **PASS** (`d=h2fleet.ca`) et DMARC **PASS**. Faire de même avec le
    courriel de confirmation d'inscription.
-4. **Formulaire de contact** : créer chez IONOS une boîte ou un alias
-   (ex. `contact@h2fleet.ca`) et poser le secret `CONTACT_INBOX_EMAIL`.
-   Pas de Cloudflare Email Routing : il remplacerait les MX d'IONOS.
+4. **Formulaire de contact** : la boîte `contact@h2fleet.ca` existe déjà
+   chez IONOS ; poser le secret `CONTACT_INBOX_EMAIL` avec cette adresse.
+   Ne JAMAIS activer Cloudflare Email Routing : il remplacerait les MX
+   d'IONOS (la réception du courriel passerait par Cloudflare).
 5. **Plus tard (Brevo)** : voir `docs/deploiement.md` — un seul SPF
    fusionné, jamais deux.
 
