@@ -13,14 +13,19 @@
  *   3. autre appareil sans code : « Me connecter » (adresse préremplie) ;
  *   4. lien expiré / déjà utilisé → message clair + « Renvoyer un lien »
  *      (réponse neutre), aussi depuis les paramètres error / error_code ;
- *   5. inscription avec une adresse déjà inscrite → même écran d'attente.
+ *   5. inscription avec une adresse déjà inscrite → même écran d'attente ;
+ *   6. retour plus tard : connexion sur un compte non confirmé → écran
+ *      d'attente (code, renvoi, modifier l'adresse) ; mauvais mot de passe =
+ *      même erreur qu'une adresse inconnue ;
+ *   7. « Vous avez reçu un code de confirmation ? » (connexion, inscription)
+ *      → adresse + code ; adresse inconnue = même message qu'un mauvais code.
  *
  *   E2E_BASE=http://127.0.0.1:8080 node scripts/e2e-confirmation.mjs            # URL propres (production)
  *   E2E_BASE=http://127.0.0.1:4173/vraih2fleet E2E_HASH=1 node scripts/e2e-confirmation.mjs   # routage par hash (GitHub Pages)
  * Requiert API_URL et SERVICE_ROLE_KEY (supabase status -o env).
  */
 import { chromium } from "playwright";
-import { existsSync, mkdirSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const BASE = (process.env.E2E_BASE ?? "http://127.0.0.1:8080").replace(/\/$/, "");
@@ -32,6 +37,7 @@ if (!SERVICE || !/^http:\/\/(127\.0\.0\.1|localhost)/.test(API)) throw new Error
 const route = (chemin) => (HASH ? `${BASE}/#${chemin}` : `${BASE}${chemin}`);
 const redirection = HASH ? `${BASE}/` : `${BASE}/auth/confirme`;
 const MDP = "Confirm2026!x";
+const TEXTES = JSON.parse(readFileSync("src/i18n/locales/fr/translation.json", "utf8"));
 const CHROMIUM_LOCAL = "/opt/pw-browsers/chromium";
 const journal = [];
 const etape = (m) => {
@@ -230,6 +236,77 @@ try {
   await ins.getByTestId("signup-confirmation").waitFor({ timeout: 20000 });
   if (await ins.getByText(/déjà utilisée|already/i).count()) throw new Error("énumération : l'adresse existante est signalée");
   etape("5. inscription avec une adresse déjà inscrite : même écran « Vérifiez vos courriels », rien ne révèle le compte");
+
+  // ── 6. Retour plus tard : connexion sur un compte non confirmé ───────────
+  // Plus d'erreur : l'écran d'attente (code, renvoi, modifier l'adresse)
+  // avec l'adresse préremplie. Un MAUVAIS mot de passe, lui, donne la même
+  // erreur qu'une adresse inconnue (pas d'énumération).
+  const e6 = unique("retour");
+  const l6 = await lien(e6);
+  const ctxE = await contexte();
+  const cnx = await ctxE.newPage();
+  const essaiConnexion = async (adresse, mdp) => {
+    await cnx.goto(route("/login"));
+    await cnx.locator("#email").fill(adresse);
+    await cnx.locator("#password").fill(mdp);
+    await cnx.locator("form button[type=submit]").click();
+  };
+  const ERREUR_IDENTIFIANTS = TEXTES.auth.errors.codes.invalidCredentials;
+  await essaiConnexion(unique("inconnue"), "Mauvais2026!x");
+  await cnx.getByText(ERREUR_IDENTIFIANTS).first().waitFor({ timeout: 15000 });
+  await essaiConnexion(e6, "Mauvais2026!x");
+  await cnx.getByText(ERREUR_IDENTIFIANTS).first().waitFor({ timeout: 15000 });
+  if (await cnx.getByTestId("login-unconfirmed").count()) throw new Error("6. mauvais mot de passe : l'écran d'attente révèle le compte");
+  await essaiConnexion(e6, MDP);
+  await cnx.getByTestId("login-unconfirmed").waitFor({ timeout: 15000 });
+  if (!(await cnx.getByTestId("confirmation-email").innerText()).includes(e6)) throw new Error("6. adresse absente de l'écran d'attente");
+  if (await cnx.getByTestId("confirmation-resend").isDisabled()) throw new Error("6. « Renvoyer » devrait être disponible tout de suite");
+  await cnx.getByTestId("confirmation-change-email").click();
+  if ((await cnx.locator("#email").inputValue()) !== e6) throw new Error("6. « Modifier l'adresse » : formulaire sans l'adresse");
+  await cnx.locator("#password").fill(MDP);
+  await cnx.locator("form button[type=submit]").click();
+  await cnx.getByTestId("login-unconfirmed").waitFor({ timeout: 15000 });
+  await cnx.getByTestId("otp-code").fill("000000");
+  await cnx.getByTestId("otp-submit").click();
+  await cnx.getByTestId("otp-error").waitFor({ timeout: 15000 });
+  await cnx.getByTestId("otp-code").fill(l6.code);
+  await cnx.getByTestId("otp-submit").click();
+  await cnx.getByTestId("email-confirmed").waitFor({ timeout: 20000 });
+  await surEspace(cnx, "6. après le code saisi à la connexion");
+  etape("6. connexion sur un compte non confirmé : écran d'attente (adresse préremplie, renvoi disponible, modifier l'adresse), code → espace ; mauvais mot de passe = même erreur qu'une adresse inconnue");
+
+  // ── 7. « Vous avez reçu un code de confirmation ? » ──────────────────────
+  const e7 = unique("lien-code");
+  const l7 = await lien(e7);
+  const ctxF = await contexte();
+  const pc7 = await ctxF.newPage();
+  await pc7.goto(route("/signup"));
+  await pc7.getByTestId("link-have-code").click();
+  await pc7.getByTestId("code-confirmation").waitFor({ timeout: 15000 });
+  if ((await pc7.getByTestId("code-email").inputValue()) !== "") throw new Error("7. depuis l'inscription : adresse inattendue");
+  await pc7.goto(route("/login"));
+  await pc7.locator("#email").fill(e7);
+  await pc7.getByTestId("link-have-code").click();
+  await pc7.getByTestId("code-confirmation").waitFor({ timeout: 15000 });
+  if ((await pc7.getByTestId("code-email").inputValue()) !== e7) throw new Error("7. depuis la connexion : adresse non reprise");
+  const messageCode = async (adresse, code) => {
+    await pc7.getByTestId("code-email").fill(adresse);
+    await pc7.getByTestId("code-value").fill(code);
+    await pc7.getByTestId("code-submit").click();
+    await pc7.getByTestId("code-error").waitFor({ timeout: 15000 });
+    const m = await pc7.getByTestId("code-error").innerText();
+    await pc7.getByTestId("code-value").fill("");
+    return m;
+  };
+  const inconnue = await messageCode(unique("jamais-inscrite"), "123456");
+  const mauvais = await messageCode(e7, "000000");
+  if (inconnue !== mauvais) throw new Error(`7. énumération : « ${inconnue} » ≠ « ${mauvais} »`);
+  await pc7.getByTestId("code-email").fill(e7);
+  await pc7.getByTestId("code-value").fill(l7.code);
+  await pc7.getByTestId("code-submit").click();
+  await pc7.getByTestId("email-confirmed").waitFor({ timeout: 20000 });
+  await surEspace(pc7, "7. après le code saisi sur la page dédiée");
+  etape("7. « Vous avez reçu un code de confirmation ? » (connexion et inscription) : adresse + code → espace ; adresse inconnue et mauvais code = même message");
 
   if (erreurs.length) throw new Error(`erreurs dans la page :\n${erreurs.join("\n")}`);
   console.log(`\n${journal.length} scénarios, 0 erreur (${HASH ? "routage par hash" : "URL propres"}).`);

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { emailPrerempli } from "@/lib/auth/confirmation";
+import { emailPrerempli, estNonConfirme, lienCodeConfirmation } from "@/lib/auth/confirmation";
+import AttenteConfirmation from "@/components/auth/AttenteConfirmation";
 import { cleErreurAuth } from "@/lib/authErrors";
 import { useTranslation } from "react-i18next";
 import { Leaf, Mail, Lock, Loader2, ArrowLeft } from "lucide-react";
@@ -19,6 +20,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  // Compte pas encore confirmé (mot de passe correct) : écran d'attente avec
+  // l'adresse, le champ du code et le renvoi, au lieu d'une erreur.
+  const [nonConfirme, setNonConfirme] = useState<string | null>(null);
   
   const { t } = useTranslation();
   const { signIn } = useAuth();
@@ -55,6 +59,13 @@ const Login = () => {
     
     const { error } = await signIn(email, password);
     
+    if (error && estNonConfirme(error)) {
+      setNonConfirme(email.trim());
+      setPassword("");
+      setIsLoading(false);
+      return;
+    }
+
     if (error) {
       toast({
         title: t('auth.errors.loginError', 'Login error'),
@@ -111,6 +122,12 @@ const Login = () => {
           </Link>
           
           <Card className="border-0 shadow-xl">
+            {nonConfirme ? (
+              <CardContent className="pt-6" data-testid="login-unconfirmed">
+                <AttenteConfirmation email={nonConfirme} origine="connexion" onModifier={() => setNonConfirme(null)} />
+              </CardContent>
+            ) : (
+            <>
             <CardHeader className="text-center pb-2">
               <div className="lg:hidden flex justify-center mb-4">
                 <div className="w-12 h-12 rounded-xl gradient-hero flex items-center justify-center">
@@ -183,15 +200,22 @@ const Login = () => {
                 </Button>
               </form>
               
-              <div className="mt-6 text-center">
+              <div className="mt-6 space-y-2 text-center">
                 <p className="text-sm text-muted-foreground">
                   {t('auth.login.noAccount')}{" "}
                   <Link to="/signup" className="text-primary font-medium hover:underline">
                     {t('auth.login.createAccount')}
                   </Link>
                 </p>
+                <p className="text-sm">
+                  <Link to={lienCodeConfirmation(email)} className="text-primary hover:underline" data-testid="link-have-code">
+                    {t('auth.confirmation.haveCode')}
+                  </Link>
+                </p>
               </div>
             </CardContent>
+            </>
+            )}
           </Card>
         </div>
       </div>

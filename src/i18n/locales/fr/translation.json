@@ -1730,7 +1730,14 @@
           "title": "Lien invalide",
           "body": "Ce lien de confirmation n'est pas valable. Indiquez votre adresse pour en recevoir un nouveau, ou connectez-vous si votre adresse est déjà confirmée."
         }
-      }
+      },
+      "haveCode": "Vous avez reçu un code de confirmation ?",
+      "unconfirmedTitle": "Confirmez votre adresse pour vous connecter",
+      "unconfirmedBody": "Votre adresse {{email}} n'est pas encore confirmée. Cliquez sur le lien du courriel de confirmation ou saisissez le code à 6 chiffres ci-dessous. Courriel introuvable ? Demandez-en un nouveau.",
+      "enterCodeTitle": "Saisissez le code reçu par courriel",
+      "codePageTitle": "Confirmer mon adresse avec un code",
+      "codePageBody": "Indiquez l'adresse utilisée à l'inscription et le code à 6 chiffres du courriel de confirmation.",
+      "backToLogin": "Retour à la connexion"
     }
   },
   "settings": {

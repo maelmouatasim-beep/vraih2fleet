@@ -54,6 +54,22 @@ export function lienConnexion(email: string): string {
   return `/login?email=${encodeURIComponent(email.trim())}`;
 }
 
+/**
+ * Lien « Vous avez reçu un code de confirmation ? » (adresse + code), avec
+ * l'adresse déjà saisie si elle est valide.
+ */
+export function lienCodeConfirmation(email = ""): string {
+  const e = email.trim();
+  return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e) && e.length <= 254
+    ? `/auth/verifier?code=1&email=${encodeURIComponent(e)}`
+    : "/auth/verifier?code=1";
+}
+
+/** Vrai si l'erreur de connexion signifie « compte pas encore confirmé » (mot de passe correct). */
+export function estNonConfirme(e: { code?: string; message?: string } | null | undefined): boolean {
+  return !!e && (e.code === "email_not_confirmed" || /email not confirmed/i.test(e.message ?? ""));
+}
+
 /** Adresse préremplie lue dans la query (?email=) ; vide si absente ou invalide. */
 export function emailPrerempli(search: string): string {
   const v = new URLSearchParams(search).get("email") ?? "";

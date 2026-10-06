@@ -11,6 +11,7 @@ import { Loader2, Truck, ArrowLeft, Eye, EyeOff, Check, X, Leaf } from 'lucide-r
 import { createSignupSchema } from '@/lib/validation/signupSchema';
 import { cleErreurAuth } from '@/lib/authErrors';
 import AttenteConfirmation from '@/components/auth/AttenteConfirmation';
+import { lienCodeConfirmation } from '@/lib/auth/confirmation';
 
 // Inscription minimale : nom, email, mot de passe. Le profil (fonction,
 // entreprise, flotte) se complète après la première connexion via
@@ -231,6 +232,11 @@ export default function Signup() {
                   {t('auth.login.alreadyHaveAccount')}{' '}
                   <Link to="/login" className="text-primary hover:underline font-medium">
                     {t('auth.login.signInButton')}
+                  </Link>
+                </p>
+                <p className="text-center text-sm">
+                  <Link to={lienCodeConfirmation()} className="text-primary hover:underline" data-testid="link-have-code">
+                    {t('auth.confirmation.haveCode')}
                   </Link>
                 </p>
               </form>

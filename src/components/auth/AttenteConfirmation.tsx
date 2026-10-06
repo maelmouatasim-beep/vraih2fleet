@@ -9,33 +9,39 @@
  *   CE navigateur, ou « Me connecter » avec l'adresse préremplie.
  * - Renvoi du courriel avec un délai de 60 s ; réponse toujours neutre
  *   (aucune indication sur l'existence d'un compte).
+ * - origine « connexion » : affiché par la page de connexion quand le compte
+ *   n'est pas encore confirmé (mot de passe correct, email_not_confirmed) ;
+ *   aucun courriel vient d'être envoyé, donc renvoi possible tout de suite.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader2, MailCheck, RefreshCw } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
-import { PAGE_CONFIRMATION, urlRetourAuth } from "@/lib/authRedirect";
-import { issueRenvoi, lienConnexion, normaliserCodeOtp, secondesAvantRenvoi } from "@/lib/auth/confirmation";
+import { PAGE_CONFIRMATION } from "@/lib/authRedirect";
+import { lienConnexion, normaliserCodeOtp, secondesAvantRenvoi } from "@/lib/auth/confirmation";
+import { renvoyerConfirmation, verifierCodeConfirmation } from "@/lib/auth/codeConfirmation";
 
 interface Props {
   email: string;
   /** Revenir au formulaire pour corriger l'adresse. */
   onModifier: () => void;
+  /** « inscription » (courriel tout juste envoyé) ou « connexion » (compte non confirmé). */
+  origine?: "inscription" | "connexion";
 }
 
 const INTERVALLE_VERIFICATION_MS = 3000;
 
-export default function AttenteConfirmation({ email, onModifier }: Props) {
+export default function AttenteConfirmation({ email, onModifier, origine = "inscription" }: Props) {
+  const depuisConnexion = origine === "connexion";
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { user, synchroniserSession } = useAuth();
-  const [dernierEnvoi, setDernierEnvoi] = useState<number>(() => Date.now());
+  const [dernierEnvoi, setDernierEnvoi] = useState<number | null>(() => (depuisConnexion ? null : Date.now()));
   const [maintenant, setMaintenant] = useState<number>(() => Date.now());
   const [renvoi, setRenvoi] = useState(false);
   const [code, setCode] = useState("");
@@ -88,15 +94,10 @@ export default function AttenteConfirmation({ email, onModifier }: Props) {
 
   const renvoyer = async () => {
     setRenvoi(true);
-    const { error } = await supabase.auth.resend({
-      type: "signup",
-      email,
-      options: { emailRedirectTo: urlRetourAuth(PAGE_CONFIRMATION) },
-    });
+    const issue = await renvoyerConfirmation(email);
     setRenvoi(false);
     setDernierEnvoi(Date.now());
     setMaintenant(Date.now());
-    const issue = issueRenvoi(error);
     toast(
       issue === "trop_de_demandes"
         ? { title: t("auth.confirmation.tooManyTitle"), description: t("auth.confirmation.tooManyBody"), variant: "destructive" }
@@ -113,12 +114,9 @@ export default function AttenteConfirmation({ email, onModifier }: Props) {
     }
     setErreurCode(null);
     setVerification(true);
-    // « email » couvre la confirmation d'inscription ; « signup » en repli
-    // pour les projets configurés à l'ancienne.
-    let { error } = await supabase.auth.verifyOtp({ email, token: jeton, type: "email" });
-    if (error) ({ error } = await supabase.auth.verifyOtp({ email, token: jeton, type: "signup" }));
+    const ok = await verifierCodeConfirmation(email, jeton);
     setVerification(false);
-    if (error) {
+    if (!ok) {
       setErreurCode(t("auth.confirmation.codeInvalid"));
       return;
     }
@@ -127,20 +125,22 @@ export default function AttenteConfirmation({ email, onModifier }: Props) {
   };
 
   return (
-    <div className="space-y-6" data-testid="signup-confirmation" role="status">
+    <div className="space-y-6" data-testid="signup-confirmation" data-origine={origine} role="status">
       <div className="space-y-2 text-center">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
           <MailCheck className="h-6 w-6 text-primary" />
         </div>
-        <h2 className="text-lg font-semibold">{t("auth.confirmation.waitTitle")}</h2>
-        <p className="text-sm text-muted-foreground">{t("auth.confirmation.waitBody", { email })}</p>
+        <h2 className="text-lg font-semibold">{t(depuisConnexion ? "auth.confirmation.unconfirmedTitle" : "auth.confirmation.waitTitle")}</h2>
+        <p className="text-sm text-muted-foreground" data-testid="confirmation-email">
+          {t(depuisConnexion ? "auth.confirmation.unconfirmedBody" : "auth.confirmation.waitBody", { email })}
+        </p>
         <p className="flex items-center justify-center gap-2 text-xs text-muted-foreground" data-testid="confirmation-watching">
           <Loader2 className="h-3 w-3 animate-spin" /> {t("auth.confirmation.watching")}
         </p>
       </div>
 
       <div className="space-y-3 rounded-lg border border-border bg-muted/40 p-4">
-        <p className="text-sm font-medium">{t("auth.confirmation.otherDeviceTitle")}</p>
+        <p className="text-sm font-medium">{t(depuisConnexion ? "auth.confirmation.enterCodeTitle" : "auth.confirmation.otherDeviceTitle")}</p>
         <form onSubmit={validerCode} className="space-y-2">
           <Label htmlFor="otp-code">{t("auth.confirmation.codeLabel")}</Label>
           <div className="flex gap-2">
@@ -166,10 +166,14 @@ export default function AttenteConfirmation({ email, onModifier }: Props) {
             </p>
           )}
         </form>
-        <p className="text-xs text-muted-foreground">{t("auth.confirmation.orSignIn")}</p>
-        <Button variant="outline" className="w-full" onClick={() => navigate(lienConnexion(email))} data-testid="confirmation-login">
-          {t("auth.confirmation.signIn")}
-        </Button>
+        {!depuisConnexion && (
+          <>
+            <p className="text-xs text-muted-foreground">{t("auth.confirmation.orSignIn")}</p>
+            <Button variant="outline" className="w-full" onClick={() => navigate(lienConnexion(email))} data-testid="confirmation-login">
+              {t("auth.confirmation.signIn")}
+            </Button>
+          </>
+        )}
       </div>
 
       <div className="flex flex-col items-center gap-2 text-sm">

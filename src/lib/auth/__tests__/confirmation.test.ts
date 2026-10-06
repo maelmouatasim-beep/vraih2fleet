@@ -5,7 +5,9 @@ import { resolve } from "node:path";
 import {
   DELAI_RENVOI_S,
   emailPrerempli,
+  estNonConfirme,
   issueRenvoi,
+  lienCodeConfirmation,
   lienConnexion,
   normaliserCodeOtp,
   secondesAvantRenvoi,
@@ -84,7 +86,9 @@ describe("garde-fous du parcours", () => {
   });
   it("l'attente détecte la session (événement, onglets, focus) et vérifie le code (verifyOtp)", () => {
     const s = lire("src/components/auth/AttenteConfirmation.tsx");
-    for (const m of ["synchroniserSession", '"storage"', '"focus"', "visibilitychange", "verifyOtp", "supabase.auth.resend"]) expect(s).toContain(m);
+    for (const m of ["synchroniserSession", '"storage"', '"focus"', "visibilitychange", "verifierCodeConfirmation", "renvoyerConfirmation"]) expect(s).toContain(m);
+    const code = lire("src/lib/auth/codeConfirmation.ts");
+    for (const m of ["verifyOtp", "supabase.auth.resend", "issueRenvoi"]) expect(code).toContain(m);
     // Événements d'authentification (dont le relais entre onglets) : dans le fournisseur.
     expect(lire("src/hooks/useAuth.tsx")).toContain("onAuthStateChange");
   });
@@ -102,5 +106,37 @@ describe("garde-fous du parcours", () => {
     const m = lire("docs/courriels-auth/confirm-signup.html");
     expect(m).toContain("{{ .ConfirmationURL }}");
     expect(m).toContain("{{ .Token }}");
+    // Dit OÙ saisir le code (correctif du 2026-10-06), dans les deux langues.
+    expect(m).toContain("page de connexion H2Fleet");
+    expect(m).toContain("« Vous avez reçu un code de confirmation ? »");
+    expect(m).toContain("H2Fleet sign-in page");
+    expect(m).toContain("“Received a confirmation code?”");
+  });
+});
+
+describe("code de confirmation saisissable hors de l'écran post-inscription (test réel du 2026-10-06)", () => {
+  it("lien « Vous avez reçu un code ? » : adresse reprise seulement si valide", () => {
+    expect(lienCodeConfirmation()).toBe("/auth/verifier?code=1");
+    expect(lienCodeConfirmation("  a.b@exemple.ca ")).toBe("/auth/verifier?code=1&email=a.b%40exemple.ca");
+    expect(lienCodeConfirmation("pas-une-adresse")).toBe("/auth/verifier?code=1");
+  });
+
+  it("compte non confirmé = code email_not_confirmed (mot de passe correct) ; un mauvais mot de passe reste une erreur générique", () => {
+    expect(estNonConfirme({ code: "email_not_confirmed", message: "Email not confirmed" })).toBe(true);
+    expect(estNonConfirme({ message: "Email not confirmed" })).toBe(true);
+    expect(estNonConfirme({ code: "invalid_credentials", message: "Invalid login credentials" })).toBe(false);
+    expect(estNonConfirme(null)).toBe(false);
+  });
+
+  it("connexion : écran d'attente (code, renvoi, modifier l'adresse) au lieu d'une erreur ; lien présent sur connexion ET inscription", () => {
+    const login = lire("src/pages/Login.tsx");
+    expect(login).toContain("estNonConfirme(error)");
+    expect(login).toMatch(/<AttenteConfirmation email=\{nonConfirme\} origine="connexion"/);
+    expect(login).toContain('data-testid="link-have-code"');
+    expect(lire("src/pages/Signup.tsx")).toContain('data-testid="link-have-code"');
+    // Page adresse + code ; réponses neutres (même message pour adresse inconnue et mauvais code).
+    const page = lire("src/components/auth/ConfirmerAvecCode.tsx");
+    expect(page.match(/auth\.confirmation\.codeInvalid/g)?.length).toBe(1);
+    expect(page).toContain("renvoyerConfirmation");
   });
 });

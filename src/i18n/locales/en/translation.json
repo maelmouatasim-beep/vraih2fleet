@@ -1730,7 +1730,14 @@
           "title": "Invalid link",
           "body": "This confirmation link is not valid. Enter your address to receive a new one, or sign in if your address is already confirmed."
         }
-      }
+      },
+      "haveCode": "Received a confirmation code?",
+      "unconfirmedTitle": "Confirm your email to sign in",
+      "unconfirmedBody": "Your address {{email}} is not confirmed yet. Click the link in the confirmation email or enter the 6-digit code below. Can't find the email? Request a new one.",
+      "enterCodeTitle": "Enter the code from the email",
+      "codePageTitle": "Confirm my email with a code",
+      "codePageBody": "Enter the address you signed up with and the 6-digit code from the confirmation email.",
+      "backToLogin": "Back to sign in"
     }
   },
   "settings": {
