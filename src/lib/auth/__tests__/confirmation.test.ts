@@ -84,7 +84,19 @@ describe("garde-fous du parcours", () => {
   });
   it("l'attente détecte la session (événement, onglets, focus) et vérifie le code (verifyOtp)", () => {
     const s = lire("src/components/auth/AttenteConfirmation.tsx");
-    for (const m of ["onAuthStateChange", '"storage"', '"focus"', "visibilitychange", "verifyOtp", "supabase.auth.resend"]) expect(s).toContain(m);
+    for (const m of ["synchroniserSession", '"storage"', '"focus"', "visibilitychange", "verifyOtp", "supabase.auth.resend"]) expect(s).toContain(m);
+    // Événements d'authentification (dont le relais entre onglets) : dans le fournisseur.
+    expect(lire("src/hooks/useAuth.tsx")).toContain("onAuthStateChange");
+  });
+  it("l'attente n'entre dans l'espace que quand le fournisseur d'auth connaît l'utilisateur (échec CI du 2026-10-05)", () => {
+    const s = lire("src/components/auth/AttenteConfirmation.tsx");
+    // Jamais de lecture directe de la session suivie d'une navigation : la route
+    // protégée lirait encore « pas d'utilisateur » et renverrait à la connexion.
+    expect(s).not.toContain("getSession");
+    expect(s).not.toContain("onAuthStateChange");
+    expect(s).toMatch(/if \(user\) entrer\(\);/);
+    const auth = lire("src/hooks/useAuth.tsx");
+    expect(auth).toMatch(/synchroniserSession = useCallback\(async \(\) => \{\s*const \{ data \} = await supabase\.auth\.getSession\(\);/);
   });
   it("modèle de courriel bilingue : lien ET code", () => {
     const m = lire("docs/courriels-auth/confirm-signup.html");

@@ -6,6 +6,9 @@
  *
  *   1. même appareil : lien ouvert dans un autre onglet → « Adresse
  *      confirmée » puis l'espace, ET l'onglet d'attente entre tout seul ;
+ *  1b. idem avec l'ordre des signaux entre onglets inversé (session vue
+ *      dans le stockage avant le relais BroadcastChannel de supabase-js) :
+ *      l'onglet d'attente entre sans passer par la connexion ;
  *   2. autre appareil avec le code à 6 chiffres (mauvais code refusé) ;
  *   3. autre appareil sans code : « Me connecter » (adresse préremplie) ;
  *   4. lien expiré / déjà utilisé → message clair + « Renvoyer un lien »
@@ -119,6 +122,49 @@ try {
   await attente.bringToFront();
   await surEspace(attente, "1. onglet d'attente");
   etape("1. même appareil : « Adresse confirmée » puis l'espace ; l'onglet d'attente est entré tout seul (délai de renvoi de 60 s affiché)");
+
+  // ── 1b. Même appareil, ordre des signaux entre onglets inversé ───────────
+  // Cause de l'échec CI du 2026-10-05 (mode hash) : l'onglet d'attente voit
+  // la session dans le stockage (événement « storage ») AVANT que supabase-js
+  // ne relaie la connexion par BroadcastChannel au fournisseur d'auth ; s'il
+  // navigue alors vers l'espace, la route protégée lit « pas d'utilisateur »
+  // et renvoie à la connexion. On impose cet ordre (message BroadcastChannel
+  // retardé de 4 s dans l'onglet d'attente) : il doit entrer SANS passer par
+  // la page de connexion.
+  const e1b = unique("ordre");
+  const l1b = await lien(e1b);
+  const ctxA2 = await contexte();
+  const attente2 = await ctxA2.newPage();
+  await attente2.addInitScript(() => {
+    const Natif = window.BroadcastChannel;
+    if (!Natif) return;
+    const retarder = (f) => (e) => setTimeout(() => f(e), 4000);
+    window.BroadcastChannel = class extends Natif {
+      set onmessage(f) {
+        super.onmessage = f ? retarder(f) : null;
+      }
+      get onmessage() {
+        return super.onmessage;
+      }
+      addEventListener(type, f, o) {
+        return super.addEventListener(type, type === "message" && typeof f === "function" ? retarder(f) : f, o);
+      }
+    };
+  });
+  const passages = [];
+  attente2.on("framenavigated", (f) => {
+    if (f === attente2.mainFrame()) passages.push(new URL(f.url()));
+  });
+  await attente2.goto(route(`/auth/verifier?email=${encodeURIComponent(e1b)}`));
+  await attente2.getByTestId("signup-confirmation").waitFor({ timeout: 30000 });
+  const onglet2 = await ctxA2.newPage();
+  await onglet2.goto(l1b.lien);
+  await onglet2.getByTestId("email-confirmed").waitFor({ timeout: 20000 });
+  await attente2.bringToFront();
+  await surEspace(attente2, "1b. onglet d'attente (signal entre onglets retardé)");
+  const versConnexion = passages.find((u) => (HASH ? u.hash.startsWith("#/login") : u.pathname.startsWith("/login")));
+  if (versConnexion) throw new Error(`1b. l'onglet d'attente est passé par la connexion (${versConnexion.pathname}${versConnexion.hash})`);
+  etape("1b. même appareil, ordre des onglets inversé (stockage avant le relais BroadcastChannel) : l'onglet d'attente entre sans passer par la connexion");
 
   // ── 2. Autre appareil, avec le code ──────────────────────────────────────
   const e2 = unique("code");

@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader2, MailCheck, RefreshCw } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,6 +34,7 @@ const INTERVALLE_VERIFICATION_MS = 3000;
 export default function AttenteConfirmation({ email, onModifier }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { user, synchroniserSession } = useAuth();
   const [dernierEnvoi, setDernierEnvoi] = useState<number>(() => Date.now());
   const [maintenant, setMaintenant] = useState<number>(() => Date.now());
   const [renvoi, setRenvoi] = useState(false);
@@ -48,36 +50,39 @@ export default function AttenteConfirmation({ email, onModifier }: Props) {
     navigate("/dashboard", { replace: true });
   }, [navigate, t]);
 
-  // Confirmation dans un autre onglet du même navigateur.
+  // Entrée dans l'espace UNIQUEMENT quand le fournisseur d'auth connaît
+  // l'utilisateur : la route protégée lit ce même état. Naviguer dès que la
+  // session apparaît dans le stockage (avant le relais de supabase-js entre
+  // onglets) menait à la page de connexion — échec CI du 2026-10-05.
   useEffect(() => {
-    const verifier = async () => {
-      const { data } = await supabase.auth.getSession();
-      if (data.session) entrer();
-    };
-    const { data: abonnement } = supabase.auth.onAuthStateChange((_evt, session) => {
-      if (session) entrer();
-    });
+    if (user) entrer();
+  }, [user, entrer]);
+
+  // Confirmation dans un autre onglet du même navigateur : on relit la
+  // session dans le fournisseur (événement « storage », retour du focus,
+  // intervalle court) ; l'effet ci-dessus fait entrer.
+  useEffect(() => {
+    const verifier = () => void synchroniserSession();
     const auFocus = () => {
-      if (document.visibilityState === "visible") void verifier();
+      if (document.visibilityState === "visible") verifier();
     };
     window.addEventListener("focus", auFocus);
     window.addEventListener("storage", auFocus);
     document.addEventListener("visibilitychange", auFocus);
     const minuterie = window.setInterval(() => {
       setMaintenant(Date.now());
-      if (document.visibilityState === "visible") void verifier();
+      if (document.visibilityState === "visible") verifier();
     }, 1000);
-    const verifPeriodique = window.setInterval(() => void verifier(), INTERVALLE_VERIFICATION_MS);
-    void verifier();
+    const verifPeriodique = window.setInterval(verifier, INTERVALLE_VERIFICATION_MS);
+    verifier();
     return () => {
-      abonnement.subscription.unsubscribe();
       window.removeEventListener("focus", auFocus);
       window.removeEventListener("storage", auFocus);
       document.removeEventListener("visibilitychange", auFocus);
       window.clearInterval(minuterie);
       window.clearInterval(verifPeriodique);
     };
-  }, [entrer]);
+  }, [synchroniserSession]);
 
   const attente = secondesAvantRenvoi(dernierEnvoi, maintenant);
 

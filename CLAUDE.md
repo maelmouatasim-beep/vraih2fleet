@@ -102,7 +102,8 @@ hydrogène : TCO, infrastructure, subventions canadiennes, télématique
   `AttenteConfirmation` (même navigateur détecté, code à 6 chiffres,
   « Me connecter », renvoi 60 s), pages `/auth/confirme` et
   `/auth/verifier` ; `scripts/e2e-confirmation.mjs` (4 scénarios +
-  anti-énumération, URL propres ET hash, en CI) ; modèle Supabase
+  anti-énumération + ordre des onglets inversé, URL propres ET hash, en CI ;
+  l'entrée dans l'espace passe TOUJOURS par `useAuth().synchroniserSession`) ; modèle Supabase
   bilingue `docs/courriels-auth/confirm-signup.html`.
 - `supabase/tests/` — tests d'intégration contre Supabase local
   (helpers + audit RLS) ; exécutés en CI, jamais contre la production.
@@ -443,6 +444,14 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   `subsidy_watch_changes` (admins H2Fleet seulement), validés ou rejetés
   dans Bibliothèque › Veille ; jamais appliqués au registre
   automatiquement ; événements validés → alerte au Financement.
+  Correctifs du 2026-10-06 : statut retenu seulement s'il porte sur le
+  programme (`statutsDeLigne`, faux « suspendu » Revenu Québec écarté,
+  `scripts/veille/recalculer-etat.mjs` recalcule `etat.json` depuis les
+  archives) ; lisibilité par source (`data/veille/lisibilite.json`,
+  `src/lib/veille/lisibilite.ts`) → badge « vérification manuelle
+  requise » + `quoiVerifier` dans la Bibliothèque ; repli Chromium pour
+  les programmes `lectureNavigateur` (FTCZE) ; PDF de modalités explicite
+  (`modalitesUrl`) ; PAGTCP lu sur quebec.ca (modalités 2025-2028).
   5.6 surveillance du plan (`src/lib/journey/surveillance.ts`, pur) :
   prix de l'énergie ±5 % depuis le rapport (stress test relancé, effet du
   prix isolé à plan égal, plan modifié signalé par l'empreinte), échéance
@@ -538,7 +547,7 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   `scripts/serveur-production.mjs`, CI e2e sur le bundle de production
   (toute violation de CSP = échec), CORS `https://*.domaine` (aperçus),
   dépôt privé anticipé (Pages s'arrête, job lourd de nuit/manuel/production),
-  `docs/production.md` (Cloudflare, DNS, DKIM/DMARC, Email Routing,
+  `docs/production.md` (Cloudflare, DNS, DKIM/DMARC — jamais d'Email Routing, MX IONOS,
   bascule, dépôt privé, retour arrière) ; (2) `docs/historique-git.md` +
   `scripts/historique/nettoyer-courriel.sh` (simulation par défaut, testé
   sur dépôt factice, NON exécuté) ; (3) identifiants télématiques chiffrés

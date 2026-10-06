@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { PAGE_CONFIRMATION, urlRetourAuth } from "@/lib/authRedirect";
@@ -41,6 +41,9 @@ interface AuthContextType {
   signUp: (email: string, password: string, metadata: SignUpMetadata) => Promise<{ error: Error | null; confirmationRequise: boolean }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
+  /** Relit la session stockée (ex. confirmée dans un autre onglet) et met à
+   *  jour CE fournisseur : seule source de vérité de l'utilisateur connecté. */
+  synchroniserSession: () => Promise<Session | null>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: Error | null }>;
 }
 
@@ -77,43 +80,42 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Même mise à jour quelle que soit l'origine de la session (événement
+  // d'authentification, relais entre onglets, relecture du stockage).
+  const appliquerSession = useCallback((session: Session | null) => {
+    setSession(session);
+    setUser(session?.user ?? null);
+    if (session?.user) {
+      const id = session.user.id;
+      // Appels Supabase différés hors du rappel d'authentification.
+      setTimeout(() => {
+        fetchProfile(id);
+        fetchRole(id);
+      }, 0);
+    } else {
+      setProfile(null);
+      setRole(null);
+    }
+    setIsLoading(false);
+  }, []);
+
   useEffect(() => {
     // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        // Defer Supabase calls with setTimeout
-        if (session?.user) {
-          setTimeout(() => {
-            fetchProfile(session.user.id);
-            fetchRole(session.user.id);
-          }, 0);
-        } else {
-          setProfile(null);
-          setRole(null);
-        }
-        
-        setIsLoading(false);
-      }
-    );
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => appliquerSession(session));
 
     // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        fetchProfile(session.user.id);
-        fetchRole(session.user.id);
-      }
-      
-      setIsLoading(false);
-    });
+    supabase.auth.getSession().then(({ data: { session } }) => appliquerSession(session));
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [appliquerSession]);
+
+  const synchroniserSession = useCallback(async () => {
+    const { data } = await supabase.auth.getSession();
+    // Ne jamais effacer un utilisateur connu sur une simple relecture : la
+    // déconnexion passe par l'événement SIGNED_OUT.
+    if (data.session) appliquerSession(data.session);
+    return data.session;
+  }, [appliquerSession]);
 
   const signUp = async (email: string, password: string, metadata: SignUpMetadata) => {
     // Le lien du courriel revient sur la page « Adresse confirmée ».
@@ -174,6 +176,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       signUp,
       signIn,
       signOut,
+      synchroniserSession,
       updateProfile,
     }}>
       {children}
