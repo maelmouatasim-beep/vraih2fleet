@@ -41,7 +41,7 @@ const MOIS: Record<string, string> = {
 
 /** Mots de statut surveillés → statut normalisé. */
 const STATUTS: [RegExp, string][] = [
-  [/\b(ferm[ée]e?s?|closed)\b/, "ferme"],
+  [/\b(ferm[ée]e?s?|closed|termin[ée]e?s?)\b/, "ferme"],
   [/\b(suspendue?s?|suspended|en pause|paused)\b/, "suspendu"],
   [/\b([ée]puis[ée]e?s?|fonds [ée]puis[ée]s|fully subscribed|no longer accepting)\b/, "epuise"],
   [/\b(ouverte?s?|open for applications|accepting applications)\b/, "ouvert"],
@@ -52,7 +52,10 @@ const STATUTS: [RegExp, string][] = [
  * - en tête de ligne (bandeau ou titre : « Fermé aux demandes »,
  *   « Closed: Incentives for… ») ;
  * - ou à au plus 6 mots d'un SUJET (programme, volet, appel, demandes,
- *   inscriptions, fonds, enveloppe…).
+ *   inscriptions, fonds, enveloppe…) ;
+ * - ou juste après « est / sont (maintenant) » dans une phrase qui nomme un
+ *   sujet (FTCZE : « La période de soumission des demandes … est
+ *   maintenant terminée »).
  * Jamais dans une ligne conditionnelle ou future (« si », « jusqu'à ce
  * que les fonds soient épuisés », « la demande sera fermée »), ni quand
  * il parle d'un tiers (« le recouvrement de ses dettes a été légalement
@@ -72,6 +75,9 @@ const EXCLU_STATUT = new RegExp(
   ].join("|"),
 );
 
+const VERBE_ETAT =
+  /\b(est|sont|is|are|a ete|ont ete|has been|have been)\s+(?:(maintenant|desormais|temporairement|now|currently|temporarily)\s+)?$/;
+
 function statutsDeLigne(ligneNormalisee: string): string[] {
   const l = ligneNormalisee.replace(/[’‘]/g, "'");
   if (EXCLU_STATUT.test(l)) return [];
@@ -83,7 +89,8 @@ function statutsDeLigne(ligneNormalisee: string): string[] {
     const avant = l.slice(0, m.index).split(/[^a-z0-9']+/).filter(Boolean).length;
     const enTete = avant === 0;
     const procheSujet = mots.some((mot, i) => SUJET_STATUT.test(mot) && Math.abs(i - avant) <= 6);
-    if (enTete || procheSujet) out.push(statut);
+    const attributDuSujet = VERBE_ETAT.test(l.slice(0, m.index)) && mots.some((mot) => SUJET_STATUT.test(mot));
+    if (enTete || procheSujet || attributDuSujet) out.push(statut);
   }
   return out;
 }

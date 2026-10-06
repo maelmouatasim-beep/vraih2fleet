@@ -39,9 +39,11 @@ describe("veille — lisibilité des sources et vérification manuelle (correcti
     expect(p.dateFin).toBe("2028-03-31");
     // Montant par commande autorisée : jamais compté automatiquement (cas de référence inchangés).
     expect(p.baremes.every((b) => b.plafondParVehicule === 0)).toBe(true);
-    // L'échec du 2026-10-05 (HTTP 403) portait sur l'ANCIENNE adresse : il ne s'applique plus.
-    expect(L.sources.pagtcp?.url).not.toBe(p.source.url);
+    // L'échec du 2026-10-05 (HTTP 403) portait sur l'ANCIENNE adresse : il ne compte plus.
     expect(etatLecture("pagtcp", p.source.url, L).etat).not.toBe("manuelle");
+    expect(etatLecture("pagtcp", "https://www.transports.gouv.qc.ca/fr/aide-finan/transport-collectif/Pages/transport-collectif.aspx", {
+      sources: { pagtcp: { url: p.source.url, date: "2026-10-06", lu: true } },
+    }).etat).toBe("jamais");
   });
 
   it("FTCZE : relu par un vrai navigateur (repli de la veille), sinon vérification manuelle avec quoi lire", () => {

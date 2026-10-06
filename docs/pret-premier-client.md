@@ -78,7 +78,7 @@
 - [ ] Sources « H2Fleet » (16 hypothèses renvoient au dépôt : estimations internes documentées) : à remplacer par des sources externes lues au fil des vérifications — à faire — toi + Claude
 - [ ] Tarifs : grille, page Tarifs, badges d'abonnement, fin de `DEMO_MODE` — à faire — toi (décision) ; Claude (implémentation)
 - [ ] Facturation réelle (prestataire de paiement) — à faire — toi (compte) ; Claude (intégration)
-- [ ] Hypothèses et programmes « à valider » vérifiés à la source (dont `seuil_sous_utilisation_flotte` ; PAGTCP vérifié le 2026-10-06 sur quebec.ca ; FTCZE : « vérification manuelle requise » tant que la veille ne la lit pas) — à faire — toi (lecture des sources listées dans la Bibliothèque, consigne « à lire vous-même » affichée) ; Claude (veille hebdomadaire, repli navigateur)
+- [ ] Hypothèses et programmes « à valider » vérifiés à la source (dont `seuil_sous_utilisation_flotte` ; PAGTCP vérifié le 2026-10-06 sur quebec.ca ; FTCZE relu par la veille en mode navigateur le 2026-10-06 ; toute source illisible passe en « vérification manuelle requise ») — à faire — toi (lecture des sources listées dans la Bibliothèque, consigne « à lire vous-même » affichée) ; Claude (veille hebdomadaire, repli navigateur)
 - [ ] Clé Anthropic en production et coût réel confirmé sur la première facture — à faire — toi
 - [ ] Relecture du modèle de note au conseil par un responsable municipal — à faire — toi
 - [ ] Adresse et processus de support pour le client pilote (`contact@h2fleet.ca`, boîte IONOS existante ; secret `CONTACT_INBOX_EMAIL`, `docs/production.md` phase D) — prêt — toi

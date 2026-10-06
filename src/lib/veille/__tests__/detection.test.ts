@@ -38,6 +38,13 @@ describe("veille des subventions — détection déterministe (aucune IA, aucune
     expect(statuts(["Fermé aux demandes"])).toEqual(["ferme"]);
     expect(statuts(["Closed: Incentives for Medium- and Heavy-Duty Zero-Emission Vehicles"])).toEqual(["ferme"]);
     expect(statuts(["Le programme est suspendu pour les nouvelles demandes."])).toEqual(["suspendu"]);
+    // FTCZE (lecture navigateur du 2026-10-06) : sujet en début de phrase, état en fin.
+    expect(
+      statuts([
+        "La période de soumission des demandes pour les projets de planification et les projets d'immobilisations du Fonds pour le transport en commun à zéro émission est maintenant terminée.",
+      ]),
+    ).toEqual(["ferme"]);
+    expect(statuts(["Le projet est maintenant terminé."])).toEqual([]);
     expect(statuts(["Le volet 1 est fermé aux nouvelles demandes."])).toEqual(["ferme"]);
     expect(statuts(["Les fonds du programme sont épuisés."])).toEqual(["epuise"]);
     expect(statuts(["The program is now open for applications."])).toEqual(["ouvert"]);

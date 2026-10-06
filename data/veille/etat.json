@@ -210,6 +210,11 @@
       "empreinte": "cde4a012",
       "faits": [
         {
+          "type": "statut",
+          "valeur": "ferme",
+          "extrait": "La période de soumission des demandes pour les projets de planification et les projets d'immobilisations du Fonds pour le transport en commun à zéro émission est maintenant terminée."
+        },
+        {
           "type": "date",
           "valeur": "2025-07-24",
           "extrait": "2025-07-24"
