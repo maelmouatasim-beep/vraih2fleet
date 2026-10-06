@@ -73,11 +73,6 @@
       "empreinte": "25779daf",
       "faits": [
         {
-          "type": "statut",
-          "valeur": "suspendu",
-          "extrait": "Une attestation de Revenu Québec confirmant que le demandeur n’a pas de compte en souffrance en vertu des lois fiscales québécoises ou, s’il a un compte en souffrance, qu’il a conclu une entente de paiement qu’il resp…"
-        },
-        {
           "type": "date",
           "valeur": "2028-03-31",
           "extrait": "Au plus tard le 31 mars 2028."
@@ -86,11 +81,6 @@
           "type": "date",
           "valeur": "2026-09-09",
           "extrait": "9 septembre 2026"
-        },
-        {
-          "type": "statut",
-          "valeur": "ouvert",
-          "extrait": "Gouvernement ouvert"
         }
       ]
     },
@@ -134,16 +124,6 @@
           "type": "montant",
           "valeur": "3000",
           "extrait": "Une aide financière d’un montant de 3 000 $ est accordée pour l’acquisition d’un VBV. Par ailleurs, les VBV"
-        },
-        {
-          "type": "statut",
-          "valeur": "suspendu",
-          "extrait": "paiement qu’il respecte ou que le recouvrement de ses dettes a été légalement suspendu. Si cette"
-        },
-        {
-          "type": "statut",
-          "valeur": "ferme",
-          "extrait": "demande sera fermée, et le demandeur ne pourra pas obtenir son aide financière. Toutefois, le demandeur"
         },
         {
           "type": "montant",
@@ -205,11 +185,6 @@
           "type": "statut",
           "valeur": "ferme",
           "extrait": "Fermé aux demandes"
-        },
-        {
-          "type": "statut",
-          "valeur": "epuise",
-          "extrait": "que les fonds soient épuisés. La contribution de RNCan sera limitée à cinquante pour cent (50 %) des"
         },
         {
           "type": "date",

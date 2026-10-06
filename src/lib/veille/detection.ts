@@ -47,6 +47,47 @@ const STATUTS: [RegExp, string][] = [
   [/\b(ouverte?s?|open for applications|accepting applications)\b/, "ouvert"],
 ];
 
+/**
+ * Un mot de statut ne compte que s'il porte sur le PROGRAMME lui-même :
+ * - en tête de ligne (bandeau ou titre : « Fermé aux demandes »,
+ *   « Closed: Incentives for… ») ;
+ * - ou à au plus 6 mots d'un SUJET (programme, volet, appel, demandes,
+ *   inscriptions, fonds, enveloppe…).
+ * Jamais dans une ligne conditionnelle ou future (« si », « jusqu'à ce
+ * que les fonds soient épuisés », « la demande sera fermée »), ni quand
+ * il parle d'un tiers (« le recouvrement de ses dettes a été légalement
+ * suspendu », Revenu Québec) ou d'un lien de navigation (« Gouvernement
+ * ouvert », « données ouvertes »). Faux positif d'origine : Écocamionnage
+ * volet 1, lecture du 2026-10-05.
+ */
+const SUJET_STATUT =
+  /^(programmes?|volets?|appels?|demandes?|inscriptions?|fonds|enveloppes?|subventions?|programs?|applications?|intakes?|streams?|funding|funds|calls?)$/;
+const EXCLU_STATUT = new RegExp(
+  [
+    "\\bsi\\b", "\\bs'il", "jusqu'a ce que", "jusqu'a epuisement", "\\blorsque\\b", "\\bdes que\\b",
+    "\\bsera\\b", "\\bseront\\b", "\\bpourra", "\\bsoient\\b", "\\bsoit\\b",
+    "\\bif\\b", "\\bunless\\b", "\\buntil\\b", "\\bwill be\\b", "\\bwould\\b",
+    "dettes?", "recouvrement", "souffrance", "revenu quebec", "\\bdebts?\\b",
+    "gouvernement ouvert", "donnees ouvertes", "open government", "open data", "heures d'ouverture", "opening hours",
+  ].join("|"),
+);
+
+function statutsDeLigne(ligneNormalisee: string): string[] {
+  const l = ligneNormalisee.replace(/[’‘]/g, "'");
+  if (EXCLU_STATUT.test(l)) return [];
+  const mots = l.split(/[^a-z0-9']+/).filter(Boolean);
+  const out: string[] = [];
+  for (const [re, statut] of STATUTS) {
+    const m = re.exec(l);
+    if (!m) continue;
+    const avant = l.slice(0, m.index).split(/[^a-z0-9']+/).filter(Boolean).length;
+    const enTete = avant === 0;
+    const procheSujet = mots.some((mot, i) => SUJET_STATUT.test(mot) && Math.abs(i - avant) <= 6);
+    if (enTete || procheSujet) out.push(statut);
+  }
+  return out;
+}
+
 /** Lignes de bruit (horodatage de page, pied de page) : jamais comparées. */
 const BRUIT = /(modifi[ée]e? le|date de modification|mis[e]? à jour le|last updated|date modified|©|copyright|cookies?)/i;
 
@@ -121,8 +162,7 @@ export function faitsSurveilles(texte: string): Fait[] {
     };
     for (const v of montantsDeLigne(ligne)) ajouter("montant", v);
     for (const v of datesDeLigne(ligne)) ajouter("date", v);
-    const l = sansAccents(ligne.toLowerCase());
-    for (const [re, statut] of STATUTS) if (re.test(l)) ajouter("statut", statut);
+    for (const statut of statutsDeLigne(sansAccents(ligne.toLowerCase()))) ajouter("statut", statut);
   }
   return faits;
 }

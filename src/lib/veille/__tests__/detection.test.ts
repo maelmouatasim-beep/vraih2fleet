@@ -20,6 +20,51 @@ describe("veille des subventions — détection déterministe (aucune IA, aucune
     expect(faits.some((f) => f.valeur === "9999")).toBe(false);
   });
 
+  it("statut : seulement s'il porte sur le programme (faux positifs réels du 2026-10-05 écartés)", () => {
+    const statuts = (lignes: string[]) => faitsSurveilles(lignes.join("\n")).filter((f) => f.type === "statut").map((f) => f.valeur);
+    // Écocamionnage volet 1 (page et PDF des modalités) : tiers, demande individuelle, navigation.
+    expect(
+      statuts([
+        "Une attestation de Revenu Québec confirmant que le demandeur n’a pas de compte en souffrance en vertu des lois fiscales québécoises ou, s’il a un compte en souffrance, qu’il a conclu une entente de paiement qu’il respecte ou que le recouvrement de ses dettes a été légalement suspendu.",
+        "paiement qu’il respecte ou que le recouvrement de ses dettes a été légalement suspendu. Si cette",
+        "demande sera fermée, et le demandeur ne pourra pas obtenir son aide financière. Toutefois, le demandeur",
+        "Gouvernement ouvert",
+        // PIVEZ : condition, pas un état
+        "que les fonds soient épuisés. La contribution de RNCan sera limitée à cinquante pour cent (50 %) des",
+        "Les demandes sont acceptées jusqu’à épuisement des fonds.",
+      ]),
+    ).toEqual([]);
+    // Vrais états du programme : bandeau en tête de ligne, ou sujet proche.
+    expect(statuts(["Fermé aux demandes"])).toEqual(["ferme"]);
+    expect(statuts(["Closed: Incentives for Medium- and Heavy-Duty Zero-Emission Vehicles"])).toEqual(["ferme"]);
+    expect(statuts(["Le programme est suspendu pour les nouvelles demandes."])).toEqual(["suspendu"]);
+    expect(statuts(["Le volet 1 est fermé aux nouvelles demandes."])).toEqual(["ferme"]);
+    expect(statuts(["Les fonds du programme sont épuisés."])).toEqual(["epuise"]);
+    expect(statuts(["The program is now open for applications."])).toEqual(["ouvert"]);
+  });
+
+  it("archives réelles du 2026-10-05 : plus aucun statut fautif sur Écocamionnage ; PIVEZ et iMHZEV fermés", async () => {
+    const { readFileSync } = await import("node:fs");
+    const statuts = (f: string) =>
+      [...new Set(faitsSurveilles(readFileSync(`data/veille/2026-10-05/${f}.txt`, "utf8")).filter((x) => x.type === "statut").map((x) => x.valeur))];
+    expect(statuts("ecocamionnage_v1")).toEqual([]);
+    expect(statuts("ecocamionnage_v1_modalites")).toEqual([]);
+    expect(statuts("pivez")).toEqual(["ferme"]);
+    expect(statuts("imhzev")).toEqual(["ferme"]);
+  });
+
+  it("data/veille/etat.json = faits recalculés depuis les archives (référence de la prochaine comparaison)", async () => {
+    const { existsSync, readFileSync } = await import("node:fs");
+    const etat = JSON.parse(readFileSync("data/veille/etat.json", "utf8")) as { sources: Record<string, { date: string; empreinte: string; faits: unknown[] }> };
+    for (const [cle, src] of Object.entries(etat.sources)) {
+      const archive = `data/veille/${src.date}/${cle.replace(/[:/]/g, "_")}.txt`;
+      if (!existsSync(archive)) continue;
+      const texte = readFileSync(archive, "utf8");
+      expect(empreinte(texte), cle).toBe(src.empreinte);
+      expect(src.faits, `${cle} : lancer scripts/veille/recalculer-etat.mjs`).toEqual(faitsSurveilles(texte));
+    }
+  });
+
   it("première lecture : état initial, aucune détection", () => {
     expect(comparerLectures("pave", "https://x", null, faitsSurveilles(page("<p>5 000 $</p>")))).toEqual([]);
   });
