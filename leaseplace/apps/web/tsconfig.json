@@ -1,0 +1,9 @@
+{
+  "extends": "@leaseplace/config/tsconfig/nextjs.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "paths": { "@/*": ["./src/*"] }
+  },
+  "include": ["next-env.d.ts", "src", "e2e", "scripts", "*.ts", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

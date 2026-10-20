@@ -1,0 +1,16 @@
+packages:
+  - apps/*
+  - packages/*
+
+# Chaîne d'approvisionnement : aucune version publiée depuis moins de 14 jours.
+minimumReleaseAge: 20160
+
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - "@tailwindcss/oxide"
+  - unrs-resolver
+
+overrides:
+  # Avis GHSA (PostCSS < 8.5.18) : Next 15 épingle 8.4.31.
+  "next>postcss": "8.5.29"

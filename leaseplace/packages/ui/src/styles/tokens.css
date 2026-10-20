@@ -1,0 +1,104 @@
+/*
+ * Design tokens LeasePlace — direction « Atlas » : vert cèdre profond,
+ * accent safran (terre cuite de Marrakech), neutres sable. Toute couleur de
+ * l'interface vient d'ici ; les paires texte/fond sont vérifiées WCAG AA
+ * par src/styles/contrast.test.ts.
+ */
+:root {
+  color-scheme: light;
+
+  --lp-bg: #f8f7f3;
+  --lp-surface: #ffffff;
+  --lp-surface-muted: #f1efe8;
+  --lp-surface-sunken: #ebe8df;
+  --lp-border: #e2ded3;
+  --lp-border-strong: #cdc7b8;
+
+  --lp-fg: #15201c;
+  --lp-fg-muted: #4f5a55;
+  --lp-fg-subtle: #5f6964;
+
+  --lp-primary: #0e4a39;
+  --lp-primary-hover: #0a3a2c;
+  --lp-primary-fg: #ffffff;
+  --lp-primary-soft: #e3efe9;
+  --lp-primary-soft-fg: #0e4a39;
+
+  --lp-accent: #c46f2a;
+  --lp-accent-strong: #94501a;
+  --lp-accent-soft: #f8ebdd;
+
+  --lp-success: #17683f;
+  --lp-success-soft: #e2f2e8;
+  --lp-warning: #8c4f05;
+  --lp-warning-soft: #fbf0dc;
+  --lp-danger: #b3261e;
+  --lp-danger-soft: #fbe7e5;
+  --lp-info: #1d5a9e;
+  --lp-info-soft: #e5eef9;
+
+  --lp-ring: #1f7a5c;
+
+  /* Panneau de marque (identique dans les deux thèmes). */
+  --lp-brand: #0b3a2d;
+  --lp-brand-deep: #072a20;
+  --lp-brand-fg: #ffffff;
+  --lp-overlay: rgb(10 20 16 / 0.45);
+
+  --lp-shadow-sm: 0 1px 2px rgb(21 32 28 / 0.06);
+  --lp-shadow-md: 0 1px 2px rgb(21 32 28 / 0.05), 0 4px 12px rgb(21 32 28 / 0.06);
+  --lp-shadow-lg: 0 2px 4px rgb(21 32 28 / 0.05), 0 16px 40px rgb(21 32 28 / 0.12);
+
+  --lp-radius-sm: 6px;
+  --lp-radius-md: 8px;
+  --lp-radius-lg: 12px;
+  --lp-radius-xl: 16px;
+
+  --lp-duration: 160ms;
+  --lp-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --lp-bg: #0b1210;
+  --lp-surface: #111a17;
+  --lp-surface-muted: #16211d;
+  --lp-surface-sunken: #0d1513;
+  --lp-border: #23302b;
+  --lp-border-strong: #33433d;
+
+  --lp-fg: #e7ece9;
+  --lp-fg-muted: #a3afa9;
+  --lp-fg-subtle: #8a9690;
+
+  --lp-primary: #5bbf98;
+  --lp-primary-hover: #74cba8;
+  --lp-primary-fg: #04120c;
+  --lp-primary-soft: #15302a;
+  --lp-primary-soft-fg: #8ed8b9;
+
+  --lp-accent: #e39a57;
+  --lp-accent-strong: #eeb27c;
+  --lp-accent-soft: #2e2116;
+
+  --lp-success: #63c58f;
+  --lp-success-soft: #13291e;
+  --lp-warning: #e8b45e;
+  --lp-warning-soft: #2c2213;
+  --lp-danger: #f08a80;
+  --lp-danger-soft: #2f1716;
+  --lp-info: #84b3ec;
+  --lp-info-soft: #14213a;
+
+  --lp-ring: #74cba8;
+
+  --lp-brand: #0b3a2d;
+  --lp-brand-deep: #072a20;
+  --lp-brand-fg: #ffffff;
+  --lp-overlay: rgb(0 0 0 / 0.6);
+
+  --lp-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --lp-shadow-md: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 12px rgb(0 0 0 / 0.35);
+  --lp-shadow-lg: 0 2px 4px rgb(0 0 0 / 0.4), 0 16px 40px rgb(0 0 0 / 0.5);
+}

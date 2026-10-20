@@ -1,0 +1,97 @@
+# CI de LeasePlace Maroc (monorepo pnpm dans leaseplace/, hébergé ici
+# provisoirement : ce fichier part avec le dossier dans le futur dépôt, où
+# il faudra retirer `working-directory` et le filtre `paths`).
+name: LeasePlace CI
+
+on:
+  push:
+    paths: ["leaseplace/**", ".github/workflows/leaseplace-ci.yml"]
+  pull_request:
+    paths: ["leaseplace/**", ".github/workflows/leaseplace-ci.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: leaseplace-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: leaseplace
+
+env:
+  PG_ADMIN_URL: postgres://postgres:postgres@localhost:5432/postgres
+  DATABASE_URL_TEST: postgres://postgres:postgres@localhost:5432/leaseplace_test
+  DATABASE_URL_ADMIN: postgres://postgres:postgres@localhost:5432/leaseplace
+  DATABASE_URL: postgres://lp_app:lp_app_local@localhost:5432/leaseplace
+  DATABASE_URL_AUTH: postgres://lp_auth:lp_auth_local@localhost:5432/leaseplace
+  BETTER_AUTH_URL: http://localhost:3000
+  LP_DEMO_MODE: "true"
+
+jobs:
+  check:
+    name: Lint, types, tests, build, e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: leaseplace/package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: leaseplace/pnpm-lock.yaml
+
+      - name: Installer (lockfile figé)
+        run: pnpm install --frozen-lockfile
+
+      - name: Audit des dépendances (vulnérabilités hautes et critiques)
+        run: pnpm audit --audit-level high --prod
+
+      - name: Format
+        run: pnpm exec prettier --check .
+
+      - name: Base de test (migrations + rôles)
+        run: bash scripts/db-local.sh
+
+      - name: Secret d'authentification éphémère
+        run: echo "BETTER_AUTH_SECRET=ci-$(openssl rand -hex 24)" >> "$GITHUB_ENV"
+
+      - name: Lint, typecheck, tests (dont RLS sur vrai Postgres)
+        run: pnpm turbo run lint typecheck test
+
+      - name: Build de production
+        run: pnpm build
+
+      - name: Jeu de démonstration
+        run: pnpm db:seed
+
+      - name: Navigateur Playwright
+        run: pnpm --filter @leaseplace/web exec playwright install --with-deps chromium
+
+      - name: Parcours e2e (4 rôles, cloisonnement, 2FA, RTL, accessibilité)
+        run: pnpm e2e
+
+      - name: Rapport e2e
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            leaseplace/apps/web/playwright-report
+            leaseplace/apps/web/test-results
+          retention-days: 7

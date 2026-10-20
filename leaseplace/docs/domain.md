@@ -1,0 +1,31 @@
+# Glossaire métier
+
+| Terme                            | Définition                                                                                                                                                                                                         |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Crédit-bail (leasing)**        | Location d'un équipement par un bailleur, avec option d'achat en fin de contrat pour une valeur résiduelle.                                                                                                        |
+| **Bailleur** (_lessor_)          | Société de crédit-bail (filiale bancaire au Maroc) qui finance l'équipement et décide seule du crédit.                                                                                                             |
+| **Entreprise / PME** (_company_) | Client qui demande le financement. Service gratuit pour elle.                                                                                                                                                      |
+| **Intermédiaire**                | Statut de la plateforme (loi 103-12) : agit sous **mandat écrit** de chaque bailleur ; ne manie aucun fonds, ne décide pas.                                                                                        |
+| **Mandat**                       | Contrat bailleur ↔ plateforme : grille de commission, clause anti-contournement, durée.                                                                                                                           |
+| **Demande de financement**       | Équipement, montant HT/TTC, durée, apport, valeur résiduelle souhaitée. Suit une machine d'états.                                                                                                                  |
+| **Dossier KYC**                  | Pièces et données de l'entreprise (RC, ICE, IF, CNSS, statuts, dirigeants, bénéficiaires effectifs, liasses), réutilisable d'une demande à l'autre. La plateforme prépare, le bailleur valide (LCB-FT, loi 43-05). |
+| **ICE**                          | Identifiant commun de l'entreprise (15 chiffres).                                                                                                                                                                  |
+| **RC / IF / CNSS**               | Registre du commerce, identifiant fiscal, affiliation à la sécurité sociale.                                                                                                                                       |
+| **Indice d'orientation**         | Grade A à E explicable, versionné. _« Indice d'orientation — la décision appartient exclusivement au bailleur. »_                                                                                                  |
+| **Appétit**                      | Critères d'un bailleur (montants, secteurs, durées, actifs, grade minimum, régions), versionnés. Le grade minimum est fixé par le bailleur ; la plateforme l'applique mécaniquement.                               |
+| **Routage**                      | Proposition de 3 à 5 bailleurs dont l'appétit correspond, puis **consentement nommant chaque bailleur**, puis envoi. Explication enregistrée critère par critère.                                                  |
+| **Consentement**                 | Accord explicite, granulaire, horodaté, révocable (loi 09-08), lié à la version des textes affichés.                                                                                                               |
+| **Offre**                        | Loyer, premier loyer majoré, durée, périodicité, terme à échoir ou échu, valeur résiduelle, frais, assurances, validité. Coût total et TEG **calculés par le moteur**, jamais saisis.                              |
+| **Terme à échoir / échu**        | Loyer payé en début / en fin de période.                                                                                                                                                                           |
+| **TEG implicite**                | Taux actuariel annuel du flux réel (financement, loyers, frais, valeur résiduelle).                                                                                                                                |
+| **Normalisation**                | Conversion de chaque offre en échéancier standard pour comparer sur le même pied. Classement neutre, jamais sponsorisé.                                                                                            |
+| **Deal**                         | Offre acceptée : accord → signature (loi 43-20) → livraison → **mise en loyer**.                                                                                                                                   |
+| **Commission**                   | Payée par le bailleur à la mise en loyer, grille **dégressive par tranches marginales** (1,5 % → 0,4 %), sans effet de seuil.                                                                                      |
+| **SLA**                          | Délai de réponse visé du bailleur : 72 h.                                                                                                                                                                          |
+| **Prescripteur**                 | Expert-comptable déposant pour ses clients (phase 2 du produit).                                                                                                                                                   |
+| **Fournisseur**                  | Vendeur d'équipement, catalogue « lease-ready » (phase 3 du produit).                                                                                                                                              |
+
+Rôles (phase 1) : `company_owner`, `company_member` ; `lessor_admin`,
+`lessor_analyst`, `lessor_viewer` ; `platform_admin`, `platform_ops`,
+`platform_support` (+ prescripteur et fournisseur, sans espace en V1).
+Matrice : `packages/domain/src/rbac/permissions.ts`.

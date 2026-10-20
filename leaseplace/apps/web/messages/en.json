@@ -1,0 +1,293 @@
+{
+  "meta": {
+    "title": "B2B equipment leasing marketplace in Morocco",
+    "description": "One application, several leasing offers, an informed decision. Free for businesses."
+  },
+  "common": {
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "language": "Language",
+    "account": "My account",
+    "twoFactorOn": "Two-factor authentication on",
+    "signOut": "Sign out"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "phase": "P{n}",
+    "company": {
+      "home": "Home",
+      "requests": "Requests",
+      "vault": "Document vault",
+      "messages": "Messages"
+    },
+    "lessor": {
+      "inbox": "Inbox",
+      "pipeline": "Pipeline",
+      "dashboard": "Dashboard",
+      "appetite": "Risk appetite",
+      "billing": "Billing"
+    },
+    "admin": {
+      "overview": "Overview",
+      "kyc": "KYC queue",
+      "lessors": "Lessors & mandates",
+      "commissions": "Commissions",
+      "users": "Users",
+      "audit": "Audit log"
+    }
+  },
+  "palette": {
+    "trigger": "Search or jump to…",
+    "title": "Command palette",
+    "description": "Navigate, change theme or language, sign out.",
+    "placeholder": "Type a command or a page…",
+    "empty": "No results.",
+    "navigation": "Navigation",
+    "preferences": "Preferences",
+    "themeLight": "Light theme",
+    "themeDark": "Dark theme",
+    "themeSystem": "System theme",
+    "language": "Language",
+    "account": "Account",
+    "signOut": "Sign out"
+  },
+  "roles": {
+    "company_owner": "Owner",
+    "company_member": "Team member",
+    "lessor_admin": "Lessor administrator",
+    "lessor_analyst": "Credit analyst",
+    "lessor_viewer": "Viewer",
+    "prescriber_admin": "Referrer administrator",
+    "prescriber_member": "Referrer",
+    "supplier_admin": "Supplier administrator",
+    "supplier_member": "Supplier",
+    "platform_admin": "Administrator",
+    "platform_ops": "Operations",
+    "platform_support": "Support"
+  },
+  "organizationTypes": {
+    "company": "Business",
+    "lessor": "Lessor",
+    "prescriber": "Referrer",
+    "supplier": "Supplier",
+    "platform": "Platform"
+  },
+  "spaces": {
+    "company": {
+      "name": "Business space",
+      "greeting": "Hello, {name}",
+      "journeyTitle": "Your financing journey",
+      "journeyBody": "Four steps, one application: you then compare offers from several lessors on their total cost.",
+      "steps": {
+        "profile": {
+          "title": "Company profile",
+          "body": "ICE, RC and key details, entered once."
+        },
+        "vault": {
+          "title": "Document vault",
+          "body": "Your documents, encrypted and reusable for every request."
+        },
+        "request": {
+          "title": "Financing request",
+          "body": "The equipment, amount and term you need, in under 5 minutes."
+        },
+        "compare": {
+          "title": "Compare offers",
+          "body": "Offers converted to the same format, ranked by total cost."
+        }
+      },
+      "comingSoon": "Coming soon",
+      "emptyTitle": "No requests yet",
+      "emptyBody": "A single request is enough to receive several offers from lessors, free of charge.",
+      "newRequest": "New request",
+      "newRequestHint": "Submitting requests opens in phase 4.",
+      "privacyTitle": "Your data stays under your control",
+      "privacyBody": "No document is shared with a lessor without your explicit consent, lessor by lessor (Law 09-08)."
+    },
+    "lessor": {
+      "name": "Lessor space",
+      "inboxTitle": "Inbox",
+      "inboxBody": "Applications routed to {organization}, sorted by remaining response time.",
+      "kpiReceived": "Applications received",
+      "kpiPeriod": "Last 30 days",
+      "kpiPending": "Awaiting response",
+      "kpiSla": "Target: response within 72 h",
+      "kpiDelay": "Average response time",
+      "kpiWinRate": "Win rate",
+      "columns": {
+        "reference": "Application",
+        "company": "Business",
+        "amount": "Amount excl. VAT",
+        "duration": "Term",
+        "grade": "Index",
+        "sla": "Time left",
+        "status": "Status"
+      },
+      "emptyTitle": "No applications routed to you",
+      "emptyBody": "Applications matching your risk appetite will appear here, with their response deadline."
+    },
+    "admin": {
+      "name": "Back office",
+      "overviewTitle": "Overview",
+      "overviewBody": "State of the platform and its organizations.",
+      "kpiKyc": "KYC files to review",
+      "kpiKycHint": "Review queue: phase 5",
+      "kpiCompanies": "Businesses",
+      "kpiLessors": "Lessors",
+      "kpiLessorsHint": "Mandates: phase 8",
+      "kpiEvents": "Audit events",
+      "kpiEventsHint": "Last 24 hours",
+      "organizationsTitle": "Organizations",
+      "columns": {
+        "name": "Name",
+        "type": "Type",
+        "members": "Members"
+      },
+      "kycEmptyTitle": "KYC queue empty",
+      "kycEmptyBody": "Files to verify will appear here once document upload opens."
+    }
+  },
+  "audit": {
+    "title": "Audit log",
+    "description": "The last {limit} events, append-only and chained with SHA-256 digests.",
+    "chainOk": "Chain intact",
+    "chainBroken": "Tampering detected at event #{id}",
+    "columns": {
+      "date": "Date",
+      "action": "Action",
+      "actor": "Actor",
+      "organization": "Organization",
+      "details": "Details",
+      "ip": "IP address"
+    },
+    "system": "System",
+    "empty": "No events yet.",
+    "restrictedTitle": "Restricted access",
+    "restrictedBody": "The audit log is reserved for administrators and operations.",
+    "deletedUser": "Deleted account"
+  },
+  "auth": {
+    "panelTitle": "One application. Several offers. An informed decision.",
+    "panelBody": "Make lessors compete on the total cost of your financing, free of charge.",
+    "panelFacts": {
+      "one": {
+        "label": "For businesses",
+        "value": "Free"
+      },
+      "two": {
+        "label": "Target response",
+        "value": "72 h"
+      },
+      "three": {
+        "label": "Lessors consulted",
+        "value": "3 to 5"
+      }
+    },
+    "title": "Sign in",
+    "subtitle": "Access your space.",
+    "tabsLabel": "Account type",
+    "tabCompany": "Business",
+    "tabPro": "Lessor or team",
+    "emailLabel": "Work email address",
+    "emailPlaceholder": "first.last@company.ma",
+    "sendCode": "Get a 6-digit code",
+    "sendLink": "Get a sign-in link",
+    "companyHint": "No password: we send you a code or a link valid for 10 minutes.",
+    "codeSent": "If an account exists for {email}, a code has just been sent.",
+    "codeLabel": "Code received by email",
+    "signIn": "Sign in",
+    "changeEmail": "Use another address",
+    "resend": "Resend code",
+    "linkSent": "If an account exists for {email}, a sign-in link has just been sent.",
+    "demoOutbox": "Open the demo outbox",
+    "emailProLabel": "Email address",
+    "passwordLabel": "Password",
+    "continue": "Continue",
+    "proHint": "Two-factor authentication is mandatory for lessors and the platform team.",
+    "totpPrompt": "Enter the 6-digit code shown in your authenticator app.",
+    "totpLabel": "Authentication code",
+    "verify": "Verify",
+    "demoHint": "Demo mode:",
+    "demoAccounts": "see the fictitious accounts",
+    "errors": {
+      "tooMany": "Too many attempts. Try again in a minute.",
+      "credentials": "Incorrect credentials.",
+      "code": "Incorrect or expired code.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "twoFactor": {
+    "title": "Turn on two-factor authentication",
+    "subtitle": "Mandatory for lessors and the platform team before accessing any application.",
+    "passwordLabel": "Confirm your password",
+    "start": "Start",
+    "scanBody": "Scan this QR code with your authenticator app (Google Authenticator, 1Password, Authy…), then enter the code shown.",
+    "qrAlt": "Authentication setup QR code",
+    "manualKey": "Manual setup key",
+    "codeLabel": "6-digit code",
+    "activate": "Turn on",
+    "enabled": "Two-factor authentication is on.",
+    "backupTitle": "Backup codes",
+    "backupBody": "Keep them somewhere safe: each one lets you sign in if you lose your phone. They will not be shown again.",
+    "copyCodes": "Copy codes",
+    "continue": "Go to my space"
+  },
+  "demo": {
+    "banner": "Demo mode: fictitious organizations and people.",
+    "bannerLink": "Demo accounts",
+    "title": "Demo accounts",
+    "intro": "Fictitious organizations and people, to showcase the platform. Authentication codes renew every 30 seconds.",
+    "password": "Password:",
+    "totp": "2FA code:",
+    "passwordless": "Sign in with an email code or link",
+    "goSignIn": "Go to sign in",
+    "outboxTitle": "Demo outbox",
+    "warning": "These credentials are public: a demo database never contains real data.",
+    "outboxIntro": "Sign-in emails land here until an email provider is connected.",
+    "outboxEmptyTitle": "No emails",
+    "outboxEmptyBody": "Request a code or a link from the sign-in page.",
+    "openLink": "Open the sign-in link"
+  },
+  "errors": {
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "This page does not exist or has moved.",
+    "backHome": "Back to home",
+    "forbiddenTitle": "Access denied",
+    "forbiddenBody": "Your role does not grant access to this space. The attempt has been recorded.",
+    "backToSpace": "Back to my space"
+  },
+  "legal": {
+    "intermediary": "{brand} is an intermediary in leasing transactions acting under written mandates from lessors (Law 103-12). {brand} never handles funds and makes no credit decision: the decision belongs exclusively to the lessor."
+  },
+  "home": {
+    "signIn": "Sign in",
+    "eyebrow": "B2B leasing · Morocco",
+    "title": "Make lessors compete. For free.",
+    "subtitle": "Submit a single application. {brand} checks it and sends it to the right lessors; you compare their offers on total cost.",
+    "cta": "Go to my space",
+    "demo": "Demo accounts",
+    "simulatorSoon": "Lease payment simulator: coming soon.",
+    "steps": {
+      "one": {
+        "title": "One application",
+        "body": "Your documents and request, submitted once and reusable afterwards."
+      },
+      "two": {
+        "title": "Several lessors",
+        "body": "With your consent, the application goes to the 3 to 5 lessors whose criteria match."
+      },
+      "three": {
+        "title": "An informed decision",
+        "body": "Offers compared on total cost, with no sponsored placement."
+      }
+    }
+  },
+  "emails": {
+    "magicLinkSubject": "Your {brand} sign-in link",
+    "magicLinkBody": "Hello,\n\nHere is your sign-in link, valid for 10 minutes:\n{url}\n\nIf you did not request it, ignore this message.",
+    "otpSubject": "Your {brand} sign-in code",
+    "otpBody": "Hello,\n\nYour sign-in code: {otp}\nIt is valid for 10 minutes.\n\nIf you did not request it, ignore this message."
+  }
+}

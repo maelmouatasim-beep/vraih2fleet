@@ -1,0 +1,106 @@
+/*
+ * Feuille commune : à importer APRÈS `@import "tailwindcss"` dans
+ * l'application. Expose les tokens comme utilitaires Tailwind
+ * (bg-surface, text-fg-muted, border-border, rounded-lg, shadow-md…).
+ */
+@import "./tokens.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-bg: var(--lp-bg);
+  --color-surface: var(--lp-surface);
+  --color-surface-muted: var(--lp-surface-muted);
+  --color-surface-sunken: var(--lp-surface-sunken);
+  --color-border: var(--lp-border);
+  --color-border-strong: var(--lp-border-strong);
+  --color-fg: var(--lp-fg);
+  --color-fg-muted: var(--lp-fg-muted);
+  --color-fg-subtle: var(--lp-fg-subtle);
+  --color-primary: var(--lp-primary);
+  --color-primary-hover: var(--lp-primary-hover);
+  --color-primary-fg: var(--lp-primary-fg);
+  --color-primary-soft: var(--lp-primary-soft);
+  --color-primary-soft-fg: var(--lp-primary-soft-fg);
+  --color-accent: var(--lp-accent);
+  --color-accent-strong: var(--lp-accent-strong);
+  --color-accent-soft: var(--lp-accent-soft);
+  --color-success: var(--lp-success);
+  --color-success-soft: var(--lp-success-soft);
+  --color-warning: var(--lp-warning);
+  --color-warning-soft: var(--lp-warning-soft);
+  --color-danger: var(--lp-danger);
+  --color-danger-soft: var(--lp-danger-soft);
+  --color-info: var(--lp-info);
+  --color-info-soft: var(--lp-info-soft);
+  --color-ring: var(--lp-ring);
+  --color-brand: var(--lp-brand);
+  --color-brand-deep: var(--lp-brand-deep);
+  --color-brand-fg: var(--lp-brand-fg);
+  --color-overlay: var(--lp-overlay);
+
+  --radius-sm: var(--lp-radius-sm);
+  --radius-md: var(--lp-radius-md);
+  --radius-lg: var(--lp-radius-lg);
+  --radius-xl: var(--lp-radius-xl);
+
+  --shadow-sm: var(--lp-shadow-sm);
+  --shadow-md: var(--lp-shadow-md);
+  --shadow-lg: var(--lp-shadow-lg);
+
+  --font-sans: var(--lp-font-sans);
+  --font-display: var(--lp-font-display);
+  --font-mono: var(--lp-font-mono);
+
+  --ease-standard: var(--lp-ease);
+  --default-transition-duration: var(--lp-duration);
+  --default-transition-timing-function: var(--lp-ease);
+}
+
+:root {
+  --lp-font-sans:
+    var(--font-geist-sans), "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --lp-font-display: "Fraunces Variable", ui-serif, Georgia, serif;
+  --lp-font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+/* Arabe : Plex Arabic d'abord (Geist n'a pas de glyphes arabes). */
+:root:lang(ar) {
+  --lp-font-sans:
+    "IBM Plex Sans Arabic", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --lp-font-display: "IBM Plex Sans Arabic", var(--font-geist-sans), ui-sans-serif, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background-color: var(--lp-bg);
+    color: var(--lp-fg);
+    font-family: var(--lp-font-sans);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background-color: var(--lp-primary-soft);
+    color: var(--lp-primary-soft-fg);
+  }
+  :focus-visible {
+    outline: 2px solid var(--lp-ring);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}

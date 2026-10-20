@@ -1,0 +1,12 @@
+node_modules
+.turbo
+.next
+out
+coverage
+dist
+*.tsbuildinfo
+.env
+.env.local
+test-results
+playwright-report
+e2e-captures

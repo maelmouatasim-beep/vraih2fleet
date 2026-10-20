@@ -1,0 +1,21 @@
+{
+  "name": "@leaseplace/domain",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc",
+    "test": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@leaseplace/config": "workspace:*",
+    "@vitest/coverage-v8": "4.1.11",
+    "eslint": "9.39.1",
+    "vitest": "4.1.11"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "leaseplace",
+  "private": true,
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "check": "turbo run lint typecheck test && prettier --check .",
+    "format": "prettier --write .",
+    "db:migrate": "pnpm --filter @leaseplace/db migrate",
+    "db:seed": "pnpm --filter @leaseplace/web seed",
+    "db:local": "bash scripts/db-local.sh",
+    "e2e": "pnpm --filter @leaseplace/web e2e"
+  },
+  "devDependencies": {
+    "prettier": "3.6.2",
+    "turbo": "2.5.8",
+    "typescript": "5.9.3"
+  }
+}

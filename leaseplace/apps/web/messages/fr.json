@@ -1,0 +1,293 @@
+{
+  "meta": {
+    "title": "Marketplace du crédit-bail B2B au Maroc",
+    "description": "Un dossier, plusieurs offres de crédit-bail, une décision éclairée. Gratuit pour les entreprises."
+  },
+  "common": {
+    "theme": "Thème",
+    "themeLight": "Clair",
+    "themeDark": "Sombre",
+    "themeSystem": "Système",
+    "language": "Langue",
+    "account": "Mon compte",
+    "twoFactorOn": "Double authentification active",
+    "signOut": "Se déconnecter"
+  },
+  "nav": {
+    "label": "Navigation principale",
+    "phase": "P{n}",
+    "company": {
+      "home": "Accueil",
+      "requests": "Demandes",
+      "vault": "Coffre-fort",
+      "messages": "Messages"
+    },
+    "lessor": {
+      "inbox": "Boîte de réception",
+      "pipeline": "Pipeline",
+      "dashboard": "Tableau de bord",
+      "appetite": "Critères d’appétit",
+      "billing": "Facturation"
+    },
+    "admin": {
+      "overview": "Vue d’ensemble",
+      "kyc": "File KYC",
+      "lessors": "Bailleurs et mandats",
+      "commissions": "Commissions",
+      "users": "Utilisateurs",
+      "audit": "Journal d’audit"
+    }
+  },
+  "palette": {
+    "trigger": "Rechercher ou aller à…",
+    "title": "Palette de commandes",
+    "description": "Naviguer, changer de thème ou de langue, se déconnecter.",
+    "placeholder": "Tapez une commande ou une page…",
+    "empty": "Aucun résultat.",
+    "navigation": "Navigation",
+    "preferences": "Préférences",
+    "themeLight": "Thème clair",
+    "themeDark": "Thème sombre",
+    "themeSystem": "Thème du système",
+    "language": "Langue",
+    "account": "Compte",
+    "signOut": "Se déconnecter"
+  },
+  "roles": {
+    "company_owner": "Dirigeant",
+    "company_member": "Collaborateur",
+    "lessor_admin": "Administrateur bailleur",
+    "lessor_analyst": "Analyste crédit",
+    "lessor_viewer": "Lecteur",
+    "prescriber_admin": "Administrateur prescripteur",
+    "prescriber_member": "Prescripteur",
+    "supplier_admin": "Administrateur fournisseur",
+    "supplier_member": "Fournisseur",
+    "platform_admin": "Administrateur",
+    "platform_ops": "Opérations",
+    "platform_support": "Support"
+  },
+  "organizationTypes": {
+    "company": "Entreprise",
+    "lessor": "Bailleur",
+    "prescriber": "Prescripteur",
+    "supplier": "Fournisseur",
+    "platform": "Plateforme"
+  },
+  "spaces": {
+    "company": {
+      "name": "Espace entreprise",
+      "greeting": "Bonjour, {name}",
+      "journeyTitle": "Votre parcours de financement",
+      "journeyBody": "Quatre étapes, un seul dossier : vous comparez ensuite les offres de plusieurs bailleurs sur leur coût total.",
+      "steps": {
+        "profile": {
+          "title": "Profil de l’entreprise",
+          "body": "ICE, RC et informations clés, saisis une seule fois."
+        },
+        "vault": {
+          "title": "Coffre-fort de documents",
+          "body": "Vos pièces, chiffrées et réutilisables pour chaque demande."
+        },
+        "request": {
+          "title": "Demande de financement",
+          "body": "L’équipement, le montant et la durée souhaités, en moins de 5 minutes."
+        },
+        "compare": {
+          "title": "Comparer les offres",
+          "body": "Des offres ramenées au même format, classées par coût total."
+        }
+      },
+      "comingSoon": "Bientôt disponible",
+      "emptyTitle": "Aucune demande pour l’instant",
+      "emptyBody": "Une seule demande suffit pour recevoir plusieurs offres de bailleurs, gratuitement.",
+      "newRequest": "Nouvelle demande",
+      "newRequestHint": "Le dépôt de demande ouvrira à la phase 4.",
+      "privacyTitle": "Vos données restent sous votre contrôle",
+      "privacyBody": "Aucun document n’est partagé avec un bailleur sans votre consentement explicite, bailleur par bailleur (loi 09-08)."
+    },
+    "lessor": {
+      "name": "Espace bailleur",
+      "inboxTitle": "Boîte de réception",
+      "inboxBody": "Dossiers routés vers {organization}, triés par délai de réponse restant.",
+      "kpiReceived": "Dossiers reçus",
+      "kpiPeriod": "30 derniers jours",
+      "kpiPending": "En attente de réponse",
+      "kpiSla": "Objectif : réponse sous 72 h",
+      "kpiDelay": "Délai moyen de réponse",
+      "kpiWinRate": "Taux de gain",
+      "columns": {
+        "reference": "Dossier",
+        "company": "Entreprise",
+        "amount": "Montant HT",
+        "duration": "Durée",
+        "grade": "Indice",
+        "sla": "Délai restant",
+        "status": "Statut"
+      },
+      "emptyTitle": "Aucun dossier routé vers vous",
+      "emptyBody": "Les dossiers qui correspondent à vos critères d’appétit apparaîtront ici, avec leur échéance de réponse."
+    },
+    "admin": {
+      "name": "Back-office",
+      "overviewTitle": "Vue d’ensemble",
+      "overviewBody": "État de la plateforme et des organisations.",
+      "kpiKyc": "Dossiers KYC à revoir",
+      "kpiKycHint": "File de revue : phase 5",
+      "kpiCompanies": "Entreprises",
+      "kpiLessors": "Bailleurs",
+      "kpiLessorsHint": "Mandats : phase 8",
+      "kpiEvents": "Événements d’audit",
+      "kpiEventsHint": "24 dernières heures",
+      "organizationsTitle": "Organisations",
+      "columns": {
+        "name": "Nom",
+        "type": "Type",
+        "members": "Membres"
+      },
+      "kycEmptyTitle": "File KYC vide",
+      "kycEmptyBody": "Les dossiers à vérifier apparaîtront ici dès l’ouverture du dépôt de documents."
+    }
+  },
+  "audit": {
+    "title": "Journal d’audit",
+    "description": "Les {limit} derniers événements, append-only et chaînés par empreinte SHA-256.",
+    "chainOk": "Chaîne intègre",
+    "chainBroken": "Altération détectée à l’événement n° {id}",
+    "columns": {
+      "date": "Date",
+      "action": "Action",
+      "actor": "Acteur",
+      "organization": "Organisation",
+      "details": "Détails",
+      "ip": "Adresse IP"
+    },
+    "system": "Système",
+    "empty": "Aucun événement pour l’instant.",
+    "restrictedTitle": "Accès restreint",
+    "restrictedBody": "La consultation du journal d’audit est réservée aux administrateurs et aux opérations.",
+    "deletedUser": "Compte supprimé"
+  },
+  "auth": {
+    "panelTitle": "Un dossier. Plusieurs offres. Une décision éclairée.",
+    "panelBody": "Mettez les bailleurs en concurrence sur le coût total de votre financement, gratuitement.",
+    "panelFacts": {
+      "one": {
+        "label": "Pour l’entreprise",
+        "value": "Gratuit"
+      },
+      "two": {
+        "label": "Réponse visée",
+        "value": "72 h"
+      },
+      "three": {
+        "label": "Bailleurs consultés",
+        "value": "3 à 5"
+      }
+    },
+    "title": "Connexion",
+    "subtitle": "Accédez à votre espace.",
+    "tabsLabel": "Type de compte",
+    "tabCompany": "Entreprise",
+    "tabPro": "Bailleur ou équipe",
+    "emailLabel": "Adresse e-mail professionnelle",
+    "emailPlaceholder": "prenom.nom@entreprise.ma",
+    "sendCode": "Recevoir un code à 6 chiffres",
+    "sendLink": "Recevoir un lien de connexion",
+    "companyHint": "Aucun mot de passe : nous vous envoyons un code ou un lien valable 10 minutes.",
+    "codeSent": "Si un compte existe pour {email}, un code vient de lui être envoyé.",
+    "codeLabel": "Code reçu par e-mail",
+    "signIn": "Se connecter",
+    "changeEmail": "Changer d’adresse",
+    "resend": "Renvoyer le code",
+    "linkSent": "Si un compte existe pour {email}, un lien de connexion vient de lui être envoyé.",
+    "demoOutbox": "Ouvrir la boîte d’envoi de démonstration",
+    "emailProLabel": "Adresse e-mail",
+    "passwordLabel": "Mot de passe",
+    "continue": "Continuer",
+    "proHint": "La double authentification est obligatoire pour les bailleurs et l’équipe de la plateforme.",
+    "totpPrompt": "Saisissez le code à 6 chiffres affiché par votre application d’authentification.",
+    "totpLabel": "Code d’authentification",
+    "verify": "Vérifier",
+    "demoHint": "Mode démonstration :",
+    "demoAccounts": "voir les comptes fictifs",
+    "errors": {
+      "tooMany": "Trop de tentatives. Réessayez dans une minute.",
+      "credentials": "Identifiants incorrects.",
+      "code": "Code incorrect ou expiré.",
+      "generic": "Une erreur est survenue. Réessayez."
+    }
+  },
+  "twoFactor": {
+    "title": "Activer la double authentification",
+    "subtitle": "Obligatoire pour les bailleurs et l’équipe de la plateforme, avant tout accès aux dossiers.",
+    "passwordLabel": "Confirmez votre mot de passe",
+    "start": "Commencer",
+    "scanBody": "Scannez ce QR code avec votre application d’authentification (Google Authenticator, 1Password, Authy…), puis saisissez le code affiché.",
+    "qrAlt": "QR code de configuration de l’authentification",
+    "manualKey": "Clé de configuration manuelle",
+    "codeLabel": "Code à 6 chiffres",
+    "activate": "Activer",
+    "enabled": "Double authentification activée.",
+    "backupTitle": "Codes de secours",
+    "backupBody": "Conservez-les en lieu sûr : chacun permet une connexion si vous perdez votre téléphone. Ils ne seront plus affichés.",
+    "copyCodes": "Copier les codes",
+    "continue": "Accéder à mon espace"
+  },
+  "demo": {
+    "banner": "Mode démonstration : organisations et personnes fictives.",
+    "bannerLink": "Comptes de démo",
+    "title": "Comptes de démonstration",
+    "intro": "Organisations et personnes fictives, pour présenter la plateforme. Les codes d’authentification se renouvellent toutes les 30 secondes.",
+    "password": "Mot de passe :",
+    "totp": "Code 2FA :",
+    "passwordless": "Connexion par code ou lien e-mail",
+    "goSignIn": "Aller à la connexion",
+    "outboxTitle": "Boîte d’envoi de démonstration",
+    "warning": "Ces identifiants sont publics : une base de démonstration ne contient jamais de données réelles.",
+    "outboxIntro": "Les e-mails de connexion y sont déposés tant qu’aucun fournisseur d’envoi n’est branché.",
+    "outboxEmptyTitle": "Aucun e-mail",
+    "outboxEmptyBody": "Demandez un code ou un lien depuis la page de connexion.",
+    "openLink": "Ouvrir le lien de connexion"
+  },
+  "errors": {
+    "notFoundTitle": "Page introuvable",
+    "notFoundBody": "Cette page n’existe pas ou a été déplacée.",
+    "backHome": "Retour à l’accueil",
+    "forbiddenTitle": "Accès non autorisé",
+    "forbiddenBody": "Votre rôle ne donne pas accès à cet espace. La tentative a été enregistrée.",
+    "backToSpace": "Retour à mon espace"
+  },
+  "legal": {
+    "intermediary": "{brand} est un intermédiaire en opérations de crédit-bail agissant sous mandat écrit des bailleurs (loi 103-12). {brand} ne manie aucun fonds et ne prend aucune décision de crédit : la décision appartient exclusivement au bailleur."
+  },
+  "home": {
+    "signIn": "Se connecter",
+    "eyebrow": "Crédit-bail B2B · Maroc",
+    "title": "Mettez les bailleurs en concurrence. Gratuitement.",
+    "subtitle": "Déposez un seul dossier. {brand} le vérifie et le transmet aux bailleurs adaptés ; vous comparez leurs offres sur le coût total.",
+    "cta": "Accéder à mon espace",
+    "demo": "Comptes de démonstration",
+    "simulatorSoon": "Simulateur de loyer : bientôt disponible.",
+    "steps": {
+      "one": {
+        "title": "Un seul dossier",
+        "body": "Vos documents et votre demande, déposés une fois, réutilisables ensuite."
+      },
+      "two": {
+        "title": "Plusieurs bailleurs",
+        "body": "Le dossier est transmis, avec votre accord, aux 3 à 5 bailleurs dont les critères correspondent."
+      },
+      "three": {
+        "title": "Une décision éclairée",
+        "body": "Des offres comparées sur le coût total, sans aucune position sponsorisée."
+      }
+    }
+  },
+  "emails": {
+    "magicLinkSubject": "Votre lien de connexion {brand}",
+    "magicLinkBody": "Bonjour,\n\nVoici votre lien de connexion, valable 10 minutes :\n{url}\n\nSi vous n’êtes pas à l’origine de cette demande, ignorez ce message.",
+    "otpSubject": "Votre code de connexion {brand}",
+    "otpBody": "Bonjour,\n\nVotre code de connexion : {otp}\nIl est valable 10 minutes.\n\nSi vous n’êtes pas à l’origine de cette demande, ignorez ce message."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": ["NODE_ENV", "LP_DEMO_MODE"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": ["DATABASE_URL", "DATABASE_URL_AUTH", "BETTER_AUTH_SECRET", "BETTER_AUTH_URL"]
+    },
+    "dev": { "cache": false, "persistent": true },
+    "lint": {},
+    "typecheck": {},
+    "test": {
+      "outputs": ["coverage/**"],
+      "env": ["DATABASE_URL_TEST"]
+    }
+  }
+}
