@@ -4,6 +4,21 @@ packages:
 
 # Chaîne d'approvisionnement : aucune version publiée depuis moins de 14 jours.
 minimumReleaseAge: 20160
+# Exceptions : correctifs de sécurité seulement, version exacte, motif noté.
+# next@15.5.28 : avis critique et haut publiés le 2026-10-22 (RCE optimisation
+# d'images SVG, déni de service Server Actions).
+minimumReleaseAgeExclude:
+  - next@15.5.28
+  - "@next/eslint-plugin-next@15.5.28"
+  - "@next/env@15.5.28"
+  - "@next/swc-darwin-x64@15.5.28"
+  - "@next/swc-darwin-arm64@15.5.28"
+  - "@next/swc-linux-x64-gnu@15.5.28"
+  - "@next/swc-linux-x64-musl@15.5.28"
+  - "@next/swc-win32-x64-msvc@15.5.28"
+  - "@next/swc-linux-arm64-gnu@15.5.28"
+  - "@next/swc-linux-arm64-musl@15.5.28"
+  - "@next/swc-win32-arm64-msvc@15.5.28"
 
 onlyBuiltDependencies:
   - esbuild
