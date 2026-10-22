@@ -15,6 +15,20 @@
       "when": 1792527439266,
       "tag": "0001_security",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792692975178,
+      "tag": "0002_marketing_leads",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792692976013,
+      "tag": "0003_marketing_security",
+      "breakpoints": true
     }
   ]
 }

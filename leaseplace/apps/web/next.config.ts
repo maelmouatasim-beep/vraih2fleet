@@ -18,6 +18,12 @@ const config: NextConfig = {
   // Le lint tourne à part (pnpm lint, CI) avec la config partagée.
   eslint: { ignoreDuringBuilds: true },
   reactStrictMode: true,
+  // Métadonnées toujours dans <head> (pas de diffusion différée selon le robot).
+  htmlLimitedBots: /.*/,
+  experimental: {
+    // CSS intégrée au HTML : aucune feuille bloquant le premier rendu.
+    inlineCss: true,
+  },
   transpilePackages: [
     "@leaseplace/ui",
     "@leaseplace/domain",

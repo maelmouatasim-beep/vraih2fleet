@@ -52,6 +52,12 @@ Cas de référence recalculés par `scripts/finance/reference.py` :
 `python3 scripts/finance/reference.py > packages/domain/src/finance/__fixtures__/reference-cases.json`.
 Simulateur public : `/simulateur`.
 
+## Site public
+
+`/`, `/simulateur`, `/secteurs/{transport,btp,medical}`, `/bailleurs`
+(formulaire de contact → `marketing.leads`, lu dans `/admin/contacts`),
+`/mentions-legales`, `sitemap.xml`, `robots.txt`. Performance : ADR 0010.
+
 ## Sécurité, en bref
 
 - Trois rôles Postgres : propriétaire (migrations), `lp_auth` (Better-Auth,

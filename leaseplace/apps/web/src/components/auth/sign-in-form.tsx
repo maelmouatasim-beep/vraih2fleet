@@ -2,7 +2,7 @@
 
 import { ArrowLeft, Building2, Landmark, Mail, MailCheck } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { Tabs } from "radix-ui";
+import * as Tabs from "@radix-ui/react-tabs";
 import { useState } from "react";
 import { Alert } from "@leaseplace/ui/alert";
 import { Button } from "@leaseplace/ui/button";

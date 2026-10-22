@@ -127,9 +127,9 @@ function Parameters({ p, set }: { p: SimulatorParams; set: Setter }) {
           min={LIMITS.amount.min}
           max={5_000_000}
           step={10_000}
-          value={[Math.min(p.amount, 5_000_000)]}
-          onValueChange={([v]) => {
-            if (v !== undefined) set("amount", v);
+          value={Math.min(p.amount, 5_000_000)}
+          onValueChange={(v) => {
+            set("amount", v);
           }}
         />
       </Field>
@@ -141,9 +141,9 @@ function Parameters({ p, set }: { p: SimulatorParams; set: Setter }) {
           min={LIMITS.months.min}
           max={LIMITS.months.max}
           step={LIMITS.months.step}
-          value={[p.months]}
-          onValueChange={([v]) => {
-            if (v !== undefined) set("months", v);
+          value={p.months}
+          onValueChange={(v) => {
+            set("months", v);
           }}
         />
       </Field>
@@ -162,9 +162,9 @@ function Parameters({ p, set }: { p: SimulatorParams; set: Setter }) {
           min={LIMITS.firstRentPct.min}
           max={LIMITS.firstRentPct.max}
           step={1}
-          value={[p.firstRentPct]}
-          onValueChange={([v]) => {
-            if (v !== undefined) set("firstRentPct", v);
+          value={p.firstRentPct}
+          onValueChange={(v) => {
+            set("firstRentPct", v);
           }}
         />
       </Field>
@@ -179,9 +179,9 @@ function Parameters({ p, set }: { p: SimulatorParams; set: Setter }) {
           min={LIMITS.residualPct.min}
           max={LIMITS.residualPct.max}
           step={1}
-          value={[p.residualPct]}
-          onValueChange={([v]) => {
-            if (v !== undefined) set("residualPct", v);
+          value={p.residualPct}
+          onValueChange={(v) => {
+            set("residualPct", v);
           }}
         />
       </Field>

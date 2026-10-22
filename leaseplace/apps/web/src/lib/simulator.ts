@@ -1,9 +1,8 @@
 /**
- * Modèle du simulateur public : paramètres bornés (lus depuis l'URL pour
- * qu'une simulation soit partageable) et calcul par le moteur de
- * packages/domain. Aucun chiffre n'est calculé ailleurs.
+ * Modèle du simulateur public : bornes, défauts et calcul par le moteur de
+ * packages/domain (aucun chiffre calculé ailleurs). Importé côté navigateur :
+ * pas de Zod ici ; la lecture de l'URL est dans simulator-params.ts (serveur).
  */
-import { z } from "zod";
 import {
   compareFinancing,
   DEFAULT_VAT_RATE,
@@ -16,6 +15,20 @@ import {
 } from "@leaseplace/domain";
 
 export const SIMULATOR_PERIODICITIES = ["monthly", "quarterly", "semiannual"] as const;
+
+export interface SimulatorParams {
+  amount: number;
+  months: number;
+  periodicity: (typeof SIMULATOR_PERIODICITIES)[number];
+  timing: "advance" | "arrears";
+  firstRentPct: number;
+  residualPct: number;
+  ratePct: number;
+  feesHt: number;
+  taxPct: number;
+  discountPct: number;
+  usefulLifeYears: number;
+}
 
 /** Hypothèses par défaut : modifiables à l'écran, jamais présentées comme des taux de marché. */
 export const DEFAULTS = {
@@ -43,45 +56,6 @@ export const LIMITS = {
   discountPct: { min: 0, max: 25 },
   usefulLifeYears: { min: 1, max: 20 },
 } as const;
-
-const num = (min: number, max: number, fallback: number) =>
-  z.coerce.number().min(min).max(max).catch(fallback);
-
-export const simulatorSchema = z.object({
-  amount: num(LIMITS.amount.min, LIMITS.amount.max, DEFAULTS.amount),
-  months: z.coerce
-    .number()
-    .int()
-    .min(LIMITS.months.min)
-    .max(LIMITS.months.max)
-    .refine((m) => m % LIMITS.months.step === 0)
-    .catch(DEFAULTS.months),
-  periodicity: z.enum(SIMULATOR_PERIODICITIES).catch(DEFAULTS.periodicity),
-  timing: z.enum(["advance", "arrears"]).catch(DEFAULTS.timing),
-  firstRentPct: num(LIMITS.firstRentPct.min, LIMITS.firstRentPct.max, DEFAULTS.firstRentPct),
-  residualPct: num(LIMITS.residualPct.min, LIMITS.residualPct.max, DEFAULTS.residualPct),
-  ratePct: num(LIMITS.ratePct.min, LIMITS.ratePct.max, DEFAULTS.ratePct),
-  feesHt: num(LIMITS.feesHt.min, LIMITS.feesHt.max, DEFAULTS.feesHt),
-  taxPct: num(LIMITS.taxPct.min, LIMITS.taxPct.max, DEFAULTS.taxPct),
-  discountPct: num(LIMITS.discountPct.min, LIMITS.discountPct.max, DEFAULTS.discountPct),
-  usefulLifeYears: num(
-    LIMITS.usefulLifeYears.min,
-    LIMITS.usefulLifeYears.max,
-    DEFAULTS.usefulLifeYears,
-  ),
-});
-
-export type SimulatorParams = z.infer<typeof simulatorSchema>;
-
-/** Valeurs absentes ou hors bornes → défaut (jamais d'erreur pour un lien partagé). */
-export function parseSimulatorParams(
-  search: Record<string, string | string[] | undefined>,
-): SimulatorParams {
-  const flat = Object.fromEntries(
-    Object.entries(search).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v]),
-  );
-  return simulatorSchema.parse(flat);
-}
 
 /** Paramètres différents des défauts seulement : URL courte. */
 export function toSearchParams(params: SimulatorParams): URLSearchParams {

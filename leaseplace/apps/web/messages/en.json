@@ -11,7 +11,8 @@
     "language": "Language",
     "account": "My account",
     "twoFactorOn": "Two-factor authentication on",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "themeCurrent": "Theme: {mode}"
   },
   "nav": {
     "label": "Main navigation",
@@ -35,7 +36,8 @@
       "lessors": "Lessors & mandates",
       "commissions": "Commissions",
       "users": "Users",
-      "audit": "Audit log"
+      "audit": "Audit log",
+      "contacts": "Contacts"
     }
   },
   "palette": {
@@ -261,29 +263,6 @@
   "legal": {
     "intermediary": "{brand} is an intermediary in leasing transactions acting under written mandates from lessors (Law 103-12). {brand} never handles funds and makes no credit decision: the decision belongs exclusively to the lessor."
   },
-  "home": {
-    "signIn": "Sign in",
-    "eyebrow": "B2B leasing · Morocco",
-    "title": "Make lessors compete. For free.",
-    "subtitle": "Submit a single application. {brand} checks it and sends it to the right lessors; you compare their offers on total cost.",
-    "cta": "Go to my space",
-    "demo": "Demo accounts",
-    "steps": {
-      "one": {
-        "title": "One application",
-        "body": "Your documents and request, submitted once and reusable afterwards."
-      },
-      "two": {
-        "title": "Several lessors",
-        "body": "With your consent, the application goes to the 3 to 5 lessors whose criteria match."
-      },
-      "three": {
-        "title": "An informed decision",
-        "body": "Offers compared on total cost, with no sponsored placement."
-      }
-    },
-    "simulate": "Simulate a payment"
-  },
   "emails": {
     "magicLinkSubject": "Your {brand} sign-in link",
     "magicLinkBody": "Hello,\n\nHere is your sign-in link, valid for 10 minutes:\n{url}\n\nIf you did not request it, ignore this message.",
@@ -364,5 +343,415 @@
     "rentN": "Payment {n}",
     "residualShort": "Purchase option",
     "total": "Total"
+  },
+  "marketing": {
+    "nav": {
+      "home": "Home",
+      "label": "Site navigation",
+      "simulator": "Simulator",
+      "sectors": "Sectors",
+      "lessors": "For lessors",
+      "signIn": "Sign in",
+      "menu": "Menu"
+    },
+    "footer": {
+      "product": "Product",
+      "simulator": "Simulator",
+      "signIn": "Sign in",
+      "sectors": "Sectors",
+      "company": "Platform",
+      "forLessors": "For lessors",
+      "legal": "Legal notice and privacy",
+      "rights": "© {year} {brand}. All rights reserved."
+    }
+  },
+  "landing": {
+    "metaTitle": "{brand} — Make lessors compete, for free",
+    "metaDescription": "One leasing application, several offers from Moroccan lessors compared on total cost. Free for businesses.",
+    "eyebrow": "B2B leasing · Morocco",
+    "title": "Make lessors compete. For free.",
+    "subtitle": "Truck, construction machine, industrial or medical equipment: submit a single application. {brand} checks it, sends it with your consent to the right lessors, and you compare their offers on total cost.",
+    "pillars": {
+      "free": "Free for businesses",
+      "neutral": "Neutral ranking, never sponsored",
+      "fast": "Lessor response targeted within 72 h"
+    },
+    "cta": "Simulate my payment",
+    "ctaLessors": "Are you a lessor?",
+    "quick": {
+      "title": "Estimate your payment in 10 seconds",
+      "amount": "Amount excl. VAT",
+      "duration": "Term",
+      "months": "{n, plural, one {# month} other {# months}}",
+      "firstRent": "Increased first payment",
+      "rentLabel": "Estimated monthly payment excl. VAT",
+      "teg": "Implied effective rate {rate} · assumed rate {base}",
+      "details": "Detailed simulation",
+      "hint": "Indicative estimate based on an assumed rate; it is not an offer."
+    },
+    "how": {
+      "eyebrow": "How it works",
+      "title": "One application, several offers, an informed decision",
+      "body": "No more approaching lessors one by one: you submit once, we circulate the application, you choose.",
+      "steps": {
+        "one": {
+          "title": "Submit your application",
+          "body": "Equipment, amount, term and documents, in a few minutes, reusable afterwards."
+        },
+        "two": {
+          "title": "We check it",
+          "body": "Document consistency and file preparation, so lessors can review quickly."
+        },
+        "three": {
+          "title": "The right lessors respond",
+          "body": "With your explicit consent, the application goes to lessors whose criteria match."
+        },
+        "four": {
+          "title": "Compare and choose",
+          "body": "Offers converted to the same format, ranked by total cost, effective rate computed for each."
+        }
+      }
+    },
+    "preview": {
+      "eyebrow": "The comparison",
+      "title": "Offers compared on what they really cost",
+      "body": "Each offer is converted into a standard schedule: payments, fees, purchase option and implied effective rate computed by our engine. Ranking is by total cost, never by the platform's remuneration.",
+      "lessor": "Lessor {letter}",
+      "best": "Best total cost",
+      "line": "Payment {rent} excl. VAT · rate {rate}",
+      "totalCost": "Cost of financing",
+      "illustrative": "Illustrative example: fictitious offers for a 1,200,000 MAD truck over 60 months."
+    },
+    "sectorsSection": {
+      "eyebrow": "By sector",
+      "title": "Built for the equipment that runs your business",
+      "body": "Each sector has its own terms, assets and specialised lessors.",
+      "cta": "See the sector"
+    },
+    "trust": {
+      "eyebrow": "Trust and compliance",
+      "title": "A transparent intermediary, not a lender",
+      "items": {
+        "mandate": {
+          "title": "Mandated by lessors",
+          "body": "{brand} acts as an intermediary in leasing transactions, under a written mandate from each lessor (Law 103-12)."
+        },
+        "decision": {
+          "title": "No credit decisions",
+          "body": "Our orientation index helps route the application; the decision belongs exclusively to the lessor."
+        },
+        "data": {
+          "title": "Your data under control",
+          "body": "Nothing is shared without your explicit consent, lessor by lessor (Law 09-08), revocable at any time."
+        },
+        "security": {
+          "title": "Security by design",
+          "body": "Encrypted traffic, two-factor authentication for lessors, strict isolation and an audit log of every access."
+        }
+      }
+    },
+    "lessorsTeaser": {
+      "eyebrow": "For lessors",
+      "title": "Prepared applications that match your appetite",
+      "body": "{brand} only sends you applications that match your criteria, complete and checked. Success-based fee.",
+      "cta": "Discover the lessor offer"
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "What you need to know",
+      "body": "Status, cost, data, timing: clear answers.",
+      "items": {
+        "intermediary": {
+          "q": "Who is {brand}?",
+          "a": "{brand} is an intermediary in leasing transactions acting under written mandates from leasing companies (Law 103-12). We do not lend money and never handle funds."
+        },
+        "free": {
+          "q": "Is it really free for my business?",
+          "a": "Yes. The service is free for businesses, with no commitment: you are free to decline every offer."
+        },
+        "decision": {
+          "q": "Who decides to grant the financing?",
+          "a": "Only the lessor. {brand} prepares and routes the application; it makes no credit decision."
+        },
+        "data": {
+          "q": "What happens to my documents?",
+          "a": "They are encrypted and only sent to the lessors you accepted, by name, in line with Law 09-08. You can access, correct and request deletion of your data."
+        },
+        "lessors": {
+          "q": "How many lessors receive my application?",
+          "a": "Usually three to five, selected because their criteria match your need (amount, sector, term, type of equipment). You see their names before accepting."
+        },
+        "delay": {
+          "q": "How long until I receive offers?",
+          "a": "Our target is a lessor response within 72 hours for a complete application. Actual timing depends on each lessor and on your application."
+        },
+        "score": {
+          "q": "What is the orientation index for?",
+          "a": "It is an explainable grid that helps route your application to suitable lessors. Orientation index: the decision belongs exclusively to the lessor."
+        },
+        "commission": {
+          "q": "How is {brand} paid?",
+          "a": "By lessors, through a success fee paid when the lease starts, as set in their mandate. It never affects how offers are ranked."
+        }
+      }
+    },
+    "final": {
+      "title": "What would your equipment cost on a lease?",
+      "body": "Simulate in seconds, no sign-up needed."
+    }
+  },
+  "sectors": {
+    "common": {
+      "eyebrow": "Leasing · {sector}",
+      "equipmentTitle": "Commonly financed equipment",
+      "exampleNote": "Pre-filled illustrative example; adjust the amounts to your project.",
+      "pointsTitle": "Points to watch",
+      "faqTitle": "Sector questions",
+      "simulateCta": "Open the full simulator"
+    },
+    "transport": {
+      "name": "Transport and logistics",
+      "teaser": "Tractors, rigid trucks, semi-trailers, vans: finance your fleet without tying up cash.",
+      "metaTitle": "Transport and logistics leasing in Morocco",
+      "metaDescription": "Lease trucks, semi-trailers and vans: one application, several lessor offers compared on total cost.",
+      "title": "Leasing for transport and logistics",
+      "intro": "Replacing a tractor or growing a fleet ties up a lot of cash. Leasing spreads the investment over the vehicle's working life.",
+      "equipment": {
+        "e1": "Road tractors",
+        "e2": "Rigid and refrigerated trucks",
+        "e3": "Semi-trailers and tippers",
+        "e4": "Light commercial vehicles",
+        "e5": "Forklifts and handling equipment"
+      },
+      "points": {
+        "c1": {
+          "title": "Term and usage",
+          "body": "Choose the term based on actual use and expected mileage: an overly long term raises the cost with no benefit."
+        },
+        "c2": {
+          "title": "New or used",
+          "body": "Some lessors finance used vehicles; age and condition weigh on the terms."
+        },
+        "c3": {
+          "title": "Resale value",
+          "body": "Good resale value reassures the lessor and can improve the offer."
+        }
+      },
+      "faq": {
+        "q1": {
+          "q": "Can several vehicles be financed in one application?",
+          "a": "Yes: describe them all in your request; each lessor states what it can finance."
+        },
+        "q2": {
+          "q": "Is the dealer's quote required?",
+          "a": "Yes, a quote or pro forma invoice lets lessors price precisely."
+        },
+        "q3": {
+          "q": "Who owns the vehicle during the lease?",
+          "a": "The lessor; you use it, and you can acquire it at the end by exercising the purchase option."
+        }
+      }
+    },
+    "btp": {
+      "name": "Construction and public works",
+      "teaser": "Excavators, loaders, cranes, batching plants: machinery financed at the pace of your projects.",
+      "metaTitle": "Construction equipment leasing in Morocco",
+      "metaDescription": "Lease excavators, loaders, cranes and site equipment: compare offers from several lessors, for free.",
+      "title": "Leasing for construction and public works",
+      "intro": "Construction machinery means large amounts. Leasing preserves your capacity to bid for contracts while equipping your teams.",
+      "equipment": {
+        "e1": "Hydraulic excavators and mini-excavators",
+        "e2": "Loaders and graders",
+        "e3": "Cranes and aerial platforms",
+        "e4": "Concrete batching plants and mixers",
+        "e5": "Compactors and earthmoving equipment"
+      },
+      "points": {
+        "c1": {
+          "title": "Project seasonality",
+          "body": "Quarterly or half-yearly payments can match your cash inflows better than monthly ones."
+        },
+        "c2": {
+          "title": "Contracts in hand",
+          "body": "Signed contracts help the lessor assess your repayment capacity."
+        },
+        "c3": {
+          "title": "Specialised equipment",
+          "body": "Very specific machinery is harder to resell: the first payment or residual value may reflect it."
+        }
+      },
+      "faq": {
+        "q1": {
+          "q": "Can I choose quarterly payments?",
+          "a": "Yes, the frequency is discussed with each lessor; the simulator lets you compare."
+        },
+        "q2": {
+          "q": "Can used equipment be financed?",
+          "a": "By some lessors, depending on the machine's age, condition and market value."
+        },
+        "q3": {
+          "q": "Which documents should I prepare?",
+          "a": "Company documents (trade register, articles, financial statements), the equipment quote and, if possible, your ongoing contracts."
+        }
+      }
+    },
+    "medical": {
+      "name": "Medical and healthcare",
+      "teaser": "Imaging, operating room, dental practice, laboratory: equip yourself without straining your cash.",
+      "metaTitle": "Medical equipment leasing in Morocco",
+      "metaDescription": "Lease imaging, practice and laboratory equipment: one application, several lessor offers compared.",
+      "title": "Leasing for medical equipment",
+      "intro": "Clinics, practices and laboratories renew costly equipment that becomes obsolete quickly. Leasing aligns the financing term with the period of use.",
+      "equipment": {
+        "e1": "Imaging (ultrasound, radiology)",
+        "e2": "Dental chairs and equipment",
+        "e3": "Operating room equipment",
+        "e4": "Laboratory analysers and equipment",
+        "e5": "Practice furniture and equipment"
+      },
+      "points": {
+        "c1": {
+          "title": "Technological obsolescence",
+          "body": "A shorter term lets you renew fast-evolving equipment sooner."
+        },
+        "c2": {
+          "title": "Approved supplier",
+          "body": "A quote from a recognised supplier, with warranty and maintenance, eases the review."
+        },
+        "c3": {
+          "title": "Regulated profession",
+          "body": "Lessors may ask for documents specific to medical practice."
+        }
+      },
+      "faq": {
+        "q1": {
+          "q": "Can an individual practice apply?",
+          "a": "Yes, provided it can supply the documents lessors require for its legal form."
+        },
+        "q2": {
+          "q": "Can maintenance be included?",
+          "a": "Some lessors include it or offer it as an option; it then appears in the offer details."
+        },
+        "q3": {
+          "q": "Can installation be financed?",
+          "a": "Depending on the lessor, installation costs on the quote can be included in the financed amount."
+        }
+      }
+    }
+  },
+  "lessorsPage": {
+    "metaTitle": "For lessors",
+    "metaDescription": "{brand} sends leasing companies prepared SME applications that match their criteria, with a success-based fee.",
+    "eyebrow": "For leasing companies",
+    "title": "SME applications ready for review, at a lower review cost",
+    "subtitle": "Small applications cost almost as much to review as large ones. {brand} prepares and checks them, and only sends you those that match your appetite.",
+    "benefits": {
+      "qualified": {
+        "title": "Prepared applications",
+        "body": "Documents collected, consistency checked, summary note: you save review time."
+      },
+      "appetite": {
+        "title": "On your criteria",
+        "body": "Amounts, sectors, terms, equipment, regions: you only receive what you finance."
+      },
+      "decision": {
+        "title": "Always your decision",
+        "body": "{brand} routes without deciding: credit analysis and decision stay yours, final KYC included."
+      },
+      "sla": {
+        "title": "Tracked response times",
+        "body": "An inbox sorted by time remaining, with a 72-hour response target."
+      },
+      "success": {
+        "title": "Success-based fee",
+        "body": "No access fee: a commission paid only when the lease starts, per the grid in your mandate."
+      },
+      "security": {
+        "title": "Security and confidentiality",
+        "body": "Two-factor authentication, strict isolation between lessors, an audit log of every view."
+      }
+    },
+    "howTitle": "How it works",
+    "steps": {
+      "s1": "We sign a written mandate setting out your criteria and the commission grid.",
+      "s2": "You receive applications matching your criteria, with the business's consent.",
+      "s3": "You ask questions in the platform and submit a priced offer, or decline with a reason.",
+      "s4": "If the business picks your offer, you contract directly with it; {brand} follows up until the lease starts."
+    },
+    "commissionTitle": "A neutral offer for the business",
+    "commissionBody": "Offers are ranked by total cost to the business. No placement is ever sold: your best offer is your best argument.",
+    "formTitle": "Let's talk about your appetite",
+    "formSubtitle": "Leave your details: our team will get back to you with a presentation and the draft mandate.",
+    "form": {
+      "organization": "Institution",
+      "contactName": "Full name",
+      "email": "Work email address",
+      "phone": "Phone (optional)",
+      "message": "Message (optional)",
+      "consent": "I agree that my details may be used to contact me about this request (Law 09-08).",
+      "privacyLink": "Privacy",
+      "submit": "Send",
+      "sending": "Sending…",
+      "successTitle": "Thank you, your request has been recorded.",
+      "successBody": "Our team will get back to you shortly.",
+      "honeypot": "Leave empty",
+      "errors": {
+        "invalid": "Check the fields: name, institution, email and consent are required.",
+        "tooMany": "Too many requests sent. Try again later.",
+        "generic": "Sending failed. Please try again."
+      }
+    }
+  },
+  "legalPage": {
+    "title": "Legal notice and privacy",
+    "description": "Publisher, intermediary status, personal data protection and cookies of {brand}.",
+    "draft": "Provisional document: information in brackets will be completed once the company is incorporated, and the whole must be reviewed by a lawyer.",
+    "sections": {
+      "publisher": {
+        "title": "Publisher",
+        "body": "{brand} is published by {entity}.\nICE: {ice} · RC: {rc} · Tax ID: {taxId}\nRegistered office: {address}\nContact: {email}"
+      },
+      "status": {
+        "title": "Status",
+        "body": "{brand} is an intermediary in leasing transactions acting under written mandates from leasing companies (Law 103-12). {brand} never handles funds and makes no credit decision: the decision belongs exclusively to the lessor. The orientation index shown is a tool to help route applications."
+      },
+      "data": {
+        "title": "Personal data",
+        "body": "Data controller: {entity}. Purposes: account management, preparation of financing applications, transmission to the lessors you choose, replies to contact requests. No data is sent to a lessor without explicit consent, given lessor by lessor and revocable. CNDP declaration or authorisation: [to be confirmed]."
+      },
+      "rights": {
+        "title": "Your rights",
+        "body": "Under Law 09-08, you have the right to access, correct and object, and may request deletion of your data, subject to legal retention obligations. Write to {email}."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "body": "The site only uses necessary cookies: sign-in session and language preference. Your theme choice is stored in your browser. No advertising cookies."
+      },
+      "hosting": {
+        "title": "Hosting",
+        "body": "Host and region: [to be confirmed — European Union region considered, subject to the lawyer's opinion on data transfers]."
+      }
+    }
+  },
+  "contacts": {
+    "title": "Contact requests",
+    "description": "Requests received from the public site (latest 200).",
+    "emptyTitle": "No requests",
+    "emptyBody": "Requests sent from the “For lessors” page will appear here.",
+    "restrictedTitle": "Restricted access",
+    "restrictedBody": "Reserved for administrators and operations.",
+    "columns": {
+      "date": "Date",
+      "kind": "Type",
+      "organization": "Institution",
+      "contact": "Contact",
+      "email": "Email",
+      "phone": "Phone",
+      "message": "Message"
+    },
+    "kinds": {
+      "lessor": "Lessor",
+      "company": "Business"
+    }
   }
 }

@@ -5,6 +5,9 @@ export const routing = defineRouting({
   defaultLocale: "fr",
   // Français sans préfixe (/), arabe et anglais préfixés (/ar, /en).
   localePrefix: "as-needed",
+  // Pas de redirection selon la langue du navigateur (recommandation SEO) : « / » reste
+  // en français ; le choix fait dans le sélecteur est mémorisé par cookie.
+  localeDetection: false,
 });
 
 export type Locale = (typeof routing.locales)[number];

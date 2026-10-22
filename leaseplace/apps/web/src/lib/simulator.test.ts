@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULTS, parseSimulatorParams, simulate, toSearchParams } from "./simulator";
+import { DEFAULTS, simulate, toSearchParams } from "./simulator";
+import { parseSimulatorParams } from "./simulator-params";
 
 describe("simulateur", () => {
   it("défauts quand l'URL est vide ou invalide", () => {

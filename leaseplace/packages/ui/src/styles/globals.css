@@ -60,15 +60,16 @@
 :root {
   --lp-font-sans:
     var(--font-geist-sans), "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
-  --lp-font-display: "Fraunces Variable", ui-serif, Georgia, serif;
-  --lp-font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --lp-font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --lp-font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
-/* Arabe : Plex Arabic d'abord (Geist n'a pas de glyphes arabes). */
+/* Arabe : Geist pour les chiffres et le latin, Plex Arabic pour les glyphes
+   arabes (repli caractère par caractère ; seul le sous-ensemble arabe est chargé). */
 :root:lang(ar) {
   --lp-font-sans:
-    "IBM Plex Sans Arabic", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --lp-font-display: "IBM Plex Sans Arabic", var(--font-geist-sans), ui-sans-serif, sans-serif;
+    var(--font-geist-sans), "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --lp-font-display: var(--font-geist-sans), "IBM Plex Sans Arabic", ui-sans-serif, sans-serif;
 }
 
 @layer base {
@@ -103,4 +104,54 @@
 
 @utility tabular {
   font-variant-numeric: tabular-nums;
+}
+
+/* Curseur natif aux couleurs de la marque (Slider). */
+.lp-range {
+  appearance: none;
+  height: 20px;
+  background: transparent;
+  cursor: pointer;
+  --lp-range-fill: var(--lp-primary);
+}
+.lp-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--lp-surface-sunken);
+}
+.lp-range::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--lp-surface-sunken);
+}
+.lp-range::-moz-range-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--lp-range-fill);
+}
+.lp-range::-webkit-slider-thumb {
+  appearance: none;
+  margin-top: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 2px solid var(--lp-primary);
+  background: var(--lp-surface);
+  box-shadow: var(--lp-shadow-sm);
+}
+.lp-range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 2px solid var(--lp-primary);
+  background: var(--lp-surface);
+}
+.lp-range:focus-visible {
+  outline: none;
+}
+.lp-range:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--lp-ring) 30%, transparent);
+}
+.lp-range:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--lp-ring) 30%, transparent);
 }

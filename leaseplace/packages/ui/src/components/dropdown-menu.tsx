@@ -1,6 +1,6 @@
 "use client";
 
-import { DropdownMenu as Primitive } from "radix-ui";
+import * as Primitive from "@radix-ui/react-dropdown-menu";
 import type { ComponentProps } from "react";
 import { cn } from "../lib/cn";
 

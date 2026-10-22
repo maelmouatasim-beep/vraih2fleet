@@ -11,7 +11,8 @@
     "language": "Langue",
     "account": "Mon compte",
     "twoFactorOn": "Double authentification active",
-    "signOut": "Se déconnecter"
+    "signOut": "Se déconnecter",
+    "themeCurrent": "Thème : {mode}"
   },
   "nav": {
     "label": "Navigation principale",
@@ -35,7 +36,8 @@
       "lessors": "Bailleurs et mandats",
       "commissions": "Commissions",
       "users": "Utilisateurs",
-      "audit": "Journal d’audit"
+      "audit": "Journal d’audit",
+      "contacts": "Contacts"
     }
   },
   "palette": {
@@ -261,29 +263,6 @@
   "legal": {
     "intermediary": "{brand} est un intermédiaire en opérations de crédit-bail agissant sous mandat écrit des bailleurs (loi 103-12). {brand} ne manie aucun fonds et ne prend aucune décision de crédit : la décision appartient exclusivement au bailleur."
   },
-  "home": {
-    "signIn": "Se connecter",
-    "eyebrow": "Crédit-bail B2B · Maroc",
-    "title": "Mettez les bailleurs en concurrence. Gratuitement.",
-    "subtitle": "Déposez un seul dossier. {brand} le vérifie et le transmet aux bailleurs adaptés ; vous comparez leurs offres sur le coût total.",
-    "cta": "Accéder à mon espace",
-    "demo": "Comptes de démonstration",
-    "steps": {
-      "one": {
-        "title": "Un seul dossier",
-        "body": "Vos documents et votre demande, déposés une fois, réutilisables ensuite."
-      },
-      "two": {
-        "title": "Plusieurs bailleurs",
-        "body": "Le dossier est transmis, avec votre accord, aux 3 à 5 bailleurs dont les critères correspondent."
-      },
-      "three": {
-        "title": "Une décision éclairée",
-        "body": "Des offres comparées sur le coût total, sans aucune position sponsorisée."
-      }
-    },
-    "simulate": "Simuler un loyer"
-  },
   "emails": {
     "magicLinkSubject": "Votre lien de connexion {brand}",
     "magicLinkBody": "Bonjour,\n\nVoici votre lien de connexion, valable 10 minutes :\n{url}\n\nSi vous n’êtes pas à l’origine de cette demande, ignorez ce message.",
@@ -364,5 +343,415 @@
     "rentN": "Loyer {n}",
     "residualShort": "Option d’achat",
     "total": "Total"
+  },
+  "marketing": {
+    "nav": {
+      "home": "Accueil",
+      "label": "Navigation du site",
+      "simulator": "Simulateur",
+      "sectors": "Secteurs",
+      "lessors": "Pour les bailleurs",
+      "signIn": "Se connecter",
+      "menu": "Menu"
+    },
+    "footer": {
+      "product": "Produit",
+      "simulator": "Simulateur",
+      "signIn": "Se connecter",
+      "sectors": "Secteurs",
+      "company": "Plateforme",
+      "forLessors": "Pour les bailleurs",
+      "legal": "Mentions légales et confidentialité",
+      "rights": "© {year} {brand}. Tous droits réservés."
+    }
+  },
+  "landing": {
+    "metaTitle": "{brand} — Mettez les bailleurs en concurrence, gratuitement",
+    "metaDescription": "Un seul dossier de crédit-bail, plusieurs offres de bailleurs marocains comparées sur le coût total. Gratuit pour les entreprises.",
+    "eyebrow": "Crédit-bail B2B · Maroc",
+    "title": "Mettez les bailleurs en concurrence. Gratuitement.",
+    "subtitle": "Camion, engin, machine, matériel médical : déposez un seul dossier. {brand} le vérifie, le transmet avec votre accord aux bailleurs adaptés, et vous comparez leurs offres sur le coût total.",
+    "pillars": {
+      "free": "Gratuit pour l’entreprise",
+      "neutral": "Classement neutre, jamais sponsorisé",
+      "fast": "Réponse des bailleurs visée sous 72 h"
+    },
+    "cta": "Simuler mon loyer",
+    "ctaLessors": "Vous êtes bailleur ?",
+    "quick": {
+      "title": "Estimez votre loyer en 10 secondes",
+      "amount": "Montant HT",
+      "duration": "Durée",
+      "months": "{n, plural, one {# mois} other {# mois}}",
+      "firstRent": "Premier loyer majoré",
+      "rentLabel": "Loyer mensuel HT estimé",
+      "teg": "TEG implicite {rate} · taux hypothétique {base}",
+      "details": "Simulation détaillée",
+      "hint": "Estimation indicative fondée sur un taux hypothétique ; elle ne vaut pas offre."
+    },
+    "how": {
+      "eyebrow": "Comment ça marche",
+      "title": "Un dossier, plusieurs offres, une décision éclairée",
+      "body": "Fini le démarchage bailleur par bailleur : vous déposez une fois, nous faisons circuler le dossier, vous choisissez.",
+      "steps": {
+        "one": {
+          "title": "Déposez votre dossier",
+          "body": "L’équipement, le montant, la durée et vos pièces, en quelques minutes, réutilisables ensuite."
+        },
+        "two": {
+          "title": "Nous le vérifions",
+          "body": "Cohérence des pièces et préparation du dossier, pour que les bailleurs instruisent vite."
+        },
+        "three": {
+          "title": "Les bailleurs adaptés répondent",
+          "body": "Avec votre accord explicite, le dossier part vers les bailleurs dont les critères correspondent."
+        },
+        "four": {
+          "title": "Comparez et choisissez",
+          "body": "Des offres ramenées au même format, classées par coût total, TEG calculé pour chacune."
+        }
+      }
+    },
+    "preview": {
+      "eyebrow": "Le comparateur",
+      "title": "Des offres comparées sur ce qu’elles coûtent vraiment",
+      "body": "Chaque offre est convertie en échéancier standard : loyers, frais, option d’achat et TEG implicite calculés par notre moteur. Le classement se fait sur le coût total, jamais sur la rémunération de la plateforme.",
+      "lessor": "Bailleur {letter}",
+      "best": "Meilleur coût total",
+      "line": "Loyer {rent} HT · TEG {rate}",
+      "totalCost": "Coût du financement",
+      "illustrative": "Exemple illustratif : offres fictives pour un camion de 1 200 000 DH HT sur 60 mois."
+    },
+    "sectorsSection": {
+      "eyebrow": "Par secteur",
+      "title": "Pensé pour les équipements qui font tourner votre activité",
+      "body": "Chaque secteur a ses durées, ses actifs et ses bailleurs spécialisés.",
+      "cta": "Voir le secteur"
+    },
+    "trust": {
+      "eyebrow": "Confiance et conformité",
+      "title": "Un intermédiaire transparent, pas un prêteur",
+      "items": {
+        "mandate": {
+          "title": "Sous mandat des bailleurs",
+          "body": "{brand} agit comme intermédiaire en opérations de crédit-bail, sous mandat écrit de chaque bailleur (loi 103-12)."
+        },
+        "decision": {
+          "title": "Aucune décision de crédit",
+          "body": "Notre indice d’orientation aide à adresser le dossier ; la décision appartient exclusivement au bailleur."
+        },
+        "data": {
+          "title": "Vos données sous contrôle",
+          "body": "Aucun partage sans votre consentement explicite, bailleur par bailleur (loi 09-08), révocable à tout moment."
+        },
+        "security": {
+          "title": "Sécurité dès la conception",
+          "body": "Échanges chiffrés, double authentification des bailleurs, cloisonnement strict et journal d’audit de chaque accès."
+        }
+      }
+    },
+    "lessorsTeaser": {
+      "eyebrow": "Pour les bailleurs",
+      "title": "Des dossiers préparés, adaptés à votre appétit",
+      "body": "{brand} vous adresse uniquement les dossiers qui correspondent à vos critères, complets et vérifiés. Rémunération au succès.",
+      "cta": "Découvrir l’offre bailleurs"
+    },
+    "faq": {
+      "eyebrow": "Questions fréquentes",
+      "title": "Ce qu’il faut savoir",
+      "body": "Statut, gratuité, données, délais : les réponses claires.",
+      "items": {
+        "intermediary": {
+          "q": "Qui est {brand} ?",
+          "a": "{brand} est un intermédiaire en opérations de crédit-bail qui agit sous mandat écrit des sociétés de crédit-bail (loi 103-12). Nous ne prêtons pas d’argent et ne manions aucun fonds."
+        },
+        "free": {
+          "q": "Est-ce vraiment gratuit pour mon entreprise ?",
+          "a": "Oui. Le service est gratuit pour l’entreprise, sans engagement : vous êtes libre de refuser toutes les offres."
+        },
+        "decision": {
+          "q": "Qui décide d’accorder le financement ?",
+          "a": "Uniquement le bailleur. {brand} prépare et oriente le dossier ; elle ne prend aucune décision de crédit."
+        },
+        "data": {
+          "q": "Que deviennent mes documents ?",
+          "a": "Ils sont chiffrés et ne sont transmis qu’aux bailleurs que vous avez acceptés, nommément, conformément à la loi 09-08. Vous pouvez accéder à vos données, les rectifier et en demander la suppression."
+        },
+        "lessors": {
+          "q": "Combien de bailleurs reçoivent mon dossier ?",
+          "a": "Généralement trois à cinq, choisis parce que leurs critères correspondent à votre besoin (montant, secteur, durée, type de matériel). Vous voyez leurs noms avant d’accepter."
+        },
+        "delay": {
+          "q": "En combien de temps reçoit-on des offres ?",
+          "a": "Notre objectif est une réponse des bailleurs sous 72 heures pour un dossier complet. Le délai réel dépend de chaque bailleur et de votre dossier."
+        },
+        "score": {
+          "q": "À quoi sert l’indice d’orientation ?",
+          "a": "C’est une grille explicable qui aide à adresser votre dossier aux bailleurs adaptés. Indice d’orientation : la décision appartient exclusivement au bailleur."
+        },
+        "commission": {
+          "q": "Comment {brand} est-elle rémunérée ?",
+          "a": "Par les bailleurs, sous forme de commission au succès versée à la mise en loyer, prévue dans leur mandat. Elle n’intervient jamais dans le classement des offres."
+        }
+      }
+    },
+    "final": {
+      "title": "Combien coûterait votre équipement en crédit-bail ?",
+      "body": "Simulez en quelques secondes, sans inscription."
+    }
+  },
+  "sectors": {
+    "common": {
+      "eyebrow": "Crédit-bail · {sector}",
+      "equipmentTitle": "Équipements financés couramment",
+      "exampleNote": "Exemple illustratif prérempli ; ajustez les montants à votre projet.",
+      "pointsTitle": "Les points d’attention",
+      "faqTitle": "Questions du secteur",
+      "simulateCta": "Ouvrir le simulateur complet"
+    },
+    "transport": {
+      "name": "Transport et logistique",
+      "teaser": "Tracteurs, porteurs, semi-remorques, utilitaires : financez votre flotte sans immobiliser votre trésorerie.",
+      "metaTitle": "Crédit-bail transport et logistique au Maroc",
+      "metaDescription": "Financez camions, semi-remorques et utilitaires en crédit-bail : un dossier, plusieurs offres de bailleurs comparées sur le coût total.",
+      "title": "Crédit-bail pour le transport et la logistique",
+      "intro": "Renouveler un tracteur ou agrandir une flotte mobilise beaucoup de trésorerie. Le crédit-bail étale l’investissement sur la durée d’exploitation du véhicule.",
+      "equipment": {
+        "e1": "Tracteurs routiers",
+        "e2": "Porteurs et camions frigorifiques",
+        "e3": "Semi-remorques et bennes",
+        "e4": "Véhicules utilitaires légers",
+        "e5": "Chariots et matériel de manutention"
+      },
+      "points": {
+        "c1": {
+          "title": "Durée et usage",
+          "body": "La durée se choisit au regard de l’usage réel et du kilométrage prévu : une durée trop longue renchérit le coût sans bénéfice."
+        },
+        "c2": {
+          "title": "Neuf ou occasion",
+          "body": "Les véhicules d’occasion sont finançables chez certains bailleurs ; l’âge et l’état du véhicule pèsent sur les conditions."
+        },
+        "c3": {
+          "title": "Valeur de revente",
+          "body": "Une bonne valeur de revente du véhicule rassure le bailleur et peut améliorer l’offre."
+        }
+      },
+      "faq": {
+        "q1": {
+          "q": "Peut-on financer plusieurs véhicules dans un même dossier ?",
+          "a": "Oui : décrivez l’ensemble dans votre demande ; chaque bailleur indique ce qu’il peut financer."
+        },
+        "q2": {
+          "q": "Le devis du concessionnaire est-il nécessaire ?",
+          "a": "Oui, un devis ou une facture pro forma permet aux bailleurs de chiffrer précisément."
+        },
+        "q3": {
+          "q": "Qui est propriétaire du véhicule pendant le contrat ?",
+          "a": "Le bailleur ; vous en avez l’usage, et vous pouvez l’acquérir en fin de contrat en levant l’option d’achat."
+        }
+      }
+    },
+    "btp": {
+      "name": "BTP et travaux publics",
+      "teaser": "Pelles, chargeuses, grues, centrales : des engins financés au rythme de vos chantiers.",
+      "metaTitle": "Crédit-bail engins de BTP au Maroc",
+      "metaDescription": "Financez pelles, chargeuses, grues et matériel de chantier en crédit-bail : comparez les offres de plusieurs bailleurs, gratuitement.",
+      "title": "Crédit-bail pour le BTP et les travaux publics",
+      "intro": "Les engins de chantier représentent des montants élevés. Le crédit-bail préserve votre capacité à répondre aux marchés tout en équipant vos équipes.",
+      "equipment": {
+        "e1": "Pelles hydrauliques et mini-pelles",
+        "e2": "Chargeuses et niveleuses",
+        "e3": "Grues et nacelles",
+        "e4": "Centrales à béton et malaxeurs",
+        "e5": "Compacteurs et matériel de terrassement"
+      },
+      "points": {
+        "c1": {
+          "title": "Saisonnalité des chantiers",
+          "body": "Une périodicité trimestrielle ou semestrielle peut mieux suivre vos encaissements qu’une mensualité."
+        },
+        "c2": {
+          "title": "Marchés en portefeuille",
+          "body": "Vos marchés signés éclairent le bailleur sur votre capacité de remboursement."
+        },
+        "c3": {
+          "title": "Matériel spécialisé",
+          "body": "Un engin très spécifique se revend plus difficilement : le premier loyer ou la valeur résiduelle peuvent s’en ressentir."
+        }
+      },
+      "faq": {
+        "q1": {
+          "q": "Peut-on choisir des loyers trimestriels ?",
+          "a": "Oui, la périodicité se discute avec chaque bailleur ; le simulateur permet de la comparer."
+        },
+        "q2": {
+          "q": "Le matériel d’occasion est-il finançable ?",
+          "a": "Chez certains bailleurs, selon l’âge, l’état et la valeur de marché de l’engin."
+        },
+        "q3": {
+          "q": "Quelles pièces prévoir ?",
+          "a": "Les pièces de l’entreprise (registre de commerce, statuts, états financiers), le devis du matériel et, si possible, vos marchés en cours."
+        }
+      }
+    },
+    "medical": {
+      "name": "Médical et santé",
+      "teaser": "Imagerie, bloc, cabinet dentaire, laboratoire : équipez-vous sans grever votre trésorerie.",
+      "metaTitle": "Crédit-bail matériel médical au Maroc",
+      "metaDescription": "Financez imagerie, équipement de cabinet et de laboratoire en crédit-bail : un dossier, plusieurs offres de bailleurs comparées.",
+      "title": "Crédit-bail pour le matériel médical",
+      "intro": "Cliniques, cabinets et laboratoires renouvellent des équipements coûteux et à obsolescence rapide. Le crédit-bail aligne la durée de financement sur la durée d’utilisation.",
+      "equipment": {
+        "e1": "Imagerie (échographie, radiologie)",
+        "e2": "Fauteuils et équipements dentaires",
+        "e3": "Matériel de bloc opératoire",
+        "e4": "Automates et équipements de laboratoire",
+        "e5": "Mobilier et équipements de cabinet"
+      },
+      "points": {
+        "c1": {
+          "title": "Obsolescence technologique",
+          "body": "Une durée courte permet de renouveler plus tôt un matériel qui évolue vite."
+        },
+        "c2": {
+          "title": "Fournisseur agréé",
+          "body": "Le devis d’un fournisseur reconnu, avec garantie et maintenance, facilite l’instruction."
+        },
+        "c3": {
+          "title": "Profession réglementée",
+          "body": "Les bailleurs peuvent demander des justificatifs propres à l’exercice médical."
+        }
+      },
+      "faq": {
+        "q1": {
+          "q": "Un cabinet individuel peut-il déposer une demande ?",
+          "a": "Oui, sous réserve de pouvoir fournir les pièces demandées par les bailleurs pour sa forme d’exercice."
+        },
+        "q2": {
+          "q": "La maintenance peut-elle être incluse ?",
+          "a": "Certains bailleurs l’intègrent ou la proposent en option ; elle apparaît alors dans le détail de l’offre."
+        },
+        "q3": {
+          "q": "Peut-on financer l’installation ?",
+          "a": "Selon les bailleurs, les frais d’installation figurant sur le devis peuvent être inclus dans le montant financé."
+        }
+      }
+    }
+  },
+  "lessorsPage": {
+    "metaTitle": "Pour les bailleurs",
+    "metaDescription": "{brand} adresse aux sociétés de crédit-bail des dossiers PME préparés et adaptés à leurs critères, avec une rémunération au succès.",
+    "eyebrow": "Pour les sociétés de crédit-bail",
+    "title": "Des dossiers PME prêts à instruire, au coût d’instruction réduit",
+    "subtitle": "Les petits dossiers coûtent presque autant à instruire que les grands. {brand} les prépare, les vérifie et ne vous adresse que ceux qui correspondent à votre appétit.",
+    "benefits": {
+      "qualified": {
+        "title": "Dossiers préparés",
+        "body": "Pièces collectées, cohérence vérifiée, note de synthèse : vous gagnez du temps d’instruction."
+      },
+      "appetite": {
+        "title": "Selon vos critères",
+        "body": "Montants, secteurs, durées, matériels, régions : vous recevez uniquement ce que vous financez."
+      },
+      "decision": {
+        "title": "Votre décision, toujours",
+        "body": "{brand} oriente sans décider : l’analyse et la décision de crédit restent les vôtres, KYC final compris."
+      },
+      "sla": {
+        "title": "Délais suivis",
+        "body": "Une boîte de réception triée par délai restant, avec un objectif de réponse sous 72 heures."
+      },
+      "success": {
+        "title": "Rémunération au succès",
+        "body": "Pas de frais d’accès : une commission versée seulement à la mise en loyer, selon la grille de votre mandat."
+      },
+      "security": {
+        "title": "Sécurité et confidentialité",
+        "body": "Double authentification, cloisonnement strict entre bailleurs, journal d’audit de chaque consultation."
+      }
+    },
+    "howTitle": "Comment ça marche",
+    "steps": {
+      "s1": "Nous signons un mandat écrit qui précise vos critères et la grille de commission.",
+      "s2": "Vous recevez les dossiers correspondant à vos critères, avec le consentement de l’entreprise.",
+      "s3": "Vous posez vos questions dans la plateforme et soumettez une offre chiffrée, ou déclinez avec un motif.",
+      "s4": "Si l’entreprise choisit votre offre, vous concluez directement avec elle ; {brand} suit la mise en loyer."
+    },
+    "commissionTitle": "Une offre neutre pour l’entreprise",
+    "commissionBody": "Les offres sont classées par coût total pour l’entreprise. Aucune position n’est vendue : votre meilleure offre est votre meilleur argument.",
+    "formTitle": "Parlons de votre appétit",
+    "formSubtitle": "Laissez vos coordonnées : notre équipe vous recontacte pour une présentation et le projet de mandat.",
+    "form": {
+      "organization": "Établissement",
+      "contactName": "Nom et prénom",
+      "email": "Adresse e-mail professionnelle",
+      "phone": "Téléphone (facultatif)",
+      "message": "Message (facultatif)",
+      "consent": "J’accepte que mes coordonnées soient utilisées pour me recontacter au sujet de cette demande (loi 09-08).",
+      "privacyLink": "Confidentialité",
+      "submit": "Envoyer",
+      "sending": "Envoi…",
+      "successTitle": "Merci, votre demande est enregistrée.",
+      "successBody": "Notre équipe vous recontacte rapidement.",
+      "honeypot": "Ne pas remplir",
+      "errors": {
+        "invalid": "Vérifiez les champs : nom, établissement, adresse e-mail et consentement sont requis.",
+        "tooMany": "Trop de demandes envoyées. Réessayez plus tard.",
+        "generic": "L’envoi a échoué. Réessayez."
+      }
+    }
+  },
+  "legalPage": {
+    "title": "Mentions légales et confidentialité",
+    "description": "Éditeur, statut d’intermédiaire, protection des données personnelles et cookies de {brand}.",
+    "draft": "Document provisoire : les informations entre crochets seront complétées à la création de la société, et l’ensemble doit être validé par un avocat.",
+    "sections": {
+      "publisher": {
+        "title": "Éditeur",
+        "body": "{brand} est édité par {entity}.\nICE : {ice} · RC : {rc} · IF : {taxId}\nSiège : {address}\nContact : {email}"
+      },
+      "status": {
+        "title": "Statut",
+        "body": "{brand} est un intermédiaire en opérations de crédit-bail agissant sous mandat écrit des sociétés de crédit-bail (loi 103-12). {brand} ne manie aucun fonds et ne prend aucune décision de crédit : la décision appartient exclusivement au bailleur. L’indice d’orientation affiché est un outil d’aide à l’orientation des dossiers."
+      },
+      "data": {
+        "title": "Données personnelles",
+        "body": "Responsable du traitement : {entity}. Finalités : gestion des comptes, préparation des dossiers de financement, transmission aux bailleurs choisis, réponse aux demandes de contact. Aucune donnée n’est transmise à un bailleur sans consentement explicite, donné bailleur par bailleur et révocable. Déclaration ou autorisation CNDP : [à confirmer]."
+      },
+      "rights": {
+        "title": "Vos droits",
+        "body": "Conformément à la loi 09-08, vous disposez d’un droit d’accès, de rectification et d’opposition, et pouvez demander la suppression de vos données, sous réserve des obligations légales de conservation. Écrivez à {email}."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "body": "Le site n’utilise que des cookies nécessaires : session de connexion et préférence de langue. Le choix du thème est conservé dans votre navigateur. Aucun cookie publicitaire."
+      },
+      "hosting": {
+        "title": "Hébergement",
+        "body": "Hébergeur et région : [à confirmer — région de l’Union européenne envisagée, sous réserve de l’avis de l’avocat sur les transferts de données]."
+      }
+    }
+  },
+  "contacts": {
+    "title": "Demandes de contact",
+    "description": "Demandes reçues depuis le site public (200 dernières).",
+    "emptyTitle": "Aucune demande",
+    "emptyBody": "Les demandes envoyées depuis la page « Pour les bailleurs » apparaîtront ici.",
+    "restrictedTitle": "Accès restreint",
+    "restrictedBody": "Réservé aux administrateurs et aux opérations.",
+    "columns": {
+      "date": "Date",
+      "kind": "Type",
+      "organization": "Établissement",
+      "contact": "Contact",
+      "email": "E-mail",
+      "phone": "Téléphone",
+      "message": "Message"
+    },
+    "kinds": {
+      "lessor": "Bailleur",
+      "company": "Entreprise"
+    }
   }
 }
