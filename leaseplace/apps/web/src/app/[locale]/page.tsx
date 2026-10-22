@@ -54,13 +54,15 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                   <ArrowRight className="rtl:rotate-180" aria-hidden="true" />
                 </Link>
               </Button>
+              <Button asChild size="lg" variant="secondary">
+                <Link href="/simulateur">{t("simulate")}</Link>
+              </Button>
               {isDemoMode() ? (
-                <Button asChild size="lg" variant="secondary">
+                <Button asChild size="lg" variant="ghost">
                   <Link href="/demo">{t("demo")}</Link>
                 </Button>
               ) : null}
             </div>
-            <p className="mt-4 text-[13px] text-fg-subtle">{t("simulatorSoon")}</p>
           </div>
         </section>
 

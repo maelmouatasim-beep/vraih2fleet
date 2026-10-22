@@ -268,7 +268,6 @@
     "subtitle": "Déposez un seul dossier. {brand} le vérifie et le transmet aux bailleurs adaptés ; vous comparez leurs offres sur le coût total.",
     "cta": "Accéder à mon espace",
     "demo": "Comptes de démonstration",
-    "simulatorSoon": "Simulateur de loyer : bientôt disponible.",
     "steps": {
       "one": {
         "title": "Un seul dossier",
@@ -282,12 +281,88 @@
         "title": "Une décision éclairée",
         "body": "Des offres comparées sur le coût total, sans aucune position sponsorisée."
       }
-    }
+    },
+    "simulate": "Simuler un loyer"
   },
   "emails": {
     "magicLinkSubject": "Votre lien de connexion {brand}",
     "magicLinkBody": "Bonjour,\n\nVoici votre lien de connexion, valable 10 minutes :\n{url}\n\nSi vous n’êtes pas à l’origine de cette demande, ignorez ce message.",
     "otpSubject": "Votre code de connexion {brand}",
     "otpBody": "Bonjour,\n\nVotre code de connexion : {otp}\nIl est valable 10 minutes.\n\nSi vous n’êtes pas à l’origine de cette demande, ignorez ce message."
+  },
+  "simulator": {
+    "metaTitle": "Simulateur de crédit-bail",
+    "metaDescription": "Estimez le loyer, le coût total et le TEG d’un crédit-bail au Maroc, et comparez-le au crédit classique et à l’achat comptant.",
+    "eyebrow": "Simulateur gratuit",
+    "title": "Combien coûte vraiment votre crédit-bail ?",
+    "subtitle": "Loyer, coût total, TEG et comparaison avec un crédit classique ou un achat comptant, calculés en direct. Les vraies offres viennent ensuite des bailleurs.",
+    "signIn": "Se connecter",
+    "amount": "Montant de l’équipement (HT)",
+    "duration": "Durée",
+    "months": "{n, plural, one {# mois} other {# mois}}",
+    "none": "Aucun",
+    "firstRent": "Premier loyer majoré",
+    "residual": "Valeur résiduelle (option d’achat)",
+    "periodicity": "Périodicité",
+    "periodicities": {
+      "monthly": "Mensuelle",
+      "quarterly": "Trimestrielle",
+      "semiannual": "Semestrielle"
+    },
+    "timing": "Paiement des loyers",
+    "timings": {
+      "advance": "À échoir",
+      "arrears": "Échu"
+    },
+    "rate": "Taux annuel (hypothèse)",
+    "rateHint": "Hypothèse modifiable : le taux réel dépend du bailleur et de votre dossier.",
+    "advanced": "Hypothèses avancées",
+    "fees": "Frais de dossier",
+    "tax": "Taux d’IS",
+    "discount": "Taux d’actualisation",
+    "usefulLife": "Durée d’amortissement",
+    "years": "ans",
+    "rentLabel": {
+      "monthly": "Loyer mensuel HT",
+      "quarterly": "Loyer trimestriel HT",
+      "semiannual": "Loyer semestriel HT"
+    },
+    "rentTtc": "soit {amount} TTC",
+    "firstRentLine": "premier loyer {amount} HT",
+    "financingCost": "Coût du financement",
+    "financingCostHint": "Loyers + frais + option d’achat − montant",
+    "teg": "TEG implicite",
+    "tegHint": "Taux actuariel annuel, frais inclus",
+    "totalTtc": "Total payé TTC",
+    "totalTtcHint": "TVA de 20 % sur loyers et frais",
+    "residualValue": "Option d’achat",
+    "residualHint": "Payée en fin de contrat",
+    "inconsistent": "Paramètres incohérents : le premier loyer et la valeur résiduelle dépassent le montant financé.",
+    "copyLink": "Copier le lien de la simulation",
+    "linkCopied": "Lien copié",
+    "apply": "Déposer une demande",
+    "applySoon": "Bientôt disponible",
+    "disclaimer": "Simulation indicative fondée sur vos hypothèses ; elle ne vaut pas offre. Les loyers HT sont en principe déductibles et la TVA récupérable pour une entreprise assujettie : à confirmer avec votre expert-comptable.",
+    "compareTitle": "Crédit-bail, crédit ou comptant ?",
+    "compareBody": "Coût actualisé à {discount}, net des économies d’IS à {tax}. Le plus bas est le moins cher.",
+    "options": {
+      "lease": "Crédit-bail",
+      "loan": "Crédit classique",
+      "cash": "Achat comptant"
+    },
+    "cheapest": "Moins cher",
+    "outflow": "Décaissé sur la durée : {amount} HT",
+    "compareHypotheses": "Hypothèses : crédit au même taux, apport égal au premier loyer majoré ; bien acquis en fin de durée dans les trois cas ; amortissement linéaire ; TVA récupérée ; économie d’IS comptée au mois de la charge.",
+    "scheduleTitle": "Échéancier ({n} échéances)",
+    "columns": {
+      "month": "Mois",
+      "item": "Objet",
+      "ht": "HT",
+      "vat": "TVA",
+      "ttc": "TTC"
+    },
+    "rentN": "Loyer {n}",
+    "residualShort": "Option d’achat",
+    "total": "Total"
   }
 }

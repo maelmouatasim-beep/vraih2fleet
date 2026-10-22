@@ -1,0 +1,158 @@
+[
+  {
+    "id": "mensuel-echoir-vr1",
+    "input": {
+      "financedAmountHt": 1000000,
+      "durationMonths": 60,
+      "periodicity": "monthly",
+      "timing": "advance",
+      "annualRate": 0.09,
+      "firstRentHt": null,
+      "residualValueHt": 10000,
+      "fileFeesHt": 2000,
+      "insurancePerPeriodHt": 0,
+      "insuranceRequired": false
+    },
+    "expected": {
+      "periods": 60,
+      "rentHt": 20472.23,
+      "firstRentHt": 20472.23,
+      "rentsHt": 1228333.8,
+      "paidHt": 1240333.8,
+      "vat": 248067.0,
+      "paidTtc": 1488400.8,
+      "financingCostHt": 240333.8,
+      "annualEffectiveRate": 0.09476410143325106
+    }
+  },
+  {
+    "id": "mensuel-echu-sans-vr",
+    "input": {
+      "financedAmountHt": 500000,
+      "durationMonths": 36,
+      "periodicity": "monthly",
+      "timing": "arrears",
+      "annualRate": 0.075,
+      "firstRentHt": null,
+      "residualValueHt": 0,
+      "fileFeesHt": 0,
+      "insurancePerPeriodHt": 0,
+      "insuranceRequired": false
+    },
+    "expected": {
+      "periods": 36,
+      "rentHt": 15553.11,
+      "firstRentHt": 15553.11,
+      "rentsHt": 559911.96,
+      "paidHt": 559911.96,
+      "vat": 111982.32,
+      "paidTtc": 671894.28,
+      "financingCostHt": 59911.96,
+      "annualEffectiveRate": 0.07763264174647172
+    }
+  },
+  {
+    "id": "trimestriel-majore-assurance",
+    "input": {
+      "financedAmountHt": 2400000,
+      "durationMonths": 48,
+      "periodicity": "quarterly",
+      "timing": "advance",
+      "annualRate": 0.0825,
+      "firstRentHt": 480000,
+      "residualValueHt": 48000,
+      "fileFeesHt": 5000,
+      "insurancePerPeriodHt": 1200,
+      "insuranceRequired": true
+    },
+    "expected": {
+      "periods": 16,
+      "rentHt": 147417.21,
+      "firstRentHt": 480000.0,
+      "rentsHt": 2691258.15,
+      "paidHt": 2763458.15,
+      "vat": 548851.6,
+      "paidTtc": 3312309.75,
+      "financingCostHt": 363458.15,
+      "annualEffectiveRate": 0.09137164623236105
+    }
+  },
+  {
+    "id": "taux-zero",
+    "input": {
+      "financedAmountHt": 120000,
+      "durationMonths": 12,
+      "periodicity": "monthly",
+      "timing": "arrears",
+      "annualRate": 0.0,
+      "firstRentHt": null,
+      "residualValueHt": 0,
+      "fileFeesHt": 0,
+      "insurancePerPeriodHt": 0,
+      "insuranceRequired": false
+    },
+    "expected": {
+      "periods": 12,
+      "rentHt": 10000.0,
+      "firstRentHt": 10000.0,
+      "rentsHt": 120000.0,
+      "paidHt": 120000.0,
+      "vat": 24000.0,
+      "paidTtc": 144000.0,
+      "financingCostHt": 0.0,
+      "annualEffectiveRate": 0.0
+    }
+  },
+  {
+    "id": "annuel-echu-vr10",
+    "input": {
+      "financedAmountHt": 300000,
+      "durationMonths": 60,
+      "periodicity": "annual",
+      "timing": "arrears",
+      "annualRate": 0.1,
+      "firstRentHt": null,
+      "residualValueHt": 30000,
+      "fileFeesHt": 0,
+      "insurancePerPeriodHt": 0,
+      "insuranceRequired": false
+    },
+    "expected": {
+      "periods": 5,
+      "rentHt": 74225.32,
+      "firstRentHt": 74225.32,
+      "rentsHt": 371126.6,
+      "paidHt": 401126.6,
+      "vat": 80225.3,
+      "paidTtc": 481351.9,
+      "financingCostHt": 101126.6,
+      "annualEffectiveRate": 0.10000000087479635
+    }
+  },
+  {
+    "id": "semestriel-majore-assurance-facultative",
+    "input": {
+      "financedAmountHt": 850000,
+      "durationMonths": 36,
+      "periodicity": "semiannual",
+      "timing": "advance",
+      "annualRate": 0.069,
+      "firstRentHt": 100000,
+      "residualValueHt": 8500,
+      "fileFeesHt": 1500,
+      "insurancePerPeriodHt": 900,
+      "insuranceRequired": false
+    },
+    "expected": {
+      "periods": 6,
+      "rentHt": 164342.12,
+      "firstRentHt": 100000.0,
+      "rentsHt": 921710.6,
+      "paidHt": 937110.6,
+      "vat": 186342.1,
+      "paidTtc": 1123452.7,
+      "financingCostHt": 81710.6,
+      "annualEffectiveRate": 0.07163896053434984
+    }
+  }
+]

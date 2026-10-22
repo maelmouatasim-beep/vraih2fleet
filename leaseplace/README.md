@@ -34,7 +34,7 @@ pnpm dev                                        # http://localhost:3000 (comptes
 
 ```
 apps/web/             Next.js 15 : public, /entreprise, /bailleur, /admin (App Router, next-intl)
-packages/domain/      logique métier pure, couverte à 100 % (RBAC, catalogue d'audit)
+packages/domain/      logique métier pure, couverte à 100 % (RBAC, audit, moteur financier)
 packages/db/          schéma Drizzle, migrations, contexte RLS, audit ; tests RLS sur vrai Postgres
 packages/ui/          design system : tokens (contrastes AA testés), composants
 packages/integrations/ adaptateurs (courriel : interface + mémoire + boîte de démo, tests de contrat)
@@ -43,6 +43,14 @@ docs/                 ADR, glossaire métier, schéma cible
 ```
 
 `packages/ai` (phase 5) n'existe pas encore : aucun paquet vide.
+
+## Moteur financier
+
+`packages/domain/src/finance` : loyer, échéancier, TEG implicite,
+classement neutre, comparaison crédit-bail / crédit / comptant (ADR 0009).
+Cas de référence recalculés par `scripts/finance/reference.py` :
+`python3 scripts/finance/reference.py > packages/domain/src/finance/__fixtures__/reference-cases.json`.
+Simulateur public : `/simulateur`.
 
 ## Sécurité, en bref
 

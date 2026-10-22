@@ -268,7 +268,6 @@
     "subtitle": "Submit a single application. {brand} checks it and sends it to the right lessors; you compare their offers on total cost.",
     "cta": "Go to my space",
     "demo": "Demo accounts",
-    "simulatorSoon": "Lease payment simulator: coming soon.",
     "steps": {
       "one": {
         "title": "One application",
@@ -282,12 +281,88 @@
         "title": "An informed decision",
         "body": "Offers compared on total cost, with no sponsored placement."
       }
-    }
+    },
+    "simulate": "Simulate a payment"
   },
   "emails": {
     "magicLinkSubject": "Your {brand} sign-in link",
     "magicLinkBody": "Hello,\n\nHere is your sign-in link, valid for 10 minutes:\n{url}\n\nIf you did not request it, ignore this message.",
     "otpSubject": "Your {brand} sign-in code",
     "otpBody": "Hello,\n\nYour sign-in code: {otp}\nIt is valid for 10 minutes.\n\nIf you did not request it, ignore this message."
+  },
+  "simulator": {
+    "metaTitle": "Equipment leasing simulator",
+    "metaDescription": "Estimate the payment, total cost and effective rate of a lease in Morocco, and compare it with a bank loan or a cash purchase.",
+    "eyebrow": "Free simulator",
+    "title": "What does your lease really cost?",
+    "subtitle": "Payment, total cost, effective rate and comparison with a bank loan or a cash purchase, calculated live. Real offers then come from lessors.",
+    "signIn": "Sign in",
+    "amount": "Equipment amount (excl. VAT)",
+    "duration": "Term",
+    "months": "{n, plural, one {# month} other {# months}}",
+    "none": "None",
+    "firstRent": "Increased first payment",
+    "residual": "Residual value (purchase option)",
+    "periodicity": "Frequency",
+    "periodicities": {
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "semiannual": "Half-yearly"
+    },
+    "timing": "Payment timing",
+    "timings": {
+      "advance": "In advance",
+      "arrears": "In arrears"
+    },
+    "rate": "Annual rate (assumption)",
+    "rateHint": "Editable assumption: the real rate depends on the lessor and your application.",
+    "advanced": "Advanced assumptions",
+    "fees": "Arrangement fees",
+    "tax": "Corporate tax rate",
+    "discount": "Discount rate",
+    "usefulLife": "Depreciation period",
+    "years": "years",
+    "rentLabel": {
+      "monthly": "Monthly payment excl. VAT",
+      "quarterly": "Quarterly payment excl. VAT",
+      "semiannual": "Half-yearly payment excl. VAT"
+    },
+    "rentTtc": "i.e. {amount} incl. VAT",
+    "firstRentLine": "first payment {amount} excl. VAT",
+    "financingCost": "Cost of financing",
+    "financingCostHint": "Payments + fees + purchase option − amount",
+    "teg": "Implied effective rate",
+    "tegHint": "Annual actuarial rate, fees included",
+    "totalTtc": "Total paid incl. VAT",
+    "totalTtcHint": "20% VAT on payments and fees",
+    "residualValue": "Purchase option",
+    "residualHint": "Paid at the end of the lease",
+    "inconsistent": "Inconsistent inputs: the first payment and the residual value exceed the financed amount.",
+    "copyLink": "Copy simulation link",
+    "linkCopied": "Link copied",
+    "apply": "Submit a request",
+    "applySoon": "Coming soon",
+    "disclaimer": "Indicative simulation based on your assumptions; it is not an offer. Lease payments are generally deductible and VAT recoverable for a VAT-registered business: check with your accountant.",
+    "compareTitle": "Lease, loan or cash?",
+    "compareBody": "Present cost at {discount}, net of corporate tax savings at {tax}. Lowest is cheapest.",
+    "options": {
+      "lease": "Lease",
+      "loan": "Bank loan",
+      "cash": "Cash purchase"
+    },
+    "cheapest": "Cheapest",
+    "outflow": "Paid out over the term: {amount} excl. VAT",
+    "compareHypotheses": "Assumptions: loan at the same rate, down payment equal to the increased first payment; asset owned at the end in all three cases; straight-line depreciation; VAT recovered; tax saving counted in the month of the expense.",
+    "scheduleTitle": "Payment schedule ({n} dates)",
+    "columns": {
+      "month": "Month",
+      "item": "Item",
+      "ht": "Excl. VAT",
+      "vat": "VAT",
+      "ttc": "Incl. VAT"
+    },
+    "rentN": "Payment {n}",
+    "residualShort": "Purchase option",
+    "total": "Total"
   }
 }

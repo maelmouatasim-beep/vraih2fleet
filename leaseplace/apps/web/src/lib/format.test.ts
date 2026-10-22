@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { formatDate, formatDateTime } from "./format";
+import {
+  formatDate,
+  formatDateTime,
+  formatMad,
+  formatNumber,
+  formatPercent,
+  ltr,
+  parseAmount,
+} from "./format";
 
 // Le décalage de Casablanca vient des données tz du runtime (tzdata 2025b :
 // UTC+1 ; 2026c : UTC+0). Le test ne fige donc aucun décalage : il compare à
@@ -31,5 +39,33 @@ describe("formats", () => {
       expect(formatDate(d)).toBe(`${c.d}/${c.m}/${c.y}`);
       expect(formatDateTime(d)).toBe(`${c.d}/${c.m}/${c.y} ${c.h}:${c.min}`);
     }
+  });
+});
+
+describe("montants et pourcentages", () => {
+  it("format MAD", () => {
+    expect(formatMad(1_250_000)).toBe("1 250 000,00 DH");
+    expect(formatMad(999.995)).toBe("1 000,00 DH");
+    expect(formatMad(-42.5)).toBe("−42,50 DH");
+    expect(formatMad(-0.001)).toBe("0,00 DH");
+    expect(formatMad(15_553.11, 0)).toBe("15 553 DH");
+    expect(formatNumber(84)).toBe("84");
+  });
+  it("pourcentages", () => {
+    expect(formatPercent(0.094764)).toBe("9,48 %");
+    expect(formatPercent(0.2, 0)).toBe("20 %");
+  });
+  it("saisie des montants", () => {
+    expect(parseAmount("1 250 000")).toBe(1_250_000);
+    expect(parseAmount("1 250 000,50 DH")).toBe(1_250_000.5);
+    expect(parseAmount("850000.75")).toBe(850_000.75);
+    expect(parseAmount("12a")).toBeNull();
+    expect(parseAmount("")).toBeNull();
+  });
+});
+
+describe("isolat bidi", () => {
+  it("encadre le texte par LRI et PDI", () => {
+    expect(ltr("12 DH")).toBe("⁦12 DH⁩");
   });
 });

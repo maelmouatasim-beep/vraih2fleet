@@ -19,9 +19,12 @@ export function Logo({ className, subtle = false }: { className?: string; subtle
   return (
     <span className={cn("inline-flex items-center gap-2", className)}>
       <LogoMark />
-      <span className="text-[15px] font-semibold tracking-tight text-fg">
+      <span
+        dir="ltr"
+        className="inline-flex items-baseline gap-1 text-[15px] font-semibold tracking-tight text-fg"
+      >
         {brand.name}
-        {subtle ? null : <span className="ms-1 font-normal text-fg-subtle">{brand.tagline}</span>}
+        {subtle ? null : <span className="font-normal text-fg-subtle">{brand.tagline}</span>}
       </span>
     </span>
   );
