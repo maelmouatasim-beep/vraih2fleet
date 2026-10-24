@@ -7,7 +7,10 @@ minimumReleaseAge: 20160
 # Exceptions : correctifs de sécurité seulement, version exacte, motif noté.
 # next@15.5.28 : avis critique et haut publiés le 2026-10-22 (RCE optimisation
 # d'images SVG, déni de service Server Actions).
+# zod@4.6.6 : avis haut GHSA-mrhx-c7xc-m3w5 (épuisement mémoire sur collections
+# contraintes surdimensionnées), version publiée le 2026-10-11.
 minimumReleaseAgeExclude:
+  - zod@4.6.6
   - next@15.5.28
   - "@next/eslint-plugin-next@15.5.28"
   - "@next/env@15.5.28"
