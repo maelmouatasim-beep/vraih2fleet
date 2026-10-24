@@ -1,7 +1,9 @@
 /**
- * Jeu de démonstration de la phase 1 : 4 organisations fictives et leurs
- * comptes (src/lib/demo-accounts.ts). Idempotent : ne crée que ce qui
- * manque. Connexion propriétaire (DATABASE_URL_ADMIN).
+ * Jeu de démonstration : 4 organisations fictives et leurs comptes
+ * (src/lib/demo-accounts.ts), plus le profil KYC de l'entreprise de
+ * démonstration (phase 4, aucun document : le coffre-fort part vide).
+ * Idempotent : ne crée que ce qui manque. Connexion propriétaire
+ * (DATABASE_URL_ADMIN).
  *
  * Les secrets TOTP sont chiffrés exactement comme Better-Auth le fait
  * (symmetricEncrypt avec BETTER_AUTH_SECRET) : le seed doit utiliser le
@@ -13,7 +15,7 @@ import { uuidv7 } from "uuidv7";
 import { createDatabase, schema } from "@leaseplace/db";
 import { DEMO_ACCOUNTS, DEMO_ORGANIZATIONS, DEMO_PASSWORD } from "../src/lib/demo-accounts";
 
-const { users, accounts, organizations, memberships, twoFactors } = schema;
+const { users, accounts, organizations, memberships, twoFactors, companies } = schema;
 
 const url = process.env.DATABASE_URL_ADMIN;
 const secret = process.env.BETTER_AUTH_SECRET;
@@ -94,6 +96,27 @@ try {
       await db
         .insert(memberships)
         .values({ id: uuidv7(), organizationId, userId, role: account.role });
+    }
+  }
+  // Profil de l'entreprise de démonstration (ICE fictif, 15 chiffres).
+  const atlasId = orgIds.get("atlas");
+  if (atlasId) {
+    const [profile] = await db
+      .select()
+      .from(companies)
+      .where(eq(companies.organizationId, atlasId));
+    if (!profile) {
+      await db.insert(companies).values({
+        organizationId: atlasId,
+        legalName: "Atlas Transports Logistique SARL",
+        ice: "000123456000078",
+        legalForm: "sarl",
+        incorporationDate: new Date("2015-03-02T00:00:00Z"),
+        sector: "transport",
+        city: "Casablanca",
+        revenueBand: "10m_50m",
+        headcountBand: "10_49",
+      });
     }
   }
   console.warn(`Jeu de démonstration prêt : ${String(DEMO_ACCOUNTS.length)} comptes.`);

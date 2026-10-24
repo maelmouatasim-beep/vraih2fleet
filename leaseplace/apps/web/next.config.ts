@@ -23,6 +23,8 @@ const config: NextConfig = {
   experimental: {
     // CSS intégrée au HTML : aucune feuille bloquant le premier rendu.
     inlineCss: true,
+    // Dépôt de documents (10 Mo maximum, contrôlé côté serveur) via action serveur.
+    serverActions: { bodySizeLimit: "11mb" },
   },
   transpilePackages: [
     "@leaseplace/ui",

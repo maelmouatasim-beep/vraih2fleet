@@ -29,6 +29,20 @@
       "when": 1792692976013,
       "tag": "0003_marketing_security",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792857623120,
+      "tag": "0004_kyc_credit",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792857624138,
+      "tag": "0005_kyc_credit_security",
+      "breakpoints": true
     }
   ]
 }

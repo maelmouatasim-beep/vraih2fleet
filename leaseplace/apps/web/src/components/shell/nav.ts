@@ -29,8 +29,9 @@ export interface NavItem {
 export const NAV: Readonly<Record<Space, readonly NavItem[]>> = {
   company: [
     { key: "home", icon: LayoutDashboard, href: "/entreprise" },
-    { key: "requests", icon: FileStack, phase: 4 },
-    { key: "vault", icon: FolderLock, phase: 4 },
+    { key: "requests", icon: FileStack, href: "/entreprise/demandes" },
+    { key: "vault", icon: FolderLock, href: "/entreprise/coffre-fort" },
+    { key: "profile", icon: Building2, href: "/entreprise/profil" },
     { key: "messages", icon: MessagesSquare, phase: 7 },
   ],
   lessor: [
@@ -50,3 +51,14 @@ export const NAV: Readonly<Record<Space, readonly NavItem[]>> = {
     { key: "audit", icon: ScrollText, href: "/admin/journal" },
   ],
 };
+
+/**
+ * État d'un lien du menu : la page elle-même, ou une de ses sous-pages
+ * (une demande ouverte garde « Demandes » actif). Les accueils d'espace
+ * ne sont actifs que sur eux-mêmes.
+ */
+export function navCurrent(pathname: string, href: string): "page" | "true" | undefined {
+  if (pathname === href) return "page";
+  const isSpaceRoot = href.split("/").length <= 2;
+  return !isSpaceRoot && pathname.startsWith(`${href}/`) ? "true" : undefined;
+}

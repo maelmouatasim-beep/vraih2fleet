@@ -258,17 +258,19 @@ function createAuth() {
         },
       }),
       emailOTP({
-        disableSignUp: true,
+        // Phase 4 : le code par courriel ouvre aussi l'inscription des PME
+        // (compte créé à la première vérification, puis onboarding).
+        disableSignUp: false,
         otpLength: 6,
         expiresIn: 60 * 10,
         allowedAttempts: 5,
         sendVerificationOTP: async ({ email, otp, type }) => {
           if (type !== "sign-in") return;
-          const user = await passwordlessRecipient(email);
-          if (!user) return;
+          const existing = await userByEmail(email);
+          if (existing && !(await passwordlessRecipient(email))) return;
           const t = await emailTranslator(email);
           await mailer.send({
-            to: user.email,
+            to: email.toLowerCase(),
             subject: t("otpSubject", { brand: brand.name }),
             text: t("otpBody", { otp }),
           });

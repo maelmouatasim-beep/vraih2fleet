@@ -1,10 +1,10 @@
-import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { Secret, TOTP } from "otpauth";
 import { DEMO_PASSWORD } from "../src/lib/demo-accounts";
 import {
   account,
   ENROLMENT_EMAIL,
+  expectAccessible,
   lastMail,
   resetRateLimitsBeforeEach,
   signInCompanyWithCode,
@@ -12,16 +12,6 @@ import {
 } from "./fixtures";
 
 resetRateLimitsBeforeEach();
-
-async function expectAccessible(page: Page) {
-  const { violations } = await new AxeBuilder({ page })
-    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
-    .analyze();
-  const graves = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
-  expect(
-    graves.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`),
-  ).toEqual([]);
-}
 
 test.describe("public", () => {
   test("accueil en français, sans erreur de CSP @mobile", async ({ page }) => {

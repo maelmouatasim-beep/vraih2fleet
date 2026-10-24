@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import { createDatabase, schema } from "@leaseplace/db";
 import { DEMO_ACCOUNTS, DEMO_PASSWORD, type DemoAccount } from "../src/lib/demo-accounts";
@@ -9,6 +10,17 @@ export function account(key: string): DemoAccount {
   const a = DEMO_ACCOUNTS.find((x) => x.key === key);
   if (!a) throw new Error(`compte de démo inconnu : ${key}`);
   return a;
+}
+
+/** Aucune violation grave ou critique (WCAG 2.2 AA). */
+export async function expectAccessible(page: Page) {
+  const { violations } = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
+    .analyze();
+  const graves = violations.filter((v) => v.impact === "serious" || v.impact === "critical");
+  expect(
+    graves.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`),
+  ).toEqual([]);
 }
 
 /** Connexion bailleur / plateforme : mot de passe puis code TOTP. */
@@ -36,15 +48,14 @@ export async function lastMail(page: Page, to: string) {
   };
 }
 
-export async function signInCompanyWithCode(page: Page) {
-  const a = account("entreprise");
+export async function signInCompanyWithCode(page: Page, email = account("entreprise").email) {
   await page.goto("/connexion");
-  await page.getByLabel("Adresse e-mail professionnelle").fill(a.email);
+  await page.getByLabel("Adresse e-mail professionnelle").fill(email);
   await page.getByRole("button", { name: "Recevoir un code à 6 chiffres" }).click();
   await expect(page.getByLabel("Code reçu par e-mail")).toBeVisible();
   const context = page.context();
   const mailbox = await context.newPage();
-  const { body } = await lastMail(mailbox, a.email);
+  const { body } = await lastMail(mailbox, email);
   await mailbox.close();
   const code = /\b(\d{6})\b/.exec(body)?.[1];
   expect(code, "code à 6 chiffres dans le courriel").toBeTruthy();

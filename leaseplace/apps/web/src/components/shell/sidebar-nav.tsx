@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import type { Space } from "@leaseplace/domain";
 import { cn } from "@leaseplace/ui/cn";
 import { Link, usePathname } from "@/i18n/navigation";
-import { NAV } from "./nav";
+import { NAV, navCurrent } from "./nav";
 
 export function SidebarNav({ space }: { space: Space }) {
   const t = useTranslations("nav");
@@ -28,12 +28,13 @@ export function SidebarNav({ space }: { space: Space }) {
             </span>
           );
         }
-        const active = pathname === href;
+        const current = navCurrent(pathname, href);
+        const active = current !== undefined;
         return (
           <Link
             key={key}
             href={href}
-            aria-current={active ? "page" : undefined}
+            aria-current={current}
             className={cn(
               "flex h-8 items-center gap-2.5 rounded-md px-2 text-[13px] font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg",
               active &&
@@ -70,12 +71,13 @@ export function TopNav({ space }: { space: Space }) {
             </span>
           );
         }
-        const active = pathname === href;
+        const current = navCurrent(pathname, href);
+        const active = current !== undefined;
         return (
           <Link
             key={key}
             href={href}
-            aria-current={active ? "page" : undefined}
+            aria-current={current}
             className={cn(
               "flex h-10 shrink-0 items-center border-b-2 border-transparent px-2.5 text-[13px] font-medium text-fg-muted hover:text-fg",
               active && "border-primary text-fg",

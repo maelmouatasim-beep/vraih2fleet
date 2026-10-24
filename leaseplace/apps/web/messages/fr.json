@@ -21,7 +21,8 @@
       "home": "Accueil",
       "requests": "Demandes",
       "vault": "Coffre-fort",
-      "messages": "Messages"
+      "messages": "Messages",
+      "profile": "Profil"
     },
     "lessor": {
       "inbox": "Boîte de réception",
@@ -80,33 +81,16 @@
     "company": {
       "name": "Espace entreprise",
       "greeting": "Bonjour, {name}",
-      "journeyTitle": "Votre parcours de financement",
-      "journeyBody": "Quatre étapes, un seul dossier : vous comparez ensuite les offres de plusieurs bailleurs sur leur coût total.",
-      "steps": {
-        "profile": {
-          "title": "Profil de l’entreprise",
-          "body": "ICE, RC et informations clés, saisis une seule fois."
-        },
-        "vault": {
-          "title": "Coffre-fort de documents",
-          "body": "Vos pièces, chiffrées et réutilisables pour chaque demande."
-        },
-        "request": {
-          "title": "Demande de financement",
-          "body": "L’équipement, le montant et la durée souhaités, en moins de 5 minutes."
-        },
-        "compare": {
-          "title": "Comparer les offres",
-          "body": "Des offres ramenées au même format, classées par coût total."
-        }
-      },
-      "comingSoon": "Bientôt disponible",
       "emptyTitle": "Aucune demande pour l’instant",
       "emptyBody": "Une seule demande suffit pour recevoir plusieurs offres de bailleurs, gratuitement.",
-      "newRequest": "Nouvelle demande",
-      "newRequestHint": "Le dépôt de demande ouvrira à la phase 4.",
       "privacyTitle": "Vos données restent sous votre contrôle",
-      "privacyBody": "Aucun document n’est partagé avec un bailleur sans votre consentement explicite, bailleur par bailleur (loi 09-08)."
+      "privacyBody": "Aucun document n’est partagé avec un bailleur sans votre consentement explicite, bailleur par bailleur (loi 09-08).",
+      "kycTitle": "Dossier de l’entreprise",
+      "kycComplete": "Toutes les pièces exigées sont fournies.",
+      "kycMissing": "{count, plural, one {# pièce à fournir ou à renouveler} other {# pièces à fournir ou à renouveler}}",
+      "openVault": "Coffre-fort",
+      "recentRequests": "Demandes récentes",
+      "allRequests": "Toutes les demandes"
     },
     "lessor": {
       "name": "Espace bailleur",
@@ -197,7 +181,7 @@
     "sendCode": "Recevoir un code à 6 chiffres",
     "sendLink": "Recevoir un lien de connexion",
     "companyHint": "Aucun mot de passe : nous vous envoyons un code ou un lien valable 10 minutes.",
-    "codeSent": "Si un compte existe pour {email}, un code vient de lui être envoyé.",
+    "codeSent": "Un code vient d’être envoyé à {email}, sauf pour un compte bailleur ou équipe (connexion par mot de passe).",
     "codeLabel": "Code reçu par e-mail",
     "signIn": "Se connecter",
     "changeEmail": "Changer d’adresse",
@@ -218,7 +202,8 @@
       "credentials": "Identifiants incorrects.",
       "code": "Code incorrect ou expiré.",
       "generic": "Une erreur est survenue. Réessayez."
-    }
+    },
+    "signupHint": "Première visite ? Le code crée votre espace entreprise, gratuitement. Le lien ne sert qu’aux comptes existants."
   },
   "twoFactor": {
     "title": "Activer la double authentification",
@@ -752,6 +737,291 @@
     "kinds": {
       "lessor": "Bailleur",
       "company": "Entreprise"
+    }
+  },
+  "company": {
+    "onboarding": {
+      "eyebrow": "Bienvenue",
+      "title": "Présentez votre entreprise",
+      "subtitle": "Ces informations, saisies une seule fois, servent à toutes vos demandes. Deux minutes suffisent.",
+      "fullName": "Votre nom complet",
+      "legalName": "Raison sociale",
+      "ice": "ICE",
+      "iceHint": "Identifiant commun de l’entreprise, 15 chiffres.",
+      "iceInvalid": "L’ICE doit comporter exactement 15 chiffres.",
+      "iceTaken": "Cet ICE est déjà enregistré. Demandez à votre dirigeant de vous inviter.",
+      "legalForm": "Forme juridique",
+      "sector": "Secteur d’activité",
+      "city": "Ville",
+      "incorporationDate": "Date de création",
+      "incorporationHint": "Elle détermine les pièces demandées (bilans à partir de 12 mois d’existence).",
+      "revenueBand": "Chiffre d’affaires annuel",
+      "headcountBand": "Effectif",
+      "notSpecified": "Non précisé",
+      "submit": "Créer mon espace",
+      "creating": "Création…",
+      "errors": {
+        "invalid": "Vérifiez les champs signalés.",
+        "ice": "L’ICE doit comporter exactement 15 chiffres.",
+        "ice_taken": "Cet ICE est déjà enregistré.",
+        "already": "Votre compte est déjà rattaché à une entreprise.",
+        "generic": "Une erreur est survenue. Réessayez dans un instant."
+      }
+    },
+    "labels": {
+      "legalForms": {
+        "sarl": "SARL",
+        "sarlau": "SARL AU",
+        "sa": "SA",
+        "sas": "SAS",
+        "snc": "SNC",
+        "ei": "Entreprise individuelle",
+        "auto_entrepreneur": "Auto-entrepreneur",
+        "other": "Autre forme"
+      },
+      "sectors": {
+        "transport": "Transport et logistique",
+        "construction": "BTP",
+        "health": "Santé",
+        "industry": "Industrie",
+        "agriculture": "Agriculture",
+        "trade": "Commerce",
+        "services": "Services",
+        "tech": "Technologies",
+        "tourism": "Tourisme",
+        "other": "Autre secteur"
+      },
+      "revenueBands": {
+        "lt_3m": "Moins de 3 M DH",
+        "3m_10m": "3 à 10 M DH",
+        "10m_50m": "10 à 50 M DH",
+        "50m_175m": "50 à 175 M DH",
+        "gt_175m": "Plus de 175 M DH"
+      },
+      "headcountBands": {
+        "1_9": "1 à 9 personnes",
+        "10_49": "10 à 49 personnes",
+        "50_199": "50 à 199 personnes",
+        "200_plus": "200 personnes et plus"
+      },
+      "documentTypes": {
+        "rc_extract": "Extrait du registre de commerce (modèle 7)",
+        "ice_certificate": "Attestation ICE",
+        "articles": "Statuts",
+        "director_id": "CIN du dirigeant",
+        "appointment_minutes": "PV de nomination du gérant",
+        "auto_entrepreneur_card": "Carte d’auto-entrepreneur",
+        "tax_returns": "Bilans et liasses fiscales (2 derniers exercices)",
+        "business_plan": "Prévisionnel d’activité",
+        "bank_statements": "Relevés bancaires (6 derniers mois)",
+        "tax_certificate": "Attestation de régularité fiscale",
+        "cnss_certificate": "Attestation CNSS",
+        "quote": "Devis ou facture pro forma",
+        "other": "Autre document"
+      },
+      "documentHints": {
+        "rc_extract": "Délivré par le tribunal de commerce, de moins de 3 mois.",
+        "ice_certificate": "Téléchargeable sur ice.gov.ma.",
+        "articles": "Statuts à jour, signés.",
+        "director_id": "Recto et verso, en cours de validité.",
+        "appointment_minutes": "Procès-verbal désignant le gérant ou le dirigeant actuel.",
+        "auto_entrepreneur_card": "Carte délivrée lors de l’inscription au registre national.",
+        "tax_returns": "Bilans, comptes de produits et charges et liasses déposés à la DGI.",
+        "business_plan": "Pour une entreprise de moins de 12 mois, à la place des bilans.",
+        "bank_statements": "Compte principal de l’entreprise, de moins de 2 mois.",
+        "tax_certificate": "Délivrée par la DGI, de moins de 3 mois.",
+        "cnss_certificate": "Délivrée par la CNSS, de moins de 3 mois.",
+        "quote": "Devis du fournisseur, au nom de votre entreprise.",
+        "other": "Tout document utile au dossier."
+      },
+      "equipmentCategories": {
+        "light_vehicle": "Véhicule léger",
+        "truck": "Poids lourd",
+        "trailer": "Remorque",
+        "construction_machine": "Engin de chantier",
+        "industrial_machine": "Machine industrielle",
+        "medical": "Équipement médical",
+        "it": "Informatique",
+        "agricultural": "Matériel agricole",
+        "other": "Autre équipement"
+      },
+      "conditions": {
+        "new": "Neuf",
+        "used": "Occasion"
+      },
+      "periodicities": {
+        "monthly": "Mensuelle",
+        "quarterly": "Trimestrielle",
+        "semiannual": "Semestrielle",
+        "annual": "Annuelle"
+      }
+    },
+    "vault": {
+      "title": "Coffre-fort",
+      "subtitle": "Vos pièces, chiffrées et réutilisées pour chaque demande.",
+      "requiredTitle": "Pièces exigées",
+      "documentsTitle": "Documents déposés",
+      "otherTitle": "Ajouter un autre document",
+      "securityNote": "Chaque fichier est analysé puis chiffré. Les liens de téléchargement sont personnels et expirent après 5 minutes.",
+      "progress": "Dossier en cours",
+      "complete": "Dossier complet",
+      "states": {
+        "ok": "Fourni",
+        "stale": "À renouveler",
+        "missing": "Manquant"
+      },
+      "add": "Ajouter",
+      "replace": "Remplacer",
+      "empty": "Aucun document pour l’instant.",
+      "columns": {
+        "document": "Document",
+        "type": "Type",
+        "issued": "Délivré le",
+        "added": "Ajouté le",
+        "status": "État",
+        "actions": "Actions"
+      },
+      "documentStatus": {
+        "clean": "Vérifié",
+        "quarantined": "Bloqué",
+        "rejected": "Refusé"
+      },
+      "type": "Type de document",
+      "file": "Fichier",
+      "fileHint": "PDF, JPEG ou PNG, 10 Mo au plus.",
+      "issuedOn": "Date de délivrance",
+      "upload": "Déposer",
+      "uploading": "Dépôt…",
+      "uploaded": "Document déposé.",
+      "quarantined": "Ce fichier a été bloqué par l’analyse antivirus. Il n’a pas été conservé.",
+      "downloadLabel": "Télécharger {name}",
+      "deleteLabel": "Supprimer {name}",
+      "deleteConfirm": "Supprimer « {name} » ?",
+      "errors": {
+        "type": "Choisissez un type de document.",
+        "empty": "Choisissez un fichier.",
+        "too_large": "Le fichier dépasse 10 Mo.",
+        "format": "Format non accepté. Envoyez un PDF, un JPEG ou un PNG.",
+        "duplicate": "Ce fichier figure déjà dans votre coffre-fort.",
+        "generic": "Le dépôt a échoué. Réessayez dans un instant.",
+        "in_use": "Ce document fait partie d’une demande soumise et ne peut plus être supprimé."
+      },
+      "sizeKb": "{n} Ko",
+      "sizeMb": "{n} Mo"
+    },
+    "wizard": {
+      "title": "Demande de financement",
+      "stepsLabel": "Étapes de la demande",
+      "steps": {
+        "equipment": "Équipement",
+        "financing": "Financement",
+        "documents": "Documents",
+        "consent": "Consentement",
+        "review": "Vérification"
+      },
+      "save": {
+        "saving": "Enregistrement…",
+        "saved": "Enregistré",
+        "conflict": "Modifiée ailleurs",
+        "error": "Non enregistré"
+      },
+      "conflict": "Cette demande a été modifiée depuis un autre appareil. Rechargez pour voir la dernière version.",
+      "reload": "Recharger",
+      "category": "Type d’équipement",
+      "description": "Description",
+      "descriptionHint": "Marque, modèle, usage prévu ({min} caractères au moins).",
+      "condition": "État",
+      "year": "Année de mise en service",
+      "supplier": "Fournisseur",
+      "supplierHint": "Facultatif. Le concessionnaire ou le vendeur de l’équipement.",
+      "amount": "Montant hors taxes",
+      "amountHint": "Entre {min} et {max}.",
+      "periodicity": "Périodicité des loyers",
+      "duration": "Durée",
+      "months": "{n, plural, one {# mois} other {# mois}}",
+      "firstRent": "Premier loyer majoré",
+      "residual": "Valeur résiduelle",
+      "estimate": "Loyer HT indicatif",
+      "estimateHint": "Estimation à {rate} de taux annuel, sans engagement. Seules les offres des bailleurs font foi.",
+      "kycTitle": "Dossier de l’entreprise",
+      "openVault": "Ouvrir le coffre-fort",
+      "quoteTitle": "Devis",
+      "quoteHint": "Joignez le devis ou la facture pro forma de l’équipement.",
+      "detach": "Retirer {name} de la demande",
+      "consentCheckbox": "J’ai lu et j’accepte ce traitement.",
+      "ownerOnly": "Seul le dirigeant de l’entreprise peut donner ce consentement et soumettre la demande.",
+      "consentNote": "Votre accord est horodaté et conservé avec la version du texte. Vous pourrez le retirer à tout moment.",
+      "issuesTitle": "Avant de soumettre",
+      "issues": {
+        "equipment_category_missing": "Choisissez le type d’équipement.",
+        "description_invalid": "Décrivez l’équipement.",
+        "condition_missing": "Précisez l’état de l’équipement.",
+        "year_invalid": "Indiquez l’année de mise en service.",
+        "amount_invalid": "Indiquez un montant dans les limites.",
+        "duration_invalid": "Choisissez une durée dans les limites.",
+        "first_rent_invalid": "Le premier loyer est hors limites.",
+        "residual_invalid": "La valeur résiduelle est hors limites.",
+        "periodicity_missing": "Choisissez la périodicité.",
+        "quote_missing": "Joignez un devis.",
+        "kyc_incomplete": "Complétez le dossier de l’entreprise.",
+        "consent_missing": "Donnez votre consentement."
+      },
+      "ready": "Tout est prêt. Votre demande peut être soumise.",
+      "submit": "Soumettre la demande",
+      "submitting": "Soumission…",
+      "previous": "Précédent",
+      "next": "Suivant"
+    },
+    "requests": {
+      "title": "Demandes",
+      "subtitle": "Vos demandes de financement, de la rédaction aux offres.",
+      "detailTitle": "Demande de financement",
+      "new": "Nouvelle demande",
+      "creating": "Création…",
+      "untitled": "Demande sans titre",
+      "statuses": {
+        "draft": "Brouillon",
+        "submitted": "Soumise",
+        "cancelled": "Annulée"
+      },
+      "submittedOn": "Soumise le {date}",
+      "updatedOn": "Modifiée le {date}",
+      "back": "Toutes les demandes",
+      "nextTitle": "Et maintenant ?",
+      "nextBody": "Notre équipe vérifie votre dossier. Vous choisirez ensuite, bailleur par bailleur, à qui le transmettre.",
+      "summaryTitle": "Récapitulatif",
+      "attachmentsTitle": "Pièces jointes",
+      "download": "Télécharger {name}",
+      "kycShared": "Les pièces du coffre-fort accompagnent la demande ; elles ne sont transmises à un bailleur qu’avec votre accord.",
+      "timelineTitle": "Historique",
+      "timeline": {
+        "draft": "Brouillon créé",
+        "submitted": "Demande soumise",
+        "cancelled": "Demande annulée"
+      },
+      "consentGiven": "Consentement donné le {date} (texte version {version}).",
+      "cancel": "Annuler la demande",
+      "cancelConfirm": "Annuler cette demande ? Cette action est définitive.",
+      "cancelFailed": "Cette demande ne peut plus être annulée."
+    },
+    "profile": {
+      "title": "Profil de l’entreprise",
+      "subtitle": "Les informations partagées avec les bailleurs, une fois votre accord donné.",
+      "createdOn": "Espace créé le",
+      "identityNote": "Raison sociale, ICE et forme juridique ne se modifient pas ici : contactez-nous pour toute correction.",
+      "fields": {
+        "tradeName": "Nom commercial",
+        "rcNumber": "Numéro RC",
+        "rcCourt": "Tribunal du RC",
+        "taxId": "Identifiant fiscal (IF)",
+        "cnssNumber": "Numéro CNSS",
+        "address": "Adresse du siège"
+      },
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "saved": "Profil enregistré.",
+      "error": "Vérifiez les champs signalés.",
+      "readOnly": "Seul le dirigeant peut modifier le profil."
     }
   }
 }

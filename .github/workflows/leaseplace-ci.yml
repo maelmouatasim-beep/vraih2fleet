@@ -71,6 +71,11 @@ jobs:
       - name: Secret d'authentification éphémère
         run: echo "BETTER_AUTH_SECRET=ci-$(openssl rand -hex 24)" >> "$GITHUB_ENV"
 
+      - name: Clé de chiffrement des documents (éphémère)
+        run: |
+          echo "LP_STORAGE_KEY=$(openssl rand -base64 32)" >> "$GITHUB_ENV"
+          echo "LP_STORAGE_DIR=$RUNNER_TEMP/lp-storage" >> "$GITHUB_ENV"
+
       - name: Lint, typecheck, tests (dont RLS sur vrai Postgres)
         run: pnpm turbo run lint typecheck test
 

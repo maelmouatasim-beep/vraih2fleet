@@ -201,6 +201,7 @@ function CompanySignIn({ next, demo }: { next: string; demo: boolean }) {
         {t("sendLink")}
       </Button>
       <p className="text-xs text-fg-subtle">{t("companyHint")}</p>
+      <p className="text-xs text-fg-subtle">{t("signupHint")}</p>
     </form>
   );
 }

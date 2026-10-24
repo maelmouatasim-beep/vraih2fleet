@@ -1,76 +1,94 @@
-import { FileStack, FolderLock, Handshake, Lock, Scale, Sparkles } from "lucide-react";
+import { ArrowRight, FileStack, FolderLock, Lock } from "lucide-react";
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { Badge } from "@leaseplace/ui/badge";
 import { Button } from "@leaseplace/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@leaseplace/ui/card";
 import { EmptyState } from "@leaseplace/ui/empty-state";
+import { KycProgress } from "@/components/company/kyc";
+import { NewRequestButton } from "@/components/company/request-buttons";
+import { RequestList } from "@/components/company/request-list";
 import { PageHeader } from "@/components/shell/shells";
-import type { Locale } from "@/i18n/routing";
-import { requireSpace } from "@/lib/viewer";
+import { Link } from "@/i18n/navigation";
+import { getCompany, kycState, listDocuments, listRequests } from "@/lib/company-data";
+import { loadCompanyPage } from "@/lib/company-page";
+import { createRequestAction } from "./actions";
 
-const STEPS = [
-  { key: "profile", icon: Sparkles },
-  { key: "vault", icon: FolderLock },
-  { key: "request", icon: FileStack },
-  { key: "compare", icon: Scale },
-] as const;
+type Props = { params: Promise<{ locale: string }> };
 
-export default async function CompanyHome({ params }: { params: Promise<{ locale: string }> }) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const viewer = await requireSpace("company", locale as Locale);
+  const t = await getTranslations({ locale, namespace: "spaces.company" });
+  return { title: t("name") };
+}
+
+export default async function CompanyHome({ params }: Props) {
+  const { locale } = await params;
+  const { viewer, kyc, requests } = await loadCompanyPage(locale, async (tx, v) => {
+    const company = await getCompany(tx, v.membership.organizationId);
+    const docs = await listDocuments(tx, v.membership.organizationId);
+    return {
+      kyc: company ? kycState(company, docs) : null,
+      requests: await listRequests(tx, v.membership.organizationId),
+    };
+  });
   const t = await getTranslations("spaces.company");
   const firstName = viewer.user.name.split(" ")[0] ?? viewer.user.name;
+  const missing = kyc ? kyc.completeness.items.filter((i) => i.state !== "ok").length : 0;
+
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
         title={t("greeting", { name: firstName })}
         description={viewer.membership.organizationName}
+        actions={requests.length > 0 ? <NewRequestButton action={createRequestAction} /> : null}
       />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("journeyTitle")}</CardTitle>
-          <CardDescription>{t("journeyBody")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {STEPS.map(({ key, icon: Icon }, i) => (
-              <li
-                key={key}
-                className="flex flex-col gap-2 rounded-md border border-border bg-surface-muted/60 p-3.5"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="flex size-7 items-center justify-center rounded-md bg-surface text-fg-muted shadow-sm [&_svg]:size-4">
-                    <Icon aria-hidden="true" />
-                  </span>
-                  <span className="tabular font-mono text-[11px] text-fg-subtle">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <p className="text-[13px] font-medium text-fg">{t(`steps.${key}.title`)}</p>
-                <p className="text-[12px] leading-relaxed text-fg-muted">
-                  {t(`steps.${key}.body`)}
-                </p>
-                <Badge className="mt-auto self-start">{t("comingSoon")}</Badge>
-              </li>
-            ))}
-          </ol>
-        </CardContent>
-      </Card>
+      {kyc ? (
+        <Card>
+          <CardHeader className="flex flex-row items-start justify-between gap-4">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <FolderLock className="size-4 text-primary" aria-hidden="true" />
+                {t("kycTitle")}
+              </CardTitle>
+              <CardDescription>
+                {kyc.completeness.complete ? t("kycComplete") : t("kycMissing", { count: missing })}
+              </CardDescription>
+            </div>
+            <Button asChild variant={kyc.completeness.complete ? "ghost" : "secondary"} size="sm">
+              <Link href="/entreprise/coffre-fort">
+                {t("openVault")}
+                <ArrowRight className="rtl:rotate-180" aria-hidden="true" />
+              </Link>
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <KycProgress completeness={kyc.completeness} />
+          </CardContent>
+        </Card>
+      ) : null}
 
-      <EmptyState
-        icon={<Handshake />}
-        title={t("emptyTitle")}
-        description={t("emptyBody")}
-        action={
-          <Button disabled aria-describedby="nouvelle-demande-aide">
-            {t("newRequest")}
-          </Button>
-        }
-      />
-      <p id="nouvelle-demande-aide" className="-mt-4 text-center text-xs text-fg-subtle">
-        {t("newRequestHint")}
-      </p>
+      {requests.length > 0 ? (
+        <section className="flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-[15px] font-semibold text-fg">{t("recentRequests")}</h2>
+            <Link
+              href="/entreprise/demandes"
+              className="text-[13px] font-medium text-primary underline-offset-2 hover:underline"
+            >
+              {t("allRequests")}
+            </Link>
+          </div>
+          <RequestList requests={requests.slice(0, 5)} />
+        </section>
+      ) : (
+        <EmptyState
+          icon={<FileStack />}
+          title={t("emptyTitle")}
+          description={t("emptyBody")}
+          action={<NewRequestButton action={createRequestAction} size="lg" />}
+        />
+      )}
 
       <Card className="bg-primary-soft/40">
         <CardContent className="flex gap-3">

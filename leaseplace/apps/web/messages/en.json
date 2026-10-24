@@ -21,7 +21,8 @@
       "home": "Home",
       "requests": "Requests",
       "vault": "Document vault",
-      "messages": "Messages"
+      "messages": "Messages",
+      "profile": "Profile"
     },
     "lessor": {
       "inbox": "Inbox",
@@ -80,33 +81,16 @@
     "company": {
       "name": "Business space",
       "greeting": "Hello, {name}",
-      "journeyTitle": "Your financing journey",
-      "journeyBody": "Four steps, one application: you then compare offers from several lessors on their total cost.",
-      "steps": {
-        "profile": {
-          "title": "Company profile",
-          "body": "ICE, RC and key details, entered once."
-        },
-        "vault": {
-          "title": "Document vault",
-          "body": "Your documents, encrypted and reusable for every request."
-        },
-        "request": {
-          "title": "Financing request",
-          "body": "The equipment, amount and term you need, in under 5 minutes."
-        },
-        "compare": {
-          "title": "Compare offers",
-          "body": "Offers converted to the same format, ranked by total cost."
-        }
-      },
-      "comingSoon": "Coming soon",
       "emptyTitle": "No requests yet",
       "emptyBody": "A single request is enough to receive several offers from lessors, free of charge.",
-      "newRequest": "New request",
-      "newRequestHint": "Submitting requests opens in phase 4.",
       "privacyTitle": "Your data stays under your control",
-      "privacyBody": "No document is shared with a lessor without your explicit consent, lessor by lessor (Law 09-08)."
+      "privacyBody": "No document is shared with a lessor without your explicit consent, lessor by lessor (Law 09-08).",
+      "kycTitle": "Company file",
+      "kycComplete": "All required documents have been provided.",
+      "kycMissing": "{count, plural, one {# document to provide or renew} other {# documents to provide or renew}}",
+      "openVault": "Vault",
+      "recentRequests": "Recent requests",
+      "allRequests": "All requests"
     },
     "lessor": {
       "name": "Lessor space",
@@ -197,7 +181,7 @@
     "sendCode": "Get a 6-digit code",
     "sendLink": "Get a sign-in link",
     "companyHint": "No password: we send you a code or a link valid for 10 minutes.",
-    "codeSent": "If an account exists for {email}, a code has just been sent.",
+    "codeSent": "A code has just been sent to {email}, unless it belongs to a lessor or team account (password sign-in).",
     "codeLabel": "Code received by email",
     "signIn": "Sign in",
     "changeEmail": "Use another address",
@@ -218,7 +202,8 @@
       "credentials": "Incorrect credentials.",
       "code": "Incorrect or expired code.",
       "generic": "Something went wrong. Please try again."
-    }
+    },
+    "signupHint": "First visit? The code creates your company workspace, free of charge. The link only works for existing accounts."
   },
   "twoFactor": {
     "title": "Turn on two-factor authentication",
@@ -752,6 +737,291 @@
     "kinds": {
       "lessor": "Lessor",
       "company": "Business"
+    }
+  },
+  "company": {
+    "onboarding": {
+      "eyebrow": "Welcome",
+      "title": "Tell us about your company",
+      "subtitle": "Entered once, this information is reused for every request. It takes two minutes.",
+      "fullName": "Your full name",
+      "legalName": "Registered company name",
+      "ice": "ICE",
+      "iceHint": "Common company identifier, 15 digits.",
+      "iceInvalid": "The ICE must be exactly 15 digits.",
+      "iceTaken": "This ICE is already registered. Ask your company’s director to invite you.",
+      "legalForm": "Legal form",
+      "sector": "Business sector",
+      "city": "City",
+      "incorporationDate": "Incorporation date",
+      "incorporationHint": "It determines which documents are required (financial statements after 12 months).",
+      "revenueBand": "Annual revenue",
+      "headcountBand": "Headcount",
+      "notSpecified": "Not specified",
+      "submit": "Create my workspace",
+      "creating": "Creating…",
+      "errors": {
+        "invalid": "Check the highlighted fields.",
+        "ice": "The ICE must be exactly 15 digits.",
+        "ice_taken": "This ICE is already registered.",
+        "already": "Your account already belongs to a company.",
+        "generic": "Something went wrong. Please try again shortly."
+      }
+    },
+    "labels": {
+      "legalForms": {
+        "sarl": "SARL (LLC)",
+        "sarlau": "SARL AU (single-member LLC)",
+        "sa": "SA (public limited company)",
+        "sas": "SAS (simplified joint-stock company)",
+        "snc": "SNC (general partnership)",
+        "ei": "Sole proprietorship",
+        "auto_entrepreneur": "Auto-entrepreneur",
+        "other": "Other form"
+      },
+      "sectors": {
+        "transport": "Transport and logistics",
+        "construction": "Construction",
+        "health": "Healthcare",
+        "industry": "Manufacturing",
+        "agriculture": "Agriculture",
+        "trade": "Retail and wholesale",
+        "services": "Services",
+        "tech": "Technology",
+        "tourism": "Tourism",
+        "other": "Other sector"
+      },
+      "revenueBands": {
+        "lt_3m": "Under MAD 3M",
+        "3m_10m": "MAD 3M to 10M",
+        "10m_50m": "MAD 10M to 50M",
+        "50m_175m": "MAD 50M to 175M",
+        "gt_175m": "Over MAD 175M"
+      },
+      "headcountBands": {
+        "1_9": "1 to 9 people",
+        "10_49": "10 to 49 people",
+        "50_199": "50 to 199 people",
+        "200_plus": "200 people or more"
+      },
+      "documentTypes": {
+        "rc_extract": "Commercial register extract (model 7)",
+        "ice_certificate": "ICE certificate",
+        "articles": "Articles of association",
+        "director_id": "Director’s national ID card",
+        "appointment_minutes": "Minutes appointing the manager",
+        "auto_entrepreneur_card": "Auto-entrepreneur card",
+        "tax_returns": "Financial statements and tax returns (last 2 years)",
+        "business_plan": "Business plan",
+        "bank_statements": "Bank statements (last 6 months)",
+        "tax_certificate": "Tax compliance certificate",
+        "cnss_certificate": "CNSS certificate",
+        "quote": "Quote or pro forma invoice",
+        "other": "Other document"
+      },
+      "documentHints": {
+        "rc_extract": "Issued by the commercial court, less than 3 months old.",
+        "ice_certificate": "Available on ice.gov.ma.",
+        "articles": "Current, signed articles.",
+        "director_id": "Front and back, currently valid.",
+        "appointment_minutes": "Minutes naming the current manager or director.",
+        "auto_entrepreneur_card": "Card issued on registration with the national register.",
+        "tax_returns": "Balance sheets, income statements and returns filed with the tax authority (DGI).",
+        "business_plan": "For a company less than 12 months old, instead of financial statements.",
+        "bank_statements": "Company’s main account, less than 2 months old.",
+        "tax_certificate": "Issued by the tax authority (DGI), less than 3 months old.",
+        "cnss_certificate": "Issued by the CNSS, less than 3 months old.",
+        "quote": "Supplier’s quote, made out to your company.",
+        "other": "Any document useful to the application."
+      },
+      "equipmentCategories": {
+        "light_vehicle": "Light vehicle",
+        "truck": "Heavy truck",
+        "trailer": "Trailer",
+        "construction_machine": "Construction machinery",
+        "industrial_machine": "Industrial machinery",
+        "medical": "Medical equipment",
+        "it": "IT equipment",
+        "agricultural": "Agricultural equipment",
+        "other": "Other equipment"
+      },
+      "conditions": {
+        "new": "New",
+        "used": "Used"
+      },
+      "periodicities": {
+        "monthly": "Monthly",
+        "quarterly": "Quarterly",
+        "semiannual": "Half-yearly",
+        "annual": "Annual"
+      }
+    },
+    "vault": {
+      "title": "Document vault",
+      "subtitle": "Your documents, encrypted and reused for every request.",
+      "requiredTitle": "Required documents",
+      "documentsTitle": "Uploaded documents",
+      "otherTitle": "Add another document",
+      "securityNote": "Every file is scanned, then encrypted. Download links are personal and expire after 5 minutes.",
+      "progress": "Application in progress",
+      "complete": "Application complete",
+      "states": {
+        "ok": "Provided",
+        "stale": "Needs renewal",
+        "missing": "Missing"
+      },
+      "add": "Add",
+      "replace": "Replace",
+      "empty": "No documents yet.",
+      "columns": {
+        "document": "Document",
+        "type": "Type",
+        "issued": "Issued",
+        "added": "Added",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "documentStatus": {
+        "clean": "Verified",
+        "quarantined": "Blocked",
+        "rejected": "Rejected"
+      },
+      "type": "Document type",
+      "file": "File",
+      "fileHint": "PDF, JPEG or PNG, 10 MB max.",
+      "issuedOn": "Issue date",
+      "upload": "Upload",
+      "uploading": "Uploading…",
+      "uploaded": "Document uploaded.",
+      "quarantined": "This file was blocked by the virus scan. It has not been kept.",
+      "downloadLabel": "Download {name}",
+      "deleteLabel": "Delete {name}",
+      "deleteConfirm": "Delete “{name}”?",
+      "errors": {
+        "type": "Choose a document type.",
+        "empty": "Choose a file.",
+        "too_large": "The file exceeds 10 MB.",
+        "format": "Unsupported format. Send a PDF, JPEG or PNG.",
+        "duplicate": "This file is already in your vault.",
+        "generic": "Upload failed. Please try again shortly.",
+        "in_use": "This document belongs to a submitted request and can no longer be deleted."
+      },
+      "sizeKb": "{n} KB",
+      "sizeMb": "{n} MB"
+    },
+    "wizard": {
+      "title": "Financing request",
+      "stepsLabel": "Request steps",
+      "steps": {
+        "equipment": "Equipment",
+        "financing": "Financing",
+        "documents": "Documents",
+        "consent": "Consent",
+        "review": "Review"
+      },
+      "save": {
+        "saving": "Saving…",
+        "saved": "Saved",
+        "conflict": "Changed elsewhere",
+        "error": "Not saved"
+      },
+      "conflict": "This request was changed on another device. Reload to see the latest version.",
+      "reload": "Reload",
+      "category": "Equipment type",
+      "description": "Description",
+      "descriptionHint": "Make, model, intended use (at least {min} characters).",
+      "condition": "Condition",
+      "year": "Year first in service",
+      "supplier": "Supplier",
+      "supplierHint": "Optional. The dealer or seller of the equipment.",
+      "amount": "Amount excluding VAT",
+      "amountHint": "Between {min} and {max}.",
+      "periodicity": "Rent frequency",
+      "duration": "Term",
+      "months": "{n, plural, one {# month} other {# months}}",
+      "firstRent": "Increased first rent",
+      "residual": "Residual value",
+      "estimate": "Indicative rent excl. VAT",
+      "estimateHint": "Estimate at {rate} annual rate, non-binding. Only lessors’ offers are authoritative.",
+      "kycTitle": "Company file",
+      "openVault": "Open the vault",
+      "quoteTitle": "Quote",
+      "quoteHint": "Attach the equipment quote or pro forma invoice.",
+      "detach": "Remove {name} from the request",
+      "consentCheckbox": "I have read and accept this processing.",
+      "ownerOnly": "Only the company’s director can give this consent and submit the request.",
+      "consentNote": "Your consent is timestamped and stored with the text version. You can withdraw it at any time.",
+      "issuesTitle": "Before submitting",
+      "issues": {
+        "equipment_category_missing": "Choose the equipment type.",
+        "description_invalid": "Describe the equipment.",
+        "condition_missing": "Specify the equipment condition.",
+        "year_invalid": "Enter the year first in service.",
+        "amount_invalid": "Enter an amount within the limits.",
+        "duration_invalid": "Choose a term within the limits.",
+        "first_rent_invalid": "The first rent is out of range.",
+        "residual_invalid": "The residual value is out of range.",
+        "periodicity_missing": "Choose the rent frequency.",
+        "quote_missing": "Attach a quote.",
+        "kyc_incomplete": "Complete the company file.",
+        "consent_missing": "Give your consent."
+      },
+      "ready": "All set. Your request can be submitted.",
+      "submit": "Submit request",
+      "submitting": "Submitting…",
+      "previous": "Back",
+      "next": "Next"
+    },
+    "requests": {
+      "title": "Requests",
+      "subtitle": "Your financing requests, from draft to offers.",
+      "detailTitle": "Financing request",
+      "new": "New request",
+      "creating": "Creating…",
+      "untitled": "Untitled request",
+      "statuses": {
+        "draft": "Draft",
+        "submitted": "Submitted",
+        "cancelled": "Cancelled"
+      },
+      "submittedOn": "Submitted on {date}",
+      "updatedOn": "Updated on {date}",
+      "back": "All requests",
+      "nextTitle": "What happens next?",
+      "nextBody": "Our team is reviewing your file. You will then choose, lessor by lessor, who receives it.",
+      "summaryTitle": "Summary",
+      "attachmentsTitle": "Attachments",
+      "download": "Download {name}",
+      "kycShared": "Vault documents accompany the request; they are only sent to a lessor with your consent.",
+      "timelineTitle": "History",
+      "timeline": {
+        "draft": "Draft created",
+        "submitted": "Request submitted",
+        "cancelled": "Request cancelled"
+      },
+      "consentGiven": "Consent given on {date} (text version {version}).",
+      "cancel": "Cancel request",
+      "cancelConfirm": "Cancel this request? This cannot be undone.",
+      "cancelFailed": "This request can no longer be cancelled."
+    },
+    "profile": {
+      "title": "Company profile",
+      "subtitle": "The information shared with lessors once you give your consent.",
+      "createdOn": "Workspace created on",
+      "identityNote": "Company name, ICE and legal form cannot be changed here: contact us for any correction.",
+      "fields": {
+        "tradeName": "Trade name",
+        "rcNumber": "Commercial register number",
+        "rcCourt": "Registering court",
+        "taxId": "Tax identifier (IF)",
+        "cnssNumber": "CNSS number",
+        "address": "Registered office address"
+      },
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Profile saved.",
+      "error": "Check the highlighted fields.",
+      "readOnly": "Only the director can edit the profile."
     }
   }
 }

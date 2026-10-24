@@ -12,6 +12,7 @@ export const CLIENT_NAMESPACES = [
   "twoFactor",
   "landing.quick",
   "lessorsPage.form",
+  "company",
 ] as const;
 
 type Messages = { [key: string]: string | Messages };

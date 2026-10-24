@@ -6,6 +6,7 @@ import { can, isOrganizationType, type OrganizationType } from "@leaseplace/doma
 import { Badge } from "@leaseplace/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@leaseplace/ui/card";
 import { EmptyState } from "@leaseplace/ui/empty-state";
+import { TableScroll } from "@leaseplace/ui/table-scroll";
 import { PageHeader, StatCard } from "@/components/shell/shells";
 import type { Locale } from "@/i18n/routing";
 import { appDb } from "@/lib/db";
@@ -82,7 +83,7 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
             <CardTitle>{t("organizationsTitle")}</CardTitle>
           </CardHeader>
           <CardContent className="p-0 pt-3">
-            <div className="overflow-x-auto">
+            <TableScroll label={t("organizationsTitle")}>
               <table className="w-full min-w-[420px] text-[13px]">
                 <thead className="border-y border-border bg-surface-muted/60 text-fg-muted">
                   <tr>
@@ -113,7 +114,7 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
                   ))}
                 </tbody>
               </table>
-            </div>
+            </TableScroll>
           </CardContent>
         </Card>
         <div className="lg:col-span-2">

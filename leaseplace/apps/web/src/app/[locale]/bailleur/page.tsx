@@ -1,6 +1,7 @@
 import { Inbox } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { EmptyState } from "@leaseplace/ui/empty-state";
+import { TableScroll } from "@leaseplace/ui/table-scroll";
 import { PageHeader, StatCard } from "@/components/shell/shells";
 import type { Locale } from "@/i18n/routing";
 import { requireSpace } from "@/lib/viewer";
@@ -25,7 +26,7 @@ export default async function LessorInbox({ params }: { params: Promise<{ locale
         <StatCard label={t("kpiWinRate")} value="—" />
       </div>
       <div className="overflow-hidden rounded-lg border border-border bg-surface shadow-sm">
-        <div className="overflow-x-auto">
+        <TableScroll label={t("inboxTitle")}>
           <table className="w-full min-w-[720px] text-[13px]">
             <thead className="border-b border-border bg-surface-muted/60 text-fg-muted">
               <tr>
@@ -41,7 +42,7 @@ export default async function LessorInbox({ params }: { params: Promise<{ locale
               </tr>
             </thead>
           </table>
-        </div>
+        </TableScroll>
         <EmptyState
           className="rounded-none border-0"
           icon={<Inbox />}

@@ -3,3 +3,7 @@ export * from "./rbac/permissions";
 export * from "./audit/actions";
 export * from "./finance";
 export * from "./marketing/leads";
+export * from "./common/state-machine";
+export * from "./kyc/company";
+export * from "./kyc/documents";
+export * from "./requests/requests";

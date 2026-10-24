@@ -5,6 +5,7 @@ import { schema, withActor } from "@leaseplace/db";
 import { can } from "@leaseplace/domain";
 import { Badge } from "@leaseplace/ui/badge";
 import { EmptyState } from "@leaseplace/ui/empty-state";
+import { TableScroll } from "@leaseplace/ui/table-scroll";
 import { PageHeader } from "@/components/shell/shells";
 import type { Locale } from "@/i18n/routing";
 import { appDb } from "@/lib/db";
@@ -77,7 +78,7 @@ export default async function AuditJournal({ params }: { params: Promise<{ local
         }
       />
       <div className="overflow-hidden rounded-lg border border-border bg-surface shadow-sm">
-        <div className="overflow-x-auto">
+        <TableScroll label={t("title")}>
           <table className="w-full min-w-[860px] text-[13px]">
             <thead className="border-b border-border bg-surface-muted/60 text-fg-muted">
               <tr>
@@ -136,7 +137,7 @@ export default async function AuditJournal({ params }: { params: Promise<{ local
               ))}
             </tbody>
           </table>
-        </div>
+        </TableScroll>
         {rows.length === 0 ? (
           <p className="px-4 py-10 text-center text-sm text-fg-muted">{t("empty")}</p>
         ) : null}

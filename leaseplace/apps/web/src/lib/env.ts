@@ -14,6 +14,12 @@ const schema = z.object({
     .enum(["true", "false"])
     .default("false")
     .transform((v) => v === "true"),
+  /** Répertoire du stockage local des documents (développement, démonstration). */
+  LP_STORAGE_DIR: z.string().min(1).default(".storage"),
+  /** Clé AES-256 du chiffrement au repos des documents, en base64 (32 octets). */
+  LP_STORAGE_KEY: z
+    .string()
+    .refine((v) => Buffer.from(v, "base64").length === 32, "LP_STORAGE_KEY : 32 octets en base64"),
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
 });
 

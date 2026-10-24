@@ -37,7 +37,7 @@ apps/web/             Next.js 15 : public, /entreprise, /bailleur, /admin (App R
 packages/domain/      logique métier pure, couverte à 100 % (RBAC, audit, moteur financier)
 packages/db/          schéma Drizzle, migrations, contexte RLS, audit ; tests RLS sur vrai Postgres
 packages/ui/          design system : tokens (contrastes AA testés), composants
-packages/integrations/ adaptateurs (courriel : interface + mémoire + boîte de démo, tests de contrat)
+packages/integrations/ adaptateurs (courriel, stockage chiffré, antivirus : interfaces + implémentations de test, tests de contrat)
 packages/config/      tsconfig et ESLint partagés
 docs/                 ADR, glossaire métier, schéma cible
 ```
@@ -57,6 +57,15 @@ Simulateur public : `/simulateur`.
 `/`, `/simulateur`, `/secteurs/{transport,btp,medical}`, `/bailleurs`
 (formulaire de contact → `marketing.leads`, lu dans `/admin/contacts`),
 `/mentions-legales`, `sitemap.xml`, `robots.txt`. Performance : ADR 0010.
+
+## Espace entreprise
+
+Inscription par code e-mail → `/bienvenue` (profil) → `/entreprise` :
+coffre-fort KYC, assistant de demande en 5 étapes avec sauvegarde
+automatique, consentement 09-08 versionné, soumission et historique
+(`docs/phases/phase-4.md`). Documents chiffrés (`LP_STORAGE_KEY`, 32 octets
+en base64 : `openssl rand -base64 32`) dans `LP_STORAGE_DIR` ; analyse
+antivirus et liens signés : ADR 0011.
 
 ## Sécurité, en bref
 

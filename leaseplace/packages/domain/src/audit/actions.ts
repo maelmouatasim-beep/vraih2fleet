@@ -10,6 +10,16 @@ export const AUDIT_ACTIONS = [
   "auth.two_factor_disabled",
   "organization.switched",
   "space.access_denied",
+  "company.created",
+  "company.updated",
+  "document.uploaded",
+  "document.deleted",
+  "document.downloaded",
+  "request.created",
+  "request.submitted",
+  "request.cancelled",
+  "consent.granted",
+  "consent.revoked",
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 

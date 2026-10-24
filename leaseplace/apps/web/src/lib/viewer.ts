@@ -73,7 +73,8 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
 
 /** Chemin d'accueil du visiteur connecté (sans préfixe de langue). */
 export function homePathOf(viewer: Viewer): string {
-  if (!viewer.membership) return "/acces-refuse";
+  // Compte sans organisation : PME en cours d'inscription.
+  if (!viewer.membership) return "/bienvenue";
   if (requiresTwoFactor(viewer.membership.organizationType) && !viewer.user.twoFactorEnabled) {
     return "/securite/double-authentification";
   }
@@ -96,7 +97,7 @@ export async function requireSpace(space: Space, locale: Locale): Promise<SpaceV
     });
   }
   const { membership } = viewer;
-  if (!membership) return redirect({ href: "/acces-refuse", locale });
+  if (!membership) return redirect({ href: "/bienvenue", locale });
   if (requiresTwoFactor(membership.organizationType) && !viewer.user.twoFactorEnabled) {
     return redirect({ href: "/securite/double-authentification", locale });
   }
