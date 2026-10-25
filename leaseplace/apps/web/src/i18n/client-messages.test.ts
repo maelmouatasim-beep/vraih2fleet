@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { CLIENT_NAMESPACES, pickMessages } from "./client-messages";
+import { CLIENT_NAMESPACES, pickMessages, SPACE_NAMESPACES } from "./client-messages";
 
 function files(dir: string): string[] {
   return readdirSync(dir).flatMap((n) => {
@@ -27,8 +27,8 @@ describe("traductions envoyées au navigateur", () => {
       if (!code.startsWith('"use client"')) continue;
       for (const m of code.matchAll(/useTranslations\("([^"]+)"\)/g)) {
         const ns = m[1] ?? "";
-        if (!CLIENT_NAMESPACES.some((c) => ns === c || ns.startsWith(`${c}.`)))
-          missing.push(`${f}: ${ns}`);
+        const covered = [...CLIENT_NAMESPACES, ...Object.values(SPACE_NAMESPACES).flat()];
+        if (!covered.some((c) => ns === c || ns.startsWith(`${c}.`))) missing.push(`${f}: ${ns}`);
       }
     }
     expect(missing).toEqual([]);

@@ -20,16 +20,28 @@ const schema = z.object({
   LP_STORAGE_KEY: z
     .string()
     .refine((v) => Buffer.from(v, "base64").length === 32, "LP_STORAGE_KEY : 32 octets en base64"),
+  /**
+   * IA : « mock » = simulateur de démonstration (aucun appel externe) ;
+   * « anthropic » = API Claude, clé ANTHROPIC_API_KEY obligatoire.
+   */
+  LP_AI_PROVIDER: z.enum(["mock", "anthropic"]).default("mock"),
+  ANTHROPIC_API_KEY: z.string().min(1).optional(),
+  LP_AI_MODEL: z.string().min(1).optional(),
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
 });
 
 export type Env = z.infer<typeof schema>;
 
+const refined = schema.refine((e) => e.LP_AI_PROVIDER !== "anthropic" || e.ANTHROPIC_API_KEY, {
+  message: "ANTHROPIC_API_KEY requise avec LP_AI_PROVIDER=anthropic",
+  path: ["ANTHROPIC_API_KEY"],
+});
+
 let cached: Env | undefined;
 
 /** Variables validées au premier accès (jamais au build). */
 export function env(): Env {
-  cached ??= schema.parse(process.env);
+  cached ??= refined.parse(process.env);
   return cached;
 }
 

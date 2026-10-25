@@ -5,7 +5,9 @@ import { recordAudit, schema, withActor, type Transaction } from "@leaseplace/db
 import {
   can,
   DOCUMENT_TYPES,
+  EDITABLE_REQUEST_STATUSES,
   EQUIPMENT_CATEGORIES,
+  isEditableRequestStatus,
   EQUIPMENT_CONDITIONS,
   MAX_DOCUMENT_BYTES,
   PERIODICITIES,
@@ -143,7 +145,7 @@ export async function deleteDocument(
   documentId: string,
 ): Promise<{ ok: boolean; error?: "in_use" }> {
   return inCompany(async (tx) => {
-    // Une pièce jointe à une demande soumise fait partie du dossier transmis.
+    // Une pièce jointe à une demande soumise, en revue ou qualifiée fait partie du dossier transmis.
     const [locked] = await tx
       .select({ id: financingRequests.id })
       .from(requestDocuments)
@@ -151,11 +153,23 @@ export async function deleteDocument(
       .where(
         and(
           eq(requestDocuments.documentId, documentId),
-          inArray(financingRequests.status, ["submitted"]),
+          inArray(financingRequests.status, ["submitted", "in_review", "qualified"]),
         ),
       );
     if (locked) return { ok: false, error: "in_use" as const };
-    await tx.delete(requestDocuments).where(eq(requestDocuments.documentId, documentId));
+    // Détachée des demandes encore modifiables ; l'historique des demandes annulées reste intact.
+    await tx.delete(requestDocuments).where(
+      and(
+        eq(requestDocuments.documentId, documentId),
+        inArray(
+          requestDocuments.requestId,
+          tx
+            .select({ id: financingRequests.id })
+            .from(financingRequests)
+            .where(inArray(financingRequests.status, [...EDITABLE_REQUEST_STATUSES])),
+        ),
+      ),
+    );
     const updated = await tx
       .update(documents)
       .set({ deletedAt: new Date() })
@@ -236,7 +250,7 @@ export async function saveDraft(
         and(
           eq(financingRequests.id, requestId),
           eq(financingRequests.version, version),
-          eq(financingRequests.status, "draft"),
+          inArray(financingRequests.status, [...EDITABLE_REQUEST_STATUSES]),
         ),
       )
       .returning({ version: financingRequests.version });
@@ -269,7 +283,7 @@ export async function submitRequest(
     if (!can(viewer.membership.role, "consent.grant")) return { status: "forbidden" } as const;
     const request = await getRequest(tx, requestId);
     const company = await getCompany(tx, viewer.membership.organizationId);
-    if (!request || !company || request.status !== "draft") {
+    if (!request || !company || !isEditableRequestStatus(request.status)) {
       return { status: "forbidden" } as const;
     }
     const attachments = await requestAttachments(tx, requestId);

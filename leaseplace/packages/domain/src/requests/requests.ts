@@ -19,17 +19,45 @@ export type EquipmentCategory = (typeof EQUIPMENT_CATEGORIES)[number];
 export const EQUIPMENT_CONDITIONS = ["new", "used"] as const;
 export type EquipmentCondition = (typeof EQUIPMENT_CONDITIONS)[number];
 
-/** Statuts livrés en phase 4 ; la suite du cycle (revue, routage, offres) s'ajoute par phase. */
-export const REQUEST_STATUSES = ["draft", "submitted", "cancelled"] as const;
+/**
+ * Cycle de vie d'une demande. Phase 5 : revue de la plateforme (vérification
+ * du dossier, indice d'orientation, note de synthèse) avant tout envoi aux
+ * bailleurs. « qualified » signifie « dossier vérifié, prêt à être orienté »,
+ * jamais un accord de crédit : la décision appartient au bailleur.
+ */
+export const REQUEST_STATUSES = [
+  "draft",
+  "submitted",
+  "in_review",
+  "needs_info",
+  "qualified",
+  "cancelled",
+] as const;
 export type RequestStatus = (typeof REQUEST_STATUSES)[number];
-export const REQUEST_EVENTS = ["submit", "cancel"] as const;
+export const REQUEST_EVENTS = [
+  "submit",
+  "start_review",
+  "request_info",
+  "qualify",
+  "cancel",
+] as const;
 export type RequestEvent = (typeof REQUEST_EVENTS)[number];
 
 export const requestMachine = defineMachine<RequestStatus, RequestEvent>({
   draft: { submit: "submitted", cancel: "cancelled" },
-  submitted: { cancel: "cancelled" },
+  submitted: { start_review: "in_review", cancel: "cancelled" },
+  in_review: { request_info: "needs_info", qualify: "qualified", cancel: "cancelled" },
+  needs_info: { submit: "submitted", cancel: "cancelled" },
+  qualified: { cancel: "cancelled" },
   cancelled: {},
 });
+
+/** Statuts où l'entreprise peut encore modifier sa demande. */
+export const EDITABLE_REQUEST_STATUSES: readonly RequestStatus[] = ["draft", "needs_info"];
+
+export function isEditableRequestStatus(status: string): boolean {
+  return (EDITABLE_REQUEST_STATUSES as readonly string[]).includes(status);
+}
 
 export const WIZARD_STEPS = ["equipment", "financing", "documents", "consent", "review"] as const;
 export type WizardStep = (typeof WIZARD_STEPS)[number];

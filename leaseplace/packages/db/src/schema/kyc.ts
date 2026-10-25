@@ -60,6 +60,9 @@ export const documents = kyc.table(
     storageKey: text("storage_key").notNull().unique(),
     issuedOn: date("issued_on", { mode: "date" }),
     scanResult: text("scan_result"),
+    /** Revue de la plateforme (phase 5) : pending → extracted → verified | rejected. */
+    reviewStatus: text("review_status").notNull().default("pending"),
+    reviewNote: text("review_note"),
     uploadedBy: uuid("uploaded_by")
       .notNull()
       .references(() => users.id),

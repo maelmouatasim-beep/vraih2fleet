@@ -43,7 +43,7 @@ export const NAV: Readonly<Record<Space, readonly NavItem[]>> = {
   ],
   admin: [
     { key: "overview", icon: LayoutDashboard, href: "/admin" },
-    { key: "kyc", icon: ClipboardCheck, phase: 5 },
+    { key: "kyc", icon: ClipboardCheck, href: "/admin/dossiers" },
     { key: "lessors", icon: Building2, phase: 8 },
     { key: "commissions", icon: BadgePercent, phase: 8 },
     { key: "contacts", icon: Contact, href: "/admin/contacts" },

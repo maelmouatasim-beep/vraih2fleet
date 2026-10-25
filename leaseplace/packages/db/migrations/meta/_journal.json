@@ -43,6 +43,20 @@
       "when": 1792857624138,
       "tag": "0005_kyc_credit_security",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792968158206,
+      "tag": "0006_review",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792968227799,
+      "tag": "0007_review_security",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,28 @@
+{
+  "name": "@leaseplace/ai",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc",
+    "test": "vitest run",
+    "eval": "node --import tsx src/evals/run.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.133.0",
+    "@leaseplace/domain": "workspace:*",
+    "zod": "4.6.6"
+  },
+  "devDependencies": {
+    "@leaseplace/config": "workspace:*",
+    "@types/node": "22.20.5",
+    "eslint": "9.39.1",
+    "tsx": "4.23.15",
+    "vitest": "4.1.11"
+  }
+}

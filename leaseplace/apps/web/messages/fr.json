@@ -33,7 +33,7 @@
     },
     "admin": {
       "overview": "Vue d’ensemble",
-      "kyc": "File KYC",
+      "kyc": "Revue des dossiers",
       "lessors": "Bailleurs et mandats",
       "commissions": "Commissions",
       "users": "Utilisateurs",
@@ -970,7 +970,9 @@
       "submit": "Soumettre la demande",
       "submitting": "Soumission…",
       "previous": "Précédent",
-      "next": "Suivant"
+      "next": "Suivant",
+      "infoRequested": "Notre équipe demande des compléments",
+      "resubmit": "Soumettre à nouveau"
     },
     "requests": {
       "title": "Demandes",
@@ -982,13 +984,14 @@
       "statuses": {
         "draft": "Brouillon",
         "submitted": "Soumise",
-        "cancelled": "Annulée"
+        "cancelled": "Annulée",
+        "in_review": "En revue",
+        "needs_info": "Compléments demandés",
+        "qualified": "Dossier vérifié"
       },
       "submittedOn": "Soumise le {date}",
       "updatedOn": "Modifiée le {date}",
       "back": "Toutes les demandes",
-      "nextTitle": "Et maintenant ?",
-      "nextBody": "Notre équipe vérifie votre dossier. Vous choisirez ensuite, bailleur par bailleur, à qui le transmettre.",
       "summaryTitle": "Récapitulatif",
       "attachmentsTitle": "Pièces jointes",
       "download": "Télécharger {name}",
@@ -997,12 +1000,29 @@
       "timeline": {
         "draft": "Brouillon créé",
         "submitted": "Demande soumise",
-        "cancelled": "Demande annulée"
+        "cancelled": "Demande annulée",
+        "in_review": "Prise en charge par notre équipe",
+        "needs_info": "Compléments demandés",
+        "qualified": "Dossier vérifié"
       },
       "consentGiven": "Consentement donné le {date} (texte version {version}).",
       "cancel": "Annuler la demande",
       "cancelConfirm": "Annuler cette demande ? Cette action est définitive.",
-      "cancelFailed": "Cette demande ne peut plus être annulée."
+      "cancelFailed": "Cette demande ne peut plus être annulée.",
+      "next": {
+        "submitted": {
+          "title": "Et maintenant ?",
+          "body": "Notre équipe va vérifier votre dossier. Vous choisirez ensuite, bailleur par bailleur, à qui le transmettre."
+        },
+        "in_review": {
+          "title": "Vérification en cours",
+          "body": "Notre équipe contrôle vos pièces. Si un document manque, vous serez prévenu ici."
+        },
+        "qualified": {
+          "title": "Dossier vérifié",
+          "body": "Votre dossier est complet. Vous pourrez bientôt choisir les bailleurs qui le recevront."
+        }
+      }
     },
     "profile": {
       "title": "Profil de l’entreprise",
@@ -1022,6 +1042,243 @@
       "saved": "Profil enregistré.",
       "error": "Vérifiez les champs signalés.",
       "readOnly": "Seul le dirigeant peut modifier le profil."
+    }
+  },
+  "review": {
+    "restrictedTitle": "Accès réservé",
+    "restrictedBody": "La revue des dossiers est réservée aux équipes opérations et administration.",
+    "queue": {
+      "title": "Revue des dossiers",
+      "description": "{count, plural, =0 {Aucun dossier en attente de prise en charge.} one {# dossier attend sa prise en charge.} other {# dossiers attendent leur prise en charge.}}",
+      "emptyTitle": "Aucun dossier à revoir",
+      "emptyBody": "Les demandes soumises par les entreprises apparaîtront ici, les plus anciennes en premier.",
+      "columns": {
+        "reference": "Référence",
+        "company": "Entreprise",
+        "equipment": "Équipement",
+        "amount": "Montant HT",
+        "submitted": "Soumise le",
+        "status": "Statut",
+        "grade": "Indice"
+      }
+    },
+    "page": {
+      "title": "Revue du dossier",
+      "back": "File de revue",
+      "simulated": "Extraction simulée (mode démonstration) : les documents ne sont pas lus, les valeurs viennent du profil déclaré. Branchez l’API Claude pour une lecture réelle.",
+      "requestTitle": "Demande et profil déclaré"
+    },
+    "company": {
+      "ice": "ICE",
+      "rc": "Numéro RC",
+      "legalForm": "Forme juridique",
+      "sector": "Secteur",
+      "city": "Ville",
+      "created": "Création",
+      "revenue": "CA déclaré"
+    },
+    "actions": {
+      "start": "Prendre en charge et analyser",
+      "rerun": "Relancer l’analyse",
+      "analyzing": "Analyse en cours…",
+      "analyzed": "{extracted, plural, =0 {Aucun document lu} one {# document lu} other {# documents lus}}, {failed, plural, =0 {aucun échec} one {# échec} other {# échecs}}."
+    },
+    "checks": {
+      "title": "Contrôles de cohérence",
+      "none": "Pas encore de contrôle : lancez l’analyse.",
+      "expected": "attendu",
+      "found": "trouvé",
+      "codes": {
+        "ice_match": "Même ICE dans toutes les pièces",
+        "rc_match": "Même numéro de RC",
+        "legal_name_match": "Raison sociale concordante",
+        "director_match": "Titulaire de la CIN parmi les dirigeants",
+        "id_document_valid": "Pièce d’identité en cours de validité",
+        "documents_fresh": "Pièces datées de moins de 3 mois",
+        "revenue_band_match": "CA dans la tranche déclarée",
+        "financials_recent": "Exercices récents",
+        "quote_amount_match": "Devis égal au montant demandé",
+        "extraction_complete": "Toutes les pièces ont pu être lues"
+      },
+      "statuses": {
+        "pass": "Conforme",
+        "warn": "À vérifier",
+        "fail": "Anomalie",
+        "not_applicable": "Sans objet"
+      }
+    },
+    "documents": {
+      "title": "{count, plural, one {# pièce} other {# pièces}}",
+      "statuses": {
+        "pending": "Non analysée",
+        "extracted": "Extraite",
+        "verified": "Vérifiée",
+        "rejected": "Rejetée"
+      },
+      "unreadable": "Illisible",
+      "download": "Télécharger {name}",
+      "notAnalyzed": "Pas encore analysée.",
+      "note": "Note de revue : {note}",
+      "verify": "Vérifiée",
+      "verifyLabel": "Marquer {name} comme vérifiée",
+      "reject": "Rejeter",
+      "rejectLabel": "Rejeter {name}",
+      "rejectReason": "Motif du rejet (visible dans l’historique de revue)",
+      "confirmReject": "Confirmer le rejet",
+      "noteTooShort": "Indiquez un motif d’au moins 10 caractères."
+    },
+    "fields": {
+      "legalName": "Raison sociale",
+      "ice": "ICE",
+      "rcNumber": "Numéro RC",
+      "rcCourt": "Tribunal",
+      "taxId": "IF",
+      "cnssNumber": "CNSS",
+      "legalForm": "Forme juridique",
+      "directors": "Dirigeants",
+      "holderName": "Titulaire",
+      "issuedOn": "Délivré le",
+      "expiresOn": "Expire le",
+      "averageMonthlyBalance": "Solde moyen mensuel",
+      "paymentIncidents": "Incidents de paiement",
+      "quoteAmountHt": "Montant HT du devis",
+      "supplierName": "Fournisseur",
+      "fiscalYears": "Exercices extraits",
+      "year": "Exercice",
+      "revenue": "Chiffre d’affaires",
+      "netIncome": "Résultat net",
+      "equity": "Capitaux propres"
+    },
+    "score": {
+      "title": "Indice d’orientation",
+      "score": "{score} sur 100",
+      "computed": "Calculé : {grade} (corrigé à la main)",
+      "capped": "Plafonné (note avant plafond : {grade})",
+      "model": "Grille {version}, {date}",
+      "disclaimer": "Indice d’orientation — la décision appartient exclusivement au bailleur.",
+      "factorsCaption": "Facteurs de l’indice, valeur lue et points obtenus",
+      "factor": "Facteur (poids)",
+      "value": "Valeur",
+      "points": "Points",
+      "factors": {
+        "coverage": "Couverture des loyers par la CAF",
+        "leverage": "Endettement / capitaux propres",
+        "profitability": "Marge nette",
+        "liquidity": "Trésorerie",
+        "exposure": "Financement / CA",
+        "seniority": "Ancienneté",
+        "sector": "Risque sectoriel",
+        "asset": "Revente de l’actif"
+      },
+      "levels": {
+        "strong": "solide",
+        "adequate": "correct",
+        "weak": "faible",
+        "missing": "non évaluable"
+      },
+      "sectorRisk": {
+        "low": "faible",
+        "medium": "moyen",
+        "high": "élevé"
+      },
+      "resale": {
+        "high": "liquide",
+        "medium": "moyenne",
+        "low": "difficile"
+      },
+      "monthsValue": "{n} mois de loyer",
+      "yearsValue": "{n, plural, one {# an} other {# ans}}",
+      "flagsTitle": "Drapeaux",
+      "noFlags": "Aucun drapeau.",
+      "severe": "plafonne à D",
+      "flags": {
+        "negative_equity": "Capitaux propres négatifs",
+        "negative_caf": "Capacité d’autofinancement négative",
+        "coverage_below_one": "La CAF ne couvre pas le loyer annuel",
+        "consistency_failures": "Anomalies dans les contrôles de cohérence",
+        "no_financial_statements": "Aucun état financier exploitable (indice plafonné à C)",
+        "net_loss": "Résultat net négatif",
+        "low_cash": "Trésorerie inférieure à un mois de loyer",
+        "high_exposure": "Financement supérieur à la moitié du CA",
+        "young_company": "Entreprise de moins de deux ans",
+        "revenue_decline": "CA en baisse de plus de 20 %",
+        "old_used_asset": "Actif d’occasion de plus de dix ans",
+        "stale_financials": "Derniers exercices anciens"
+      },
+      "overrideLine": "Corrigé en {grade} le {date} : {reason}",
+      "override": "Corriger l’indice (motif obligatoire)",
+      "newGrade": "Nouvel indice",
+      "reason": "Motif",
+      "reasonHint": "20 caractères au moins. Le motif est conservé dans le journal d’audit.",
+      "overrideIssues": {
+        "same_grade": "Choisissez un indice différent.",
+        "reason_too_short": "Le motif doit faire au moins 20 caractères."
+      },
+      "overridden": "Correction enregistrée.",
+      "saveOverride": "Enregistrer la correction",
+      "none": "Pas encore d’indice : lancez l’analyse."
+    },
+    "memo": {
+      "title": "Note de synthèse",
+      "none": "Aucune note pour l’instant.",
+      "generate": "Rédiger la note",
+      "regenerate": "Rédiger une nouvelle version",
+      "generating": "Rédaction…",
+      "rejected": "Note rejetée par la vérification automatique",
+      "failed": "Rédaction impossible ({code}). Réessayez ou rédigez avec le simulateur.",
+      "issues": {
+        "missing_section": "Section manquante",
+        "duplicate_section": "Section en double",
+        "empty_paragraph": "Paragraphe vide",
+        "no_source": "Paragraphe sans source",
+        "unknown_source": "Source inconnue",
+        "unverified_number": "Nombre absent des faits"
+      },
+      "approve": "Valider la note",
+      "discard": "Écarter",
+      "statuses": {
+        "draft": "Brouillon à valider",
+        "approved": "Validée",
+        "discarded": "Écartée"
+      },
+      "decidedOn": "Validée le {date}",
+      "humanCheck": "Relisez chaque affirmation et ses sources avant de valider.",
+      "sections": {
+        "presentation": "Présentation",
+        "need": "Besoin",
+        "financials": "Analyse financière",
+        "strengths": "Points forts",
+        "risks": "Risques",
+        "documents": "Pièces"
+      },
+      "sources": {
+        "PROFILE": "Profil déclaré",
+        "REQUEST": "Demande",
+        "SCORE": "Indice d’orientation",
+        "CHECKS": "Contrôles de cohérence",
+        "FINANCIALS": "États financiers extraits"
+      },
+      "lastRun": {
+        "failed": "La dernière rédaction a échoué.",
+        "rejected": "La dernière rédaction a été rejetée : un nombre ou une source n’a pas pu être vérifié."
+      }
+    },
+    "decision": {
+      "title": "Décision de revue",
+      "qualifyTitle": "Qualifier le dossier",
+      "qualifyBody": "Dossier vérifié et prêt à être orienté vers les bailleurs. Ce n’est pas une décision de crédit.",
+      "anomaliesLabel": "Anomalies examinées : expliquez pourquoi le dossier peut être qualifié",
+      "qualify": "Qualifier le dossier",
+      "issues": {
+        "assessment_missing": "Aucun indice calculé.",
+        "memo_not_approved": "La note de synthèse de l’analyse en cours n’est pas validée.",
+        "failed_checks_unacknowledged": "Des contrôles sont en anomalie : commentez-les (10 caractères au moins)."
+      },
+      "infoTitle": "Demander des compléments",
+      "infoLabel": "Message à l’entreprise",
+      "infoHint": "L’entreprise voit ce message et peut corriger sa demande avant de la soumettre à nouveau.",
+      "noteTooShort": "Le message doit faire au moins 10 caractères.",
+      "requestInfo": "Envoyer la demande de compléments"
     }
   }
 }

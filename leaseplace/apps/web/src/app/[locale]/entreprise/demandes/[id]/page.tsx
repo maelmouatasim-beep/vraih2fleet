@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { schema } from "@leaseplace/db";
-import { can, requestMachine, REQUEST_STATUSES } from "@leaseplace/domain";
+import { can, isEditableRequestStatus, requestMachine, REQUEST_STATUSES } from "@leaseplace/domain";
 import { Badge } from "@leaseplace/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@leaseplace/ui/card";
 import { CancelRequestButton } from "@/components/company/request-buttons";
@@ -77,9 +77,15 @@ export default async function RequestPage({ params }: Props) {
   if (!request || !("attachments" in data)) notFound();
   const { kyc, attachments, timeline, legalText, consent } = data;
 
-  if (request.status === "draft") {
+  if (isEditableRequestStatus(request.status)) {
+    const infoEvent = timeline.filter((e) => e.toStatus === "needs_info").at(-1);
+    const infoNote =
+      request.status === "needs_info"
+        ? ((infoEvent?.metadata as { note?: string } | null)?.note ?? null)
+        : null;
     return (
       <RequestWizard
+        infoNote={infoNote}
         request={{
           id: request.id,
           reference: request.reference,
@@ -148,11 +154,13 @@ export default async function RequestPage({ params }: Props) {
         <p className="tabular mt-1 font-mono text-[12px] text-fg-subtle">{request.reference}</p>
       </div>
 
-      {request.status === "submitted" ? (
-        <Card className="bg-info-soft/60">
+      {request.status === "submitted" ||
+      request.status === "in_review" ||
+      request.status === "qualified" ? (
+        <Card className={request.status === "qualified" ? "bg-success-soft/60" : "bg-info-soft/60"}>
           <CardContent className="text-[14px] text-fg">
-            <p className="font-medium">{t("nextTitle")}</p>
-            <p className="mt-1 text-fg-muted">{t("nextBody")}</p>
+            <p className="font-medium">{t(`next.${request.status}.title`)}</p>
+            <p className="mt-1 text-fg-muted">{t(`next.${request.status}.body`)}</p>
           </CardContent>
         </Card>
       ) : null}
@@ -237,6 +245,11 @@ export default async function RequestPage({ params }: Props) {
                       <p className="tabular text-[12px] text-fg-subtle">
                         {formatDateTime(e.occurredAt)}
                       </p>
+                      {(e.metadata as { note?: string } | null)?.note ? (
+                        <p className="mt-1 text-[13px] text-fg-muted" data-event-note>
+                          {(e.metadata as { note: string }).note}
+                        </p>
+                      ) : null}
                     </div>
                   </li>
                 ))}

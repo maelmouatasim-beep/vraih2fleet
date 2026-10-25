@@ -3,6 +3,7 @@ import {
   draftIssues,
   formatRequestReference,
   requestMachine,
+  isEditableRequestStatus,
   resumeStep,
   submissionIssues,
   type RequestDraft,
@@ -22,16 +23,34 @@ const complete: RequestDraft = {
 const ctx = { hasQuote: true, kycComplete: true, consentGiven: true, now };
 
 describe("cycle de vie", () => {
-  it("brouillon → soumise → annulée ; jamais de retour en brouillon", () => {
+  it("brouillon → soumise → en revue → qualifiée ; jamais de retour en brouillon", () => {
     expect(requestMachine.next("draft", "submit")).toBe("submitted");
+    expect(requestMachine.next("submitted", "start_review")).toBe("in_review");
+    expect(requestMachine.next("in_review", "qualify")).toBe("qualified");
     expect(requestMachine.next("submitted", "cancel")).toBe("cancelled");
     expect(requestMachine.can("submitted", "submit")).toBe(false);
     expect(requestMachine.can("cancelled", "cancel")).toBe(false);
+    expect(requestMachine.can("qualified", "request_info")).toBe(false);
     expect(requestMachine.edges()).toEqual([
       ["draft", "submitted"],
       ["draft", "cancelled"],
+      ["submitted", "in_review"],
       ["submitted", "cancelled"],
+      ["in_review", "needs_info"],
+      ["in_review", "qualified"],
+      ["in_review", "cancelled"],
+      ["needs_info", "submitted"],
+      ["needs_info", "cancelled"],
+      ["qualified", "cancelled"],
     ]);
+  });
+  it("compléments demandés : la demande redevient modifiable puis se resoumet", () => {
+    expect(requestMachine.next("in_review", "request_info")).toBe("needs_info");
+    expect(requestMachine.next("needs_info", "submit")).toBe("submitted");
+    expect(isEditableRequestStatus("needs_info")).toBe(true);
+    expect(isEditableRequestStatus("draft")).toBe(true);
+    expect(isEditableRequestStatus("submitted")).toBe(false);
+    expect(isEditableRequestStatus("in_review")).toBe(false);
   });
 });
 

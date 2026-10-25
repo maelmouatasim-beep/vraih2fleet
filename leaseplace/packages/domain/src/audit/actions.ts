@@ -20,6 +20,16 @@ export const AUDIT_ACTIONS = [
   "request.cancelled",
   "consent.granted",
   "consent.revoked",
+  "request.review_started",
+  "request.info_requested",
+  "request.qualified",
+  "review.analyzed",
+  "document.reviewed",
+  "risk.assessed",
+  "risk.overridden",
+  "memo.generated",
+  "memo.approved",
+  "memo.discarded",
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 

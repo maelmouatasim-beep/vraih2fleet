@@ -40,6 +40,8 @@ import { FormField } from "./fields";
 import { UploadForm } from "./upload-form";
 
 export interface WizardProps {
+  /** Motif de la plateforme quand des compléments sont demandés. */
+  infoNote?: string | null;
   request: { id: string; reference: string; version: number; draft: RequestDraft };
   quotes: { id: string; name: string }[];
   kyc: { items: { type: string; state: RequirementState }[]; complete: boolean };
@@ -135,6 +137,7 @@ function AmountInput({
 }
 
 export function RequestWizard({
+  infoNote,
   request,
   quotes,
   kyc,
@@ -255,6 +258,16 @@ export function RequestWizard({
           {save === "idle" ? null : t(`save.${save}`)}
         </p>
       </div>
+
+      {infoNote ? (
+        <Alert tone="warning" role="status" data-info-note>
+          <AlertTriangle aria-hidden="true" />
+          <div>
+            <p className="font-medium">{t("infoRequested")}</p>
+            <p className="mt-0.5">{infoNote}</p>
+          </div>
+        </Alert>
+      ) : null}
 
       {save === "conflict" ? (
         <Alert tone="warning" role="alert">
@@ -612,7 +625,9 @@ export function RequestWizard({
               disabled={submitting || issues.length > 0 || !canConsent}
               className="self-start"
             >
-              {submitting ? t("submitting") : t("submit")}
+              {submitting
+                ? t("submitting")
+                : t(infoNote === undefined || infoNote === null ? "submit" : "resubmit")}
             </Button>
           </div>
         ) : null}

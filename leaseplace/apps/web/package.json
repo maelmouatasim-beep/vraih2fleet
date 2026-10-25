@@ -16,6 +16,7 @@
   "dependencies": {
     "@fontsource-variable/fraunces": "5.3.0",
     "@fontsource/ibm-plex-sans-arabic": "5.3.0",
+    "@leaseplace/ai": "workspace:*",
     "@leaseplace/db": "workspace:*",
     "@leaseplace/domain": "workspace:*",
     "@leaseplace/integrations": "workspace:*",

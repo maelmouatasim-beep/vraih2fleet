@@ -36,13 +36,12 @@ pnpm dev                                        # http://localhost:3000 (comptes
 apps/web/             Next.js 15 : public, /entreprise, /bailleur, /admin (App Router, next-intl)
 packages/domain/      logique métier pure, couverte à 100 % (RBAC, audit, moteur financier)
 packages/db/          schéma Drizzle, migrations, contexte RLS, audit ; tests RLS sur vrai Postgres
+packages/ai/          IA : prompts versionnés, schémas Zod, client Claude, simulateur, vérificateur de notes
 packages/ui/          design system : tokens (contrastes AA testés), composants
 packages/integrations/ adaptateurs (courriel, stockage chiffré, antivirus : interfaces + implémentations de test, tests de contrat)
 packages/config/      tsconfig et ESLint partagés
 docs/                 ADR, glossaire métier, schéma cible
 ```
-
-`packages/ai` (phase 5) n'existe pas encore : aucun paquet vide.
 
 ## Moteur financier
 
@@ -66,6 +65,14 @@ automatique, consentement 09-08 versionné, soumission et historique
 (`docs/phases/phase-4.md`). Documents chiffrés (`LP_STORAGE_KEY`, 32 octets
 en base64 : `openssl rand -base64 32`) dans `LP_STORAGE_DIR` ; analyse
 antivirus et liens signés : ADR 0011.
+
+## Revue des dossiers (back-office)
+
+`/admin/dossiers` : extraction des pièces, contrôles de cohérence, indice
+d'orientation explicable (`docs/scoring.md`), note de synthèse vérifiée puis
+validée par un humain, qualification ou demande de compléments (ADR 0012).
+IA : `LP_AI_PROVIDER=mock` (simulateur, défaut) ou `anthropic`
+(`ANTHROPIC_API_KEY`) ; évaluation manuelle : `pnpm --filter @leaseplace/ai eval`.
 
 ## Sécurité, en bref
 

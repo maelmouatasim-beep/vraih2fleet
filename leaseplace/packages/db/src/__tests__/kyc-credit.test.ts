@@ -340,7 +340,7 @@ describe("demandes, consentement, historique", () => {
     const [row] = await db.execute<{ src: string }>(
       sql`select prosrc as src from pg_proc where proname = 'guard_request_update'`,
     );
-    const pairs = [...(row?.src ?? "").matchAll(/\('([a-z]+)', '([a-z]+)'\)/g)].map((m) => [
+    const pairs = [...(row?.src ?? "").matchAll(/\('([a-z_]+)', '([a-z_]+)'\)/g)].map((m) => [
       m[1],
       m[2],
     ]);

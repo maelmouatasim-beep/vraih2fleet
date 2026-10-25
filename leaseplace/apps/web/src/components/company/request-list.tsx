@@ -5,7 +5,14 @@ import { Link } from "@/i18n/navigation";
 import type { RequestRow } from "@/lib/company-data";
 import { formatDate, formatMad, ltr } from "@/lib/format";
 
-export const STATUS_TONE = { draft: "neutral", submitted: "info", cancelled: "danger" } as const;
+export const STATUS_TONE = {
+  draft: "neutral",
+  submitted: "info",
+  in_review: "primary",
+  needs_info: "warning",
+  qualified: "success",
+  cancelled: "danger",
+} as const;
 
 export function statusTone(status: string) {
   return STATUS_TONE[status as keyof typeof STATUS_TONE];

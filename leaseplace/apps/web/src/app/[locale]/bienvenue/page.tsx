@@ -4,6 +4,7 @@ import { Logo } from "@/components/brand/logo";
 import { OnboardingForm } from "@/components/company/onboarding-form";
 import { LegalNotice } from "@/components/legal-notice";
 import { redirect } from "@/i18n/navigation";
+import { SpaceMessages } from "@/i18n/space-messages";
 import type { Locale } from "@/i18n/routing";
 import { getViewer, homePathOf } from "@/lib/viewer";
 import { createCompanyAction } from "./actions";
@@ -33,7 +34,9 @@ export default async function Welcome({ params }: Props) {
         <h1 className="mt-2 text-2xl font-semibold tracking-tight text-fg">{t("title")}</h1>
         <p className="mt-2 text-sm text-fg-muted">{t("subtitle")}</p>
         <div className="mt-8 rounded-xl border border-border bg-surface p-6 shadow-sm">
-          <OnboardingForm action={createCompanyAction} defaultName={viewer.user.name} />
+          <SpaceMessages space="company">
+            <OnboardingForm action={createCompanyAction} defaultName={viewer.user.name} />
+          </SpaceMessages>
         </div>
         <LegalNotice className="mt-8" />
       </main>

@@ -33,7 +33,7 @@
     },
     "admin": {
       "overview": "Overview",
-      "kyc": "KYC queue",
+      "kyc": "File review",
       "lessors": "Lessors & mandates",
       "commissions": "Commissions",
       "users": "Users",
@@ -970,7 +970,9 @@
       "submit": "Submit request",
       "submitting": "Submitting…",
       "previous": "Back",
-      "next": "Next"
+      "next": "Next",
+      "infoRequested": "Our team needs more information",
+      "resubmit": "Submit again"
     },
     "requests": {
       "title": "Requests",
@@ -982,13 +984,14 @@
       "statuses": {
         "draft": "Draft",
         "submitted": "Submitted",
-        "cancelled": "Cancelled"
+        "cancelled": "Cancelled",
+        "in_review": "In review",
+        "needs_info": "Information requested",
+        "qualified": "File verified"
       },
       "submittedOn": "Submitted on {date}",
       "updatedOn": "Updated on {date}",
       "back": "All requests",
-      "nextTitle": "What happens next?",
-      "nextBody": "Our team is reviewing your file. You will then choose, lessor by lessor, who receives it.",
       "summaryTitle": "Summary",
       "attachmentsTitle": "Attachments",
       "download": "Download {name}",
@@ -997,12 +1000,29 @@
       "timeline": {
         "draft": "Draft created",
         "submitted": "Request submitted",
-        "cancelled": "Request cancelled"
+        "cancelled": "Request cancelled",
+        "in_review": "Picked up by our team",
+        "needs_info": "Information requested",
+        "qualified": "File verified"
       },
       "consentGiven": "Consent given on {date} (text version {version}).",
       "cancel": "Cancel request",
       "cancelConfirm": "Cancel this request? This cannot be undone.",
-      "cancelFailed": "This request can no longer be cancelled."
+      "cancelFailed": "This request can no longer be cancelled.",
+      "next": {
+        "submitted": {
+          "title": "What happens next?",
+          "body": "Our team will review your file. You will then choose, lessor by lessor, who receives it."
+        },
+        "in_review": {
+          "title": "Review in progress",
+          "body": "Our team is checking your documents. If anything is missing, you will be told here."
+        },
+        "qualified": {
+          "title": "File verified",
+          "body": "Your file is complete. You will soon be able to choose the lessors who receive it."
+        }
+      }
     },
     "profile": {
       "title": "Company profile",
@@ -1022,6 +1042,243 @@
       "saved": "Profile saved.",
       "error": "Check the highlighted fields.",
       "readOnly": "Only the director can edit the profile."
+    }
+  },
+  "review": {
+    "restrictedTitle": "Restricted access",
+    "restrictedBody": "File review is limited to the operations and administration teams.",
+    "queue": {
+      "title": "File review",
+      "description": "{count, plural, =0 {No file waiting to be picked up.} one {# file waiting to be picked up.} other {# files waiting to be picked up.}}",
+      "emptyTitle": "No files to review",
+      "emptyBody": "Requests submitted by companies will appear here, oldest first.",
+      "columns": {
+        "reference": "Reference",
+        "company": "Company",
+        "equipment": "Equipment",
+        "amount": "Amount excl. VAT",
+        "submitted": "Submitted",
+        "status": "Status",
+        "grade": "Index"
+      }
+    },
+    "page": {
+      "title": "File review",
+      "back": "Review queue",
+      "simulated": "Simulated extraction (demo mode): documents are not read; values come from the declared profile. Connect the Claude API for real reading.",
+      "requestTitle": "Request and declared profile"
+    },
+    "company": {
+      "ice": "ICE",
+      "rc": "Commercial register no.",
+      "legalForm": "Legal form",
+      "sector": "Sector",
+      "city": "City",
+      "created": "Incorporated",
+      "revenue": "Declared revenue"
+    },
+    "actions": {
+      "start": "Pick up and analyse",
+      "rerun": "Re-run analysis",
+      "analyzing": "Analysing…",
+      "analyzed": "{extracted, plural, =0 {No document read} one {# document read} other {# documents read}}, {failed, plural, =0 {no failures} one {# failure} other {# failures}}."
+    },
+    "checks": {
+      "title": "Consistency checks",
+      "none": "No checks yet: run the analysis.",
+      "expected": "expected",
+      "found": "found",
+      "codes": {
+        "ice_match": "Same ICE on every document",
+        "rc_match": "Same register number",
+        "legal_name_match": "Company name matches",
+        "director_match": "ID holder is a listed director",
+        "id_document_valid": "ID document still valid",
+        "documents_fresh": "Documents less than 3 months old",
+        "revenue_band_match": "Revenue within declared band",
+        "financials_recent": "Recent fiscal years",
+        "quote_amount_match": "Quote matches requested amount",
+        "extraction_complete": "Every document could be read"
+      },
+      "statuses": {
+        "pass": "Consistent",
+        "warn": "To check",
+        "fail": "Anomaly",
+        "not_applicable": "Not applicable"
+      }
+    },
+    "documents": {
+      "title": "{count, plural, one {# document} other {# documents}}",
+      "statuses": {
+        "pending": "Not analysed",
+        "extracted": "Extracted",
+        "verified": "Verified",
+        "rejected": "Rejected"
+      },
+      "unreadable": "Unreadable",
+      "download": "Download {name}",
+      "notAnalyzed": "Not analysed yet.",
+      "note": "Review note: {note}",
+      "verify": "Verified",
+      "verifyLabel": "Mark {name} as verified",
+      "reject": "Reject",
+      "rejectLabel": "Reject {name}",
+      "rejectReason": "Reason for rejection (kept in the review history)",
+      "confirmReject": "Confirm rejection",
+      "noteTooShort": "Give a reason of at least 10 characters."
+    },
+    "fields": {
+      "legalName": "Company name",
+      "ice": "ICE",
+      "rcNumber": "Register no.",
+      "rcCourt": "Court",
+      "taxId": "Tax ID (IF)",
+      "cnssNumber": "CNSS",
+      "legalForm": "Legal form",
+      "directors": "Directors",
+      "holderName": "Holder",
+      "issuedOn": "Issued",
+      "expiresOn": "Expires",
+      "averageMonthlyBalance": "Average monthly balance",
+      "paymentIncidents": "Payment incidents",
+      "quoteAmountHt": "Quote amount excl. VAT",
+      "supplierName": "Supplier",
+      "fiscalYears": "Extracted fiscal years",
+      "year": "Year",
+      "revenue": "Revenue",
+      "netIncome": "Net income",
+      "equity": "Equity"
+    },
+    "score": {
+      "title": "Orientation index",
+      "score": "{score} out of 100",
+      "computed": "Computed: {grade} (manually corrected)",
+      "capped": "Capped (grade before cap: {grade})",
+      "model": "Grid {version}, {date}",
+      "disclaimer": "Orientation index — the decision belongs exclusively to the lessor.",
+      "factorsCaption": "Index factors, value read and points earned",
+      "factor": "Factor (weight)",
+      "value": "Value",
+      "points": "Points",
+      "factors": {
+        "coverage": "Rent coverage by cash flow",
+        "leverage": "Debt to equity",
+        "profitability": "Net margin",
+        "liquidity": "Cash",
+        "exposure": "Financing to revenue",
+        "seniority": "Company age",
+        "sector": "Sector risk",
+        "asset": "Asset resale"
+      },
+      "levels": {
+        "strong": "strong",
+        "adequate": "adequate",
+        "weak": "weak",
+        "missing": "not assessable"
+      },
+      "sectorRisk": {
+        "low": "low",
+        "medium": "medium",
+        "high": "high"
+      },
+      "resale": {
+        "high": "liquid",
+        "medium": "moderate",
+        "low": "difficult"
+      },
+      "monthsValue": "{n} months of rent",
+      "yearsValue": "{n, plural, one {# year} other {# years}}",
+      "flagsTitle": "Flags",
+      "noFlags": "No flags.",
+      "severe": "caps at D",
+      "flags": {
+        "negative_equity": "Negative equity",
+        "negative_caf": "Negative cash flow",
+        "coverage_below_one": "Cash flow does not cover the annual rent",
+        "consistency_failures": "Anomalies in the consistency checks",
+        "no_financial_statements": "No usable financial statements (index capped at C)",
+        "net_loss": "Net loss",
+        "low_cash": "Cash below one month of rent",
+        "high_exposure": "Financing above half of revenue",
+        "young_company": "Company less than two years old",
+        "revenue_decline": "Revenue down more than 20%",
+        "old_used_asset": "Used asset more than ten years old",
+        "stale_financials": "Latest fiscal years are old"
+      },
+      "overrideLine": "Corrected to {grade} on {date}: {reason}",
+      "override": "Correct the index (reason required)",
+      "newGrade": "New index",
+      "reason": "Reason",
+      "reasonHint": "At least 20 characters. The reason is kept in the audit log.",
+      "overrideIssues": {
+        "same_grade": "Choose a different index.",
+        "reason_too_short": "The reason must be at least 20 characters."
+      },
+      "overridden": "Correction saved.",
+      "saveOverride": "Save correction",
+      "none": "No index yet: run the analysis."
+    },
+    "memo": {
+      "title": "Credit memo",
+      "none": "No memo yet.",
+      "generate": "Draft the memo",
+      "regenerate": "Draft a new version",
+      "generating": "Drafting…",
+      "rejected": "Memo rejected by automatic verification",
+      "failed": "Drafting failed ({code}). Try again or use the simulator.",
+      "issues": {
+        "missing_section": "Missing section",
+        "duplicate_section": "Duplicate section",
+        "empty_paragraph": "Empty paragraph",
+        "no_source": "Paragraph without source",
+        "unknown_source": "Unknown source",
+        "unverified_number": "Number not in the facts"
+      },
+      "approve": "Approve memo",
+      "discard": "Discard",
+      "statuses": {
+        "draft": "Draft to approve",
+        "approved": "Approved",
+        "discarded": "Discarded"
+      },
+      "decidedOn": "Approved on {date}",
+      "humanCheck": "Read every statement and its sources before approving.",
+      "sections": {
+        "presentation": "Overview",
+        "need": "Need",
+        "financials": "Financial analysis",
+        "strengths": "Strengths",
+        "risks": "Risks",
+        "documents": "Documents"
+      },
+      "sources": {
+        "PROFILE": "Declared profile",
+        "REQUEST": "Request",
+        "SCORE": "Orientation index",
+        "CHECKS": "Consistency checks",
+        "FINANCIALS": "Extracted financial statements"
+      },
+      "lastRun": {
+        "failed": "The last drafting attempt failed.",
+        "rejected": "The last draft was rejected: a number or a source could not be verified."
+      }
+    },
+    "decision": {
+      "title": "Review decision",
+      "qualifyTitle": "Qualify the file",
+      "qualifyBody": "File verified and ready to be routed to lessors. This is not a credit decision.",
+      "anomaliesLabel": "Anomalies reviewed: explain why the file can be qualified",
+      "qualify": "Qualify the file",
+      "issues": {
+        "assessment_missing": "No index computed.",
+        "memo_not_approved": "The memo for the current analysis is not approved.",
+        "failed_checks_unacknowledged": "Some checks show anomalies: comment on them (at least 10 characters)."
+      },
+      "infoTitle": "Request more information",
+      "infoLabel": "Message to the company",
+      "infoHint": "The company sees this message and can correct its request before resubmitting.",
+      "noteTooShort": "The message must be at least 10 characters.",
+      "requestInfo": "Send the request"
     }
   }
 }

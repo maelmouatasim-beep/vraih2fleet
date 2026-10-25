@@ -31,6 +31,7 @@ const config: NextConfig = {
     "@leaseplace/domain",
     "@leaseplace/db",
     "@leaseplace/integrations",
+    "@leaseplace/ai",
   ],
   serverExternalPackages: ["pino"],
   headers() {

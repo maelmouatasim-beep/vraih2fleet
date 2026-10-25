@@ -7,3 +7,7 @@ export * from "./common/state-machine";
 export * from "./kyc/company";
 export * from "./kyc/documents";
 export * from "./requests/requests";
+export * from "./kyc/extraction";
+export * from "./kyc/consistency";
+export * from "./scoring/model";
+export * from "./review/review";
