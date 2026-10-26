@@ -44,7 +44,7 @@ import { markViewed } from "@/lib/lessor/actions";
 import { lessorTarget } from "@/lib/lessor/data";
 import { latestAssessment, latestChecks, reviewDocuments } from "@/lib/review/data";
 import { signDocumentUrl, signingKey } from "@/lib/signed-url";
-import { actorFor, requireSpace } from "@/lib/viewer";
+import { actorFor, isSupportAccess, requireSpace } from "@/lib/viewer";
 import {
   cancelDealAction,
   declineAction,
@@ -69,7 +69,8 @@ export default async function LessorFile({ params }: Props) {
   if (!UUID.test(id)) notFound();
   const viewer = await requireSpace("lessor", locale as Locale);
   const data = await withActor(appDb(), await actorFor(viewer), async (tx) => {
-    await markViewed(tx, viewer, id);
+    const readOnly = isSupportAccess(viewer);
+    if (!readOnly) await markViewed(tx, viewer, id);
     const file = await lessorTarget(tx, id);
     if (!file || file.target.lessorOrganizationId !== viewer.membership.organizationId) return null;
     const [assessment, checks, docs, deal, threadId] = await Promise.all([
@@ -77,10 +78,10 @@ export default async function LessorFile({ params }: Props) {
       latestChecks(tx, file.request.id),
       reviewDocuments(tx, file.request),
       dealOfRequest(tx, file.request.id, viewer.membership.organizationId),
-      ensureLessorThread(tx, file.request.id, viewer.membership.organizationId),
+      ensureLessorThread(tx, file.request.id, viewer.membership.organizationId, readOnly),
     ]);
     const thread = threadId ? await threadView(tx, threadId) : null;
-    if (thread) await markThreadRead(tx, thread.thread.id, viewer.user.id);
+    if (thread) await markThreadRead(tx, thread.thread.id, viewer.user.id, readOnly);
     return { ...file, assessment, checks, docs, deal, thread };
   });
   if (!data) notFound();

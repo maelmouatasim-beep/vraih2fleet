@@ -4,6 +4,7 @@ import type { Space } from "@leaseplace/domain";
 import { Logo } from "@/components/brand/logo";
 import { LegalNotice } from "@/components/legal-notice";
 import { NotificationBell } from "@/components/notifications/bell";
+import { SupportBanner } from "@/components/support/support-banner";
 import { Link } from "@/i18n/navigation";
 import type { SpaceViewer } from "@/lib/viewer";
 import { CommandPalette } from "./command-palette";
@@ -59,6 +60,7 @@ export async function WorkspaceShell({
         </div>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
+        <SupportBanner viewer={viewer} />
         <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-bg/85 px-4 backdrop-blur md:px-6">
           <div className="md:hidden">
             <Logo subtle />
@@ -90,6 +92,7 @@ export async function WorkspaceShell({
 export function GuidedShell({ viewer, children }: { viewer: SpaceViewer; children: ReactNode }) {
   return (
     <div className="flex min-h-dvh flex-col">
+      <SupportBanner viewer={viewer} />
       <header className="sticky top-0 z-30 border-b border-border bg-surface/90 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-5xl items-center gap-3 px-4">
           <Link href="/entreprise">

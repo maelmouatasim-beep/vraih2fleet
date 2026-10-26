@@ -35,7 +35,11 @@ export async function SlaBadge({
       data-sla={s.overdue ? "overdue" : "ok"}
     >
       <Clock className="size-3" aria-hidden="true" />
-      {s.overdue ? t("overdue", { hours: -s.hoursLeft }) : t("left", { hours: s.hoursLeft })}
+      {s.overdue
+        ? -s.hoursLeft >= 48
+          ? t("overdueDays", { days: Math.floor(-s.hoursLeft / 24) })
+          : t("overdue", { hours: -s.hoursLeft })
+        : t("left", { hours: s.hoursLeft })}
     </Badge>
   );
 }

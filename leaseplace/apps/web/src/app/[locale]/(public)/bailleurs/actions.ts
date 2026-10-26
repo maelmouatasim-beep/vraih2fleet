@@ -1,8 +1,10 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
 import { sql } from "drizzle-orm";
 import { withActor } from "@leaseplace/db";
 import { LEAD_CONSENT_VERSION } from "@leaseplace/domain";
+import { track } from "@/lib/analytics";
 import { appDb } from "@/lib/db";
 import { echoValues, leadFormSchema, pgErrorCode, type LeadState } from "@/lib/leads";
 import { logger } from "@/lib/logger";
@@ -31,6 +33,8 @@ export async function submitLead(_prev: LeadState, formData: FormData): Promise<
           ${d.phone}, ${d.message}, ${d.locale}, ${LEAD_CONSENT_VERSION})
       `),
     );
+    // Prospect anonyme : identifiant à usage unique, aucune donnée du formulaire.
+    track("lead_submitted", randomUUID(), { kind: d.kind });
     return { status: "success" };
   } catch (error) {
     const code = pgErrorCode(error);

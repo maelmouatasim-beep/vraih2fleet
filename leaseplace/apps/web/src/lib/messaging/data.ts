@@ -119,16 +119,21 @@ export async function threadView(tx: Transaction, threadId: string): Promise<Thr
   return { ...row, companyName: company?.name ?? "", messages: list };
 }
 
-/** Fil d'un bailleur sur une demande (créé s'il manque : demandes transmises avant la phase 7). */
+/**
+ * Fil d'un bailleur sur une demande (créé s'il manque : demandes transmises
+ * avant la phase 7 ; jamais créé en lecture seule, accès support).
+ */
 export async function ensureLessorThread(
   tx: Transaction,
   requestId: string,
   lessorOrganizationId: string,
+  readOnly = false,
 ): Promise<string | null> {
-  await tx
-    .insert(threads)
-    .values({ id: crypto.randomUUID(), requestId, lessorOrganizationId })
-    .onConflictDoNothing();
+  if (!readOnly)
+    await tx
+      .insert(threads)
+      .values({ id: crypto.randomUUID(), requestId, lessorOrganizationId })
+      .onConflictDoNothing();
   const [row] = await tx
     .select({ id: threads.id })
     .from(threads)
@@ -138,8 +143,14 @@ export async function ensureLessorThread(
   return row?.id ?? null;
 }
 
-/** Accusé de lecture : les messages reçus jusqu'ici sont lus. */
-export async function markThreadRead(tx: Transaction, threadId: string, userId: string) {
+/** Accusé de lecture : les messages reçus jusqu'ici sont lus (sauf accès support). */
+export async function markThreadRead(
+  tx: Transaction,
+  threadId: string,
+  userId: string,
+  readOnly = false,
+) {
+  if (readOnly) return;
   const now = new Date();
   await tx
     .insert(threadReads)

@@ -45,7 +45,7 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
       .from(organizations)
       .leftJoin(memberships, eq(memberships.organizationId, organizations.id))
       .groupBy(organizations.id)
-      .orderBy(organizations.type, organizations.name);
+      .orderBy(desc(organizations.createdAt));
     const [events] = canAudit
       ? await tx
           .select({ n: count() })
@@ -107,6 +107,12 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
         <Card className="lg:col-span-3">
           <CardHeader>
             <CardTitle>{t("organizationsTitle")}</CardTitle>
+            <p className="text-[12px] text-fg-muted">
+              {t("organizationsCount", {
+                shown: Math.min(12, data.orgs.length),
+                total: data.orgs.length,
+              })}
+            </p>
           </CardHeader>
           <CardContent className="p-0 pt-3">
             <TableScroll label={t("organizationsTitle")}>
@@ -125,7 +131,7 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                  {data.orgs.map((o) => (
+                  {data.orgs.slice(0, 12).map((o) => (
                     <tr key={o.id} className="hover:bg-surface-muted/50">
                       <td className="px-5 py-2.5 font-medium text-fg">{o.name}</td>
                       <td className="px-5 py-2.5">

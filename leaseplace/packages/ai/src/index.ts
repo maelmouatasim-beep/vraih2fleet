@@ -3,6 +3,6 @@ export * from "./provider";
 export * from "./facts";
 export * from "./verify";
 export * from "./mock";
-export { createAnthropicProvider, DEFAULT_MODEL } from "./anthropic";
+export { createAnthropicProvider } from "./anthropic";
 export { EXTRACTION_PROMPT_VERSION } from "./prompts/extraction";
 export { MEMO_PROMPT_VERSION } from "./prompts/memo";

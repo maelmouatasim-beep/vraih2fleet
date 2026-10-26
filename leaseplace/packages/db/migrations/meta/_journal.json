@@ -99,6 +99,20 @@
       "when": 1792982740810,
       "tag": "0013_billing_security",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1792984985649,
+      "tag": "0014_privacy",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1792984986575,
+      "tag": "0015_privacy_security",
+      "breakpoints": true
     }
   ]
 }

@@ -19,8 +19,8 @@ export const CLIENT_NAMESPACES = [
  * dans cet espace (le site public n'en porte pas le poids).
  */
 export const SPACE_NAMESPACES = {
-  company: ["company", "messages", "deals", "notifications.preferences"],
-  admin: ["review", "billing"],
+  company: ["company", "messages", "deals", "notifications.preferences", "privacy"],
+  admin: ["review", "billing", "support", "privacy"],
   lessor: ["lessor", "company.labels", "messages", "deals", "notifications.preferences"],
 } as const;
 export type MessageSpace = keyof typeof SPACE_NAMESPACES;

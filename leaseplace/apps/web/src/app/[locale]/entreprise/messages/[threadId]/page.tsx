@@ -12,6 +12,7 @@ import { PageHeader } from "@/components/shell/shells";
 import { Link } from "@/i18n/navigation";
 import { loadCompanyPage } from "@/lib/company-page";
 import { markThreadRead, threadView } from "@/lib/messaging/data";
+import { isSupportAccess } from "@/lib/viewer";
 import { sendMessageAction } from "../../actions";
 
 type Props = { params: Promise<{ locale: string; threadId: string }> };
@@ -29,7 +30,7 @@ export default async function CompanyThread({ params }: Props) {
   const data = await loadCompanyPage(locale, async (tx, v) => {
     const view = await threadView(tx, threadId);
     if (view?.companyId !== v.membership.organizationId) return { view: null };
-    await markThreadRead(tx, threadId, v.user.id);
+    await markThreadRead(tx, threadId, v.user.id, isSupportAccess(v));
     const [deal] = await tx
       .select({ id: schema.deals.id })
       .from(schema.deals)

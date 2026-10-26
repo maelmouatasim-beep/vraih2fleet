@@ -53,6 +53,15 @@ export const AUDIT_ACTIONS = [
   "commission.paid",
   "commission.cancelled",
   "invoice.downloaded",
+  "data.exported",
+  "privacy.erasure_requested",
+  "privacy.erasure_cancelled",
+  "privacy.erasure_completed",
+  "privacy.erasure_rejected",
+  "retention.updated",
+  "retention.applied",
+  "support.impersonation_started",
+  "support.impersonation_ended",
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 

@@ -9,7 +9,7 @@ import {
   type NotificationPreferences,
 } from "@leaseplace/domain";
 import { appDb } from "../db";
-import { actorFor, getViewer, type SpaceViewer } from "../viewer";
+import { actorFor, getViewer, isSupportAccess, type SpaceViewer } from "../viewer";
 import { z } from "../zod";
 
 const { notifications, notificationPreferences } = schema;
@@ -82,6 +82,14 @@ async function asViewer<T>(fn: (tx: Transaction, viewer: SpaceViewer) => Promise
 /** Ouvre une notification : marquée lue, renvoie l'écran concerné (chemin interne). */
 export async function openNotification(id: string): Promise<string | null> {
   return asViewer(async (tx, viewer) => {
+    // Accès support : on suit le lien sans marquer la notification comme lue.
+    if (isSupportAccess(viewer)) {
+      const [seen] = await tx
+        .select({ path: notifications.path })
+        .from(notifications)
+        .where(and(eq(notifications.id, id), eq(notifications.userId, viewer.user.id)));
+      return seen?.path ?? null;
+    }
     const [row] = await tx
       .update(notifications)
       .set({ readAt: sql`coalesce(${notifications.readAt}, now())` })

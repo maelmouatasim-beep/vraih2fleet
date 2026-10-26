@@ -38,7 +38,8 @@
       "commissions": "Commissions",
       "users": "Users",
       "audit": "Audit log",
-      "contacts": "Contacts"
+      "contacts": "Contacts",
+      "privacy": "Privacy"
     }
   },
   "palette": {
@@ -106,7 +107,7 @@
       "kpiLessorsHint": "{count, plural, =0 {No mandate in force} one {# mandate in force} other {# mandates in force}}",
       "kpiEvents": "Audit events",
       "kpiEventsHint": "Last 24 hours",
-      "organizationsTitle": "Organizations",
+      "organizationsTitle": "Latest organisations",
       "columns": {
         "name": "Name",
         "type": "Type",
@@ -114,7 +115,8 @@
       },
       "kycEmptyTitle": "No file to review",
       "kycEmptyBody": "Requests submitted by companies will appear here.",
-      "queueTitle": "Files to review"
+      "queueTitle": "Files to review",
+      "organizationsCount": "{shown} most recent of {total}"
     }
   },
   "audit": {
@@ -1473,7 +1475,8 @@
     },
     "sla": {
       "left": "{hours} h left",
-      "overdue": "{hours} h overdue"
+      "overdue": "{hours} h overdue",
+      "overdueDays": "{days} d overdue"
     },
     "inbox": {
       "title": "Inbox",
@@ -2020,11 +2023,12 @@
         "organization": "Organisation",
         "role": "Role",
         "twoFactor": "Two-factor authentication",
-        "created": "Created on"
+        "created": "Created on",
+        "support": "Support"
       },
       "on": "Enabled",
       "off": "—",
-      "impersonationNote": "“Log in as” access for support is not open yet: it will be traced in the audit log."
+      "impersonationNote": "Support access opens a customer’s workspace read-only for 30 minutes, with a reason; its start and end are recorded in the audit log and no document can be downloaded."
     }
   },
   "kpis": {
@@ -2050,6 +2054,167 @@
       "accepted": "Offer accepted",
       "financed": "Financed"
     },
-    "funnelNote": "Percentage: share of the previous step's requests. Visits and simulations will be measured with the analytics tool (phase 9)."
+    "funnelNote": "Percentage: share of the previous step's requests. Visits and simulator use are tracked, under a pseudonym, in the product analytics tool."
+  },
+  "support": {
+    "banner": "Read-only support access: {agent} is viewing the workspace of {name} ({organization}) until {until}. No changes or downloads are possible.",
+    "end": "End access",
+    "start": "Support access",
+    "reason": "Reason (ticket, customer request)",
+    "confirm": "Open access",
+    "hint": "Read-only, 30 minutes, recorded in the audit log.",
+    "issues": {
+      "reason_too_short": "Reason too short (at least 15 characters).",
+      "platform_target": "Platform accounts cannot be opened through support access.",
+      "self": "You cannot open your own account."
+    },
+    "forbidden": "Access reserved to support and administrators."
+  },
+  "privacy": {
+    "company": {
+      "title": "Your data (Law 09-08)",
+      "intro": "You can retrieve your company’s data or request its erasure at any time.",
+      "ownerOnly": "These requests are reserved to the company’s director.",
+      "export": "Download my data (JSON)",
+      "exportHint": "Instant export: profile, requests, consents, offers, deals, messages and a log of your actions.",
+      "erasureTitle": "Request erasure",
+      "erased": "Erased",
+      "kept": "Kept (legal obligation, evidence)",
+      "scope": {
+        "accounts": "User accounts (name, email, access)",
+        "documents": "Vault documents and their files",
+        "extractions": "Data extracted from documents",
+        "ai_runs": "Automated analyses and credit memos",
+        "notifications": "Notifications and preferences",
+        "leads": "Contact requests",
+        "requests": "Financing requests (without personal data)",
+        "consents": "Consent records",
+        "offers": "Offers received",
+        "deals": "Closed deals",
+        "invoices": "Invoices and commissions (10 years)",
+        "audit": "Audit log, pseudonymised"
+      },
+      "pending": "Request filed on {on}: answer by {due} at the latest.",
+      "cancel": "Withdraw the request",
+      "last": {
+        "completed": "Erasure completed on {on}.",
+        "rejected": "Last request declined on {on}: our team has told you why.",
+        "cancelled": "Last request withdrawn on {on}."
+      },
+      "issues": {
+        "requests_in_progress": "A request is in progress with us or a lessor: withdraw it or wait for its outcome before erasure.",
+        "deals_in_progress": "A deal is being signed or delivered: erasure will be possible once it is active or cancelled."
+      },
+      "ask": "Request erasure",
+      "note": "Details (optional)",
+      "confirm": "I understand that the company’s accounts will be closed and that erasure is final.",
+      "submit": "Send the request",
+      "back": "Cancel",
+      "errors": {
+        "already_pending": "A request is already pending.",
+        "note_too_long": "2,000 characters at most."
+      },
+      "forbidden": "Reserved to the company’s director."
+    },
+    "admin": {
+      "title": "Privacy",
+      "description": "Erasure requests (Law 09-08) and data retention periods.",
+      "restrictedTitle": "Restricted access",
+      "restrictedBody": "Privacy is managed by platform administrators.",
+      "requestsTitle": "Erasure requests",
+      "emptyTitle": "No requests",
+      "emptyBody": "Companies’ erasure requests appear here.",
+      "columns": {
+        "organization": "Company",
+        "requestedBy": "Requested by",
+        "requested": "Received",
+        "due": "Due",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "statuses": {
+        "pending": "Pending",
+        "completed": "Erased",
+        "rejected": "Declined",
+        "cancelled": "Withdrawn"
+      },
+      "issues": {
+        "requests_in_progress": "Request in progress: erasure blocked.",
+        "deals_in_progress": "Deal in progress: erasure blocked."
+      },
+      "execute": "Erase",
+      "executeWarning": "Irreversible: accounts anonymised, access closed, documents, extractions and memos deleted. Requests, consents, deals and invoices are kept.",
+      "confirmExecute": "Confirm erasure",
+      "reject": "Decline",
+      "reason": "Reason",
+      "note": "Details",
+      "confirmReject": "Confirm decline",
+      "reasons": {
+        "identity_unverified": "Requester’s identity not verified",
+        "legal_hold": "Retention required by law or a dispute",
+        "other": "Other reason"
+      },
+      "errors": {
+        "in_progress": "A request or deal is in progress: erasure is not possible.",
+        "reason_invalid": "Unknown reason.",
+        "note_required": "Give details (at least 10 characters)."
+      },
+      "forbidden": "Reserved to administrators."
+    },
+    "retention": {
+      "title": "Retention periods",
+      "lastRun": "Last purge: {at}.",
+      "neverRun": "No purge has run yet.",
+      "run": "Run the purge",
+      "ran": "Purge done: {drafts, plural, one {# draft} other {# drafts}}, {notifications, plural, one {# notification} other {# notifications}}, {files, plural, one {# file} other {# files}}.",
+      "columns": {
+        "rule": "Data",
+        "bounds": "Bounds (default)",
+        "days": "Retention"
+      },
+      "bounds": "{min} to {max} d (default {default})",
+      "unit": "days",
+      "days": "Duration in days",
+      "save": "Save",
+      "rules": {
+        "outbox_messages": {
+          "label": "Demo outbox",
+          "body": "Simulated emails and text messages in demo mode."
+        },
+        "read_notifications": {
+          "label": "Read notifications",
+          "body": "Deleted once read, after this period."
+        },
+        "expired_sessions": {
+          "label": "Expired sessions and codes",
+          "body": "Counted from their expiry."
+        },
+        "marketing_leads": {
+          "label": "Contact requests",
+          "body": "Lessor forms and callbacks with no follow-up."
+        },
+        "draft_requests": {
+          "label": "Abandoned drafts",
+          "body": "Requests never submitted and unchanged since."
+        },
+        "deleted_documents": {
+          "label": "Deleted documents",
+          "body": "Encrypted file removed from storage after deletion from the vault."
+        }
+      },
+      "legal": {
+        "label": "Invoices, commissions, audit log",
+        "body": "Statutory period, not adjustable (Commercial Code, art. 22); the log is immutable."
+      },
+      "years": "{count, plural, one {# year} other {# years}}",
+      "jobNote": "The purge runs daily as a scheduled task (pnpm retention:run); documents’ encrypted files are then removed from storage.",
+      "errors": {
+        "unknown_rule": "Unknown rule.",
+        "not_integer": "A whole number of days.",
+        "below_minimum": "Below the minimum.",
+        "above_maximum": "Above the maximum."
+      },
+      "forbidden": "Reserved to administrators."
+    }
   }
 }

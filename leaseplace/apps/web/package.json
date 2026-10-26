@@ -11,7 +11,8 @@
     "typecheck": "tsc",
     "test": "vitest run",
     "e2e": "playwright test",
-    "seed": "node --env-file-if-exists=.env.local --import tsx scripts/seed.ts"
+    "seed": "node --env-file-if-exists=.env.local --import tsx scripts/seed.ts",
+    "retention": "node --env-file-if-exists=.env.local --import tsx scripts/retention.ts"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "5.3.0",

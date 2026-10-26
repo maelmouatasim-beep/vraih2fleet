@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { PageView } from "@/components/analytics/page-view";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { SiteHeader } from "@/components/marketing/site-header";
 
@@ -11,6 +12,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
         {children}
       </main>
       <SiteFooter />
+      <PageView />
     </div>
   );
 }

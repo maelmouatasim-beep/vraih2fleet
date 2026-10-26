@@ -72,7 +72,7 @@ export async function createCompanyAction(
   const values = raw;
   const viewer = await getViewer();
   if (!viewer) return { status: "error", error: "generic" };
-  if (viewer.membership) return { status: "error", error: "already" };
+  if (viewer.membership || viewer.impersonation) return { status: "error", error: "already" };
   const parsed = schema.safeParse(raw);
   if (!parsed.success) {
     return {

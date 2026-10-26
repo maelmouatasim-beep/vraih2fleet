@@ -28,6 +28,12 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       headers: { "Cache-Control": "no-store" },
     });
   if (!/^[0-9a-f-]{36}$/.test(id)) return NOT_FOUND();
+  // Accès support : aucune pièce n'est téléchargeable (minimisation).
+  if (viewer.impersonation)
+    return new Response("Accès support : téléchargement indisponible", {
+      status: 403,
+      headers: { "Cache-Control": "no-store" },
+    });
   const key = signingKey(env().BETTER_AUTH_SECRET);
   if (
     !verifyDocumentUrl(

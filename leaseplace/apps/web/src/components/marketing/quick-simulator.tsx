@@ -8,12 +8,14 @@ import { Slider } from "@leaseplace/ui/slider";
 import { Link } from "@/i18n/navigation";
 import { formatMad, formatPercent, ltr } from "@/lib/format";
 import { DEFAULTS, LIMITS, simulate, toSearchParams, type SimulatorParams } from "@/lib/simulator";
+import { useSimulatorTracking } from "@/lib/analytics-client";
 
 /** Simulateur réduit de la page d'accueil : 3 réglages, le reste au simulateur complet. */
 export function QuickSimulator({ preset = {} }: { preset?: Partial<SimulatorParams> }) {
   const t = useTranslations("landing.quick");
   const [p, setP] = useState<SimulatorParams>({ ...DEFAULTS, ...preset });
   const result = useMemo(() => simulate(p), [p]);
+  useSimulatorTracking(p);
   const set = <K extends keyof SimulatorParams>(k: K, v: SimulatorParams[K]) => {
     setP((prev) => ({ ...prev, [k]: v }));
   };

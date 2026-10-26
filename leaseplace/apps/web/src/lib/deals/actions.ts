@@ -21,6 +21,7 @@ import { isoDay } from "../format";
 import { lessorViewer } from "../lessor/actions";
 import { notify } from "../notify";
 import { actorFor, type SpaceViewer } from "../viewer";
+import { amountBand, track } from "../analytics";
 
 const { offers, deals, financingRequests, routingTargets } = schema;
 
@@ -94,6 +95,7 @@ export async function acceptOffer(offerId: string): Promise<AcceptResult> {
           effectiveRate: offer.effectiveRate,
         },
       });
+      track("offer_accepted", request.organizationId, { offers: others.length + 1 });
       const targets = await tx
         .select({ id: routingTargets.id, lessorId: routingTargets.lessorOrganizationId })
         .from(routingTargets)
@@ -214,6 +216,10 @@ export async function recordDealStep(
       metadata: { on: onIso, financedAmountHt: financedAmountHt ?? null },
     });
   });
+  if (step === "activate")
+    track("deal_financed", deal.companyOrganizationId, {
+      amount_band: amountBand(financedAmountHt ?? deal.financedAmountHt),
+    });
   await notify(STEP_NOTIFICATION[step], deal.companyOrganizationId, {
     reference: loaded.reference,
     path: `/entreprise/demandes/${deal.requestId}`,

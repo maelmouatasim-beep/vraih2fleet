@@ -19,7 +19,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   if (!UUID.test(id)) return notFound();
   const viewer = await getViewer();
   const m = viewer?.membership;
-  if (!viewer || !m) return notFound();
+  if (!viewer || !m || viewer.impersonation) return notFound();
   if (
     !can(m.role, "commission.manage") &&
     !can(m.role, "kpi.read") &&

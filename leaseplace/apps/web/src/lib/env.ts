@@ -28,14 +28,26 @@ const schema = z.object({
   ANTHROPIC_API_KEY: z.string().min(1).optional(),
   LP_AI_MODEL: z.string().min(1).optional(),
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
+  /**
+   * Analyse produit (PostHog, région UE) : sans clé, ou en mode démo, les
+   * événements restent en mémoire (journal de débogage). Hôte d'ingestion
+   * https ; identifiants pseudonymes (HMAC), aucune donnée personnelle.
+   */
+  POSTHOG_KEY: z.string().min(1).optional(),
+  POSTHOG_HOST: z.url().default("https://eu.i.posthog.com"),
 });
 
 export type Env = z.infer<typeof schema>;
 
-const refined = schema.refine((e) => e.LP_AI_PROVIDER !== "anthropic" || e.ANTHROPIC_API_KEY, {
-  message: "ANTHROPIC_API_KEY requise avec LP_AI_PROVIDER=anthropic",
-  path: ["ANTHROPIC_API_KEY"],
-});
+const refined = schema
+  .refine((e) => e.LP_AI_PROVIDER !== "anthropic" || e.ANTHROPIC_API_KEY, {
+    message: "ANTHROPIC_API_KEY requise avec LP_AI_PROVIDER=anthropic",
+    path: ["ANTHROPIC_API_KEY"],
+  })
+  .refine((e) => e.LP_AI_PROVIDER !== "anthropic" || e.LP_AI_MODEL, {
+    message: "LP_AI_MODEL requis avec LP_AI_PROVIDER=anthropic",
+    path: ["LP_AI_MODEL"],
+  });
 
 let cached: Env | undefined;
 

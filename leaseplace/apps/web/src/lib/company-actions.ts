@@ -32,6 +32,7 @@ import { logger } from "./logger";
 import { documentStorage, malwareScanner } from "./storage";
 import { getViewer, actorFor, type SpaceViewer } from "./viewer";
 import { z } from "./zod";
+import { amountBand, track } from "./analytics";
 
 const { documents, financingRequests, requestDocuments, consents } = schema;
 
@@ -206,6 +207,7 @@ export async function createRequest(): Promise<string> {
       entityType: "financing_request",
       entityId: id,
     });
+    track("request_started", viewer.membership.organizationId);
     return id;
   });
 }
@@ -331,6 +333,10 @@ export async function submitRequest(
       action: "request.submitted",
       entityType: "financing_request",
       entityId: requestId,
+    });
+    track("request_submitted", viewer.membership.organizationId, {
+      category: request.equipmentCategory,
+      amount_band: request.amountHt === null ? undefined : amountBand(request.amountHt),
     });
     return { status: "submitted" } as const;
   });

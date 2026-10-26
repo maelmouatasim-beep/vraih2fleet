@@ -21,11 +21,10 @@ import {
   type MemoOutput,
 } from "./schemas";
 
-export const DEFAULT_MODEL = "claude-opus-5-5";
-
 export interface AnthropicOptions {
   apiKey: string;
-  model?: string;
+  /** Identifiant du modèle : réglage d'exploitation (LP_AI_MODEL), jamais figé dans le code. */
+  model: string;
   /** Pour les tests : client injecté. */
   client?: Anthropic;
 }
@@ -38,7 +37,7 @@ export interface AnthropicOptions {
 export function createAnthropicProvider(options: AnthropicOptions): AiProvider {
   const client =
     options.client ?? new Anthropic({ apiKey: options.apiKey, maxRetries: 2, timeout: 180_000 });
-  const model = options.model ?? DEFAULT_MODEL;
+  const { model } = options;
 
   async function call<T>(
     promptVersion: string,

@@ -20,6 +20,7 @@ import { MAX_AGE_MONTHS, requiredDocuments, type LegalForm } from "@leaseplace/d
 import { createFileStorage, encryptedStorage } from "@leaseplace/integrations/storage";
 import { demoPdf } from "../src/lib/watermark";
 import { seedMandates, seedMarket } from "./seed-market";
+import { seedVolume } from "./seed-volume";
 import {
   DEMO_ACCOUNTS,
   DEMO_APPETITES,
@@ -247,7 +248,10 @@ try {
     return t?.id ?? "";
   };
   const lessorIds = Object.fromEntries(
-    ["cedre", "argane", "oasis", "medina", "sahel"].map((k) => [k, orgIds.get(k) ?? ""]),
+    DEMO_ORGANIZATIONS.filter((o) => o.type === "lessor").map((o) => [
+      o.key,
+      orgIds.get(o.key) ?? "",
+    ]),
   );
   await seedMandates(db, lessorIds, await userOf("admin"));
   if (atlasId && owner) {
@@ -265,7 +269,20 @@ try {
       { processing: await textOf("consent_processing"), routing: await textOf("consent_routing") },
     );
   }
-  console.warn(`Jeu de démonstration prêt : ${String(DEMO_ACCOUNTS.length)} comptes.`);
+  // Démonstration en volume : 7 bailleurs, 30 PME, 80 demandes (phase 9).
+  const added = await seedVolume(db, {
+    ops: await userOf("ops"),
+    admin: await userOf("admin"),
+    lessors: lessorIds,
+    lessorUsers: { cedre: await userOf("bailleur"), argane: await userOf("bailleur-b") },
+    legalTexts: {
+      processing: await textOf("consent_processing"),
+      routing: await textOf("consent_routing"),
+    },
+  });
+  console.warn(
+    `Jeu de démonstration prêt : ${String(DEMO_ACCOUNTS.length)} comptes, ${String(added)} demandes en volume.`,
+  );
 } finally {
   await close();
 }

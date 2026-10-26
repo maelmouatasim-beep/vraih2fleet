@@ -8,10 +8,13 @@ import { Badge } from "@leaseplace/ui/badge";
 import { EmptyState } from "@leaseplace/ui/empty-state";
 import { TableScroll } from "@leaseplace/ui/table-scroll";
 import { PageHeader } from "@/components/shell/shells";
+import { SupportAccess } from "@/components/support/support-access";
+import { getPathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { authDb } from "@/lib/db";
 import { formatDate } from "@/lib/format";
 import { requireSpace } from "@/lib/viewer";
+import { startSupportAccessAction } from "../../support-actions";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -24,14 +27,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 /**
  * Utilisateurs (lecture) : organisation, rôle, double authentification.
  * Lu par la connexion d'authentification (tables identity), réservé à
- * l'administration (user.manage).
+ * l'administration (user.manage) et au support (user.impersonate), qui y
+ * ouvre un accès en lecture seule, motivé et tracé.
  */
 export default async function AdminUsers({ params }: Props) {
   const { locale } = await params;
   const viewer = await requireSpace("admin", locale as Locale);
   const t = await getTranslations("billing.users");
   const tr = await getTranslations("roles");
-  if (!can(viewer.membership.role, "user.manage"))
+  const support = can(viewer.membership.role, "user.impersonate");
+  if (!can(viewer.membership.role, "user.manage") && !support)
     return (
       <EmptyState icon={<Users />} title={t("restrictedTitle")} description={t("restrictedBody")} />
     );
@@ -39,6 +44,8 @@ export default async function AdminUsers({ params }: Props) {
   const rows = await authDb()
     .select({
       id: memberships.id,
+      userId: users.id,
+      organizationId: organizations.id,
       name: users.name,
       email: users.email,
       twoFactor: users.twoFactorEnabled,
@@ -52,21 +59,30 @@ export default async function AdminUsers({ params }: Props) {
     .innerJoin(organizations, eq(organizations.id, memberships.organizationId))
     .orderBy(asc(organizations.type), asc(organizations.name), asc(users.name))
     .limit(500);
+  const home = getPathname({ href: "/espace", locale: locale as Locale });
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-4">
       <PageHeader title={t("title")} description={t("description", { count: rows.length })} />
       <div className="overflow-hidden rounded-lg border border-border bg-surface shadow-sm">
         <TableScroll label={t("title")}>
-          <table className="w-full min-w-[860px] text-[13px]">
+          <table className="w-full min-w-[980px] text-[13px]">
             <thead className="border-b border-border bg-surface-muted/60 text-fg-muted">
               <tr>
-                {(["name", "email", "organization", "role", "twoFactor", "created"] as const).map(
-                  (c) => (
-                    <th key={c} scope="col" className="px-4 py-2.5 text-start font-medium">
-                      {t(`columns.${c}`)}
-                    </th>
-                  ),
-                )}
+                {(
+                  [
+                    "name",
+                    "email",
+                    "organization",
+                    "role",
+                    "twoFactor",
+                    "created",
+                    "support",
+                  ] as const
+                ).map((c) => (
+                  <th key={c} scope="col" className="px-4 py-2.5 text-start font-medium">
+                    {t(`columns.${c}`)}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -84,6 +100,18 @@ export default async function AdminUsers({ params }: Props) {
                     </Badge>
                   </td>
                   <td className="tabular px-4 py-2.5">{formatDate(r.createdAt)}</td>
+                  <td className="px-4 py-2.5 text-end">
+                    {support && r.type !== "platform" && r.userId !== viewer.user.id ? (
+                      <SupportAccess
+                        userId={r.userId}
+                        organizationId={r.organizationId}
+                        homeHref={home}
+                        start={startSupportAccessAction}
+                      />
+                    ) : (
+                      <span className="text-fg-subtle">—</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

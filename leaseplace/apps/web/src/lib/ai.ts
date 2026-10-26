@@ -9,7 +9,7 @@ export function aiProvider(): AiProvider {
   if (!globalForAi.lpAi) {
     const e = env();
     globalForAi.lpAi =
-      e.LP_AI_PROVIDER === "anthropic" && e.ANTHROPIC_API_KEY
+      e.LP_AI_PROVIDER === "anthropic" && e.ANTHROPIC_API_KEY && e.LP_AI_MODEL
         ? createAnthropicProvider({ apiKey: e.ANTHROPIC_API_KEY, model: e.LP_AI_MODEL })
         : createMockProvider();
   }

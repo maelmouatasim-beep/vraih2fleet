@@ -38,7 +38,8 @@
       "commissions": "Commissions",
       "users": "Utilisateurs",
       "audit": "Journal d’audit",
-      "contacts": "Contacts"
+      "contacts": "Contacts",
+      "privacy": "Confidentialité"
     }
   },
   "palette": {
@@ -106,7 +107,7 @@
       "kpiLessorsHint": "{count, plural, =0 {Aucun mandat en vigueur} one {# mandat en vigueur} other {# mandats en vigueur}}",
       "kpiEvents": "Événements d’audit",
       "kpiEventsHint": "24 dernières heures",
-      "organizationsTitle": "Organisations",
+      "organizationsTitle": "Dernières organisations",
       "columns": {
         "name": "Nom",
         "type": "Type",
@@ -114,7 +115,8 @@
       },
       "kycEmptyTitle": "Aucun dossier à revoir",
       "kycEmptyBody": "Les demandes soumises par les entreprises apparaîtront ici.",
-      "queueTitle": "Dossiers à revoir"
+      "queueTitle": "Dossiers à revoir",
+      "organizationsCount": "{shown} plus récentes sur {total}"
     }
   },
   "audit": {
@@ -1473,7 +1475,8 @@
     },
     "sla": {
       "left": "{hours} h restantes",
-      "overdue": "En retard de {hours} h"
+      "overdue": "En retard de {hours} h",
+      "overdueDays": "En retard de {days} j"
     },
     "inbox": {
       "title": "Boîte de réception",
@@ -2020,11 +2023,12 @@
         "organization": "Organisation",
         "role": "Rôle",
         "twoFactor": "Double authentification",
-        "created": "Créé le"
+        "created": "Créé le",
+        "support": "Support"
       },
       "on": "Activée",
       "off": "—",
-      "impersonationNote": "L’accès « en tant que » pour le support n’est pas encore ouvert : il sera tracé dans le journal d’audit."
+      "impersonationNote": "L’accès support ouvre l’espace d’un client en lecture seule pendant 30 minutes, sur motif ; son début et sa fin sont inscrits au journal d’audit, aucune pièce n’est téléchargeable."
     }
   },
   "kpis": {
@@ -2050,6 +2054,167 @@
       "accepted": "Offre acceptée",
       "financed": "Financées"
     },
-    "funnelNote": "Pourcentage : part des demandes de l’étape précédente. Les visites et simulations seront mesurées avec l’outil d’analyse (phase 9)."
+    "funnelNote": "Pourcentage : part des demandes de l’étape précédente. Les visites et l’usage du simulateur sont suivis, sous pseudonyme, dans l’outil d’analyse produit."
+  },
+  "support": {
+    "banner": "Accès support en lecture seule : {agent} consulte l’espace de {name} ({organization}) jusqu’au {until}. Aucune modification ni téléchargement n’est possible.",
+    "end": "Terminer l’accès",
+    "start": "Accès support",
+    "reason": "Motif (ticket, demande du client)",
+    "confirm": "Ouvrir l’accès",
+    "hint": "Lecture seule, 30 minutes, inscrit au journal d’audit.",
+    "issues": {
+      "reason_too_short": "Motif trop court (15 caractères au moins).",
+      "platform_target": "Un compte de la plateforme ne s’ouvre pas en accès support.",
+      "self": "Vous ne pouvez pas ouvrir votre propre compte."
+    },
+    "forbidden": "Accès réservé au support et aux administrateurs."
+  },
+  "privacy": {
+    "company": {
+      "title": "Vos données (loi 09-08)",
+      "intro": "Vous pouvez à tout moment récupérer les données de votre entreprise ou demander leur effacement.",
+      "ownerOnly": "Ces démarches sont réservées au dirigeant de l’entreprise.",
+      "export": "Télécharger mes données (JSON)",
+      "exportHint": "Export immédiat : profil, demandes, consentements, offres, opérations, messages et journal de vos actions.",
+      "erasureTitle": "Demander l’effacement",
+      "erased": "Effacé",
+      "kept": "Conservé (obligation légale, preuve)",
+      "scope": {
+        "accounts": "Comptes des utilisateurs (nom, e-mail, accès)",
+        "documents": "Pièces du coffre-fort et leurs fichiers",
+        "extractions": "Données extraites des pièces",
+        "ai_runs": "Analyses automatiques et notes de synthèse",
+        "notifications": "Notifications et préférences",
+        "leads": "Demandes de contact",
+        "requests": "Demandes de financement (sans données personnelles)",
+        "consents": "Preuves de consentement",
+        "offers": "Offres reçues",
+        "deals": "Opérations conclues",
+        "invoices": "Factures et commissions (10 ans)",
+        "audit": "Journal d’audit, rendu pseudonyme"
+      },
+      "pending": "Demande déposée le {on} : réponse au plus tard le {due}.",
+      "cancel": "Retirer la demande",
+      "last": {
+        "completed": "Effacement effectué le {on}.",
+        "rejected": "Dernière demande refusée le {on} : notre équipe vous en a précisé le motif.",
+        "cancelled": "Dernière demande retirée le {on}."
+      },
+      "issues": {
+        "requests_in_progress": "Une demande est en cours chez nous ou chez un bailleur : retirez-la ou attendez sa conclusion avant l’effacement.",
+        "deals_in_progress": "Une opération est en cours de signature ou de livraison : l’effacement sera possible après sa mise en loyer ou son annulation."
+      },
+      "ask": "Demander l’effacement",
+      "note": "Précisions (facultatif)",
+      "confirm": "Je comprends que les comptes de l’entreprise seront fermés et que l’effacement est définitif.",
+      "submit": "Envoyer la demande",
+      "back": "Annuler",
+      "errors": {
+        "already_pending": "Une demande est déjà en attente.",
+        "note_too_long": "2 000 caractères au plus."
+      },
+      "forbidden": "Démarche réservée au dirigeant de l’entreprise."
+    },
+    "admin": {
+      "title": "Confidentialité",
+      "description": "Demandes d’effacement (loi 09-08) et durées de conservation des données.",
+      "restrictedTitle": "Accès réservé",
+      "restrictedBody": "La confidentialité est gérée par les administrateurs de la plateforme.",
+      "requestsTitle": "Demandes d’effacement",
+      "emptyTitle": "Aucune demande",
+      "emptyBody": "Les demandes d’effacement des entreprises apparaissent ici.",
+      "columns": {
+        "organization": "Entreprise",
+        "requestedBy": "Demandée par",
+        "requested": "Reçue le",
+        "due": "Échéance",
+        "status": "Statut",
+        "actions": "Actions"
+      },
+      "statuses": {
+        "pending": "En attente",
+        "completed": "Effacée",
+        "rejected": "Refusée",
+        "cancelled": "Retirée"
+      },
+      "issues": {
+        "requests_in_progress": "Dossier en cours : effacement bloqué.",
+        "deals_in_progress": "Opération en cours : effacement bloqué."
+      },
+      "execute": "Effacer",
+      "executeWarning": "Irréversible : comptes anonymisés, accès fermés, pièces, extractions et notes supprimées. Demandes, consentements, opérations et factures sont conservés.",
+      "confirmExecute": "Confirmer l’effacement",
+      "reject": "Refuser",
+      "reason": "Motif",
+      "note": "Précision",
+      "confirmReject": "Confirmer le refus",
+      "reasons": {
+        "identity_unverified": "Identité du demandeur non vérifiée",
+        "legal_hold": "Conservation imposée par la loi ou un litige",
+        "other": "Autre motif"
+      },
+      "errors": {
+        "in_progress": "Un dossier ou une opération est en cours : effacement impossible.",
+        "reason_invalid": "Motif inconnu.",
+        "note_required": "Précisez le motif (10 caractères au moins)."
+      },
+      "forbidden": "Action réservée aux administrateurs."
+    },
+    "retention": {
+      "title": "Durées de conservation",
+      "lastRun": "Dernière purge : {at}.",
+      "neverRun": "Aucune purge exécutée pour l’instant.",
+      "run": "Lancer la purge",
+      "ran": "Purge effectuée : {drafts, plural, one {# brouillon} other {# brouillons}}, {notifications, plural, one {# notification} other {# notifications}}, {files, plural, one {# fichier} other {# fichiers}}.",
+      "columns": {
+        "rule": "Donnée",
+        "bounds": "Bornes (défaut)",
+        "days": "Conservation"
+      },
+      "bounds": "{min} à {max} j (défaut {default})",
+      "unit": "jours",
+      "days": "Durée en jours",
+      "save": "Enregistrer",
+      "rules": {
+        "outbox_messages": {
+          "label": "Boîte d’envoi de démonstration",
+          "body": "Courriels et SMS simulés du mode démo."
+        },
+        "read_notifications": {
+          "label": "Notifications lues",
+          "body": "Supprimées une fois lues, passé ce délai."
+        },
+        "expired_sessions": {
+          "label": "Sessions et codes expirés",
+          "body": "Délai compté depuis leur expiration."
+        },
+        "marketing_leads": {
+          "label": "Demandes de contact",
+          "body": "Formulaires bailleurs et rappels sans suite."
+        },
+        "draft_requests": {
+          "label": "Brouillons abandonnés",
+          "body": "Demandes jamais soumises, sans modification depuis."
+        },
+        "deleted_documents": {
+          "label": "Pièces supprimées",
+          "body": "Fichier chiffré effacé du stockage après sa suppression au coffre-fort."
+        }
+      },
+      "legal": {
+        "label": "Factures, commissions, journal d’audit",
+        "body": "Durée légale, non réglable (Code de commerce, art. 22) ; le journal est immuable."
+      },
+      "years": "{count, plural, one {# an} other {# ans}}",
+      "jobNote": "La purge s’exécute chaque jour par la tâche planifiée (pnpm retention:run) ; les fichiers chiffrés des pièces sont alors supprimés du stockage.",
+      "errors": {
+        "unknown_rule": "Règle inconnue.",
+        "not_integer": "Un nombre entier de jours.",
+        "below_minimum": "Durée sous le minimum.",
+        "above_maximum": "Durée au-delà du maximum."
+      },
+      "forbidden": "Action réservée aux administrateurs."
+    }
   }
 }

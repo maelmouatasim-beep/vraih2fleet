@@ -26,6 +26,9 @@ export const PERMISSIONS = [
   // Facturation et pilotage (phase 8)
   "billing.read_own",
   "kpi.read",
+  // Droits des personnes et conservation (phase 9)
+  "privacy.manage_own",
+  "privacy.manage",
   // Bailleur (phase 6)
   "routed_request.read",
   "offer.submit",
@@ -54,6 +57,7 @@ const MATRIX: Readonly<Record<Role, readonly Permission[]>> = {
     "offer.accept",
     "deal.cancel_own",
     "message.send",
+    "privacy.manage_own",
   ],
   company_member: [
     "space.company",
@@ -102,6 +106,7 @@ const MATRIX: Readonly<Record<Role, readonly Permission[]>> = {
     "user.impersonate",
     "user.manage",
     "kpi.read",
+    "privacy.manage",
   ],
   platform_ops: [
     "space.admin",

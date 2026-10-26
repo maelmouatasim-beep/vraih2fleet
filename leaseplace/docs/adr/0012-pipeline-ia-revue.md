@@ -13,7 +13,7 @@ loi 09-08 impose de limiter les données transmises.
 
 - **`packages/ai`** : interface `AiProvider` (`extract`, `writeMemo`),
   prompts versionnés (`extraction-v1`, `memo-v1`), schémas Zod. Deux
-  implémentations : `anthropic` (SDK officiel, modèle `claude-opus-5-5`,
+  implémentations : `anthropic` (SDK officiel, modèle fixé par `LP_AI_MODEL`,
   sorties structurées, effort moyen, repli serveur `fallbacks: "default"`
   en cas de refus) et `mock`, simulateur déterministe de démonstration qui
   **ne lit pas le document** (valeurs tirées du profil déclaré, signalé à

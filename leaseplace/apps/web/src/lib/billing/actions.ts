@@ -19,6 +19,7 @@ import { isoDay } from "../format";
 import { actorFor, getViewer, type SpaceViewer } from "../viewer";
 import { z } from "../zod";
 import { gridOf } from "./data";
+import { track } from "../analytics";
 
 const { mandates, commissions, invoices } = schema;
 
@@ -193,6 +194,7 @@ export async function issueInvoice(commissionId: string): Promise<AdminResult> {
       entityId: commissionId,
       metadata: { invoiceId: id, amountTtc: c.amountTtc },
     });
+    track("commission_invoiced", c.lessorOrganizationId);
     return { status: "done", id } as const;
   });
 }

@@ -9,12 +9,13 @@ import { demoFacts } from "../fixtures.test-helpers";
 import { verifyMemo } from "../verify";
 
 const apiKey = process.env.ANTHROPIC_API_KEY;
-if (!apiKey) {
-  console.error("ANTHROPIC_API_KEY requis (évaluation manuelle, appels facturés).");
+const model = process.env.LP_AI_MODEL;
+if (!apiKey || !model) {
+  console.error("ANTHROPIC_API_KEY et LP_AI_MODEL requis (évaluation manuelle, appels facturés).");
   process.exit(1);
 }
 const runs = Number(process.argv[2] ?? "3");
-const provider = createAnthropicProvider({ apiKey, model: process.env.LP_AI_MODEL });
+const provider = createAnthropicProvider({ apiKey, model });
 const { facts, sourceIds } = demoFacts();
 let passed = 0;
 for (let i = 1; i <= runs; i++) {

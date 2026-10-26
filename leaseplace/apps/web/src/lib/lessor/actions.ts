@@ -21,6 +21,7 @@ import { notify } from "../notify";
 import { actorFor, getViewer, type SpaceViewer } from "../viewer";
 import { z } from "../zod";
 import { appetiteOf, lessorTarget } from "./data";
+import { track } from "../analytics";
 
 const { routingTargets, offers, targetDeclines, lessorAppetites } = schema;
 
@@ -158,6 +159,8 @@ export async function submitOffer(targetId: string, form: OfferForm): Promise<Of
         financingCostHt: priced.normalized.totals.financingCostHt,
       },
     });
+    // Entonnoir suivi par entreprise : la première offre est la première occurrence.
+    track("offer_submitted", file.request.organizationId);
     return {
       status: "submitted",
       companyId: file.request.organizationId,

@@ -68,6 +68,8 @@ export const documents = kyc.table(
       .references(() => users.id),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
+    /** Fichier chiffré effacé du stockage (purge de conservation ou effacement 09-08). */
+    purgedAt: timestamp("purged_at", { withTimezone: true }),
   },
   (t) => [
     index("documents_org_idx").on(t.organizationId),

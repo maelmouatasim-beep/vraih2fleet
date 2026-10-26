@@ -18,3 +18,6 @@ export * from "./messaging/messages";
 export * from "./notifications/notifications";
 export * from "./billing/billing";
 export * from "./kpis/kpis";
+export * from "./privacy/privacy";
+export * from "./support/impersonation";
+export * from "./analytics/events";

@@ -1,5 +1,5 @@
 import "server-only";
-import { eq } from "drizzle-orm";
+import { and, eq, gt, isNull } from "drizzle-orm";
 import { headers } from "next/headers";
 import { cache } from "react";
 import { recordAudit, schema, withActor } from "@leaseplace/db";
@@ -27,19 +27,24 @@ export interface Membership {
   role: Role;
 }
 
+/** Accès support en cours : l'agent voit l'espace du compte cible, en lecture seule. */
+export interface Impersonation {
+  id: string;
+  actorUserId: string;
+  actorName: string;
+  expiresAt: Date;
+}
+
 export interface Viewer {
   user: { id: string; name: string; email: string; twoFactorEnabled: boolean };
   membership: Membership | null;
   memberships: Membership[];
+  impersonation: Impersonation | null;
 }
 
-/** Utilisateur connecté et son adhésion active, lues sous RLS (lp_app). */
-export const getViewer = cache(async (): Promise<Viewer | null> => {
-  const current = await getAuth().api.getSession({ headers: await headers() });
-  if (!current) return null;
-  const { user, session } = current;
+async function membershipsOf(userId: string): Promise<Membership[]> {
   const { memberships, organizations } = schema;
-  const rows = await withActor(appDb(), { userId: user.id }, (tx) =>
+  const rows = await withActor(appDb(), { userId }, (tx) =>
     tx
       .select({
         organizationId: organizations.id,
@@ -49,14 +54,73 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
       })
       .from(memberships)
       .innerJoin(organizations, eq(organizations.id, memberships.organizationId))
-      .where(eq(memberships.userId, user.id))
+      .where(eq(memberships.userId, userId))
       .orderBy(memberships.createdAt),
   );
-  const valid = rows.flatMap((r): Membership[] =>
+  return rows.flatMap((r): Membership[] =>
     isRole(r.role) && isOrganizationType(r.organizationType)
       ? [{ ...r, role: r.role, organizationType: r.organizationType }]
       : [],
   );
+}
+
+/**
+ * Accès support ouvert sur cette session : le compte cible et son adhésion
+ * dans l'organisation visée. Lu par l'agent lui-même (RLS).
+ */
+async function supportAccessOf(actorId: string, sessionId: string) {
+  const { impersonations, users } = schema;
+  return withActor(appDb(), { userId: actorId }, async (tx) => {
+    const [row] = await tx
+      .select()
+      .from(impersonations)
+      .where(
+        and(
+          eq(impersonations.actorSessionId, sessionId),
+          isNull(impersonations.endedAt),
+          gt(impersonations.expiresAt, new Date()),
+        ),
+      );
+    if (!row) return null;
+    const [actor] = await tx.select({ name: users.name }).from(users).where(eq(users.id, actorId));
+    const [target] = await tx.select().from(users).where(eq(users.id, row.targetUserId));
+    return target ? { row, actorName: actor?.name ?? "", target } : null;
+  });
+}
+
+/** Utilisateur connecté et son adhésion active, lues sous RLS (lp_app). */
+export const getViewer = cache(async (): Promise<Viewer | null> => {
+  const current = await getAuth().api.getSession({ headers: await headers() });
+  if (!current) return null;
+  const { user, session } = current;
+  const valid = await membershipsOf(user.id);
+  // Seul un membre de la plateforme peut avoir un accès support ouvert.
+  if (valid.some((m) => m.organizationType === "platform")) {
+    const access = await supportAccessOf(user.id, session.id);
+    if (access) {
+      const targetMemberships = await membershipsOf(access.target.id);
+      return {
+        user: {
+          id: access.target.id,
+          name: access.target.name,
+          email: access.target.email,
+          twoFactorEnabled: access.target.twoFactorEnabled,
+        },
+        membership:
+          targetMemberships.find((m) => m.organizationId === access.row.targetOrganizationId) ??
+          null,
+        memberships: targetMemberships.filter(
+          (m) => m.organizationId === access.row.targetOrganizationId,
+        ),
+        impersonation: {
+          id: access.row.id,
+          actorUserId: user.id,
+          actorName: access.actorName,
+          expiresAt: access.row.expiresAt,
+        },
+      };
+    }
+  }
   const active =
     valid.find((m) => m.organizationId === session.activeOrganizationId) ?? valid[0] ?? null;
   return {
@@ -68,6 +132,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     },
     membership: active,
     memberships: valid,
+    impersonation: null,
   };
 });
 
@@ -98,10 +163,17 @@ export async function requireSpace(space: Space, locale: Locale): Promise<SpaceV
   }
   const { membership } = viewer;
   if (!membership) return redirect({ href: "/bienvenue", locale });
-  if (requiresTwoFactor(membership.organizationType) && !viewer.user.twoFactorEnabled) {
+  if (
+    requiresTwoFactor(membership.organizationType) &&
+    !viewer.user.twoFactorEnabled &&
+    !viewer.impersonation
+  ) {
     return redirect({ href: "/securite/double-authentification", locale });
   }
   if (!canAccessSpace(membership.role, space)) {
+    // Accès support (lecture seule) : pas d'écriture au journal, simple refus.
+    if (viewer.impersonation)
+      return redirect({ href: { pathname: "/acces-refuse", query: { espace: space } }, locale });
     const ctx = await requestContext();
     await withActor(
       appDb(),
@@ -124,13 +196,23 @@ export async function requireSpace(space: Space, locale: Locale): Promise<SpaceV
   return { ...viewer, membership };
 }
 
-/** Acteur de transaction pour le visiteur (RLS + audit). */
+/**
+ * Acteur de transaction pour le visiteur (RLS + audit). Pendant un accès
+ * support, l'agent est l'« impersonateur » : la transaction est en lecture
+ * seule (packages/db, withActor).
+ */
 export async function actorFor(viewer: SpaceViewer) {
   const ctx = await requestContext();
   return {
     userId: viewer.user.id,
     organizationId: viewer.membership.organizationId,
+    impersonatorId: viewer.impersonation?.actorUserId ?? null,
     ip: ctx.ip,
     userAgent: ctx.userAgent,
   };
+}
+
+/** Vrai pendant un accès support : aucune écriture, aucun téléchargement de pièce. */
+export function isSupportAccess(viewer: Viewer): boolean {
+  return viewer.impersonation !== null;
 }

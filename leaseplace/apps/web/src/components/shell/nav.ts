@@ -12,6 +12,7 @@ import {
   MessagesSquare,
   Receipt,
   ScrollText,
+  ShieldCheck,
   SlidersHorizontal,
   Users,
   type LucideIcon,
@@ -48,6 +49,7 @@ export const NAV: Readonly<Record<Space, readonly NavItem[]>> = {
     { key: "commissions", icon: BadgePercent, href: "/admin/commissions" },
     { key: "contacts", icon: Contact, href: "/admin/contacts" },
     { key: "users", icon: Users, href: "/admin/utilisateurs" },
+    { key: "privacy", icon: ShieldCheck, href: "/admin/confidentialite" },
     { key: "audit", icon: ScrollText, href: "/admin/journal" },
   ],
 };

@@ -24,6 +24,7 @@ import {
 const formatMad = (value: number, decimals?: number) => ltr(mad(value, decimals));
 const formatPercent = (fraction: number, decimals?: number) => ltr(pct(fraction, decimals));
 import { LIMITS, simulate, toSearchParams, type SimulatorParams } from "@/lib/simulator";
+import { useSimulatorTracking } from "@/lib/analytics-client";
 
 type Setter = <K extends keyof SimulatorParams>(key: K, value: SimulatorParams[K]) => void;
 
@@ -307,6 +308,7 @@ export function Simulator({ initial }: { initial: SimulatorParams }) {
   const [p, setP] = useState(initial);
   const [copied, setCopied] = useState(false);
   const result = useMemo(() => simulate(p), [p]);
+  useSimulatorTracking(p);
   const set: Setter = (key, value) => {
     setP((prev) => ({ ...prev, [key]: value }));
   };

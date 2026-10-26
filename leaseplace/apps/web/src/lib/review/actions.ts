@@ -57,6 +57,7 @@ import {
   type ReviewDocument,
   type ReviewRequest,
 } from "./data";
+import { track } from "../analytics";
 
 const {
   financingRequests,
@@ -446,6 +447,8 @@ export async function qualifyRequest(
       entityId: requestId,
       metadata: { grade: assessment?.grade ?? null, anomaliesNote: anomaliesNote.trim() || null },
     });
+    // Dossier qualifié = KYC complet et vérifié par la plateforme.
+    track("kyc_completed", request.organizationId);
     // Orientation calculée dès la qualification : l'entreprise choisit ensuite.
     const company = await reviewCompany(tx, request.organizationId);
     if (company && assessment) {

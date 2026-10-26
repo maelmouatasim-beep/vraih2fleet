@@ -28,13 +28,18 @@ export async function applyActor(tx: Transaction, actor: Actor): Promise<void> {
   `);
 }
 
-/** Toute lecture ou écriture applicative passe par ici. */
+/**
+ * Toute lecture ou écriture applicative passe par ici. Un accès support
+ * (`impersonatorId`) ouvre une transaction en LECTURE SEULE : la base
+ * refuse toute écriture, journal compris.
+ */
 export function withActor<T>(
   db: Database,
   actor: Actor,
   fn: (tx: Transaction) => Promise<T>,
 ): Promise<T> {
   return db.transaction(async (tx) => {
+    if (actor.impersonatorId) await tx.execute(sql`set transaction read only`);
     await applyActor(tx, actor);
     return fn(tx);
   });

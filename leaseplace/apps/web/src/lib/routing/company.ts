@@ -9,6 +9,7 @@ import { appDb } from "../db";
 import { notify } from "../notify";
 import { actorFor } from "../viewer";
 import { withActor } from "@leaseplace/db";
+import { track } from "../analytics";
 
 const {
   routingDecisions,
@@ -165,6 +166,7 @@ export async function sendToLessors(
       entityId: requestId,
       metadata: { recipients: chosen },
     });
+    track("request_routed", request.organizationId, { targets: chosen.length });
     return {
       status: "sent",
       count: chosen.length,

@@ -3,10 +3,13 @@ import { getTranslations } from "next-intl/server";
 import { can } from "@leaseplace/domain";
 import { Card, CardContent } from "@leaseplace/ui/card";
 import { ProfileForm } from "@/components/company/profile-form";
+import { CompanyPrivacy } from "@/components/privacy/company-privacy";
 import { PageHeader } from "@/components/shell/shells";
 import { getCompany } from "@/lib/company-data";
 import { loadCompanyPage } from "@/lib/company-page";
 import { formatDate } from "@/lib/format";
+import { companyPrivacy } from "@/lib/privacy/data";
+import { cancelErasureAction, requestErasureAction } from "../../privacy-actions";
 import { updateProfileAction } from "../actions";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -21,9 +24,13 @@ const isoDate = (d: Date | null) => (d ? d.toISOString().slice(0, 10) : "");
 
 export default async function Profile({ params }: Props) {
   const { locale } = await params;
-  const { viewer, company } = await loadCompanyPage(locale, async (tx, v) => ({
+  const { viewer, company, privacy } = await loadCompanyPage(locale, async (tx, v) => ({
     company: await getCompany(tx, v.membership.organizationId),
+    privacy: can(v.membership.role, "privacy.manage_own")
+      ? await companyPrivacy(tx, v.membership.organizationId)
+      : null,
   }));
+  const decided = privacy?.history.find((r) => r.status !== "pending" && r.decidedAt);
   const t = await getTranslations("company.profile");
   const to = await getTranslations("company.onboarding");
   const tl = await getTranslations("company.labels");
@@ -68,6 +75,29 @@ export default async function Profile({ params }: Props) {
               revenueBand: company.revenueBand ?? "",
               headcountBand: company.headcountBand ?? "",
             }}
+          />
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent>
+          <CompanyPrivacy
+            canManage={privacy !== null && !viewer.impersonation}
+            pending={
+              privacy?.pending
+                ? {
+                    id: privacy.pending.id,
+                    requestedOn: formatDate(privacy.pending.requestedAt),
+                    dueOn: formatDate(privacy.pending.dueOn),
+                  }
+                : null
+            }
+            issues={privacy?.issues ?? []}
+            lastDecision={
+              decided?.decidedAt
+                ? { status: decided.status, on: formatDate(decided.decidedAt) }
+                : null
+            }
+            actions={{ request: requestErasureAction, cancel: cancelErasureAction }}
           />
         </CardContent>
       </Card>

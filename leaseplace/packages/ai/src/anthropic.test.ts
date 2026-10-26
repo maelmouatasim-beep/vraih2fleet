@@ -1,6 +1,8 @@
 import type Anthropic from "@anthropic-ai/sdk";
 import { describe, expect, it, vi } from "vitest";
-import { createAnthropicProvider, DEFAULT_MODEL } from "./anthropic";
+import { createAnthropicProvider } from "./anthropic";
+
+const MODEL = "modele-de-test";
 import { DEMO, demoFacts } from "./fixtures.test-helpers";
 import { mockExtraction, mockMemo } from "./mock";
 import { AiError } from "./provider";
@@ -25,24 +27,24 @@ describe("fournisseur Claude", () => {
   it("extraction : document en bloc PDF, repli serveur activé, sortie validée et tracée", async () => {
     const parsed = mockExtraction(extractionRequest);
     const { client, parse } = fakeClient({
-      model: DEFAULT_MODEL,
+      model: MODEL,
       usage,
       stop_reason: "end_turn",
       parsed_output: parsed,
     });
-    const provider = createAnthropicProvider({ apiKey: "test", client });
+    const provider = createAnthropicProvider({ apiKey: "test", model: MODEL, client });
     expect(provider.real).toBe(true);
     const { output, meta } = await provider.extract(extractionRequest);
     expect(output).toEqual(parsed);
     expect(meta).toMatchObject({
       provider: "anthropic",
-      model: DEFAULT_MODEL,
+      model: MODEL,
       promptVersion: "extraction-v1",
       usage: { inputTokens: 1200, outputTokens: 300 },
     });
     const params = parse.mock.calls[0]?.[0] as Record<string, unknown>;
     expect(params).toMatchObject({
-      model: DEFAULT_MODEL,
+      model: MODEL,
       fallbacks: "default",
       betas: ["server-side-fallback-2026-07-01"],
     });
@@ -77,9 +79,11 @@ describe("fournisseur Claude", () => {
       stop_reason: "end_turn",
       parsed_output: memo,
     });
-    const { output, meta } = await createAnthropicProvider({ apiKey: "t", client }).writeMemo(
-      facts,
-    );
+    const { output, meta } = await createAnthropicProvider({
+      apiKey: "t",
+      model: MODEL,
+      client,
+    }).writeMemo(facts);
     expect(output).toEqual(memo);
     expect(meta.promptVersion).toBe("memo-v1");
   });
@@ -89,7 +93,7 @@ describe("fournisseur Claude", () => {
     ["max_tokens", "truncated"],
   ])("arrêt %s → erreur %s, trace conservée", async (stop, code) => {
     const { client } = fakeClient({ model: "m", usage, stop_reason: stop, parsed_output: null });
-    const error = await createAnthropicProvider({ apiKey: "t", client })
+    const error = await createAnthropicProvider({ apiKey: "t", model: MODEL, client })
       .extract(extractionRequest)
       .catch((e: unknown) => e);
     expect(error).toBeInstanceOf(AiError);
@@ -104,14 +108,14 @@ describe("fournisseur Claude", () => {
       parsed_output: { readable: "oui" },
     });
     await expect(
-      createAnthropicProvider({ apiKey: "t", client }).extract(extractionRequest),
+      createAnthropicProvider({ apiKey: "t", model: MODEL, client }).extract(extractionRequest),
     ).rejects.toMatchObject({ code: "invalid_output" });
   });
 
   it("panne réseau ou réponse illisible : erreur typée", async () => {
     const { client } = fakeClient(new Error("socket hang up"));
     await expect(
-      createAnthropicProvider({ apiKey: "t", client }).extract(extractionRequest),
+      createAnthropicProvider({ apiKey: "t", model: MODEL, client }).extract(extractionRequest),
     ).rejects.toMatchObject({ code: "invalid_output" });
   });
 });
