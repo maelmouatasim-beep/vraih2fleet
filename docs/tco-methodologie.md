@@ -61,6 +61,12 @@ Version 2.3 (test terrain) — 2026-10-02 — statut : **en validation**
 > dans les sorties (investissement, valeur résiduelle, subventions).
 > Entrées existantes inchangées : mêmes empreintes, cas de référence
 > identiques au centième.
+> engineVersion 2.5.1 (§7.3) : dans le stress test, le facteur « prix
+> d'achat des véhicules zéro émission » ne s'applique plus aux véhicules
+> remplacés par un diesel neuf (comme l'entretien et la consommation
+> déjà). Un plan qui ne change aucun véhicule a donc un écart nul dans
+> les trois scénarios. VAN centrale, empreintes et cas de référence
+> inchangés.
 
 Ce document est la référence unique de la méthode de calcul. Il est écrit
 pour être lu par un directeur des finances municipal : chaque formule est
@@ -695,7 +701,7 @@ Sens des effets — vérifié par un test unitaire chacun :
 | Prix de l'électricité | Défavorable |
 | Prix de l'hydrogène | Défavorable |
 | Subventions | Favorable (et TCO jamais réduit sous le coût net) |
-| Prix d'achat des ZE | Défavorable |
+| Prix d'achat des ZE (les remplacements en diesel neuf ne sont pas touchés) | Défavorable |
 | Coût de raccordement | Défavorable |
 | Taux d'actualisation | Défavorable (les économies futures pèsent moins) |
 

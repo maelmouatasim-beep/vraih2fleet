@@ -5260,7 +5260,8 @@
       "selectionExclusBorne_one": "{{count}} left out: the charger costs more than the vehicle saves ({{unites}})",
       "selectionExclusBorne_other": "{{count}} left out: the charger costs more than the vehicle saves ({{unites}})",
       "selectionExclusRaccordement_one": "{{count}} left out: the extra grid upgrade would cost more than they save ({{unites}})",
-      "selectionExclusRaccordement_other": "{{count}} left out: the extra grid upgrade would cost more than they save ({{unites}})"
+      "selectionExclusRaccordement_other": "{{count}} left out: the extra grid upgrade would cost more than they save ({{unites}})",
+      "stressNone": "No vehicle changes technology in this strategy: nothing to stress test."
     },
     "plan": {
       "empty": {

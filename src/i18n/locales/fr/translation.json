@@ -5260,7 +5260,8 @@
       "selectionExclusBorne_one": "{{count}} écarté : la borne coûte plus que l'économie du véhicule ({{unites}})",
       "selectionExclusBorne_other": "{{count}} écartés : la borne coûte plus que l'économie du véhicule ({{unites}})",
       "selectionExclusRaccordement_one": "{{count}} écarté : le raccordement supplémentaire coûterait plus qu'ils ne rapportent ({{unites}})",
-      "selectionExclusRaccordement_other": "{{count}} écartés : le raccordement supplémentaire coûterait plus qu'ils ne rapportent ({{unites}})"
+      "selectionExclusRaccordement_other": "{{count}} écartés : le raccordement supplémentaire coûterait plus qu'ils ne rapportent ({{unites}})",
+      "stressNone": "Aucun véhicule ne change de technologie dans cette stratégie : rien à soumettre au stress test."
     },
     "plan": {
       "empty": {

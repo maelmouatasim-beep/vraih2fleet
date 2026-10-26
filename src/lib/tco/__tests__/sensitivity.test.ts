@@ -82,3 +82,42 @@ describe('analyse complète', () => {
     expect(r.niveauRisque).toBe('eleve');
   });
 });
+
+describe('véhicules remplacés en diesel : jamais touchés par les facteurs « zéro émission » (audit A6, engineVersion 2.5.1)', () => {
+  /** Remplacement à l'identique : l'alternative est un diesel neuf, sans subvention ni borne. */
+  function enDiesel(plan: ReturnType<typeof cas1>, id: string) {
+    const v = plan.vehicules.find((x) => x.id === id)!;
+    v.alternative = { ...v.reference };
+    v.subventionsAlternative = [];
+    plan.sitesInfra = (plan.sitesInfra ?? []).map((s) => ({ ...s, vehiculeIds: s.vehiculeIds.filter((x) => x !== id) }))
+      .filter((s) => s.vehiculeIds.length > 0);
+    return plan;
+  }
+
+  it('plan sans aucun véhicule zéro émission : écart nul dans les 3 scénarios et sur chaque barre', () => {
+    const vide = enDiesel(cas1(), 'camionnette');
+    const a = analyserSensibilite(vide);
+    expect(a.vanCentrale).toBeCloseTo(0, 6);
+    for (const s of ['prudent', 'central', 'favorable'] as const) expect(a.scenarios[s].van).toBeCloseTo(0, 6);
+    for (const b of a.tornade) {
+      expect(b.vanBasse).toBeCloseTo(0, 6);
+      expect(b.vanHaute).toBeCloseTo(0, 6);
+    }
+  });
+
+  it('ajouter un véhicule remplacé en diesel ne change NI la VAN NI la barre « prix d’achat des véhicules zéro émission »', () => {
+    const seul = cas1();
+    const mixte = cas1();
+    const diesel = structuredClone(mixte.vehicules[0]);
+    diesel.id = 'camionnette-diesel';
+    mixte.vehicules.push(diesel);
+    enDiesel(mixte, 'camionnette-diesel');
+    const a = analyserSensibilite(seul);
+    const b = analyserSensibilite(mixte);
+    expect(b.vanCentrale).toBeCloseTo(a.vanCentrale, 4);
+    const barre = (r: typeof a) => r.tornade.find((x) => x.id === 'prix_achat_alternative')!;
+    expect(barre(b).vanBasse).toBeCloseTo(barre(a).vanBasse, 4);
+    expect(barre(b).vanHaute).toBeCloseTo(barre(a).vanHaute, 4);
+    for (const s of ['prudent', 'favorable'] as const) expect(b.scenarios[s].van).toBeCloseTo(a.scenarios[s].van, 4);
+  });
+});

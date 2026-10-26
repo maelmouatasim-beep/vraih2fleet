@@ -571,7 +571,15 @@ export default function StrategiesStep({ projectId, project }: StrategiesStepPro
       </Card>
 
       {selectionnee?.resultat && <VanDecompositionCard resultat={selectionnee.resultat} />}
-      {selectionnee?.plan && <StressTestPanel plan={selectionnee.plan} />}
+      {/* Aucun véhicule ne change de technologie : rien à tester (audit A6). */}
+      {selectionnee?.plan &&
+        (selectionnee.nbZeroEmission > 0 ? (
+          <StressTestPanel plan={selectionnee.plan} />
+        ) : (
+          <p className="text-sm text-muted-foreground" data-testid="stress-test-none">
+            {t("journey.strategies.stressNone")}
+          </p>
+        ))}
 
       <OptimizerConstraintsDialog
         open={formulaireOuvert}

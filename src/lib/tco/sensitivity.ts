@@ -71,7 +71,11 @@ export function parametresStandards(plan: PlanTco): ParametreSensibilite[] {
       haute: 1.2,
       appliquer: (pl, v) => {
         const c = cloner(pl);
-        for (const veh of c.vehicules) veh.alternative.prixAvantTaxes *= v;
+        // Véhicules zéro émission SEULEMENT (2.5.1) : un remplacement en
+        // diesel neuf garde son prix (comme l'entretien et la consommation).
+        for (const veh of c.vehicules) {
+          if (veh.alternative.technologie !== 'diesel') veh.alternative.prixAvantTaxes *= v;
+        }
         return c;
       },
     },
