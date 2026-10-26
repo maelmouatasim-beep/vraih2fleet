@@ -120,7 +120,7 @@ export function CompanyPrivacy({
                   </p>
                 ) : null}
                 {issues.length > 0 ? (
-                  <ul className="flex flex-col gap-1 text-[13px] text-warning" role="note">
+                  <ul className="flex flex-col gap-1 text-[13px] text-warning">
                     {issues.map((i) => (
                       <li key={i}>{t(`issues.${i}`)}</li>
                     ))}

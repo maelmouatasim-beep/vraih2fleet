@@ -85,6 +85,20 @@ jobs:
       - name: Jeu de démonstration
         run: pnpm db:seed
 
+      - name: Sauvegarde chiffrée, restauration et vérification
+        run: |
+          pg_dump --version
+          export LP_BACKUP_PASSPHRASE="$(openssl rand -hex 24)" LP_BACKUP_DIR="$RUNNER_TEMP/sauvegardes"
+          bash scripts/sauvegarde/sauvegarder.sh
+          psql "$PG_ADMIN_URL" -c "CREATE DATABASE leaseplace_restore"
+          bash scripts/sauvegarde/restaurer.sh "$(ls "$LP_BACKUP_DIR"/*.dump.enc)" \
+            postgres://postgres:postgres@localhost:5432/leaseplace_restore
+          bash scripts/sauvegarde/verifier.sh "$DATABASE_URL_ADMIN" \
+            postgres://postgres:postgres@localhost:5432/leaseplace_restore
+
+      - name: Purge de conservation (tâche planifiée)
+        run: pnpm retention:run
+
       - name: Navigateur Playwright
         run: pnpm --filter @leaseplace/web exec playwright install --with-deps chromium
 

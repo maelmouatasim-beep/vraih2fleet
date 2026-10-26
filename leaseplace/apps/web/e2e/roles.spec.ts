@@ -189,10 +189,14 @@ test.describe("plateforme", () => {
     await signInPro(page, "ops");
     await expect(page).toHaveURL(/\/admin$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Vue d’ensemble");
-    for (const name of ["Atlas Transports Logistique SARL", "Cèdre Leasing", "Argane Bail"]) {
-      await expect(page.getByRole("cell", { name })).toBeVisible();
-    }
+    await expect(page.getByText("Dernières organisations")).toBeVisible();
     await expectAccessible(page);
+    // Toute la plateforme : bailleurs de chaque organisation, dossiers de chaque entreprise.
+    await page.goto("/admin/bailleurs");
+    for (const name of ["Cèdre Leasing", "Argane Bail"])
+      await expect(page.getByRole("cell", { name }).first()).toBeVisible();
+    await page.goto("/admin/dossiers");
+    await expect(page.getByText("Atlas Transports Logistique SARL").first()).toBeVisible();
   });
 
   test("administrateur : journal d'audit chaîné, connexions et refus tracés", async ({ page }) => {

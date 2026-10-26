@@ -100,6 +100,19 @@ encaissement (`/admin/commissions`), facturation côté bailleur
 (`/bailleur/facturation`), tableau de pilotage dans la vue d'ensemble —
 ADR 0015, `docs/phases/phase-8.md`.
 
+## Données personnelles, support, analyse
+
+- Loi 09-08 : export JSON par le dirigeant (`/entreprise/profil`), demande
+  d'effacement traitée dans `/admin/confidentialite`, durées de
+  conservation réglables et purge quotidienne (`pnpm retention:run`) —
+  ADR 0016, `docs/exploitation/sauvegardes-et-conservation.md`.
+- Accès support en lecture seule, motivé, 30 minutes, tracé
+  (`/admin/utilisateurs`) — ADR 0017.
+- Analyse produit `objet_action` vers PostHog (UE) sous pseudonyme, ou en
+  mémoire sans clé (`POSTHOG_KEY`) — ADR 0018.
+- Sauvegardes chiffrées : `pnpm backup:create`, `backup:restore`,
+  `backup:verify` ; cycle complet testé en CI — ADR 0019.
+
 ## Sécurité, en bref
 
 - Trois rôles Postgres : propriétaire (migrations), `lp_auth` (Better-Auth,
@@ -114,6 +127,8 @@ ADR 0015, `docs/phases/phase-8.md`.
   refusée). PME : code à 6 chiffres ou lien magique, sans mot de passe.
 - CSP stricte à nonce, HSTS, `frame-ancestors 'none'`, limitation de débit
   persistée en base, redirections post-connexion limitées aux espaces.
+- Audit ASVS niveau 2 et tests de pénétration de base :
+  `docs/securite/audit-asvs-l2.md`, `apps/web/e2e/security.spec.ts`.
 
 ## Mode démo
 
@@ -121,3 +136,7 @@ ADR 0015, `docs/phases/phase-8.md`.
 TOTP courants), boîte d'envoi `/demo/boite-mail` (aucun fournisseur de
 courriel branché). Identifiants publics : une base de démo ne contient
 jamais de données réelles.
+
+Le jeu (`pnpm db:seed`) compte 7 bailleurs, 30 PME et 80 demandes
+fictives réparties sur tout le parcours, des offres aux commissions payées
+(`apps/web/scripts/seed-volume.ts`, tirages déterministes).

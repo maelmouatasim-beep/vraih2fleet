@@ -133,3 +133,47 @@ describe("RLS — privilèges", () => {
     expect(code).toBe("23514");
   });
 });
+
+describe("garde-fous transverses (audit de sécurité, phase 9)", () => {
+  const SCHEMAS = sql`('identity', 'audit', 'dev', 'marketing', 'kyc', 'credit', 'market', 'billing', 'privacy')`;
+
+  it("chaque table applicative a la RLS activée", async () => {
+    const rows = await db.execute<{ t: string }>(sql`
+      select n.nspname || '.' || c.relname as t
+      from pg_class c join pg_namespace n on n.oid = c.relnamespace
+      where c.relkind = 'r' and n.nspname in ${SCHEMAS} and not c.relrowsecurity`);
+    expect(rows.map((r) => r.t)).toEqual([]);
+  });
+
+  it("aucun privilège de table accordé à PUBLIC", async () => {
+    const rows = await db.execute<{ t: string }>(sql`
+      select table_schema || '.' || table_name || ' ' || privilege_type as t
+      from information_schema.role_table_grants
+      where grantee = 'PUBLIC' and table_schema in ${SCHEMAS}`);
+    expect(rows.map((r) => r.t)).toEqual([]);
+  });
+
+  it("chaque fonction SECURITY DEFINER fige son search_path", async () => {
+    const rows = await db.execute<{ f: string }>(sql`
+      select n.nspname || '.' || p.proname as f
+      from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+      where p.prosecdef and n.nspname in ${SCHEMAS} or (p.prosecdef and n.nspname = 'app')
+      group by 1, p.proconfig
+      having not coalesce(bool_or(p.proconfig::text like '%search_path=%'), false)`);
+    expect(rows.map((r) => r.f)).toEqual([]);
+  });
+
+  it("les rôles applicatifs ne contournent pas la RLS et ne possèdent rien", async () => {
+    const roles = await db.execute<{ rolname: string; bypass: boolean; superuser: boolean }>(sql`
+      select rolname, rolbypassrls as bypass, rolsuper as superuser
+      from pg_roles where rolname in ('lp_app', 'lp_auth') order by rolname`);
+    expect(roles).toEqual([
+      { rolname: "lp_app", bypass: false, superuser: false },
+      { rolname: "lp_auth", bypass: false, superuser: false },
+    ]);
+    const owned = await db.execute<{ n: string }>(sql`
+      select count(*) as n from pg_class c join pg_roles r on r.oid = c.relowner
+      where r.rolname in ('lp_app', 'lp_auth')`);
+    expect(Number(owned[0]?.n)).toBe(0);
+  });
+});

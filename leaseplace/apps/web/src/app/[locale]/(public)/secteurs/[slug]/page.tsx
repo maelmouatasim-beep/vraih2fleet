@@ -9,14 +9,13 @@ import { QuickSimulator } from "@/components/marketing/quick-simulator";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { requestContext } from "@/lib/request";
-import { isSector, SECTOR_EXAMPLES, SECTORS } from "@/lib/sectors";
+import { isSector, SECTOR_EXAMPLES } from "@/lib/sectors";
 import { pageMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
-export function generateStaticParams() {
-  return SECTORS.map((slug) => ({ slug }));
-}
+// Rendu à la demande : la CSP exige un nonce par requête (ADR 0007). Une
+// génération statique par secteur rendait les versions ar et en en erreur 500.
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;

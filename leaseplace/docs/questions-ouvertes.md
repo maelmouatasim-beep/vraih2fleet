@@ -97,3 +97,33 @@ indiqué ; rien n'est irréversible tant qu'aucune base n'est hébergée.
 6. Commission due si l'opération est dénouée après la mise en loyer
    (avoir aujourd'hui manuel) ?
 7. Accès « en tant que » pour le support : à ouvrir (tracé) ou non ?
+   → ouvert en phase 9, en lecture seule (voir phase 9, question 4).
+
+## Phase 9 — Durcissement
+
+1. Délai de réponse à une demande d'effacement : 30 jours (retenu) ;
+   périmètre effacé ou conservé (ADR 0016) à valider par l'avocat,
+   notamment la conservation des messages et des consentements.
+2. Durées de conservation par défaut (brouillons 180 j, demandes de contact
+   1 an, notifications lues 180 j, pièces supprimées 30 j) : à valider ; et
+   combien de temps garder les pièces KYC d'une entreprise inactive ?
+3. Rectification : l'entreprise modifie elle-même son profil et ses pièces ;
+   faut-il un formulaire de demande de rectification pour le reste ?
+4. Accès support : informer le client à chaque ouverture (notification,
+   courriel) ? Exiger son accord préalable ? (retenu : ni l'un ni l'autre,
+   bandeau et journal seulement).
+5. PostHog : compte UE à créer (`POSTHOG_KEY`) ; transfert hors du Maroc
+   soumis à autorisation CNDP ; bandeau de consentement aux mesures
+   d'audience nécessaire ou non (retenu : aucun cookie, Do Not Track et
+   GPC respectés) ?
+6. Sauvegardes : fréquence (quotidienne retenue), rétention (35 j),
+   objectifs RPO 24 h et RTO 4 h, région de stockage ; service géré de
+   l'hébergeur ou scripts fournis ?
+7. Test d'intrusion externe avant l'ouverture : prestataire et budget.
+8. Antivirus réel, coffre de clés, supervision (Sentry) : à choisir avec
+   l'hébergeur.
+9. Modèle d'IA : identifiant à fixer en exploitation (`LP_AI_MODEL`), plus
+   aucune valeur par défaut dans le code.
+10. Bailleurs fictifs de démonstration ajoutés (Zellige Leasing,
+    Tafilalet Crédit-Bail) : noms à garder ou changer pour les
+    présentations ?

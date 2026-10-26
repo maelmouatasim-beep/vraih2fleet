@@ -16,6 +16,9 @@
     "db:migrate": "pnpm --filter @leaseplace/db migrate",
     "db:seed": "pnpm --filter @leaseplace/web seed",
     "retention:run": "pnpm --filter @leaseplace/web retention",
+    "backup:create": "bash scripts/sauvegarde/sauvegarder.sh",
+    "backup:restore": "bash scripts/sauvegarde/restaurer.sh",
+    "backup:verify": "bash scripts/sauvegarde/verifier.sh",
     "db:local": "bash scripts/db-local.sh",
     "e2e": "pnpm --filter @leaseplace/web e2e"
   },
