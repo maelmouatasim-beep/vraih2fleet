@@ -2,7 +2,8 @@
  * Jeu de démonstration : 4 organisations fictives et leurs comptes
  * (src/lib/demo-accounts.ts), plus le profil KYC de l'entreprise de
  * démonstration et un dossier soumis avec ses pièces (PDF fictifs chiffrés),
- * pour que la file de revue de la phase 5 ne soit pas vide.
+ * pour que la file de revue de la phase 5 ne soit pas vide ; offres à
+ * comparer et opération en cours (scripts/seed-market.ts).
  * Idempotent : ne crée que ce qui manque. Connexion propriétaire
  * (DATABASE_URL_ADMIN).
  *
@@ -18,6 +19,7 @@ import { createDatabase, schema, withActor } from "@leaseplace/db";
 import { MAX_AGE_MONTHS, requiredDocuments, type LegalForm } from "@leaseplace/domain";
 import { createFileStorage, encryptedStorage } from "@leaseplace/integrations/storage";
 import { demoPdf } from "../src/lib/watermark";
+import { seedMarket } from "./seed-market";
 import {
   DEMO_ACCOUNTS,
   DEMO_APPETITES,
@@ -230,6 +232,34 @@ try {
         .set({ status: "submitted" })
         .where(eq(schema.financingRequests.id, requestId));
     });
+  }
+  // Offres à comparer et opération en cours (phases 6 et 7).
+  const userOf = async (key: string) => {
+    const a = DEMO_ACCOUNTS.find((x) => x.key === key);
+    const [u] = a ? await db.select().from(users).where(eq(users.email, a.email)) : [];
+    return u?.id ?? "";
+  };
+  const textOf = async (kind: string) => {
+    const [t] = await db
+      .select({ id: schema.legalTexts.id })
+      .from(schema.legalTexts)
+      .where(and(eq(schema.legalTexts.kind, kind), eq(schema.legalTexts.locale, "fr")));
+    return t?.id ?? "";
+  };
+  if (atlasId && owner) {
+    await seedMarket(
+      db,
+      {
+        atlas: atlasId,
+        owner: owner.id,
+        ops: await userOf("ops"),
+        lessors: Object.fromEntries(
+          ["cedre", "argane", "oasis", "medina", "sahel"].map((k) => [k, orgIds.get(k) ?? ""]),
+        ),
+        lessorUsers: { cedre: await userOf("bailleur"), argane: await userOf("bailleur-b") },
+      },
+      { processing: await textOf("consent_processing"), routing: await textOf("consent_routing") },
+    );
   }
   console.warn(`Jeu de démonstration prêt : ${String(DEMO_ACCOUNTS.length)} comptes.`);
 } finally {

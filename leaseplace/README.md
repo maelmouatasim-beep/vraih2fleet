@@ -83,6 +83,15 @@ consent, bailleur par bailleur. `/bailleur` : boîte de réception (délai de
 refus motivé, critères d'appétit, tableau de bord (ADR 0013,
 `docs/phases/phase-6.md`).
 
+## Offres, opérations, messages
+
+Comparateur neutre par coût total avec simulation (apport, durée),
+acceptation par le dirigeant, opération suivie par le bailleur jusqu'à la
+mise en loyer (`/bailleur/pipeline`), messagerie par demande et par bailleur,
+notifications dans l'application, par e-mail, SMS ou WhatsApp (boîte de
+démonstration `/demo/boite-mail`) — ADR 0014, `docs/phases/phase-7.md`.
+Questions en attente d'arbitrage : `docs/questions-ouvertes.md`.
+
 ## Sécurité, en bref
 
 - Trois rôles Postgres : propriétaire (migrations), `lp_auth` (Better-Auth,

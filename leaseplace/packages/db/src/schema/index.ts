@@ -6,3 +6,5 @@ export * from "./kyc";
 export * from "./credit";
 export * from "./review";
 export * from "./routing";
+export * from "./deals";
+export * from "./notifications";

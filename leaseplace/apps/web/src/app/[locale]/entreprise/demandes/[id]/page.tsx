@@ -4,7 +4,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { schema } from "@leaseplace/db";
-import { can, isEditableRequestStatus, requestMachine, REQUEST_STATUSES } from "@leaseplace/domain";
+import {
+  can,
+  isEditableRequestStatus,
+  requestMachine,
+  REQUEST_STATUSES,
+  type DealStatus,
+} from "@leaseplace/domain";
 import { Badge } from "@leaseplace/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@leaseplace/ui/card";
 import { CancelRequestButton } from "@/components/company/request-buttons";
@@ -24,10 +30,15 @@ import {
 import { loadCompanyPage } from "@/lib/company-page";
 import { companyRouting } from "@/lib/routing/company";
 import { RoutingChooser } from "@/components/company/routing-chooser";
+import { DealSummary } from "@/components/deals/deal-card";
+import { DealCancelPanel } from "@/components/deals/deal-forms";
+import { RequestTracker } from "@/components/deals/request-tracker";
+import { dealOfRequest, requestOffers } from "@/lib/deals/data";
 import { env } from "@/lib/env";
 import { formatDate, formatDateTime, formatMad, formatPercent, ltr } from "@/lib/format";
 import { signDocumentUrl, signingKey } from "@/lib/signed-url";
 import {
+  cancelDealAction,
   cancelRequestAction,
   sendToLessorsAction,
   detachDocumentAction,
@@ -80,6 +91,7 @@ export default async function RequestPage({ params }: Props) {
       companyRouting(tx, id),
       currentLegalText(tx, "consent_routing", locale),
     ]);
+    const [offers, deal] = await Promise.all([requestOffers(tx, id), dealOfRequest(tx, id)]);
     return {
       request,
       kyc: company ? kycState(company, docs) : null,
@@ -91,11 +103,15 @@ export default async function RequestPage({ params }: Props) {
       consent,
       routing,
       routingText,
+      offers,
+      deal,
     };
   });
   const { request, viewer } = data;
   if (!request || !("attachments" in data)) notFound();
-  const { kyc, attachments, timeline, legalText, consent, routing, routingText } = data;
+  const { kyc, attachments, timeline, legalText, consent, routing, routingText, offers, deal } =
+    data;
+  const offerStatusOf = new Map(offers.map((o) => [o.lessorOrganizationId, o.status]));
 
   if (isEditableRequestStatus(request.status)) {
     const infoEvent = timeline.filter((e) => e.toStatus === "needs_info").at(-1);
@@ -174,6 +190,14 @@ export default async function RequestPage({ params }: Props) {
         <p className="tabular mt-1 font-mono text-[12px] text-fg-subtle">{request.reference}</p>
       </div>
 
+      <RequestTracker
+        requestStatus={request.status}
+        offerCount={offers.length}
+        dealStatus={
+          deal && deal.deal.status !== "cancelled" ? (deal.deal.status as DealStatus) : null
+        }
+      />
+
       {request.status === "submitted" ||
       request.status === "in_review" ||
       request.status === "qualified" ? (
@@ -206,7 +230,7 @@ export default async function RequestPage({ params }: Props) {
         </Card>
       ) : null}
 
-      {request.status === "routed" && routing ? (
+      {["routed", "accepted", "financed"].includes(request.status) && routing ? (
         <Card data-routed>
           <CardHeader>
             <CardTitle>{t("routing.sentTitle")}</CardTitle>
@@ -222,15 +246,62 @@ export default async function RequestPage({ params }: Props) {
                     data-target={x.lessorName}
                   >
                     <span className="font-medium text-fg">{x.lessorName}</span>
-                    <Badge tone={TARGET_TONE[x.status] ?? "neutral"}>
-                      {t(`routing.statuses.${x.status}`)}
-                    </Badge>
+                    {offerStatusOf.get(x.lessorId) === "accepted" ||
+                    offerStatusOf.get(x.lessorId) === "not_retained" ? (
+                      <Badge
+                        tone={offerStatusOf.get(x.lessorId) === "accepted" ? "success" : "neutral"}
+                      >
+                        {t(`routing.offerStatuses.${offerStatusOf.get(x.lessorId) ?? ""}`)}
+                      </Badge>
+                    ) : (
+                      <Badge tone={TARGET_TONE[x.status] ?? "neutral"}>
+                        {t(`routing.statuses.${x.status}`)}
+                      </Badge>
+                    )}
                   </li>
                 ))}
             </ul>
-            <p className="text-[13px] text-fg-muted">
-              {t("routing.offers", { count: routing.offerCount })}
-            </p>
+            {offers.length === 0 ? (
+              <p className="text-[13px] text-fg-muted">
+                {t("routing.offers", { count: routing.offerCount })}
+              </p>
+            ) : null}
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {deal ? (
+        <Card data-deal-card>
+          <CardHeader>
+            <CardTitle>{t("deal.title", { lessor: deal.lessorName })}</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <DealSummary view={deal} />
+            <p className="text-[13px] text-fg-muted">{t(`deal.next.${deal.deal.status}`)}</p>
+            {deal.deal.status === "accepted" && can(viewer.membership.role, "deal.cancel_own") ? (
+              <DealCancelPanel dealId={deal.deal.id} side="company" action={cancelDealAction} />
+            ) : null}
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {offers.length > 0 ? (
+        <Card data-offers-card>
+          <CardContent className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-[15px] font-semibold text-fg">
+                {t("offersCard.title", { count: offers.length })}
+              </p>
+              <p className="text-[13px] text-fg-muted">
+                {request.status === "routed" ? t("offersCard.choose") : t("offersCard.review")}
+              </p>
+            </div>
+            <Link
+              href={`/entreprise/demandes/${request.id}/offres`}
+              className="inline-flex h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-fg hover:bg-primary/90"
+            >
+              {t("offersCard.compare")}
+            </Link>
           </CardContent>
         </Card>
       ) : null}

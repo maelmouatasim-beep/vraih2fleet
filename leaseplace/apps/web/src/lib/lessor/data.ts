@@ -99,10 +99,17 @@ export async function lessorTarget(tx: Transaction, targetId: string) {
     .where(and(eq(creditMemos.requestId, request.id), eq(creditMemos.status, "approved")))
     .orderBy(desc(creditMemos.createdAt))
     .limit(1);
+  // Offre en cours, acceptée ou non retenue (jamais une offre retirée).
   const [offer] = await tx
     .select()
     .from(offers)
-    .where(and(eq(offers.targetId, targetId), eq(offers.status, "submitted")))
+    .where(
+      and(
+        eq(offers.targetId, targetId),
+        inArray(offers.status, ["submitted", "accepted", "not_retained"]),
+      ),
+    )
+    .orderBy(desc(offers.createdAt))
     .limit(1);
   const [decline] = await tx
     .select()

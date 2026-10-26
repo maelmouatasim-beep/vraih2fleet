@@ -41,6 +41,7 @@ import { aiProvider } from "../ai";
 import { computeRouting } from "../routing/compute";
 import { appDb } from "../db";
 import { logger } from "../logger";
+import { notify } from "../notify";
 import { documentStorage } from "../storage";
 import { actorFor, getViewer, type SpaceViewer } from "../viewer";
 import {
@@ -384,7 +385,7 @@ export type NoteResult = { status: "done" } | { status: "invalid" } | { status: 
 
 export async function requestInfo(requestId: string, note: string): Promise<NoteResult> {
   if (!isValidReviewNote(note)) return { status: "invalid" };
-  return inReview(async (tx) => {
+  const outcome = await inReview(async (tx) => {
     const request = await reviewRequest(tx, requestId);
     if (request?.status !== "in_review") return { status: "forbidden" } as const;
     await setEventNote(tx, note.trim());
@@ -398,8 +399,14 @@ export async function requestInfo(requestId: string, note: string): Promise<Note
       entityId: requestId,
       metadata: { note: note.trim() },
     });
-    return { status: "done" } as const;
+    return { status: "done", request } as const;
   });
+  if (outcome.status !== "done") return outcome;
+  await notify("request_needs_info", outcome.request.organizationId, {
+    reference: outcome.request.reference,
+    path: `/entreprise/demandes/${requestId}`,
+  });
+  return { status: "done" };
 }
 
 export type QualifyResult =
@@ -411,7 +418,7 @@ export async function qualifyRequest(
   requestId: string,
   anomaliesNote: string,
 ): Promise<QualifyResult> {
-  return inReview(async (tx, viewer) => {
+  const outcome = await inReview(async (tx, viewer) => {
     const request = await reviewRequest(tx, requestId);
     if (request?.status !== "in_review") return { status: "forbidden" } as const;
     const assessment = await latestAssessment(tx, requestId);
@@ -444,8 +451,14 @@ export async function qualifyRequest(
     if (company && assessment) {
       await computeRouting(tx, viewer.user.id, request, company, assessment.grade);
     }
-    return { status: "qualified" } as const;
+    return { status: "qualified", request } as const;
   });
+  if (outcome.status !== "qualified") return outcome;
+  await notify("request_qualified", outcome.request.organizationId, {
+    reference: outcome.request.reference,
+    path: `/entreprise/demandes/${requestId}`,
+  });
+  return { status: "qualified" };
 }
 
 // ── Indice : correction humaine motivée ────────────────────────────────────

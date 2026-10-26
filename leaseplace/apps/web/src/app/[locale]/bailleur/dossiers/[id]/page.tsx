@@ -4,10 +4,22 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { MemoOutput } from "@leaseplace/ai";
 import { withActor } from "@leaseplace/db";
-import { can, type FactorScore, type Flag, type Periodicity } from "@leaseplace/domain";
+import {
+  can,
+  type DealStatus,
+  type FactorScore,
+  type Flag,
+  type Periodicity,
+} from "@leaseplace/domain";
 import { Card, CardContent, CardHeader, CardTitle } from "@leaseplace/ui/card";
 import { DeclinePanel, OfferFormPanel, WithdrawButton } from "@/components/lessor/lessor-forms";
 import { SlaBadge, TargetBadge } from "@/components/lessor/lessor-view";
+import { DealSummary } from "@/components/deals/deal-card";
+import { DealCancelPanel, DealStepPanel } from "@/components/deals/deal-forms";
+import { MessageComposer } from "@/components/messaging/composer";
+import { ThreadMessages } from "@/components/messaging/thread";
+import { dealOfRequest } from "@/lib/deals/data";
+import { ensureLessorThread, markThreadRead, threadView } from "@/lib/messaging/data";
 import {
   ChecksTable,
   DownloadLink,
@@ -22,6 +34,7 @@ import { env } from "@/lib/env";
 import {
   formatDate,
   formatDateTime,
+  isoDay,
   formatMad,
   formatNumber,
   formatPercent,
@@ -32,7 +45,14 @@ import { lessorTarget } from "@/lib/lessor/data";
 import { latestAssessment, latestChecks, reviewDocuments } from "@/lib/review/data";
 import { signDocumentUrl, signingKey } from "@/lib/signed-url";
 import { actorFor, requireSpace } from "@/lib/viewer";
-import { declineAction, submitOfferAction, withdrawOfferAction } from "../../actions";
+import {
+  cancelDealAction,
+  declineAction,
+  recordDealStepAction,
+  sendMessageAction,
+  submitOfferAction,
+  withdrawOfferAction,
+} from "../../actions";
 
 type Props = { params: Promise<{ locale: string; id: string }> };
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -52,16 +72,21 @@ export default async function LessorFile({ params }: Props) {
     await markViewed(tx, viewer, id);
     const file = await lessorTarget(tx, id);
     if (!file || file.target.lessorOrganizationId !== viewer.membership.organizationId) return null;
-    const [assessment, checks, docs] = await Promise.all([
+    const [assessment, checks, docs, deal, threadId] = await Promise.all([
       latestAssessment(tx, file.request.id),
       latestChecks(tx, file.request.id),
       reviewDocuments(tx, file.request),
+      dealOfRequest(tx, file.request.id, viewer.membership.organizationId),
+      ensureLessorThread(tx, file.request.id, viewer.membership.organizationId),
     ]);
-    return { ...file, assessment, checks, docs };
+    const thread = threadId ? await threadView(tx, threadId) : null;
+    if (thread) await markThreadRead(tx, thread.thread.id, viewer.user.id);
+    return { ...file, assessment, checks, docs, deal, thread };
   });
   if (!data) notFound();
   const { target, request, company, companyName, memo, offer, decline, assessment, checks, docs } =
     data;
+  const { deal, thread } = data;
   const t = await getTranslations("lessor.file");
   const tr = await getTranslations("review");
   const tl = await getTranslations("company.labels");
@@ -77,6 +102,8 @@ export default async function LessorFile({ params }: Props) {
   const sourceLabel = (src: string) =>
     sourceMap[src] ? docLabel(sourceMap[src]) : tr(`memo.sources.${src}`);
   const canAnswer = can(viewer.membership.role, "offer.submit");
+  const canManageDeal = can(viewer.membership.role, "deal.manage");
+  const liveDeal = deal && deal.deal.status !== "cancelled" ? deal : null;
 
   const facts: readonly (readonly [string, string])[] = [
     [
@@ -226,6 +253,35 @@ export default async function LessorFile({ params }: Props) {
             </CardContent>
           </Card>
 
+          {deal ? (
+            <Card data-deal-card>
+              <CardHeader>
+                <CardTitle>{t("dealTitle")}</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-4">
+                <DealSummary view={deal} />
+                {liveDeal && canManageDeal ? (
+                  <>
+                    <DealStepPanel
+                      dealId={liveDeal.deal.id}
+                      status={liveDeal.deal.status as DealStatus}
+                      financedAmountHt={liveDeal.deal.financedAmountHt}
+                      today={isoDay()}
+                      action={recordDealStepAction}
+                    />
+                    {liveDeal.deal.status !== "active" ? (
+                      <DealCancelPanel
+                        dealId={liveDeal.deal.id}
+                        side="lessor"
+                        action={cancelDealAction}
+                      />
+                    ) : null}
+                  </>
+                ) : null}
+              </CardContent>
+            </Card>
+          ) : null}
+
           <Card data-response>
             <CardHeader>
               <CardTitle>{t("responseTitle")}</CardTitle>
@@ -253,7 +309,11 @@ export default async function LessorFile({ params }: Props) {
                   {offer.conditions ? (
                     <p className="text-[13px] text-fg-muted">{offer.conditions}</p>
                   ) : null}
-                  {canAnswer ? (
+                  {offer.status !== "submitted" ? (
+                    <p className="text-[14px] font-medium text-fg" data-offer-status={offer.status}>
+                      {t(`offerStatus.${offer.status}`)}
+                    </p>
+                  ) : canAnswer ? (
                     <WithdrawButton targetId={target.id} action={withdrawOfferAction} />
                   ) : null}
                 </>
@@ -287,6 +347,28 @@ export default async function LessorFile({ params }: Props) {
               )}
             </CardContent>
           </Card>
+
+          {thread ? (
+            <Card data-messages>
+              <CardHeader>
+                <CardTitle>{t("messagesTitle")}</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-4">
+                <ThreadMessages
+                  messages={thread.messages}
+                  myOrganizationId={viewer.membership.organizationId}
+                  names={{ [thread.companyId]: companyName }}
+                />
+                {can(viewer.membership.role, "message.send") ? (
+                  <MessageComposer
+                    threadId={thread.thread.id}
+                    warnContacts={!liveDeal}
+                    action={sendMessageAction}
+                  />
+                ) : null}
+              </CardContent>
+            </Card>
+          ) : null}
         </div>
       </div>
     </div>

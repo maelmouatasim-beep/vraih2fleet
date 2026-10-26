@@ -12,6 +12,8 @@ export const STATUS_TONE = {
   needs_info: "warning",
   qualified: "success",
   routed: "primary",
+  accepted: "success",
+  financed: "success",
   cancelled: "danger",
 } as const;
 

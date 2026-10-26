@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { schema } from "@leaseplace/db";
+import { Badge } from "@leaseplace/ui/badge";
 import { Card } from "@leaseplace/ui/card";
 import { EmptyState } from "@leaseplace/ui/empty-state";
 import { Logo } from "@/components/brand/logo";
@@ -20,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const LINK = /https?:\/\/\S+/;
 
-/** Boîte d'envoi de démonstration : remplace un vrai fournisseur de courriels. */
+/** Boîte d'envoi de démonstration : remplace les fournisseurs de courriels, SMS et WhatsApp. */
 export default async function DemoOutbox() {
   if (!outboxReadable()) notFound();
   const t = await getTranslations("demo");
@@ -28,7 +29,7 @@ export default async function DemoOutbox() {
     .select()
     .from(schema.outbox)
     .orderBy(desc(schema.outbox.createdAt))
-    .limit(20);
+    .limit(40);
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">
       <Logo />
@@ -45,9 +46,19 @@ export default async function DemoOutbox() {
           mails.map((m) => {
             const link = LINK.exec(m.text)?.[0];
             return (
-              <Card key={m.id} className="p-4" data-outbox-to={m.to}>
+              <Card
+                key={m.id}
+                className="p-4"
+                data-outbox-to={m.to}
+                data-outbox-channel={m.channel}
+              >
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <p className="text-[14px] font-medium text-fg">{m.subject}</p>
+                  <p className="flex items-center gap-2 text-[14px] font-medium text-fg">
+                    <Badge tone={m.channel === "email" ? "neutral" : "info"}>
+                      {t(`channels.${m.channel}`)}
+                    </Badge>
+                    {m.channel === "email" ? m.subject : null}
+                  </p>
                   <p className="tabular text-[12px] text-fg-subtle">
                     {formatDateTime(m.createdAt)}
                   </p>

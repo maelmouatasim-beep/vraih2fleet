@@ -10,6 +10,7 @@ import { PageHeader, StatCard } from "@/components/shell/shells";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { appDb } from "@/lib/db";
+import { lessorUnreadByRequest } from "@/lib/messaging/data";
 import { formatDate, formatMad, formatNumber, ltr } from "@/lib/format";
 import { gradesOf, lessorInbox, lessorStats } from "@/lib/lessor/data";
 import { actorFor, requireSpace } from "@/lib/viewer";
@@ -37,10 +38,11 @@ export default async function LessorInbox({ params, searchParams }: Props) {
   const t = await getTranslations("lessor.inbox");
   const tl = await getTranslations("company.labels");
   const now = new Date();
-  const { rows, grades } = await withActor(appDb(), await actorFor(viewer), async (tx) => {
+  const { rows, grades, unread } = await withActor(appDb(), await actorFor(viewer), async (tx) => {
     const rows = await lessorInbox(tx, viewer.membership.organizationId);
     return {
       rows,
+      unread: await lessorUnreadByRequest(tx, viewer.user.id, viewer.membership.organizationId),
       grades: await gradesOf(
         tx,
         rows.map((r) => r.requestId),
@@ -154,6 +156,11 @@ export default async function LessorInbox({ params, searchParams }: Props) {
                       >
                         {r.reference}
                       </Link>
+                      {unread.get(r.requestId) ? (
+                        <Badge tone="primary" className="ms-2" data-unread-messages>
+                          {t("unreadMessages", { count: unread.get(r.requestId) ?? 0 })}
+                        </Badge>
+                      ) : null}
                     </td>
                     <td className="px-4 py-2.5">
                       <span className="block font-medium text-fg">{r.companyName}</span>

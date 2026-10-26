@@ -71,6 +71,20 @@
       "when": 1792975390031,
       "tag": "0009_routing_security",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792979238160,
+      "tag": "0010_deals_messaging",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792979281943,
+      "tag": "0011_deals_security",
+      "breakpoints": true
     }
   ]
 }

@@ -5,6 +5,7 @@ import {
   formatMad,
   formatNumber,
   formatPercent,
+  isoDay,
   ltr,
   parseAmount,
 } from "./format";
@@ -67,5 +68,13 @@ describe("montants et pourcentages", () => {
 describe("isolat bidi", () => {
   it("encadre le texte par LRI et PDI", () => {
     expect(ltr("12 DH")).toBe("⁦12 DH⁩");
+  });
+});
+
+describe("isoDay", () => {
+  it("jour à Casablanca, au format des champs date", () => {
+    expect(isoDay(new Date("2026-10-26T10:00:00Z"))).toBe("2026-10-26");
+    // 23 h 30 UTC = minuit et demi à Casablanca (UTC+1) : déjà le lendemain.
+    expect(isoDay(new Date("2026-10-26T23:30:00Z"))).toBe("2026-10-27");
   });
 });

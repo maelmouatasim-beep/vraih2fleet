@@ -20,6 +20,8 @@ import {
 } from "@/lib/company-actions";
 import { getCompany } from "@/lib/company-data";
 import { sendToLessors, type SendResult } from "@/lib/routing/company";
+import { acceptOffer, cancelDeal, type AcceptResult, type DealResult } from "@/lib/deals/actions";
+import { sendMessage, type SendResult as MessageResult } from "@/lib/messaging/actions";
 import { appDb } from "@/lib/db";
 import { actorFor } from "@/lib/viewer";
 import { z } from "@/lib/zod";
@@ -149,6 +151,28 @@ export async function sendToLessorsAction(
   locale: string,
 ): Promise<SendResult> {
   const result = await sendToLessors(requestId, lessorIds, consent, locale);
+  revalidatePath("/[locale]/entreprise", "layout");
+  return result;
+}
+
+export async function acceptOfferAction(offerId: string): Promise<AcceptResult> {
+  const result = await acceptOffer(offerId);
+  revalidatePath("/[locale]/entreprise", "layout");
+  return result;
+}
+
+export async function cancelDealAction(
+  dealId: string,
+  reason: string,
+  note: string,
+): Promise<DealResult> {
+  const result = await cancelDeal("company", dealId, reason, note);
+  revalidatePath("/[locale]/entreprise", "layout");
+  return result;
+}
+
+export async function sendMessageAction(threadId: string, body: string): Promise<MessageResult> {
+  const result = await sendMessage(threadId, body);
   revalidatePath("/[locale]/entreprise", "layout");
   return result;
 }

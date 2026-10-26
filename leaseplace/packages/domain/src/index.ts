@@ -13,3 +13,6 @@ export * from "./scoring/model";
 export * from "./review/review";
 export * from "./routing/routing";
 export * from "./offers/offers";
+export * from "./deals/deals";
+export * from "./messaging/messages";
+export * from "./notifications/notifications";

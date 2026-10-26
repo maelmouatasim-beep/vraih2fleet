@@ -24,6 +24,8 @@ export type EquipmentCondition = (typeof EQUIPMENT_CONDITIONS)[number];
  * du dossier, indice d'orientation, note de synthèse) avant tout envoi aux
  * bailleurs. « qualified » signifie « dossier vérifié, prêt à être orienté »,
  * jamais un accord de crédit : la décision appartient au bailleur.
+ * Phase 7 : « accepted » = l'entreprise a accepté une offre (accord de
+ * principe), « financed » = mise en loyer constatée par le bailleur.
  */
 export const REQUEST_STATUSES = [
   "draft",
@@ -32,6 +34,8 @@ export const REQUEST_STATUSES = [
   "needs_info",
   "qualified",
   "routed",
+  "accepted",
+  "financed",
   "cancelled",
 ] as const;
 export type RequestStatus = (typeof REQUEST_STATUSES)[number];
@@ -41,6 +45,9 @@ export const REQUEST_EVENTS = [
   "request_info",
   "qualify",
   "route",
+  "accept",
+  "reopen",
+  "finance",
   "cancel",
 ] as const;
 export type RequestEvent = (typeof REQUEST_EVENTS)[number];
@@ -51,7 +58,11 @@ export const requestMachine = defineMachine<RequestStatus, RequestEvent>({
   in_review: { request_info: "needs_info", qualify: "qualified", cancel: "cancelled" },
   needs_info: { submit: "submitted", cancel: "cancelled" },
   qualified: { route: "routed", cancel: "cancelled" },
-  routed: { cancel: "cancelled" },
+  routed: { accept: "accepted", cancel: "cancelled" },
+  // Offre acceptée : le financement suit son cours chez le bailleur ; si
+  // l'opération est annulée, la demande revient aux offres restantes.
+  accepted: { reopen: "routed", finance: "financed" },
+  financed: {},
   cancelled: {},
 });
 

@@ -18,6 +18,11 @@ export const PERMISSIONS = [
   "request.read_own",
   "document.manage_own",
   "consent.grant",
+  // Comparateur, opérations, messagerie (phase 7)
+  "offer.accept",
+  "deal.cancel_own",
+  "deal.manage",
+  "message.send",
   // Bailleur (phase 6)
   "routed_request.read",
   "offer.submit",
@@ -43,6 +48,9 @@ const MATRIX: Readonly<Record<Role, readonly Permission[]>> = {
     "request.read_own",
     "document.manage_own",
     "consent.grant",
+    "offer.accept",
+    "deal.cancel_own",
+    "message.send",
   ],
   company_member: [
     "space.company",
@@ -50,6 +58,7 @@ const MATRIX: Readonly<Record<Role, readonly Permission[]>> = {
     "request.create",
     "request.read_own",
     "document.manage_own",
+    "message.send",
   ],
   lessor_admin: [
     "space.lessor",
@@ -59,6 +68,8 @@ const MATRIX: Readonly<Record<Role, readonly Permission[]>> = {
     "offer.submit",
     "offer.read_own",
     "appetite.manage",
+    "deal.manage",
+    "message.send",
   ],
   lessor_analyst: [
     "space.lessor",
@@ -66,6 +77,8 @@ const MATRIX: Readonly<Record<Role, readonly Permission[]>> = {
     "routed_request.read",
     "offer.submit",
     "offer.read_own",
+    "deal.manage",
+    "message.send",
   ],
   lessor_viewer: ["space.lessor", "organization.read", "routed_request.read", "offer.read_own"],
   // Prescripteurs et fournisseurs : hors périmètre V1, aucun espace ouvert.

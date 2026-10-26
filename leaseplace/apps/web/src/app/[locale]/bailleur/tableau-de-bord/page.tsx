@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { withActor } from "@leaseplace/db";
+import { and, eq, inArray, sql } from "drizzle-orm";
+import { schema, withActor } from "@leaseplace/db";
 import { PageHeader, StatCard } from "@/components/shell/shells";
 import type { Locale } from "@/i18n/routing";
 import { appDb } from "@/lib/db";
@@ -16,14 +17,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: t("title") };
 }
 
-/** Tableau de bord du bailleur : volumes, réactivité ; gains et commissions aux phases 7 et 8. */
+/** Tableau de bord du bailleur : volumes, réactivité, taux de gain ; commissions en phase 8. */
 export default async function LessorDashboard({ params }: Props) {
   const { locale } = await params;
   const viewer = await requireSpace("lessor", locale as Locale);
   const t = await getTranslations("lessor.dashboard");
-  const rows = await withActor(appDb(), await actorFor(viewer), (tx) =>
-    lessorInbox(tx, viewer.membership.organizationId),
-  );
+  const { rows, decided } = await withActor(appDb(), await actorFor(viewer), async (tx) => ({
+    rows: await lessorInbox(tx, viewer.membership.organizationId),
+    decided: await tx
+      .select({ status: schema.offers.status, n: sql<number>`count(*)::int` })
+      .from(schema.offers)
+      .where(
+        and(
+          eq(schema.offers.lessorOrganizationId, viewer.membership.organizationId),
+          inArray(schema.offers.status, ["accepted", "not_retained"]),
+        ),
+      )
+      .groupBy(schema.offers.status),
+  }));
+  // Taux de gain : offres acceptées parmi les offres tranchées par les entreprises.
+  const won = decided.find((d) => d.status === "accepted")?.n ?? 0;
+  const lost = decided.find((d) => d.status === "not_retained")?.n ?? 0;
   const s = lessorStats(rows, new Date());
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
@@ -55,7 +69,11 @@ export default async function LessorDashboard({ params }: Props) {
         />
         <StatCard label={t("offered")} value={formatNumber(s.offered)} />
         <StatCard label={t("declined")} value={formatNumber(s.declined)} />
-        <StatCard label={t("winRate")} value="—" hint={t("winRateHint")} />
+        <StatCard
+          label={t("winRate")}
+          value={won + lost === 0 ? "—" : ltr(formatPercent(won / (won + lost), 0))}
+          hint={t("winRateHint", { won, decided: won + lost })}
+        />
         <StatCard label={t("commissions")} value="—" hint={t("commissionsHint")} />
       </div>
     </div>

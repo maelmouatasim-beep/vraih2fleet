@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import type { Space } from "@leaseplace/domain";
 import { Logo } from "@/components/brand/logo";
 import { LegalNotice } from "@/components/legal-notice";
+import { NotificationBell } from "@/components/notifications/bell";
 import { Link } from "@/i18n/navigation";
 import type { SpaceViewer } from "@/lib/viewer";
 import { CommandPalette } from "./command-palette";
@@ -66,6 +67,9 @@ export async function WorkspaceShell({
             <CommandPalette space={space} />
           </div>
           <div className="ms-auto flex items-center gap-1">
+            {space === "lessor" ? (
+              <NotificationBell viewer={viewer} href="/bailleur/notifications" />
+            ) : null}
             <LocaleSwitcher />
             <ThemeToggle />
             <Account viewer={viewer} />
@@ -92,6 +96,7 @@ export function GuidedShell({ viewer, children }: { viewer: SpaceViewer; childre
             <Logo />
           </Link>
           <div className="ms-auto flex items-center gap-1">
+            <NotificationBell viewer={viewer} href="/entreprise/notifications" />
             <LocaleSwitcher />
             <ThemeToggle />
             <Account viewer={viewer} />

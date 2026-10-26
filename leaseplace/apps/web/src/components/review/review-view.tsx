@@ -21,6 +21,8 @@ const STATUS_TONE: Record<
   needs_info: "warning",
   qualified: "success",
   routed: "primary",
+  accepted: "success",
+  financed: "success",
   cancelled: "danger",
 };
 

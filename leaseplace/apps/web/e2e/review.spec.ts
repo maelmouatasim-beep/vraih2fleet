@@ -65,6 +65,10 @@ test("revue complète jusqu'à la qualification", async ({ page }) => {
 
   await page.getByRole("button", { name: "Qualifier le dossier" }).click();
   await expect(page.getByText("Dossier vérifié", { exact: true }).first()).toBeVisible();
+
+  // La file affiche l'indice retenu du dossier.
+  await page.goto("/admin/dossiers");
+  await expect(page.locator(`[data-queue-row="${c.reference}"]`)).toContainText(target);
 });
 
 test("compléments demandés : l'entreprise voit le motif et resoumet", async ({ page, browser }) => {

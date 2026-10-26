@@ -21,6 +21,12 @@ export function formatDate(date: Date): string {
   return `${p.day ?? ""}/${p.month ?? ""}/${p.year ?? ""}`;
 }
 
+/** Jour au format ISO (aaaa-mm-jj) à Casablanca : valeur des champs date. */
+export function isoDay(date: Date = new Date()): string {
+  const p = parts(date, false);
+  return `${p.year ?? ""}-${p.month ?? ""}-${p.day ?? ""}`;
+}
+
 export function formatDateTime(date: Date): string {
   const p = parts(date, true);
   return `${formatDate(date)} ${p.hour ?? ""}:${p.minute ?? ""}`;

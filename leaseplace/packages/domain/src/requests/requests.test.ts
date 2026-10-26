@@ -43,8 +43,18 @@ describe("cycle de vie", () => {
       ["needs_info", "cancelled"],
       ["qualified", "routed"],
       ["qualified", "cancelled"],
+      ["routed", "accepted"],
       ["routed", "cancelled"],
+      ["accepted", "routed"],
+      ["accepted", "financed"],
     ]);
+  });
+  it("offre acceptée : financée, ou retour aux offres si l'opération est annulée", () => {
+    expect(requestMachine.next("routed", "accept")).toBe("accepted");
+    expect(requestMachine.next("accepted", "finance")).toBe("financed");
+    expect(requestMachine.next("accepted", "reopen")).toBe("routed");
+    expect(requestMachine.can("accepted", "cancel")).toBe(false);
+    expect(requestMachine.can("financed", "cancel")).toBe(false);
   });
   it("compléments demandés : la demande redevient modifiable puis se resoumet", () => {
     expect(requestMachine.next("in_review", "request_info")).toBe("needs_info");

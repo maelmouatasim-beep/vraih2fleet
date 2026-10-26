@@ -6,6 +6,7 @@
   "sideEffects": false,
   "exports": {
     "./email": "./src/email/index.ts",
+    "./text": "./src/text/index.ts",
     "./storage": "./src/storage/index.ts",
     "./scanner": "./src/scanner/index.ts"
   },

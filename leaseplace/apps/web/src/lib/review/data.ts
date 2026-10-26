@@ -55,9 +55,16 @@ export interface QueueItem {
 
 /** File de revue : demandes soumises (les plus anciennes d'abord), puis en cours. */
 export async function reviewQueue(tx: Transaction): Promise<QueueItem[]> {
+  // Colonne externe écrite en clair : interpolée, drizzle la rendrait sans
+  // table (« "id" ») et elle désignerait l'évaluation elle-même.
+  // Indice retenu : dernière correction humaine, sinon indice calculé (≡ effectiveGrade).
   const latestGrade = sql<string | null>`(
-    select a.grade from credit.risk_assessments a
-    where a.request_id = ${financingRequests.id}
+    select coalesce(
+      (select o.grade from credit.risk_overrides o
+       where o.assessment_id = a.id order by o.created_at desc limit 1),
+      a.grade)
+    from credit.risk_assessments a
+    where a.request_id = financing_requests.id
     order by a.created_at desc limit 1)`;
   const rows = await tx
     .select({

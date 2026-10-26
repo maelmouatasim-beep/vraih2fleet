@@ -1,12 +1,12 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import { and, asc, desc, eq, inArray } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, ne } from "drizzle-orm";
 import { recordAudit, schema, type Transaction } from "@leaseplace/db";
 import { can, selectionIssues, type RoutingCandidate } from "@leaseplace/domain";
 import { companyViewer } from "../company-actions";
 import { currentLegalText } from "../company-data";
 import { appDb } from "../db";
-import { notifyMembers } from "../notify";
+import { notify } from "../notify";
 import { actorFor } from "../viewer";
 import { withActor } from "@leaseplace/db";
 
@@ -18,6 +18,7 @@ const {
   financingRequests,
   consents,
   consentRecipients,
+  threads,
 } = schema;
 
 export interface CompanyTarget {
@@ -65,11 +66,12 @@ export async function companyRouting(
     .innerJoin(organizations, eq(organizations.id, routingTargets.lessorOrganizationId))
     .where(eq(routingTargets.decisionId, decision.id))
     .orderBy(asc(routingTargets.rank));
-  const live = await tx
+  // Offres reçues : en cours, acceptée ou non retenue (jamais une offre retirée).
+  const received = await tx
     .select({ id: offers.id })
     .from(offers)
-    .where(and(eq(offers.requestId, requestId), eq(offers.status, "submitted")));
-  return { maxTargets: decision.maxTargets, targets, offerCount: live.length };
+    .where(and(eq(offers.requestId, requestId), ne(offers.status, "withdrawn")));
+  return { maxTargets: decision.maxTargets, targets, offerCount: received.length };
 }
 
 export type SendResult =
@@ -130,6 +132,17 @@ export async function sendToLessors(
       .update(routingTargets)
       .set({ status: "sent" })
       .where(inArray(routingTargets.id, targetIds));
+    // Un fil de questions-réponses par bailleur destinataire.
+    await tx
+      .insert(threads)
+      .values(
+        chosen.map((lessorOrganizationId) => ({
+          id: randomUUID(),
+          requestId,
+          lessorOrganizationId,
+        })),
+      )
+      .onConflictDoNothing();
     await tx
       .update(financingRequests)
       .set({ status: "routed" })
@@ -161,7 +174,7 @@ export async function sendToLessors(
   });
   if (outcome.status !== "sent") return outcome;
   for (const t of outcome.targets) {
-    await notifyMembers(t.lessorId, ["lessor_admin", "lessor_analyst"], "newRequest", {
+    await notify("request_received", t.lessorId, {
       reference: outcome.reference,
       path: `/bailleur/dossiers/${t.id}`,
     });

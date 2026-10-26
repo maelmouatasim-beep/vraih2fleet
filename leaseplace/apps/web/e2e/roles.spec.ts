@@ -115,9 +115,14 @@ test.describe("bailleur", () => {
     await page.getByRole("button", { name: "Recevoir un code à 6 chiffres" }).click();
     // Même réponse qu'un compte valide (pas d'énumération)…
     await expect(page.getByLabel("Code reçu par e-mail")).toBeVisible();
-    // …mais aucun courriel n'est parti.
+    // …mais aucun courriel de connexion n'est parti (les notifications de
+    // dossiers, elles, existent pour ce compte).
     await page.goto("/demo/boite-mail");
-    await expect(page.locator(`[data-outbox-to="${a.email}"]`)).toHaveCount(0);
+    await expect(
+      page
+        .locator(`[data-outbox-to="${a.email}"]`)
+        .filter({ hasText: /Votre (code|lien) de connexion/ }),
+    ).toHaveCount(0);
   });
 
   test("limitation de débit : la 6e tentative en une minute est refusée", async ({ page }) => {

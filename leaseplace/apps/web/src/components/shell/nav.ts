@@ -32,13 +32,13 @@ export const NAV: Readonly<Record<Space, readonly NavItem[]>> = {
     { key: "requests", icon: FileStack, href: "/entreprise/demandes" },
     { key: "vault", icon: FolderLock, href: "/entreprise/coffre-fort" },
     { key: "profile", icon: Building2, href: "/entreprise/profil" },
-    { key: "messages", icon: MessagesSquare, phase: 7 },
+    { key: "messages", icon: MessagesSquare, href: "/entreprise/messages" },
   ],
   lessor: [
     { key: "inbox", icon: Inbox, href: "/bailleur" },
     { key: "dashboard", icon: Gauge, href: "/bailleur/tableau-de-bord" },
     { key: "appetite", icon: SlidersHorizontal, href: "/bailleur/criteres" },
-    { key: "pipeline", icon: KanbanSquare, phase: 7 },
+    { key: "pipeline", icon: KanbanSquare, href: "/bailleur/pipeline" },
     { key: "billing", icon: Receipt, phase: 8 },
   ],
   admin: [

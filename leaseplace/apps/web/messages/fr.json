@@ -216,7 +216,12 @@
     "outboxIntro": "Les e-mails de connexion y sont déposés tant qu’aucun fournisseur d’envoi n’est branché.",
     "outboxEmptyTitle": "Aucun e-mail",
     "outboxEmptyBody": "Demandez un code ou un lien depuis la page de connexion.",
-    "openLink": "Ouvrir le lien de connexion"
+    "openLink": "Ouvrir le lien de connexion",
+    "channels": {
+      "email": "E-mail",
+      "sms": "SMS",
+      "whatsapp": "WhatsApp"
+    }
   },
   "errors": {
     "notFoundTitle": "Page introuvable",
@@ -233,11 +238,7 @@
     "magicLinkSubject": "Votre lien de connexion {brand}",
     "magicLinkBody": "Bonjour,\n\nVoici votre lien de connexion, valable 10 minutes :\n{url}\n\nSi vous n’êtes pas à l’origine de cette demande, ignorez ce message.",
     "otpSubject": "Votre code de connexion {brand}",
-    "otpBody": "Bonjour,\n\nVotre code de connexion : {otp}\nIl est valable 10 minutes.\n\nSi vous n’êtes pas à l’origine de cette demande, ignorez ce message.",
-    "newRequestSubject": "{brand} : nouveau dossier {reference}",
-    "newRequestBody": "Bonjour,\n\nUne entreprise vous a choisi pour recevoir son dossier de crédit-bail {reference}. Vous avez 72 heures pour répondre.\n\nOuvrir le dossier : {url}\n\nCe message ne contient aucune donnée du dossier.",
-    "offerReceivedSubject": "{brand} : offre reçue pour {reference}",
-    "offerReceivedBody": "Bonjour,\n\nUn bailleur a envoyé une offre pour votre demande {reference}.\n\nVoir la demande : {url}"
+    "otpBody": "Bonjour,\n\nVotre code de connexion : {otp}\nIl est valable 10 minutes.\n\nSi vous n’êtes pas à l’origine de cette demande, ignorez ce message."
   },
   "simulator": {
     "metaTitle": "Simulateur de crédit-bail",
@@ -973,7 +974,9 @@
         "in_review": "En revue",
         "needs_info": "Compléments demandés",
         "qualified": "Dossier vérifié",
-        "routed": "Transmise aux bailleurs"
+        "routed": "Transmise aux bailleurs",
+        "accepted": "Offre acceptée",
+        "financed": "Financée"
       },
       "submittedOn": "Soumise le {date}",
       "updatedOn": "Modifiée le {date}",
@@ -990,7 +993,9 @@
         "in_review": "Prise en charge par notre équipe",
         "needs_info": "Compléments demandés",
         "qualified": "Dossier vérifié",
-        "routed": "Dossier transmis aux bailleurs choisis"
+        "routed": "Dossier transmis aux bailleurs choisis",
+        "accepted": "Offre acceptée",
+        "financed": "Mise en loyer, financement en place"
       },
       "consentGiven": "Consentement donné le {date} (texte version {version}).",
       "cancel": "Annuler la demande",
@@ -1020,7 +1025,27 @@
           "offered": "Offre reçue",
           "declined": "Ne donne pas suite"
         },
-        "offers": "{count, plural, =0 {Aucune offre pour l’instant : les bailleurs répondent en principe sous 72 h.} one {# offre reçue. La comparaison des offres arrive bientôt.} other {# offres reçues. La comparaison des offres arrive bientôt.}}"
+        "offers": "{count, plural, =0 {Aucune offre pour l’instant : les bailleurs répondent en principe sous 72 h.} one {# offre reçue. La comparaison des offres arrive bientôt.} other {# offres reçues. La comparaison des offres arrive bientôt.}}",
+        "offerStatuses": {
+          "accepted": "Offre acceptée",
+          "not_retained": "Offre non retenue"
+        }
+      },
+      "deal": {
+        "title": "Opération avec {lessor}",
+        "next": {
+          "accepted": "Le bailleur finalise son analyse et va vous proposer le contrat.",
+          "signed": "Contrat signé : le bailleur commande le matériel auprès du fournisseur.",
+          "delivered": "Matériel livré : la mise en loyer va démarrer.",
+          "active": "Financement en place : les loyers ont démarré.",
+          "cancelled": "Cette opération a été annulée. Vous pouvez choisir une autre offre encore valable."
+        }
+      },
+      "offersCard": {
+        "title": "{count, plural, one {# offre reçue} other {# offres reçues}}",
+        "choose": "Comparez-les sur le coût total et choisissez celle qui vous convient.",
+        "review": "Revoir les offres reçues et leur détail.",
+        "compare": "Comparer les offres"
       }
     },
     "profile": {
@@ -1057,6 +1082,122 @@
       },
       "sending": "Transmission…",
       "send": "{count, plural, =0 {Transmettre le dossier} one {Transmettre à # bailleur} other {Transmettre à # bailleurs}}"
+    },
+    "offers": {
+      "title": "Comparer les offres",
+      "description": "{count, plural, =0 {Aucune offre pour l’instant.} one {# offre reçue, calculée sur le même échéancier.} other {# offres reçues, calculées sur le même échéancier.}}",
+      "back": "Demande {reference}",
+      "sortLabel": "Trier les offres",
+      "sort": {
+        "totalCost": "Coût total",
+        "effectiveRate": "TEG",
+        "rent": "Loyer",
+        "firstRent": "Premier loyer"
+      },
+      "viewLabel": "Affichage",
+      "views": {
+        "cards": "Cartes",
+        "table": "Tableau"
+      },
+      "neutral": "Classement neutre, par coût total par défaut. Aucune position n’est sponsorisée : les bailleurs ne paient pas pour apparaître ici.",
+      "listLabel": "Offres reçues",
+      "tableCaption": "Offres reçues, dans l’ordre de tri choisi",
+      "columns": {
+        "lessor": "Bailleur",
+        "cost": "Coût total HT",
+        "rate": "TEG",
+        "rent": "Loyer HT",
+        "firstRent": "Premier loyer HT",
+        "duration": "Durée",
+        "validUntil": "Valable jusqu’au"
+      },
+      "rank": "N° {n}",
+      "best": "Meilleur coût total",
+      "statuses": {
+        "accepted": "Acceptée",
+        "not_retained": "Non retenue"
+      },
+      "expired": "Expirée",
+      "cost": "Coût total du financement HT",
+      "costHint": "Ce que vous payez en plus du montant financé : loyers, frais, assurance exigée et valeur résiduelle.",
+      "rent": "Loyer HT · {periodicity}",
+      "rate": "TEG",
+      "firstRent": "Premier loyer HT",
+      "duration": "Durée",
+      "months": "{n, plural, one {# mois} other {# mois}}",
+      "validUntil": "Valable jusqu’au {date} ({days, plural, =0 {dernier jour} one {encore # jour} other {encore # jours}})",
+      "expiredOn": "Offre expirée le {date}",
+      "details": "Voir le détail",
+      "financed": "Montant financé HT",
+      "residual": "Valeur résiduelle HT",
+      "fees": "Frais de dossier HT",
+      "insurance": "Assurance par échéance HT",
+      "required": "exigée",
+      "timing": "Paiement",
+      "timings": {
+        "advance": "Terme à échoir",
+        "arrears": "Terme échu"
+      },
+      "nominalRate": "Taux nominal annuel",
+      "paidTtc": "Total payé TTC",
+      "vat": "TVA",
+      "conditions": "Conditions particulières",
+      "vatReminder": "Rappel : les loyers de crédit-bail sont en principe déductibles du résultat imposable et la TVA récupérable, selon votre régime. Vérifiez avec votre comptable.",
+      "accept": "Accepter cette offre",
+      "ask": "Poser une question",
+      "confirmTitle": "Accepter l’offre de {lessor} ?",
+      "confirmBody": "Votre acceptation vaut accord de principe. Le bailleur finalise ensuite son analyse et vous propose le contrat ; la décision de crédit lui appartient exclusivement. Les autres offres seront marquées « non retenues » et redeviendront disponibles si l’opération n’aboutit pas.",
+      "confirmCheckbox": "J’ai compris et je confirme mon choix.",
+      "confirm": "Confirmer l’acceptation",
+      "accepting": "Acceptation…",
+      "keep": "Annuler",
+      "issues": {
+        "offer_unavailable": "Cette offre n’est plus disponible.",
+        "offer_expired": "Cette offre a expiré : demandez au bailleur de la renouveler.",
+        "request_not_open": "Une offre a déjà été acceptée pour cette demande.",
+        "deal_exists": "Une offre a déjà été acceptée pour cette demande."
+      },
+      "forbidden": "Seul le dirigeant de l’entreprise peut accepter une offre.",
+      "ownerOnly": "Seul le dirigeant de l’entreprise peut accepter une offre.",
+      "acceptedBanner": "Vous avez accepté l’offre de {lessor}.",
+      "followDeal": "Suivre l’opération",
+      "emptyTitle": "Pas encore d’offre",
+      "emptyBody": "Les bailleurs choisis répondent en principe sous 72 heures. Vous serez prévenu à chaque nouvelle offre.",
+      "legal": "LeasePlace est un intermédiaire : il ne manie aucun fonds et ne prend aucune décision de crédit. Coût total et TEG sont recalculés par la plateforme à partir des conditions saisies par chaque bailleur.",
+      "simulation": {
+        "title": "Et avec un autre apport ou une autre durée ?",
+        "body": "Estimation au taux et aux frais de chaque offre. Seule l’offre ferme du bailleur fait foi.",
+        "down": "Premier loyer majoré (apport) HT",
+        "downPlaceholder": "Ex. 100 000",
+        "duration": "Durée",
+        "sameDuration": "Durée de chaque offre",
+        "months": "{n, plural, one {# mois} other {# mois}}",
+        "caption": "Estimation par offre",
+        "lessor": "Bailleur",
+        "rent": "Loyer HT estimé",
+        "cost": "Coût total HT estimé",
+        "rate": "TEG estimé",
+        "impossible": "Hors des conditions de ce bailleur",
+        "disclaimer": "Estimation indicative : demandez au bailleur une offre révisée avant de décider."
+      }
+    },
+    "tracker": {
+      "label": "Suivi de votre demande",
+      "steps": {
+        "submitted": "Demande déposée",
+        "verified": "Dossier vérifié",
+        "routed": "Transmis aux bailleurs",
+        "offers": "Offres reçues",
+        "accepted": "Offre acceptée",
+        "signed": "Contrat signé",
+        "delivered": "Matériel livré",
+        "active": "Mise en loyer"
+      },
+      "states": {
+        "done": "terminé",
+        "current": "en cours",
+        "upcoming": "à venir"
+      }
     }
   },
   "review": {
@@ -1364,7 +1505,8 @@
         "sla": "Délai",
         "status": "Statut"
       },
-      "disclaimer": "L’indice et la synthèse sont des aides à la lecture préparées par la plateforme. La décision de crédit appartient exclusivement à votre établissement."
+      "disclaimer": "L’indice et la synthèse sont des aides à la lecture préparées par la plateforme. La décision de crédit appartient exclusivement à votre établissement.",
+      "unreadMessages": "{count, plural, one {# message} other {# messages}}"
     },
     "file": {
       "title": "Dossier reçu",
@@ -1385,7 +1527,13 @@
         "validUntil": "Valable jusqu’au"
       },
       "declined": "Dossier décliné le {date} : {reason}.",
-      "readOnly": "Votre rôle permet de consulter ce dossier, pas d’y répondre."
+      "readOnly": "Votre rôle permet de consulter ce dossier, pas d’y répondre.",
+      "dealTitle": "Opération",
+      "messagesTitle": "Questions et réponses",
+      "offerStatus": {
+        "accepted": "Offre acceptée par l’entreprise.",
+        "not_retained": "Offre non retenue : l’entreprise a choisi une autre offre."
+      }
     },
     "offer": {
       "amount": "Montant financé HT",
@@ -1477,9 +1625,213 @@
       "offered": "Offres envoyées",
       "declined": "Dossiers déclinés",
       "winRate": "Offres acceptées",
-      "winRateHint": "Disponible avec le comparateur",
+      "winRateHint": "Acceptées / tranchées : {won} / {decided}",
       "commissions": "Commissions",
       "commissionsHint": "Disponible avec la facturation"
+    },
+    "pipeline": {
+      "title": "Pipeline",
+      "description": "Vos offres acceptées, de l’accord à la mise en loyer.",
+      "kpiOngoing": "Opérations en cours",
+      "kpiOngoingAmount": "Montant en cours HT",
+      "kpiActive": "Mises en loyer",
+      "kpiActiveAmount": "Montant mis en loyer HT",
+      "viewsLabel": "Filtrer les opérations",
+      "views": {
+        "en-cours": "En cours",
+        "mis-en-loyer": "Mises en loyer",
+        "annules": "Annulées"
+      },
+      "columns": {
+        "reference": "Référence",
+        "company": "Entreprise",
+        "amount": "Montant HT",
+        "accepted": "Acceptée le",
+        "status": "Statut",
+        "next": "Prochaine étape"
+      },
+      "emptyTitle": "Aucune opération ici",
+      "emptyBody": "Les offres acceptées par les entreprises apparaissent ici."
+    }
+  },
+  "deals": {
+    "statuses": {
+      "accepted": "Offre acceptée",
+      "signed": "Contrat signé",
+      "delivered": "Matériel livré",
+      "active": "Mis en loyer",
+      "cancelled": "Annulée"
+    },
+    "steps": {
+      "accepted": "Acceptation",
+      "signed": "Signature",
+      "delivered": "Livraison",
+      "active": "Mise en loyer"
+    },
+    "financed": "Montant financé : {amount} HT",
+    "cancelledBy": "Annulée par {side} le {date} : {reason}.",
+    "sides": {
+      "lessor": "le bailleur",
+      "company": "l’entreprise"
+    },
+    "reasons": {
+      "credit_refused": "Décision de crédit défavorable",
+      "documents_incomplete": "Pièces complémentaires non fournies",
+      "supplier_issue": "Problème avec le fournisseur",
+      "project_abandoned": "Projet abandonné",
+      "financed_elsewhere": "Financé autrement",
+      "other": "Autre motif"
+    },
+    "next": {
+      "sign": "Prochaine étape : signature du contrat",
+      "deliver": "Prochaine étape : livraison du matériel",
+      "activate": "Prochaine étape : mise en loyer"
+    },
+    "dateLabels": {
+      "sign": "Date de signature",
+      "deliver": "Date de livraison",
+      "activate": "Date de mise en loyer"
+    },
+    "finalAmount": "Montant financé définitif HT",
+    "confirm": {
+      "sign": "Enregistrer la signature",
+      "deliver": "Enregistrer la livraison",
+      "activate": "Enregistrer la mise en loyer"
+    },
+    "cancel": {
+      "open": {
+        "lessor": "Annuler l’opération",
+        "company": "Renoncer à cette offre"
+      },
+      "body": {
+        "lessor": "L’entreprise est prévenue ; ses autres offres redeviennent disponibles.",
+        "company": "Possible tant que le contrat n’est pas signé. Le bailleur est prévenu et vos autres offres encore valables redeviennent disponibles."
+      },
+      "reason": "Motif",
+      "note": "Précision (obligatoire pour « Autre motif »)",
+      "confirm": "Confirmer l’annulation"
+    },
+    "issues": {
+      "transition_invalid": "Cette étape n’est plus possible.",
+      "date_in_future": "La date ne peut pas être dans le futur.",
+      "date_before_previous": "La date ne peut pas précéder l’étape précédente.",
+      "amount_invalid": "Montant invalide.",
+      "reason_invalid": "Motif invalide.",
+      "note_required": "Précisez le motif (10 caractères au moins)."
+    },
+    "forbidden": "Action non autorisée pour votre rôle."
+  },
+  "messages": {
+    "title": "Messages",
+    "description": "Vos questions et réponses avec chaque bailleur, dossier par dossier.",
+    "noThreadsTitle": "Aucun échange pour l’instant",
+    "noThreadsBody": "Un fil s’ouvre avec chaque bailleur dès que votre dossier lui est transmis.",
+    "noMessage": "Aucun message",
+    "unread": "{count, plural, one {# non lu} other {# non lus}}",
+    "back": "Messages",
+    "threadDescription": "Demande {reference}",
+    "openRequest": "Voir la demande",
+    "listLabel": "Messages échangés",
+    "empty": "Aucun message pour l’instant. Posez votre question ci-dessous.",
+    "you": "Vous",
+    "flagged": "coordonnées signalées",
+    "label": "Votre message",
+    "send": "Envoyer",
+    "sending": "Envoi…",
+    "contactWarning": "Ce message contient des coordonnées. Jusqu’à l’acceptation d’une offre, les échanges restent sur la plateforme : c’est la garantie d’une mise en concurrence loyale.",
+    "issues": {
+      "empty": "Le message est vide.",
+      "too_long": "Message trop long : 4 000 caractères au maximum."
+    },
+    "forbidden": "Vous ne pouvez pas écrire sur ce fil.",
+    "onPlatform": "Les échanges sont conservés sur la plateforme et visibles des deux parties uniquement."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Les étapes de vos dossiers, au fil de l’eau.",
+    "bell": "Notifications",
+    "bellUnread": "{count, plural, one {Notifications : # non lue} other {Notifications : # non lues}}",
+    "markAll": "Tout marquer comme lu",
+    "unreadLabel": "non lue",
+    "emptyTitle": "Rien de nouveau",
+    "emptyBody": "Vous serez prévenu ici à chaque étape importante.",
+    "emailBody": "Bonjour,\n\n{title}\n{body}\n\n{url}\n\n— {brand}",
+    "textBody": "{brand} : {body} {url}",
+    "kinds": {
+      "request_needs_info": {
+        "title": "Compléments demandés sur {reference}",
+        "body": "Notre équipe a besoin d’une précision avant de transmettre votre dossier."
+      },
+      "request_qualified": {
+        "title": "Dossier {reference} vérifié",
+        "body": "Choisissez maintenant les bailleurs qui recevront votre dossier."
+      },
+      "offer_received": {
+        "title": "Nouvelle offre de {lessor} sur {reference}",
+        "body": "Comparez-la aux autres sur le coût total."
+      },
+      "message_from_lessor": {
+        "title": "Message de {lessor} sur {reference}",
+        "body": "Le bailleur vous a écrit."
+      },
+      "deal_signed": {
+        "title": "Contrat signé pour {reference}",
+        "body": "{lessor} a enregistré la signature du contrat."
+      },
+      "deal_delivered": {
+        "title": "Matériel livré pour {reference}",
+        "body": "{lessor} a enregistré la livraison."
+      },
+      "deal_activated": {
+        "title": "Financement en place pour {reference}",
+        "body": "{lessor} a enregistré la mise en loyer."
+      },
+      "deal_cancelled_by_lessor": {
+        "title": "Opération annulée sur {reference}",
+        "body": "{lessor} a annulé l’opération. Vos autres offres valables sont de nouveau disponibles."
+      },
+      "request_received": {
+        "title": "Nouveau dossier {reference}",
+        "body": "Une entreprise vous a choisi. Réponse attendue sous 72 h."
+      },
+      "message_from_company": {
+        "title": "Message de l’entreprise sur {reference}",
+        "body": "L’entreprise vous a posé une question."
+      },
+      "offer_accepted": {
+        "title": "Offre acceptée sur {reference}",
+        "body": "L’entreprise a accepté votre offre. Finalisez votre analyse et proposez le contrat."
+      },
+      "offer_not_retained": {
+        "title": "Offre non retenue sur {reference}",
+        "body": "L’entreprise a choisi une autre offre."
+      },
+      "deal_cancelled_by_company": {
+        "title": "Opération annulée sur {reference}",
+        "body": "L’entreprise a renoncé à votre offre avant la signature."
+      }
+    },
+    "preferences": {
+      "title": "Recevoir les notifications",
+      "channels": "Canaux",
+      "channel": {
+        "email": "Par e-mail",
+        "sms": "Par SMS",
+        "whatsapp": "Par WhatsApp"
+      },
+      "hint": {
+        "email": "Pour chaque étape.",
+        "sms": "Étapes importantes seulement (nouvelle offre, acceptation, mise en loyer…).",
+        "whatsapp": "Étapes importantes seulement."
+      },
+      "phone": "Numéro de mobile",
+      "phoneHint": "Mobile marocain (06 ou 07), exigé pour le SMS et WhatsApp. Utilisé uniquement pour ces notifications.",
+      "issues": {
+        "phone_invalid": "Numéro invalide : un mobile marocain commençant par 06 ou 07.",
+        "phone_required": "Indiquez un numéro de mobile pour le SMS ou WhatsApp."
+      },
+      "saved": "Préférences enregistrées.",
+      "save": "Enregistrer"
     }
   }
 }

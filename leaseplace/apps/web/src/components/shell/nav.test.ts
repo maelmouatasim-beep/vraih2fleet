@@ -17,13 +17,18 @@ describe("navCurrent", () => {
 });
 
 describe("NAV", () => {
-  it("l'espace entreprise ouvre demandes, coffre-fort et profil", () => {
+  it("l'espace entreprise ouvre demandes, coffre-fort, profil et messages", () => {
     const hrefs = NAV.company.map((i) => i.href).filter(Boolean);
     expect(hrefs).toEqual([
       "/entreprise",
       "/entreprise/demandes",
       "/entreprise/coffre-fort",
       "/entreprise/profil",
+      "/entreprise/messages",
     ]);
+  });
+  it("l'espace bailleur ouvre le pipeline ; la facturation reste en phase 8", () => {
+    expect(NAV.lessor.find((i) => i.key === "pipeline")?.href).toBe("/bailleur/pipeline");
+    expect(NAV.lessor.find((i) => i.key === "billing")?.phase).toBe(8);
   });
 });

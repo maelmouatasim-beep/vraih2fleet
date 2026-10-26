@@ -17,7 +17,7 @@ import {
   type OfferIssue,
 } from "@leaseplace/domain";
 import { appDb } from "../db";
-import { notifyMembers } from "../notify";
+import { notify } from "../notify";
 import { actorFor, getViewer, type SpaceViewer } from "../viewer";
 import { z } from "../zod";
 import { appetiteOf, lessorTarget } from "./data";
@@ -163,12 +163,14 @@ export async function submitOffer(targetId: string, form: OfferForm): Promise<Of
       companyId: file.request.organizationId,
       reference: file.request.reference,
       requestId: file.request.id,
+      lessor: viewer.membership.organizationName,
     } as const;
   });
   if (outcome.status !== "submitted") return outcome;
-  await notifyMembers(outcome.companyId, ["company_owner", "company_member"], "offerReceived", {
+  await notify("offer_received", outcome.companyId, {
     reference: outcome.reference,
-    path: `/entreprise/demandes/${outcome.requestId}`,
+    path: `/entreprise/demandes/${outcome.requestId}/offres`,
+    lessor: outcome.lessor,
   });
   return { status: "submitted" };
 }

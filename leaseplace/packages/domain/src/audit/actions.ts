@@ -37,6 +37,13 @@ export const AUDIT_ACTIONS = [
   "offer.submitted",
   "offer.withdrawn",
   "appetite.updated",
+  "offer.accepted",
+  "deal.signed",
+  "deal.delivered",
+  "deal.activated",
+  "deal.cancelled",
+  "message.sent",
+  "notification.preferences_updated",
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 

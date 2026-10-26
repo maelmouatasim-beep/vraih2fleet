@@ -216,7 +216,12 @@
     "outboxIntro": "Sign-in emails land here until an email provider is connected.",
     "outboxEmptyTitle": "No emails",
     "outboxEmptyBody": "Request a code or a link from the sign-in page.",
-    "openLink": "Open the sign-in link"
+    "openLink": "Open the sign-in link",
+    "channels": {
+      "email": "Email",
+      "sms": "SMS",
+      "whatsapp": "WhatsApp"
+    }
   },
   "errors": {
     "notFoundTitle": "Page not found",
@@ -233,11 +238,7 @@
     "magicLinkSubject": "Your {brand} sign-in link",
     "magicLinkBody": "Hello,\n\nHere is your sign-in link, valid for 10 minutes:\n{url}\n\nIf you did not request it, ignore this message.",
     "otpSubject": "Your {brand} sign-in code",
-    "otpBody": "Hello,\n\nYour sign-in code: {otp}\nIt is valid for 10 minutes.\n\nIf you did not request it, ignore this message.",
-    "newRequestSubject": "{brand}: new file {reference}",
-    "newRequestBody": "Hello,\n\nA company has chosen you to receive its leasing file {reference}. You have 72 hours to respond.\n\nOpen the file: {url}\n\nThis message contains no file data.",
-    "offerReceivedSubject": "{brand}: offer received for {reference}",
-    "offerReceivedBody": "Hello,\n\nA lessor has sent an offer for your request {reference}.\n\nView the request: {url}"
+    "otpBody": "Hello,\n\nYour sign-in code: {otp}\nIt is valid for 10 minutes.\n\nIf you did not request it, ignore this message."
   },
   "simulator": {
     "metaTitle": "Equipment leasing simulator",
@@ -973,7 +974,9 @@
         "in_review": "In review",
         "needs_info": "Information requested",
         "qualified": "File verified",
-        "routed": "Sent to lessors"
+        "routed": "Sent to lessors",
+        "accepted": "Offer accepted",
+        "financed": "Financed"
       },
       "submittedOn": "Submitted on {date}",
       "updatedOn": "Updated on {date}",
@@ -990,7 +993,9 @@
         "in_review": "Picked up by our team",
         "needs_info": "Information requested",
         "qualified": "File verified",
-        "routed": "File sent to the chosen lessors"
+        "routed": "File sent to the chosen lessors",
+        "accepted": "Offer accepted",
+        "financed": "Lease started, financing in place"
       },
       "consentGiven": "Consent given on {date} (text version {version}).",
       "cancel": "Cancel request",
@@ -1020,7 +1025,27 @@
           "offered": "Offer received",
           "declined": "Not proceeding"
         },
-        "offers": "{count, plural, =0 {No offer yet: lessors usually respond within 72 hours.} one {# offer received. Offer comparison is coming soon.} other {# offers received. Offer comparison is coming soon.}}"
+        "offers": "{count, plural, =0 {No offer yet: lessors usually respond within 72 hours.} one {# offer received. Offer comparison is coming soon.} other {# offers received. Offer comparison is coming soon.}}",
+        "offerStatuses": {
+          "accepted": "Offer accepted",
+          "not_retained": "Offer not selected"
+        }
+      },
+      "deal": {
+        "title": "Transaction with {lessor}",
+        "next": {
+          "accepted": "The lessor is completing its analysis and will send you the contract.",
+          "signed": "Contract signed: the lessor is ordering the equipment from the supplier.",
+          "delivered": "Equipment delivered: the lease is about to start.",
+          "active": "Financing in place: rents have started.",
+          "cancelled": "This transaction was cancelled. You can choose another offer that is still valid."
+        }
+      },
+      "offersCard": {
+        "title": "{count, plural, one {# offer received} other {# offers received}}",
+        "choose": "Compare them on total cost and choose the one that suits you.",
+        "review": "Review the offers received and their details.",
+        "compare": "Compare offers"
       }
     },
     "profile": {
@@ -1057,6 +1082,122 @@
       },
       "sending": "Sending…",
       "send": "{count, plural, =0 {Send the file} one {Send to # lessor} other {Send to # lessors}}"
+    },
+    "offers": {
+      "title": "Compare offers",
+      "description": "{count, plural, =0 {No offer yet.} one {# offer received, computed on the same schedule.} other {# offers received, computed on the same schedule.}}",
+      "back": "Request {reference}",
+      "sortLabel": "Sort offers",
+      "sort": {
+        "totalCost": "Total cost",
+        "effectiveRate": "APR",
+        "rent": "Rent",
+        "firstRent": "First rent"
+      },
+      "viewLabel": "Display",
+      "views": {
+        "cards": "Cards",
+        "table": "Table"
+      },
+      "neutral": "Neutral ranking, by total cost by default. No position is sponsored: lessors do not pay to appear here.",
+      "listLabel": "Offers received",
+      "tableCaption": "Offers received, in the chosen order",
+      "columns": {
+        "lessor": "Lessor",
+        "cost": "Total cost excl. VAT",
+        "rate": "APR",
+        "rent": "Rent excl. VAT",
+        "firstRent": "First rent excl. VAT",
+        "duration": "Term",
+        "validUntil": "Valid until"
+      },
+      "rank": "No. {n}",
+      "best": "Best total cost",
+      "statuses": {
+        "accepted": "Accepted",
+        "not_retained": "Not selected"
+      },
+      "expired": "Expired",
+      "cost": "Total financing cost excl. VAT",
+      "costHint": "What you pay on top of the financed amount: rents, fees, required insurance and residual value.",
+      "rent": "Rent excl. VAT · {periodicity}",
+      "rate": "APR",
+      "firstRent": "First rent excl. VAT",
+      "duration": "Term",
+      "months": "{n, plural, one {# month} other {# months}}",
+      "validUntil": "Valid until {date} ({days, plural, =0 {last day} one {# day left} other {# days left}})",
+      "expiredOn": "Offer expired on {date}",
+      "details": "See details",
+      "financed": "Financed amount excl. VAT",
+      "residual": "Residual value excl. VAT",
+      "fees": "Arrangement fees excl. VAT",
+      "insurance": "Insurance per instalment excl. VAT",
+      "required": "required",
+      "timing": "Payment",
+      "timings": {
+        "advance": "In advance",
+        "arrears": "In arrears"
+      },
+      "nominalRate": "Nominal annual rate",
+      "paidTtc": "Total paid incl. VAT",
+      "vat": "VAT",
+      "conditions": "Special conditions",
+      "vatReminder": "Reminder: lease rents are generally deductible from taxable income and VAT recoverable, depending on your regime. Check with your accountant.",
+      "accept": "Accept this offer",
+      "ask": "Ask a question",
+      "confirmTitle": "Accept the offer from {lessor}?",
+      "confirmBody": "Your acceptance is an agreement in principle. The lessor then completes its analysis and sends you the contract; the credit decision belongs exclusively to the lessor. The other offers will be marked “not selected” and become available again if the transaction does not go through.",
+      "confirmCheckbox": "I understand and confirm my choice.",
+      "confirm": "Confirm acceptance",
+      "accepting": "Accepting…",
+      "keep": "Cancel",
+      "issues": {
+        "offer_unavailable": "This offer is no longer available.",
+        "offer_expired": "This offer has expired: ask the lessor to renew it.",
+        "request_not_open": "An offer has already been accepted for this request.",
+        "deal_exists": "An offer has already been accepted for this request."
+      },
+      "forbidden": "Only the company's manager can accept an offer.",
+      "ownerOnly": "Only the company's manager can accept an offer.",
+      "acceptedBanner": "You accepted the offer from {lessor}.",
+      "followDeal": "Track the transaction",
+      "emptyTitle": "No offer yet",
+      "emptyBody": "The chosen lessors usually respond within 72 hours. You will be notified of each new offer.",
+      "legal": "LeasePlace is an intermediary: it handles no funds and makes no credit decision. Total cost and APR are recomputed by the platform from the terms entered by each lessor.",
+      "simulation": {
+        "title": "What about another down payment or term?",
+        "body": "Estimate at each offer's rate and fees. Only the lessor's firm offer is binding.",
+        "down": "Increased first rent (down payment) excl. VAT",
+        "downPlaceholder": "e.g. 100,000",
+        "duration": "Term",
+        "sameDuration": "Each offer's term",
+        "months": "{n, plural, one {# month} other {# months}}",
+        "caption": "Estimate per offer",
+        "lessor": "Lessor",
+        "rent": "Estimated rent excl. VAT",
+        "cost": "Estimated total cost excl. VAT",
+        "rate": "Estimated APR",
+        "impossible": "Outside this lessor's terms",
+        "disclaimer": "Indicative estimate: ask the lessor for a revised offer before deciding."
+      }
+    },
+    "tracker": {
+      "label": "Tracking your request",
+      "steps": {
+        "submitted": "Request filed",
+        "verified": "File verified",
+        "routed": "Sent to lessors",
+        "offers": "Offers received",
+        "accepted": "Offer accepted",
+        "signed": "Contract signed",
+        "delivered": "Equipment delivered",
+        "active": "Lease started"
+      },
+      "states": {
+        "done": "done",
+        "current": "in progress",
+        "upcoming": "upcoming"
+      }
     }
   },
   "review": {
@@ -1364,7 +1505,8 @@
         "sla": "Time left",
         "status": "Status"
       },
-      "disclaimer": "The grade and summary are reading aids prepared by the platform. The credit decision belongs exclusively to your institution."
+      "disclaimer": "The grade and summary are reading aids prepared by the platform. The credit decision belongs exclusively to your institution.",
+      "unreadMessages": "{count, plural, one {# message} other {# messages}}"
     },
     "file": {
       "title": "Received file",
@@ -1385,7 +1527,13 @@
         "validUntil": "Valid until"
       },
       "declined": "File declined on {date}: {reason}.",
-      "readOnly": "Your role lets you view this file, not respond to it."
+      "readOnly": "Your role lets you view this file, not respond to it.",
+      "dealTitle": "Transaction",
+      "messagesTitle": "Questions and answers",
+      "offerStatus": {
+        "accepted": "Offer accepted by the company.",
+        "not_retained": "Offer not selected: the company chose another offer."
+      }
     },
     "offer": {
       "amount": "Financed amount excl. VAT",
@@ -1477,9 +1625,213 @@
       "offered": "Offers sent",
       "declined": "Files declined",
       "winRate": "Accepted offers",
-      "winRateHint": "Available with the comparator",
+      "winRateHint": "Accepted / decided: {won} / {decided}",
       "commissions": "Commissions",
       "commissionsHint": "Available with billing"
+    },
+    "pipeline": {
+      "title": "Pipeline",
+      "description": "Your accepted offers, from agreement to lease start.",
+      "kpiOngoing": "Ongoing transactions",
+      "kpiOngoingAmount": "Ongoing amount excl. VAT",
+      "kpiActive": "Leases started",
+      "kpiActiveAmount": "Amount in lease excl. VAT",
+      "viewsLabel": "Filter transactions",
+      "views": {
+        "en-cours": "Ongoing",
+        "mis-en-loyer": "Leases started",
+        "annules": "Cancelled"
+      },
+      "columns": {
+        "reference": "Reference",
+        "company": "Company",
+        "amount": "Amount excl. VAT",
+        "accepted": "Accepted on",
+        "status": "Status",
+        "next": "Next step"
+      },
+      "emptyTitle": "No transaction here",
+      "emptyBody": "Offers accepted by companies appear here."
+    }
+  },
+  "deals": {
+    "statuses": {
+      "accepted": "Offer accepted",
+      "signed": "Contract signed",
+      "delivered": "Equipment delivered",
+      "active": "Lease started",
+      "cancelled": "Cancelled"
+    },
+    "steps": {
+      "accepted": "Acceptance",
+      "signed": "Signature",
+      "delivered": "Delivery",
+      "active": "Lease start"
+    },
+    "financed": "Financed amount: {amount} excl. VAT",
+    "cancelledBy": "Cancelled by {side} on {date}: {reason}.",
+    "sides": {
+      "lessor": "the lessor",
+      "company": "the company"
+    },
+    "reasons": {
+      "credit_refused": "Unfavourable credit decision",
+      "documents_incomplete": "Additional documents not provided",
+      "supplier_issue": "Problem with the supplier",
+      "project_abandoned": "Project abandoned",
+      "financed_elsewhere": "Financed elsewhere",
+      "other": "Other reason"
+    },
+    "next": {
+      "sign": "Next step: contract signature",
+      "deliver": "Next step: equipment delivery",
+      "activate": "Next step: lease start"
+    },
+    "dateLabels": {
+      "sign": "Signature date",
+      "deliver": "Delivery date",
+      "activate": "Lease start date"
+    },
+    "finalAmount": "Final financed amount excl. VAT",
+    "confirm": {
+      "sign": "Record the signature",
+      "deliver": "Record the delivery",
+      "activate": "Record the lease start"
+    },
+    "cancel": {
+      "open": {
+        "lessor": "Cancel the transaction",
+        "company": "Withdraw from this offer"
+      },
+      "body": {
+        "lessor": "The company is notified; its other offers become available again.",
+        "company": "Possible until the contract is signed. The lessor is notified and your other valid offers become available again."
+      },
+      "reason": "Reason",
+      "note": "Details (required for “Other reason”)",
+      "confirm": "Confirm cancellation"
+    },
+    "issues": {
+      "transition_invalid": "This step is no longer possible.",
+      "date_in_future": "The date cannot be in the future.",
+      "date_before_previous": "The date cannot be before the previous step.",
+      "amount_invalid": "Invalid amount.",
+      "reason_invalid": "Invalid reason.",
+      "note_required": "Explain the reason (at least 10 characters)."
+    },
+    "forbidden": "Action not allowed for your role."
+  },
+  "messages": {
+    "title": "Messages",
+    "description": "Your questions and answers with each lessor, file by file.",
+    "noThreadsTitle": "No conversation yet",
+    "noThreadsBody": "A thread opens with each lessor as soon as your file is sent to them.",
+    "noMessage": "No message",
+    "unread": "{count, plural, one {# unread} other {# unread}}",
+    "back": "Messages",
+    "threadDescription": "Request {reference}",
+    "openRequest": "View the request",
+    "listLabel": "Messages exchanged",
+    "empty": "No message yet. Ask your question below.",
+    "you": "You",
+    "flagged": "contact details flagged",
+    "label": "Your message",
+    "send": "Send",
+    "sending": "Sending…",
+    "contactWarning": "This message contains contact details. Until an offer is accepted, conversations stay on the platform: this guarantees fair competition.",
+    "issues": {
+      "empty": "The message is empty.",
+      "too_long": "Message too long: 4,000 characters at most."
+    },
+    "forbidden": "You cannot write in this thread.",
+    "onPlatform": "Conversations are kept on the platform and visible to both parties only."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "The steps of your files, as they happen.",
+    "bell": "Notifications",
+    "bellUnread": "{count, plural, one {Notifications: # unread} other {Notifications: # unread}}",
+    "markAll": "Mark all as read",
+    "unreadLabel": "unread",
+    "emptyTitle": "Nothing new",
+    "emptyBody": "You will be notified here at each important step.",
+    "emailBody": "Hello,\n\n{title}\n{body}\n\n{url}\n\n— {brand}",
+    "textBody": "{brand}: {body} {url}",
+    "kinds": {
+      "request_needs_info": {
+        "title": "Additional information requested on {reference}",
+        "body": "Our team needs a clarification before sending your file."
+      },
+      "request_qualified": {
+        "title": "File {reference} verified",
+        "body": "Now choose the lessors who will receive your file."
+      },
+      "offer_received": {
+        "title": "New offer from {lessor} on {reference}",
+        "body": "Compare it with the others on total cost."
+      },
+      "message_from_lessor": {
+        "title": "Message from {lessor} on {reference}",
+        "body": "The lessor has written to you."
+      },
+      "deal_signed": {
+        "title": "Contract signed for {reference}",
+        "body": "{lessor} recorded the contract signature."
+      },
+      "deal_delivered": {
+        "title": "Equipment delivered for {reference}",
+        "body": "{lessor} recorded the delivery."
+      },
+      "deal_activated": {
+        "title": "Financing in place for {reference}",
+        "body": "{lessor} recorded the lease start."
+      },
+      "deal_cancelled_by_lessor": {
+        "title": "Transaction cancelled on {reference}",
+        "body": "{lessor} cancelled the transaction. Your other valid offers are available again."
+      },
+      "request_received": {
+        "title": "New file {reference}",
+        "body": "A company has chosen you. Response expected within 72 h."
+      },
+      "message_from_company": {
+        "title": "Message from the company on {reference}",
+        "body": "The company has asked you a question."
+      },
+      "offer_accepted": {
+        "title": "Offer accepted on {reference}",
+        "body": "The company accepted your offer. Complete your analysis and send the contract."
+      },
+      "offer_not_retained": {
+        "title": "Offer not selected on {reference}",
+        "body": "The company chose another offer."
+      },
+      "deal_cancelled_by_company": {
+        "title": "Transaction cancelled on {reference}",
+        "body": "The company withdrew from your offer before signature."
+      }
+    },
+    "preferences": {
+      "title": "Receive notifications",
+      "channels": "Channels",
+      "channel": {
+        "email": "By email",
+        "sms": "By SMS",
+        "whatsapp": "By WhatsApp"
+      },
+      "hint": {
+        "email": "For every step.",
+        "sms": "Important steps only (new offer, acceptance, lease start…).",
+        "whatsapp": "Important steps only."
+      },
+      "phone": "Mobile number",
+      "phoneHint": "Moroccan mobile (06 or 07), required for SMS and WhatsApp. Used only for these notifications.",
+      "issues": {
+        "phone_invalid": "Invalid number: a Moroccan mobile starting with 06 or 07.",
+        "phone_required": "Enter a mobile number for SMS or WhatsApp."
+      },
+      "saved": "Preferences saved.",
+      "save": "Save"
     }
   }
 }
