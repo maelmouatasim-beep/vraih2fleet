@@ -312,7 +312,11 @@ try {
   await page.waitForTimeout(1500);
   await capture(page, "08-financement");
   const subvFinancement = await valeurCarte(page, "Subventions du plan");
-  etape("Financement : règle et raison de chaque subvention");
+  // Audit A9 : un programme d'infrastructure (PIVEZ) a un plafond PAR PROJET.
+  const texteFinancement = (await page.locator("body").innerText()).replace(/[\u00a0\u202f]/g, " ");
+  if (!/Jusqu'à 2 000 000 \$ par projet/.test(texteFinancement)) throw new Error("Financement : plafond du PIVEZ « par projet » absent");
+  if (/2 000 000 \$ par véhicule/.test(texteFinancement)) throw new Error("Financement : PIVEZ affiché « par véhicule »");
+  etape("Financement : règle et raison de chaque subvention ; PIVEZ plafonné par projet");
 
   await page.goto(`${base}/rapports`);
   for (const [bouton, nom] of [[/PDF \(français\)/, "rapport-fr.pdf"], [/Télécharger le \.xlsx/, "classeur-fr.xlsx"]]) {

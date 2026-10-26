@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { PROGRAMMES } from "@/lib/tco";
-import { echeancesDemandes, nomProgramme, type DemandeSubvention } from "../financing";
+import { echeancesDemandes, nomProgramme, plafondAffiche, type DemandeSubvention } from "../financing";
 
 function demande(patch: Partial<DemandeSubvention> = {}): DemandeSubvention {
   return {
@@ -54,5 +54,27 @@ describe("nomProgramme", () => {
     expect(nomProgramme(prog.id, null)).toBe(prog.nom.split("—")[0].trim());
     expect(nomProgramme("autre", "PAGTCP volet 3")).toBe("PAGTCP volet 3");
     expect(nomProgramme("inconnu-xyz", null)).toBe("inconnu-xyz");
+  });
+});
+
+describe("plafond affiché d'un programme (audit A9)", () => {
+  const prog = (id: string) => PROGRAMMES.find((p) => p.id === id)!;
+
+  it("PIVEZ (infrastructure) : 2 M$ PAR PROJET, jamais « par véhicule »", () => {
+    expect(prog("pivez").cible).toBe("infrastructure");
+    expect(plafondAffiche(prog("pivez"))).toEqual({ montant: 2_000_000, cle: "journey.financing.maxPerProject" });
+  });
+
+  it("programme d'achat : plafond par véhicule ; montant par projet (plafond 0) : rien d'affiché", () => {
+    expect(plafondAffiche(prog("pave"))).toMatchObject({ cle: "journey.financing.maxPerVehicle" });
+    expect(plafondAffiche(prog("pave"))!.montant).toBeGreaterThan(0);
+    expect(plafondAffiche(prog("pagtcp"))).toBeNull();
+  });
+
+  it("chaque programme d'infrastructure du registre est affiché « par projet »", () => {
+    for (const p of PROGRAMMES.filter((x) => x.cible === "infrastructure")) {
+      const a = plafondAffiche(p);
+      if (a) expect(a.cle).toBe("journey.financing.maxPerProject");
+    }
   });
 });

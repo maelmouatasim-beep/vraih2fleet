@@ -5118,7 +5118,7 @@
         "surcout_non_resorbe": "the extra cost is not recovered within the {{horizon}}-year horizon",
         "aucun_ecart": "no vehicle changes technology: nothing to recover"
       },
-      "co2Avoided": "{{ttw}} t CO2e avoided at the exhaust · {{wtw}} t full cycle (totals)",
+      "co2Avoided": "over {{horizon}} years: {{ttw}} t CO2e avoided at the exhaust · {{wtw}} t over the full cycle (figure used in totals)",
       "subsidies": "Subsidies: {{amount}}",
       "reserves": {
         "longue_distance": "Range to verify (long distance)",
@@ -5341,7 +5341,8 @@
       "disclaimer": "Amounts estimated from the scales in force at the verification date: nothing is guaranteed before an application is accepted, and several programs close when funds run out. “To validate” programs have not yet been read at the source — check the link before budgeting.",
       "programChanges_one": "{{count}} validated change affects a program considered for your plan",
       "programChanges_other": "{{count}} validated changes affect programs considered for your plan",
-      "programChangesNote": "Changes found by the weekly watch and checked by the H2Fleet team. Plan amounts follow the program registry, updated after reading the source; confirm with the program before applying."
+      "programChangesNote": "Changes found by the weekly watch and checked by the H2Fleet team. Plan amounts follow the program registry, updated after reading the source; confirm with the program before applying.",
+      "maxPerProject": "Up to {{amount}} per project"
     },
     "reports": {
       "empty": {

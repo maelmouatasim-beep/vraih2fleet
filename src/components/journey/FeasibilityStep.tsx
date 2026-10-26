@@ -177,6 +177,7 @@ export default function FeasibilityStep({ projectId, project }: FeasibilityStepP
               })}
           {" · "}
           {t("journey.feasibility.co2Avoided", {
+            horizon: options?.horizonAns,
             ttw: formateurNombre(i18n.language, 1).format(e.co2EviteTtwTonnes),
             wtw: formateurNombre(i18n.language, 1).format(e.co2EviteWtwTonnes),
           })}

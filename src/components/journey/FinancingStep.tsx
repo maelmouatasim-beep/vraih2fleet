@@ -29,6 +29,7 @@ import { ExternalLink } from "lucide-react";
 import ConfirmedSubsidiesCard from "./ConfirmedSubsidiesCard";
 import SubsidyApplicationsCard from "./SubsidyApplicationsCard";
 import { cumulProgramme, nomProgramme, traduireLibelleSubvention } from "@/lib/tco/translations-en";
+import { plafondAffiche } from "@/lib/journey/financing";
 import { texteExplication } from "@/lib/journey/subsidy-explain";
 import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 import ClientDocumentsCard from "@/components/documents/ClientDocumentsCard";
@@ -272,7 +273,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
         <CardContent className="space-y-3">
           {PROGRAMMES.map((prog) => {
             const statut = statutEffectif(prog, aujourdHui);
-            const plafondMax = Math.max(...prog.baremes.map((b) => b.plafondParVehicule), 0);
+            const plafond = plafondAffiche(prog);
             return (
               <div key={prog.id} className="rounded-lg border border-border p-4 space-y-2">
                 <div className="flex flex-wrap items-start justify-between gap-2">
@@ -284,9 +285,7 @@ export default function FinancingStep({ projectId, project }: FinancingStepProps
                   </div>
                 </div>
                 <div className="text-sm text-muted-foreground space-y-1">
-                  {plafondMax > 0 && (
-                    <p>{t("journey.financing.maxPerVehicle", { amount: argent.format(plafondMax) })}</p>
-                  )}
+                  {plafond && <p>{t(plafond.cle, { amount: argent.format(plafond.montant) })}</p>}
                   {prog.bonificationAchatLocal && (
                     <p>
                       {t("journey.financing.localBonus", {

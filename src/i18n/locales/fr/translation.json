@@ -5118,7 +5118,7 @@
         "surcout_non_resorbe": "le surcoût n'est pas résorbé sur l'horizon de {{horizon}} ans",
         "aucun_ecart": "aucun véhicule ne change de technologie : rien à récupérer"
       },
-      "co2Avoided": "{{ttw}} t CO2e évitées à l'échappement · {{wtw}} t cycle complet (totaux)",
+      "co2Avoided": "sur {{horizon}} ans : {{ttw}} t CO2e évitées à l'échappement · {{wtw}} t sur le cycle complet (chiffre retenu dans les totaux)",
       "subsidies": "Subventions : {{amount}}",
       "reserves": {
         "longue_distance": "Autonomie à vérifier (longue distance)",
@@ -5341,7 +5341,8 @@
       "disclaimer": "Montants estimés selon les barèmes en vigueur à la date de vérification : rien n'est garanti avant l'acceptation d'une demande, et plusieurs programmes ferment à l'épuisement des fonds. Les programmes « à valider » n'ont pas encore été lus à la source — consultez le lien avant de budgéter.",
       "programChanges_one": "{{count}} changement validé touche un programme examiné pour votre plan",
       "programChanges_other": "{{count}} changements validés touchent des programmes examinés pour votre plan",
-      "programChangesNote": "Changements relevés par la veille hebdomadaire et vérifiés par l'équipe H2Fleet. Les montants du plan suivent le registre des programmes, mis à jour après lecture de la source ; confirmez auprès du programme avant de déposer une demande."
+      "programChangesNote": "Changements relevés par la veille hebdomadaire et vérifiés par l'équipe H2Fleet. Les montants du plan suivent le registre des programmes, mis à jour après lecture de la source ; confirmez auprès du programme avant de déposer une demande.",
+      "maxPerProject": "Jusqu'à {{amount}} par projet"
     },
     "reports": {
       "empty": {

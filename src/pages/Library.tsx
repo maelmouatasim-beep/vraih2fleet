@@ -38,6 +38,7 @@ import {
 import { formateurCad, formateurNombre } from "@/lib/format";
 import { ArrowRight, ExternalLink, Plug } from "lucide-react";
 import { cumulProgramme, descriptionHypothese, nomProgramme } from "@/lib/tco/translations-en";
+import { plafondAffiche } from "@/lib/journey/financing";
 import { StatusBadge } from "@/components/layout/States";
 import { ton, TON_LECTURE, TON_PROGRAMME, TON_VERIFICATION } from "@/components/layout/tons";
 import { etatLecture, type Lisibilite } from "@/lib/veille/lisibilite";
@@ -199,7 +200,7 @@ export default function Library() {
           <TabsContent value="programmes" className="space-y-3">
             {PROGRAMMES.map((prog) => {
               const statutProg = statutEffectif(prog, aujourdHui);
-              const plafondMax = Math.max(...prog.baremes.map((b) => b.plafondParVehicule), 0);
+              const plafond = plafondAffiche(prog);
               const lecture = etatLecture(prog.id, prog.source.url, lisibiliteVeille as Lisibilite);
               return (
                 <Card key={prog.id} data-testid={`library-program-${prog.id}`}>
@@ -225,9 +226,7 @@ export default function Library() {
                       </div>
                     )}
                     <div className="text-sm text-muted-foreground space-y-1">
-                      {plafondMax > 0 && (
-                        <p>{t("journey.financing.maxPerVehicle", { amount: argent.format(plafondMax) })}</p>
-                      )}
+                      {plafond && <p>{t(plafond.cle, { amount: argent.format(plafond.montant) })}</p>}
                       <p>{cumulProgramme(prog.id, langue)}</p>
                       {prog.dateFin && <p>{t("journey.financing.until", { date: prog.dateFin })}</p>}
                     </div>

@@ -4,7 +4,7 @@
  * générée du plan (auto_key subvention:<vehicule>:<programme>), sinon de
  * la date de fin du programme du registre.
  */
-import { PROGRAMMES } from "@/lib/tco";
+import { PROGRAMMES, type ProgrammeSubvention } from "@/lib/tco";
 import { nomCourtProgramme, type Langue } from "@/lib/tco/translations-en";
 
 export const STATUTS_DEMANDE = ["a_preparer", "deposee", "accordee", "recue"] as const;
@@ -68,4 +68,20 @@ export function echeancesDemandes(
     }
   }
   return resultat;
+}
+
+/**
+ * Plafond affiché d'un programme (audit A9) : par VÉHICULE pour un programme
+ * d'achat, par PROJET pour un programme d'infrastructure (PIVEZ : 2 M$ par
+ * projet, jamais « par véhicule »). null = aucun plafond à afficher.
+ */
+export function plafondAffiche(
+  prog: Pick<ProgrammeSubvention, "cible" | "baremes">,
+): { montant: number; cle: "journey.financing.maxPerVehicle" | "journey.financing.maxPerProject" } | null {
+  const montant = Math.max(...prog.baremes.map((b) => b.plafondParVehicule), 0);
+  if (montant <= 0) return null;
+  return {
+    montant,
+    cle: prog.cible === "infrastructure" ? "journey.financing.maxPerProject" : "journey.financing.maxPerVehicle",
+  };
 }
