@@ -20,6 +20,7 @@ const STATUS_TONE: Record<
   in_review: "primary",
   needs_info: "warning",
   qualified: "success",
+  routed: "primary",
   cancelled: "danger",
 };
 

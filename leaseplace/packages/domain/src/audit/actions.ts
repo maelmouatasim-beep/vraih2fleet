@@ -30,6 +30,13 @@ export const AUDIT_ACTIONS = [
   "memo.generated",
   "memo.approved",
   "memo.discarded",
+  "routing.computed",
+  "request.routed",
+  "target.viewed",
+  "target.declined",
+  "offer.submitted",
+  "offer.withdrawn",
+  "appetite.updated",
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 

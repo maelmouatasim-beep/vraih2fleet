@@ -6,7 +6,13 @@
  * réelles. Le jeu n'est chargé que par `pnpm db:seed` (refus en production
  * hors mode démo).
  */
-import type { OrganizationType, Role } from "@leaseplace/domain";
+import type {
+  BusinessSector,
+  EquipmentCategory,
+  Grade,
+  OrganizationType,
+  Role,
+} from "@leaseplace/domain";
 
 export const DEMO_PASSWORD = "Demo-LeasePlace-2026!";
 
@@ -38,6 +44,9 @@ export const DEMO_ORGANIZATIONS: readonly DemoOrganization[] = [
   },
   { key: "cedre", name: "Cèdre Leasing", slug: "cedre-leasing", type: "lessor" },
   { key: "argane", name: "Argane Bail", slug: "argane-bail", type: "lessor" },
+  { key: "oasis", name: "Oasis Crédit-Bail", slug: "oasis-credit-bail", type: "lessor" },
+  { key: "medina", name: "Médina Leasing", slug: "medina-leasing", type: "lessor" },
+  { key: "sahel", name: "Sahel Équipement Bail", slug: "sahel-equipement-bail", type: "lessor" },
   {
     key: "plateforme",
     name: "LeasePlace Opérations",
@@ -90,5 +99,70 @@ export const DEMO_ACCOUNTS: readonly DemoAccount[] = [
     organization: "plateforme",
     totpSecret: "DemoPlatformAdminTotpSecret00004",
     password: true,
+  },
+];
+
+/** Appétit de démonstration de chaque bailleur fictif (critères d'orientation). */
+export interface DemoAppetite {
+  organization: string;
+  minAmountHt: number;
+  maxAmountHt: number;
+  minDurationMonths: number;
+  maxDurationMonths: number;
+  sectors: BusinessSector[];
+  categories: EquipmentCategory[];
+  minGrade: Grade;
+}
+
+export const DEMO_APPETITES: readonly DemoAppetite[] = [
+  {
+    organization: "cedre",
+    minAmountHt: 100_000,
+    maxAmountHt: 5_000_000,
+    minDurationMonths: 24,
+    maxDurationMonths: 84,
+    sectors: [],
+    categories: [],
+    minGrade: "C",
+  },
+  {
+    organization: "argane",
+    minAmountHt: 50_000,
+    maxAmountHt: 2_000_000,
+    minDurationMonths: 12,
+    maxDurationMonths: 60,
+    sectors: ["transport", "construction", "agriculture", "trade"],
+    categories: ["light_vehicle", "truck", "trailer", "construction_machine", "agricultural"],
+    minGrade: "C",
+  },
+  {
+    organization: "oasis",
+    minAmountHt: 200_000,
+    maxAmountHt: 20_000_000,
+    minDurationMonths: 24,
+    maxDurationMonths: 84,
+    sectors: [],
+    categories: [],
+    minGrade: "B",
+  },
+  {
+    organization: "medina",
+    minAmountHt: 50_000,
+    maxAmountHt: 1_500_000,
+    minDurationMonths: 12,
+    maxDurationMonths: 72,
+    sectors: [],
+    categories: ["light_vehicle", "it", "medical", "industrial_machine", "other"],
+    minGrade: "D",
+  },
+  {
+    organization: "sahel",
+    minAmountHt: 300_000,
+    maxAmountHt: 30_000_000,
+    minDurationMonths: 36,
+    maxDurationMonths: 120,
+    sectors: [],
+    categories: ["truck", "construction_machine", "industrial_machine", "agricultural"],
+    minGrade: "C",
   },
 ];

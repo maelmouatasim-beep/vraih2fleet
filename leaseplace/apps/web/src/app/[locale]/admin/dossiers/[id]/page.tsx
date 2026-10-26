@@ -9,6 +9,7 @@ import { Alert } from "@leaseplace/ui/alert";
 import { Badge } from "@leaseplace/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@leaseplace/ui/card";
 import { EmptyState } from "@leaseplace/ui/empty-state";
+import { TableScroll } from "@leaseplace/ui/table-scroll";
 import {
   AnalysisButton,
   DecisionPanel,
@@ -53,6 +54,7 @@ import {
   reviewRequest,
   reviewTimeline,
 } from "@/lib/review/data";
+import { companyRouting } from "@/lib/routing/company";
 import { signDocumentUrl, signingKey } from "@/lib/signed-url";
 import { actorFor, requireSpace } from "@/lib/viewer";
 import {
@@ -108,18 +110,20 @@ export default async function ReviewPage({ params }: Props) {
     if (!request) return null;
     const company = await reviewCompany(tx, request.organizationId);
     const docs = await reviewDocuments(tx, request);
-    const [extractions, failed, checks, assessment, memos, memoRun, timeline] = await Promise.all([
-      latestExtractions(
-        tx,
-        docs.map((d) => d.id),
-      ),
-      failedExtractions(tx, id),
-      latestChecks(tx, id),
-      latestAssessment(tx, id),
-      memosOf(tx, id),
-      lastMemoRun(tx, id),
-      reviewTimeline(tx, id),
-    ]);
+    const [extractions, failed, checks, assessment, memos, memoRun, timeline, routing] =
+      await Promise.all([
+        latestExtractions(
+          tx,
+          docs.map((d) => d.id),
+        ),
+        failedExtractions(tx, id),
+        latestChecks(tx, id),
+        latestAssessment(tx, id),
+        memosOf(tx, id),
+        lastMemoRun(tx, id),
+        reviewTimeline(tx, id),
+        companyRouting(tx, id),
+      ]);
     return {
       request,
       company,
@@ -131,6 +135,7 @@ export default async function ReviewPage({ params }: Props) {
       memos,
       memoRun,
       timeline,
+      routing,
     };
   });
   if (!data?.company) notFound();
@@ -145,6 +150,7 @@ export default async function ReviewPage({ params }: Props) {
     memos,
     memoRun,
     timeline,
+    routing,
   } = data;
 
   const inReview = request.status === "in_review";
@@ -441,6 +447,63 @@ export default async function ReviewPage({ params }: Props) {
               requestInfo={requestInfoAction}
               qualify={qualifyAction}
             />
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {routing ? (
+        <Card data-routing-result>
+          <CardHeader>
+            <CardTitle>{t("routing.title")}</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-3">
+            <p className="text-[13px] text-fg-muted">
+              {t("routing.summary", {
+                eligible: routing.targets.filter((x) => x.status !== "excluded").length,
+                max: routing.maxTargets,
+              })}
+            </p>
+            <TableScroll label={t("routing.title")}>
+              <table className="w-full min-w-[560px] text-[13px]">
+                <thead className="text-fg-muted">
+                  <tr>
+                    <th scope="col" className="py-1.5 text-start font-medium">
+                      {t("routing.lessor")}
+                    </th>
+                    <th scope="col" className="py-1.5 text-start font-medium">
+                      {t("routing.status")}
+                    </th>
+                    <th scope="col" className="py-1.5 text-start font-medium">
+                      {t("routing.reasons")}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {routing.targets.map((x) => (
+                    <tr key={x.id} data-routing-target={x.lessorName} data-status={x.status}>
+                      <th scope="row" className="py-2 text-start font-medium text-fg">
+                        {x.lessorName}
+                      </th>
+                      <td className="py-2 whitespace-nowrap">
+                        <Badge tone={x.status === "excluded" ? "neutral" : "info"}>
+                          {t(`routing.statuses.${x.status}`)}
+                        </Badge>
+                        {x.proposed ? (
+                          <span className="ms-2 text-[12px] text-fg-subtle">
+                            {t("routing.proposed")}
+                          </span>
+                        ) : null}
+                      </td>
+                      <td className="py-2 text-fg-muted">
+                        {(x.exclusions as string[])
+                          .map((r) => t(`routing.exclusions.${r}`))
+                          .join(" · ") || "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </TableScroll>
           </CardContent>
         </Card>
       ) : null}

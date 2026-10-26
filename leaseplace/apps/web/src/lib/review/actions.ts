@@ -38,6 +38,7 @@ import {
   type RevenueBand,
 } from "@leaseplace/domain";
 import { aiProvider } from "../ai";
+import { computeRouting } from "../routing/compute";
 import { appDb } from "../db";
 import { logger } from "../logger";
 import { documentStorage } from "../storage";
@@ -410,7 +411,7 @@ export async function qualifyRequest(
   requestId: string,
   anomaliesNote: string,
 ): Promise<QualifyResult> {
-  return inReview(async (tx) => {
+  return inReview(async (tx, viewer) => {
     const request = await reviewRequest(tx, requestId);
     if (request?.status !== "in_review") return { status: "forbidden" } as const;
     const assessment = await latestAssessment(tx, requestId);
@@ -438,6 +439,11 @@ export async function qualifyRequest(
       entityId: requestId,
       metadata: { grade: assessment?.grade ?? null, anomaliesNote: anomaliesNote.trim() || null },
     });
+    // Orientation calculée dès la qualification : l'entreprise choisit ensuite.
+    const company = await reviewCompany(tx, request.organizationId);
+    if (company && assessment) {
+      await computeRouting(tx, viewer.user.id, request, company, assessment.grade);
+    }
     return { status: "qualified" } as const;
   });
 }

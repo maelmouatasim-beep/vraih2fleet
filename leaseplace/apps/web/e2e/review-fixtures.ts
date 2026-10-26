@@ -9,6 +9,7 @@ import { uuidv7 } from "uuidv7";
 import { createDatabase, schema, withActor } from "@leaseplace/db";
 import { requiredDocuments } from "@leaseplace/domain";
 import { createFileStorage, encryptedStorage } from "@leaseplace/integrations/storage";
+import { demoPdf } from "../src/lib/watermark";
 
 export interface ReviewCase {
   requestId: string;
@@ -56,7 +57,7 @@ export async function createReviewCase(options: { anomaly?: boolean } = {}): Pro
       const recent = new Date(Date.now() - 10 * 86_400_000);
       async function addDocument(type: string, name: string) {
         const id = uuidv7();
-        const bytes = new TextEncoder().encode(`%PDF-1.4\n% e2e ${tag} ${name}\n%%EOF\n`);
+        const bytes = await demoPdf(`${companyName} : ${name}`, [`e2e ${tag}`]);
         await storage.put(`${orgId}/${id}`, bytes);
         await tx.insert(schema.documents).values({
           id,

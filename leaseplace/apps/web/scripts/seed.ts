@@ -17,7 +17,13 @@ import { uuidv7 } from "uuidv7";
 import { createDatabase, schema, withActor } from "@leaseplace/db";
 import { MAX_AGE_MONTHS, requiredDocuments, type LegalForm } from "@leaseplace/domain";
 import { createFileStorage, encryptedStorage } from "@leaseplace/integrations/storage";
-import { DEMO_ACCOUNTS, DEMO_ORGANIZATIONS, DEMO_PASSWORD } from "../src/lib/demo-accounts";
+import { demoPdf } from "../src/lib/watermark";
+import {
+  DEMO_ACCOUNTS,
+  DEMO_APPETITES,
+  DEMO_ORGANIZATIONS,
+  DEMO_PASSWORD,
+} from "../src/lib/demo-accounts";
 
 const { users, accounts, organizations, memberships, twoFactors, companies } = schema;
 
@@ -102,6 +108,20 @@ try {
         .values({ id: uuidv7(), organizationId, userId, role: account.role });
     }
   }
+  // Appétit des bailleurs fictifs (critères d'orientation de la phase 6).
+  for (const a of DEMO_APPETITES) {
+    const organizationId = orgIds.get(a.organization);
+    if (!organizationId) continue;
+    const [existing] = await db
+      .select()
+      .from(schema.lessorAppetites)
+      .where(eq(schema.lessorAppetites.organizationId, organizationId));
+    if (!existing) {
+      const { organization: _org, ...criteria } = a;
+      await db.insert(schema.lessorAppetites).values({ organizationId, ...criteria });
+    }
+  }
+
   // Profil de l'entreprise de démonstration (ICE fictif, 15 chiffres).
   const atlasId = orgIds.get("atlas");
   if (atlasId) {
@@ -146,9 +166,9 @@ try {
     await withActor(db, { userId: owner.id, organizationId: atlasId }, async (tx) => {
       async function addDocument(type: string, name: string) {
         const id = uuidv7();
-        const bytes = new TextEncoder().encode(
-          `%PDF-1.4\n% Document fictif de démonstration : ${name}\n%%EOF\n`,
-        );
+        const bytes = await demoPdf(`Atlas Transports Logistique SARL : ${name}`, [
+          "Piece fictive du jeu de demonstration.",
+        ]);
         const key = `${atlasId ?? ""}/${id}`;
         await storage.put(key, bytes);
         await tx.insert(schema.documents).values({

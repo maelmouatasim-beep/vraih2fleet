@@ -22,16 +22,26 @@ import {
   requestTimeline,
 } from "@/lib/company-data";
 import { loadCompanyPage } from "@/lib/company-page";
+import { companyRouting } from "@/lib/routing/company";
+import { RoutingChooser } from "@/components/company/routing-chooser";
 import { env } from "@/lib/env";
 import { formatDate, formatDateTime, formatMad, formatPercent, ltr } from "@/lib/format";
 import { signDocumentUrl, signingKey } from "@/lib/signed-url";
 import {
   cancelRequestAction,
+  sendToLessorsAction,
   detachDocumentAction,
   saveDraftAction,
   submitRequestAction,
   uploadDocumentAction,
 } from "../../actions";
+
+const TARGET_TONE: Record<string, "info" | "primary" | "success" | "neutral"> = {
+  sent: "info",
+  viewed: "primary",
+  offered: "success",
+  declined: "neutral",
+};
 
 type Props = { params: Promise<{ locale: string; id: string }> };
 
@@ -51,7 +61,7 @@ export default async function RequestPage({ params }: Props) {
     if (!request) return { request: null };
     const company = await getCompany(tx, v.membership.organizationId);
     const docs = await listDocuments(tx, v.membership.organizationId);
-    const [attachments, timeline, legalText, consent] = await Promise.all([
+    const [attachments, timeline, legalText, consent, routing, routingText] = await Promise.all([
       requestAttachments(tx, id),
       requestTimeline(tx, id),
       currentLegalText(tx, "consent_processing", locale),
@@ -59,8 +69,16 @@ export default async function RequestPage({ params }: Props) {
         .select({ grantedAt: schema.consents.grantedAt, version: schema.legalTexts.version })
         .from(schema.consents)
         .innerJoin(schema.legalTexts, eq(schema.legalTexts.id, schema.consents.legalTextId))
-        .where(and(eq(schema.consents.requestId, id), isNull(schema.consents.revokedAt)))
+        .where(
+          and(
+            eq(schema.consents.requestId, id),
+            eq(schema.consents.purpose, "processing"),
+            isNull(schema.consents.revokedAt),
+          ),
+        )
         .then((rows) => rows[0] ?? null),
+      companyRouting(tx, id),
+      currentLegalText(tx, "consent_routing", locale),
     ]);
     return {
       request,
@@ -71,11 +89,13 @@ export default async function RequestPage({ params }: Props) {
       timeline,
       legalText,
       consent,
+      routing,
+      routingText,
     };
   });
   const { request, viewer } = data;
   if (!request || !("attachments" in data)) notFound();
-  const { kyc, attachments, timeline, legalText, consent } = data;
+  const { kyc, attachments, timeline, legalText, consent, routing, routingText } = data;
 
   if (isEditableRequestStatus(request.status)) {
     const infoEvent = timeline.filter((e) => e.toStatus === "needs_info").at(-1);
@@ -161,6 +181,56 @@ export default async function RequestPage({ params }: Props) {
           <CardContent className="text-[14px] text-fg">
             <p className="font-medium">{t(`next.${request.status}.title`)}</p>
             <p className="mt-1 text-fg-muted">{t(`next.${request.status}.body`)}</p>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {request.status === "qualified" && routing ? (
+        <Card data-routing>
+          <CardHeader>
+            <CardTitle>{t("routing.title")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-[14px] text-fg-muted">{t("routing.body")}</p>
+            <RoutingChooser
+              requestId={request.id}
+              maxTargets={routing.maxTargets}
+              choices={routing.targets
+                .filter((x) => x.status === "eligible")
+                .map((x) => ({ lessorId: x.lessorId, name: x.lessorName, proposed: x.proposed }))}
+              consentText={routingText?.body ?? ""}
+              canConsent={can(viewer.membership.role, "consent.grant")}
+              action={sendToLessorsAction}
+            />
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {request.status === "routed" && routing ? (
+        <Card data-routed>
+          <CardHeader>
+            <CardTitle>{t("routing.sentTitle")}</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-3">
+            <ul className="divide-y divide-border">
+              {routing.targets
+                .filter((x) => x.status !== "eligible")
+                .map((x) => (
+                  <li
+                    key={x.id}
+                    className="flex items-center justify-between gap-3 py-2.5 text-[14px]"
+                    data-target={x.lessorName}
+                  >
+                    <span className="font-medium text-fg">{x.lessorName}</span>
+                    <Badge tone={TARGET_TONE[x.status] ?? "neutral"}>
+                      {t(`routing.statuses.${x.status}`)}
+                    </Badge>
+                  </li>
+                ))}
+            </ul>
+            <p className="text-[13px] text-fg-muted">
+              {t("routing.offers", { count: routing.offerCount })}
+            </p>
           </CardContent>
         </Card>
       ) : null}

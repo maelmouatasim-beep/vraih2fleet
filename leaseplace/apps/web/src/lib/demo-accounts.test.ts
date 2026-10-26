@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { isRoleAllowedFor, requiresTwoFactor } from "@leaseplace/domain";
-import { DEMO_ACCOUNTS, DEMO_ORGANIZATIONS } from "./demo-accounts";
+import { DEMO_ACCOUNTS, DEMO_APPETITES, DEMO_ORGANIZATIONS } from "./demo-accounts";
 import { currentTotp, secondsLeftInPeriod } from "./totp";
 
 describe("jeu de démonstration", () => {
@@ -18,6 +18,15 @@ describe("jeu de démonstration", () => {
       const strict = org ? requiresTwoFactor(org.type) : false;
       expect(Boolean(a.totpSecret), a.key).toBe(strict);
       expect(a.password, a.key).toBe(strict);
+    }
+  });
+
+  it("un appétit par bailleur fictif, bornes cohérentes", () => {
+    const lessors = DEMO_ORGANIZATIONS.filter((o) => o.type === "lessor").map((o) => o.key);
+    expect(DEMO_APPETITES.map((a) => a.organization).sort()).toEqual([...lessors].sort());
+    for (const a of DEMO_APPETITES) {
+      expect(a.maxAmountHt).toBeGreaterThan(a.minAmountHt);
+      expect(a.maxDurationMonths).toBeGreaterThan(a.minDurationMonths);
     }
   });
 

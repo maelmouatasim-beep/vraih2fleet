@@ -74,6 +74,15 @@ validée par un humain, qualification ou demande de compléments (ADR 0012).
 IA : `LP_AI_PROVIDER=mock` (simulateur, défaut) ou `anthropic`
 (`ANTHROPIC_API_KEY`) ; évaluation manuelle : `pnpm --filter @leaseplace/ai eval`.
 
+## Orientation et espace bailleur
+
+À la qualification, les bailleurs éligibles sont calculés d'après leurs
+critères d'appétit (ordre neutre). L'entreprise en choisit au plus 4 et
+consent, bailleur par bailleur. `/bailleur` : boîte de réception (délai de
+72 h), fiche dossier avec pièces filigranées, offre recalculée par le moteur,
+refus motivé, critères d'appétit, tableau de bord (ADR 0013,
+`docs/phases/phase-6.md`).
+
 ## Sécurité, en bref
 
 - Trois rôles Postgres : propriétaire (migrations), `lp_auth` (Better-Auth,

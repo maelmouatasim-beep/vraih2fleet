@@ -93,26 +93,7 @@
       "allRequests": "All requests"
     },
     "lessor": {
-      "name": "Lessor space",
-      "inboxTitle": "Inbox",
-      "inboxBody": "Applications routed to {organization}, sorted by remaining response time.",
-      "kpiReceived": "Applications received",
-      "kpiPeriod": "Last 30 days",
-      "kpiPending": "Awaiting response",
-      "kpiSla": "Target: response within 72 h",
-      "kpiDelay": "Average response time",
-      "kpiWinRate": "Win rate",
-      "columns": {
-        "reference": "Application",
-        "company": "Business",
-        "amount": "Amount excl. VAT",
-        "duration": "Term",
-        "grade": "Index",
-        "sla": "Time left",
-        "status": "Status"
-      },
-      "emptyTitle": "No applications routed to you",
-      "emptyBody": "Applications matching your risk appetite will appear here, with their response deadline."
+      "name": "Lessor space"
     },
     "admin": {
       "name": "Back office",
@@ -252,7 +233,11 @@
     "magicLinkSubject": "Your {brand} sign-in link",
     "magicLinkBody": "Hello,\n\nHere is your sign-in link, valid for 10 minutes:\n{url}\n\nIf you did not request it, ignore this message.",
     "otpSubject": "Your {brand} sign-in code",
-    "otpBody": "Hello,\n\nYour sign-in code: {otp}\nIt is valid for 10 minutes.\n\nIf you did not request it, ignore this message."
+    "otpBody": "Hello,\n\nYour sign-in code: {otp}\nIt is valid for 10 minutes.\n\nIf you did not request it, ignore this message.",
+    "newRequestSubject": "{brand}: new file {reference}",
+    "newRequestBody": "Hello,\n\nA company has chosen you to receive its leasing file {reference}. You have 72 hours to respond.\n\nOpen the file: {url}\n\nThis message contains no file data.",
+    "offerReceivedSubject": "{brand}: offer received for {reference}",
+    "offerReceivedBody": "Hello,\n\nA lessor has sent an offer for your request {reference}.\n\nView the request: {url}"
   },
   "simulator": {
     "metaTitle": "Equipment leasing simulator",
@@ -987,7 +972,8 @@
         "cancelled": "Cancelled",
         "in_review": "In review",
         "needs_info": "Information requested",
-        "qualified": "File verified"
+        "qualified": "File verified",
+        "routed": "Sent to lessors"
       },
       "submittedOn": "Submitted on {date}",
       "updatedOn": "Updated on {date}",
@@ -1003,7 +989,8 @@
         "cancelled": "Request cancelled",
         "in_review": "Picked up by our team",
         "needs_info": "Information requested",
-        "qualified": "File verified"
+        "qualified": "File verified",
+        "routed": "File sent to the chosen lessors"
       },
       "consentGiven": "Consent given on {date} (text version {version}).",
       "cancel": "Cancel request",
@@ -1020,8 +1007,20 @@
         },
         "qualified": {
           "title": "File verified",
-          "body": "Your file is complete. You will soon be able to choose the lessors who receive it."
+          "body": "Your file is complete. Choose below the lessors who will receive it."
         }
+      },
+      "routing": {
+        "title": "Choose your lessors",
+        "body": "These lessors match your file (amount, term, sector, equipment). Nothing is shared until you tick and consent.",
+        "sentTitle": "File sent",
+        "statuses": {
+          "sent": "Received",
+          "viewed": "Viewed",
+          "offered": "Offer received",
+          "declined": "Not proceeding"
+        },
+        "offers": "{count, plural, =0 {No offer yet: lessors usually respond within 72 hours.} one {# offer received. Offer comparison is coming soon.} other {# offers received. Offer comparison is coming soon.}}"
       }
     },
     "profile": {
@@ -1042,6 +1041,22 @@
       "saved": "Profile saved.",
       "error": "Check the highlighted fields.",
       "readOnly": "Only the director can edit the profile."
+    },
+    "routing": {
+      "noLessor": "No partner lessor matches this file today. Our team will contact you to find a solution.",
+      "chooseLabel": "Lessors who will receive your file (up to {max})",
+      "selectedCount": "{count} of {max}",
+      "neutralOrder": "Neutral display order, reshuffled for each file: it reflects neither a ranking nor a preference.",
+      "consentCheckbox": "I have read this text and I agree to my file being shared with the selected lessors, and with them only.",
+      "ownerOnly": "Only the company's manager can give this consent and send the file.",
+      "issues": {
+        "none_selected": "Choose at least one lessor.",
+        "too_many": "You chose more lessors than the allowed maximum.",
+        "not_eligible": "One of the chosen lessors does not match this file.",
+        "consent_missing": "Tick the consent box to send the file."
+      },
+      "sending": "Sending…",
+      "send": "{count, plural, =0 {Send the file} one {Send to # lessor} other {Send to # lessors}}"
     }
   },
   "review": {
@@ -1279,6 +1294,192 @@
       "infoHint": "The company sees this message and can correct its request before resubmitting.",
       "noteTooShort": "The message must be at least 10 characters.",
       "requestInfo": "Send the request"
+    },
+    "routing": {
+      "title": "Routing to lessors",
+      "summary": "{eligible, plural, =0 {No eligible lessor.} one {# eligible lessor} other {# eligible lessors}}; the company chooses {max} at most. The order is neutral (rotation per file).",
+      "lessor": "Lessor",
+      "status": "Status",
+      "reasons": "Exclusion reasons",
+      "proposed": "proposed by default",
+      "statuses": {
+        "eligible": "Eligible",
+        "excluded": "Excluded",
+        "sent": "Sent",
+        "viewed": "Viewed",
+        "offered": "Offer received",
+        "declined": "Declined"
+      },
+      "exclusions": {
+        "inactive": "No longer receiving files",
+        "amount_below_min": "Amount below minimum",
+        "amount_above_max": "Amount above maximum",
+        "duration_out_of_range": "Term outside criteria",
+        "sector_excluded": "Sector not covered",
+        "category_excluded": "Equipment not covered",
+        "grade_below_min": "Grade below minimum"
+      }
+    }
+  },
+  "lessor": {
+    "statuses": {
+      "sent": "New",
+      "viewed": "Viewed",
+      "offered": "Offer sent",
+      "declined": "Declined"
+    },
+    "sla": {
+      "left": "{hours} h left",
+      "overdue": "{hours} h overdue"
+    },
+    "inbox": {
+      "title": "Inbox",
+      "description": "Verified files that companies chose to send to {organization}.",
+      "kpiPending": "To process",
+      "kpiPendingHint": "Received, not answered",
+      "kpiOverdue": "Overdue",
+      "kpiOverdueHint": "72-hour window exceeded",
+      "kpiReceived": "Received (30 days)",
+      "kpiReceivedHint": "Files sent to you",
+      "kpiDelay": "Average delay",
+      "kpiDelayHint": "From receipt to response",
+      "hours": "{n} h",
+      "months": "{n, plural, one {# month} other {# months}}",
+      "viewsLabel": "Filter files",
+      "views": {
+        "a-traiter": "To process",
+        "repondus": "Answered",
+        "tous": "All"
+      },
+      "emptyTitle": "No files here",
+      "emptyBody": "Files appear as soon as a company chooses you. Check that your criteria are up to date.",
+      "columns": {
+        "reference": "Reference",
+        "company": "Company",
+        "equipment": "Equipment",
+        "amount": "Amount excl. VAT",
+        "duration": "Term",
+        "grade": "Grade",
+        "received": "Received",
+        "sla": "Time left",
+        "status": "Status"
+      },
+      "disclaimer": "The grade and summary are reading aids prepared by the platform. The credit decision belongs exclusively to your institution."
+    },
+    "file": {
+      "title": "Received file",
+      "back": "Inbox",
+      "received": "Received on {date}",
+      "memoTitle": "File summary",
+      "noMemo": "No approved summary for this file.",
+      "documentsTitle": "{count, plural, =0 {No documents} one {Document (#)} other {Documents (#)}}",
+      "watermarkNote": "Every downloaded document carries the name {organization} and the date: do not share it outside your institution.",
+      "requestTitle": "Request",
+      "responseTitle": "Your response",
+      "offer": {
+        "rent": "Rent excl. VAT",
+        "firstRent": "First rent excl. VAT",
+        "effectiveRate": "APR",
+        "cost": "Financing cost excl. VAT",
+        "duration": "Term",
+        "validUntil": "Valid until"
+      },
+      "declined": "File declined on {date}: {reason}.",
+      "readOnly": "Your role lets you view this file, not respond to it."
+    },
+    "offer": {
+      "amount": "Financed amount excl. VAT",
+      "rate": "Annual rate",
+      "rateHint": "Lessor's nominal rate, excluding fees.",
+      "duration": "Term",
+      "monthsSuffix": "months",
+      "periodicity": "Frequency",
+      "timing": "Rent payment",
+      "advance": "In advance",
+      "arrears": "In arrears",
+      "firstRent": "Increased first rent excl. VAT",
+      "firstRentHint": "0 if there is no increased first rent.",
+      "residual": "Residual value excl. VAT",
+      "fees": "Arrangement fees excl. VAT",
+      "insurance": "Insurance per instalment excl. VAT",
+      "validUntil": "Offer valid until",
+      "insuranceRequired": "Equipment insurance required",
+      "conditions": "Special conditions (optional)",
+      "rent": "Rent excl. VAT",
+      "firstRentComputed": "First rent excl. VAT",
+      "cost": "Financing cost excl. VAT",
+      "effectiveRate": "APR",
+      "computedNote": "Indicative calculation; the server recomputes the offer on submission with the same engine.",
+      "issues": {
+        "amount_invalid": "Invalid amount: at most 120% of the requested amount.",
+        "duration_invalid": "Invalid term: 12 to 120 months, in whole periods.",
+        "rate_invalid": "Invalid rate: between 0.1% and 30%.",
+        "first_rent_invalid": "Invalid first rent: less than half of the financed amount.",
+        "residual_invalid": "Invalid residual value: less than half of the financed amount.",
+        "fees_invalid": "Invalid fees or insurance.",
+        "validity_invalid": "Invalid validity date: 1 to 90 days from today.",
+        "conditions_too_long": "Conditions too long: 2,000 characters at most."
+      },
+      "forbidden": "This file no longer accepts an offer from you.",
+      "submitting": "Sending…",
+      "submit": "Send the offer",
+      "withdraw": "Withdraw the offer"
+    },
+    "decline": {
+      "open": "Do not proceed",
+      "reason": "Reason",
+      "reasons": {
+        "outside_appetite": "Outside our criteria",
+        "insufficient_financials": "Insufficient financial position",
+        "sector_exposure": "Sector exposure",
+        "asset_risk": "Equipment risk",
+        "incomplete_file": "Incomplete file",
+        "pricing_not_competitive": "Terms not competitive",
+        "other": "Other reason"
+      },
+      "note": "Details (optional)",
+      "noteHint": "Required for “Other reason”. Visible to the platform team, not to the company.",
+      "noteRequired": "Explain the reason (at least 10 characters).",
+      "confirm": "Confirm decline"
+    },
+    "appetite": {
+      "title": "Risk appetite",
+      "description": "They determine which files can be offered to you. The company then chooses its lessors itself.",
+      "active": "Receive new files",
+      "minAmount": "Minimum amount",
+      "maxAmount": "Maximum amount",
+      "minDuration": "Minimum term",
+      "maxDuration": "Maximum term",
+      "monthsSuffix": "months",
+      "minGrade": "Minimum accepted grade",
+      "minGradeHint": "A is the most favourable grade, E the least favourable.",
+      "sectors": "Accepted sectors",
+      "categories": "Accepted equipment",
+      "emptyMeansAll": "Nothing ticked: all accepted.",
+      "invalid": "Inconsistent criteria: check that each minimum is below the maximum.",
+      "saved": "Criteria saved.",
+      "readOnly": "Only an administrator of your institution can change these criteria.",
+      "save": "Save",
+      "updated": "Last updated on {date} (version {version})"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "description": "Your institution's activity on the platform.",
+      "received": "Files received",
+      "received30d": "{count, plural, =0 {None in 30 days} one {# in 30 days} other {# in 30 days}}",
+      "responseRate": "Response rate",
+      "responseRateHint": "Offers and declines over files received",
+      "delay": "Average response time",
+      "delayHint": "Target: under 72 hours",
+      "hours": "{n} h",
+      "pending": "To process",
+      "overdue": "{count, plural, =0 {None overdue} one {# overdue} other {# overdue}}",
+      "offered": "Offers sent",
+      "declined": "Files declined",
+      "winRate": "Accepted offers",
+      "winRateHint": "Available with the comparator",
+      "commissions": "Commissions",
+      "commissionsHint": "Available with billing"
     }
   }
 }

@@ -100,7 +100,7 @@ export function requestTimeline(tx: Transaction, requestId: string) {
 /** Dernière version publiée d'un texte légal dans une langue. */
 export async function currentLegalText(
   tx: Transaction,
-  kind: "consent_processing",
+  kind: "consent_processing" | "consent_routing",
   locale: string,
 ) {
   const [row] = await tx

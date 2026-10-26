@@ -11,3 +11,5 @@ export * from "./kyc/extraction";
 export * from "./kyc/consistency";
 export * from "./scoring/model";
 export * from "./review/review";
+export * from "./routing/routing";
+export * from "./offers/offers";

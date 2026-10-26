@@ -41,7 +41,9 @@ describe("cycle de vie", () => {
       ["in_review", "cancelled"],
       ["needs_info", "submitted"],
       ["needs_info", "cancelled"],
+      ["qualified", "routed"],
       ["qualified", "cancelled"],
+      ["routed", "cancelled"],
     ]);
   });
   it("compléments demandés : la demande redevient modifiable puis se resoumet", () => {

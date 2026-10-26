@@ -6,6 +6,7 @@ import { requestContext } from "@/lib/request";
 import { signingKey, verifyDocumentUrl } from "@/lib/signed-url";
 import { documentStorage } from "@/lib/storage";
 import { getViewer } from "@/lib/viewer";
+import { watermark, WatermarkError } from "@/lib/watermark";
 
 export const dynamic = "force-dynamic";
 
@@ -70,14 +71,34 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     return row;
   });
   if (!doc) return NOT_FOUND();
-  const bytes = await documentStorage().get(doc.storageKey);
-  if (!bytes) return NOT_FOUND();
-  const ascii = doc.originalName.replace(/[^\x20-\x7e]/g, "_").replace(/["\\]/g, "_");
+  const stored = await documentStorage().get(doc.storageKey);
+  if (!stored) return NOT_FOUND();
+  // Un bailleur reçoit toujours une copie filigranée à son nom (PDF).
+  const lessor = viewer.membership?.organizationType === "lessor" ? viewer.membership : null;
+  let bytes: Uint8Array = stored;
+  let mimeType = doc.mimeType;
+  let name = doc.originalName;
+  if (lessor) {
+    try {
+      bytes = await watermark(stored, doc.mimeType, lessor.organizationName, new Date());
+    } catch (error) {
+      if (error instanceof WatermarkError) {
+        return new Response("Document non filigranable", {
+          status: 422,
+          headers: { "Cache-Control": "no-store" },
+        });
+      }
+      throw error;
+    }
+    mimeType = "application/pdf";
+    name = name.replace(/\.(jpe?g|png)$/i, ".pdf");
+  }
+  const ascii = name.replace(/[^\x20-\x7e]/g, "_").replace(/["\\]/g, "_");
   return new Response(Buffer.from(bytes), {
     headers: {
-      "Content-Type": doc.mimeType,
+      "Content-Type": mimeType,
       "Content-Length": String(bytes.length),
-      "Content-Disposition": `attachment; filename="${ascii}"; filename*=UTF-8''${encodeURIComponent(doc.originalName)}`,
+      "Content-Disposition": `attachment; filename="${ascii}"; filename*=UTF-8''${encodeURIComponent(name)}`,
       "Cache-Control": "private, no-store",
       "X-Content-Type-Options": "nosniff",
       "Content-Security-Policy": "default-src 'none'; sandbox",

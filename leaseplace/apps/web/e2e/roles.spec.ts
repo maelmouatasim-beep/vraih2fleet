@@ -89,7 +89,7 @@ test.describe("bailleur", () => {
     await signInPro(page, "bailleur");
     await expect(page).toHaveURL(/\/bailleur$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Boîte de réception");
-    await expect(page.getByText("Aucun dossier routé vers vous")).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "Filtrer les dossiers" })).toBeVisible();
     await expectAccessible(page);
     await page.keyboard.press("ControlOrMeta+k");
     await expect(page.getByPlaceholder("Tapez une commande ou une page…")).toBeVisible();

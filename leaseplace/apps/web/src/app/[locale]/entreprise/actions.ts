@@ -19,6 +19,7 @@ import {
   type UploadResult,
 } from "@/lib/company-actions";
 import { getCompany } from "@/lib/company-data";
+import { sendToLessors, type SendResult } from "@/lib/routing/company";
 import { appDb } from "@/lib/db";
 import { actorFor } from "@/lib/viewer";
 import { z } from "@/lib/zod";
@@ -139,4 +140,15 @@ export async function updateProfileAction(
   });
   revalidatePath("/[locale]/entreprise", "layout");
   return { status: "saved" };
+}
+
+export async function sendToLessorsAction(
+  requestId: string,
+  lessorIds: string[],
+  consent: boolean,
+  locale: string,
+): Promise<SendResult> {
+  const result = await sendToLessors(requestId, lessorIds, consent, locale);
+  revalidatePath("/[locale]/entreprise", "layout");
+  return result;
 }

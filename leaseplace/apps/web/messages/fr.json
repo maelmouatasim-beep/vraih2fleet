@@ -93,26 +93,7 @@
       "allRequests": "Toutes les demandes"
     },
     "lessor": {
-      "name": "Espace bailleur",
-      "inboxTitle": "Boîte de réception",
-      "inboxBody": "Dossiers routés vers {organization}, triés par délai de réponse restant.",
-      "kpiReceived": "Dossiers reçus",
-      "kpiPeriod": "30 derniers jours",
-      "kpiPending": "En attente de réponse",
-      "kpiSla": "Objectif : réponse sous 72 h",
-      "kpiDelay": "Délai moyen de réponse",
-      "kpiWinRate": "Taux de gain",
-      "columns": {
-        "reference": "Dossier",
-        "company": "Entreprise",
-        "amount": "Montant HT",
-        "duration": "Durée",
-        "grade": "Indice",
-        "sla": "Délai restant",
-        "status": "Statut"
-      },
-      "emptyTitle": "Aucun dossier routé vers vous",
-      "emptyBody": "Les dossiers qui correspondent à vos critères d’appétit apparaîtront ici, avec leur échéance de réponse."
+      "name": "Espace bailleur"
     },
     "admin": {
       "name": "Back-office",
@@ -252,7 +233,11 @@
     "magicLinkSubject": "Votre lien de connexion {brand}",
     "magicLinkBody": "Bonjour,\n\nVoici votre lien de connexion, valable 10 minutes :\n{url}\n\nSi vous n’êtes pas à l’origine de cette demande, ignorez ce message.",
     "otpSubject": "Votre code de connexion {brand}",
-    "otpBody": "Bonjour,\n\nVotre code de connexion : {otp}\nIl est valable 10 minutes.\n\nSi vous n’êtes pas à l’origine de cette demande, ignorez ce message."
+    "otpBody": "Bonjour,\n\nVotre code de connexion : {otp}\nIl est valable 10 minutes.\n\nSi vous n’êtes pas à l’origine de cette demande, ignorez ce message.",
+    "newRequestSubject": "{brand} : nouveau dossier {reference}",
+    "newRequestBody": "Bonjour,\n\nUne entreprise vous a choisi pour recevoir son dossier de crédit-bail {reference}. Vous avez 72 heures pour répondre.\n\nOuvrir le dossier : {url}\n\nCe message ne contient aucune donnée du dossier.",
+    "offerReceivedSubject": "{brand} : offre reçue pour {reference}",
+    "offerReceivedBody": "Bonjour,\n\nUn bailleur a envoyé une offre pour votre demande {reference}.\n\nVoir la demande : {url}"
   },
   "simulator": {
     "metaTitle": "Simulateur de crédit-bail",
@@ -987,7 +972,8 @@
         "cancelled": "Annulée",
         "in_review": "En revue",
         "needs_info": "Compléments demandés",
-        "qualified": "Dossier vérifié"
+        "qualified": "Dossier vérifié",
+        "routed": "Transmise aux bailleurs"
       },
       "submittedOn": "Soumise le {date}",
       "updatedOn": "Modifiée le {date}",
@@ -1003,7 +989,8 @@
         "cancelled": "Demande annulée",
         "in_review": "Prise en charge par notre équipe",
         "needs_info": "Compléments demandés",
-        "qualified": "Dossier vérifié"
+        "qualified": "Dossier vérifié",
+        "routed": "Dossier transmis aux bailleurs choisis"
       },
       "consentGiven": "Consentement donné le {date} (texte version {version}).",
       "cancel": "Annuler la demande",
@@ -1020,8 +1007,20 @@
         },
         "qualified": {
           "title": "Dossier vérifié",
-          "body": "Votre dossier est complet. Vous pourrez bientôt choisir les bailleurs qui le recevront."
+          "body": "Votre dossier est complet. Choisissez ci-dessous les bailleurs qui le recevront."
         }
+      },
+      "routing": {
+        "title": "Choisissez les bailleurs",
+        "body": "Ces bailleurs correspondent à votre dossier (montant, durée, secteur, équipement). Rien n’est transmis tant que vous n’avez pas coché et consenti.",
+        "sentTitle": "Dossier transmis",
+        "statuses": {
+          "sent": "Reçu",
+          "viewed": "Consulté",
+          "offered": "Offre reçue",
+          "declined": "Ne donne pas suite"
+        },
+        "offers": "{count, plural, =0 {Aucune offre pour l’instant : les bailleurs répondent en principe sous 72 h.} one {# offre reçue. La comparaison des offres arrive bientôt.} other {# offres reçues. La comparaison des offres arrive bientôt.}}"
       }
     },
     "profile": {
@@ -1042,6 +1041,22 @@
       "saved": "Profil enregistré.",
       "error": "Vérifiez les champs signalés.",
       "readOnly": "Seul le dirigeant peut modifier le profil."
+    },
+    "routing": {
+      "noLessor": "Aucun bailleur partenaire ne correspond aujourd’hui à ce dossier. Notre équipe vous contactera pour trouver une solution.",
+      "chooseLabel": "Bailleurs qui recevront votre dossier ({max} au maximum)",
+      "selectedCount": "{count} sur {max}",
+      "neutralOrder": "Ordre d’affichage neutre, renouvelé pour chaque dossier : il ne reflète ni un classement ni une préférence.",
+      "consentCheckbox": "J’ai lu ce texte et j’accepte la transmission de mon dossier aux bailleurs cochés, et à eux seuls.",
+      "ownerOnly": "Seul le gérant de l’entreprise peut donner ce consentement et transmettre le dossier.",
+      "issues": {
+        "none_selected": "Choisissez au moins un bailleur.",
+        "too_many": "Vous avez choisi plus de bailleurs que le maximum autorisé.",
+        "not_eligible": "Un des bailleurs choisis ne correspond pas à ce dossier.",
+        "consent_missing": "Cochez la case de consentement pour transmettre le dossier."
+      },
+      "sending": "Transmission…",
+      "send": "{count, plural, =0 {Transmettre le dossier} one {Transmettre à # bailleur} other {Transmettre à # bailleurs}}"
     }
   },
   "review": {
@@ -1279,6 +1294,192 @@
       "infoHint": "L’entreprise voit ce message et peut corriger sa demande avant de la soumettre à nouveau.",
       "noteTooShort": "Le message doit faire au moins 10 caractères.",
       "requestInfo": "Envoyer la demande de compléments"
+    },
+    "routing": {
+      "title": "Orientation vers les bailleurs",
+      "summary": "{eligible, plural, =0 {Aucun bailleur éligible.} one {# bailleur éligible} other {# bailleurs éligibles}} ; l’entreprise en choisit {max} au plus. L’ordre est neutre (rotation par dossier).",
+      "lessor": "Bailleur",
+      "status": "Statut",
+      "reasons": "Motifs d’exclusion",
+      "proposed": "proposé par défaut",
+      "statuses": {
+        "eligible": "Éligible",
+        "excluded": "Exclu",
+        "sent": "Transmis",
+        "viewed": "Consulté",
+        "offered": "Offre reçue",
+        "declined": "Décliné"
+      },
+      "exclusions": {
+        "inactive": "Ne reçoit plus de dossiers",
+        "amount_below_min": "Montant sous le minimum",
+        "amount_above_max": "Montant au-dessus du maximum",
+        "duration_out_of_range": "Durée hors critères",
+        "sector_excluded": "Secteur non couvert",
+        "category_excluded": "Équipement non couvert",
+        "grade_below_min": "Indice sous le minimum"
+      }
+    }
+  },
+  "lessor": {
+    "statuses": {
+      "sent": "Nouveau",
+      "viewed": "Consulté",
+      "offered": "Offre envoyée",
+      "declined": "Décliné"
+    },
+    "sla": {
+      "left": "{hours} h restantes",
+      "overdue": "En retard de {hours} h"
+    },
+    "inbox": {
+      "title": "Boîte de réception",
+      "description": "Dossiers vérifiés que les entreprises ont choisi de transmettre à {organization}.",
+      "kpiPending": "À traiter",
+      "kpiPendingHint": "Reçus, sans réponse",
+      "kpiOverdue": "En retard",
+      "kpiOverdueHint": "Délai de 72 h dépassé",
+      "kpiReceived": "Reçus (30 jours)",
+      "kpiReceivedHint": "Dossiers transmis",
+      "kpiDelay": "Délai moyen",
+      "kpiDelayHint": "De la réception à la réponse",
+      "hours": "{n} h",
+      "months": "{n, plural, one {# mois} other {# mois}}",
+      "viewsLabel": "Filtrer les dossiers",
+      "views": {
+        "a-traiter": "À traiter",
+        "repondus": "Répondus",
+        "tous": "Tous"
+      },
+      "emptyTitle": "Aucun dossier ici",
+      "emptyBody": "Les dossiers apparaissent dès qu’une entreprise vous choisit. Vérifiez que vos critères sont à jour.",
+      "columns": {
+        "reference": "Référence",
+        "company": "Entreprise",
+        "equipment": "Équipement",
+        "amount": "Montant HT",
+        "duration": "Durée",
+        "grade": "Indice",
+        "received": "Reçu le",
+        "sla": "Délai",
+        "status": "Statut"
+      },
+      "disclaimer": "L’indice et la synthèse sont des aides à la lecture préparées par la plateforme. La décision de crédit appartient exclusivement à votre établissement."
+    },
+    "file": {
+      "title": "Dossier reçu",
+      "back": "Boîte de réception",
+      "received": "Reçu le {date}",
+      "memoTitle": "Synthèse du dossier",
+      "noMemo": "Aucune synthèse approuvée pour ce dossier.",
+      "documentsTitle": "{count, plural, =0 {Aucune pièce} one {Pièce (#)} other {Pièces (#)}}",
+      "watermarkNote": "Chaque pièce téléchargée porte le nom de {organization} et la date : ne la diffusez pas hors de votre établissement.",
+      "requestTitle": "Demande",
+      "responseTitle": "Votre réponse",
+      "offer": {
+        "rent": "Loyer HT",
+        "firstRent": "Premier loyer HT",
+        "effectiveRate": "TEG",
+        "cost": "Coût du financement HT",
+        "duration": "Durée",
+        "validUntil": "Valable jusqu’au"
+      },
+      "declined": "Dossier décliné le {date} : {reason}.",
+      "readOnly": "Votre rôle permet de consulter ce dossier, pas d’y répondre."
+    },
+    "offer": {
+      "amount": "Montant financé HT",
+      "rate": "Taux annuel",
+      "rateHint": "Taux nominal du bailleur, hors frais.",
+      "duration": "Durée",
+      "monthsSuffix": "mois",
+      "periodicity": "Périodicité",
+      "timing": "Paiement des loyers",
+      "advance": "Terme à échoir",
+      "arrears": "Terme échu",
+      "firstRent": "Premier loyer majoré HT",
+      "firstRentHint": "0 si aucun premier loyer majoré.",
+      "residual": "Valeur résiduelle HT",
+      "fees": "Frais de dossier HT",
+      "insurance": "Assurance par échéance HT",
+      "validUntil": "Offre valable jusqu’au",
+      "insuranceRequired": "Assurance du matériel exigée",
+      "conditions": "Conditions particulières (facultatif)",
+      "rent": "Loyer HT",
+      "firstRentComputed": "Premier loyer HT",
+      "cost": "Coût du financement HT",
+      "effectiveRate": "TEG",
+      "computedNote": "Calcul indicatif ; le serveur recalcule l’offre à l’envoi avec le même moteur.",
+      "issues": {
+        "amount_invalid": "Montant invalide : au plus 120 % du montant demandé.",
+        "duration_invalid": "Durée invalide : de 12 à 120 mois, en nombre entier de périodes.",
+        "rate_invalid": "Taux invalide : entre 0,1 % et 30 %.",
+        "first_rent_invalid": "Premier loyer invalide : moins de la moitié du montant financé.",
+        "residual_invalid": "Valeur résiduelle invalide : moins de la moitié du montant financé.",
+        "fees_invalid": "Frais ou assurance invalides.",
+        "validity_invalid": "Date de validité invalide : de 1 à 90 jours à partir d’aujourd’hui.",
+        "conditions_too_long": "Conditions trop longues : 2 000 caractères au maximum."
+      },
+      "forbidden": "Ce dossier n’accepte plus d’offre de votre part.",
+      "submitting": "Envoi…",
+      "submit": "Envoyer l’offre",
+      "withdraw": "Retirer l’offre"
+    },
+    "decline": {
+      "open": "Ne pas donner suite",
+      "reason": "Motif",
+      "reasons": {
+        "outside_appetite": "Hors de nos critères",
+        "insufficient_financials": "Situation financière insuffisante",
+        "sector_exposure": "Exposition sectorielle",
+        "asset_risk": "Risque sur le matériel",
+        "incomplete_file": "Dossier incomplet",
+        "pricing_not_competitive": "Conditions non compétitives",
+        "other": "Autre motif"
+      },
+      "note": "Précision (facultatif)",
+      "noteHint": "Obligatoire pour « Autre motif ». Visible par l’équipe de la plateforme, pas par l’entreprise.",
+      "noteRequired": "Précisez le motif (10 caractères au moins).",
+      "confirm": "Confirmer le refus"
+    },
+    "appetite": {
+      "title": "Critères d’appétit",
+      "description": "Ils déterminent les dossiers qui peuvent vous être proposés. L’entreprise choisit ensuite elle-même ses bailleurs.",
+      "active": "Recevoir de nouveaux dossiers",
+      "minAmount": "Montant minimum",
+      "maxAmount": "Montant maximum",
+      "minDuration": "Durée minimum",
+      "maxDuration": "Durée maximum",
+      "monthsSuffix": "mois",
+      "minGrade": "Indice minimum accepté",
+      "minGradeHint": "A est l’indice le plus favorable, E le moins favorable.",
+      "sectors": "Secteurs acceptés",
+      "categories": "Équipements acceptés",
+      "emptyMeansAll": "Aucune case cochée : tous acceptés.",
+      "invalid": "Critères incohérents : vérifiez que chaque minimum est inférieur au maximum.",
+      "saved": "Critères enregistrés.",
+      "readOnly": "Seul un administrateur de votre établissement peut modifier ces critères.",
+      "save": "Enregistrer",
+      "updated": "Dernière mise à jour le {date} (version {version})"
+    },
+    "dashboard": {
+      "title": "Tableau de bord",
+      "description": "Activité de votre établissement sur la plateforme.",
+      "received": "Dossiers reçus",
+      "received30d": "{count, plural, =0 {Aucun sur 30 jours} one {# sur 30 jours} other {# sur 30 jours}}",
+      "responseRate": "Taux de réponse",
+      "responseRateHint": "Offres et refus sur dossiers reçus",
+      "delay": "Délai moyen de réponse",
+      "delayHint": "Objectif : moins de 72 h",
+      "hours": "{n} h",
+      "pending": "À traiter",
+      "overdue": "{count, plural, =0 {Aucun en retard} one {# en retard} other {# en retard}}",
+      "offered": "Offres envoyées",
+      "declined": "Dossiers déclinés",
+      "winRate": "Offres acceptées",
+      "winRateHint": "Disponible avec le comparateur",
+      "commissions": "Commissions",
+      "commissionsHint": "Disponible avec la facturation"
     }
   }
 }

@@ -36,9 +36,9 @@ export const NAV: Readonly<Record<Space, readonly NavItem[]>> = {
   ],
   lessor: [
     { key: "inbox", icon: Inbox, href: "/bailleur" },
-    { key: "pipeline", icon: KanbanSquare, phase: 6 },
-    { key: "dashboard", icon: Gauge, phase: 6 },
-    { key: "appetite", icon: SlidersHorizontal, phase: 6 },
+    { key: "dashboard", icon: Gauge, href: "/bailleur/tableau-de-bord" },
+    { key: "appetite", icon: SlidersHorizontal, href: "/bailleur/criteres" },
+    { key: "pipeline", icon: KanbanSquare, phase: 7 },
     { key: "billing", icon: Receipt, phase: 8 },
   ],
   admin: [

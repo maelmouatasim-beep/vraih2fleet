@@ -21,6 +21,7 @@ export const CLIENT_NAMESPACES = [
 export const SPACE_NAMESPACES = {
   company: ["company"],
   admin: ["review"],
+  lessor: ["lessor", "company.labels"],
 } as const;
 export type MessageSpace = keyof typeof SPACE_NAMESPACES;
 

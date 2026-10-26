@@ -31,6 +31,7 @@ export const REQUEST_STATUSES = [
   "in_review",
   "needs_info",
   "qualified",
+  "routed",
   "cancelled",
 ] as const;
 export type RequestStatus = (typeof REQUEST_STATUSES)[number];
@@ -39,6 +40,7 @@ export const REQUEST_EVENTS = [
   "start_review",
   "request_info",
   "qualify",
+  "route",
   "cancel",
 ] as const;
 export type RequestEvent = (typeof REQUEST_EVENTS)[number];
@@ -48,7 +50,8 @@ export const requestMachine = defineMachine<RequestStatus, RequestEvent>({
   submitted: { start_review: "in_review", cancel: "cancelled" },
   in_review: { request_info: "needs_info", qualify: "qualified", cancel: "cancelled" },
   needs_info: { submit: "submitted", cancel: "cancelled" },
-  qualified: { cancel: "cancelled" },
+  qualified: { route: "routed", cancel: "cancelled" },
+  routed: { cancel: "cancelled" },
   cancelled: {},
 });
 
