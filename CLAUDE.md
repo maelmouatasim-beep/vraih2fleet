@@ -610,6 +610,18 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   vraies formules vérifiées par un évaluateur (`classeurFormules.test.ts`)
   et par l'e2e terrain.
 
+- **Audit du test pilote (2026-10-25) — lot 1 LIVRÉ, en attente du « ok ».**
+  19 constats vérifiés dans le code : la plupart déjà corrigés (blocs 1-3
+  du test terrain). Corrigés maintenant : A6 **moteur 2.5.1** — stress
+  test : le facteur de prix d'achat des véhicules zéro émission ne touche
+  plus les remplacements en diesel (`sensitivity.ts`), plan sans véhicule
+  ZE = écart nul, Stratégies n'affiche plus de stress test quand rien ne
+  change ; A9 plafond d'un programme d'infrastructure « par projet »
+  (`plafondAffiche`, `src/lib/journey/financing.ts`) ; A8 libellé CO2
+  « sur N ans ». Lots suivants proposés : B6 liste par jalons dans Suivi,
+  B4 sélecteur de garage, C2 « à revoir » ; reportés : B5 garage
+  prioritaire, kanban remplacé, hiver H2.
+
 Rappels de méthode : chaque phase finit par `npm run check` vert → push →
 résumé court → **attendre le « ok » de l'utilisateur** ; kanban intégré à
 l'étape Suivi (pas de module autonome) ; aucune suppression de données en
