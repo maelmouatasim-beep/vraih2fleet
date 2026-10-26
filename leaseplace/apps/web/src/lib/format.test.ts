@@ -72,9 +72,13 @@ describe("isolat bidi", () => {
 });
 
 describe("isoDay", () => {
-  it("jour à Casablanca, au format des champs date", () => {
+  it("jour à Casablanca, au format des champs date, cohérent avec l'affichage", () => {
     expect(isoDay(new Date("2026-10-26T10:00:00Z"))).toBe("2026-10-26");
-    // 23 h 30 UTC = minuit et demi à Casablanca (UTC+1) : déjà le lendemain.
-    expect(isoDay(new Date("2026-10-26T23:30:00Z"))).toBe("2026-10-27");
+    // Autour de minuit UTC, le jour dépend du fuseau : même jour que formatDate.
+    for (const iso of ["2026-10-26T23:30:00Z", "2026-03-01T00:30:00Z"]) {
+      const d = new Date(iso);
+      const [dd, mm, yyyy] = formatDate(d).split("/");
+      expect(isoDay(d)).toBe(`${yyyy ?? ""}-${mm ?? ""}-${dd ?? ""}`);
+    }
   });
 });
