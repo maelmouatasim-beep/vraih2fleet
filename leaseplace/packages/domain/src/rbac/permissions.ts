@@ -23,6 +23,9 @@ export const PERMISSIONS = [
   "deal.cancel_own",
   "deal.manage",
   "message.send",
+  // Facturation et pilotage (phase 8)
+  "billing.read_own",
+  "kpi.read",
   // Bailleur (phase 6)
   "routed_request.read",
   "offer.submit",
@@ -70,6 +73,7 @@ const MATRIX: Readonly<Record<Role, readonly Permission[]>> = {
     "appetite.manage",
     "deal.manage",
     "message.send",
+    "billing.read_own",
   ],
   lessor_analyst: [
     "space.lessor",
@@ -97,8 +101,16 @@ const MATRIX: Readonly<Record<Role, readonly Permission[]>> = {
     "audit.read",
     "user.impersonate",
     "user.manage",
+    "kpi.read",
   ],
-  platform_ops: ["space.admin", "organization.read", "kyc.review", "score.override", "audit.read"],
+  platform_ops: [
+    "space.admin",
+    "organization.read",
+    "kyc.review",
+    "score.override",
+    "audit.read",
+    "kpi.read",
+  ],
   platform_support: ["space.admin", "organization.read", "user.impersonate"],
 };
 

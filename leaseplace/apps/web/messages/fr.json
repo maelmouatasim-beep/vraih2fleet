@@ -100,10 +100,10 @@
       "overviewTitle": "Vue d’ensemble",
       "overviewBody": "État de la plateforme et des organisations.",
       "kpiKyc": "Dossiers KYC à revoir",
-      "kpiKycHint": "File de revue : phase 5",
+      "kpiKycHint": "Soumis, en revue ou en attente de compléments",
       "kpiCompanies": "Entreprises",
       "kpiLessors": "Bailleurs",
-      "kpiLessorsHint": "Mandats : phase 8",
+      "kpiLessorsHint": "{count, plural, =0 {Aucun mandat en vigueur} one {# mandat en vigueur} other {# mandats en vigueur}}",
       "kpiEvents": "Événements d’audit",
       "kpiEventsHint": "24 dernières heures",
       "organizationsTitle": "Organisations",
@@ -112,8 +112,9 @@
         "type": "Type",
         "members": "Membres"
       },
-      "kycEmptyTitle": "File KYC vide",
-      "kycEmptyBody": "Les dossiers à vérifier apparaîtront ici dès l’ouverture du dépôt de documents."
+      "kycEmptyTitle": "Aucun dossier à revoir",
+      "kycEmptyBody": "Les demandes soumises par les entreprises apparaîtront ici.",
+      "queueTitle": "Dossiers à revoir"
     }
   },
   "audit": {
@@ -1458,7 +1459,8 @@
         "duration_out_of_range": "Durée hors critères",
         "sector_excluded": "Secteur non couvert",
         "category_excluded": "Équipement non couvert",
-        "grade_below_min": "Indice sous le minimum"
+        "grade_below_min": "Indice sous le minimum",
+        "no_mandate": "Aucun mandat en vigueur"
       }
     }
   },
@@ -1627,7 +1629,8 @@
       "winRate": "Offres acceptées",
       "winRateHint": "Acceptées / tranchées : {won} / {decided}",
       "commissions": "Commissions",
-      "commissionsHint": "Disponible avec la facturation"
+      "commissionsHint": "À régler, TTC : voir la facturation",
+      "commissionsRestricted": "Visible par l’administrateur"
     },
     "pipeline": {
       "title": "Pipeline",
@@ -1833,5 +1836,220 @@
       "saved": "Préférences enregistrées.",
       "save": "Enregistrer"
     }
+  },
+  "billing": {
+    "forbidden": "Action réservée à l’administration de la plateforme.",
+    "grid": {
+      "caption": "Grille de commission par tranche",
+      "tier": "Tranche du montant financé HT",
+      "rate": "Taux",
+      "range": "de {from} à {to}",
+      "above": "au-delà de {from}"
+    },
+    "lessors": {
+      "title": "Bailleurs et mandats",
+      "description": "Mandats écrits en vigueur, critères d’appétit et volumes de chaque bailleur partenaire.",
+      "columns": {
+        "name": "Bailleur",
+        "mandate": "Mandat",
+        "appetite": "Appétit",
+        "received": "Dossiers reçus",
+        "offers": "Offres",
+        "active": "Mises en loyer",
+        "production": "Production HT"
+      },
+      "noMandate": "Aucun mandat : ne reçoit aucun dossier",
+      "appetiteOpen": "Ouvert",
+      "appetiteClosed": "Fermé",
+      "emptyTitle": "Aucun bailleur",
+      "emptyBody": "Les bailleurs partenaires apparaissent ici dès leur création.",
+      "readOnly": "Lecture seule : seul un administrateur de la plateforme gère les mandats.",
+      "detailTitle": "Mandats du bailleur",
+      "detailDescription": "Chaque version du mandat est conservée. Une fois signé, un mandat ne se modifie plus : on en crée une nouvelle version.",
+      "noMandateBody": "Ce bailleur n’a aucun mandat : il ne reçoit aucun dossier tant qu’un mandat n’est pas en vigueur (loi 103-12)."
+    },
+    "mandate": {
+      "statuses": {
+        "draft": "Brouillon",
+        "active": "En vigueur",
+        "suspended": "Suspendu",
+        "terminated": "Résilié"
+      },
+      "events": {
+        "activate": "Mettre en vigueur",
+        "suspend": "Suspendre",
+        "resume": "Reprendre",
+        "terminate": "Résilier"
+      },
+      "untitled": "Mandat sans version",
+      "version": "Version du contrat",
+      "signedOn": "Signé le",
+      "activatedAt": "En vigueur depuis",
+      "terminatedAt": "Résilié le",
+      "antiCircumvention": "Clause anti-contournement (mois)",
+      "months": "{n, plural, one {# mois} other {# mois}}",
+      "grid": "Grille de commission (tranches marginales)",
+      "gridHint": "Chaque tranche du montant financé est commissionnée à son taux : pas d’effet de seuil. Taux en pourcentage.",
+      "from": "À partir de (DH HT)",
+      "rate": "Taux (%)",
+      "addTier": "Ajouter une tranche",
+      "removeTier": "Retirer la tranche",
+      "gridIssues": {
+        "empty": "La grille est vide.",
+        "too_many_tiers": "Dix tranches au plus.",
+        "first_not_zero": "La première tranche commence à 0.",
+        "not_ascending": "Les seuils doivent croître.",
+        "rate_out_of_range": "Chaque taux entre 0,1 % et 5 %.",
+        "not_degressive": "La grille est dégressive : un taux ne dépasse jamais celui de la tranche précédente."
+      },
+      "note": "Note interne (facultatif)",
+      "create": "Créer le brouillon",
+      "newTitle": "Nouvelle version du mandat",
+      "newBody": "Sa mise en vigueur résilie automatiquement le mandat en cours. Les opérations déjà acceptées gardent la grille du mandat de leur acceptation.",
+      "issues": {
+        "empty": "La grille est vide.",
+        "too_many_tiers": "Dix tranches au plus.",
+        "first_not_zero": "La première tranche commence à 0.",
+        "not_ascending": "Les seuils doivent croître.",
+        "rate_out_of_range": "Chaque taux entre 0,1 % et 5 %.",
+        "not_degressive": "La grille est dégressive : un taux ne dépasse jamais celui de la tranche précédente.",
+        "form_invalid": "Formulaire incomplet.",
+        "version_missing": "Indiquez la version du contrat signé.",
+        "signed_on_missing": "Indiquez la date de signature.",
+        "signed_in_future": "La date de signature ne peut pas être dans le futur.",
+        "anti_circumvention_missing": "La clause anti-contournement est obligatoire.",
+        "anti_circumvention_out_of_range": "Clause anti-contournement : de 6 à 36 mois.",
+        "grid_invalid": "La grille n’est pas valide.",
+        "transition_invalid": "Action impossible dans ce statut.",
+        "another_active": "Une version plus récente est en vigueur : ce mandat ne peut pas être repris."
+      }
+    },
+    "commission": {
+      "statuses": {
+        "due": "À facturer",
+        "invoiced": "Facturée",
+        "paid": "Payée",
+        "cancelled": "Annulée",
+        "overdue": "En retard"
+      },
+      "invoice": "Émettre la facture",
+      "pay": "Encaisser",
+      "cancel": "Avoir",
+      "paidOn": "Payée le",
+      "reference": "Référence du virement",
+      "confirmPay": "Confirmer l’encaissement",
+      "reason": "Motif",
+      "reasons": {
+        "deal_unwound": "Opération annulée",
+        "billing_error": "Erreur de facturation",
+        "commercial_gesture": "Geste commercial",
+        "other": "Autre motif"
+      },
+      "note": "Précision",
+      "confirmCancel": "Confirmer l’avoir",
+      "issues": {
+        "paid_on_invalid": "Date de paiement invalide.",
+        "reference_required": "Indiquez la référence du virement.",
+        "reason_invalid": "Motif invalide.",
+        "note_required": "Précisez le motif (10 caractères au moins)."
+      },
+      "forbidden": "Action réservée à l’administration de la plateforme."
+    },
+    "commissions": {
+      "title": "Commissions",
+      "description": "Dues à la mise en loyer selon la grille du mandat ; facturées, puis encaissées.",
+      "restrictedTitle": "Accès réservé",
+      "restrictedBody": "La facturation est réservée à l’administration de la plateforme.",
+      "kpiDue": "À facturer",
+      "kpiInvoiced": "Facturées, en attente",
+      "kpiOverdue": "En retard",
+      "kpiOverdueHint": "Échéance dépassée, HT",
+      "kpiPaid": "Encaissées en {year}",
+      "ht": "Montant HT",
+      "viewsLabel": "Filtrer les commissions",
+      "views": {
+        "a-facturer": "À facturer",
+        "facturees": "Facturées",
+        "payees": "Payées",
+        "toutes": "Toutes"
+      },
+      "columns": {
+        "reference": "Demande",
+        "lessor": "Bailleur",
+        "activated": "Mise en loyer",
+        "financed": "Montant financé HT",
+        "commission": "Commission HT",
+        "status": "Statut",
+        "invoice": "Facture",
+        "actions": "Actions"
+      },
+      "ttc": "{amount} TTC",
+      "dueOn": "échéance {date}",
+      "emptyTitle": "Rien ici",
+      "emptyBody": "Les commissions apparaissent à la mise en loyer des opérations.",
+      "legal": "Commission d’intermédiation payée par le bailleur au succès, selon son mandat. L’entreprise ne paie rien."
+    },
+    "lessorBilling": {
+      "title": "Facturation",
+      "description": "Votre mandat, vos commissions et vos factures.",
+      "mandateTitle": "Mandat en vigueur",
+      "version": "Version du contrat",
+      "signedOn": "Signé le",
+      "antiCircumvention": "Clause anti-contournement",
+      "antiCircumventionBody": "{months} mois après la présentation d’un dossier par la plateforme.",
+      "noMandate": "Aucun mandat en vigueur : votre établissement ne reçoit pas de dossier. Contactez l’équipe de la plateforme.",
+      "restrictedTitle": "Accès réservé",
+      "restrictedBody": "Les commissions et factures sont visibles par l’administrateur de votre établissement.",
+      "kpiDue": "À régler",
+      "kpiOverdue": "En retard",
+      "kpiPaid": "Réglées",
+      "ttc": "Montant TTC",
+      "emptyTitle": "Aucune commission",
+      "emptyBody": "Une commission est due à chaque mise en loyer d’un dossier présenté par la plateforme.",
+      "notInvoiced": "Pas encore facturée",
+      "legal": "Commission calculée par la plateforme selon la grille de votre mandat (tranches marginales), TVA 20 % en sus."
+    },
+    "users": {
+      "title": "Utilisateurs",
+      "description": "{count, plural, one {# accès} other {# accès}} : organisation, rôle, double authentification.",
+      "restrictedTitle": "Accès réservé",
+      "restrictedBody": "La gestion des utilisateurs est réservée à l’administration de la plateforme.",
+      "columns": {
+        "name": "Nom",
+        "email": "E-mail",
+        "organization": "Organisation",
+        "role": "Rôle",
+        "twoFactor": "Double authentification",
+        "created": "Créé le"
+      },
+      "on": "Activée",
+      "off": "—",
+      "impersonationNote": "L’accès « en tant que » pour le support n’est pas encore ouvert : il sera tracé dans le journal d’audit."
+    }
+  },
+  "kpis": {
+    "title": "Pilotage",
+    "timeToOffer": "Délai jusqu’à la première offre",
+    "timeToOfferHint": "Médiane, depuis la transmission",
+    "hours": "{n} h",
+    "offersPerFile": "Offres par dossier",
+    "offersPerFileHint": "Moyenne des dossiers transmis",
+    "savings": "Économie moyenne",
+    "savingsHint": "Coût moyen des autres offres moins l’offre acceptée",
+    "production": "Production intermédiée",
+    "productionHint": "{count, plural, =0 {Aucune mise en loyer} one {# mise en loyer, HT} other {# mises en loyer, HT}}",
+    "commissionsDue": "Commissions à encaisser",
+    "commissionsPaid": "Commissions encaissées",
+    "ht": "Montant HT",
+    "funnelTitle": "Entonnoir des demandes",
+    "stages": {
+      "submitted": "Soumises",
+      "qualified": "Vérifiées",
+      "routed": "Transmises",
+      "firstOffer": "Première offre",
+      "accepted": "Offre acceptée",
+      "financed": "Financées"
+    },
+    "funnelNote": "Pourcentage : part des demandes de l’étape précédente. Les visites et simulations seront mesurées avec l’outil d’analyse (phase 9)."
   }
 }

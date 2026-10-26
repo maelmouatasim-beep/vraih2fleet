@@ -52,6 +52,17 @@ beforeAll(async () => {
     sql`select id from kyc.legal_texts where kind = 'consent_routing' and locale = 'fr' limit 1`,
   );
   consentText = t?.id ?? "";
+  // Mandats en vigueur (sinon la mise en loyer est refusée) : écrits par le
+  // propriétaire, triggers désactivés ; les règles des mandats sont testées
+  // dans billing.test.ts.
+  await db.transaction(async (tx) => {
+    await tx.execute(sql`set local session_replication_role = replica`);
+    for (const l of ["bailleurA", "bailleurB"])
+      await tx.execute(sql`insert into billing.mandates
+        (id, lessor_organization_id, status, contract_version, signed_on, grid, activated_at, created_by)
+        values (${uuidv7()}, ${org(l)}, 'active', 'TEST-1', now()::date - 30,
+          '[{"from":0,"rate":0.015},{"from":500000,"rate":0.012}]', now() - interval '30 days', ${user("ops")})`);
+  });
 });
 
 afterAll(async () => {
@@ -70,6 +81,7 @@ afterAll(async () => {
         sql`delete from market.deal_events where deal_id in (select id from market.deals where request_id in ${reqs})`,
       );
       await tx.execute(sql`delete from market.deals where request_id in ${reqs}`);
+      await tx.execute(sql`delete from billing.commissions where request_id in ${reqs}`);
       await tx.execute(sql`delete from market.offers where request_id in ${reqs}`);
       await tx.execute(sql`delete from credit.routing_targets where request_id in ${reqs}`);
       await tx.execute(sql`delete from credit.routing_decisions where request_id in ${reqs}`);
@@ -80,6 +92,9 @@ afterAll(async () => {
       await tx.execute(sql`delete from credit.request_events where request_id in ${reqs}`);
       await tx.execute(
         sql`delete from credit.financing_requests where organization_id = ${org("pme")}`,
+      );
+      await tx.execute(
+        sql`delete from billing.mandates where lessor_organization_id in (${org("bailleurA")}, ${org("bailleurB")})`,
       );
       await tx.execute(
         sql`delete from identity.notifications where user_id in (${sql.join(

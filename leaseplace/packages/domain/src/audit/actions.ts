@@ -44,6 +44,15 @@ export const AUDIT_ACTIONS = [
   "deal.cancelled",
   "message.sent",
   "notification.preferences_updated",
+  "mandate.created",
+  "mandate.activated",
+  "mandate.suspended",
+  "mandate.resumed",
+  "mandate.terminated",
+  "commission.invoiced",
+  "commission.paid",
+  "commission.cancelled",
+  "invoice.downloaded",
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 

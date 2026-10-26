@@ -24,6 +24,7 @@ const profile: RoutingProfile = {
 
 const open = (lessorId: string, over: Partial<Appetite> = {}): Appetite => ({
   lessorId,
+  mandated: true,
   active: true,
   minAmountHt: 100_000,
   maxAmountHt: 5_000_000,
@@ -44,6 +45,7 @@ describe("critères d'appétit", () => {
       exclusionsOf(
         profile,
         open("a", {
+          mandated: false,
           active: false,
           minAmountHt: 2_000_000,
           minDurationMonths: 72,
@@ -53,6 +55,7 @@ describe("critères d'appétit", () => {
         }),
       ),
     ).toEqual([
+      "no_mandate",
       "inactive",
       "amount_below_min",
       "duration_out_of_range",

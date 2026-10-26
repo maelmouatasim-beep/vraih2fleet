@@ -92,6 +92,14 @@ notifications dans l'application, par e-mail, SMS ou WhatsApp (boîte de
 démonstration `/demo/boite-mail`) — ADR 0014, `docs/phases/phase-7.md`.
 Questions en attente d'arbitrage : `docs/questions-ouvertes.md`.
 
+## Mandats, commissions, pilotage
+
+Mandats versionnés par bailleur (`/admin/bailleurs`), commission à la mise en
+loyer selon la grille marginale du mandat, factures PDF numérotées et
+encaissement (`/admin/commissions`), facturation côté bailleur
+(`/bailleur/facturation`), tableau de pilotage dans la vue d'ensemble —
+ADR 0015, `docs/phases/phase-8.md`.
+
 ## Sécurité, en bref
 
 - Trois rôles Postgres : propriétaire (migrations), `lp_auth` (Better-Auth,

@@ -8,3 +8,4 @@ export * from "./review";
 export * from "./routing";
 export * from "./deals";
 export * from "./notifications";
+export * from "./billing";

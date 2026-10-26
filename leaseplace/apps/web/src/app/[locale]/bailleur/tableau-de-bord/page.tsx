@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { schema, withActor } from "@leaseplace/db";
+import { can } from "@leaseplace/domain";
 import { PageHeader, StatCard } from "@/components/shell/shells";
 import type { Locale } from "@/i18n/routing";
 import { appDb } from "@/lib/db";
-import { formatNumber, formatPercent, ltr } from "@/lib/format";
+import { formatMad, formatNumber, formatPercent, ltr } from "@/lib/format";
 import { lessorInbox, lessorStats } from "@/lib/lessor/data";
 import { actorFor, requireSpace } from "@/lib/viewer";
 
@@ -17,12 +18,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: t("title") };
 }
 
-/** Tableau de bord du bailleur : volumes, réactivité, taux de gain ; commissions en phase 8. */
+/** Tableau de bord du bailleur : volumes, réactivité, taux de gain, commissions dues. */
 export default async function LessorDashboard({ params }: Props) {
   const { locale } = await params;
   const viewer = await requireSpace("lessor", locale as Locale);
   const t = await getTranslations("lessor.dashboard");
-  const { rows, decided } = await withActor(appDb(), await actorFor(viewer), async (tx) => ({
+  const { rows, decided, owed } = await withActor(appDb(), await actorFor(viewer), async (tx) => ({
     rows: await lessorInbox(tx, viewer.membership.organizationId),
     decided: await tx
       .select({ status: schema.offers.status, n: sql<number>`count(*)::int` })
@@ -34,6 +35,18 @@ export default async function LessorDashboard({ params }: Props) {
         ),
       )
       .groupBy(schema.offers.status),
+    owed: can(viewer.membership.role, "billing.read_own")
+      ? await tx
+          .select({ total: sql<number>`coalesce(sum(${schema.commissions.amountTtc}), 0)::float8` })
+          .from(schema.commissions)
+          .where(
+            and(
+              eq(schema.commissions.lessorOrganizationId, viewer.membership.organizationId),
+              inArray(schema.commissions.status, ["due", "invoiced"]),
+            ),
+          )
+          .then((r) => r[0]?.total ?? 0)
+      : null,
   }));
   // Taux de gain : offres acceptées parmi les offres tranchées par les entreprises.
   const won = decided.find((d) => d.status === "accepted")?.n ?? 0;
@@ -74,7 +87,11 @@ export default async function LessorDashboard({ params }: Props) {
           value={won + lost === 0 ? "—" : ltr(formatPercent(won / (won + lost), 0))}
           hint={t("winRateHint", { won, decided: won + lost })}
         />
-        <StatCard label={t("commissions")} value="—" hint={t("commissionsHint")} />
+        <StatCard
+          label={t("commissions")}
+          value={owed === null ? "—" : ltr(formatMad(owed, 0))}
+          hint={owed === null ? t("commissionsRestricted") : t("commissionsHint")}
+        />
       </div>
     </div>
   );

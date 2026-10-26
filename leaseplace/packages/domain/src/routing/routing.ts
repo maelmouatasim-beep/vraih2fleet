@@ -13,6 +13,8 @@ import { GRADES, type Grade } from "../scoring/model";
  */
 export interface Appetite {
   lessorId: string;
+  /** Mandat écrit en vigueur avec la plateforme (loi 103-12) : sans lui, aucun dossier. */
+  mandated: boolean;
   active: boolean;
   minAmountHt: number;
   maxAmountHt: number;
@@ -36,6 +38,7 @@ export interface RoutingProfile {
 }
 
 export const ROUTING_EXCLUSIONS = [
+  "no_mandate",
   "inactive",
   "amount_below_min",
   "amount_above_max",
@@ -55,6 +58,7 @@ export function clampMaxTargets(n: number): number {
 
 export function exclusionsOf(profile: RoutingProfile, a: Appetite): RoutingExclusion[] {
   const out: RoutingExclusion[] = [];
+  if (!a.mandated) out.push("no_mandate");
   if (!a.active) out.push("inactive");
   if (profile.amountHt < a.minAmountHt) out.push("amount_below_min");
   if (profile.amountHt > a.maxAmountHt) out.push("amount_above_max");

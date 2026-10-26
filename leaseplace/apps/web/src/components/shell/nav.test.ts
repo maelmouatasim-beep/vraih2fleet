@@ -27,8 +27,9 @@ describe("NAV", () => {
       "/entreprise/messages",
     ]);
   });
-  it("l'espace bailleur ouvre le pipeline ; la facturation reste en phase 8", () => {
+  it("toutes les entrées des espaces bailleur et back-office sont livrées", () => {
     expect(NAV.lessor.find((i) => i.key === "pipeline")?.href).toBe("/bailleur/pipeline");
-    expect(NAV.lessor.find((i) => i.key === "billing")?.phase).toBe(8);
+    expect(NAV.lessor.find((i) => i.key === "billing")?.href).toBe("/bailleur/facturation");
+    for (const item of [...NAV.lessor, ...NAV.admin]) expect(item.href, item.key).toBeTruthy();
   });
 });

@@ -7,7 +7,12 @@ import { Badge } from "@leaseplace/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@leaseplace/ui/card";
 import { EmptyState } from "@leaseplace/ui/empty-state";
 import { TableScroll } from "@leaseplace/ui/table-scroll";
+import { KpiDashboard } from "@/components/billing/kpi-dashboard";
 import { PageHeader, StatCard } from "@/components/shell/shells";
+import { StatusBadge } from "@/components/review/review-view";
+import { Link } from "@/i18n/navigation";
+import { kpiData } from "@/lib/billing/data";
+import { reviewQueue } from "@/lib/review/data";
 import type { Locale } from "@/i18n/routing";
 import { appDb } from "@/lib/db";
 import { actorFor, requireSpace } from "@/lib/viewer";
@@ -54,7 +59,22 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
           .orderBy(desc(auditEvents.id))
           .limit(1)
       : [];
-    return { orgs, events: events?.n ?? null, lastEvent: last?.at ?? null };
+    const kpis = can(viewer.membership.role, "kpi.read") ? await kpiData(tx) : null;
+    const queue = can(viewer.membership.role, "kyc.review")
+      ? (await reviewQueue(tx)).filter((q) => q.status !== "qualified")
+      : null;
+    const [mandated] = await tx
+      .select({ n: count() })
+      .from(schema.mandates)
+      .where(eq(schema.mandates.status, "active"));
+    return {
+      orgs,
+      events: events?.n ?? null,
+      lastEvent: last?.at ?? null,
+      kpis,
+      queue,
+      mandated: mandated?.n ?? 0,
+    };
   });
 
   const byType = (type: OrganizationType) => data.orgs.filter((o) => o.type === type).length;
@@ -63,12 +83,16 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
       <PageHeader title={t("overviewTitle")} description={t("overviewBody")} />
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatCard label={t("kpiKyc")} value="0" hint={t("kpiKycHint")} />
+        <StatCard
+          label={t("kpiKyc")}
+          value={data.queue === null ? "—" : String(data.queue.length)}
+          hint={t("kpiKycHint")}
+        />
         <StatCard label={t("kpiCompanies")} value={String(byType("company"))} />
         <StatCard
           label={t("kpiLessors")}
           value={String(byType("lessor"))}
-          hint={t("kpiLessorsHint")}
+          hint={t("kpiLessorsHint", { count: data.mandated })}
         />
         <StatCard
           label={t("kpiEvents")}
@@ -76,6 +100,8 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
           hint={t("kpiEventsHint")}
         />
       </div>
+
+      {data.kpis ? <KpiDashboard data={data.kpis} /> : null}
 
       <div className="grid gap-6 lg:grid-cols-5">
         <Card className="lg:col-span-3">
@@ -118,12 +144,41 @@ export default async function AdminHome({ params }: { params: Promise<{ locale: 
           </CardContent>
         </Card>
         <div className="lg:col-span-2">
-          <EmptyState
-            icon={<ClipboardCheck />}
-            title={t("kycEmptyTitle")}
-            description={t("kycEmptyBody")}
-            className="h-full"
-          />
+          {data.queue && data.queue.length > 0 ? (
+            <Card className="h-full">
+              <CardHeader>
+                <CardTitle>{t("queueTitle")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="divide-y divide-border" data-overview-queue>
+                  {data.queue.slice(0, 8).map((q) => (
+                    <li
+                      key={q.id}
+                      className="flex items-center justify-between gap-3 py-2.5 text-[13px]"
+                    >
+                      <span className="min-w-0">
+                        <Link
+                          href={`/admin/dossiers/${q.id}`}
+                          className="tabular font-mono font-medium text-primary hover:underline"
+                        >
+                          {q.reference}
+                        </Link>
+                        <span className="block truncate text-fg-muted">{q.companyName}</span>
+                      </span>
+                      <StatusBadge status={q.status} />
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ) : (
+            <EmptyState
+              icon={<ClipboardCheck />}
+              title={t("kycEmptyTitle")}
+              description={t("kycEmptyBody")}
+              className="h-full"
+            />
+          )}
         </div>
       </div>
     </div>

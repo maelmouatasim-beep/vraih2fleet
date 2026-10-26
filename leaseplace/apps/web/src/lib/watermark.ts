@@ -14,7 +14,7 @@ export class WatermarkError extends Error {
 }
 
 /** Police standard (WinAnsi) : accents latins conservés, autres caractères translittérés. */
-function encodable(font: PDFFont, text: string): string {
+export function encodable(font: PDFFont, text: string): string {
   const out: string[] = [];
   for (const ch of text) {
     try {

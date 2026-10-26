@@ -82,3 +82,25 @@ export async function offerAs(browser: Browser, key: string, c: ReviewCase, rate
   await expect(page.locator("[data-offer-summary]")).toBeVisible();
   return page;
 }
+
+/** Acceptation d'une offre depuis le comparateur (case de confirmation comprise). */
+export async function acceptOffer(page: Page, lessor: string) {
+  const card = page.locator(`[data-offer="${lessor}"]`);
+  await card.getByRole("button", { name: "Accepter cette offre" }).click();
+  const confirm = card.locator("[data-accept-confirm]");
+  await confirm.getByLabel("J’ai compris et je confirme mon choix.").check();
+  await confirm.getByRole("button", { name: "Confirmer l’acceptation" }).click();
+  await expect(page.getByText(`Vous avez accepté l’offre de ${lessor}.`)).toBeVisible();
+}
+
+/** Signature, livraison et mise en loyer constatées par le bailleur, sur sa fiche. */
+export async function runDealToActive(page: Page) {
+  await page.reload();
+  const deal = page.locator("[data-deal-card]");
+  await deal.getByRole("button", { name: "Enregistrer la signature" }).click();
+  await expect(deal.locator("[data-deal]")).toHaveAttribute("data-deal", "signed");
+  await deal.getByRole("button", { name: "Enregistrer la livraison" }).click();
+  await expect(deal.locator("[data-deal]")).toHaveAttribute("data-deal", "delivered");
+  await deal.getByRole("button", { name: "Enregistrer la mise en loyer" }).click();
+  await expect(deal.locator("[data-deal]")).toHaveAttribute("data-deal", "active");
+}

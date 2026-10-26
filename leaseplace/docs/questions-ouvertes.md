@@ -81,3 +81,19 @@ indiqué ; rien n'est irréversible tant qu'aucune base n'est hébergée.
    faut-il compter les offres expirées comme perdues ?
 7. Le classement par défaut sur le coût total HT (retenu, cf. prompt) ne
    compare pas des durées différentes : afficher aussi un coût mensualisé ?
+
+## Phase 8 — Mandats, commissions, facturation
+
+1. Grille de commission : tranches marginales (retenu) ou taux unique selon
+   le palier atteint ? Seuils et taux par défaut (1,5 % jusqu'à 500 k DH,
+   1,2 %, 0,9 %, 0,6 %, 0,4 % au-delà de 5 M DH) à valider avec l'associé.
+2. Durée de la clause anti-contournement (retenu : 24 mois par défaut,
+   6 à 36) et point de départ.
+3. Facturation : une facture par mise en loyer (retenu) ou un relevé
+   mensuel ? Délai de paiement (retenu : 30 jours) ; pénalités de retard ?
+4. Identité juridique, ICE, RC, IF et adresse de l'entité qui facture ;
+   mentions obligatoires d'une facture au Maroc (expert-comptable).
+5. TVA sur la commission : 20 % (retenu) — confirmer le régime.
+6. Commission due si l'opération est dénouée après la mise en loyer
+   (avoir aujourd'hui manuel) ?
+7. Accès « en tant que » pour le support : à ouvrir (tracé) ou non ?

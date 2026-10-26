@@ -4,6 +4,6 @@ export default defineConfig({
   dialect: "postgresql",
   schema: "./src/schema/index.ts",
   out: "./migrations",
-  schemaFilter: ["identity", "audit", "dev", "marketing", "kyc", "credit", "market"],
+  schemaFilter: ["identity", "audit", "dev", "marketing", "kyc", "credit", "market", "billing"],
   dbCredentials: { url: process.env.DATABASE_URL_ADMIN ?? "" },
 });

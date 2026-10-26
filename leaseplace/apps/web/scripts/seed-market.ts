@@ -11,6 +11,9 @@ import { uuidv7 } from "uuidv7";
 import { schema, type Database } from "@leaseplace/db";
 import {
   assess,
+  computeCommission,
+  DEFAULT_COMMISSION_GRID,
+  invoiceDueOn,
   priceOffer,
   referenceAnnualRent,
   type EquipmentCategory,
@@ -61,6 +64,18 @@ const ACCEPTED: DemoRequest = {
   ],
 };
 
+const FINANCED: DemoRequest = {
+  description: "Deux chariots élévateurs électriques pour l'entrepôt de Mohammedia",
+  category: "industrial_machine",
+  amountHt: 760_000,
+  durationMonths: 48,
+  sentTo: ["cedre", "oasis"],
+  offers: [
+    { lessor: "cedre", rate: 0.082, fees: 1_500, residualPct: 0.01 },
+    { lessor: "oasis", rate: 0.087, fees: 2_000, residualPct: 0.01 },
+  ],
+};
+
 const FISCAL_YEARS = [
   {
     year: 2025,
@@ -81,6 +96,36 @@ const FISCAL_YEARS = [
     cash: 1_700_000,
   },
 ];
+
+/** Mandat en vigueur pour chaque bailleur de démonstration (loi 103-12) ; idempotent. */
+export async function seedMandates(
+  db: Database,
+  lessors: Record<string, string>,
+  createdBy: string,
+) {
+  await db.transaction(async (tx) => {
+    await tx.execute(sql`set local session_replication_role = replica`);
+    for (const id of Object.values(lessors)) {
+      const [has] = await tx
+        .select({ id: schema.mandates.id })
+        .from(schema.mandates)
+        .where(sql`lessor_organization_id = ${id}`);
+      if (has) continue;
+      await tx.insert(schema.mandates).values({
+        id: uuidv7(),
+        lessorOrganizationId: id,
+        status: "active",
+        contractVersion: "MANDAT-2026-01",
+        signedOn: new Date(Date.now() - 95 * DAY),
+        grid: DEFAULT_COMMISSION_GRID,
+        antiCircumvention: true,
+        antiCircumventionMonths: 24,
+        activatedAt: new Date(Date.now() - 90 * DAY),
+        createdBy,
+      });
+    }
+  });
+}
 
 export async function seedMarket(
   db: Database,
@@ -405,5 +450,110 @@ export async function seedMarket(
         actorUserId: ids.lessorUsers.cedre ?? null,
       },
     ]);
+
+    // 3. Opération mise en loyer chez Cèdre : commission facturée (facture numérotée).
+    const financed = await request(FINANCED, 45, "accepted");
+    await tx
+      .update(schema.financingRequests)
+      .set({ status: "financed" })
+      .where(sql`id = ${financed.requestId}`);
+    await tx.insert(schema.requestEvents).values({
+      requestId: financed.requestId,
+      fromStatus: "accepted",
+      toStatus: "financed",
+      actorUserId: ids.lessorUsers.cedre ?? null,
+      occurredAt: financed.at(30),
+    });
+    const day = (d: Date) =>
+      new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    const steps = {
+      accepted: financed.at(6),
+      signed: day(financed.at(10)),
+      delivered: day(financed.at(25)),
+      active: day(financed.at(30)),
+    };
+    const financedDealId = uuidv7();
+    const cedreUser = ids.lessorUsers.cedre ?? null;
+    await tx.insert(schema.deals).values({
+      id: financedDealId,
+      requestId: financed.requestId,
+      offerId: financed.offerIds.get("cedre") ?? "",
+      companyOrganizationId: ids.atlas,
+      lessorOrganizationId: ids.lessors.cedre ?? "",
+      status: "active",
+      financedAmountHt: FINANCED.amountHt,
+      acceptedAt: steps.accepted,
+      acceptedBy: ids.owner,
+      signedOn: steps.signed,
+      deliveredOn: steps.delivered,
+      activatedOn: steps.active,
+    });
+    await tx.insert(schema.dealEvents).values([
+      {
+        dealId: financedDealId,
+        fromStatus: null,
+        toStatus: "accepted",
+        occurredOn: steps.accepted,
+        actorUserId: ids.owner,
+      },
+      {
+        dealId: financedDealId,
+        fromStatus: "accepted",
+        toStatus: "signed",
+        occurredOn: steps.signed,
+        actorUserId: cedreUser,
+      },
+      {
+        dealId: financedDealId,
+        fromStatus: "signed",
+        toStatus: "delivered",
+        occurredOn: steps.delivered,
+        actorUserId: cedreUser,
+      },
+      {
+        dealId: financedDealId,
+        fromStatus: "delivered",
+        toStatus: "active",
+        occurredOn: steps.active,
+        actorUserId: cedreUser,
+      },
+    ]);
+    const [mandate] = await tx
+      .select()
+      .from(schema.mandates)
+      .where(sql`lessor_organization_id = ${ids.lessors.cedre ?? ""} and status = 'active'`);
+    if (mandate) {
+      const c = computeCommission(FINANCED.amountHt, DEFAULT_COMMISSION_GRID);
+      const invoiceId = uuidv7();
+      const issuedOn = day(financed.at(32));
+      await tx.insert(schema.invoices).values({
+        id: invoiceId,
+        number: sql`billing.next_invoice_number()`,
+        lessorOrganizationId: ids.lessors.cedre ?? "",
+        issuedOn,
+        dueOn: invoiceDueOn(issuedOn),
+        amountHt: c.amountHt,
+        vatRate: c.vatRate,
+        vat: c.vat,
+        amountTtc: c.amountTtc,
+        createdBy: ids.ops,
+      });
+      await tx.insert(schema.commissions).values({
+        id: uuidv7(),
+        dealId: financedDealId,
+        requestId: financed.requestId,
+        lessorOrganizationId: ids.lessors.cedre ?? "",
+        mandateId: mandate.id,
+        status: "invoiced",
+        financedAmountHt: FINANCED.amountHt,
+        grid: DEFAULT_COMMISSION_GRID,
+        amountHt: c.amountHt,
+        vatRate: c.vatRate,
+        vat: c.vat,
+        amountTtc: c.amountTtc,
+        activatedOn: steps.active,
+        invoiceId,
+      });
+    }
   });
 }

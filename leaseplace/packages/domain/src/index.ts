@@ -16,3 +16,5 @@ export * from "./offers/offers";
 export * from "./deals/deals";
 export * from "./messaging/messages";
 export * from "./notifications/notifications";
+export * from "./billing/billing";
+export * from "./kpis/kpis";

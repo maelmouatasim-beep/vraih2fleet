@@ -19,7 +19,7 @@ import { createDatabase, schema, withActor } from "@leaseplace/db";
 import { MAX_AGE_MONTHS, requiredDocuments, type LegalForm } from "@leaseplace/domain";
 import { createFileStorage, encryptedStorage } from "@leaseplace/integrations/storage";
 import { demoPdf } from "../src/lib/watermark";
-import { seedMarket } from "./seed-market";
+import { seedMandates, seedMarket } from "./seed-market";
 import {
   DEMO_ACCOUNTS,
   DEMO_APPETITES,
@@ -246,6 +246,10 @@ try {
       .where(and(eq(schema.legalTexts.kind, kind), eq(schema.legalTexts.locale, "fr")));
     return t?.id ?? "";
   };
+  const lessorIds = Object.fromEntries(
+    ["cedre", "argane", "oasis", "medina", "sahel"].map((k) => [k, orgIds.get(k) ?? ""]),
+  );
+  await seedMandates(db, lessorIds, await userOf("admin"));
   if (atlasId && owner) {
     await seedMarket(
       db,

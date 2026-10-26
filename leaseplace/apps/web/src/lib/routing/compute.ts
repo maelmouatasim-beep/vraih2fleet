@@ -1,5 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
+import { eq } from "drizzle-orm";
 import { recordAudit, schema, type Transaction } from "@leaseplace/db";
 import {
   isGrade,
@@ -12,7 +13,7 @@ import {
   type RoutingProfile,
 } from "@leaseplace/domain";
 
-const { lessorAppetites, routingDecisions, routingTargets } = schema;
+const { lessorAppetites, routingDecisions, routingTargets, mandates } = schema;
 
 /**
  * Calcule l'orientation d'une demande qualifiée : chaque bailleur ayant
@@ -33,8 +34,18 @@ export async function computeRouting(
   maxTargets: number = TARGET_LIMITS.default,
 ) {
   const rows = await tx.select().from(lessorAppetites);
+  // Sans mandat en vigueur (loi 103-12), un bailleur ne reçoit aucun dossier.
+  const mandated = new Set(
+    (
+      await tx
+        .select({ lessorId: mandates.lessorOrganizationId })
+        .from(mandates)
+        .where(eq(mandates.status, "active"))
+    ).map((m) => m.lessorId),
+  );
   const appetites: Appetite[] = rows.map((r) => ({
     lessorId: r.organizationId,
+    mandated: mandated.has(r.organizationId),
     active: r.active,
     minAmountHt: r.minAmountHt,
     maxAmountHt: r.maxAmountHt,

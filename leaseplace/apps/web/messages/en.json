@@ -100,10 +100,10 @@
       "overviewTitle": "Overview",
       "overviewBody": "State of the platform and its organizations.",
       "kpiKyc": "KYC files to review",
-      "kpiKycHint": "Review queue: phase 5",
+      "kpiKycHint": "Submitted, in review or awaiting information",
       "kpiCompanies": "Businesses",
       "kpiLessors": "Lessors",
-      "kpiLessorsHint": "Mandates: phase 8",
+      "kpiLessorsHint": "{count, plural, =0 {No mandate in force} one {# mandate in force} other {# mandates in force}}",
       "kpiEvents": "Audit events",
       "kpiEventsHint": "Last 24 hours",
       "organizationsTitle": "Organizations",
@@ -112,8 +112,9 @@
         "type": "Type",
         "members": "Members"
       },
-      "kycEmptyTitle": "KYC queue empty",
-      "kycEmptyBody": "Files to verify will appear here once document upload opens."
+      "kycEmptyTitle": "No file to review",
+      "kycEmptyBody": "Requests submitted by companies will appear here.",
+      "queueTitle": "Files to review"
     }
   },
   "audit": {
@@ -1458,7 +1459,8 @@
         "duration_out_of_range": "Term outside criteria",
         "sector_excluded": "Sector not covered",
         "category_excluded": "Equipment not covered",
-        "grade_below_min": "Grade below minimum"
+        "grade_below_min": "Grade below minimum",
+        "no_mandate": "No mandate in force"
       }
     }
   },
@@ -1627,7 +1629,8 @@
       "winRate": "Accepted offers",
       "winRateHint": "Accepted / decided: {won} / {decided}",
       "commissions": "Commissions",
-      "commissionsHint": "Available with billing"
+      "commissionsHint": "To pay, incl. VAT: see billing",
+      "commissionsRestricted": "Visible to the administrator"
     },
     "pipeline": {
       "title": "Pipeline",
@@ -1833,5 +1836,220 @@
       "saved": "Preferences saved.",
       "save": "Save"
     }
+  },
+  "billing": {
+    "forbidden": "Action reserved for the platform administration.",
+    "grid": {
+      "caption": "Commission grid by tier",
+      "tier": "Tier of the financed amount excl. VAT",
+      "rate": "Rate",
+      "range": "from {from} to {to}",
+      "above": "above {from}"
+    },
+    "lessors": {
+      "title": "Lessors and mandates",
+      "description": "Written mandates in force, appetite criteria and volumes of each partner lessor.",
+      "columns": {
+        "name": "Lessor",
+        "mandate": "Mandate",
+        "appetite": "Appetite",
+        "received": "Files received",
+        "offers": "Offers",
+        "active": "Leases started",
+        "production": "Production excl. VAT"
+      },
+      "noMandate": "No mandate: receives no files",
+      "appetiteOpen": "Open",
+      "appetiteClosed": "Closed",
+      "emptyTitle": "No lessor",
+      "emptyBody": "Partner lessors appear here as soon as they are created.",
+      "readOnly": "Read only: only a platform administrator manages mandates.",
+      "detailTitle": "Lessor mandates",
+      "detailDescription": "Every mandate version is kept. Once signed, a mandate is never edited: a new version is created.",
+      "noMandateBody": "This lessor has no mandate: it receives no file until a mandate is in force (law 103-12)."
+    },
+    "mandate": {
+      "statuses": {
+        "draft": "Draft",
+        "active": "In force",
+        "suspended": "Suspended",
+        "terminated": "Terminated"
+      },
+      "events": {
+        "activate": "Put in force",
+        "suspend": "Suspend",
+        "resume": "Resume",
+        "terminate": "Terminate"
+      },
+      "untitled": "Unversioned mandate",
+      "version": "Contract version",
+      "signedOn": "Signed on",
+      "activatedAt": "In force since",
+      "terminatedAt": "Terminated on",
+      "antiCircumvention": "Non-circumvention clause (months)",
+      "months": "{n, plural, one {# month} other {# months}}",
+      "grid": "Commission grid (marginal tiers)",
+      "gridHint": "Each tier of the financed amount is charged at its own rate: no threshold effect. Rates in percent.",
+      "from": "From (MAD excl. VAT)",
+      "rate": "Rate (%)",
+      "addTier": "Add a tier",
+      "removeTier": "Remove the tier",
+      "gridIssues": {
+        "empty": "The grid is empty.",
+        "too_many_tiers": "Ten tiers at most.",
+        "first_not_zero": "The first tier starts at 0.",
+        "not_ascending": "Thresholds must increase.",
+        "rate_out_of_range": "Each rate between 0.1% and 5%.",
+        "not_degressive": "The grid is degressive: a rate never exceeds the previous tier's."
+      },
+      "note": "Internal note (optional)",
+      "create": "Create the draft",
+      "newTitle": "New mandate version",
+      "newBody": "Putting it in force automatically terminates the current mandate. Transactions already accepted keep the grid of the mandate at their acceptance.",
+      "issues": {
+        "empty": "The grid is empty.",
+        "too_many_tiers": "Ten tiers at most.",
+        "first_not_zero": "The first tier starts at 0.",
+        "not_ascending": "Thresholds must increase.",
+        "rate_out_of_range": "Each rate between 0.1% and 5%.",
+        "not_degressive": "The grid is degressive: a rate never exceeds the previous tier's.",
+        "form_invalid": "Incomplete form.",
+        "version_missing": "Enter the signed contract version.",
+        "signed_on_missing": "Enter the signature date.",
+        "signed_in_future": "The signature date cannot be in the future.",
+        "anti_circumvention_missing": "The non-circumvention clause is mandatory.",
+        "anti_circumvention_out_of_range": "Non-circumvention clause: 6 to 36 months.",
+        "grid_invalid": "The grid is not valid.",
+        "transition_invalid": "Action not possible in this status.",
+        "another_active": "A newer version is in force: this mandate cannot be resumed."
+      }
+    },
+    "commission": {
+      "statuses": {
+        "due": "To invoice",
+        "invoiced": "Invoiced",
+        "paid": "Paid",
+        "cancelled": "Cancelled",
+        "overdue": "Overdue"
+      },
+      "invoice": "Issue the invoice",
+      "pay": "Record payment",
+      "cancel": "Credit note",
+      "paidOn": "Paid on",
+      "reference": "Transfer reference",
+      "confirmPay": "Confirm payment",
+      "reason": "Reason",
+      "reasons": {
+        "deal_unwound": "Transaction cancelled",
+        "billing_error": "Billing error",
+        "commercial_gesture": "Commercial gesture",
+        "other": "Other reason"
+      },
+      "note": "Details",
+      "confirmCancel": "Confirm credit note",
+      "issues": {
+        "paid_on_invalid": "Invalid payment date.",
+        "reference_required": "Enter the transfer reference.",
+        "reason_invalid": "Invalid reason.",
+        "note_required": "Explain the reason (at least 10 characters)."
+      },
+      "forbidden": "Action reserved for the platform administration."
+    },
+    "commissions": {
+      "title": "Commissions",
+      "description": "Due at lease start according to the mandate grid; invoiced, then collected.",
+      "restrictedTitle": "Restricted access",
+      "restrictedBody": "Billing is reserved for the platform administration.",
+      "kpiDue": "To invoice",
+      "kpiInvoiced": "Invoiced, pending",
+      "kpiOverdue": "Overdue",
+      "kpiOverdueHint": "Past due date, excl. VAT",
+      "kpiPaid": "Collected in {year}",
+      "ht": "Amount excl. VAT",
+      "viewsLabel": "Filter commissions",
+      "views": {
+        "a-facturer": "To invoice",
+        "facturees": "Invoiced",
+        "payees": "Paid",
+        "toutes": "All"
+      },
+      "columns": {
+        "reference": "Request",
+        "lessor": "Lessor",
+        "activated": "Lease start",
+        "financed": "Financed amount excl. VAT",
+        "commission": "Commission excl. VAT",
+        "status": "Status",
+        "invoice": "Invoice",
+        "actions": "Actions"
+      },
+      "ttc": "{amount} incl. VAT",
+      "dueOn": "due {date}",
+      "emptyTitle": "Nothing here",
+      "emptyBody": "Commissions appear when transactions start their lease.",
+      "legal": "Intermediation commission paid by the lessor on success, under its mandate. The company pays nothing."
+    },
+    "lessorBilling": {
+      "title": "Billing",
+      "description": "Your mandate, commissions and invoices.",
+      "mandateTitle": "Mandate in force",
+      "version": "Contract version",
+      "signedOn": "Signed on",
+      "antiCircumvention": "Non-circumvention clause",
+      "antiCircumventionBody": "{months} months after a file is presented by the platform.",
+      "noMandate": "No mandate in force: your institution receives no files. Contact the platform team.",
+      "restrictedTitle": "Restricted access",
+      "restrictedBody": "Commissions and invoices are visible to your institution's administrator.",
+      "kpiDue": "To pay",
+      "kpiOverdue": "Overdue",
+      "kpiPaid": "Paid",
+      "ttc": "Amount incl. VAT",
+      "emptyTitle": "No commission",
+      "emptyBody": "A commission is due for each lease start of a file presented by the platform.",
+      "notInvoiced": "Not yet invoiced",
+      "legal": "Commission computed by the platform according to your mandate grid (marginal tiers), plus 20% VAT."
+    },
+    "users": {
+      "title": "Users",
+      "description": "{count, plural, one {# access} other {# accesses}}: organisation, role, two-factor authentication.",
+      "restrictedTitle": "Restricted access",
+      "restrictedBody": "User management is reserved for the platform administration.",
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "organization": "Organisation",
+        "role": "Role",
+        "twoFactor": "Two-factor authentication",
+        "created": "Created on"
+      },
+      "on": "Enabled",
+      "off": "—",
+      "impersonationNote": "“Log in as” access for support is not open yet: it will be traced in the audit log."
+    }
+  },
+  "kpis": {
+    "title": "Steering",
+    "timeToOffer": "Time to first offer",
+    "timeToOfferHint": "Median, from sending",
+    "hours": "{n} h",
+    "offersPerFile": "Offers per file",
+    "offersPerFileHint": "Average over files sent",
+    "savings": "Average savings",
+    "savingsHint": "Average cost of the other offers minus the accepted offer",
+    "production": "Intermediated production",
+    "productionHint": "{count, plural, =0 {No lease started} one {# lease started, excl. VAT} other {# leases started, excl. VAT}}",
+    "commissionsDue": "Commissions to collect",
+    "commissionsPaid": "Commissions collected",
+    "ht": "Amount excl. VAT",
+    "funnelTitle": "Request funnel",
+    "stages": {
+      "submitted": "Submitted",
+      "qualified": "Verified",
+      "routed": "Sent",
+      "firstOffer": "First offer",
+      "accepted": "Offer accepted",
+      "financed": "Financed"
+    },
+    "funnelNote": "Percentage: share of the previous step's requests. Visits and simulations will be measured with the analytics tool (phase 9)."
   }
 }
