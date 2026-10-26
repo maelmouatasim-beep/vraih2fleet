@@ -3,9 +3,14 @@
     "pave": {
       "programmeId": "pave",
       "url": "https://tc.canada.ca/en/road-transportation/innovative-technologies/electric-vehicles/electric-vehicle-affordability-program",
-      "date": "2026-10-19",
-      "empreinte": "fb73b2be",
+      "date": "2026-10-26",
+      "empreinte": "cfc90338",
       "faits": [
+        {
+          "type": "date",
+          "valeur": "2027-01-01",
+          "extrait": "The EVAP incentive amounts will drop on January 1, 2027 at midnight. The applicable incentive amounts will be based on the date (year) the dealership submits the eligibility assessment, not on the vehicle’s delivery d…"
+        },
         {
           "type": "date",
           "valeur": "2026-02-16",
@@ -36,8 +41,8 @@
     "roulez_vert": {
       "programmeId": "roulez_vert",
       "url": "https://www.quebec.ca/en/transports/electric-transportation/financial-assistance-electric-vehicle/new-vehicle/amount-financial-assistance",
-      "date": "2026-10-19",
-      "empreinte": "2bc3df95",
+      "date": "2026-10-26",
+      "empreinte": "35cf25ea",
       "faits": [
         {
           "type": "montant",
@@ -69,8 +74,8 @@
     "ecocamionnage_v1": {
       "programmeId": "ecocamionnage_v1",
       "url": "https://www.quebec.ca/transports/aide-financiere/electrification/ecocamionnage/volet-1",
-      "date": "2026-10-19",
-      "empreinte": "25779daf",
+      "date": "2026-10-26",
+      "empreinte": "e62688d9",
       "faits": [
         {
           "type": "date",
@@ -87,7 +92,7 @@
     "ecocamionnage_v1:modalites": {
       "programmeId": "ecocamionnage_v1",
       "url": "https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/transports/transports/aide_financiere/electrification/ecocamionnage/Ecocamionnage_Modalites-2025-2028.pdf",
-      "date": "2026-10-19",
+      "date": "2026-10-26",
       "empreinte": "18061346",
       "faits": [
         {
@@ -150,7 +155,7 @@
     "imhzev": {
       "programmeId": "imhzev",
       "url": "https://tc.canada.ca/en/road-transportation/innovative-technologies/zero-emission-vehicles/medium-heavy-duty-zero-emission-vehicles",
-      "date": "2026-10-19",
+      "date": "2026-10-26",
       "empreinte": "f419786f",
       "faits": [
         {
@@ -178,7 +183,7 @@
     "pivez": {
       "programmeId": "pivez",
       "url": "https://ressources-naturelles.canada.ca/efficacite-energetique/efficacite-energetique-transports/pivez",
-      "date": "2026-10-19",
+      "date": "2026-10-26",
       "empreinte": "d9ead859",
       "faits": [
         {
@@ -206,7 +211,7 @@
     "ftcze": {
       "programmeId": "ftcze",
       "url": "https://logement-infrastructure.canada.ca/zero-emissions-trans-zero-emissions/index-fra.html",
-      "date": "2026-10-19",
+      "date": "2026-10-26",
       "empreinte": "cde4a012",
       "faits": [
         {
@@ -224,8 +229,8 @@
     "pagtcp": {
       "programmeId": "pagtcp",
       "url": "https://www.quebec.ca/transports/aide-financiere/collectif/transport-personnes",
-      "date": "2026-10-19",
-      "empreinte": "907b0c28",
+      "date": "2026-10-26",
+      "empreinte": "27d255c2",
       "faits": [
         {
           "type": "date",
@@ -262,7 +267,7 @@
     "pagtcp:modalites": {
       "programmeId": "pagtcp",
       "url": "https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/transports/transports/aide_financiere/collectif/pagtcp/modalites-2025-2028.pdf",
-      "date": "2026-10-19",
+      "date": "2026-10-26",
       "empreinte": "bd1a5b6d",
       "faits": [
         {
