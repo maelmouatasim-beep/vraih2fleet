@@ -52,7 +52,7 @@ describe("tachesDuPlan", () => {
   it("crée la tâche de remplacement (échéance 31 mars) et la tâche de demande de subvention", () => {
     const taches = tachesDuPlan([vehicule()], OPTIONS);
     const remplacement = taches.find((t) => t.auto_key === "remplacement:v1:2028")!;
-    expect(remplacement.title).toBe("Remplacer U-101 (BEV)");
+    expect(remplacement.title).toBe("Remplacer U-101 (électrique)"); // jamais « BEV »
     expect(remplacement.due_date).toBe("2028-03-31");
     expect(remplacement.plan_year).toBe(2028);
     // Camionnette BEV de classe inconnue en 2028 : barème le plus bas

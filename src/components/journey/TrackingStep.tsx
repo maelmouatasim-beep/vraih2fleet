@@ -166,8 +166,11 @@ export default function TrackingStep({ projectId, project }: TrackingStepProps) 
         suivi.vehicules,
         { ...options, anneeReference: anneeCourante },
         {
-          remplacement: ({ unite, techno }) =>
-            t("journey.tracking.tasks.replaceTitle", { unit: unite, techno }),
+          remplacement: ({ unite, techno, cible }) =>
+            t("journey.tracking.tasks.replaceTitle", {
+              unit: unite,
+              techno: t(`journey.tracking.tasks.techno.${cible}`, { defaultValue: techno }),
+            }),
           subvention: ({ programme, unite }) =>
             t("journey.tracking.tasks.submitTitle", { program: programme, unit: unite }),
         },

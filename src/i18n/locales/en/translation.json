@@ -5468,7 +5468,12 @@
         "replaceTitle": "Replace {{unit}} ({{techno}})",
         "submitTitle": "Submit the {{program}} application — {{unit}}",
         "generated_one": "{{count}} task created from the plan deadlines",
-        "generated_other": "{{count}} tasks created from the plan deadlines"
+        "generated_other": "{{count}} tasks created from the plan deadlines",
+        "techno": {
+          "bev": "electric",
+          "fcev": "hydrogen",
+          "diesel": "new combustion"
+        }
       },
       "completed": {
         "markButton": "Mark completed",

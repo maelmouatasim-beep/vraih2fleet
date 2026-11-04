@@ -5468,7 +5468,12 @@
         "replaceTitle": "Remplacer {{unit}} ({{techno}})",
         "submitTitle": "Déposer la demande {{program}} — {{unit}}",
         "generated_one": "{{count}} tâche créée depuis les échéances du plan",
-        "generated_other": "{{count}} tâches créées depuis les échéances du plan"
+        "generated_other": "{{count}} tâches créées depuis les échéances du plan",
+        "techno": {
+          "bev": "électrique",
+          "fcev": "hydrogène",
+          "diesel": "thermique neuf"
+        }
       },
       "completed": {
         "markButton": "Marquer réalisé",

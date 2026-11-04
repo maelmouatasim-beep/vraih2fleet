@@ -47,11 +47,13 @@ export interface TacheAuto {
   subsidy_program: string | null;
 }
 
-const LIBELLES_TECHNO: Record<string, string> = { bev: "BEV", fcev: "FCEV", diesel: "diesel" };
+// Libellés en clair (audit acheteur 9 : jamais « BEV »/« FCEV » à l'écran).
+const LIBELLES_TECHNO: Record<string, string> = { bev: "électrique", fcev: "hydrogène", diesel: "thermique neuf" };
 
 /** Libellés des tâches générées (C4 : traduits par l'appelant, i18n). */
 export interface LibellesTaches {
-  remplacement: (p: { unite: string; techno: string }) => string;
+  /** `techno` = libellé français par défaut ; `cible` = code (bev/fcev/diesel) à traduire. */
+  remplacement: (p: { unite: string; techno: string; cible: string }) => string;
   subvention: (p: { programme: string; unite: string }) => string;
 }
 
@@ -81,7 +83,7 @@ export function tachesDuPlan(
     const techno = LIBELLES_TECHNO[v.target_technology] ?? v.target_technology;
     taches.push({
       auto_key: `remplacement:${v.id}:${v.replacement_year}`,
-      title: libelles.remplacement({ unite: v.unit_number, techno }),
+      title: libelles.remplacement({ unite: v.unit_number, techno, cible: v.target_technology }),
       due_date: `${v.replacement_year}-03-31`,
       vehicle_id: v.id,
       plan_year: v.replacement_year,
