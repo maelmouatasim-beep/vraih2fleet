@@ -5456,8 +5456,8 @@
       },
       "empty": "Aucun véhicule au plan — sélectionnez-les à l'étape Flotte.",
       "tasks": {
-        "title": "Tâches du projet",
-        "subtitle": "Kanban et vue liste, assignation et commentaires ; les tâches générées sont liées au véhicule, à l'année du plan et au programme de subvention.",
+        "title": "Actions du plan",
+        "subtitle": "Actions liées aux jalons du plan : chaque remplacement et chaque demande de subvention, avec son échéance. Cochez une action quand elle est faite ; ouvrez-la pour l'assigner ou la commenter.",
         "generate": "Générer les tâches du plan",
         "upToDate": "Les tâches du plan existent déjà — rien à créer.",
         "replaceTitle": "Remplacer {{unit}} ({{techno}})",
@@ -5481,6 +5481,21 @@
         "saved": "Remplacement de {{unit}} marqué réalisé",
         "cleared": "Réalisé retiré pour {{unit}}",
         "totalActual": "Coût réel cumulé des remplacements réalisés : {{amount}}"
+      },
+      "actions": {
+        "new": "Nouvelle action",
+        "empty": "Aucune action pour l'instant : générez les actions du plan ou ajoutez-en une.",
+        "milestone": "Jalon {{year}}",
+        "noDate": "Sans échéance",
+        "progress_one": "{{done}} sur {{count}} faite",
+        "progress_other": "{{done}} sur {{count}} faites",
+        "overdue_one": "{{count}} en retard",
+        "overdue_other": "{{count}} en retard",
+        "markDone": "Marquer « {{title}} » comme faite",
+        "markTodo": "Marquer « {{title}} » comme à faire",
+        "vehicle": "Véhicule {{unit}}",
+        "due": "échéance {{date}}",
+        "late": "En retard"
       }
     },
     "applications": {

@@ -5456,8 +5456,8 @@
       },
       "empty": "No vehicles in the plan — select them in the Fleet step.",
       "tasks": {
-        "title": "Project tasks",
-        "subtitle": "Kanban and list views, assignment and comments; generated tasks are linked to the vehicle, the plan year and the subsidy program.",
+        "title": "Plan actions",
+        "subtitle": "Actions tied to the plan's milestones: each replacement and each subsidy application, with its due date. Tick an action when it is done; open it to assign or comment.",
         "generate": "Generate plan tasks",
         "upToDate": "Plan tasks already exist — nothing to create.",
         "replaceTitle": "Replace {{unit}} ({{techno}})",
@@ -5481,6 +5481,21 @@
         "saved": "Replacement of {{unit}} marked completed",
         "cleared": "Completion cleared for {{unit}}",
         "totalActual": "Cumulative actual cost of completed replacements: {{amount}}"
+      },
+      "actions": {
+        "new": "New action",
+        "empty": "No actions yet: generate the plan's actions or add one.",
+        "milestone": "{{year}} milestone",
+        "noDate": "No due date",
+        "progress_one": "{{done}} of {{count}} done",
+        "progress_other": "{{done}} of {{count}} done",
+        "overdue_one": "{{count}} overdue",
+        "overdue_other": "{{count}} overdue",
+        "markDone": "Mark “{{title}}” as done",
+        "markTodo": "Mark “{{title}}” as to do",
+        "vehicle": "Vehicle {{unit}}",
+        "due": "due {{date}}",
+        "late": "Overdue"
       }
     },
     "applications": {

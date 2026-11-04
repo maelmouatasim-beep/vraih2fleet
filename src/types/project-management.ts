@@ -40,6 +40,12 @@ export interface Task {
   updatedAt: string;
   createdBy: string | null;
   
+  // Lien au plan (actions du Suivi) : véhicule, année du jalon, programme
+  vehicleId?: string | null;
+  planYear?: number | null;
+  subsidyProgram?: string | null;
+  autoKey?: string | null;
+
   // Enriched data (from joins)
   assignees?: UserProfile[];
   milestone?: { id: string; title: string };
@@ -104,6 +110,11 @@ export interface TaskRow {
   created_at: string;
   updated_at: string;
   created_by: string | null;
+  /** Lien au plan (Suivi, migration 20260928170000) — absents des anciennes lignes. */
+  vehicle_id?: string | null;
+  plan_year?: number | null;
+  subsidy_program?: string | null;
+  auto_key?: string | null;
 }
 
 export interface TaskCommentRow {
@@ -198,6 +209,10 @@ export function rowToTask(row: TaskRow): Task {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     createdBy: row.created_by,
+    vehicleId: row.vehicle_id ?? null,
+    planYear: row.plan_year ?? null,
+    subsidyProgram: row.subsidy_program ?? null,
+    autoKey: row.auto_key ?? null,
   };
 }
 

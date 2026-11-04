@@ -30,7 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TaskBoard } from "@/components/tasks";
+import ActionsJalons from "./ActionsJalons";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useOptionsProjet } from "@/hooks/useEnergyClientInputs";
@@ -106,6 +106,7 @@ export default function TrackingStep({ projectId, project }: TrackingStepProps) 
       coutReelTotal,
     };
   }, [projectVehicles, anneeCourante]);
+  const unites = useMemo(() => new Map(suivi.vehicules.map((v) => [v.id, v.unit_number])), [suivi.vehicules]);
 
   const ouvrirRealise = (v: (typeof suivi.vehicules)[number]) => {
     setRealise({
@@ -391,7 +392,7 @@ export default function TrackingStep({ projectId, project }: TrackingStepProps) 
           <p className="text-sm text-muted-foreground">{t("journey.tracking.tasks.subtitle")}</p>
         </CardHeader>
         <CardContent>
-          <TaskBoard key={cleTableau} projectId={projectId} />
+          <ActionsJalons key={cleTableau} projectId={projectId} unites={unites} />
         </CardContent>
       </Card>
 
