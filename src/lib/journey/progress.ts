@@ -1,11 +1,14 @@
 /**
  * Test terrain, bloc 3.2 — état RÉEL des 7 étapes du parcours (terminé /
- * en cours / à faire) et ce qui manque, calculé à partir des données du
- * projet (jamais à partir de la position de l'étape affichée). PUR.
+ * en cours / à faire / à revoir) et ce qui manque, calculé à partir des
+ * données du projet (jamais à partir de la position de l'étape affichée).
+ * « À revoir » (audit C2) : l'étape avait été terminée, mais un changement
+ * fait ensuite l'a rendue caduque (choix modifiés depuis la stratégie
+ * appliquée, plan modifié depuis le dernier rapport). PUR.
  */
 import type { EtapeParcoursCle } from "./steps";
 
-export type EtatEtape = "termine" | "en_cours" | "a_faire";
+export type EtatEtape = "termine" | "en_cours" | "a_faire" | "a_revoir";
 
 /** Ce qui manque : clé i18n journey.progress.missing.<cle> + paramètres. */
 export interface Manque {
@@ -14,6 +17,7 @@ export interface Manque {
     | "sansAnnee"
     | "sansCible"
     | "aucuneStrategie"
+    | "strategieModifiee"
     | "planVide"
     | "demandesManquantes"
     | "aucunRapport"
@@ -32,6 +36,8 @@ export interface DonneesParcours {
   nbSansAnnee: number;
   nbSansCible: number;
   strategieAppliquee: boolean;
+  /** Véhicules dont l'année ou la cible a changé depuis la stratégie appliquée. */
+  ecartsStrategie?: number;
   /** Véhicules à remplacer par un véhicule zéro émission (cible BEV/FCEV). */
   nbZeroEmission: number;
   /** Programmes de subvention prévus par le plan (montant > 0). */
@@ -61,9 +67,12 @@ export function etatDuParcours(d: DonneesParcours): Record<EtapeParcoursCle, Eta
           ? { etat: "en_cours", manques: [{ cle: "sansCible", count: d.nbSansCible }] }
           : { etat: "termine", manques: [] };
 
-  const strategies: EtatParcours = d.strategieAppliquee
-    ? { etat: "termine", manques: [] }
-    : { etat: "a_faire", manques: [d.nbVehicules === 0 ? { cle: "aucunVehicule" } : { cle: "aucuneStrategie" }] };
+  const ecarts = d.ecartsStrategie ?? 0;
+  const strategies: EtatParcours = !d.strategieAppliquee
+    ? { etat: "a_faire", manques: [d.nbVehicules === 0 ? { cle: "aucunVehicule" } : { cle: "aucuneStrategie" }] }
+    : ecarts > 0
+      ? { etat: "a_revoir", manques: [{ cle: "strategieModifiee", count: ecarts }] }
+      : { etat: "termine", manques: [] };
 
   const plan: EtatParcours =
     d.nbZeroEmission === 0
@@ -86,7 +95,7 @@ export function etatDuParcours(d: DonneesParcours): Record<EtapeParcoursCle, Eta
   const rapports: EtatParcours = !d.rapportGenere
     ? { etat: "a_faire", manques: [{ cle: "aucunRapport" }] }
     : d.rapportAJour === false
-      ? { etat: "en_cours", manques: [{ cle: "rapportPerime" }] }
+      ? { etat: "a_revoir", manques: [{ cle: "rapportPerime" }] }
       : { etat: "termine", manques: [] };
 
   const restants = Math.max(0, d.nbZeroEmission - d.nbRealises);

@@ -5618,7 +5618,8 @@
       "state": {
         "termine": "Étape terminée",
         "en_cours": "Étape en cours",
-        "a_faire": "Étape à faire"
+        "a_faire": "Étape à faire",
+        "a_revoir": "Étape à revoir"
       },
       "missingLabel": "ce qui manque :",
       "missing": {
@@ -5634,7 +5635,9 @@
         "aucunRapport": "générer le rapport (PDF ou Excel)",
         "rapportPerime": "le plan a changé depuis le dernier rapport : le régénérer",
         "remplacementsRestants_one": "{{count}} remplacement à marquer réalisé",
-        "remplacementsRestants_other": "{{count}} remplacements à marquer réalisés"
+        "remplacementsRestants_other": "{{count}} remplacements à marquer réalisés",
+        "strategieModifiee_one": "{{count}} véhicule modifié depuis la stratégie appliquée : la réappliquer ou garder ce choix",
+        "strategieModifiee_other": "{{count}} véhicules modifiés depuis la stratégie appliquée : la réappliquer ou garder ces choix"
       },
       "ariaLabel": "Étapes du parcours",
       "stepOf": "Étape {{n}} sur {{total}}",

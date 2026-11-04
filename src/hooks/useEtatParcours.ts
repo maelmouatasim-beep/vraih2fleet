@@ -6,7 +6,8 @@ import { useConfirmedSubsidies } from "@/hooks/useConfirmedSubsidies";
 import { useSubsidyApplications } from "@/hooks/useSubsidyApplications";
 import { dernierSnapshotRapport } from "@/lib/supabase/reportSnapshots";
 import type { ProjectDTO } from "@/lib/supabase/projects";
-import { construireStrategie } from "@/lib/journey/strategies";
+import { construireStrategie, strategieRetenue } from "@/lib/journey/strategies";
+import { lireAssignation } from "@/lib/journey/optimizer";
 import { etatDuParcours } from "@/lib/journey/progress";
 import { vehiculeProjetDepuis } from "@/lib/journey/vehiculeProjet";
 
@@ -38,6 +39,10 @@ export function useEtatParcours(projectId: string | undefined, project: ProjectD
       nbSansAnnee: projectVehicles.filter((pv) => pv.replacement_year == null).length,
       nbSansCible: projectVehicles.filter((pv) => pv.target_technology == null).length,
       strategieAppliquee: !!project.selectedStrategy,
+      ecartsStrategie:
+        project.selectedStrategy && options
+          ? strategieRetenue(vehicules, project.selectedStrategy, options, lireAssignation(project.optimizedAssignment)).ecarts
+          : 0,
       nbZeroEmission: zeroEmission.length,
       programmesPrevus,
       programmesDemandes: (applications ?? []).map((a) => a.program_id),

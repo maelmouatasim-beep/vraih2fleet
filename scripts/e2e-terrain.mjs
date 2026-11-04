@@ -194,7 +194,17 @@ try {
   }
   await page.waitForTimeout(800);
   await capture(page, "02-ma-flotte-garages");
-  etape("3 garages créés par l'import, puissance et fenêtre de recharge renseignées");
+  // Audit B4 : la fiche du véhicule propose les garages dans une liste (plus de texte libre).
+  const ligneGm01 = page.getByRole("row").filter({ has: page.getByRole("cell", { name: "GM-01", exact: true }) });
+  await ligneGm01.getByRole("button", { name: "Modifier" }).first().click();
+  const choixGarage = page.locator("select#fl-depot");
+  await choixGarage.waitFor({ timeout: 10000 });
+  const optionsGarage = await choixGarage.locator("option").allInnerTexts();
+  for (const g of GARAGES) if (!optionsGarage.includes(g.nom)) throw new Error(`fiche véhicule : garage « ${g.nom} » absent de la liste`);
+  if ((await choixGarage.inputValue()) !== "Garage municipal") throw new Error(`fiche véhicule : garage sélectionné « ${await choixGarage.inputValue()} »`);
+  await page.keyboard.press("Escape");
+  await page.getByRole("dialog").waitFor({ state: "hidden" });
+  etape("3 garages créés par l'import, puissance et fenêtre de recharge renseignées ; fiche véhicule : garage choisi dans la liste");
 
   // Projet + 12 véhicules + cibles suggérées
   await page.goto(url("/dashboard/projects"));
@@ -732,6 +742,25 @@ try {
   if (apresClic !== apresGeneration - 1) throw new Error(`notifications : compteur ${apresClic} après le clic (attendu ${apresGeneration - 1})`);
   const luEnBase = psql(`select count(*) from public.notifications where project_id = '${projetId}' and type = 'tasks_generated' and is_read`).trim();
   if (luEnBase !== "1") throw new Error("notifications : la notification ouverte n'est pas marquée lue en base");
+  // Audit B6 : les tâches du Suivi sont des actions par JALON (plus de kanban) ;
+  // cocher une action la marque faite en base, la décocher la remet à faire.
+  const jalons = page.locator('[data-testid^="jalon-"]');
+  await jalons.first().waitFor({ timeout: 15000 });
+  const annees = (await jalons.evaluateAll((els) => els.map((e) => e.getAttribute("data-testid").slice(6)))).filter((a) => a !== "sans").map(Number);
+  if (annees.length === 0 || annees.some((a, i) => i > 0 && a <= annees[i - 1])) throw new Error(`Suivi : jalons absents ou mal ordonnés (${annees.join(", ")})`);
+  const premiereAction = page.getByTestId("action-ligne").first();
+  const titreAction = (await premiereAction.locator("button").first().innerText()).trim();
+  const statutAction = () =>
+    psql(`select status from public.tasks where project_id = '${projetId}' and title = '${titreAction.replaceAll("'", "''")}' limit 1`).trim();
+  const attendreStatut = async (attendu) => {
+    for (let i = 0; i < 40 && statutAction() !== attendu; i++) await page.waitForTimeout(250);
+    if (statutAction() !== attendu) throw new Error(`Suivi : « ${titreAction} » devrait être ${attendu} (base : ${statutAction()})`);
+  };
+  await premiereAction.getByTestId("action-fait").click();
+  await attendreStatut("completed");
+  await page.locator('[data-testid="action-ligne"]', { hasText: titreAction }).getByTestId("action-fait").click();
+  await attendreStatut("todo");
+  await capture(page, "15b-suivi-actions-jalons");
   await page.goto(url("/dashboard/notifications"));
   const compteurPage = page.getByTestId("notifications-page-unread");
   let texteCompteurPage = await compteurPage.innerText();
@@ -744,7 +773,7 @@ try {
   for (let i = 0; i < 20 && (await badge.count()) > 0; i++) await page.waitForTimeout(250);
   if ((await badge.count()) > 0) throw new Error("notifications : « Tout marquer comme lu » n'a pas remis le compteur à zéro");
   if (erreursPage.length) throw new Error(`notifications : erreur JavaScript dans la page — ${erreursPage[0]}`);
-  etape(`Notifications : tâches générées → notification en temps réel (${typesCloche.join(", ")}) → clic → étape Suivi, lue ; compteur ${apresGeneration} → ${apresClic} identique cloche/Accueil/page ; tout lu → 0 ; aucune erreur JavaScript`);
+  etape(`Notifications : tâches générées → notification en temps réel (${typesCloche.join(", ")}) → clic → étape Suivi, lue ; actions par jalon (${annees.join(", ")}), cochée = faite en base ; compteur ${apresGeneration} → ${apresClic} identique cloche/Accueil/page ; tout lu → 0 ; aucune erreur JavaScript`);
 
   writeFileSync(join(SORTIE, "resultat.json"), JSON.stringify({ infraStrategie, infraPlan, subvStrategie, vanPlan, sousTitre, statutOpt, nbDecisions, nbChangements }, null, 2));
   if (erreurs.length) throw new Error(`réponses locales en erreur :\n${erreurs.join("\n")}`);

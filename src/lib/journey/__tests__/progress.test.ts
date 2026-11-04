@@ -38,7 +38,7 @@ describe("état réel des 7 étapes (bloc 3.2)", () => {
     expect(e.rapports.manques).toEqual([{ cle: "aucunRapport" }]);
   });
 
-  it("en cours : années manquantes, cibles partielles, demande manquante, rapport périmé, remplacements restants", () => {
+  it("en cours (ou à revoir pour le rapport périmé) : années manquantes, cibles partielles, demande manquante, remplacements restants", () => {
     const e = etatDuParcours({
       ...base,
       nbSansAnnee: 2,
@@ -50,7 +50,7 @@ describe("état réel des 7 étapes (bloc 3.2)", () => {
     expect(e.flotte).toEqual({ etat: "en_cours", manques: [{ cle: "sansAnnee", count: 2 }] });
     expect(e.faisabilite).toEqual({ etat: "en_cours", manques: [{ cle: "sansCible", count: 4 }] });
     expect(e.financement).toEqual({ etat: "en_cours", manques: [{ cle: "demandesManquantes", count: 1 }] });
-    expect(e.rapports).toEqual({ etat: "en_cours", manques: [{ cle: "rapportPerime" }] });
+    expect(e.rapports).toEqual({ etat: "a_revoir", manques: [{ cle: "rapportPerime" }] });
     expect(e.suivi).toEqual({ etat: "en_cours", manques: [{ cle: "remplacementsRestants", count: 2 }] });
   });
 
@@ -59,5 +59,15 @@ describe("état réel des 7 étapes (bloc 3.2)", () => {
       etat: "a_faire",
       manques: [{ cle: "aucuneStrategie" }],
     });
+  });
+
+  it("à revoir (audit C2) : choix modifiés depuis la stratégie appliquée, plan modifié depuis le rapport", () => {
+    const e = etatDuParcours({ ...base, ecartsStrategie: 2, rapportAJour: false });
+    expect(e.strategies).toEqual({ etat: "a_revoir", manques: [{ cle: "strategieModifiee", count: 2 }] });
+    expect(e.rapports).toEqual({ etat: "a_revoir", manques: [{ cle: "rapportPerime" }] });
+    // Sans écart : terminée ; jamais « à revoir » une étape qui n'a pas été faite.
+    expect(etatDuParcours({ ...base, ecartsStrategie: 0 }).strategies.etat).toBe("termine");
+    expect(etatDuParcours({ ...base, strategieAppliquee: false, ecartsStrategie: 3 }).strategies.etat).toBe("a_faire");
+    expect(etatDuParcours({ ...base, rapportGenere: false, rapportAJour: false }).rapports.etat).toBe("a_faire");
   });
 });

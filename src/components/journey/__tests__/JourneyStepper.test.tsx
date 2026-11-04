@@ -47,7 +47,7 @@ const ETATS: Record<EtapeParcoursCle, EtatParcours> = {
   suivi: { etat: "a_faire", manques: [] },
 };
 
-function monter(etape: EtapeParcoursCle = "financement") {
+function monter(etape: EtapeParcoursCle = "financement", etats: Record<EtapeParcoursCle, EtatParcours> = ETATS) {
   const div = document.createElement("div");
   document.body.appendChild(div);
   racine = createRoot(div);
@@ -56,7 +56,7 @@ function monter(etape: EtapeParcoursCle = "financement") {
       <I18nextProvider i18n={i18n}>
         <MemoryRouter>
           <TooltipProvider>
-            <JourneyStepper base="/dashboard/projects/p1" etape={etape} etats={ETATS} />
+            <JourneyStepper base="/dashboard/projects/p1" etape={etape} etats={etats} />
           </TooltipProvider>
         </MemoryRouter>
       </I18nextProvider>,
@@ -92,6 +92,22 @@ describe("JourneyStepper — structure et états", () => {
     expect(classe(0)).toContain("bg-primary-strong");
     expect(classe(3)).toContain("border-amber-600");
     expect(classe(4)).toContain("border-muted-foreground");
+  });
+
+  it("à revoir (audit C2) : cercle ambre plein, distinct d'« en cours », annoncé et expliqué", () => {
+    const d = monter("strategies", {
+      ...ETATS,
+      strategies: { etat: "a_revoir", manques: [{ cle: "strategieModifiee", count: 2 }] },
+    });
+    const cercles = [...d.querySelectorAll('[data-testid="journey-step-circle"]')];
+    expect(cercles[2].className).toContain("bg-amber-100");
+    expect(cercles[2].className).not.toBe(cercles[3].className); // ≠ en cours
+    const lien = d.querySelectorAll('[data-testid="journey-step"] a')[2];
+    expect(lien.getAttribute("aria-label")).toContain("Étape à revoir");
+    expect(lien.getAttribute("data-etat")).toBe("a_revoir");
+    expect(d.querySelector('[data-testid="etat-etape"]')!.textContent).toContain("2 véhicules modifiés depuis la stratégie appliquée");
+    // Une étape à revoir ne compte pas comme terminée pour la ligne de progression.
+    expect(segmentTermine(["termine", "a_revoir"], 0)).toBe(false);
   });
 
   it("l'étape affichée est la seule en aria-current=\"step\", libellé gras souligné ; sans changer son cercle", () => {
@@ -194,8 +210,15 @@ describe("JourneyStepper — contraste AA", () => {
     const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
     return (x + 0.05) / (y + 0.05);
   };
-  // Palette Tailwind (amber-400/600/700).
-  const AMBRE = { 400: hex("#fbbf24"), 600: hex("#d97706"), 700: hex("#b45309") };
+  // Palette Tailwind (amber-100/300/400/600/700/800).
+  const AMBRE = {
+    100: hex("#fef3c7"),
+    300: hex("#fcd34d"),
+    400: hex("#fbbf24"),
+    600: hex("#d97706"),
+    700: hex("#b45309"),
+    800: hex("#92400e"),
+  };
 
   it("thème clair : textes ≥ 4,5:1, contours ≥ 3:1", () => {
     const carte = token(clair, "card");
@@ -205,6 +228,8 @@ describe("JourneyStepper — contraste AA", () => {
     expect(ratio(AMBRE[600], carte)).toBeGreaterThanOrEqual(3); // contour en cours
     expect(ratio(token(clair, "muted-foreground"), carte)).toBeGreaterThanOrEqual(4.5); // à faire
     expect(ratio(token(clair, "foreground"), carte)).toBeGreaterThanOrEqual(4.5);
+    expect(ratio(AMBRE[800], AMBRE[100])).toBeGreaterThanOrEqual(4.5); // numéro « à revoir »
+    expect(ratio(AMBRE[800], carte)).toBeGreaterThanOrEqual(4.5); // libellé « à revoir »
   });
 
   it("thème sombre : mêmes exigences", () => {
@@ -213,5 +238,6 @@ describe("JourneyStepper — contraste AA", () => {
     expect(ratio(token(sombre, "primary-foreground"), token(sombre, "primary-strong"))).toBeGreaterThanOrEqual(4.5);
     expect(ratio(AMBRE[400], carte)).toBeGreaterThanOrEqual(4.5);
     expect(ratio(token(sombre, "muted-foreground"), carte)).toBeGreaterThanOrEqual(4.5);
+    expect(ratio(AMBRE[300], carte)).toBeGreaterThanOrEqual(4.5); // « à revoir »
   });
 });

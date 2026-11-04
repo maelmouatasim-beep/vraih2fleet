@@ -5618,7 +5618,8 @@
       "state": {
         "termine": "Step complete",
         "en_cours": "Step in progress",
-        "a_faire": "Step to do"
+        "a_faire": "Step to do",
+        "a_revoir": "Step to review"
       },
       "missingLabel": "what's missing:",
       "missing": {
@@ -5634,7 +5635,9 @@
         "aucunRapport": "generate the report (PDF or Excel)",
         "rapportPerime": "the plan changed since the last report: regenerate it",
         "remplacementsRestants_one": "{{count}} replacement to mark as completed",
-        "remplacementsRestants_other": "{{count}} replacements to mark as completed"
+        "remplacementsRestants_other": "{{count}} replacements to mark as completed",
+        "strategieModifiee_one": "{{count}} vehicle changed since the strategy was applied: apply it again or keep this choice",
+        "strategieModifiee_other": "{{count}} vehicles changed since the strategy was applied: apply it again or keep these choices"
       },
       "ariaLabel": "Journey steps",
       "stepOf": "Step {{n}} of {{total}}",

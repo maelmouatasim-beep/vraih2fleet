@@ -4,7 +4,7 @@
  * Grille de 7 colonnes de largeur égale ; chaque étape = un cercle de
  * taille fixe qui contient TOUJOURS son numéro + le libellé dessous, sur
  * une ligne. Un seul système d'états, porté par le cercle et la couleur du
- * libellé (terminé / en cours / à faire) ; l'étape affichée est marquée à
+ * libellé (terminé / en cours / à faire / à revoir) ; l'étape affichée est marquée à
  * part (libellé gras souligné, aria-current="step"). Ligne de progression
  * entre les cercles. Infobulle au survol et au focus : état + ce qui
  * manque. Mise en page selon la largeur réelle (src/lib/journey/stepper.ts).
@@ -30,11 +30,14 @@ const CERCLE: Record<EtatEtape, string> = {
   termine: "bg-primary-strong border-primary-strong text-primary-foreground",
   en_cours: "bg-card border-amber-600 text-amber-700 dark:border-amber-400 dark:text-amber-400",
   a_faire: "bg-card border-muted-foreground text-muted-foreground",
+  // À revoir : cercle ambre plein (terminée puis rendue caduque), distinct d'« en cours ».
+  a_revoir: "bg-amber-100 border-amber-600 text-amber-800 dark:bg-amber-500/20 dark:border-amber-400 dark:text-amber-300",
 };
 const LIBELLE: Record<EtatEtape, string> = {
   termine: "text-primary-strong",
   en_cours: "text-foreground",
   a_faire: "text-muted-foreground",
+  a_revoir: "text-amber-800 dark:text-amber-300",
 };
 
 export default function JourneyStepper({ base, etape, etats }: JourneyStepperProps) {
