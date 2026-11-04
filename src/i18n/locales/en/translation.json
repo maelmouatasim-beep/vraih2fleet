@@ -165,6 +165,11 @@
         "modele": "Suggested from the model: class {{classe}} — to confirm (manufacturer's plate).",
         "categorie": "Suggested from the category: class {{classe}} — to confirm (manufacturer's plate)."
       }
+    },
+    "garage": {
+      "none": "No garage",
+      "new": "New garage…",
+      "newName": "Name of the new garage"
     }
   },
   "pages_marketing": {

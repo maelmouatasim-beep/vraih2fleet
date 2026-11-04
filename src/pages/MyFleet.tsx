@@ -44,11 +44,14 @@ import SmartImportDialog from "@/components/fleet/SmartImportDialog";
 import ChangeLogCard from "@/components/journey/ChangeLogCard";
 import { useGarages } from "@/hooks/useGarages";
 import { assurerGarages } from "@/lib/fleet/garages";
+import { cleGarage } from "@/lib/journey/infrastructure";
 import { CLASSES_PNBV, proposerClasse } from "@/lib/fleet/gvwr";
 import { StatusBadge, LoadingState } from "@/components/layout/States";
 import { ton, TON_SOURCE, TON_VEHICULE } from "@/components/layout/tons";
 import { StatCard, StatGrid } from "@/components/layout/StatCard";
 import { formateurNombre } from "@/lib/format";
+
+const NOUVEAU_GARAGE = "__nouveau_garage__";
 
 const selectCls =
   "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -101,6 +104,13 @@ export default function MyFleet() {
   }, [vehicles]);
 
   const dialogueFormulaireOuvert = ajoutOuvert || edition !== null;
+  // Garage du véhicule (audit B4) : choisi dans la liste des garages ;
+  // « Nouveau garage… » ouvre la saisie d'un nom (le garage est créé à
+  // l'enregistrement, comme à l'import).
+  const [saisieNouveauGarage, setSaisieNouveauGarage] = useState(false);
+  const garageExistant = garages.find((g) => cleGarage(g.name) === cleGarage(forme.depot));
+  const valeurGarage =
+    saisieNouveauGarage || (forme.depot.trim() && !garageExistant) ? NOUVEAU_GARAGE : garageExistant?.name ?? "";
   const proposition = proposerClasse({ category: forme.category, model: forme.model });
 
   const ouvrirEdition = (v: VehicleRow) => {
@@ -118,6 +128,7 @@ export default function MyFleet() {
       max_daily_km: v.max_daily_km != null ? String(v.max_daily_km) : "",
       status: v.status,
     });
+    setSaisieNouveauGarage(false);
     setEdition(v);
   };
 
@@ -125,6 +136,7 @@ export default function MyFleet() {
     setAjoutOuvert(false);
     setEdition(null);
     setForme({ ...FORME_VIDE });
+    setSaisieNouveauGarage(false);
   };
 
   const enregistrer = async () => {
@@ -395,17 +407,33 @@ export default function MyFleet() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="fl-depot">{t("fleet.columns.depot")}</Label>
-              <Input
+              <select
                 id="fl-depot"
-                list="fl-garages"
-                value={forme.depot}
-                onChange={(e) => setForme({ ...forme, depot: e.target.value })}
-              />
-              <datalist id="fl-garages">
+                className={selectCls}
+                value={valeurGarage}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setSaisieNouveauGarage(v === NOUVEAU_GARAGE);
+                  setForme({ ...forme, depot: v === NOUVEAU_GARAGE ? "" : v });
+                }}
+              >
+                <option value="">{t("fleet.garage.none")}</option>
                 {garages.map((g) => (
-                  <option key={g.id} value={g.name} />
+                  <option key={g.id} value={g.name}>
+                    {g.name}
+                  </option>
                 ))}
-              </datalist>
+                <option value={NOUVEAU_GARAGE}>{t("fleet.garage.new")}</option>
+              </select>
+              {valeurGarage === NOUVEAU_GARAGE && (
+                <Input
+                  id="fl-depot-nouveau"
+                  aria-label={t("fleet.garage.newName")}
+                  placeholder={t("fleet.garage.newName")}
+                  value={forme.depot}
+                  onChange={(e) => setForme({ ...forme, depot: e.target.value })}
+                />
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="fl-kmj">{t("fleet.add.maxDailyKm")}</Label>

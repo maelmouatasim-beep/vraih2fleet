@@ -165,6 +165,11 @@
         "modele": "Proposition d'après le modèle : classe {{classe}} — à confirmer (plaque du constructeur).",
         "categorie": "Proposition d'après la catégorie : classe {{classe}} — à confirmer (plaque du constructeur)."
       }
+    },
+    "garage": {
+      "none": "Aucun garage",
+      "new": "Nouveau garage…",
+      "newName": "Nom du nouveau garage"
     }
   },
   "pages_marketing": {
