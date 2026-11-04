@@ -610,7 +610,7 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   vraies formules vérifiées par un évaluateur (`classeurFormules.test.ts`)
   et par l'e2e terrain.
 
-- **Audit du test pilote (2026-10-25) — lot 1 LIVRÉ, en attente du « ok ».**
+- **Audit du test pilote (2026-10-25) — lots 1 et 2 LIVRÉS, en attente du « ok ».**
   19 constats vérifiés dans le code : la plupart déjà corrigés (blocs 1-3
   du test terrain). Corrigés maintenant : A6 **moteur 2.5.1** — stress
   test : le facteur de prix d'achat des véhicules zéro émission ne touche
@@ -618,9 +618,18 @@ plan détaillé des phases 1 à 4, risques). Méthodologie TCO :
   ZE = écart nul, Stratégies n'affiche plus de stress test quand rien ne
   change ; A9 plafond d'un programme d'infrastructure « par projet »
   (`plafondAffiche`, `src/lib/journey/financing.ts`) ; A8 libellé CO2
-  « sur N ans ». Lots suivants proposés : B6 liste par jalons dans Suivi,
-  B4 sélecteur de garage, C2 « à revoir » ; reportés : B5 garage
-  prioritaire, kanban remplacé, hiver H2.
+  « sur N ans ». Lot 2 : B6 Suivi = « Actions du plan » par jalon (année
+  du plan, sinon de l'échéance ; `src/lib/journey/actions.ts` pur testé,
+  `ActionsJalons.tsx` : case « fait », retard signalé, véhicule et
+  programme liés ; `TaskBoard` n'est plus monté, non supprimé) ; B4 fiche
+  véhicule : garage choisi dans la liste des garages (`select#fl-depot`,
+  « Nouveau garage… » = saisie libre, toujours créé à l'enregistrement) ;
+  C2 état « à revoir » (`progress.ts`) : Stratégies quand des véhicules
+  ont changé depuis la stratégie appliquée (`strategieRetenue().ecarts`),
+  Rapports quand le plan a changé depuis le dernier rapport ; cercle ambre
+  plein, AA testé. e2e terrain : garages de la fiche, jalons ordonnés,
+  case cochée → `completed` en base. Reportés : B5 garage prioritaire,
+  hiver H2.
 
 Rappels de méthode : chaque phase finit par `npm run check` vert → push →
 résumé court → **attendre le « ok » de l'utilisateur** ; kanban intégré à
