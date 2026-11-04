@@ -749,7 +749,8 @@ try {
   const annees = (await jalons.evaluateAll((els) => els.map((e) => e.getAttribute("data-testid").slice(6)))).filter((a) => a !== "sans").map(Number);
   if (annees.length === 0 || annees.some((a, i) => i > 0 && a <= annees[i - 1])) throw new Error(`Suivi : jalons absents ou mal ordonnés (${annees.join(", ")})`);
   const premiereAction = page.getByTestId("action-ligne").first();
-  const titreAction = (await premiereAction.locator("button").first().innerText()).trim();
+  const titreAction = (await premiereAction.getByTestId("action-titre").innerText()).trim();
+  if (!titreAction) throw new Error("Suivi : titre de la première action vide");
   const statutAction = () =>
     psql(`select status from public.tasks where project_id = '${projetId}' and title = '${titreAction.replaceAll("'", "''")}' limit 1`).trim();
   const attendreStatut = async (attendu) => {

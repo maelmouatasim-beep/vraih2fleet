@@ -248,19 +248,28 @@ export function useTasks(projectId: string | undefined) {
     newStatus: TaskStatus, 
     newOrderIndex: number
   ): Promise<boolean> => {
+    const completedDate = newStatus === 'completed' ? new Date().toISOString().split('T')[0] : null;
+    // Mise à jour optimiste : l'écran ne dépend pas du canal temps réel
+    // (une case « fait » décochée aussitôt après l'avoir cochée doit envoyer
+    // « à faire », pas « fait » une seconde fois). Restaurée en cas d'erreur.
+    const avant = tasks.find((t) => t.id === taskId);
+    setTasks((liste) =>
+      liste.map((t) => (t.id === taskId ? { ...t, status: newStatus, orderIndex: newOrderIndex, completedDate } : t)),
+    );
     try {
       const { error } = await supabase
         .from('tasks')
         .update({ 
           status: newStatus, 
           order_index: newOrderIndex,
-          completed_date: newStatus === 'completed' ? new Date().toISOString().split('T')[0] : null
+          completed_date: completedDate
         })
         .eq('id', taskId);
 
       if (error) throw error;
       return true;
     } catch (error) {
+      if (avant) setTasks((liste) => liste.map((t) => (t.id === taskId ? avant : t)));
       console.error('Error moving task:', error);
       toast.error('Erreur lors du déplacement');
       return false;

@@ -101,6 +101,7 @@ export default function ActionsJalons({ projectId, unites }: Props) {
                     type="button"
                     className={cn("text-left text-sm font-medium hover:underline", a.fait && "text-muted-foreground line-through")}
                     onClick={() => setOuverte(parId.get(a.id) ?? null)}
+                    data-testid="action-titre"
                   >
                     {a.title}
                   </button>
