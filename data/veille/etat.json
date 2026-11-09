@@ -3,8 +3,8 @@
     "pave": {
       "programmeId": "pave",
       "url": "https://tc.canada.ca/en/road-transportation/innovative-technologies/electric-vehicles/electric-vehicle-affordability-program",
-      "date": "2026-11-02",
-      "empreinte": "cfc90338",
+      "date": "2026-11-09",
+      "empreinte": "4796cc85",
       "faits": [
         {
           "type": "date",
@@ -24,24 +24,24 @@
         {
           "type": "montant",
           "valeur": "2",
-          "extrait": "The EVAP received $2.275B in funding over 5 years. As of October 1, 2026, there is $1.92B in remaining funds."
+          "extrait": "The EVAP received $2.275B in funding over 5 years. As of November 1, 2026, there is $1.87B in remaining funds."
         },
         {
           "type": "date",
-          "valeur": "2026-10-01",
-          "extrait": "The EVAP received $2.275B in funding over 5 years. As of October 1, 2026, there is $1.92B in remaining funds."
+          "valeur": "2026-11-01",
+          "extrait": "The EVAP received $2.275B in funding over 5 years. As of November 1, 2026, there is $1.87B in remaining funds."
         },
         {
           "type": "date",
-          "valeur": "2026-10-19",
-          "extrait": "2026-10-19"
+          "valeur": "2026-11-04",
+          "extrait": "2026-11-04"
         }
       ]
     },
     "roulez_vert": {
       "programmeId": "roulez_vert",
       "url": "https://www.quebec.ca/en/transports/electric-transportation/financial-assistance-electric-vehicle/new-vehicle/amount-financial-assistance",
-      "date": "2026-11-02",
+      "date": "2026-11-09",
       "empreinte": "35cf25ea",
       "faits": [
         {
@@ -74,7 +74,7 @@
     "ecocamionnage_v1": {
       "programmeId": "ecocamionnage_v1",
       "url": "https://www.quebec.ca/transports/aide-financiere/electrification/ecocamionnage/volet-1",
-      "date": "2026-11-02",
+      "date": "2026-11-09",
       "empreinte": "e62688d9",
       "faits": [
         {
@@ -92,7 +92,7 @@
     "ecocamionnage_v1:modalites": {
       "programmeId": "ecocamionnage_v1",
       "url": "https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/transports/transports/aide_financiere/electrification/ecocamionnage/Ecocamionnage_Modalites-2025-2028.pdf",
-      "date": "2026-11-02",
+      "date": "2026-11-09",
       "empreinte": "18061346",
       "faits": [
         {
@@ -155,7 +155,7 @@
     "imhzev": {
       "programmeId": "imhzev",
       "url": "https://tc.canada.ca/en/road-transportation/innovative-technologies/zero-emission-vehicles/medium-heavy-duty-zero-emission-vehicles",
-      "date": "2026-11-02",
+      "date": "2026-11-09",
       "empreinte": "f419786f",
       "faits": [
         {
@@ -183,7 +183,7 @@
     "pivez": {
       "programmeId": "pivez",
       "url": "https://ressources-naturelles.canada.ca/efficacite-energetique/efficacite-energetique-transports/pivez",
-      "date": "2026-11-02",
+      "date": "2026-11-09",
       "empreinte": "d9ead859",
       "faits": [
         {
@@ -211,7 +211,7 @@
     "ftcze": {
       "programmeId": "ftcze",
       "url": "https://logement-infrastructure.canada.ca/zero-emissions-trans-zero-emissions/index-fra.html",
-      "date": "2026-11-02",
+      "date": "2026-11-09",
       "empreinte": "75839e64",
       "faits": [
         {
@@ -229,7 +229,7 @@
     "pagtcp": {
       "programmeId": "pagtcp",
       "url": "https://www.quebec.ca/transports/aide-financiere/collectif/transport-personnes",
-      "date": "2026-11-02",
+      "date": "2026-11-09",
       "empreinte": "27d255c2",
       "faits": [
         {
@@ -267,7 +267,7 @@
     "pagtcp:modalites": {
       "programmeId": "pagtcp",
       "url": "https://cdn-contenu.quebec.ca/cdn-contenu/adm/min/transports/transports/aide_financiere/collectif/pagtcp/modalites-2025-2028.pdf",
-      "date": "2026-11-02",
+      "date": "2026-11-09",
       "empreinte": "bd1a5b6d",
       "faits": [
         {
