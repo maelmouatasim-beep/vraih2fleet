@@ -1,0 +1,3108 @@
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE
+
+
+
+
+Programme d’aide gouvernementale
+au transport collectif des personnes
+Modalités d’application 2025-2028
+Mars 2026
+Cette publication a été réalisée par la Direction générale des politiques et des programmes en transport
+collectif et éditée par la Direction générale des communications du ministère des Transports et de la
+Mobilité durable.
+
+
+Le contenu de cette publication se trouve à l’adresse : www.quebec.ca/transports/aide-financiere.
+
+Pour obtenir des renseignements :
+
+• composer le 511 (au Québec) ou le 1 888 355-0511 (partout en Amérique du Nord)
+
+• consulter le site Web du ministère des Transports et de la Mobilité durable à l’adresse suivante :
+www.transports.gouv.qc.ca
+
+• écrire à l’adresse suivante :   Direction générale des communications
+                                  Ministère des Transports et de la Mobilité durable
+                                  500, boulevard René-Lévesque Ouest, bureau 4 010
+                                  Montréal (Québec) H2Z 1W7
+
+
+
+
+© Gouvernement du Québec, ministère des Transports et de la Mobilité durable, 2026
+
+ISBN 978-2-555-03513-3 (PDF)
+
+Dépôt légal – 2026
+Bibliothèque et Archives nationales du Québec
+
+Tous droits réservés. Reproduction à des fins commerciales par quelque procédé que ce soit et traduction,
+même partielles, interdites sans l’autorisation écrite des Publications du Québec.
+TABLE DES MATIÈRES
+
+
+
+1.       DESCRIPTION DU PROGRAMME ............................................................................................................. 4
+     1.1       Contexte ....................................................................................................................................................................................... 4
+     1.2       Raison d’être du programme ................................................................................................................................................. 4
+     1.3       Cadre législatif et réglementaire ......................................................................................................................................... 6
+     1.4       Autres programmes d’aide aux immobilisations en transport collectif .................................................................. 6
+2.       OBJECTIFS, DURÉE ET VOLETS DU PROGRAMME ............................................................................. 7
+     2.1       Objectifs poursuivis .................................................................................................................................................................. 7
+     2.2       Durée du programme .............................................................................................................................................................. 8
+     2.3       Volets du programme .............................................................................................................................................................. 8
+3.       ADMISSIBILITÉ DES DEMANDES............................................................................................................. 9
+     3.1       Organismes admissibles au programme ........................................................................................................................... 9
+     3.2       Organismes non admissibles au programme .................................................................................................................. 9
+     3.3       Projets admissibles ................................................................................................................................................................ 10
+     3.4       Conditions d’admissibilité des projets ............................................................................................................................. 11
+     3.5       Projets non admissibles ........................................................................................................................................................ 12
+4.       AUTORISATION DES PROJETS .............................................................................................................. 12
+     4.1       Processus d’autorisation des projets ................................................................................................................................ 12
+     4.2       Présentation d’une demande d’aide financière ............................................................................................................. 14
+     4.3       Conditions à respecter après l’autorisation du projet ................................................................................................. 16
+     4.4       Modification d’un projet autorisé ....................................................................................................................................... 16
+5.       OCTROI DE L’AIDE FINANCIÈRE ............................................................................................................ 17
+     5.1       Principes généraux ................................................................................................................................................................. 17
+     5.2       Taux d’aide financière ............................................................................................................................................................ 17
+     5.3       Règles de cumul ...................................................................................................................................................................... 20
+     5.4       Dépenses admissibles ........................................................................................................................................................... 21
+     5.5       Admissibilité des dépenses en régie ................................................................................................................................ 24
+     5.6       Dépenses non admissibles .................................................................................................................................................. 25
+     5.7       Conditions particulières d’octroi de l’aide financière ................................................................................................... 26
+6.       RÈGLES PARTICULIÈRES PAR CATÉGORIE D’ACTIF ....................................................................... 29
+     6.1 Autobus ...................................................................................................................................................................................... 29
+     6.2 Véhicules de service ............................................................................................................................................................... 34
+     6.3 Systèmes ou applications nécessaires à l’exploitation des réseaux ...................................................................... 35
+     6.4 Terrains....................................................................................................................................................................................... 37
+     6.5 Mesures préférentielles pour les autobus ...................................................................................................................... 37
+     6.6 Stationnements d’incitation à l’utilisation du transport collectif ............................................................................. 38
+     6.7 Garages et terminus ............................................................................................................................................................... 39
+     6.8 Abribus ....................................................................................................................................................................................... 40
+     6.9 Mesures de transport actif ................................................................................................................................................... 41
+     6.10 Réseaux de métro et de trains de banlieue et tout autre système de transport terrestre guidé ................. 43
+     6.11 Modifications visant à améliorer, pour les clientèles à mobilité réduite, l’accès au service régulier existant
+     de transport collectif ......................................................................................................................................................................... 45
+     6.12 Étude d’opportunité................................................................................................................................................................ 46
+7.        VERSEMENT DE L’AIDE FINANCIÈRE ................................................................................................... 47
+     7.1       Projets dont l’aide financière accordée est égale ou inférieure à 500 000 $ ...................................................... 47
+     7.2       Projets dont l’aide financière accordée est supérieure à 500 000 $ ...................................................................... 48
+8.        CONTRÔLE ET REDDITION DE COMPTES........................................................................................... 48
+     8.1       Rapports ou renseignements à fournir par le bénéficiaire ........................................................................................ 48
+     8.2       Audit et évaluation ................................................................................................................................................................. 49
+9.        AUTRES DISPOSITIONS ........................................................................................................................... 50
+     9.1       Obligations légales et réglementaires ............................................................................................................................. 50
+     9.2       Dispositions générales .......................................................................................................................................................... 51
+     9.3       Droit de refus ou de résiliation ........................................................................................................................................... 51
+     9.4       Responsabilité.......................................................................................................................................................................... 51
+     9.5       Autres obligations et exigences ......................................................................................................................................... 52
+     9.6       Mesures transitoires ............................................................................................................................................................... 52
+     9.7       Mesures d’exception .............................................................................................................................................................. 52
+10. SPÉCIFICITÉS POUR LES PROJETS D’ENVERGURE (VOLET B) ..................................................... 53
+     10.1 Admissibilité des demandes ............................................................................................................................................... 53
+     10.2 Dépenses admissibles ........................................................................................................................................................... 53
+11. SPÉCIFICITÉS POUR LES PROJETS MAJEURS (VOLET C) ............................................................... 54
+     11.1 Autorisation des projets ........................................................................................................................................................ 54
+     11.2 Dépenses admissibles ........................................................................................................................................................... 54
+12. MESURES D’EXCEPTION POUR CERTAINS PROJETS DE MAINTIEN D’ACTIFS ........................ 55
+     12.1 Métro, garages et centres d’entretien .............................................................................................................................. 55
+     12.2 Maintien urgent d’actifs ........................................................................................................................................................ 55
+ANNEXES .............................................................................................................................................................. 55
+     Taux et admissibilité des aides financières par catégorie d’actif et d’organisme ......................................................... 56
+     Glossaire ............................................................................................................................................................................................... 57
+    MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                                  PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                                        AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+1.         DESCRIPTION DU PROGRAMME
+
+1.1        Contexte
+Le transport collectif est un élément déterminant de la mobilité durable des personnes et de la réduction des
+émissions de gaz à effet de serre (GES). Avec le Programme d’aide gouvernementale au transport collectif
+des personnes (PAGTCP), le gouvernement du Québec peut offrir une aide financière aux organismes de
+transport collectif en vue de les soutenir dans la réalisation de leurs projets d’immobilisation visant le
+maintien, l’amélioration ou le développement des réseaux de transport collectif et de transport adapté.
+
+Le PAGTCP existe depuis la fin des années 1970 et a fait l’objet de plusieurs révisions au fil des ans. Depuis
+le début des années 1990, le volet « immobilisations » a été bonifié de façon importante et est devenu le
+principal volet du programme. En 2022, le PAGTCP est devenu un programme d’aide entièrement consacré
+au financement des immobilisations en transport collectif. Les volets « aide à l’exploitation » et « autres
+subventions », qui étaient auparavant inclus dans ce programme, ont été intégrés dans le Programme d’aide
+au développement du transport collectif.
+
+Les dispositions du PAGTCP n’ont pas pour effet de modifier rétroactivement les autorisations déjà
+accordées ainsi que le montant des aides financières déjà versées ou à verser aux organismes bénéficiaires
+en vertu des anciennes dispositions du PAGTCP, sauf si cela est explicitement prévu aux modalités
+d’application du PAGTCP 2025-2028. De plus, dans le cadre des projets de réfection, de rénovation ou de
+remplacement d’actifs, les dispositions du présent PAGTCP qui déterminent les durées de vie utile de ces
+actifs prévalent sur celles établies lors de l’acquisition ou de la construction initiale de l’actif subventionné
+en vertu des dispositions d’une version antérieure du programme.
+
+Les annexes jointes au PAGTCP en font partie intégrante. En cas de conflit entre une annexe et le PAGTCP,
+ce dernier prévaut. Les définitions d’expressions inscrites au PAGTCP se retrouvent au glossaire, en annexe.
+
+
+1.2        Raison d’être du programme
+Le transport collectif est un service essentiel au développement économique et social des agglomérations
+urbaines et des régions du Québec parce qu’il facilite les échanges, contribue à soulager la congestion
+routière et permet à toutes et à tous de participer à la vie de la communauté. Il contribue aussi à la lutte
+contre les changements climatiques et la pollution de l’air, à la promotion de la santé et à l’adaptation au
+vieillissement de la population. Le transport collectif joue un rôle primordial dans l’atteinte des objectifs
+gouvernementaux en matière de mobilité durable, de développement économique, d’électrification des
+transports, de transition climatique et de réduction des émissions de GES associées au transport des
+personnes.
+
+Le gouvernement du Québec a fixé la cible de réduction des émissions de GES à 37,5 % sous les niveaux de
+1990, à l’horizon 2035. Or, selon les données les plus récentes (2022)1, le Québec n’a réduit ses émissions
+
+1
+    GES 1990-2022 : Inventaire québécois des émissions de gaz à effet de serre en 2022 et leur évolution depuis 1990, Ministère de
+    l’Environnement, de la Lutte contre les changements climatiques, de la Faune et des Parcs, gouvernement du Québec, 2024.
+
+                                                                                                                                4
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+de GES que de 7,2 % en comparaison de celles de 1990. Avec le Plan pour une économie
+verte 2030 (PEV 2030), dévoilé le 16 novembre 2020, le Québec vise notamment à atteindre sa cible de
+réduction des émissions de GES en maximisant les réductions réalisées sur son territoire. Dans ce contexte,
+le secteur des transports constitue un domaine d’intervention prioritaire, compte tenu de sa croissance
+soutenue et de son poids relatif dans le profil énergétique et le bilan des émissions de GES du Québec.
+En 2022, il était responsable de 43,3 % des émissions de GES. À lui seul, le transport routier représentait
+74,6 % des émissions du secteur des transports. Entre 1990 et 2022, les émissions de GES produites par le
+secteur des transports ont connu un accroissement de 25,6 %, et la part du transport routier sur les émissions
+totales du Québec est passée de 24,3 % en 1990 à 32,3 % en 2022.
+
+En soutenant financièrement la réalisation de projets de transport collectif et l’électrification du parc
+d’autobus urbains, le PAGTCP contribue à l’atteinte de deux objectifs du PEV 2030 en matière de transport
+collectif, soit :
+
+− réduire l’empreinte carbone de chaque mode de transport;
+
+− transférer les déplacements vers des modes plus sobres en carbone.
+
+Le PAGTCP s’inscrit plus précisément dans le cadre de l’action R1-090 du Plan de mise en œuvre du
+PEV 2030, qui vise à soutenir l’électrification du parc d’autobus urbains. Les sommes en provenance du
+Fonds d’électrification et de changements climatiques contribuent au financement du surcoût que représente
+l’acquisition des autobus à propulsion entièrement électrique.
+
+Le PAGTCP s’aligne aussi sur les orientations stratégiques de la Politique de mobilité durable – 2030 (PMD),
+qui consistent à développer une mobilité au service de la population, à plus faible empreinte carbone et à
+l’appui d’une économie plus forte.
+
+En soutenant financièrement la réalisation des projets d’immobilisations visant le maintien, l’amélioration, le
+développement ou l’électrification des réseaux de transport collectif, le PAGTCP profite en premier lieu aux
+usagers du transport collectif ainsi qu’aux municipalités et organismes qui planifient et exploitent les services
+de transport collectif. Toutefois, l’amélioration des services de transport collectif et l’électrification du parc
+d’autobus, ainsi que l’ensemble des bienfaits pouvant en découler, notamment la diminution des émissions
+de GES, profitent à la population du Québec en général. Aussi, ultimement, la réalisation de certains projets
+d’immobilisations en transport collectif qui contribuent à l’augmentation de la mobilité, à la réduction des
+temps de déplacements ou à la réduction de la congestion routière peut bénéficier aux usagers de la route
+et aux entreprises.
+
+
+
+
+                                                                                                                5
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                       PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                          AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+1.3    Cadre législatif et réglementaire
+Le pouvoir du ministre des Transports et de la Mobilité durable (« le ministre ») d’octroyer des aides
+financières, notamment pour le transport collectif, lui est conféré par l’article 4 de la Loi sur les
+transports (RLRQ, chapitre T-12).
+
+Les responsabilités en transport collectif des organismes admissibles au PAGTCP leur sont conférées par la
+section V.3 « Service municipal de transport en commun » (articles 48.18 à 48.38) de la Loi sur les transports
+ou par leur loi constitutive respective, soit :
+
+− la Loi sur les sociétés de transport en commun (RLRQ, chapitre S-30.01);
+
+− la Loi sur l’Autorité régionale de transport métropolitain (RLRQ, chapitre A-33.3);
+
+− la Loi sur le Réseau de transport métropolitain (RLRQ, chapitre R-25.01).
+
+La Loi sur les infrastructures publiques (RLRQ, chapitre I-8.3) établit des règles de gouvernance en matière
+de planification des investissements publics, de même qu’en matière de gestion des infrastructures
+publiques. En vertu de cette loi, certains projets d’investissements en infrastructures publiques peuvent être
+considérés comme des projets majeurs et être soumis à la Directive sur la gestion des projets majeurs
+d’infrastructure publique (« la Directive »), qui impose des exigences particulières relativement à
+l’autorisation et à la gestion de projets.
+
+Cette loi institue le Plan québécois des infrastructures (PQI). Ce plan, présenté annuellement par le Conseil
+du trésor au gouvernement du Québec, regroupe tous les investissements publics en matière
+d’infrastructures prévus sur une période de 10 années.
+
+
+1.4    Autres programmes d’aide aux immobilisations en transport collectif
+Outre le PAGTCP, d’autres programmes d’aide financière permettent de soutenir des projets
+d’immobilisations en transport collectif, notamment :
+
+− le Programme d’aide aux immobilisations en transport en commun (PAITC) de la Société de financement
+   des infrastructures locales du Québec (SOFIL) et du ministère des Transports et de la Mobilité durable;
+
+− le Programme d’aide gouvernementale aux infrastructures de transport collectif (PAGITC).
+
+
+
+
+                                                                                                             6
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                       PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                          AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+2.       OBJECTIFS, DURÉE ET VOLETS DU PROGRAMME
+
+2.1      Objectifs poursuivis
+Le PAGTCP soutient financièrement les organismes de transport collectif dans la réalisation de leurs projets
+d’immobilisations. L’objectif général du PAGTCP est de préserver, d’améliorer et de développer les réseaux
+de transport collectif. Les objectifs spécifiques du PAGTCP sont les suivants :
+
+− Améliorer l’état des actifs, par :
+
+     •   un rajeunissement de l’âge moyen du parc d’autobus urbains;
+
+     •   une amélioration de l’indice d’état gouvernemental des infrastructures des sociétés de transport en
+         commun (une augmentation du pourcentage des actifs en bon état).
+
+− Contribuer à l’électrification du transport collectif et à la réduction des émissions de GES en découlant,
+     par :
+
+     •   une augmentation du nombre d’autobus à propulsion entièrement électrique dans le parc d’autobus
+         des sociétés de transport en commun en activité au Québec;
+
+     •   une augmentation du nombre de kilomètres de réseaux de métro et de trains ou de tout autre
+         système de transport terrestre guidé électrique.
+
+− Contribuer à l’augmentation de l’offre de services de transport collectif, par :
+
+     •   une augmentation du nombre de voitures de métro et de trains de banlieue, ou de tout autre système
+         de transport terrestre guidé, ainsi qu’une croissance du nombre de places qui leur sont réservées
+         dans les centres d’entretien;
+
+     •   une augmentation du nombre de kilomètres couverts par les réseaux de transport collectif.
+
+− Améliorer l’attractivité du transport collectif, par :
+
+     •   une augmentation du nombre de kilomètres de voies réservées aux autobus ou de toute autre mesure
+         préférentielle pour les autobus;
+
+     •   une augmentation du nombre de projets visant l’implantation ou le développement de systèmes de
+         transport intelligents, de systèmes ou applications nécessaires à l’exploitation des réseaux ou de
+         toutes autres mesures destinées à faciliter l’utilisation du transport collectif par les usagers.
+
+
+
+
+                                                                                                             7
+    MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                                          PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                                                AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+− Favoriser l’intermodalité, par :
+
+      •     une augmentation du nombre de stationnements d’incitation au transport collectif ou du nombre de
+            places disponibles dans ces stationnements;
+
+      •     une augmentation du nombre de vélostations;
+
+      •     une augmentation du nombre de supports à vélos installés sur les autobus ou à proximité des
+            services de transport collectif pour faciliter l’accès à ces services.
+
+− Améliorer l’accessibilité des réseaux de transport collectif réguliers aux personnes handicapées et à
+       mobilité réduite, par :
+
+       •    une augmentation du nombre de stations de métro et de trains de banlieue accessibles à ces
+            clientèles;
+
+       •    une augmentation du nombre de véhicules accessibles à ces clientèles (autobus et voitures de métro
+            ou de trains).
+
+
+2.2         Durée du programme
+Le PAGTCP entre en vigueur dès la date de son approbation par le Conseil du trésor et prend fin le
+31 mars 2028. Toutefois, les dépenses admissibles au présent programme peuvent avoir été engagées à
+partir du 1er avril 2025 si les conditions énoncées à l’article 4 du présent document sont respectées. La
+réalisation des projets autorisés pendant la durée du PAGTCP peut se prolonger au-delà de la date de fin
+du programme.
+
+
+2.3         Volets du programme
+Le PAGTCP comprend trois volets, soit :
+
+− Volet A : Projets réguliers dont le coût total2 est inférieur à 50 000 000 $ et projets d’acquisition
+       d’autobus. Ces projets ne sont pas soumis à la Directive ni à aucune exigence particulière du Conseil du
+       trésor. Les articles 1 à 9 du présent document et les annexes sont applicables à ce volet.
+
+− Volet B : Projets d’envergure dont le coût total est égal ou supérieur à 50 000 000 $ et qui ne sont pas
+       des projets majeurs (voir le volet C) ni des projets d’acquisition d’autobus. Le cumul de projets
+       indépendants totalisant 50 000 000 $ et plus ne constitue pas un projet d’envergure. Les articles 1 à 10
+       du présent document et les annexes sont applicables à ce volet.
+
+
+
+
+2
+    Le coût total d’un projet correspond à l’ensemble des coûts nécessaires à sa planification et à sa réalisation, quel que soit le programme
+    d’aide par lequel son financement est assuré.
+
+                                                                                                                                            8
+    MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                                              PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                                                    AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+− Volet C : Projets majeurs d’investissements en infrastructures publiques soumis à la Directive, ou à
+        toutes autres exigences du Conseil du trésor. Les articles 1 à 11 du présent document et les annexes
+        sont applicables à ce volet.
+
+
+3.           ADMISSIBILITÉ DES DEMANDES
+
+3.1          Organismes admissibles au programme
+Les organismes admissibles à recevoir une aide financière dans le cadre des trois volets du PAGTCP sont :
+
+− les sociétés de transport en commun instituées en vertu de la Loi sur les sociétés de transport en
+        commun;
+
+− l’Autorité régionale de transport métropolitain (ARTM);
+
+− le Réseau de transport métropolitain, désigné ci-après sous le nom « exo »;
+
+− les organismes municipaux et intermunicipaux de transport (OMIT), qui incluent les municipalités et les
+        municipalités régionales de comté (MRC)3 ayant déclaré leur compétence en transport collectif des
+        personnes, les régies municipales et intermunicipales de transport et les regroupements de municipalités
+        qui organisent des services municipaux de transport collectif urbain ou régional et qui contribuent à leur
+        financement.
+
+L’ARTM, exo et les sociétés de transport en commun sont admissibles à toutes les catégories d’aide
+financière prévues au PAGTCP (voir l’article 3.3, « Projets admissibles »).
+
+Pour leur part, les OMIT sont admissibles à certaines catégories d’actifs. Plus précisément, ces organismes
+ne sont pas admissibles aux catégories d’actifs suivantes : les autobus, les garages, les centres d’entretien,
+les mesures préférentielles pour les autobus ainsi que les réseaux de métro et de trains de banlieue, et tout
+autre système de transport terrestre guidé.
+
+
+3.2          Organismes non admissibles au programme
+Un organisme cité ci-dessus n’est pas admissible au PAGTCP s’il a, au cours des deux années précédant la
+demande d’aide financière, fait défaut de respecter ses obligations après avoir été dûment mis en demeure
+en lien avec l’attribution d’une aide financière antérieure par le ministre.
+
+
+
+
+3
+     Les communautés autochtones représentées par leur conseil de bande au sens de la Loi sur les Indiens (L.R.C. 1985, chapitre I-5) ou de la
+    Loi sur les Naskapis et la Commission crie-naskapie (S.C. 1984, chapitre 18), un village nordique et l’Administration régionale Kativik au sens
+    de la Loi sur les villages nordiques et l’Administration régionale Kativik (RLRQ, chapitre V-6.1), de même que l’Association des corporations
+    foncières du Nunavik, sont traités au même titre que les MRC aux fins du PAGTCP 2025-2028.
+
+                                                                                                                                                 9
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+3.3     Projets admissibles
+Les projets admissibles à une aide financière dans le cadre du PAGTCP portent sur les différentes
+immobilisations nécessaires à l’exploitation des réseaux de transport collectif et de transport adapté. Plus
+précisément, ils se rattachent aux différentes catégories d’actifs suivantes :
+
+− Les études d’opportunité et leur mise à jour, dans le cas des projets réguliers dont les coûts sont estimés
+   à 20 000 000 $ et plus (volet A) et des projets d’envergure (volet B), à l’exception des projets de maintien
+   d’actifs existants tels que décrits à l’article 4.2.
+
+− Le matériel roulant, les équipements et les infrastructures de métro, de trains de banlieue ou de tout autre
+   système de transport terrestre guidé.
+
+− Les autobus hybrides ainsi que les autobus à propulsion entièrement électrique.
+
+− Les véhicules de service.
+
+− Les garages et les centres d’entretien.
+
+− Les terminus et les aires d’attente ou de recharge.
+
+− Les stationnements d’incitation.
+
+− Les abribus.
+
+− Les supports à vélos, les vélostations et les infrastructures de transport actif améliorant l’accès aux
+   réseaux de transport collectif.
+
+− Les mesures préférentielles pour les autobus.
+
+− Les systèmes ou les applications nécessaires à l’exploitation des réseaux.
+
+− Les terrains requis pour la réalisation des projets admissibles.
+
+− Les mesures permettant d’améliorer l’accessibilité des clientèles à mobilité réduite aux actifs de transport
+   collectif existants. Pour que les projets des sociétés de transport en commun et d’exo soient admissibles,
+   ceux-ci doivent démontrer qu’ils ont consulté leurs organismes partenaires représentant les différentes
+   clientèles en situation de handicap en amont du dépôt de leur demande d’aide financière.
+
+− Les minibus accessibles aux passagers en fauteuil roulant.
+
+− Le cahier des charges et les plans et devis, si requis pour l’analyse du projet (voir l’article 4.2).
+
+
+                                                                                                              10
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+L’acquisition de terrains en vue de la réalisation d’un projet admissible, y compris les démarches relatives
+aux droits superficiaires, aux droits d’accès, aux emprises ou aux servitudes et, le cas échéant, les travaux de
+préparation du site, peut constituer un projet indépendant admissible pouvant faire l’objet d’une demande
+d’aide financière distincte. Lorsque l’acquisition d’un terrain est un projet indépendant, un projet de transport
+collectif sur ce terrain doit être déposé au Ministère dans les sept années suivant son acquisition, et la phase
+de construction doit être prévue au cours de l’année suivant le dépôt du projet, sans quoi le ministre peut
+exiger le remboursement de l’aide financière accordée. Le remboursement correspond au taux de l’aide
+financière qui a été versée au moment de l’achat du terrain, multiplié par la juste valeur marchande du terrain
+au moment de la récupération de l’aide financière.
+
+De même, si un projet financé par plus d’un programme d’aide aux immobilisations prévoit que les études ou
+d’autres dépenses (par exemple les frais de gestion liés à un achat groupé d’autobus) sont couvertes par le
+PAGTCP, ces dépenses peuvent constituer un projet admissible pouvant faire l’objet d’une demande d’aide
+financière distincte.
+
+
+3.4     Conditions d’admissibilité des projets
+Chaque projet soumis par un organisme admissible doit aussi satisfaire à toutes les conditions suivantes :
+
+− La demande d’aide financière doit avoir été soumise au ministre au plus tard le 30 septembre 2027.
+
+− Être utilisé pour exploiter un service de transport collectif ou de transport adapté.
+
+− Prévoir des mesures d’accessibilité universelle et sans obstacle pour les personnes handicapées et à
+    mobilité réduite, sauf s’il est démontré de façon probante que les conditions d’exploitation ne le
+    permettent pas ou ne le justifient pas.
+
+− Être inscrit au plan d’immobilisations de l’organisme ou, pour les organismes qui n’élaborent pas de tel
+    plan, être approuvé par une résolution du conseil d’administration qui confirme la participation financière
+    de l’organisme en vue de sa réalisation.
+
+− Être inscrit au PQI dûment approuvé par le Conseil des ministres. Si aucune demande d’aide financière
+    n’a été reçue dans les 12 mois suivant la confirmation à l’organisme de cette inscription, le ministre peut
+    supprimer le projet du PQI. Pour être admissible à nouveau, le projet devra faire l’objet d’une nouvelle
+    demande d’inscription à un PQI ultérieur approuvé par le Conseil des ministres.
+
+− Pour un projet situé dans la région métropolitaine de Montréal, il devra avoir fait l’objet d’une analyse de
+    cohérence de l’ARTM.
+
+− Pour les projets en lien avec la mobilité intégrée, ils devront être compatibles avec les solutions déjà
+    implantées ou en cours d’implantation au Québec.
+
+Dans le cas des projets d’acquisition d’autobus (volet A), de locomotives ou de voitures de métro ou de trains,
+l’appel d’offres doit exiger un minimum de 25 % de contenu canadien, incluant l’assemblage final au Canada.
+                                                                                                              11
+    MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                                              PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                                                    AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+Le gouvernement peut, aux conditions qu’il détermine, dispenser un organisme de ces obligations, si ce
+dernier fait une démonstration probante qu’elles entraînent un risque réel d’absence de soumission.
+
+L’organisme admissible doit également confirmer que le projet soumis est conforme aux plans de mobilité
+et à la réglementation en matière d’aménagement en vigueur sur son territoire de desserte. Si ce n’est pas le
+cas au moment du dépôt de la demande d’aide financière, il doit indiquer les démarches prévues pour
+s’assurer que le projet sera conforme à ces exigences une fois qu’il sera terminé.
+
+
+3.5          Projets non admissibles
+Les projets suivants ne sont pas admissibles à recevoir une aide financière dans le cadre du PAGTCP :
+
+− Les projets visant l’entretien courant et périodique du matériel roulant, des équipements et des
+       infrastructures de transport collectif et de transport adapté;
+
+− Les projets d’acquisition d’autobus à moteur thermique;
+
+− Les projets d’acquisition de véhicules de service à moteur thermique, sauf si une démonstration probante
+       d’absence de marché pour des véhicules à propulsion entièrement électrique ou hybride est déposée;
+
+− Les projets visant le transport interurbain.
+
+
+4.          AUTORISATION DES PROJETS
+
+4.1          Processus d’autorisation des projets
+Pour bénéficier d’une aide financière dans le cadre du PAGTCP, tous les projets doivent être autorisés par le
+ministre. Le processus d’autorisation d’un projet4 s’effectue selon les étapes décrites ci-après.
+
+
+Inscription au PQI
+
+1. L’organisme admissible doit d’abord acheminer une demande d’inscription de son projet au PQI pour
+       planification afin de s’assurer que les sommes nécessaires à sa réalisation seront disponibles. Pour ce
+       faire, il doit accompagner sa demande de la fiche de projet requise, disponible sur le site Web du
+       gouvernement du Québec (quebec.ca), présentant une justification du projet, une description du projet et
+       des travaux envisagés, une répartition annuelle des coûts et un échéancier de réalisation. Pour un projet
+       situé dans la région métropolitaine de Montréal, l’organisme admissible doit aussi inclure la
+       recommandation de l’ARTM, issue de son analyse de cohérence préliminaire.
+
+
+4
+    Il est à noter que, pour les projets d’acquisition d’autobus et de matériel roulant (locomotives et voitures de trains ou de métro), des
+    dispositions particulières sont établies aux articles 6.1 « Autobus » et 6.10 « Réseaux de métro et de trains de banlieue et tout autre système
+    de transport terrestre guidé ».
+
+                                                                                                                                                12
+    MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                                                  PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                                                        AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+      −      Dans le cas des projets réguliers dont les coûts sont estimés à 20 000 000 $ et plus (volet A) et des
+             projets d’envergure (volet B), une étude d’opportunité5 doit être réalisée préalablement à l’inscription
+             au PQI du projet. Cette étude, qui peut constituer un projet indépendant admissible au PAGTCP, doit
+             être déposée au Ministère au même moment que la fiche de justification du projet.
+
+      −      Si le projet n’est pas admissible, l’organisme sera informé que son projet ne sera pas recommandé
+             pour inscription au PQI à moins qu’il le modifie ou qu’il ajoute l’information requise pour le rendre
+             admissible au PAGTCP.
+
+2. À la suite de l’approbation du PQI par le Conseil des ministres, le ministre informe par écrit l’organisme
+       de l’inscription du projet au PQI. Cette inscription confirme la réservation des sommes qui contribueront
+       à son financement. Elle ne constitue pas une autorisation à commencer le projet. Aucune dépense n’est
+       admissible à cette étape, et aucun versement ne peut être effectué.
+
+
+Autorisation du projet
+
+3. L’organisme admissible dépose une demande d’aide financière pour chaque projet inscrit au PQI. Il doit
+       utiliser le formulaire de demande d’aide financière prévu à cet effet, disponible sur le site Web du
+       gouvernement du Québec (quebec.ca).
+
+      −      Les demandes doivent être accompagnées de tous les documents de soutien requis pour leur analyse
+             complète et pour la détermination, le cas échéant, du montant maximal des dépenses admissibles à
+             l’aide financière.
+
+      −      L’article 4.2, « Présentation d’une demande d’aide financière », énumère les différents types de
+             documents requis.
+
+      −      Les demandes doivent être transmises par courriel à l’adresse indiquée sur le site Web du
+             gouvernement du Québec (quebec.ca).
+
+4. La demande d’aide financière est analysée par le ministre en fonction des modalités du PAGTCP et des
+       orientations du Ministère. Tous les projets doivent satisfaire aux diverses conditions énoncées à
+       l’article 3.4, « Conditions d’admissibilité des projets ». Le cas échéant, les projets doivent également
+       respecter toute décision du Conseil des ministres ou du Conseil du trésor.
+
+      −      Si l’analyse est concluante et que le projet est autorisé, le ministre informe par écrit l’organisme
+             admissible et lui indique le montant maximal de l’aide financière accordé pour sa réalisation. La date
+             inscrite sur cette lettre constitue la date de début de l’admissibilité des dépenses, à l’exception des
+             dépenses inscrites au deuxième paragraphe de l’article 5.4.
+
+      −      Dans le cas des projets majeurs, les différentes étapes du projet sont autorisées par le Conseil des
+             ministres ou par le Conseil du trésor. À la suite de chacune de ces autorisations, une lettre est émise
+
+5
+    Dans le cas des projets de maintien d’actifs existants tels que décrits à l’article 4.2, il n’est pas obligatoire d’effectuer cette analyse.
+
+                                                                                                                                                   13
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                          PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                             AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+         par le ministre afin d’indiquer le montant maximal de l’aide financière qui est accordée à l’organisme
+         admissible (« le bénéficiaire »). La date de début de l’admissibilité des dépenses correspond à la date
+         de la décision rendue par le Conseil du trésor ou par le Conseil des ministres sur l’étape du projet en
+         vertu de la Directive ou de la Loi sur les infrastructures publiques. Le bénéficiaire doit cependant avoir
+         déposé une demande d’aide financière pour chacune des étapes du projet au ministre dans les trois
+         mois suivant la date de décision du Conseil du trésor ou du Conseil des ministres, sans quoi la date
+         inscrite sur la lettre d’autorisation de chacune des étapes du projet par le ministre constituera la date
+         de début de l’admissibilité des dépenses.
+
+     −   Si le projet est refusé, l’organisme en est informé.
+
+5. Le bénéficiaire doit prendre l’engagement envers le ministre, selon la forme demandée par ce dernier, de
+     respecter les conditions du PAGTCP et les obligations en découlant.
+
+6. Le versement de l’aide financière s’effectue à la suite de l’autorisation du projet et de la signature de
+     l’engagement conformément aux dispositions du PAGTCP établies à l’article 7, « Versement de l’aide
+     financière ».
+
+7. Le suivi du projet et la reddition de comptes s’effectuent conformément aux exigences du PAGTCP
+     exposées à l’article 8, « Contrôle et reddition de comptes », ou, s’il y a lieu, conformément aux exigences
+     prévues à l’engagement et, le cas échéant, en conformité avec la Directive ou avec toutes autres
+     exigences gouvernementales.
+
+
+4.2      Présentation d’une demande d’aide financière
+Les demandes d’aide financière doivent être transmises par courriel à l’aide du formulaire requis, disponible
+sur le site Web du gouvernement du Québec (quebec.ca). Elles doivent être accompagnées de documents
+justificatifs regroupant les informations pertinentes pour l’analyse du projet et démontrant que le projet est
+conforme aux conditions énoncées à l’article 3.4, « Conditions d’admissibilité des projets ».
+
+La liste des documents justificatifs à transmettre varie en fonction de la nature et de l’ampleur du projet.
+Outre les documents énumérés dans la liste qui suit, le ministre peut exiger tout autre document justificatif
+ou toutes études ou analyses supplémentaires qu’il juge nécessaires pour l’analyse du projet.
+
+La liste des documents justificatifs à transmettre comprend les renseignements suivants :
+
+1.    Un extrait du plan d’immobilisations de l’organisme confirmant l’inscription du projet ou, pour les
+      organismes qui n’ont pas de plan d’immobilisations, une résolution du Conseil d’administration de
+      l’organisme admissible autorisant le projet et son financement.
+
+2.    Une analyse de cohérence préparée par l’ARTM (pour les projets réalisés dans la région métropolitaine
+      de Montréal).
+
+3.    Une mise en contexte et une justification à l’appui du projet envisagé.
+
+
+                                                                                                                14
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                          PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                             AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+4.   Une analyse des besoins actuels et futurs.
+
+5.   La portée et les objectifs du projet.
+
+6.   Une description et une analyse des différents scénarios possibles pour répondre aux besoins, y compris :
+
+     •   une présentation de la méthodologie d’évaluation des scénarios;
+
+     •   une analyse des avantages et des inconvénients des différents scénarios envisagés;
+
+     •   une description détaillée du scénario retenu, de la portée du projet et des travaux à réaliser.
+
+         Dans le cas d’un projet en lien avec la mobilité intégrée, un scénario évaluant la possibilité d’utiliser
+         une solution technologique déjà développée ou en cours de développement par un autre organisme
+         de transport du Québec doit avoir été étudié.
+
+7.   Un plan conceptuel ou un dessin illustrant le projet.
+
+8.   Le cahier des charges et les plans et devis, si requis pour l’analyse du projet.
+
+9.   Un échéancier de l’appel d’offres et de la réalisation des travaux et, s’il y a lieu, les résultats de l’appel
+     d’offres.
+
+10. Le mode envisagé pour la réalisation et la surveillance des travaux.
+
+11. Une ventilation détaillée des coûts qui permet de statuer sur l’admissibilité des dépenses.
+
+12. La stratégie de financement envisagée.
+
+13. La structure de gouvernance.
+
+14. Une analyse des risques du projet.
+
+15. Une analyse de rentabilité financière pour les projets suivants :
+
+     •   Le remplacement, la réfection ou les réparations majeures effectuées en vue de prolonger la durée
+         de vie utile des locomotives et des voitures de métro et de trains de banlieue;
+
+     •   Le remplacement de batteries d’un autobus urbain hybride ou électrique;
+
+     •   L’achat et l’installation de systèmes ou d’applications nécessaires à l’exploitation des réseaux dont
+         le montant des dépenses totales est inférieur à 20 000 000 $, mais supérieur à 1 000 000 $;
+
+     •   L’implantation, l’amélioration et le prolongement des mesures préférentielles pour les autobus dont
+         le montant des dépenses totales est inférieur à 20 000 000 $, mais supérieur à 1 000 000 $;
+
+
+
+                                                                                                                15
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+16. Une analyse démontrant que le projet du bénéficiaire est optimal d’un point de vue financier dans le cas
+    d’un projet de maintien d’actifs existants, tels que les réfections ou les réparations effectuées en vue de
+    prolonger la durée de vie utile des infrastructures du réseau de métro, de trains de banlieue et de centres
+    de transport dont le montant des dépenses totales est inférieur au seuil des projets d’envergure ou des
+    projets majeurs, mais supérieur à 1 000 000 $.
+
+Dans le cas des études d’opportunité, la demande d’aide financière doit couvrir les renseignements
+demandés aux points 1, 2, 3, 5, 11. De plus, l’organisme devra remettre le devis de l’étude, incluant
+notamment l’analyse des besoins et une description des scénarios qui seront analysés, son montage
+financier, une liste préliminaire des risques associés au projet d’étude d’opportunité ainsi qu’un échéancier
+de réalisation de l’étude. Le ministre peut exiger tout autre document justificatif supplémentaire qu’il juge
+nécessaire pour l’analyse du projet.
+
+
+4.3     Conditions à respecter après l’autorisation du projet
+Les différentes conditions à respecter à la suite de l’autorisation d’un projet sont les suivantes :
+
+− Pour obtenir le versement de l’aide financière prévue au PAGTCP, le bénéficiaire, par l’entremise de son
+    représentant autorisé, devra préalablement conclure avec le ministre, qui pourrait être représenté par un
+    fonctionnaire autorisé du Ministère, un engagement portant sur le respect des conditions du PAGTCP et
+    des obligations qui en découlent, dont la forme sera déterminée par le ministre.
+
+− Au moment de la réalisation d’un projet bénéficiant d’une aide financière dans le cadre du PAGTCP, le
+    bénéficiaire s’engage à se conformer au Protocole de visibilité pour les programmes d’aide disponible sur
+    le site Web du gouvernement du Québec.
+
+− Lorsque la réalisation du projet est terminée (et avant la préparation de l’audit final des dépenses
+    admissibles), le bénéficiaire doit remplir le certificat de conformité des travaux selon le gabarit du
+    Ministère et le faire signer par le chargé de projet ou le surveillant des travaux. Ce certificat atteste que
+    le projet réalisé est conforme au projet autorisé par le ministre en fonction, le cas échéant, des
+    modifications au projet qui ont été autorisées. Dans le cas des projets concernant plus précisément des
+    acquisitions de biens, le certificat de conformité devra faire état des quantités réellement acquises par
+    rapport aux quantités autorisées et, le cas échéant, du produit de la disposition des biens remplacés.
+
+− Le bénéficiaire doit procéder à toutes les redditions de comptes et à tous les suivis exigés à l’article 8,
+    « Contrôle et reddition de comptes », ou, le cas échéant, à l’engagement.
+
+
+4.4     Modification d’un projet autorisé
+Le bénéficiaire doit informer promptement le ministre de tout changement ayant une incidence sur un projet
+déjà autorisé, que ce soit par rapport à sa portée, à son emplacement, à ses coûts, à son échéancier ou à tout
+autre paramètre mentionné dans sa description, tel qu’il a été autorisé.
+
+
+                                                                                                              16
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+Afin que les modifications apportées à un projet autorisé soient admissibles à l’aide financière, une nouvelle
+autorisation du ministre est requise lorsque les changements :
+
+− entraînent une augmentation du coût total du projet ou du montant maximal de l’aide financière accordée;
+
+− n’entraînent pas d’augmentation des coûts, mais modifient de façon importante les paramètres du projet
+     autorisé (réduction significative de l’envergure, des quantités ou de la capacité, ou modifications majeures
+     au concept du projet).
+
+D’autres modifications requièrent l’acceptation de l’unité administrative du Ministère qui est responsable de
+l’autorisation du projet pour être admissibles à l’aide financière. C’est notamment le cas lorsque les
+changements :
+
+− n’entraînent pas d’augmentation des coûts ni du montant maximal de l’aide financière accordée et n’ont
+     pas de répercussions significatives sur le concept ou la portée du projet;
+
+− permettent une augmentation des quantités autorisées sans entraîner la hausse des coûts du projet ou
+     du montant maximal de l’aide financière accordée.
+
+Le cas échéant, une modification à l’engagement pris en vertu du point 6 de l’article 4.1, « Processus
+d’autorisation des projets », devra être effectuée.
+
+
+5.      OCTROI DE L’AIDE FINANCIÈRE
+
+5.1      Principes généraux
+L’aide financière accordée est versée au bénéficiaire sous réserve des sommes disponibles. Tout engagement
+financier dans le cadre du PAGTCP est conditionnel à la disponibilité des fonds affectés à sa mise en œuvre,
+conformément à la Loi sur l’administration financière (RLRQ, chapitre A-6.001).
+
+L’admissibilité d’un organisme aux modalités d’application du PAGTCP n’accorde aucune garantie de
+financement par le ministre ni aucune obligation pour celui-ci.
+
+
+5.2      Taux d’aide financière
+Les taux d’aide financière indiqués dans cette section sont les taux applicables aux sociétés de transport, à
+l’ARTM et à exo. Les taux d’aide financière applicables aux OMIT sont indiqués en annexe du présent
+document.
+
+
+
+
+                                                                                                              17
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                       PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                          AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+Les taux d’aide financière sont de :
+
+− 95 % des dépenses admissibles pour les projets suivants :
+
+   • Aménagement ou développement des réseaux de métro et de trains de banlieue ou de tout autre mode
+      de transport terrestre guidé, comprenant l’ajout de nouvelles stations ou de nouvelles lignes, le
+      prolongement des systèmes existants ou l’électrification d’une ligne de train de banlieue. Les coûts de
+      ces projets concernent l’ajout d’infrastructures, d’équipements et de matériel roulant sur rail.
+
+   • Aménagement ou prolongement de systèmes rapides par bus (SRB) en site propre. Les coûts de ces
+      projets concernent l’ajout d’infrastructures et d’équipements, mais excluent les dépenses associées au
+      matériel roulant.
+
+− 90 % des dépenses admissibles pour l’acquisition (ajout ou remplacement) d’autobus à propulsion
+   entièrement électrique ou d’autobus hybrides.
+
+− 85 % des dépenses admissibles pour les projets :
+
+   • d’acquisition (ajout ou remplacement) de véhicules de service à propulsion entièrement électrique;
+
+   • de modifications aux terminus, aux stationnements d’incitation ainsi qu’aux stations, aux gares et aux
+      voitures de métro ou de trains de banlieue en vue d’améliorer l’accès des clientèles à mobilité réduite
+      aux réseaux de transport collectif;
+
+   • de maintien, d’amélioration ou de remplacement des actifs existants des réseaux de métro et de trains
+      de banlieue (matériel roulant, équipements et infrastructures);
+
+   • de maintien ou d’amélioration des actifs existants des SRB (équipements et infrastructures);
+
+   • de maintien ou d’amélioration des infrastructures et équipements requis pour l’exploitation des
+      stationnements d’incitation, des terminus et des aires d’attente;
+
+− 75 % des dépenses admissibles pour les projets concernant les éléments suivants :
+
+   • Des systèmes ou des applications nécessaires à l’exploitation des réseaux ou des systèmes de
+      transports intelligents.
+
+   • L’aménagement ou l’agrandissement de stationnements d’incitation, de terminus, d’aires d’attente, de
+      garages ou de centres d’entretien existants et qui ne sont pas liés à l’électrification des réseaux de
+      transport. Dans le cas des garages et des centres d’entretien existants, ils comprennent aussi les
+      projets de maintien ou d’amélioration des infrastructures et équipements requis pour leur exploitation.
+
+   • L’électrification des réseaux d’autobus nécessaires à l’exploitation des services de transport collectif
+      ou de transport adapté. Ces projets comprennent la construction de nouveaux garages ou centres
+
+
+                                                                                                            18
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                      PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                         AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+     d’entretien accueillant des autobus à propulsion électrique ainsi que les adaptations ou modifications
+     requises aux infrastructures et équipements existants. Ils comprennent aussi les projets de maintien
+     ou d’amélioration des infrastructures et équipements requis pour leur exploitation. Dans le cas où le
+     projet est également financé par un programme du gouvernement du Canada, le taux d’aide est
+     augmenté à 85 %, et ce, malgré l’article 5.3.
+
+  • Le remplacement ou ajout d’équipements de garage requis pour l’exploitation des garages et des
+     centres d’entretien.
+
+  • L’acquisition (ajout ou remplacement) de véhicules de service hybrides rechargeables. Une
+     démonstration probante de la non-disponibilité ou de l’absence de marché pour des véhicules à
+     propulsion entièrement électrique devra être déposée par le bénéficiaire et acceptée par le ministre
+     pour que le projet soit admissible.
+
+  • L’aménagement de mesures préférentielles pour les autobus lorsque le projet est effectué en site
+     propre.
+
+  • Les abribus, les supports à vélos, les vélostations et les autres infrastructures de transport actif
+     favorisant l’accès aux réseaux de transport collectif.
+
+− 50 % des dépenses admissibles pour les projets suivants :
+
+  • Acquisition (ajout ou remplacement), à l’état neuf, de minibus accessibles aux passagers en fauteuil
+     roulant, d’une capacité maximale de 10 places assises et munis de 2 ou 3 dispositifs d’ancrage pour
+     fauteuils roulants. Cette aide peut être demandée par l’ensemble des organismes admissibles, incluant
+     une municipalité, une régie municipale ou intermunicipale de transport, un regroupement de
+     municipalités ou une MRC qui mandate un organisme de transport adapté afin d’opérer des véhicules
+     dont elle ou il est propriétaire. Cette aide est accordée jusqu’à concurrence des montants autorisés, et
+     elle augmente à 85 % des dépenses admissibles lorsque le minibus est entièrement électrique.
+
+  • Réparations majeures visant à prolonger la durée de vie utile des autobus non électriques.
+
+  • Remplacement à mi-vie (généralement au bout de huit ans) des batteries des autobus hybrides ou
+     électriques, ou de leurs modules. Ce même taux d’aide s’applique lors d’un ou de plusieurs
+     remplacements de modules de batteries, et ce, jusqu’à concurrence de la valeur totale de
+     remplacement de la batterie.
+
+  • Études d’opportunité, dans le cas des projets réguliers dont les coûts sont estimés à 20 000 000 $ et
+     plus (volet A) et des projets d’envergure (volet B).
+
+− 25 % des dépenses admissibles pour les projets visant :
+
+  • l’aménagement de mesures préférentielles pour les autobus lorsqu’ils ne sont pas effectués en site
+     propre;
+
+                                                                                                           19
+    MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                                            PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                                                  AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+      • l’acquisition (ajout ou remplacement) de véhicules de service à moteur thermique. Une démonstration
+          probante de la non-disponibilité ou de l’absence de marché pour des véhicules à propulsion
+          entièrement électrique et des véhicules hybrides rechargeables devra être déposée par le bénéficiaire
+          et acceptée par le ministre pour que le projet soit admissible.
+
+Un seul taux d’aide financière est applicable pour un projet donné. Le taux est déterminé selon la principale
+composante du projet. Aussi, lorsqu’un projet vise uniquement l’acquisition de terrains ou la réalisation
+d’études, à l’exception des études d’opportunité nécessaires aux volets A et B, le taux d’aide financière
+applicable est le même que celui déterminé pour l’actif auquel il renvoie. L’annexe présente une synthèse
+des taux d’aide financière par catégorie d’actif et par catégorie d’organisme.
+
+
+5.3         Règles de cumul
+Différents programmes d’aide aux immobilisations sont notamment administrés par le ministre6. Lorsqu’un
+projet est financé par plus d’un programme, le montant total des dépenses financées par les autres
+programmes est déduit des dépenses totales, et le solde résiduel devient le montant maximal pris en compte
+pour l’établissement des dépenses admissibles à l’aide financière en vertu du PAGTCP. Le cumul des aides
+financières reçues directement ou indirectement des ministères et organismes des gouvernements du
+Canada ou du Québec, ainsi que des entités municipales7 qui ne sont pas directement bénéficiaires du
+PAGTCP, ne peut pas excéder 100 % du total des dépenses admissibles directement liées au projet.
+
+Dans le cas où le projet est financé par un programme du gouvernement du Canada, le gouvernement du
+Québec complète le financement pour que le taux d’aide financière devant s’appliquer au projet, selon ce qui
+est défini à l’article 5.2, « Taux d’aide financière », soit atteint.
+
+Par ailleurs, si d’autres partenaires privés participent au financement d’un projet, le montant de leur
+contribution est également déduit des dépenses totales, et le solde résiduel devient le montant maximal pris
+en compte pour l’établissement des dépenses admissibles à l’aide financière.
+
+L’actif visé au paragraphe 1° du premier alinéa de l’article 89 de la Loi instituant le Gouvernement régional
+d’Eeyou Istchee Baie-James (RLRQ, chapitre G-1.04) n’est pas considéré dans les règles de cumul.
+
+Aux fins des règles de calcul du taux de cumul, toutes les formes d’aide financière accordées par un
+organisme public doivent être calculées à 100 % de leur valeur, qu’elles soient remboursables ou non.
+
+Par ailleurs, les aides financières provenant de la Banque de développement du Canada (BDC), de
+Financement agricole Canada (FAC) et de La Financière agricole du Québec (FAQ) sont à considérer comme
+des contributions privées si elles n’offrent aucun avantage conféré, soit qu’elles sont convenues aux
+conditions du marché.
+
+
+
+6
+    Voir l’article 1.4, « Autres programmes d’aide aux immobilisations en transport collectif ».
+7
+    Aux fins des règles de cumul des aides financières publiques, l’expression « entités municipales » renvoie aux organismes municipaux compris
+    à l’article 5 de la Loi sur l’accès aux documents des organismes publics et sur la protection des renseignements personnels (RLRQ,
+    chapitre A-2.1).
+
+                                                                                                                                             20
+    MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                      PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+Pour certains actifs, dont les véhicules de service, des règles de cumul particulières s’appliquent8.
+
+
+5.4          Dépenses admissibles
+Sur la base des dépenses admissibles au PAGTCP qui sont listées ci-après, le ministre établit, lors de
+l’autorisation du projet, un montant maximal admissible à l’aide financière pour chaque projet autorisé. Les
+coûts détaillés admissibles par poste budgétaire peuvent varier entre les coûts planifiés au moment de
+l’autorisation du projet et les coûts finaux établis après sa réalisation, pourvu que le montant maximal
+autorisé et, le cas échéant, les différents plafonds prévus au PAGTCP soient respectés.
+
+Les dépenses admissibles nécessaires à la réalisation d’activités de planification et de préparation d’un
+projet, celles requises pour la préparation des documents justificatifs exigés à l’article 4.2, « Présentation
+d’une demande d’aide financière », ainsi que celles liées à l’acquisition de terrains, qui font partie d’un projet
+autorisé par la suite par le ministre, sont admissibles à l’aide financière à compter de la date inscrite sur la
+lettre d’autorisation du projet du ministre, sans égard à la date à laquelle elles ont été engagées ou payées
+par le bénéficiaire.
+
+Les dépenses engagées et autorisées dans le cadre d’un projet d’immobilisation doivent être comptabilisées
+selon les normes comptables canadiennes pour le secteur public. Toutefois, une dépense prévue au PAGTCP,
+qui est non capitalisable en vertu des normes de comptabilisation applicables à l’organisme, peut tout de
+même être reconnue admissible à l’aide financière.
+
+Le montant de la dépense admissible à l’aide financière ne peut excéder le montant net payé par le
+bénéficiaire. Ainsi, ce montant correspond aux dépenses totales après déduction des remboursements de
+taxes et, s’il y a lieu, du produit de la disposition d’un actif remplacé. Si ces montants ne sont pas connus au
+moment de l’autorisation du projet, ils seront considérés au moment de l’audit.
+
+Lorsqu’un organisme bénéficie d’une aide financière pour la réalisation d’un projet et qu’il confie la réalisation
+de celui-ci à un autre organisme, les dépenses engagées, réalisées et payées par le bénéficiaire et par
+l’organisme mandaté peuvent être admissibles à l’aide financière. Le bénéficiaire doit par ailleurs s’assurer
+que son mandataire, dans le cadre de la réalisation du projet, s’engage à respecter les diverses conditions et
+obligations prévues au PAGTCP, notamment celles relatives à la conservation des documents.
+
+Aucune dépense admissible ne peut dépasser le coût d’un actif équivalent tel qu’il est établi par le ministre.
+
+Les dépenses admissibles comprennent tous les coûts nécessaires à la planification, à la réalisation et à la
+mise en œuvre d’un projet admissible, à l’exception de ceux décrits à l’article 5.6, « Dépenses non
+admissibles ».
+
+
+
+
+8
+    Voir l’article 6, « Règles particulières par catégorie d’actif ».
+
+                                                                                                               21
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                        PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                           AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+Plus précisément, les dépenses admissibles à l’aide financière sont les suivantes :
+
+a) Les coûts liés à la réalisation d’études nécessaires à la planification et à la réalisation d’un projet
+    admissible.
+
+b) Les honoraires professionnels et les frais juridiques, à l’exclusion de ceux engendrés dans le cadre de
+    toute action, réclamation ou demande en justice pouvant découler directement ou indirectement de la
+    réalisation du projet.
+
+c) Les dépenses associées à la préparation des plans et devis, à l’ingénierie et à la surveillance des travaux.
+
+d) Les coûts de construction et d’approvisionnement nécessaires à la réalisation d’un projet admissible, y
+    compris ceux requis pour satisfaire les exigences générales de chantier et pour réaliser la préparation
+    des sites ainsi que les frais connexes.
+
+e) Les dépenses nécessaires à l’électrification des réseaux, comprenant l’acquisition du matériel roulant, le
+    remplacement de batteries au cours de la durée de vie utile d’un autobus hybride ou électrique, l’achat
+    ou la fabrication d’outillage spécialisé ainsi que les acquisitions, les modifications et les ajouts
+    nécessaires aux installations et aux infrastructures, à l’exclusion des bornes de recharge destinées à
+    l’usage de la clientèle ou du personnel.
+
+f) Les coûts liés à l’achat et à l’installation ou au remplacement d’équipements, de systèmes et de
+    dispositifs requis pour la réalisation et la mise en œuvre d’un projet admissible.
+
+g) Les coûts d’achat de pièces de rechange lors de l’acquisition d’un actif subventionné en vue d’établir un
+    stock minimal de pièces pour assurer le maintien des activités lors d’un bris d’équipement. Le stock
+    minimal de pièces se détermine en fonction des temps de livraison, de la disponibilité du matériel sur le
+    marché ainsi que du parc de rechange du réseau existant.
+
+h) Les coûts d’acquisition d’outils manuels ou portatifs qui sont requis pour la réalisation du projet et qui ne
+    sont pas utilisés pour l’entretien courant et périodique.
+
+i) Les frais d’acquisition et d’installation du mobilier urbain ainsi que les coûts des aménagements
+    paysagers intégrés dans un projet admissible, à l’exception des projets de garage et de centre d’entretien.
+
+j) Les dépenses relatives à la location de terrains ou aux permissions d’occupation, à la location
+    d’immeubles et à la location de véhicules, d’équipements ou d’autres installations, si elles sont requises
+    pendant la réalisation des travaux.
+
+k) Les dépenses nécessaires aux travaux de réfection ou de construction d’infrastructures routières et
+    requises aux seules fins d’exploitation d’un projet admissible (par exemple : l’aménagement d’une voie
+    réservée ou de mesures préférentielles pour les autobus).
+
+l) Les coûts pour les mesures de compensation requises en vertu du Règlement sur la compensation pour
+    l’atteinte aux milieux humides et hydriques (RLRQ, chapitre Q-2, r. 9.1).
+                                                                                                             22
+    MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                                               PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                                                     AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+m) Les dépenses associées à la mise en place de mesures d’atténuation pour limiter les répercussions
+       causées par la réalisation des travaux sur l’exploitation des services.
+
+n) Les frais d’acquisition et d’installation de l’éclairage et de la signalisation requise dans le cadre d’un
+       projet admissible, s’il y a lieu.
+
+o) Les dépenses liées à l’achat de terrains, y compris, le cas échéant, les coûts liés à l’expropriation, aux
+       droits d’accès, aux emprises, aux droits superficiaires et aux servitudes. Lorsque le coût d’acquisition du
+       terrain excède la valeur de l’évaluation municipale, l’organisme doit présenter une estimation faite par
+       un évaluateur agréé pour justifier le dépassement.
+
+p) Les dépenses associées à l’achat, à la réfection et à l’agrandissement de bâtiments qui sont directement
+       en lien avec l’exploitation des services de transport collectif ou de transport adapté.
+
+q) Les coûts des travaux, des dispositifs et des équipements requis pour faciliter l’accès et la sortie des
+       véhicules et du matériel roulant.
+
+r) Les coûts liés aux activités de communication directement associées au projet et, le cas échéant, prévus
+       à l’engagement.
+
+s) Les coûts d’acquisition d’œuvres d’art installées dans un terminus et reconnus admissibles par la
+       Politique d’intégration des arts à l’architecture et à l’environnement des bâtiments et des sites
+       gouvernementaux et publics (décret no 955-96 du 7 août 1996). Le calcul des montants admissibles
+       affectés aux œuvres d’art est le même que celui établi dans cette politique.
+
+t) Les dépenses en régie détaillées à l’article 5.5, « Admissibilité des dépenses en régie ».
+
+u) Les frais pour les déplacements du personnel effectués à l’extérieur du territoire de l’organisme, ou du
+       territoire de l’ARTM pour les organismes de la région de Montréal, qui sont nécessaires au suivi d’un
+       contrat et qui sont, le cas échéant, clairement indiqués dans l’engagement. Ces frais doivent respecter
+       les barèmes en vigueur au gouvernement du Québec.
+
+v) Les coûts de l’audit des dépenses admissibles et d’évaluation lorsqu’ils sont exigés par le ministre.
+
+w) Les frais de contingence et une provision pour risques, lorsque nécessaires9, jusqu’à un maximum de
+       15 % des dépenses admissibles du projet.
+
+x) Les taxes applicables, moins les remboursements auxquels l’organisme de transport a droit (taxes
+       nettes).
+
+
+9
+    Les montants des frais de contingence et de provision pour risques diffèrent d’un projet à l’autre. Un maximum de 15 % des dépenses
+    admissibles du projet pourra être prévu dans le montage financier pour faire face à la concrétisation de certains risques qui sont susceptibles
+    de se produire aux étapes de conception et de construction, qui présentent une très grande probabilité d’occurrence et qui sont généralement
+    d’ordre technique. Ces frais devront être détaillés, concerner des dépenses précises et être autorisés. Les coûts détaillés admissibles par
+    poste budgétaire peuvent varier entre les coûts planifiés au moment de l’autorisation du projet et les coûts finaux établis après sa réalisation.
+
+                                                                                                                                                  23
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+y) Les dépenses liées aux liens piétonniers entre deux actifs admissibles, tels un stationnement d’incitation,
+    une voie réservée au transport collectif, une gare ou un terminus. Cependant, les dépenses relatives à un
+    lien piétonnier vers un centre commercial ou vers une entreprise privée ne sont pas admissibles à une
+    aide financière.
+
+
+5.5     Admissibilité des dépenses en régie
+Aux fins de l’application des modalités du PAGTCP, les dépenses en régie correspondent aux coûts de la
+main-d’œuvre du personnel à l’emploi du bénéficiaire, d’un organisme spécifié à l’article 3.1, « Organismes
+admissibles au programme », ou de tout autre organisme municipal mandaté par un bénéficiaire pour
+effectuer certains travaux ou activités admissibles à l’aide financière.
+
+Les dépenses admissibles sont limitées au coût d’emploi du personnel qui réalise les activités ou travaux
+admissibles et, dans le cas des travaux de construction ou d’installation d’équipements, à celui affecté à sa
+supervision immédiate. Ces dépenses correspondent aux taux horaires moyens de base, à taux simple,
+prévus dans les conventions collectives ou les conditions d’emploi, auxquels s’ajoute une majoration pour
+les divers frais assumés par l’employeur (par exemple les avantages sociaux et les cotisations aux régimes
+étatiques). Les taux horaires peuvent être pondérés par catégorie d’emploi et en fonction de l’ancienneté du
+personnel de l’organisme.
+
+L’utilisation de taux moyens d’ordre interne établis par le bénéficiaire et validés annuellement par ses
+auditeurs est acceptée pour la détermination des dépenses admissibles. À défaut de pouvoir déterminer de
+tels taux moyens d’ordre interne, la majoration maximale applicable est de 75 %. Les dépenses admissibles
+ne doivent pas excéder les montants réels déboursés par l’organisme qui réalise les travaux ou les activités.
+
+Pour les dépenses effectuées en régie, l’organisme doit tenir une comptabilité séparée permettant d’établir
+les dépenses qui sont admissibles. Il devra aussi fournir la liste et les mandats de travail du personnel affecté
+à la réalisation du projet admissible et fournir la ventilation des heures, des corps d’emploi et des taux
+salariaux moyens utilisés.
+
+Les catégories de dépenses en régie admissibles sont limitées à celles requises pour la réalisation des
+activités ou travaux mentionnés ci-dessous et leur supervision immédiate :
+
+− L’installation d’équipements et de dispositifs sur des biens admissibles appartenant à l’organisme;
+
+− Les activités liées à la programmation, aux tests et à l’implantation de systèmes ou d’applications
+    nécessaires à l’exploitation des réseaux admissibles;
+
+− La réalisation des plans et devis pour des projets concernant le réseau de métro;
+
+− Les travaux réalisés dans le réseau de métro.
+
+
+
+
+                                                                                                              24
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                        PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                           AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+Les dépenses effectuées en régie pour l’installation d’équipements et de dispositifs sur des biens admissibles
+appartenant à l’organisme ou pour les activités liées à la programmation, aux tests et à l’implantation de
+systèmes ou d’applications nécessaires à l’exploitation des réseaux sont admissibles à l’aide financière
+seulement lorsque :
+
+− les travaux ou activités ne peuvent être réalisés à l’externe pour des raisons d’obligation imposée par
+   une loi, telle la Loi sur les relations de travail, la formation professionnelle et la gestion de la main-
+   d’œuvre dans l’industrie de la construction (RLRQ, chapitre R-20);
+
+− la réalisation des travaux ou activités nécessite une expertise spécialisée que l’on ne trouve pas à
+   l’externe;
+
+− la réalisation des travaux ou activités ne peut être confiée à l’externe pour des raisons de sécurité et de
+   confidentialité;
+
+− les contraintes d’exploitation rendent difficile le recours à des ressources externes, entraînant ainsi des
+   problèmes de coordination majeurs.
+
+
+5.6    Dépenses non admissibles
+L’aide gouvernementale ne couvre pas les dépenses suivantes :
+
+a) Les dépenses liées à la construction et à l’installation de biens admissibles réalisées avant l’obtention de
+   l’autorisation du projet.
+
+b) Les dépenses qui ne sont pas directement destinées à l’exploitation des services de transport collectif
+   ou de transport adapté au moment de l’achat, de la réfection ou de l’agrandissement de bâtiments. Ces
+   dépenses incluent, sans s’y limiter, les douches, les gymnases, les aires de divertissement et les
+   cafétérias (à l’exception des aires de repas) et les aires de stationnement qui ne sont pas réservés
+   exclusivement aux usagers du transport collectif.
+
+c) Dans le cas des projets de garages et de centres d’entretien, les dépenses relatives aux aménagements
+   paysagers et au mobilier de bureau.
+
+d) Les dépenses assimilables à l’entretien normal pour assurer la bonne conservation des actifs jusqu’à la
+   fin de leur durée de vie utile, telle qu’elle est définie à l’article 6, « Règles particulières par catégorie
+   d’actif ».
+
+e) Les coûts de décontamination découlant de l’exploitation des services de transport collectif.
+
+f) Les frais engagés pour les garanties prolongées.
+
+g) Les coûts d’emploi de main-d’œuvre en régie pour la formation du personnel.
+
+
+                                                                                                             25
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                       PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                          AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+h) Les dépenses engagées pour des projets qui ont été annulés par le bénéficiaire.
+
+i) Les dépenses engagées par un soumissionnaire pour la réalisation et le dépôt d’une soumission.
+
+j) Les dépenses relatives à l’acquisition de biens ou à la construction d’infrastructures qui ne sont pas
+   destinées à l’usage des services de transport collectif ou de transport adapté, tels les locaux à vocation
+   commerciale ou les infrastructures routières servant au transport routier.
+
+k) Les dépenses précisées aux articles 10.2 et 11.2, « Dépenses admissibles », qui sont admissibles
+   seulement pour les projets d’envergure et les projets majeurs.
+
+l) Les dépenses découlant de l’achat d’un bien ou de la prestation de services fournis par des entreprises
+   inscrites au Registre des entreprises non admissibles aux contrats publics (RENA), incluant leurs sous-
+   traitants inscrits au RENA.
+
+m) Les dépenses découlant d’un projet soumis par un organisme ayant fait défaut de respecter ses
+   obligations après avoir été dûment mis en demeure en lien avec l’octroi d’une aide financière antérieure
+   par le Ministère.
+
+n) Les dépenses associées à la mise aux normes ou au remplacement d’infrastructures municipales ou de
+   biens en fin de durée de vie utile appartenant à la municipalité.
+
+o) Les dépenses associées à la mise en place d’un centre administratif pour le personnel du bénéficiaire.
+
+p) Les intérêts à court terme engagés auprès du ministère des Finances du Québec ou auprès de l’institution
+   financière de l’organisme pour des projets admissibles.
+
+q) Les dépenses découlant d’activités de marketing, d’activités promotionnelles ou de démarches de
+   développement d’une image de marque.
+
+r) Les dépenses visant à réparer ou à mettre à niveau une chaussée municipale existante (asphalte) dans
+   le cadre de projets de mesures préférentielles pour les autobus lorsque le projet n’est pas en site propre.
+
+s) Les dépenses visant à répondre à des obligations contractuelles ou syndicales d’un organisme
+   admissible envers son personnel.
+
+
+5.7    Conditions particulières d’octroi de l’aide financière
+Dans le cas des projets d’acquisition d’autobus ayant une durée de vie utile de 16 ans, seules les dispositions
+particulières concernant la vente ou l’aliénation d’un actif subventionné, l’achat ou le transfert d’un actif
+subventionné entre organismes admissibles et le remplacement d’un actif sinistré s’appliquent.
+
+
+
+
+                                                                                                            26
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                           PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                              AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+Vente ou aliénation d’un actif subventionné
+
+Le bénéficiaire doit informer le ministre de l’aliénation de tout bien subventionné. Si la valeur du bien
+subventionné au moment de l’aliénation est de 25 000 $ ou plus, l’aliénation du bien doit être autorisée par
+le ministre.
+
+Lorsqu’un actif subventionné en vertu du PAGTCP est vendu ou autrement aliéné sans être remplacé, le
+ministre procède à la récupération des aides financières versées selon le montant le plus élevé entre la valeur
+résiduelle et le prix de vente de l’actif, ajusté au taux d’aide financière appliqué lors de l’autorisation de l’aide
+financière.
+
+
+Achat ou transfert d’un actif subventionné entre organismes admissibles
+
+Aucune aide financière n’est récupérée lorsqu’un bénéficiaire cède un actif subventionné à un autre
+organisme admissible au PAGTCP. De plus, un organisme admissible qui prend possession ou qui acquiert
+un actif subventionné d’un autre organisme admissible ne peut pas recevoir d’aide financière additionnelle
+dans le cadre du PAGTCP pour cet actif. Cependant, si l’aide financière pour cet actif est versée sous forme
+de service de la dette, les versements qu’il reste à effectuer avant l’échéance du service de la dette pourront
+être remis à l’organisme qui acquiert l’actif, à la date convenue entre les deux organismes, sous réserve de
+l’accord du ministre à la cession de l’engagement en lien avec cet actif.
+
+L’organisme qui acquiert le bien subventionné doit s’assurer du respect des dispositions concernant la durée
+de vie utile de l’actif qui sont prévues au PAGTCP, par lequel le bien a été subventionné initialement.
+
+Dans le cas des autobus urbains ayant une durée de vie utile de 16 ans, le transfert des autobus entre les
+organismes admissibles est permis seulement lorsque l’autobus a été mis en service pendant une durée
+minimale de 5 ans.
+
+
+Remplacement d’un actif sinistré
+
+Lorsqu’un actif sinistré a été subventionné en vertu du PAGTCP et que cet actif n’est pas remplacé (qu’il soit
+vendu, mis au rebut ou autrement aliéné), le ministre procède à la récupération des aides financières versées.
+Le montant récupéré correspond au plus élevé entre le prix de vente de l’actif sinistré et le montant d’aide
+financière accordé, calculé au prorata de la durée de vie utile non atteinte et ajusté au taux d’aide financière
+appliqué lors de l’autorisation de l’aide financière.
+
+Lorsqu’un actif sinistré subventionné est remplacé par un actif neuf similaire dans le cadre du PAGTCP,
+aucune des sommes versées pour l’actif sinistré n’est récupérée, mais le montant des dépenses admissibles
+pour le nouvel actif est ajusté au prorata de la durée de vie utile atteinte de l’actif sinistré.
+
+Toutefois, lorsque le sinistre concerne un autobus urbain d’au moins 12 ans, l’organisme a la possibilité de
+considérer le véhicule comme mis au rancart aux fins du calcul des dépenses admissibles à l’aide financière.
+Dans ce cas, les règles relatives au remplacement des autobus urbains prévues à l’article 6.1, « Autobus »,
+s’appliquent.
+
+                                                                                                                  27
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                           PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                              AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+Réfection ou remplacement d’un actif
+
+Lorsque la réfection ou le remplacement d’un actif subventionné survient avant la fin de sa durée de vie utile,
+l’aide financière autorisée pour ce projet est réduite en fonction de la durée de vie utile non atteinte de l’actif.
+Si l’actif :
+
+− a atteint 75 % de sa durée de vie utile, la réduction est calculée en proportion de la durée de vie utile non
+    atteinte;
+
+− n’a pas atteint 75 % de sa durée de vie utile, la réduction de l’aide financière est égale à deux fois la
+    durée de vie utile non atteinte de l’actif.
+
+Cependant, aucune réduction de l’aide financière n’est applicable avant la fin de la durée de vie utile d’un
+actif lorsque sa réfection ou son remplacement :
+
+− soutient l’électrification des réseaux de transport collectif;
+
+− est rendu nécessaire à la suite d’une décision gouvernementale ou d’une modification législative ou
+    réglementaire;
+
+− répond à une norme gouvernementale, à une loi, à une réglementation ou à une ordonnance judiciaire
+    qui détermine un délai ou une date limite pour sa réalisation;
+
+− est rendu nécessaire du fait que les pièces requises pour assurer son entretien ou sa réfection ne sont
+    plus disponibles ou que les fournisseurs n’assurent plus la mise à jour des systèmes informatiques;
+
+− concerne les infrastructures et les équipements d’un réseau de métro et qu’il est démontré de manière
+    probante par l’organisme que ces actifs ont atteint leur durée maximale d’utilisation et qu’une réfection
+    ou un remplacement doit être effectué.
+
+
+Utilisation d’un actif à d’autres fins
+
+Avant la fin de sa durée de vie utile, lorsque l’actif acquis, construit ou aménagé grâce à une aide financière
+gouvernementale n’est pas utilisé exclusivement ou principalement pour l’exploitation d’un réseau de
+transport collectif ou de transport adapté, l’aide financière est réduite au prorata de son utilisation à d’autres
+fins. Cependant, aucune réduction de l’aide financière à l’égard de l’utilisation de l’actif n’est applicable si
+cette situation est rendue nécessaire en raison d’une décision gouvernementale ou d’une modification
+législative ou réglementaire.
+
+Si un bénéficiaire loue un terrain qui a été financé par le PAGTCP, les revenus de location sont remboursables
+au Ministère au prorata du taux d’aide financière qui a été accordé pour l’acquisition du terrain.
+
+
+
+
+                                                                                                                 28
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                          PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                             AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+Abandon d’un actif
+
+Avant la fin de la durée de vie utile d’un actif, lorsqu’un organisme renonce à utiliser cet actif aux fins prévues
+lors de l’autorisation de l’aide financière, le ministre procède à la récupération des aides financières versées
+selon la durée de vie utile non atteinte. Toutefois, aucune récupération d’aide financière à l’égard de la durée
+de vie utile non atteinte de l’actif abandonné n’est applicable si cet abandon est rendu nécessaire en raison
+d’une décision gouvernementale ou d’une modification législative ou réglementaire.
+
+
+Projets d’immobilisations réalisés dans les emprises du Ministère
+
+Lorsqu’un projet d’immobilisation admissible au PAGTCP est réalisé dans les emprises du Ministère, la
+gestion du projet peut être assurée par le ministre ou par l’organisme de transport collectif concerné par le
+projet.
+
+Si la gestion du projet est assurée par l’organisme de transport collectif qui demande la réalisation du projet,
+ce dernier doit obtenir une permission de voirie ou signer une entente qui prend en compte les intérêts du
+ministre. Les coûts du projet sont entièrement imputables à l’organisme de transport collectif et ils peuvent
+être admissibles à une aide financière selon les modalités du PAGTCP.
+
+Lorsque le ministre met en œuvre lui-même un projet de transport collectif sur son réseau ou lorsque les
+travaux effectués pour le transport collectif ne représentent qu’une partie d’un projet, le ministre conserve
+la gestion du projet. Le financement du projet peut être assumé totalement par le ministre ou partagé entre
+le ministre et l’organisme de transport collectif concerné. Dans ce dernier cas, une entente établissant
+clairement le partage des responsabilités et des coûts doit être ratifiée entre les partenaires. La part de
+l’organisme de transport collectif peut bénéficier d’une aide financière si l’ensemble des modalités
+d’application du PAGTCP sont respectées.
+
+Dans le cas où le Ministère reprend unilatéralement l’occupation de l’emprise et que l’actif subventionné n’a
+pas atteint la fin de sa durée de vie utile, aucun remboursement d’aide financière ne sera exigé de
+l’organisme.
+
+
+6.      RÈGLES PARTICULIÈRES PAR CATÉGORIE D’ACTIF
+
+Les modalités prévues dans les articles qui suivent définissent la durée de vie utile et les dispositions
+particulières s’appliquant à chaque catégorie d’actif.
+
+
+6.1     Autobus
+
+Règles particulières
+
+Seuls les projets d’acquisition d’autobus neufs à propulsion entièrement électrique et d’autobus hybrides
+sont admissibles à une aide financière dans le cadre du volet A du PAGTCP. L’acquisition d’autobus à moteur
+
+                                                                                                                29
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+thermique et d’autobus usagés de même que la location d’autobus ne sont pas admissibles à une aide
+financière.
+
+L’aide pour l’achat de minibus accessibles aux passagers en fauteuil roulant réservée aux municipalités, aux
+régies municipales et intermunicipales de transport, aux regroupements de municipalités ou aux MRC ainsi
+qu’à l’Administration régionale Kativik (voir l’article 5.2) est exclue du processus d’acquisition prévu dans le
+présent article.
+
+À compter du 1er avril 2026, aucune aide financière ne sera accordée pour l’acquisition d’autobus si le taux
+de réserve est supérieur à 30 % pour les organismes admissibles qui exploitent un réseau de métro, un
+réseau de trains de banlieue ou tout autre système de transport terrestre guidé, ou supérieur à 25 % pour
+les autres organismes admissibles.
+
+À compter du 1er avril 2027, aucune aide financière ne sera accordée pour l’acquisition d’autobus si le taux
+de réserve est supérieur à 25 % pour les organismes admissibles qui exploitent un réseau de métro, un
+réseau de trains de banlieue ou tout autre système de transport terrestre guidé, ou supérieur à 20 % pour
+les autres organismes admissibles.
+
+Malgré ce qui précède, le ministre peut accorder une aide financière si le bénéficiaire démontre, à la
+satisfaction de ce dernier, la nécessité d’un taux de réserve supérieur.
+
+Au cours de la durée de vie utile d’un autobus urbain de type hybride ou électrique, un seul projet de
+remplacement de batterie peut être reconnu admissible à l’aide financière. Néanmoins, il est possible de
+remplacer des modules de batterie au cours de la durée de vie utile de l’autobus, et ce, jusqu’à concurrence
+de la valeur totale d’un remplacement de batterie. Le montant maximal admissible à l’aide financière est
+déterminé en fonction des documents justificatifs transmis par l’organisme, lesquels comprennent une
+analyse de rentabilité financière des différents scénarios possibles. L’organisme devra également préciser le
+mode de disposition prévu pour les batteries ou les modules de batterie à la fin de leur durée de vie utile.
+
+Spécificités pour l’autorisation des commandes d’acquisition d’autobus
+
+Dans le cas des projets concernant des commandes d’acquisition d’autobus, dont le financement peut
+provenir de différentes sources, le processus d’autorisation des projets s’effectue selon les étapes suivantes :
+
+1. Le ministre accorde une autorisation de principe avant le lancement de l’appel d’offres public en vue de
+   s’assurer que les véhicules à acquérir sont conformes aux exigences ministérielles et gouvernementales.
+
+2. Une autorisation finale est accordée par le ministre à la suite de l’analyse des résultats de l’appel d’offres.
+
+   −    Lorsqu’il s’agit d’un achat groupé, une autorisation finale est adressée à l’organisme mandataire,
+        cette autorisation établissant le coût unitaire maximal et les quantités totales de véhicules qui sont
+        admissibles à l’aide financière gouvernementale pour la période couverte par la commande
+        d’autobus.
+
+
+
+
+                                                                                                               30
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                        PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                           AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+    − Le ministre accorde également une autorisation finale à chacun des organismes concernés pour leur
+       confirmer les quantités d’autobus et le montant maximal de l’aide financière qui leur est autorisée
+       dans le cadre du PAGTCP, et ce, en conformité avec les paramètres établis dans l’autorisation finale
+       de l’achat groupé.
+
+3. Chaque organisme bénéficiaire de l’aide financière signe un engagement à respecter les conditions de
+   chacun des programmes d’aide visés par l’autorisation finale et les obligations en découlant.
+
+4. Le versement de l’aide financière s’effectue ensuite conformément aux dispositions prévues au PAGTCP
+   et en fonction des dépenses réalisées et des livraisons d’autobus effectuées.
+
+
+Spécificités pour les dépenses admissibles
+
+Les dépenses admissibles à l’aide financière sont celles prévues au contrat d’acquisition d’une commande
+d’autobus pour lequel une autorisation finale a été accordée par le ministre. L’acquisition et l’installation de
+supports à vélos, d’équipements, de systèmes ou d’applications nécessaires à l’exploitation des réseaux à
+bord des autobus, qui sont des actifs admissibles au PAGTCP et qui peuvent constituer un projet autonome,
+doivent faire l’objet d’une autorisation ministérielle distincte.
+
+Un montant maximal admissible à l’aide financière est prévu pour tous les types d’autobus composant le
+parc des organismes de transport. Le coût d’acquisition maximal admissible, taxes nettes en sus, est de :
+
+− 1 650 000 $ pour un autobus électrique régulier;
+
+− 900 000 $ pour un autobus hybride régulier;
+
+− 2 500 000 $ pour un autobus électrique articulé;
+
+− 1 700 000 $ pour un autobus hybride articulé;
+
+− 1 200 000 $ pour un midibus électrique;
+
+− 750 000 $ pour un midibus hybride;
+
+− 300 000 $ pour un minibus accessible aux passagers en fauteuil roulant.
+
+Le ministre favorise le groupement des achats d’autobus au sein d’une société de transport en commun, étant
+donné qu’il permet de réaliser des économies, tant au chapitre du coût d’acquisition qu’à celui des dépenses
+de gestion et de suivi de contrat. Ainsi, uniquement dans le cadre d’un achat groupé d’autobus, les dépenses
+de gestion et de suivi de contrat sont admissibles à une aide financière dans le cadre du PAGTCP.
+
+− Une aide financière forfaitaire d’un montant de 2 200 $ par autobus peut être accordée pour compenser
+   les frais de gestion et de suivi d’une commande d’achat groupé d’autobus. Ce montant est fixe pour
+   toutes les commandes et pour toutes les catégories d’autobus.
+
+                                                                                                             31
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                          PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                             AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+− Les dépenses de gestion et de suivi de contrats ne sont pas admissibles à l’aide financière dans les autres
+    programmes d’aide aux immobilisations de transport collectif administrés par le ministre. Ainsi, les
+    dépenses admissibles relatives à la gestion et au suivi de contrats en vertu du PAGTCP couvrent la
+    quantité totale d’autobus autorisée dans le cadre d’une commande d’achat groupé, quel que soit le
+    programme par lequel l’acquisition d’autobus est financée.
+
+− Les frais de gestion d’une commande d’achat groupé font l’objet d’un projet distinct pour chacun des
+    organismes concernés par la commande.
+
+
+Durée de vie utile et conditions de remplacement des autobus
+
+Aux fins de l’application du PAGTCP, la durée de vie utile d’un autobus urbain est de 16 ans. Celle d’un
+minibus de type scolaire (construit sur châssis) est de 5 ans ou de 350 000 kilomètres, selon la première des
+éventualités. À cette fin, l’âge d’un véhicule se détermine en nombre de mois à partir de la date où le véhicule
+a été immatriculé pour la première fois jusqu’à ce qu’il cesse d’être en service au bénéfice de l’organisme. La
+date de fin d’utilisation d’un autobus est établie selon la première des deux dates suivantes : la date de fin
+d’immatriculation ou le délai prévu après le dernier entretien préventif effectué sur l’autobus conformément
+au programme d’entretien préventif.
+
+Les autobus doivent être maintenus en service ou disponibles à l’utilisation pour les services réguliers de
+transport collectif ou de transport adapté. À cette fin, l’organisme doit les immatriculer et les maintenir en
+état de rouler comme le prévoit le Règlement sur les normes de sécurité des véhicules
+routiers (RLRQ, chapitre C-24.2, r. 32). Aux fins de l’application des présentes modalités, un autobus en état
+d’offrir un service ne peut être déclaré inactif et doit être inclus dans le parc de véhicule non remisé. Un
+autobus inactif (remisé) n’est pas disponible à l’utilisation pour les services réguliers de transport collectif ou
+de transport adapté et est considéré comme mis au rancart, à l’exception des situations où le bénéficiaire
+remise provisoirement un autobus pendant la période où des réparations majeures sont effectuées sur celui-
+ci.
+
+Le cas échéant, le prix de vente des autobus remplacés est déduit des dépenses admissibles à l’aide
+financière pour l’acquisition d’autobus. S’il n’y a pas de vente, le produit de la disposition est considéré
+comme nul.
+
+Lorsque tous les autobus urbains remplacés ou mis au rancart au cours de l’année ont 12 ans et plus et que
+l’âge moyen de ces véhicules est égal ou supérieur à 16 ans, aucune pénalité n’est appliquée au montant de
+l’aide financière.
+
+Lorsque des autobus urbains remplacés ou mis au rancart au cours de l’année ont moins de 12 ans, l’aide
+financière est réduite, pour chacun de ces autobus, d’un montant égal à celui qui aurait été consenti pour
+l’acquisition d’un autobus neuf.
+
+Lorsque des autobus urbains de plus de 12 ans sont remplacés ou mis au rancart au cours de l’année et que
+l’âge moyen de ces autobus est inférieur à 16 ans, l’aide financière est réduite du montant qui aurait été
+consenti pour l’acquisition d’un autobus neuf pour chaque autobus remplacé ou mis au rancart au cours de
+
+                                                                                                                32
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                       PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                          AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+l’année ayant fait descendre la moyenne en bas du seuil de 16 ans. Aux fins de l’identification des autobus
+ayant fait descendre la moyenne en bas du seuil de 16 ans, il faut considérer en premier lieu l’autobus le
+moins vieux, puis le deuxième en âge, et ainsi de suite jusqu’à ce que le seuil de 16 ans soit atteint.
+
+Les minibus de type scolaire ainsi que les autobus acquis sans subvention par un organisme, y compris les
+autobus achetés d’une autre société de transport en commun, ne sont pas considérés aux fins du calcul de
+l’âge moyen de 16 ans.
+
+Le remplacement d’un minibus de type scolaire est admissible sans pénalité s’il a respecté l’une ou l’autre
+des conditions suivantes : le véhicule a au moins 5 ans ou le véhicule a parcouru au moins
+350 000 kilomètres. Si aucune des deux conditions n’est satisfaite, l’aide financière est réduite en proportion
+de la durée de vie utile non atteinte ou du nombre de kilomètres non parcourus, selon l’échéance la plus
+brève.
+
+Enfin, dans le cadre de l’électrification d’un parc d’autobus, lorsqu’un organisme intègre à son parc d’autobus
+une nouvelle catégorie de véhicules dont la technologie n’est pas éprouvée, l’aide financière pourra être
+versée en totalité si l’expérience ne s’avère pas concluante et que les autobus doivent être mis
+prématurément au rancart. Le cas échéant, ces autobus ne seront pas considérés dans le calcul de l’âge
+moyen des autobus mis au rancart.
+
+
+Réparations pour prolonger la durée de vie utile
+
+Les réparations effectuées en vue d’atteindre les durées de vie établies aux fins de l’application du PAGTCP
+ne sont pas admissibles à une aide financière.
+
+Les réparations majeures réalisées en vue de prolonger la durée de vie utile d’un autobus, y compris celle
+des minibus de type scolaire, peuvent être admissibles à l’aide financière seulement si le bénéficiaire
+démontre qu’il ne peut pas remplacer l’autobus concerné par un autobus à propulsion entièrement électrique
+ou par un autobus hybride.
+
+L’aide financière couvre 50 % des dépenses admissibles, jusqu’à concurrence du montant maximal autorisé
+par le ministre.
+
+Le montant maximal des dépenses admissibles ne peut excéder le coût d’acquisition d’un autobus neuf
+similaire ajusté au prorata de la période de prolongation par rapport à la durée de vie utile de l’autobus.
+
+Dans le cas où l’autobus ayant fait l’objet d’une aide financière en vue de la prolongation de sa durée de vie
+utile cesse d’être utilisé, est remplacé, est mis au rancart ou est autrement aliéné avant la fin de la période
+de prolongation prévue lors de l’autorisation de l’aide financière, le ministre procède à la récupération de
+l’aide financière au prorata de la durée de vie utile prolongée non atteinte.
+
+
+
+
+                                                                                                            33
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+6.2     Véhicules de service
+
+Règles particulières
+
+Les véhicules de service neufs nécessaires à l’exploitation des réseaux d’autobus pour le transport collectif
+et le transport adapté et à l’exploitation des réseaux de trains et de métro sont admissibles à l’aide financière.
+
+L’achat de véhicules de service à propulsion entièrement électrique est privilégié. Cependant, si l’organisme
+fait la démonstration qu’il y a absence de marché pour les véhicules entièrement électriques dans la catégorie
+de véhicules qu’il souhaite acquérir, à la satisfaction du ministre, l’achat de véhicules de service hybrides
+rechargeables est admissible. L’achat de véhicules à moteur thermique est lui aussi permis, mais uniquement
+si l’organisme fait la démonstration, à la satisfaction du ministre, qu’il y a absence de marché pour les
+véhicules entièrement électriques et les véhicules hybrides rechargeables.
+
+Un montant maximal admissible à l’aide financière est prévu pour les petits véhicules routiers composant en
+majeure partie le parc de véhicules de service des organismes de transport. Le coût d’acquisition maximal
+admissible, taxes nettes en sus, est de :
+
+− 34 322 $ pour une berline;
+
+− 30 363 $ pour une minifourgonnette;
+
+− 39 603 $ pour un véhicule utilitaire sport;
+
+− 44 880 $ pour une fourgonnette;
+
+− 50 161 $ pour une camionnette (benne ouverte).
+
+Pour les autres types de véhicules de service routiers (camions, camions-atelier, camions spécialisés,
+véhicules-outils, remorques et semi-remorques), le montant unitaire admissible à une aide financière sera
+déterminé en fonction des justifications transmises par l’organisme jusqu’à concurrence d’un montant
+maximal de 434 209 $. Il est à noter qu’un véhicule ayant un poids nominal brut égal ou supérieur à 4 500 kg
+est considéré comme un camion.
+
+Le montant maximal admissible par véhicule inclut les divers coûts liés à son acquisition qui sont facturés au
+moment de l’achat, par exemple : les options du fabricant ou du concessionnaire, les taxes autres que les
+taxes de vente et les pneus d’hiver.
+
+Aux montants prévus pour l’acquisition des véhicules s’ajoutent, s’il y a lieu, les dépenses associées à
+l’identification des véhicules au nom de l’organisme, aux modifications devant être apportées aux véhicules
+aux fins d’exploitation ainsi qu’à l’achat et à l’installation d’équipements fixes dans les véhicules, comme les
+tablettes, les cabinets pour mettre les outils, les supports pour les ordinateurs portables, les gyrophares, les
+nacelles, l’équipement de déneigement ou l’équipement de bascule pour les bennes.
+
+
+                                                                                                               34
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+Le cas échéant, le montant maximal admissible tient compte des rabais à l’achat ou des remboursements
+effectués par les différents gouvernements pour l’acquisition de certaines catégories de véhicules. Le coût
+admissible à l’aide financière se calcule alors en déduisant les rabais et les remboursements reçus du coût
+total du véhicule. Le montant net qui en résulte ne peut excéder le montant maximal établi pour chaque
+catégorie de véhicules.
+
+De plus, le cumul des aides financières reçues directement ou indirectement des ministères et organismes
+des gouvernements du Canada ou du Québec, ainsi que des entités municipales qui ne sont pas directement
+bénéficiaires du PAGTCP, ne peut pas excéder 85 % (ou 90 % si le bénéficiaire est un OMIT) du coût
+d’acquisition d’un véhicule de service à propulsion entièrement électrique, ou 75 % du coût d’acquisition d’un
+véhicule de service hybride rechargeable, ou 25 % du coût d’acquisition d’un véhicule de service à moteur
+thermique.
+
+
+Durée de vie utile
+
+La durée de vie utile des petits véhicules routiers est de 10 ans ou de 200 000 kilomètres, selon la première
+échéance atteinte. À cette fin, l’âge d’un véhicule se détermine en nombre de mois à partir de la date où le
+véhicule a été immatriculé la première fois par l’organisme, jusqu’à ce qu’il soit remplacé (date
+d’immatriculation du nouveau véhicule) ou qu’il cesse d’être en service au bénéfice de l’organisme. Dans ce
+dernier cas, la date de fin d’immatriculation doit être considérée lorsqu’il n’est pas possible de déterminer la
+date où le véhicule n’était plus en service.
+
+Pour les autres types de véhicules, la durée de vie utile est déterminée en fonction des justifications
+transmises par l’organisme admissible.
+
+Si un véhicule remplacé n’a pas atteint la durée de vie utile requise au moment de l’immatriculation du
+véhicule neuf qui le remplace, l’aide financière sera réduite conformément aux dispositions relatives au
+remplacement d’actif prévues à l’article 5.7, « Conditions particulières d’octroi de l’aide financière ».
+
+Pour être considéré comme remplacé, un véhicule doit être vendu, mis au rancart ou autrement aliéné. Le cas
+échéant, le prix de vente du véhicule remplacé est déduit des dépenses admissibles à l’aide financière pour
+l’acquisition du véhicule. S’il n’y a pas de vente ou si la vente du véhicule s’effectue plus d’un an après son
+remplacement, au moment de la vérification des pièces justificatives, le produit de la disposition sera estimé
+selon une évaluation basée sur des valeurs reconnues, qui devra être fournie par l’organisme.
+
+
+6.3     Systèmes ou applications nécessaires à l’exploitation des réseaux
+
+Biens visés
+
+Les biens visés au présent article sont les différents systèmes ou applications nécessaires à l’exploitation
+des réseaux de transport collectif et de transport adapté, dont ceux servant au repérage des véhicules, à
+l’information de la clientèle, à la priorisation des véhicules de transport collectif ou de transport adapté dans
+la circulation automobile, à l’aide à l’exploitation, à l’émission des titres de transport et à la perception des
+recettes ainsi qu’aux réservations de déplacements.
+                                                                                                              35
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                      PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                         AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+La gamme des technologies comprend toutes les applications liées au domaine du transport et utilisant
+notamment l’électronique embarquée ou fixe (capteurs, moyens de calcul), les télécommunications, les bases
+de données et d’information et les systèmes de régulation. Elle inclut aussi toutes les applications qui
+permettent d’améliorer la qualité de l’environnement, tels les équipements qui contribuent à réduire la
+consommation d’énergie et à minimiser l’émission de polluants.
+
+Les applications et systèmes suivants sont admissibles :
+
+− Les systèmes d’aide à l’exploitation (par exemple : équipements de géolocalisation, logiciels
+   d’affectation des chauffeurs, systèmes dynamiques de feux de circulation, systèmes de comptage des
+   voyageurs, systèmes d’indication de demande de service, systèmes de communication par radio,
+   vidéosurveillance, contrôles d’accès).
+
+− Les systèmes de maintenance des véhicules de transport collectif (par exemple : logiciels de gestion du
+   parc de véhicules, automatisation de la collecte de données sur les véhicules).
+
+− Les systèmes servant à informer les usagers (par exemple : affichage dynamique; information sonore aux
+   arrêts d’autobus, sur les quais et dans les véhicules et les voitures; systèmes informatisés d’information
+   de la clientèle par téléphone et de gestion des plaintes; Internet, site Web ou applications mobiles).
+
+− Les systèmes de gestion des stationnements d’incitation et des voies réservées au transport collectif
+   (par exemple : systèmes de comptage automatisé des automobiles; information transmise aux
+   automobilistes sur la capacité résiduelle des stationnements d’incitation; détection des contrevenants
+   dans les voies réservées au transport collectif; caméras et relais vidéo).
+
+− Les systèmes d’information géographique (par exemple : calculateur d’itinéraire).
+
+− Les systèmes automatisés de vente et de perception (par exemple : distributrices de titres, boîtes de
+   perception, valideurs de titres de transport, système central de gestion de l’information, tourniquets). Il
+   est à noter toutefois que l’acquisition de cartes à puce pour l’émission des titres de transport et la
+   perception des recettes n’est pas admissible à une aide financière.
+
+− Les systèmes pour l’amélioration de la qualité de l’environnement (par exemple : anti-déversement de
+   carburant, détection des gaz d’échappement, éclairage solaire dans les abribus).
+
+− Les systèmes d’aide à la réservation et à la répartition des déplacements dans le réseau de transport
+   adapté ou pour le taxibus.
+
+
+Durée de vie utile
+
+La durée de vie utile des systèmes ou applications nécessaires à l’exploitation des réseaux est de 10 ans.
+Elle se calcule à partir de la date de mise en service du système de base.
+
+
+
+                                                                                                           36
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                        PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                           AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+La réalisation d’un projet visant la mise à niveau, l’amélioration ou l’ajout de fonctionnalités ou de nouvelles
+applications est admissible, sans pénalité, une seule fois au cours de la durée de vie des systèmes ou
+applications nécessaires à l’exploitation des réseaux. Le montant maximal des dépenses admissibles ne peut
+toutefois excéder 50 % du coût autorisé pour le projet initial.
+
+Le remplacement avant la fin de la durée de vie utile d’un système ou d’une application nécessaire à
+l’exploitation des réseaux est admissible à l’aide financière selon les pénalités prévues au PAGTCP.
+
+Aucune récupération de l’aide financière n’est applicable si le remplacement survient au terme de la durée
+de vie utile. Il en est de même lorsque l’organisme procède à ses frais au remplacement ou à la mise à niveau
+des systèmes ou applications au cours de leur durée de vie utile.
+
+
+6.4     Terrains
+
+Règles particulières
+
+Lorsqu’il existe une possibilité que le terrain visé par un projet admissible soit contaminé, l’organisme doit
+réaliser ou faire réaliser une étude de caractérisation des sols conforme aux directives du ministère de
+l’Environnement, de la Lutte contre les changements climatiques, de la Faune et des Parcs. L’étude doit aussi
+être accompagnée d’une estimation des coûts de décontamination ou de restauration, le cas échéant.
+
+Les coûts de décontamination peuvent être admissibles à l’aide financière, mais l’organisme devra démontrer
+qu’il s’agit de la meilleure (ou de la seule) option possible pour la réalisation de son projet.
+
+
+Durée de vie utile
+
+La durée de vie utile d’un terrain est illimitée.
+
+
+6.5     Mesures préférentielles pour les autobus
+
+Biens visés
+
+Les différentes mesures suivantes sont admissibles à une aide financière dans le cadre du PAGTCP :
+
+− Les mesures favorisant la circulation des autobus, telles que les voies réservées au transport collectif,
+    les feux de priorité aux autobus et les SRB;
+
+− Les mesures améliorant la sécurité pour l’embarquement ou le débarquement des usagers, par exemple
+    l’aménagement d’une baie de refuge.
+
+
+
+
+                                                                                                             37
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+Durée de vie utile
+
+La durée de vie utile des infrastructures et des équipements requis en vue de l’implantation de mesures
+préférentielles pour les autobus, y compris les SRB, est de 20 ans, sauf pour les systèmes ou applications
+nécessaires à l’exploitation de ces mesures. Dans de tels cas, elle est de 10 ans, comme indiqué à l’article 6.3,
+« Systèmes ou applications nécessaires à l’exploitation des réseaux ».
+
+
+6.6     Stationnements d’incitation à l’utilisation du transport collectif
+
+Règles particulières
+
+De façon générale, l’accès à un stationnement d’incitation qui a fait l’objet d’une aide financière est gratuit.
+Toutefois, si un organisme souhaite tarifer l’utilisation d’un stationnement d’incitation dont l’aménagement,
+la réfection ou l’agrandissement ont fait l’objet d’une aide financière gouvernementale, le premier tarif et tout
+autre tarif ultérieur exigé pour l’utilisation de ce stationnement d’incitation doivent être autorisés par le
+ministre.
+
+L’aménagement de stationnements écologiques intégrant des mesures pour réduire la formation d’îlots de
+chaleur est privilégié.
+
+
+Durée de vie utile
+
+La durée de vie utile d’un stationnement extérieur aménagé à la surface du sol est de 20 ans. Celle d’un
+stationnement en structure (étagé ou souterrain) est de 40 ans.
+
+
+Dépenses admissibles
+
+Les dépenses admissibles à l’aide financière pour les stationnements aménagés à la surface du sol sont
+plafonnées à 5 511 $ par place de stationnement, taxes nettes en sus, en excluant les coûts liés à
+l’acquisition du terrain.
+
+Ce montant est haussé à 11 328 $ par place, taxes nettes en sus, pour l’aménagement de stationnements
+écologiques.
+
+Les plafonds ne s’appliquent pas lorsque l’aménagement du stationnement fait partie d’un projet dont la
+portée est plus large, par exemple s’il est inclus dans le cadre de l’aménagement d’une gare de trains. Les
+dépenses admissibles sont alors celles prévues aux dispositions applicables à ce type de projet.
+
+Dans le cas des stationnements en structure (étagés ou souterrains), le montant maximal des dépenses
+admissibles est déterminé selon l’évaluation des coûts de construction et les documents justificatifs transmis
+par l’organisme, qui incluent une analyse des bénéfices et des coûts.
+
+
+
+
+                                                                                                              38
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                        PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                           AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+6.7    Garages et terminus
+
+Biens visés
+
+Les projets visés au présent article concernent les infrastructures et les équipements nécessaires à
+l’exploitation d’un garage, d’un centre d’entretien, d’un terminus ou d’une aire d’attente ou de recharge.
+
+Les différents projets d’immobilisations admissibles comprennent :
+
+− l’acquisition, la construction, l’agrandissement, le remplacement ou la réfection d’un bien immeuble
+   utilisé aux fins de l’exploitation de l’actif;
+
+− l’adaptation ou l’acquisition (ajout ou remplacement) des différents équipements et dispositifs requis aux
+   fins de l’exploitation de l’actif;
+
+− la réfection ou le remplacement de la toiture d’un bien immeuble;
+
+− les acquisitions, les adaptations et les améliorations requises pour les équipements, les dispositifs et les
+   infrastructures en vue de soutenir l’électrification des réseaux de transport collectif et de transport
+   adapté.
+
+Tous les équipements et dispositifs nécessaires à l’exploitation des actifs visés au présent article sont
+admissibles à l’aide financière. Les équipements et dispositifs admissibles comprennent, sans s’y limiter :
+
+− les systèmes de contrôle de protection contre les incendies (par exemple : système sous eau, système
+   de mousse à air comprimé);
+
+− les systèmes d’éclairage d’urgence, de climatisation, de chauffage, de ventilation et de détection des gaz;
+
+− les portes donnant accès aux autobus seulement (par exemple : à enroulement rapide, à enroulement
+   motorisé);
+
+− les systèmes de distribution et de contrôle des carburants et d’autres liquides;
+
+− les vérins, les laveurs et les compacteurs à déchets requis pour les garages et les équipements de levage
+   attenant à l’édifice (par exemple : ponts roulants, treuils, palans);
+
+− les balais mécaniques, les laveuses à plancher, les chariots élévateurs, les mules, les nacelles, les
+   plates-formes élévatrices et les véhicules non immatriculés;
+
+− les bancs d’essai et les dynamomètres;
+
+− les systèmes de branchement des autobus et des véhicules de service.
+
+                                                                                                             39
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                       PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                          AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+À ces équipements et dispositifs s’ajoutent tous les biens technologiques dont les modalités d’application
+sont définies à l’article 6.3, « Systèmes ou applications nécessaires à l’exploitation des réseaux ».
+
+
+Durée de vie utile
+
+La durée de vie utile d’un garage, d’un centre d’entretien, d’un entrepôt ou d’un terminus lourd est de 40 ans.
+
+La durée de vie utile d’un terminus léger ou d’un entrepôt, ou de tout autre bâtiment ou équipement construit
+en structure légère, ainsi que celle d’une aire d’attente, d’une aire de recharge ou d’une toiture de bâtiment
+est de 20 ans.
+
+La durée de vie utile des équipements et dispositifs est de 20 ans.
+
+
+Dépenses admissibles
+
+Pour les projets de construction, d’agrandissement, de réfection ou de réaménagement de garages ou de
+centres d’entretien pour des autobus électriques, incluant les adaptations ou les modifications requises sur
+les infrastructures et équipements existants, le montant maximal des dépenses admissibles est déterminé
+selon l’évaluation des coûts de construction et les documents justificatifs transmis par l’organisme, à la
+satisfaction du ministre. Ces dépenses ne pourront cependant pas excéder le plafond de 21 000 $ par mètre
+carré.
+
+Dans le cas de la construction, de l’agrandissement, de la réfection ou du réaménagement de garages ou de
+centres d’entretien ne servant pas à électrifier le transport collectif, le montant maximal des dépenses
+admissibles est déterminé selon l’évaluation des coûts de construction et les documents justificatifs transmis
+par l’organisme, à la satisfaction du ministre. Ces dépenses ne pourront cependant pas excéder le plafond
+de 15 000 $ par mètre carré.
+
+
+6.8    Abribus
+
+Règles particulières
+
+Un organisme de transport qui souhaite installer un abribus dans une emprise du Ministère doit obtenir une
+permission de voirie.
+
+Le déplacement d’abribus existants, incluant le transport et l’installation au nouvel emplacement, n’est pas
+admissible à une aide financière.
+
+
+Durée de vie utile
+
+La durée de vie utile d’un abribus est de 20 ans.
+
+
+
+
+                                                                                                            40
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                           PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                              AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+Toutefois, le ministre peut autoriser un organisme admissible à remplacer annuellement jusqu’à 5 % de son
+parc d’abribus, sans égard à l’âge de ceux-ci, selon le suivi annuel de son parc d’abribus.
+
+Les ajouts d’abribus sont admissibles selon les justifications transmises par un organisme admissible.
+
+
+Dépenses admissibles
+
+Le coût unitaire maximal admissible pour l’acquisition et l’installation d’un abribus standard, soit un abribus
+réalisé en structure légère et ayant une superficie d’environ six mètres carrés, est fixé à 13 775 $, taxes
+nettes en sus.
+
+Pour un abribus de plus grande dimension, le montant admissible est établi en fonction de sa superficie. Le
+coût maximal admissible ne peut excéder 2 266 $ par mètre carré.
+
+Le montant maximal admissible est déterminé au moment de l’autorisation du projet selon la date prévue
+(ou la date réelle, si disponible) de l’installation de l’abribus.
+
+À ces montants s’ajoutent, s’il y a lieu, les coûts nécessaires à l’installation ou l’aménagement de mesures
+particulières pour l’accessibilité aux clientèles handicapées et à mobilité réduite ainsi que les coûts pour les
+systèmes de chauffage, d’éclairage ou de sécurité lorsque leur nécessité est démontrée par l’organisme.
+
+Les plafonds prévus par abribus s’appliquent seulement pour les projets visant uniquement l’acquisition et
+l’installation d’abribus. Ils ne s’appliquent pas lorsque l’acquisition et l’installation d’abribus font partie d’un
+projet dont la portée est plus large, par exemple si elles sont incluses dans le cadre de l’aménagement d’un
+terminus ou d’une station de métro. Les dépenses admissibles répondent alors aux dispositions prévues pour
+ce dernier projet.
+
+Les dépenses liées aux infrastructures municipales (par exemple l’aménagement de trottoirs) ne sont pas
+admissibles à l’aide financière, sauf si elles concernent la réparation d’un bris causé par la réalisation des
+travaux dont les dépenses sont admissibles.
+
+
+6.9     Mesures de transport actif
+
+Biens admissibles
+
+Pour être admissibles à l’aide financière, les mesures de transport actif doivent donner accès à des
+équipements ou à des infrastructures de transport collectif, être installées sur des actifs appartenant aux
+organismes admissibles ou longer une voie réservée au transport collectif.
+
+En revanche, les supports à vélos installés sur une rue ou à proximité des arrêts d’autobus ne sont pas
+admissibles à l’aide financière.
+
+De plus, à l’exception des supports à vélos et des vélostations, les autres mesures de transport actif (par
+exemple une piste cyclable, un lien piétonnier ou multifonctionnel ou une passerelle), pour être admissibles
+
+                                                                                                                 41
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+à l’aide financière, doivent être réalisées dans le cadre d’un projet de transport collectif admissible et
+favoriser l’intermodalité.
+
+Les liens piétonniers ou multifonctionnels entre deux actifs admissibles, tels un stationnement d’incitation,
+une voie réservée au transport collectif, une gare ou un terminus, sont admissibles à l’aide financière.
+Cependant, un lien multifonctionnel vers un centre commercial ou vers une entreprise privée n’est pas
+admissible à une aide financière.
+
+
+Dépenses admissibles
+
+Le montant maximal des dépenses admissibles par place, taxes nettes en sus, ne peut excéder :
+
+− 1 981 $ pour un support à vélos installé sur un autobus;
+
+− 1 320 $ pour les cases à vélos ou les supports à vélos superposés;
+
+− 950 $ pour un support à vélos installé dans un train;
+
+− 660 $ pour un support à vélos standard sous abris;
+
+− 131 $ pour un support non protégé.
+
+Pour l’acquisition et l’installation d’une vélostation ou d’un abri à vélos, le montant admissible est établi en
+fonction de sa superficie. Le coût maximal admissible ne peut excéder 2 171 $ par mètre carré. À ce montant
+s’ajoutent le coût des supports à vélos selon les plafonds indiqués ci-dessus et, s’il y a lieu, les coûts reliés
+aux systèmes de ventilation ou de climatisation, d’éclairage ou de sécurité lorsque leur nécessité est
+démontrée par l’organisme.
+
+Le montant maximal admissible est établi au moment de l’autorisation du projet selon la date prévue (ou la
+date réelle si disponible) de l’installation des supports à vélos.
+
+Ces plafonds ne s’appliquent pas lorsque l’acquisition et l’installation de supports à vélos, d’une vélostation
+ou d’un abri à vélos font partie d’un projet dont la portée est plus large, par exemple si ces mesures sont
+incluses dans le cadre de l’aménagement d’un terminus ou d’une station de métro. Les dépenses admissibles
+répondent alors aux dispositions prévues pour ce dernier projet.
+
+
+
+
+                                                                                                              42
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+6.10 Réseaux de métro et de trains de banlieue et tout autre système de
+     transport terrestre guidé
+
+Spécificités pour les projets d’acquisition de matériel roulant
+
+Dans le cas des projets concernant des commandes d’acquisition de locomotives et de voitures de trains de
+banlieue ou de métro, l’autorisation des projets s’effectue selon les étapes suivantes :
+
+1.   Le ministre accorde une autorisation de principe avant le lancement de l’appel d’offres public en vue de
+     s’assurer que les véhicules sont conformes aux exigences ministérielles et gouvernementales.
+
+2.   Une autorisation ministérielle finale établit le coût unitaire maximal et les quantités totales admissibles
+     à l’aide financière.
+
+3.   Un engagement est signé, confirmant que le bénéficiaire de l’aide financière s’engage à respecter les
+     conditions du PAGTCP et les obligations en découlant.
+
+4.   Le versement de l’aide financière s’effectue conformément aux dispositions du PAGTCP établies à
+     l’article 7, « Versement de l’aide financière ».
+
+
+Durée de vie utile
+
+La durée de vie utile des actifs des réseaux de métro et de trains de banlieue et de tout autre système de
+transport guidé est définie selon les quatre catégories suivantes :
+
+A. Tunnels, ponts, viaducs et systèmes porteurs de type monorail
+
+Les parties qui composent les tunnels, les ponts, les viaducs et les systèmes porteurs de type monorail ont
+une durée de vie utile de 50 ans, sauf :
+
+− le revêtement de béton des voûtes des tunnels, dont la durée de vie utile est de 25 ans;
+
+− les systèmes d’éclairage, dont la durée de vie utile est de 30 ans;
+
+− les structures auxiliaires, dont la durée de vie utile est de 40 ans.
+
+B. Bâtiments
+
+Les bâtiments (stations, gares, centres de contrôle, structures auxiliaires, ateliers d’entretien, garages) ont
+une durée de vie utile de 40 ans, sauf les édicules temporaires, les quais et les bâtiments conçus en structure
+légère, dont la durée de vie utile est de 20 ans. La durée de vie utile de la toiture des bâtiments est également
+de 20 ans.
+
+
+
+                                                                                                              43
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                        PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                           AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+C. Matériel roulant
+
+Le matériel roulant utilisé pour les réseaux de métro (voitures et véhicules de service sur rail) a une durée de
+vie utile de 40 ans, sauf les aspirateurs de voies et les équipements embarqués, tels que les grues et les
+équipements de lavage, dont la durée de vie utile est de 30 ans.
+
+Le matériel roulant utilisé pour les réseaux de trains de banlieue ou pour tout autre système de transport
+terrestre guidé (locomotives, voitures et véhicules de service sur rail) a une durée de vie utile de 30 ans.
+
+La durée de vie utile du matériel roulant acquis à l’état usagé ou faisant l’objet d’une rénovation est établie
+lors de l’autorisation de l’aide financière en fonction de l’âge du matériel et des travaux de rénovation
+effectués.
+
+D. Équipements fixes (sept sous-catégories)
+
+1. Installations motorisées : durée de vie utile de 25 ans.
+
+   Les installations motorisées comprennent les escaliers mécaniques, les tapis roulants, les postes de
+   ventilation, les postes d’épuisement (pompes) et les équipements de transport vertical (ascenseurs,
+   monte-charge, plates-formes ou quais hydrauliques).
+
+2. Centre de contrôle : durée de vie utile de 25 ans
+
+   Les équipements du centre de contrôle comprennent tous ceux qui sont nécessaires à l’exploitation
+   sécuritaire du réseau ainsi que les logiciels spécialisés pour leur mise en exploitation. Ils incluent les
+   équipements de télémesure, les tableaux de contrôle optique, les ordinateurs et les postes de commande.
+
+3. Télécommunications : durée de vie utile de 10 ans ou de 25 ans
+
+   Les télécommunications englobent les systèmes nécessaires au contrôle des procédés d’exploitation et
+   aux communications opérationnelles, comme les systèmes suivants : radio, téléphonie d’exploitation
+   privée, télétransmission, vidéosurveillance, sonorisation, affichage électronique, alarme d’intrusion,
+   contrôle d’accès, alarme d’incendie et données de gestion. La durée de vie des biens admissibles à
+   l’article 6.3, « Systèmes ou applications nécessaires à l’exploitation des réseaux », est de 10 ans et celle
+   des autres actifs est de 25 ans.
+
+4. Contrôle de trains à cantons fixes : durée de vie utile de 25 ans
+
+   Le système de contrôle de trains à cantons fixes comprend les circuits de voies, les postes de
+   signalisation, le câblage, les mécanismes d’aiguilles, les contrôleurs d’aiguilles, les zones-tests, les
+   chargeurs de batteries, les coffrets de commande et les indicateurs, les divers détecteurs et les
+   connexions inductives.
+
+
+
+
+                                                                                                             44
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                          PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                             AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+5. Contrôle de train de type CBTC : durée de vie utile de 20 ans
+
+   Le contrôle de trains de type CBTC (système de contrôle des trains par communication) comprend un
+   système d’enclenchement informatisé (SEI), un système de transmission de données incluant un réseau
+   informatique au sol, un réseau radio et un équipement embarqué sur les trains.
+
+6. Équipements de voies : durée de vie utile de 40 ans
+
+   Les équipements de voies sont constitués des composants mécaniques servant au roulement et au
+   guidage des trains de banlieue : les rails, les barres de guidage, les pièces de roulement, les appareils de
+   voies et les isolateurs de barres de guidage.
+
+7. Système d’énergie d’exploitation : durée de vie utile de 40 ans
+
+   Le système d’énergie d’exploitation est formé des équipements d’alimentation, de conversion et de
+   distribution électriques : les postes de district, les postes de redressement, les postes secondaires de
+   distribution, les câbles à traction, les câbles à haute tension et les groupes électrogènes fixes et mobiles.
+
+
+Réparations majeures pour prolonger la durée de vie utile
+
+Les réparations majeures effectuées en vue d’atteindre les durées de vie établies dans le PAGTCP ne sont
+pas admissibles à une aide financière.
+
+Les réparations majeures effectuées en vue de prolonger la durée de vie utile du matériel roulant au-delà de
+celle établie dans le PAGTCP sont considérées dans les actions visant le maintien des actifs et sont
+admissibles à l’aide financière.
+
+Le montant maximal des dépenses admissibles ne peut cependant pas excéder le coût d’acquisition de
+matériel roulant neuf similaire ajusté au prorata de la période de prolongation par rapport à la durée de vie
+utile de ce matériel roulant neuf. Le coût d’acquisition du matériel roulant neuf correspond au coût d’achat
+l’année où sont effectuées les réparations majeures.
+
+Dans le cas où le matériel roulant ayant fait l’objet d’une aide financière pour la prolongation de sa durée de
+vie utile cesse d’être utilisé, est remplacé, est mis au rancart ou est autrement aliéné avant la fin de la période
+de prolongation prévue lors de l’autorisation de l’aide financière, le ministre procède à la récupération de
+l’aide financière au prorata de la durée de vie prolongée non atteinte.
+
+6.11 Modifications visant à améliorer, pour les clientèles à mobilité réduite,
+     l’accès au service régulier existant de transport collectif
+Les projets visant l’adaptation des voitures de métro ou de trains ou l’adaptation des différentes
+infrastructures de transport collectif pour les rendre accessibles aux clientèles à mobilité réduite sont
+admissibles en tout temps, et ce, sans pénalité à l’égard de la durée de vie utile des actifs sur lesquels ils
+sont réalisés.
+
+
+                                                                                                                45
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                       PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                          AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+6.12 Étude d’opportunité
+Une étude d’opportunité est exigée préalablement à l’inscription au PQI des projets réguliers estimés à
+20 000 000 $ et plus (volet A) et des projets d’envergure (volet B), à l’exception des projets de maintien
+d’actifs. Elle doit comprendre, sans s’y limiter, les éléments présentés ci-dessous, répartis en deux sections
+distinctes, soit l’analyse des besoins et l’analyse des solutions.
+
+Analyse des besoins
+
+L’analyse des besoins inclut les éléments suivants :
+
+− Un état de la situation actuelle et projetée, devant comprendre un portrait du secteur d’étude, des
+   infrastructures et services, des usagers et des problèmes recensés (statu quo).
+
+− Une description des besoins actuels et projetés auxquels la situation actuelle ne répond pas. Cette
+   description doit démontrer qu’une intervention est requise.
+
+− Une priorisation des besoins retenus, qui doit être cohérente avec la planification du territoire (schémas
+   et plans métropolitains d’aménagement et de développement) et, dans le cas de projets réalisés sur le
+   territoire de l’ARTM, avec celle du Plan stratégique de développement.
+
+− L’identification des exigences fonctionnelles, techniques et réglementaires auxquelles devra répondre le
+   projet.
+
+Analyse des solutions
+
+L’analyse des solutions inclut les éléments suivants :
+
+− Une description détaillée de trois scénarios permettant de répondre aux besoins. Par exemple, ces
+   scénarios peuvent présenter différentes options en termes de modes, de tracés, de localisation,
+   d’envergure ou de solutions technologiques. Le statu quo ne peut pas être considéré comme un scénario
+   puisqu’il ne permet pas de répondre aux besoins.
+
+− Une évaluation comparative des trois scénarios et du statu quo basée sur des indicateurs permettant de
+   mesurer la capacité des solutions à répondre aux besoins priorisés et aux exigences, en fonction de
+   l’estimation de leurs coûts. Ces estimations des coûts des scénarios envisagés doivent être de classe D.
+   Les estimations des coûts d’exploitation et des mesures d’atténuation, si leur variation est significative
+   d’un scénario à l’autre, ainsi que les coûts associés aux principaux risques pour chacun des scénarios
+   doivent être inclus à l’évaluation comparative. Celle-ci peut être basée sur une analyse avantages-coûts
+   ou multicritères.
+
+− La justification du choix du scénario retenu et la présentation du ou des modes de réalisation envisagés.
+
+
+
+                                                                                                            46
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+Ces analyses doivent s’appuyer sur des données validées et sur des hypothèses prévisionnelles réalistes.
+Les méthodologies retenues aux fins de la réalisation de l’étude d’opportunité doivent être transmises au
+Ministère, à sa demande. Celui-ci peut exiger une révision des méthodologies retenues si elles ne permettent
+pas de représenter adéquatement les éléments analysés.
+
+Une étude d’opportunité est valide pour une durée de cinq années. Après cinq ans, si aucune demande d’aide
+financière n’a été déposée au Ministère pour la réalisation du projet découlant de l’étude d’opportunité, une
+mise à jour de cette dernière sera requise afin de permettre l’inscription du projet au PQI. En cas de
+changement significatif des situations actuelle et projetée, le ministre peut exiger une mise à jour avant cinq
+ans. Inversement, si les situations actuelle et projetée sont jugées inchangées, le ministre peut prolonger la
+durée de validité de l’étude d’opportunité. Les mises à jour d’études d’opportunité peuvent faire l’objet de
+nouvelles demandes d’aide.
+
+
+7.      VERSEMENT DE L’AIDE FINANCIÈRE
+
+Pour les projets réguliers, aucun versement ne peut être effectué avant que l’organisme n’ait obtenu
+l’autorisation du projet et avant la signature de l’engagement, comme prévu au point 6 de l’article 4.1,
+« Processus d’autorisation des projets ».
+
+Advenant le cas où des conditions particulières exigées par le ministre ne seraient pas satisfaites, les
+versements de l’aide financière pourront être retardés ou annulés.
+
+Les aides financières versées en trop, le cas échéant, sont récupérées lors d’un versement d’aide financière
+subséquent prévu pour l’organisme. Lorsqu’aucun versement subséquent n’est prévu, l’organisme doit
+rembourser les sommes dans un délai maximal de 12 mois. Aucun intérêt n’est exigible sur les aides
+financières à verser ou à récupérer.
+
+Les aides financières accordées sont versées sous réserve des disponibilités budgétaires.
+
+7.1      Projets dont l’aide financière accordée est égale ou inférieure à
+         500 000 $
+Pour les projets dont l’aide financière maximale accordée est égale ou inférieure à 500 000 $, les versements
+sont effectués comme suit :
+
+− Un premier versement, d’un montant représentant 50 % de l’aide financière accordée, taxes nettes
+     incluses, est effectué à la suite de l’autorisation du projet et de la signature de l’engagement.
+
+− Le versement du solde est effectué après que l’organisme a transmis, à la satisfaction du ministre, toutes
+     les pièces justificatives nécessaires à l’établissement du montant maximal final réel admissible à l’aide
+     financière, jusqu’à concurrence du maximum autorisé par le ministre, ainsi que les données sur les
+     résultats du projet.
+
+
+                                                                                                              47
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                          PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                             AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+7.2      Projets dont l’aide financière accordée est supérieure à 500 000 $
+Pour les projets autorisés dont l’aide financière maximale accordée est supérieure à 500 000 $, les
+versements sont effectués comme suit, à la suite de l’autorisation du projet et de la signature de
+l’engagement :
+
+− Des versements sont effectués deux fois par année, selon l’avancement des travaux admissibles réalisés.
+     Le montant versé correspond au taux d’aide financière multiplié par le montant des dépenses admissibles
+     réalisées durant la période visée, selon la reddition de comptes fournie (voir l’article 8.1), et ce, jusqu’à
+     ce que le montant cumulatif des versements atteigne 90 % du montant maximal de l’aide financière
+     accordée par le ministre pour ce projet.
+
+− Le versement du solde est effectué après que le bénéficiaire a transmis au ministre un rapport d’audit
+     final attestant le montant des dépenses totales et des dépenses admissibles, conformément à
+     l’article 8.2, « Audit et évaluation ». Le bénéficiaire doit aussi fournir les données sur les résultats du
+     projet et respecter la reddition de compte de l’article 8.1.
+
+
+8.      CONTRÔLE ET REDDITION DE COMPTES
+
+8.1      Rapports ou renseignements à fournir par le bénéficiaire
+Outre les documents requis pour l’autorisation, le suivi ou l’audit des projets, les bénéficiaires d’une aide
+financière dans le cadre du PAGTCP doivent faire parvenir au ministre les éléments suivants :
+
+− Un plan d’immobilisation, ou une programmation, dûment approuvé et mis à jour annuellement de leurs
+     immobilisations pour les 10 exercices financiers subséquents. Les organismes municipaux qui n’ont pas
+     l’obligation de produire un tel programme peuvent présenter une résolution comprenant une liste des
+     étapes de réalisation du projet et de ses coûts, répartis par année.
+
+− Le suivi financier semestriel des projets financés et planifiés dans le cadre du PAGTCP.
+
+− En date du 31 décembre et du 30 juin durant la période de réalisation des projets, un rapport
+     d’avancement des travaux (voir la définition du glossaire en annexe) admissibles selon la forme requise
+     par le ministre. Pour certains projets, les bénéficiaires pourraient devoir fournir un rapport d’avancement
+     des travaux au 31 mars.
+
+− Une liste annuelle des actifs financés par le PAGTCP qui ont été abandonnés, aliénés, vendus, sinistrés
+     ou remplacés en cours d’année.
+
+− Une copie de leur budget, de leurs états financiers et de leur rapport annuel, s’il y a lieu.
+
+
+
+                                                                                                               48
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                        PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                           AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+− Une copie du rapport annuel d’exploitation, dont la forme est déterminée par le ministre et qui regroupe
+   des données opérationnelles et financières nécessaires au processus d’évaluation du PAGTCP.
+
+− Les données énumérées à l’article 2.1, « Objectifs poursuivis », qui sont nécessaires au calcul des
+   indicateurs de suivi des résultats relatifs aux investissements réalisés dans le cadre du PAGTCP.
+
+De plus, les sociétés de transport en commun doivent fournir annuellement une mise à jour du plan
+quinquennal de gestion de leur parc d’autobus.
+
+Le ministre se réserve le droit d’exiger tout autre document qu’il juge nécessaire, y compris les documents
+requis pour mesurer les réductions des émissions de GES attribuables au PAGTCP.
+
+
+8.2    Audit et évaluation
+Le Vérificateur général du Québec et le ministre (ou son mandataire) peuvent, en tout temps, s’assurer qu’une
+aide financière versée a été utilisée aux fins pour lesquelles elle a été autorisée et que la contribution du
+bénéficiaire respecte son engagement, pris lors de l’autorisation de l’aide financière par le ministre.
+
+Une personne représentant le gouvernement ou mandatée par celui-ci peut aussi aller auditer sur place, en
+tout temps convenable et comme elle le juge utile, toutes les données relatives aux demandes d’aide
+financière ou aux aides financières déjà versées.
+
+− Le dépôt par le bénéficiaire d’un rapport d’audit, tel que spécifié dans les conditions de l’engagement,
+   attestant les dépenses totales et les dépenses admissibles est obligatoire pour tous les projets dont
+   l’aide financière accordée est supérieure à 500 000 $. Ce rapport peut tout de même être exigé par le
+   ministre pour certains projets dont l’aide financière est égale ou inférieure à 500 000 $ et qui sont
+   financés dans le cadre du PAGTCP.
+
+− Pour les projets dont la réalisation s’effectue sur une période de moins d’un an, le bénéficiaire doit
+   déposer le rapport d’audit final attestant les dépenses totales et les dépenses admissibles, le cas
+   échéant, au plus tard un an après la fin des travaux ou la mise en service du bien subventionné.
+
+− Dans le cas des projets dont la réalisation nécessite plus d’une année, des audits intérimaires attestant
+   les dépenses totales réalisées et les dépenses admissibles doivent être effectués au moins tous les deux
+   ans à la suite de l’autorisation du projet. Le rapport d’audit final, le cas échéant, doit être déposé au plus
+   tard un an après la fin des travaux ou de la mise en service du bien subventionné.
+
+Sauf en cas de stipulation contraire dans l’engagement, les activités liées à l’audit des dépenses admissibles
+sont réalisées par des auditeurs externes ou des vérificateurs généraux municipaux.
+
+Le bénéficiaire doit respecter les démarches suivantes :
+
+− Fournir les rapports d’audits sur l’admissibilité des dépenses qui sont exigés pour le versement de l’aide
+   financière.
+
+                                                                                                              49
+     MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                                       PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                                              AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+− Garantir et faciliter en tout temps toute activité d’audit devant être effectuée dans le cadre du PAGTCP
+       par le ministre ou son mandataire ainsi que par toute autre personne ou tout autre organisme, y compris
+       le Vérificateur général du Québec, dans le cadre de leurs fonctions ou des mandats qui leur sont confiés.
+
+− Fournir à tout moment au ministre ou à son mandataire, à sa demande, tout document ou renseignement
+       pertinent pour l’obtention ou l’utilisation de l’aide financière.
+
+− Transmettre un rapport d’audit final attestant les dépenses totales et les dépenses admissibles à l’aide
+       financière, et ce, au plus tard un an après la réalisation complète du projet ou la mise en service du bien
+       subventionné. Selon les recommandations des auditeurs, le bénéficiaire rembourse au ministre les aides
+       financières versées en trop, s’il en est.
+
+− Conserver tous les documents, comptes et registres relatifs à l’aide financière accordée pendant une
+       période de six ans après le dépôt de la reddition de comptes finale ou, le cas échéant, après le versement
+       final de l’aide financière.
+
+− Fournir, à la demande du ministre, toutes les données et informations requises aux fins du suivi et de
+       l’évaluation du PAGTCP, et ce, pour une période allant jusqu’à six ans après le dépôt de la reddition de
+       comptes finale ou après le versement final de l’aide financière.
+
+
+9.          AUTRES DISPOSITIONS
+
+9.1         Obligations légales et réglementaires
+Le bénéficiaire s’engage à respecter les mesures suivantes :
+
+− Sa loi constitutive et ses règlements intérieurs, notamment en matière d’octroi de contrats.
+
+− Les lois, les règlements, les normes et les ententes en vigueur, notamment en matière environnementale,
+       commerciale, d’accessibilité ou d’aménagement du territoire.
+
+− L’obligation de procéder par appel d’offres public pour l’adjudication de tout contrat ayant comme objet
+       la réalisation de travaux de construction dont la valeur est égale ou supérieure au seuil en vigueur10. Les
+       organismes déjà assujettis à une telle obligation en vertu des lois qui leur sont applicables doivent se
+       conformer aux règles prévues par ces lois.
+
+− Les dispositions du PAGTCP.
+
+
+
+
+10
+     Conformité des contrats municipaux en matière de libéralisation des marchés publics | Gouvernement du Québec (quebec.ca)
+
+                                                                                                                                50
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                          PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                             AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+9.2     Dispositions générales
+Le ministre se réserve le droit de demander des documents additionnels ou des ajustements aux documents
+transmis par un organisme et de refuser tout document incomplet.
+
+Dans le cas où les conditions du PAGTCP ne sont pas respectées ou à défaut de recevoir les documents
+demandés, le ministre peut retarder, réduire ou annuler toute aide financière, ou réclamer le remboursement
+total ou partiel de toute somme versée. Il en est de même lorsque les conditions du PAGTCP ne sont pas
+respectées.
+
+Le non-respect des modalités du PAGTCP peut se traduire, entre autres, par le fait d’omettre le dépôt d’un
+rapport ou de remettre un rapport incomplet, par la réalisation de travaux qui ne sont pas conformes aux
+normes gouvernementales ou qui sont inachevés, ou encore par des dépenses injustifiées.
+
+Les formulaires de demande d’aide financière, les procédures administratives ainsi que les modalités de
+calcul, de financement et de versement de l’aide financière relatives au PAGTCP sont déterminés par le
+ministre.
+
+Les procédures et les exigences administratives relatives à l’octroi et au versement de l’aide financière
+peuvent varier selon la nature et l’envergure des projets ainsi qu’en fonction du budget disponible.
+
+
+9.3     Droit de refus ou de résiliation
+Le ministre se réserve le droit de refuser d’accorder une aide financière ou de cesser de lui verser cette aide
+financière si le demandeur ou le bénéficiaire ne satisfait pas aux exigences élevées d’intégrité auxquelles le
+public est en droit de s’attendre d’un bénéficiaire d’une aide financière versée à même des fonds publics.
+Pour ce faire, le ministre adresse un avis écrit au bénéficiaire énonçant le motif de refus, de modification, de
+réduction ou de résiliation. Le bénéficiaire aura alors l’occasion de présenter ses observations et, s’il y a lieu,
+de produire des documents pour compléter son dossier. Le ministre pourra tenir compte de ces observations
+ou de ces documents pour prendre sa décision.
+
+
+9.4     Responsabilité
+Le bénéficiaire est responsable de tout dommage causé par lui, ses employés, ses agents, ses représentants
+ou ses sous-traitants dans le cours ou à l’occasion de l’exécution de l’engagement, y compris un dommage
+résultant d’un manquement à un engagement pris en vertu de ce dernier.
+
+Le bénéficiaire s’engage à indemniser le ministre de tous recours et de toutes réclamations, demandes et
+poursuites découlant de dommages ainsi causés.
+
+
+
+
+                                                                                                                51
+     MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                                                AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+9.5         Autres obligations et exigences
+Le bénéficiaire s’engage à se conformer au Protocole de visibilité pour les programmes d’aide disponible sur
+le site Web du gouvernement du Québec. Le bénéficiaire accepte que le ministre ou la personne qui le
+représente puisse annoncer publiquement les éléments importants du projet, comme : la nature du projet,
+son emplacement, son coût estimé, le montant de l’aide financière octroyée et versée par le ministre et les
+autres bénéfices escomptés à la suite de la réalisation du projet.
+
+Le bénéficiaire consent à la publication par le ministre de toute information relative à l’octroi de son aide
+financière.
+
+Pour les projets des volets B et C, le ministre peut exiger la signature d’un protocole de communication entre
+le ministre et le bénéficiaire.
+
+
+9.6         Mesures transitoires
+A.      Dans le cas des demandes d’aide financière complètes et déposées par des organismes admissibles au
+        plus tard le 30 septembre 2024, les modalités d’application du PAGTCP sont celles qui étaient
+        applicables au moment de la réception de la demande d’aide financière. Dans ce cas, la date
+        d’admissibilité des dépenses est celle de l’inscription au PQI.
+
+B.      Lorsqu’un projet est inscrit au PQI 2025-2035 ou un PQI antérieur et qu’aucune demande d’aide en lien
+        avec ce projet n’a été déposée, ou si la demande d’aide déposée est incomplète, la date d’admissibilité
+        des dépenses sera celle de l’inscription au PQI, et les modalités d’application du PAGTCP 2025-2028
+        s’appliqueront. Les bénéficiaires ont jusqu’au 1er octobre 2026 pour déposer ces demandes d’aide
+        financière, sans quoi les projets seront reconnus comme n’étant pas admissibles.
+
+C.      Pour les projets amorcés et inscrits au PQI 2025-2035 ou dans des PQI antérieurs, les intérêts à court
+        terme engagés auprès du ministère des Finances du Québec ou d’une institution financière11 pour des
+        projets admissibles seront reconnus comme admissibles. Ils ne seront cependant plus admissibles à
+        partir du 31 décembre 2026.
+
+D.      Pour les financements octroyés antérieurement sous forme de service de la dette, les versements sont
+        effectués selon l’échéancier de remboursement établi par le ministère des Finances. Cependant, lors
+        d’un refinancement ou d’un ajustement à la suite d’un audit, le solde sera remboursé sous la forme d’un
+        versement unique au comptant.
+
+
+9.7         Mesures d’exception
+A.      En ce qui concerne les demandes d’aide financière déposées par des organismes admissibles dans le
+        cadre du PAGTCP pour des projets d’acquisition d’autobus articulés hybrides (diesel-électrique)
+
+
+11
+     Les organismes pour lesquels le financement n’est pas obligatoire auprès du ministère des Finances du Québec peuvent se faire rembourser
+     les intérêts à court terme contractés auprès de leur institution financière.
+
+                                                                                                                                          52
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                           PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                              AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+      approuvés par le ministre en 2021, les dépenses liées à ces projets sont admissibles à une aide
+      financière au taux de 60 % des dépenses admissibles du projet.
+
+B.    Malgré l’article 9.6 C, en ce qui concerne les projets du volet C ayant fait l’objet d’une décision du Conseil
+      des ministres ou du Conseil du trésor et pour lesquels la contribution du Québec autorisée inclut les
+      frais financiers à court terme, les intérêts à court terme engagés auprès du ministère des Finances du
+      Québec ou de leur institution financière sur les dépenses admissibles sont reconnus comme étant
+      admissibles.
+
+
+10.      SPÉCIFICITÉS POUR LES PROJETS D’ENVERGURE (VOLET B)
+
+Les projets d’envergure sont ceux définis à l’article 2.3 du présent document.
+
+
+10.1 Admissibilité des demandes
+Les études préalables à la réalisation d’un projet d’envergure peuvent constituer un projet admissible à l’aide
+financière et faire l’objet d’une autorisation dans le cadre du PAGTCP.
+
+Le taux d’aide financière applicable à ces projets d’études, à l’exception des études d’opportunité exigées
+aux volets A et B, est le même que celui déterminé pour le projet auquel il fait référence (voir l’article 5.2,
+« Taux d’aide financière »).
+
+
+10.2 Dépenses admissibles
+Dans le cas des projets d’envergure, des dépenses admissibles s’ajoutent à celles mentionnées à l’article 5.4,
+soit :
+
+− les dépenses de location d’immeubles nécessaires à la mise en place d’un bureau de projet pour la
+     planification et la réalisation du projet, si elles entraînent une dépense supplémentaire pour le
+     bénéficiaire;
+
+− les dépenses de gestion de projet et de contrôle financier (honoraires professionnels et coûts de main-
+     d’œuvre en régie).
+
+Le montant admissible pour les dépenses mentionnées ci-haut ne peut cependant pas excéder 15 % du coût
+admissible total du projet.
+
+De plus, en ce qui a trait aux dépenses en régie effectuées par le bureau de projet, des catégories de dépenses
+s’ajoutent à celles indiquées à l’article 5.5, soit :
+
+− les dépenses de gestion de projet et de contrôle financier;
+
+− les dépenses liées aux études nécessaires à la planification et à la réalisation du projet;
+                                                                                                                 53
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+− les dépenses associées à la préparation des plans et devis, à l’ingénierie et à la surveillance des travaux.
+
+
+11.     SPÉCIFICITÉS POUR LES PROJETS MAJEURS (VOLET C)
+
+Les projets majeurs sont ceux définis à l’article 2.3 du présent document.
+
+
+11.1 Autorisation des projets
+Une demande d’aide financière peut être soumise dans le cadre du PAGTCP à chaque étape du processus
+d’autorisation d’un projet majeur. Le taux d’aide financière applicable est le même pour chacune de ces
+étapes et correspond à celui déterminé pour le projet auquel il renvoie (article 5.2, « Taux d’aide financière »).
+
+La réalisation et les coûts totaux de chaque étape étant préalablement approuvés par le Conseil des
+ministres ou par le Conseil du trésor, les demandes d’aide financière déposées dans le cadre du PAGTCP à
+chacune des étapes et les documents fournis en appui à ces demandes visent uniquement à démontrer
+l’admissibilité du projet au PAGTCP et à statuer sur le montant admissible à l’aide financière. Le cas échéant,
+l’autorisation du projet confirmera le montant maximal de l’aide financière qui pourra être versé dans le cadre
+du PAGTCP pour chacune des étapes autorisées en vue de la réalisation du projet majeur.
+
+L’engagement du bénéficiaire envers le ministre de respecter les conditions du PAGTCP et les obligations
+qui en découlent tiendra compte, le cas échéant, de tout autre engagement intervenu entre eux dans le cadre
+de la réalisation d’un projet majeur soumis à la Directive.
+
+
+11.2 Dépenses admissibles
+Les dépenses liées à l’acquisition de mobilier et de matériel de bureau nécessaires à la mise en place d’un
+bureau de projet pour la planification et la réalisation d’un projet majeur s’ajoutent à celles énumérées aux
+articles 5.4 et 10.2, « Dépenses admissibles ».
+De plus, les dépenses suivantes, lorsqu’effectuées en régie, s’ajoutent aux dépenses admissibles :
+
+− Les frais juridiques, à l’exclusion de ceux engendrés dans le cadre de toute action, réclamation ou
+    demande en justice pouvant découler directement ou indirectement de la réalisation du projet;
+
+− Les coûts liés aux activités de communication directement associées au projet.
+
+
+
+
+                                                                                                               54
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                        PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                           AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+12.    MESURES D’EXCEPTION POUR CERTAINS PROJETS DE MAINTIEN
+       D’ACTIFS
+
+12.1 Métro, garages et centres d’entretien
+Il est possible pour un organisme admissible de regrouper des projets de maintien d’actifs d’un réseau de
+métro, de garages et de centres d’entretien dans une seule demande d’aide financière. Cependant, les projets
+de 50 000 000 $ et plus ne peuvent être inclus dans ce regroupement de projets et doivent être traités
+séparément. À partir du 1er avril 2026, les travaux inclus à cette demande d’aide financière porteront sur une
+période maximale de 12 mois. Dans le cadre de sa demande d’inscription de projets au PQI, l’organisme
+admissible devra tout de même déposer annuellement une planification sur un minimum de cinq ans de
+l’ensemble des projets de maintien d’actifs qu’il inscrit dans ce regroupement de projets.
+
+Les projets inclus dans la demande d’aide financière sont soumis à l’ensemble des articles du PAGTCP en
+vigueur. Quant à l’organisme admissible, il doit lui aussi respecter l’ensemble des modalités présentées au
+PAGTCP.
+
+
+12.2 Maintien urgent d’actifs
+Lorsqu’un accident ou un bris majeur cause une rupture de service dans un réseau de métro ou de trains de
+banlieue ou dans tout autre système de transport terrestre guidé, ou lorsqu’un accident ou un bris majeur
+entraîne l’arrêt complet d’un service de transport en commun par autobus, un organisme admissible peut
+faire appel à cette mesure d’exception afin que l’autorisation de son projet soit accélérée. Cette mesure peut
+être appliquée uniquement sur la portion des travaux qui doivent être effectués d’urgence, et non sur
+l’ensemble d’un projet donné.
+
+
+Autorisation d’urgence
+
+L’autorisation d’urgence permet à l’organisme admissible d’effectuer des réparations en vue de rétablir le
+fonctionnement du système de transport. Pour obtenir cette autorisation, l’organisme admissible doit
+déposer une demande d’aide financière au moyen du formulaire requis, disponible sur le site Web du
+gouvernement du Québec (quebec.ca). La demande doit être transmise par courriel à l’adresse qui y est
+indiquée.
+
+La demande d’aide financière soumise doit préciser clairement :
+
+− la description du problème et l’objectif de l’intervention d’urgence;
+
+− la description et l’évaluation des différents scénarios envisageables;
+
+− la description détaillée du scénario retenu;
+
+
+                                                                                                             55
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                       PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                          AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+
+− l’évaluation et la ventilation des coûts du projet;
+
+− l’échéancier de réalisation;
+
+− l’évaluation des travaux résiduels à effectuer une fois que les travaux d’urgence auront été réalisés.
+
+La demande d’aide financière est analysée par le ministre en fonction des modalités du PAGTCP. Tous les
+projets doivent respecter les diverses conditions énoncées aux articles 5, 6 et 9 du PAGTCP. Le cas échéant,
+les projets doivent également respecter toute décision du Conseil des ministres ou du Conseil du trésor.
+
+Si l’analyse est concluante, le ministre informe par écrit l’organisme admissible de l’autorisation d’urgence
+et du montant maximal de l’aide financière qui lui est accordé pour sa réalisation. La date d’admissibilité des
+dépenses est celle de la réception de la demande d’aide financière par le ministère. La date inscrite sur la
+lettre du ministre détermine la version des modalités du PAGTCP qui seront applicables au projet. Dans le
+cas contraire, l’organisme est informé du refus de sa demande d’aide financière.
+
+
+Autres conditions
+
+Lorsque l’autorisation d’une aide financière d’urgence est donnée par le ministre, le bénéficiaire doit prendre
+l’engagement envers le ministre, selon la forme que ce dernier requiert, de respecter les conditions du
+PAGTCP et les obligations en découlant.
+
+Le versement de l’aide financière s’effectue à la suite de l’autorisation d’urgence et de la signature de
+l’engagement conformément aux dispositions du PAGTCP établies à l’article 7, « Versement de l’aide
+financière ».
+
+Le suivi et la reddition de comptes s’effectuent conformément aux exigences du PAGTCP exposées à
+l’article 8, « Contrôle et reddition de comptes », ou, s’il y a lieu, conformément aux exigences prévues à
+l’engagement et, le cas échéant, en conformité avec la Directive ou avec toutes autres exigences
+gouvernementales.
+
+
+
+
+                                                                                                            56
+ANNEXES
+
+
+
+
+          55
+MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                                                      PROGRAMME D’AIDE GOUVERNEMENTALE AU
+                                                                                                        TRANSPORT COLLECTIF DES PERSONNES
+
+
+Taux1 et admissibilité des aides financières par catégorie d’actif et d’organisme
+                                                                                           Sociétés de transport,
+                                                                                                                                   Organismes municipaux
+                                 Catégorie d’actif                                               ARTM et exo
+                                                                                         Admissibilité           Taux           Admissibilité                Taux
+Autobus    2
+
+
+       •       À propulsion entièrement électrique                                              Oui               90 %                 Non
+       •       Hybride                                                                          Oui               90 %                 Non
+       •       Réparations pour prolonger la durée de vie utile                                 Oui               50 %                 Non
+       •       Minibus entièrement électrique accessible aux passagers en
+                                                                                                Oui               85 %                 Oui                   85 %
+               fauteuil roulant
+       •       Minibus à essence ou diesel accessible aux passagers en
+                                                                                                Oui               50 %                 Oui                   50 %
+               fauteuil roulant
+Véhicule de service2
+       •       À propulsion entièrement électrique                                              Oui               85 %                 Oui                   90 %
+       •       Hybride rechargeable, si démonstration d’absence de marché                       Oui               75 %                 Oui                   75 %
+       •       Essence ou diesel, si démonstration d’absence de marché                          Oui               25 %                 Oui                   25 %
+Systèmes ou applications nécessaires à l’exploitation des réseaux                               Oui               75 %                 Oui                   90 %
+
+Mesure préférentielle pour les autobus (MPB)
+       •       Système rapide par bus en site propre                                            Oui               95 %                 Non
+       •       Autre MPB en site propre                                                         Oui               75 %                 Non
+       •       MPB qui n’est pas en site propre                                                 Oui               25 %                Non
+                                                                                                                               Oui (à l’exclusion
+Stationnement d’incitation3, terminus, aire d’attente, garage et centre
+                                                                                                                              des garages et des             90 %
+d’entretien (voir les détails à l’article 5.2)
+                                                                                                                              centres d’entretien)
+       •       Projet de développement des actifs4                                              Oui               75 %
+       •       Projet de maintien ou d’amélioration des actifs                                  Oui               85 %
+       •       Projet de garage et de centre d’entretien                                        Oui               75 %
+Abribus, support à vélos, vélostations et infrastructure de transport actif        3
+                                                                                                Oui               75 %                 Oui                   90 %
+
+Réseau de métro ou de trains de banlieue ou tout autre système de
+transport terrestre guidé (matériel roulant, équipement et infrastructure)
+       •       Projet de maintien ou d’amélioration des actifs5                                 Oui               85 %                 Non
+       •       Projet de développement des actifs ou d’électrification d’une
+                                                                                                Oui               95 %                 Non
+               ligne de trains de banlieue4
+Améliorations favorisant l’accessibilité des clientèles à mobilité réduite aux
+                                                                                                Oui               85 %                 Oui                   90 %
+services réguliers existants de transport collectif
+Étude d’opportunité pour les volets A et B (20 M$ et plus)                                      Oui               50 %                 Oui                   50 %
+
+Note 1 : Pour un projet donné, un seul taux d’aide financière est applicable. Ce taux est déterminé selon la principale composante du projet. Par exemple, dans le cas
+         de la réalisation d’un projet de prolongement d’une ligne de trains de banlieue, le taux applicable serait de 95 % pour toutes les composantes du projet y
+         compris, s’il y a lieu, les stationnements d’incitation ou les abribus.
+Note 2 : Les taux d’aide financière s’appliquent pour l’acquisition de véhicules neufs (remplacement ou ajout).
+Note 3 : Le taux d’aide financière de 75 % s’applique pour les projets indépendants. Lorsque l’acquisition et l’installation de ces équipements sont une composante
+         d’un projet, c’est le taux de ce projet qui s’applique.
+Note 4 : Les projets de développement des actifs visent l’ajout d’équipements ou l’agrandissement d’infrastructures, l’implantation de nouveaux systèmes de transport
+         terrestre guidé, l’ajout de stations ou le prolongement des réseaux existants de métro et de trains de banlieue ainsi que l’augmentation du parc de locomotives
+         ou de voitures de métro ou de trains.
+Note 5 : Les projets de maintien ou d’amélioration des actifs visent le remplacement, la réfection ou la rénovation des infrastructures et des équipements existants ainsi
+         que le remplacement ou le prolongement de la durée de vie utile des locomotives et des voitures de trains et de métro.
+
+
+
+
+                                                                                                                                                               56
+     MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                                       PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                                              AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+
+Glossaire
+Aire d’attente ou de recharge : espace aménagé pour permettre le stationnement sécuritaire des véhicules
+de service ou des autobus entre deux circuits ou pour permettre la recharge des véhicules en cours ou au
+terme d’un parcours.
+
+Assemblage final d’un autobus : aux fins de l’application du PAGTCP, assemblage comprenant l’installation
+du moteur, de la transmission, du système de refroidissement, du système de chauffage et de ventilation,
+des systèmes pneumatiques, hydrauliques et électriques, des sièges de passagers, des mains courantes, des
+colonnes d’appui et des poignées, de la girouette et de la rampe d’accès aux fauteuils roulants, l’inspection
+finale, les essais routiers, les réparations et la préparation avant livraison.
+
+Autobus : dans les présentes modalités, autobus de toutes catégories, soit le minibus, le midibus, l’autobus,
+l’autobus articulé, l’autobus étagé, etc.
+
+Avancement des travaux : proportion des dépenses admissibles réalisées sur le total des dépenses
+admissibles autorisées du projet.
+
+Bureau de projet : structure de gestion temporaire, indépendante de l’organisme et consacrée à la réalisation
+d’un projet. Le personnel de cette structure de gestion est composé d’employés de l’organisme de transport
+et/ou de ressources venant de partenaires12 ou de firmes externes de l’organisme de transport. Le personnel
+désigné par l’organisme au bureau de projet pour l’étude, la planification et la réalisation du projet est affecté
+au projet à temps plein ou à temps partiel pour toute la durée du projet, pour une période déterminée ou
+pour la réalisation d’une activité particulière. Il doit être mandaté par le bureau de projet. Les ressources
+composant le bureau de projet peuvent être appelées à varier selon les phases du projet.
+
+Capacité : quantité, nombre, volume, superficie, poids, charge, puissance ou débit que peut contenir,
+déplacer, générer, parcourir, soulever, supporter, transmettre, transporter ou traiter un actif, par exemple le
+nombre de places dans un stationnement, la superficie d’un abribus ou le volume de stockage d’un
+équipement informatique.
+
+Concept : manière dont est conçu un projet ou un produit regroupant un ensemble de paramètres.
+
+Déplacement interurbain par autobus : déplacement réalisé par un titulaire de permis de transport par
+autobus délivré par la Commission des transports du Québec et offert entre deux municipalités généralement
+assez éloignées l’une de l’autre. Ce service n’est pas admissible à une aide financière dans le cadre du
+PAGTCP.
+
+Durée de vie utile : âge de remplacement d’un actif établi aux fins du calcul de l’aide financière par le ministre
+et correspondant au nombre minimal d’années d’utilisation avant qu’un actif ne soit admissible au plein
+montant d’aide financière lors de son remplacement, de sa réfection ou de sa rénovation.
+
+
+
+
+12
+     Les partenaires sont une autre autorité organisatrice de transport ou une instance gouvernementale (ville, province ou gouvernement du
+     Canada).
+
+                                                                                                                                        57
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+Édicule temporaire : petit édifice, ou construction utilitaire, élevé sur la voie publique et par lequel on accède
+à une station de métro. Ce type d’édicule, souvent doté d’un seul accès et d’une architecture peu élaborée,
+est considéré comme provisoire en attente d’une intégration à un bâtiment plus important tels un immeuble
+à bureaux, un immeuble à logements ou un centre commercial. Certains édicules de gabarit réduit sont
+toutefois permanents.
+
+Entretien : dépense effectuée pour maintenir ou remettre en bon état de fonctionnement un actif afin qu’il
+puisse être utilisé conformément à son état initial. Une dépense faite pour réparer un actif en remplaçant une
+de ses parties est habituellement considérée comme une dépense d’entretien.
+
+Étude d’opportunité : évaluation visant à démontrer la pertinence et la faisabilité d’un projet en y comparant
+différents scénarios. Elle sert de fondement à la décision quant à la réalisation du projet.
+
+Mesure préférentielle pour les autobus : intervention visant à procurer aux autobus des dispositifs ou des
+aménagements routiers privilégiant leur circulation, permettant ainsi d’atténuer les effets de la congestion
+urbaine, de favoriser la ponctualité du service de transport collectif et de réduire le temps de déplacement
+des usagers en transport collectif.
+
+Mobilité intégrée : système intégré proposant information, réservation, achat et validation, pour un panel de
+services de mobilité le plus étendu possible.
+
+Programme d’immobilisations : outil de planification par lequel les organismes de transport collectif
+établissent annuellement leurs prévisions de dépenses en immobilisations pour une période déterminée.
+
+Projet en site propre : un projet en site propre doit viser l’aménagement d’une nouvelle voie de circulation
+dédiée uniquement au transport collectif. L’ajout de cette nouvelle voie ne doit pas avoir pour effet de réduire
+la capacité de la route sur laquelle l’aménagement est réalisé.
+
+Projet en lien avec la mobilité intégrée : projet qui inclut les systèmes de billettique, de relation client,
+d’application de mobilité multimodale et d’équipements de validation et de réservation.
+
+Projet indépendant : projet de transport collectif qui est conçu pour être autonome et indépendant, ne
+nécessitant pas de soutien ni de ressources externes pour fonctionner ou atteindre ses objectifs. Ce projet
+doit contenir tous les éléments nécessaires pour être exécuté et livré sans dépendre d’autres projets.
+
+Service d’utilité publique : service considéré comme essentiel par l’État, notamment la câblodistribution, la
+téléphonie, le gaz naturel, l’eau et l’électricité. Sont considérés comme des installations d’utilité publique un
+poteau, une tour, une canalisation ou un conduit souterrain et toute autre structure de support ou de soutien,
+et toute tranchée, de même que leurs accessoires.
+
+Service rapide par bus (SRB) : service par autobus caractérisé par une haute fréquence de passage par le
+biais d’une voie réservée sur un site consacré à 100 % au transport collectif.
+
+Stationnement d’incitation à l’utilisation du transport collectif : espace de stationnement aménagé en site
+propre ou partagé, situé à proximité d’un terminus d’autobus ou d’un service de transport collectif et
+permettant un transfert modal du véhicule personnel vers un mode de transport collectif. Deux types de
+
+
+                                                                                                               58
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                         PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                            AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+stationnements sont reconnus, soit le stationnement extérieur, qui est aménagé à la surface du sol, et le
+stationnement en structure, qui peut être étagé ou souterrain.
+
+Structure auxiliaire : extension du tunnel du métro où sont concentrés les systèmes essentiels au
+fonctionnement optimal et sécuritaire du métro. La structure se compose de deux parties, soit la partie
+horizontale, qui part du tunnel du métro, et le puits vertical, qui permet de rejoindre la surface où se trouvent
+une partie ouverte (puits de ventilation) et une partie couverte. Comparativement au tunnel, la structure
+auxiliaire est plus soumise aux intempéries et aux changements brusques de température.
+
+Taux de réserve : le taux de réserve est calculé en divisant le nombre de véhicules en réserve par le nombre
+total de véhicules. Les véhicules en réserve sont les véhicules non affectés aux dessertes et permettant le
+remplacement de véhicules non disponibles pour tous motifs (entretien périodique, pannes, accidents,
+réparations courantes, etc.). Les véhicules inactifs ne sont ni considérés comme des véhicules en réserve ni
+considérés comme étant des véhicules inclus dans le nombre total de véhicules aux fins du calcul. Le nombre
+total de véhicules est défini comme étant le nombre de véhicules en pointe, additionné du nombre de
+véhicules en réserve. Pour plus d’information concernant ce taux, voir le glossaire du rapport d’exploitation.
+
+Terminus : lieu d’attente pour la clientèle utilisant le transport collectif, situé à un point de convergence de
+plusieurs lignes d’un réseau d’autobus, comportant un abri pour les usagers et permettant à la clientèle
+d’effectuer des correspondances entre ces lignes de réseau. Le site comporte un stationnement temporaire
+pour l’arrivée et le départ des véhicules ainsi que pour le transfert de la clientèle d’un véhicule à l’autre.
+
+Terminus léger : terminus extérieur ne comportant que des abribus ou un bâtiment d’un type de construction
+temporaire ou réalisé en structure légère.
+
+Terminus lourd : terminus intérieur ou extérieur comportant des bâtiments d’un type de construction
+permanente et certains éléments comme des fondations à l’épreuve du gel, un pare-vapeur, des isolants, un
+vitrage double, des finis intérieurs ou autres.
+
+Transport collectif : transport collectif urbain et régional, incluant le transport adapté au transport des
+personnes handicapées.
+
+Transport terrestre guidé : système de transport collectif utilisant une emprise exclusive et étant dans
+l’incapacité de circuler à l’extérieur de cette emprise.
+
+Valeur résiduelle de l’actif : valeur égale au coût de remplacement de l’actif auquel est appliqué le
+pourcentage de la durée de vie utile non atteinte. Le coût de remplacement correspond au montant à
+débourser pour construire ou acquérir un actif semblable au moment du remplacement ou de la construction,
+jusqu’à concurrence, s’il y a lieu, du montant maximal admissible déterminé en vertu des modalités
+d’application du PAGTCP. S’il n’existe plus d’actif comparable ou s’il n’est pas possible d’en établir la valeur
+de construction, le coût de remplacement correspond au coût initial d’acquisition ou de construction de l’actif
+remplacé, vendu ou abandonné, ajusté en fonction de l’augmentation de l’indice des prix à la consommation
+depuis sa date de livraison ou de fin de construction jusqu’à sa date de fin d’utilisation, et ce, jusqu’à
+concurrence, s’il y a lieu, du montant maximal admissible déterminé en vertu des modalités d’application du
+PAGTCP. Si un actif a atteint la fin de sa durée de vie utile, la valeur résiduelle est égale à zéro aux fins du
+calcul de l’aide financière.
+
+                                                                                                              59
+ MINISTÈRE DES TRANSPORTS ET DE LA MOBILITÉ DURABLE                       PROGRAMME D’AIDE GOUVERNEMENTALE
+                                                                          AU TRANSPORT COLLECTIF DES PERSONNES
+
+
+Vélostation : abri à vélos fermé et à accès contrôlé.
+
+Voie réservée au transport collectif : mesure préférentielle pour les autobus ayant pour objectif
+l’amélioration de la mobilité des usagers du transport collectif et dont la raison fondamentale est de rendre
+le transport collectif plus compétitif par rapport à l’automobile en procurant aux autobus un environnement
+d’exploitation à l’abri d’obstacles causés principalement par l’importante affluence de véhicules sur le réseau
+routier. Une voie de circulation peut être réservée à l’usage exclusif du transport collectif ou à certaines
+catégories de véhicules routiers transportant un minimum de personnes (par exemple le covoiturage).
+
+
+
+
+                                                                                                            60
+
